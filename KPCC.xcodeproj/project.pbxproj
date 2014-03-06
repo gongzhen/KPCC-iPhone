@@ -23,6 +23,7 @@
 		76A308EE18C8FB950065D4B1 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 76A308CA18C8FB940065D4B1 /* UIKit.framework */; };
 		76A308F618C8FB950065D4B1 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 76A308F418C8FB950065D4B1 /* InfoPlist.strings */; };
 		76A308F818C8FB950065D4B1 /* KPCCTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 76A308F718C8FB950065D4B1 /* KPCCTests.m */; };
+		76A3090418C93C880065D4B1 /* AudioManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 76A3090318C93C880065D4B1 /* AudioManager.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -58,6 +59,8 @@
 		76A308F318C8FB950065D4B1 /* KPCCTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "KPCCTests-Info.plist"; sourceTree = "<group>"; };
 		76A308F518C8FB950065D4B1 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		76A308F718C8FB950065D4B1 /* KPCCTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = KPCCTests.m; sourceTree = "<group>"; };
+		76A3090218C93C880065D4B1 /* AudioManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AudioManager.h; path = Managers/AudioManager.h; sourceTree = "<group>"; };
+		76A3090318C93C880065D4B1 /* AudioManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AudioManager.m; path = Managers/AudioManager.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -117,6 +120,7 @@
 		76A308CC18C8FB940065D4B1 /* KPCC */ = {
 			isa = PBXGroup;
 			children = (
+				76A3090118C93C3A0065D4B1 /* Managers */,
 				76A308D518C8FB940065D4B1 /* SCPRAppDelegate.h */,
 				76A308D618C8FB940065D4B1 /* SCPRAppDelegate.m */,
 				76A308D818C8FB940065D4B1 /* Main_iPhone.storyboard */,
@@ -158,6 +162,15 @@
 				76A308F418C8FB950065D4B1 /* InfoPlist.strings */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		76A3090118C93C3A0065D4B1 /* Managers */ = {
+			isa = PBXGroup;
+			children = (
+				76A3090218C93C880065D4B1 /* AudioManager.h */,
+				76A3090318C93C880065D4B1 /* AudioManager.m */,
+			);
+			name = Managers;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -262,6 +275,7 @@
 				76A308E318C8FB940065D4B1 /* SCPRSecondViewController.m in Sources */,
 				76A308D718C8FB940065D4B1 /* SCPRAppDelegate.m in Sources */,
 				76A308D318C8FB940065D4B1 /* main.m in Sources */,
+				76A3090418C93C880065D4B1 /* AudioManager.m in Sources */,
 				76A308E018C8FB940065D4B1 /* SCPRFirstViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -399,6 +413,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "KPCC/KPCC-Prefix.pch";
 				INFOPLIST_FILE = "KPCC/KPCC-Info.plist";
@@ -412,6 +427,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "KPCC/KPCC-Prefix.pch";
 				INFOPLIST_FILE = "KPCC/KPCC-Info.plist";
@@ -481,6 +497,7 @@
 				76A308FD18C8FB950065D4B1 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		76A308FE18C8FB950065D4B1 /* Build configuration list for PBXNativeTarget "KPCCTests" */ = {
 			isa = XCConfigurationList;
@@ -489,6 +506,7 @@
 				76A3090018C8FB950065D4B1 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
