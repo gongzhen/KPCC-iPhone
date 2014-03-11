@@ -10,4 +10,10 @@
 
 @interface SCPRFirstViewController : UIViewController
 
+@property (nonatomic,strong) IBOutlet UIButton *playButton;
+@property (nonatomic,strong) IBOutlet UIButton *stopButton;
+
+- (IBAction)buttonTapped:(id)sender;
+
+
 @end

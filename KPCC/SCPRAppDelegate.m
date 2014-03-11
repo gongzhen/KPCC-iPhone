@@ -7,11 +7,17 @@
 //
 
 #import "SCPRAppDelegate.h"
+#import <AVFoundation/AVFoundation.h>
+
 
 @implementation SCPRAppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    NSError* error;
+    [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback error:&error];
+    [[AVAudioSession sharedInstance] setActive:YES error:&error];
+    
     // Override point for customization after application launch.
     return YES;
 }

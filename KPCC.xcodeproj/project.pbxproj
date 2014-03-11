@@ -16,7 +16,6 @@
 		76A308DA18C8FB940065D4B1 /* Main_iPhone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 76A308D818C8FB940065D4B1 /* Main_iPhone.storyboard */; };
 		76A308DD18C8FB940065D4B1 /* Main_iPad.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 76A308DB18C8FB940065D4B1 /* Main_iPad.storyboard */; };
 		76A308E018C8FB940065D4B1 /* SCPRFirstViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 76A308DF18C8FB940065D4B1 /* SCPRFirstViewController.m */; };
-		76A308E318C8FB940065D4B1 /* SCPRSecondViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 76A308E218C8FB940065D4B1 /* SCPRSecondViewController.m */; };
 		76A308E518C8FB940065D4B1 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 76A308E418C8FB940065D4B1 /* Images.xcassets */; };
 		76A308EC18C8FB950065D4B1 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 76A308EB18C8FB950065D4B1 /* XCTest.framework */; };
 		76A308ED18C8FB950065D4B1 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 76A308C618C8FB940065D4B1 /* Foundation.framework */; };
@@ -24,6 +23,17 @@
 		76A308F618C8FB950065D4B1 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 76A308F418C8FB950065D4B1 /* InfoPlist.strings */; };
 		76A308F818C8FB950065D4B1 /* KPCCTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 76A308F718C8FB950065D4B1 /* KPCCTests.m */; };
 		76A3090418C93C880065D4B1 /* AudioManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 76A3090318C93C880065D4B1 /* AudioManager.m */; };
+		76E75F3518CE4682008E3197 /* NSMutableArray+STKAudioPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 76E75F1F18CE4682008E3197 /* NSMutableArray+STKAudioPlayer.m */; };
+		76E75F3618CE4682008E3197 /* STKAudioPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 76E75F2118CE4682008E3197 /* STKAudioPlayer.m */; };
+		76E75F3718CE4682008E3197 /* STKAutoRecoveringHTTPDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 76E75F2318CE4682008E3197 /* STKAutoRecoveringHTTPDataSource.m */; };
+		76E75F3818CE4682008E3197 /* STKBufferChunk.m in Sources */ = {isa = PBXBuildFile; fileRef = 76E75F2518CE4682008E3197 /* STKBufferChunk.m */; };
+		76E75F3918CE4682008E3197 /* STKBufferingDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 76E75F2718CE4682008E3197 /* STKBufferingDataSource.m */; };
+		76E75F3A18CE4682008E3197 /* STKCoreFoundationDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 76E75F2918CE4682008E3197 /* STKCoreFoundationDataSource.m */; };
+		76E75F3B18CE4682008E3197 /* STKDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 76E75F2B18CE4682008E3197 /* STKDataSource.m */; };
+		76E75F3C18CE4682008E3197 /* STKDataSourceWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 76E75F2D18CE4682008E3197 /* STKDataSourceWrapper.m */; };
+		76E75F3D18CE4682008E3197 /* STKHTTPDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 76E75F2F18CE4682008E3197 /* STKHTTPDataSource.m */; };
+		76E75F3E18CE4682008E3197 /* STKLocalFileDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 76E75F3118CE4682008E3197 /* STKLocalFileDataSource.m */; };
+		76E75F3F18CE4682008E3197 /* STKQueueEntry.m in Sources */ = {isa = PBXBuildFile; fileRef = 76E75F3318CE4682008E3197 /* STKQueueEntry.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -51,8 +61,6 @@
 		76A308DC18C8FB940065D4B1 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main_iPad.storyboard; sourceTree = "<group>"; };
 		76A308DE18C8FB940065D4B1 /* SCPRFirstViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SCPRFirstViewController.h; sourceTree = "<group>"; };
 		76A308DF18C8FB940065D4B1 /* SCPRFirstViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SCPRFirstViewController.m; sourceTree = "<group>"; };
-		76A308E118C8FB940065D4B1 /* SCPRSecondViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SCPRSecondViewController.h; sourceTree = "<group>"; };
-		76A308E218C8FB940065D4B1 /* SCPRSecondViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SCPRSecondViewController.m; sourceTree = "<group>"; };
 		76A308E418C8FB940065D4B1 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		76A308EA18C8FB950065D4B1 /* KPCCTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = KPCCTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		76A308EB18C8FB950065D4B1 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
@@ -61,6 +69,29 @@
 		76A308F718C8FB950065D4B1 /* KPCCTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = KPCCTests.m; sourceTree = "<group>"; };
 		76A3090218C93C880065D4B1 /* AudioManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AudioManager.h; path = Managers/AudioManager.h; sourceTree = "<group>"; };
 		76A3090318C93C880065D4B1 /* AudioManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AudioManager.m; path = Managers/AudioManager.m; sourceTree = "<group>"; };
+		76E75F1E18CE4682008E3197 /* NSMutableArray+STKAudioPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSMutableArray+STKAudioPlayer.h"; sourceTree = "<group>"; };
+		76E75F1F18CE4682008E3197 /* NSMutableArray+STKAudioPlayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSMutableArray+STKAudioPlayer.m"; sourceTree = "<group>"; };
+		76E75F2018CE4682008E3197 /* STKAudioPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STKAudioPlayer.h; sourceTree = "<group>"; };
+		76E75F2118CE4682008E3197 /* STKAudioPlayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STKAudioPlayer.m; sourceTree = "<group>"; };
+		76E75F2218CE4682008E3197 /* STKAutoRecoveringHTTPDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STKAutoRecoveringHTTPDataSource.h; sourceTree = "<group>"; };
+		76E75F2318CE4682008E3197 /* STKAutoRecoveringHTTPDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STKAutoRecoveringHTTPDataSource.m; sourceTree = "<group>"; };
+		76E75F2418CE4682008E3197 /* STKBufferChunk.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STKBufferChunk.h; sourceTree = "<group>"; };
+		76E75F2518CE4682008E3197 /* STKBufferChunk.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STKBufferChunk.m; sourceTree = "<group>"; };
+		76E75F2618CE4682008E3197 /* STKBufferingDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STKBufferingDataSource.h; sourceTree = "<group>"; };
+		76E75F2718CE4682008E3197 /* STKBufferingDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STKBufferingDataSource.m; sourceTree = "<group>"; };
+		76E75F2818CE4682008E3197 /* STKCoreFoundationDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STKCoreFoundationDataSource.h; sourceTree = "<group>"; };
+		76E75F2918CE4682008E3197 /* STKCoreFoundationDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STKCoreFoundationDataSource.m; sourceTree = "<group>"; };
+		76E75F2A18CE4682008E3197 /* STKDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STKDataSource.h; sourceTree = "<group>"; };
+		76E75F2B18CE4682008E3197 /* STKDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STKDataSource.m; sourceTree = "<group>"; };
+		76E75F2C18CE4682008E3197 /* STKDataSourceWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STKDataSourceWrapper.h; sourceTree = "<group>"; };
+		76E75F2D18CE4682008E3197 /* STKDataSourceWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STKDataSourceWrapper.m; sourceTree = "<group>"; };
+		76E75F2E18CE4682008E3197 /* STKHTTPDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STKHTTPDataSource.h; sourceTree = "<group>"; };
+		76E75F2F18CE4682008E3197 /* STKHTTPDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STKHTTPDataSource.m; sourceTree = "<group>"; };
+		76E75F3018CE4682008E3197 /* STKLocalFileDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STKLocalFileDataSource.h; sourceTree = "<group>"; };
+		76E75F3118CE4682008E3197 /* STKLocalFileDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STKLocalFileDataSource.m; sourceTree = "<group>"; };
+		76E75F3218CE4682008E3197 /* STKQueueEntry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STKQueueEntry.h; sourceTree = "<group>"; };
+		76E75F3318CE4682008E3197 /* STKQueueEntry.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STKQueueEntry.m; sourceTree = "<group>"; };
+		76E75F3418CE4682008E3197 /* StreamingKit-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "StreamingKit-Prefix.pch"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -120,6 +151,7 @@
 		76A308CC18C8FB940065D4B1 /* KPCC */ = {
 			isa = PBXGroup;
 			children = (
+				76E75F1C18CE4682008E3197 /* ThirdParty */,
 				76A3090118C93C3A0065D4B1 /* Managers */,
 				76A308D518C8FB940065D4B1 /* SCPRAppDelegate.h */,
 				76A308D618C8FB940065D4B1 /* SCPRAppDelegate.m */,
@@ -127,8 +159,6 @@
 				76A308DB18C8FB940065D4B1 /* Main_iPad.storyboard */,
 				76A308DE18C8FB940065D4B1 /* SCPRFirstViewController.h */,
 				76A308DF18C8FB940065D4B1 /* SCPRFirstViewController.m */,
-				76A308E118C8FB940065D4B1 /* SCPRSecondViewController.h */,
-				76A308E218C8FB940065D4B1 /* SCPRSecondViewController.m */,
 				76A308E418C8FB940065D4B1 /* Images.xcassets */,
 				76A308CD18C8FB940065D4B1 /* Supporting Files */,
 			);
@@ -171,6 +201,44 @@
 				76A3090318C93C880065D4B1 /* AudioManager.m */,
 			);
 			name = Managers;
+			sourceTree = "<group>";
+		};
+		76E75F1C18CE4682008E3197 /* ThirdParty */ = {
+			isa = PBXGroup;
+			children = (
+				76E75F1D18CE4682008E3197 /* StreamingKit */,
+			);
+			path = ThirdParty;
+			sourceTree = "<group>";
+		};
+		76E75F1D18CE4682008E3197 /* StreamingKit */ = {
+			isa = PBXGroup;
+			children = (
+				76E75F1E18CE4682008E3197 /* NSMutableArray+STKAudioPlayer.h */,
+				76E75F1F18CE4682008E3197 /* NSMutableArray+STKAudioPlayer.m */,
+				76E75F2018CE4682008E3197 /* STKAudioPlayer.h */,
+				76E75F2118CE4682008E3197 /* STKAudioPlayer.m */,
+				76E75F2218CE4682008E3197 /* STKAutoRecoveringHTTPDataSource.h */,
+				76E75F2318CE4682008E3197 /* STKAutoRecoveringHTTPDataSource.m */,
+				76E75F2418CE4682008E3197 /* STKBufferChunk.h */,
+				76E75F2518CE4682008E3197 /* STKBufferChunk.m */,
+				76E75F2618CE4682008E3197 /* STKBufferingDataSource.h */,
+				76E75F2718CE4682008E3197 /* STKBufferingDataSource.m */,
+				76E75F2818CE4682008E3197 /* STKCoreFoundationDataSource.h */,
+				76E75F2918CE4682008E3197 /* STKCoreFoundationDataSource.m */,
+				76E75F2A18CE4682008E3197 /* STKDataSource.h */,
+				76E75F2B18CE4682008E3197 /* STKDataSource.m */,
+				76E75F2C18CE4682008E3197 /* STKDataSourceWrapper.h */,
+				76E75F2D18CE4682008E3197 /* STKDataSourceWrapper.m */,
+				76E75F2E18CE4682008E3197 /* STKHTTPDataSource.h */,
+				76E75F2F18CE4682008E3197 /* STKHTTPDataSource.m */,
+				76E75F3018CE4682008E3197 /* STKLocalFileDataSource.h */,
+				76E75F3118CE4682008E3197 /* STKLocalFileDataSource.m */,
+				76E75F3218CE4682008E3197 /* STKQueueEntry.h */,
+				76E75F3318CE4682008E3197 /* STKQueueEntry.m */,
+				76E75F3418CE4682008E3197 /* StreamingKit-Prefix.pch */,
+			);
+			path = StreamingKit;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -218,9 +286,16 @@
 			isa = PBXProject;
 			attributes = {
 				CLASSPREFIX = SCPR;
-				LastUpgradeCheck = 0500;
+				LastUpgradeCheck = 0510;
 				ORGANIZATIONNAME = SCPR;
 				TargetAttributes = {
+					76A308C218C8FB940065D4B1 = {
+						SystemCapabilities = {
+							com.apple.BackgroundModes = {
+								enabled = 1;
+							};
+						};
+					};
 					76A308E918C8FB940065D4B1 = {
 						TestTargetID = 76A308C218C8FB940065D4B1;
 					};
@@ -272,11 +347,21 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				76A308E318C8FB940065D4B1 /* SCPRSecondViewController.m in Sources */,
+				76E75F3D18CE4682008E3197 /* STKHTTPDataSource.m in Sources */,
+				76E75F3618CE4682008E3197 /* STKAudioPlayer.m in Sources */,
+				76E75F3F18CE4682008E3197 /* STKQueueEntry.m in Sources */,
+				76E75F3718CE4682008E3197 /* STKAutoRecoveringHTTPDataSource.m in Sources */,
 				76A308D718C8FB940065D4B1 /* SCPRAppDelegate.m in Sources */,
 				76A308D318C8FB940065D4B1 /* main.m in Sources */,
 				76A3090418C93C880065D4B1 /* AudioManager.m in Sources */,
+				76E75F3918CE4682008E3197 /* STKBufferingDataSource.m in Sources */,
+				76E75F3B18CE4682008E3197 /* STKDataSource.m in Sources */,
+				76E75F3818CE4682008E3197 /* STKBufferChunk.m in Sources */,
+				76E75F3A18CE4682008E3197 /* STKCoreFoundationDataSource.m in Sources */,
+				76E75F3518CE4682008E3197 /* NSMutableArray+STKAudioPlayer.m in Sources */,
+				76E75F3C18CE4682008E3197 /* STKDataSourceWrapper.m in Sources */,
 				76A308E018C8FB940065D4B1 /* SCPRFirstViewController.m in Sources */,
+				76E75F3E18CE4682008E3197 /* STKLocalFileDataSource.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -338,7 +423,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
@@ -378,7 +462,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
@@ -417,6 +500,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "KPCC/KPCC-Prefix.pch";
 				INFOPLIST_FILE = "KPCC/KPCC-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
@@ -431,6 +515,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "KPCC/KPCC-Prefix.pch";
 				INFOPLIST_FILE = "KPCC/KPCC-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
@@ -439,7 +524,6 @@
 		76A308FF18C8FB950065D4B1 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
 				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/KPCC.app/KPCC";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
@@ -462,7 +546,6 @@
 		76A3090018C8FB950065D4B1 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
 				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/KPCC.app/KPCC";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
