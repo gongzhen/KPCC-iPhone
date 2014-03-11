@@ -14,7 +14,6 @@
 		76A308D318C8FB940065D4B1 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 76A308D218C8FB940065D4B1 /* main.m */; };
 		76A308D718C8FB940065D4B1 /* SCPRAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 76A308D618C8FB940065D4B1 /* SCPRAppDelegate.m */; };
 		76A308DA18C8FB940065D4B1 /* Main_iPhone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 76A308D818C8FB940065D4B1 /* Main_iPhone.storyboard */; };
-		76A308DD18C8FB940065D4B1 /* Main_iPad.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 76A308DB18C8FB940065D4B1 /* Main_iPad.storyboard */; };
 		76A308E018C8FB940065D4B1 /* SCPRFirstViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 76A308DF18C8FB940065D4B1 /* SCPRFirstViewController.m */; };
 		76A308E518C8FB940065D4B1 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 76A308E418C8FB940065D4B1 /* Images.xcassets */; };
 		76A308EC18C8FB950065D4B1 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 76A308EB18C8FB950065D4B1 /* XCTest.framework */; };
@@ -58,7 +57,6 @@
 		76A308D518C8FB940065D4B1 /* SCPRAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SCPRAppDelegate.h; sourceTree = "<group>"; };
 		76A308D618C8FB940065D4B1 /* SCPRAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SCPRAppDelegate.m; sourceTree = "<group>"; };
 		76A308D918C8FB940065D4B1 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main_iPhone.storyboard; sourceTree = "<group>"; };
-		76A308DC18C8FB940065D4B1 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main_iPad.storyboard; sourceTree = "<group>"; };
 		76A308DE18C8FB940065D4B1 /* SCPRFirstViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SCPRFirstViewController.h; sourceTree = "<group>"; };
 		76A308DF18C8FB940065D4B1 /* SCPRFirstViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SCPRFirstViewController.m; sourceTree = "<group>"; };
 		76A308E418C8FB940065D4B1 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
@@ -156,7 +154,6 @@
 				76A308D518C8FB940065D4B1 /* SCPRAppDelegate.h */,
 				76A308D618C8FB940065D4B1 /* SCPRAppDelegate.m */,
 				76A308D818C8FB940065D4B1 /* Main_iPhone.storyboard */,
-				76A308DB18C8FB940065D4B1 /* Main_iPad.storyboard */,
 				76A308DE18C8FB940065D4B1 /* SCPRFirstViewController.h */,
 				76A308DF18C8FB940065D4B1 /* SCPRFirstViewController.m */,
 				76A308E418C8FB940065D4B1 /* Images.xcassets */,
@@ -325,7 +322,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				76A308DD18C8FB940065D4B1 /* Main_iPad.storyboard in Resources */,
 				76A308E518C8FB940065D4B1 /* Images.xcassets in Resources */,
 				76A308DA18C8FB940065D4B1 /* Main_iPhone.storyboard in Resources */,
 				76A308D118C8FB940065D4B1 /* InfoPlist.strings in Resources */,
@@ -398,14 +394,6 @@
 				76A308D918C8FB940065D4B1 /* Base */,
 			);
 			name = Main_iPhone.storyboard;
-			sourceTree = "<group>";
-		};
-		76A308DB18C8FB940065D4B1 /* Main_iPad.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				76A308DC18C8FB940065D4B1 /* Base */,
-			);
-			name = Main_iPad.storyboard;
 			sourceTree = "<group>";
 		};
 		76A308F418C8FB950065D4B1 /* InfoPlist.strings */ = {
@@ -502,6 +490,7 @@
 				INFOPLIST_FILE = "KPCC/KPCC-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -517,6 +506,7 @@
 				INFOPLIST_FILE = "KPCC/KPCC-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
