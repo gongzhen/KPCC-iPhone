@@ -7,11 +7,18 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "STKAudioPlayer.h"
 
 @interface SCPRFirstViewController : UIViewController
+{
+@private
+    NSTimer *timer;
+}
 
 @property (nonatomic,strong) IBOutlet UIButton *playButton;
 @property (nonatomic,strong) IBOutlet UIButton *stopButton;
+@property (nonatomic,strong) IBOutlet UILabel *streamStatusLabel;
+@property (nonatomic,strong) IBOutlet UIView *meter;
 
 - (IBAction)buttonTapped:(id)sender;
 

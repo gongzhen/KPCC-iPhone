@@ -12,11 +12,14 @@
 
 #define kLiveStreamURL @"http://live.scpr.org/kpcclive?preskip=true"
 
-@interface AudioManager : NSObject
+@interface AudioManager : NSObject<STKAudioPlayerDelegate>
+
 + (AudioManager*)shared;
 
 @property STKAudioPlayer *audioPlayer;
 @property STKDataSource *audioDataSource;
+
+@property BOOL streamPlaying;
 
 - (void)startStream;
 - (void)stopStream;

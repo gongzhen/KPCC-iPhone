@@ -28,17 +28,19 @@ static AudioManager *singleton = nil;
     if ( !urlForStream ) {
         urlForStream =kLiveStreamURL;
     }
-
+    self.streamPlaying = NO;
     self.audioPlayer = [[STKAudioPlayer alloc]init];
     self.audioDataSource = [STKAudioPlayer dataSourceFromURL:[NSURL URLWithString:urlForStream]];
 }
 
-- (void)startStream {
+- (void)startStream {    
     [self.audioPlayer setDataSource:self.audioDataSource withQueueItemId:nil];
+    self.streamPlaying = YES;
 }
 
 - (void)stopStream {
     [self.audioPlayer stop];
+    self.streamPlaying = NO;
 }
 
 
