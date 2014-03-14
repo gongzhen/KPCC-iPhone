@@ -69,7 +69,51 @@
 
 -(void) tick
 {
-	
+    STKAudioPlayerState stkAudioPlayerState = [[AudioManager shared] audioPlayer].state;
+    NSString *audioPlayerStateString;
+    
+    switch (stkAudioPlayerState) {
+        case STKAudioPlayerStateReady:
+            audioPlayerStateString = @"ready";
+            break;
+            
+        case STKAudioPlayerStateRunning:
+            audioPlayerStateString = @"running";
+            break;
+            
+        case STKAudioPlayerStateBuffering:
+            audioPlayerStateString = @"buffering";
+            break;
+            
+        case STKAudioPlayerStateDisposed:
+            audioPlayerStateString = @"disposed";
+            break;
+            
+        case STKAudioPlayerStateError:
+            audioPlayerStateString = @"error";
+            break;
+        
+        case STKAudioPlayerStatePaused:
+            audioPlayerStateString = @"paused";
+            break;
+        
+        case STKAudioPlayerStatePlaying:
+            audioPlayerStateString = @"playing";
+            break;
+        
+        case STKAudioPlayerStateStopped:
+            audioPlayerStateString = @"stopped";
+            break;
+            
+        default:
+            audioPlayerStateString = @"";
+            break;
+    }
+
+    [self.streamStatusLabel setText:audioPlayerStateString];
+    
+    
+    /*
     if ([[AudioManager shared] audioPlayer].state == STKAudioPlayerStateBuffering) {
         [self.streamStatusLabel setText:@"Buffering"];
     } else {
@@ -81,7 +125,8 @@
         {
             [self.streamStatusLabel setText:@"Not playing"];
         }
-    }
+    }*/
+    
 	
 	//CGFloat newWidth = 320 * (([[[AudioManager shared] audioPlayer] averagePowerInDecibelsForChannel:1] + 60) / 60);
 	

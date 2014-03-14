@@ -7,6 +7,37 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		76349CA618D372B30027C3B8 /* libTestFlight.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 76349CA218D372B30027C3B8 /* libTestFlight.a */; };
+		76349CA818D373440027C3B8 /* Config.plist in Resources */ = {isa = PBXBuildFile; fileRef = 76349CA718D373440027C3B8 /* Config.plist */; };
+		76349CAA18D3747E0027C3B8 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 76349CA918D3747E0027C3B8 /* libz.dylib */; };
+		76349CF318D388C80027C3B8 /* STKHTTPDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 76E75F2F18CE4682008E3197 /* STKHTTPDataSource.m */; };
+		76349CF418D388C80027C3B8 /* STKAudioPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 76E75F2118CE4682008E3197 /* STKAudioPlayer.m */; };
+		76349CF518D388C80027C3B8 /* STKQueueEntry.m in Sources */ = {isa = PBXBuildFile; fileRef = 76E75F3318CE4682008E3197 /* STKQueueEntry.m */; };
+		76349CF618D388C80027C3B8 /* STKAutoRecoveringHTTPDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 76E75F2318CE4682008E3197 /* STKAutoRecoveringHTTPDataSource.m */; };
+		76349CF718D388C80027C3B8 /* SCPRAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 76A308D618C8FB940065D4B1 /* SCPRAppDelegate.m */; };
+		76349CF818D388C80027C3B8 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 76A308D218C8FB940065D4B1 /* main.m */; };
+		76349CF918D388C80027C3B8 /* AudioManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 76A3090318C93C880065D4B1 /* AudioManager.m */; };
+		76349CFA18D388C80027C3B8 /* STKBufferingDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 76E75F2718CE4682008E3197 /* STKBufferingDataSource.m */; };
+		76349CFB18D388C80027C3B8 /* STKDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 76E75F2B18CE4682008E3197 /* STKDataSource.m */; };
+		76349CFC18D388C80027C3B8 /* STKBufferChunk.m in Sources */ = {isa = PBXBuildFile; fileRef = 76E75F2518CE4682008E3197 /* STKBufferChunk.m */; };
+		76349CFD18D388C80027C3B8 /* STKCoreFoundationDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 76E75F2918CE4682008E3197 /* STKCoreFoundationDataSource.m */; };
+		76349CFE18D388C80027C3B8 /* NSMutableArray+STKAudioPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 76E75F1F18CE4682008E3197 /* NSMutableArray+STKAudioPlayer.m */; };
+		76349CFF18D388C80027C3B8 /* STKDataSourceWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 76E75F2D18CE4682008E3197 /* STKDataSourceWrapper.m */; };
+		76349D0018D388C80027C3B8 /* SCPRFirstViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 76A308DF18C8FB940065D4B1 /* SCPRFirstViewController.m */; };
+		76349D0118D388C80027C3B8 /* STKLocalFileDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 76E75F3118CE4682008E3197 /* STKLocalFileDataSource.m */; };
+		76349D0318D388C80027C3B8 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 76349CA918D3747E0027C3B8 /* libz.dylib */; };
+		76349D0418D388C80027C3B8 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 768EAAE018D26C9C00469734 /* AVFoundation.framework */; };
+		76349D0518D388C80027C3B8 /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 768EAADE18D26C5500469734 /* MediaPlayer.framework */; };
+		76349D0618D388C80027C3B8 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 76A308C818C8FB940065D4B1 /* CoreGraphics.framework */; };
+		76349D0718D388C80027C3B8 /* libTestFlight.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 76349CA218D372B30027C3B8 /* libTestFlight.a */; };
+		76349D0818D388C80027C3B8 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 76A308CA18C8FB940065D4B1 /* UIKit.framework */; };
+		76349D0918D388C80027C3B8 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 76A308C618C8FB940065D4B1 /* Foundation.framework */; };
+		76349D0B18D388C80027C3B8 /* Config.plist in Resources */ = {isa = PBXBuildFile; fileRef = 76349CA718D373440027C3B8 /* Config.plist */; };
+		76349D0C18D388C80027C3B8 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 76A308E418C8FB940065D4B1 /* Images.xcassets */; };
+		76349D0D18D388C80027C3B8 /* Main_iPhone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 76A308D818C8FB940065D4B1 /* Main_iPhone.storyboard */; };
+		76349D0E18D388C80027C3B8 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 76A308CF18C8FB940065D4B1 /* InfoPlist.strings */; };
+		768EAADF18D26C5500469734 /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 768EAADE18D26C5500469734 /* MediaPlayer.framework */; };
+		768EAAE118D26C9C00469734 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 768EAAE018D26C9C00469734 /* AVFoundation.framework */; };
 		76A308C718C8FB940065D4B1 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 76A308C618C8FB940065D4B1 /* Foundation.framework */; };
 		76A308C918C8FB940065D4B1 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 76A308C818C8FB940065D4B1 /* CoreGraphics.framework */; };
 		76A308CB18C8FB940065D4B1 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 76A308CA18C8FB940065D4B1 /* UIKit.framework */; };
@@ -46,6 +77,16 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		76349CA218D372B30027C3B8 /* libTestFlight.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libTestFlight.a; sourceTree = "<group>"; };
+		76349CA318D372B30027C3B8 /* TestFlight+AsyncLogging.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TestFlight+AsyncLogging.h"; sourceTree = "<group>"; };
+		76349CA418D372B30027C3B8 /* TestFlight+ManualSessions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TestFlight+ManualSessions.h"; sourceTree = "<group>"; };
+		76349CA518D372B30027C3B8 /* TestFlight.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestFlight.h; sourceTree = "<group>"; };
+		76349CA718D373440027C3B8 /* Config.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Config.plist; path = KPCC/Config.plist; sourceTree = "<group>"; };
+		76349CA918D3747E0027C3B8 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
+		76349D1218D388C80027C3B8 /* KPCC Testflight.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "KPCC Testflight.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		76349D1318D388C80027C3B8 /* Testflight-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "Testflight-Info.plist"; path = "/Users/jmeeker/Sites/KPCC-iPhone/Testflight-Info.plist"; sourceTree = "<absolute>"; };
+		768EAADE18D26C5500469734 /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
+		768EAAE018D26C9C00469734 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		76A308C318C8FB940065D4B1 /* KPCC.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = KPCC.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		76A308C618C8FB940065D4B1 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		76A308C818C8FB940065D4B1 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -93,11 +134,29 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		76349D0218D388C80027C3B8 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				76349D0318D388C80027C3B8 /* libz.dylib in Frameworks */,
+				76349D0418D388C80027C3B8 /* AVFoundation.framework in Frameworks */,
+				76349D0518D388C80027C3B8 /* MediaPlayer.framework in Frameworks */,
+				76349D0618D388C80027C3B8 /* CoreGraphics.framework in Frameworks */,
+				76349D0718D388C80027C3B8 /* libTestFlight.a in Frameworks */,
+				76349D0818D388C80027C3B8 /* UIKit.framework in Frameworks */,
+				76349D0918D388C80027C3B8 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		76A308C018C8FB940065D4B1 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				76349CAA18D3747E0027C3B8 /* libz.dylib in Frameworks */,
+				768EAAE118D26C9C00469734 /* AVFoundation.framework in Frameworks */,
+				768EAADF18D26C5500469734 /* MediaPlayer.framework in Frameworks */,
 				76A308C918C8FB940065D4B1 /* CoreGraphics.framework in Frameworks */,
+				76349CA618D372B30027C3B8 /* libTestFlight.a in Frameworks */,
 				76A308CB18C8FB940065D4B1 /* UIKit.framework in Frameworks */,
 				76A308C718C8FB940065D4B1 /* Foundation.framework in Frameworks */,
 			);
@@ -116,9 +175,21 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		76349CA118D372B30027C3B8 /* TestFlight */ = {
+			isa = PBXGroup;
+			children = (
+				76349CA218D372B30027C3B8 /* libTestFlight.a */,
+				76349CA318D372B30027C3B8 /* TestFlight+AsyncLogging.h */,
+				76349CA418D372B30027C3B8 /* TestFlight+ManualSessions.h */,
+				76349CA518D372B30027C3B8 /* TestFlight.h */,
+			);
+			path = TestFlight;
+			sourceTree = "<group>";
+		};
 		76A308BA18C8FB940065D4B1 = {
 			isa = PBXGroup;
 			children = (
+				76349CA718D373440027C3B8 /* Config.plist */,
 				76A308CC18C8FB940065D4B1 /* KPCC */,
 				76A308F118C8FB950065D4B1 /* KPCCTests */,
 				76A308C518C8FB940065D4B1 /* Frameworks */,
@@ -131,6 +202,7 @@
 			children = (
 				76A308C318C8FB940065D4B1 /* KPCC.app */,
 				76A308EA18C8FB950065D4B1 /* KPCCTests.xctest */,
+				76349D1218D388C80027C3B8 /* KPCC Testflight.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -138,6 +210,9 @@
 		76A308C518C8FB940065D4B1 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				76349CA918D3747E0027C3B8 /* libz.dylib */,
+				768EAAE018D26C9C00469734 /* AVFoundation.framework */,
+				768EAADE18D26C5500469734 /* MediaPlayer.framework */,
 				76A308C618C8FB940065D4B1 /* Foundation.framework */,
 				76A308C818C8FB940065D4B1 /* CoreGraphics.framework */,
 				76A308CA18C8FB940065D4B1 /* UIKit.framework */,
@@ -166,6 +241,7 @@
 			isa = PBXGroup;
 			children = (
 				76A308CE18C8FB940065D4B1 /* KPCC-Info.plist */,
+				76349D1318D388C80027C3B8 /* Testflight-Info.plist */,
 				76A308CF18C8FB940065D4B1 /* InfoPlist.strings */,
 				76A308D218C8FB940065D4B1 /* main.m */,
 				76A308D418C8FB940065D4B1 /* KPCC-Prefix.pch */,
@@ -203,6 +279,7 @@
 		76E75F1C18CE4682008E3197 /* ThirdParty */ = {
 			isa = PBXGroup;
 			children = (
+				76349CA118D372B30027C3B8 /* TestFlight */,
 				76E75F1D18CE4682008E3197 /* StreamingKit */,
 			);
 			path = ThirdParty;
@@ -241,6 +318,23 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		76349CF118D388C80027C3B8 /* TestFlight */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 76349D0F18D388C80027C3B8 /* Build configuration list for PBXNativeTarget "TestFlight" */;
+			buildPhases = (
+				76349CF218D388C80027C3B8 /* Sources */,
+				76349D0218D388C80027C3B8 /* Frameworks */,
+				76349D0A18D388C80027C3B8 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = TestFlight;
+			productName = KPCC;
+			productReference = 76349D1218D388C80027C3B8 /* KPCC Testflight.app */;
+			productType = "com.apple.product-type.application";
+		};
 		76A308C218C8FB940065D4B1 /* KPCC */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 76A308FB18C8FB950065D4B1 /* Build configuration list for PBXNativeTarget "KPCC" */;
@@ -313,15 +407,28 @@
 			targets = (
 				76A308C218C8FB940065D4B1 /* KPCC */,
 				76A308E918C8FB940065D4B1 /* KPCCTests */,
+				76349CF118D388C80027C3B8 /* TestFlight */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		76349D0A18D388C80027C3B8 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				76349D0B18D388C80027C3B8 /* Config.plist in Resources */,
+				76349D0C18D388C80027C3B8 /* Images.xcassets in Resources */,
+				76349D0D18D388C80027C3B8 /* Main_iPhone.storyboard in Resources */,
+				76349D0E18D388C80027C3B8 /* InfoPlist.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		76A308C118C8FB940065D4B1 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				76349CA818D373440027C3B8 /* Config.plist in Resources */,
 				76A308E518C8FB940065D4B1 /* Images.xcassets in Resources */,
 				76A308DA18C8FB940065D4B1 /* Main_iPhone.storyboard in Resources */,
 				76A308D118C8FB940065D4B1 /* InfoPlist.strings in Resources */,
@@ -339,6 +446,28 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		76349CF218D388C80027C3B8 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				76349CF318D388C80027C3B8 /* STKHTTPDataSource.m in Sources */,
+				76349CF418D388C80027C3B8 /* STKAudioPlayer.m in Sources */,
+				76349CF518D388C80027C3B8 /* STKQueueEntry.m in Sources */,
+				76349CF618D388C80027C3B8 /* STKAutoRecoveringHTTPDataSource.m in Sources */,
+				76349CF718D388C80027C3B8 /* SCPRAppDelegate.m in Sources */,
+				76349CF818D388C80027C3B8 /* main.m in Sources */,
+				76349CF918D388C80027C3B8 /* AudioManager.m in Sources */,
+				76349CFA18D388C80027C3B8 /* STKBufferingDataSource.m in Sources */,
+				76349CFB18D388C80027C3B8 /* STKDataSource.m in Sources */,
+				76349CFC18D388C80027C3B8 /* STKBufferChunk.m in Sources */,
+				76349CFD18D388C80027C3B8 /* STKCoreFoundationDataSource.m in Sources */,
+				76349CFE18D388C80027C3B8 /* NSMutableArray+STKAudioPlayer.m in Sources */,
+				76349CFF18D388C80027C3B8 /* STKDataSourceWrapper.m in Sources */,
+				76349D0018D388C80027C3B8 /* SCPRFirstViewController.m in Sources */,
+				76349D0118D388C80027C3B8 /* STKLocalFileDataSource.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		76A308BF18C8FB940065D4B1 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -407,6 +536,52 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		76349D1018D388C80027C3B8 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "KPCC/KPCC-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+					ENABLE_TESTFLIGHT,
+				);
+				INFOPLIST_FILE = "Testflight-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/KPCC/ThirdParty/TestFlight",
+				);
+				PRODUCT_NAME = "KPCC Testflight";
+				TARGETED_DEVICE_FAMILY = 1;
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		76349D1118D388C80027C3B8 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "KPCC/KPCC-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = ENABLE_TESTFLIGHT;
+				INFOPLIST_FILE = "Testflight-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/KPCC/ThirdParty/TestFlight",
+				);
+				PRODUCT_NAME = "KPCC Testflight";
+				TARGETED_DEVICE_FAMILY = 1;
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
 		76A308F918C8FB950065D4B1 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -489,6 +664,10 @@
 				GCC_PREFIX_HEADER = "KPCC/KPCC-Prefix.pch";
 				INFOPLIST_FILE = "KPCC/KPCC-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/KPCC/ThirdParty/TestFlight",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
@@ -505,6 +684,10 @@
 				GCC_PREFIX_HEADER = "KPCC/KPCC-Prefix.pch";
 				INFOPLIST_FILE = "KPCC/KPCC-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/KPCC/ThirdParty/TestFlight",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
@@ -554,6 +737,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		76349D0F18D388C80027C3B8 /* Build configuration list for PBXNativeTarget "TestFlight" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				76349D1018D388C80027C3B8 /* Debug */,
+				76349D1118D388C80027C3B8 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		76A308BE18C8FB940065D4B1 /* Build configuration list for PBXProject "KPCC" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

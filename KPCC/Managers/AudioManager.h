@@ -8,9 +8,13 @@
 
 #import <Foundation/Foundation.h>
 #import <AVFoundation/AVFoundation.h>
+#import <MediaPlayer/MediaPlayer.h>
 #import "STKAudioPlayer.h"
+#import "STKHTTPDataSource.h"
 
 #define kLiveStreamURL @"http://live.scpr.org/kpcclive?preskip=true"
+#define kLiveStreamAACURL @"http://live.scpr.org/aac"
+
 
 @interface AudioManager : NSObject<STKAudioPlayerDelegate>
 

@@ -9,6 +9,10 @@
 #import "SCPRAppDelegate.h"
 #import <AVFoundation/AVFoundation.h>
 
+#ifdef ENABLE_TESTFLIGHT
+#import "TestFlight.h"
+#endif
+
 
 @implementation SCPRAppDelegate
 
@@ -17,6 +21,13 @@
     NSError* error;
     [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback error:&error];
     [[AVAudioSession sharedInstance] setActive:YES error:&error];
+    
+    NSString *path = [[NSBundle mainBundle] pathForResource:@"Config" ofType:@"plist"];
+    NSDictionary *globalConfig = [[NSDictionary alloc] initWithContentsOfFile:path];
+    
+#ifdef ENABLE_TESTFLIGHT
+    [TestFlight takeOff: [[globalConfig objectForKey:@"TestFlight"] objectForKey:@"AppToken"]];
+#endif
     
     // Override point for customization after application launch.
     return YES;
