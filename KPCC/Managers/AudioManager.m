@@ -31,13 +31,11 @@ static AudioManager *singleton = nil;
     self.streamPlaying = NO;
     self.audioPlayer = [[STKAudioPlayer alloc]init];
     self.audioDataSource = [STKAudioPlayer dataSourceFromURL:[NSURL URLWithString:urlForStream]];
-    //self.audioDataSource = [STKAudioPlayer]
 }
 
 - (void)startStream {    
     [self.audioPlayer setDataSource:self.audioDataSource withQueueItemId:nil];
 
-    //[self.audioPlayer resume];
     self.streamPlaying = YES;
 
     NSDictionary *audioMetaData = @{ MPMediaItemPropertyArtist : @"89.3 KPCC",
@@ -63,7 +61,6 @@ static AudioManager *singleton = nil;
     
     if (state == STKAudioPlayerStateError) {
         NSLog(@"STKAudioPlayerStateError");
-        //[self playNextStream];
     }
 }
 
@@ -72,7 +69,6 @@ static AudioManager *singleton = nil;
     
     if (errorCode == STKAudioPlayerErrorDataNotFound) {
         NSLog(@"STKAudioPlayerErrorDataNotFound");
-        //[self playNextStream];
     }
 }
 

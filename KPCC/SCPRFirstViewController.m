@@ -13,7 +13,6 @@
 
 @interface SCPRFirstViewController ()
 -(void) setupTimer;
--(void) updateControls;
 @end
 
 @implementation SCPRFirstViewController
@@ -28,7 +27,6 @@
     [self becomeFirstResponder];
     
     [self setupTimer];
-    [self updateControls];
 }
 
 - (BOOL)canBecomeFirstResponder {
@@ -50,19 +48,15 @@
 
 - (IBAction)buttonTapped:(id)sender {
     if (sender == self.playButton) {
-        NSLog(@"play tapped");
         [self playStream];
     } else if (sender == self.stopButton) {
-        NSLog(@"stop tapped");
         [self stopStream];
-        
     }
 }
 
 -(void) setupTimer
 {
 	timer = [NSTimer timerWithTimeInterval:0.001 target:self selector:@selector(tick) userInfo:nil repeats:YES];
-	
 	[[NSRunLoop currentRunLoop] addTimer:timer forMode:NSRunLoopCommonModes];
 }
 
@@ -111,31 +105,7 @@
     }
 
     [self.streamStatusLabel setText:audioPlayerStateString];
-    
-    
-    /*
-    if ([[AudioManager shared] audioPlayer].state == STKAudioPlayerStateBuffering) {
-        [self.streamStatusLabel setText:@"Buffering"];
-    } else {
-        if ([[AudioManager shared] streamPlaying])
-        {
-            [self.streamStatusLabel setText:@"Playing"];
-        }
-        else
-        {
-            [self.streamStatusLabel setText:@"Not playing"];
-        }
-    }*/
-    
-	
-	//CGFloat newWidth = 320 * (([[[AudioManager shared] audioPlayer] averagePowerInDecibelsForChannel:1] + 60) / 60);
-	
-	//meter.frame = CGRectMake(0, 460, newWidth, 20);
 }
-
-
-
-
 
 - (void)playStream
 {
@@ -147,26 +117,12 @@
     [[AudioManager shared] stopStream];
 }
 
--(void) updateControls
-{
-	if ([[AudioManager shared] streamPlaying])
-	{
-		[self.streamStatusLabel setText:@"Playing"];
-	}
-	else
-	{
-		[self.streamStatusLabel setText:@"Not playing"];
-	}
-    
-    [self tick];
-}
-
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
     
-    //End recieving events
-    [[UIApplication sharedApplication] endReceivingRemoteControlEvents];
-    [self resignFirstResponder];
+    // End recieving events
+    // [[UIApplication sharedApplication] endReceivingRemoteControlEvents];
+    // [self resignFirstResponder];
 }
 
 - (void)didReceiveMemoryWarning
