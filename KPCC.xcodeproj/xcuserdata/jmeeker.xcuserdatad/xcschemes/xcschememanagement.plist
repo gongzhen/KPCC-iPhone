@@ -4,6 +4,11 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
+		<key>KPCC-TestFlight.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>1</integer>
+		</dict>
 		<key>KPCC.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
@@ -12,6 +17,21 @@
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
+		<key>76349CAB18D3775F0027C3B8</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>76349CCE18D377810027C3B8</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>76349CF118D388C80027C3B8</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
 		<key>76A308C218C8FB940065D4B1</key>
 		<dict>
 			<key>primary</key>
