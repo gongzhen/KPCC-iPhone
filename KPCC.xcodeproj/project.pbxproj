@@ -38,6 +38,11 @@
 		76349D0E18D388C80027C3B8 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 76A308CF18C8FB940065D4B1 /* InfoPlist.strings */; };
 		76349D1718D3B53D0027C3B8 /* libFlurry_4.3.2.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 76349D1618D3B53D0027C3B8 /* libFlurry_4.3.2.a */; };
 		76349D1818D3B53E0027C3B8 /* libFlurry_4.3.2.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 76349D1618D3B53D0027C3B8 /* libFlurry_4.3.2.a */; };
+		76349D1B18D8C74F0027C3B8 /* NetworkManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 76349D1A18D8C74F0027C3B8 /* NetworkManager.m */; };
+		76349D1C18D8C74F0027C3B8 /* NetworkManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 76349D1A18D8C74F0027C3B8 /* NetworkManager.m */; };
+		76349D2118D8F8A30027C3B8 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 76349D2018D8F8A30027C3B8 /* Reachability.m */; };
+		76349D2218D8F8A30027C3B8 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 76349D2018D8F8A30027C3B8 /* Reachability.m */; };
+		76349D2418D8F8D80027C3B8 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 76349D2318D8F8D80027C3B8 /* SystemConfiguration.framework */; };
 		768EAADF18D26C5500469734 /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 768EAADE18D26C5500469734 /* MediaPlayer.framework */; };
 		768EAAE118D26C9C00469734 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 768EAAE018D26C9C00469734 /* AVFoundation.framework */; };
 		76A308C718C8FB940065D4B1 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 76A308C618C8FB940065D4B1 /* Foundation.framework */; };
@@ -89,6 +94,11 @@
 		76349D1318D388C80027C3B8 /* Testflight-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "Testflight-Info.plist"; path = "/Users/jmeeker/Sites/KPCC-iPhone/Testflight-Info.plist"; sourceTree = "<absolute>"; };
 		76349D1518D3B53D0027C3B8 /* Flurry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Flurry.h; sourceTree = "<group>"; };
 		76349D1618D3B53D0027C3B8 /* libFlurry_4.3.2.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libFlurry_4.3.2.a; sourceTree = "<group>"; };
+		76349D1918D8C74F0027C3B8 /* NetworkManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NetworkManager.h; path = Managers/NetworkManager.h; sourceTree = "<group>"; };
+		76349D1A18D8C74F0027C3B8 /* NetworkManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NetworkManager.m; path = Managers/NetworkManager.m; sourceTree = "<group>"; };
+		76349D1F18D8F8A30027C3B8 /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
+		76349D2018D8F8A30027C3B8 /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reachability.m; sourceTree = "<group>"; };
+		76349D2318D8F8D80027C3B8 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		768EAADE18D26C5500469734 /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
 		768EAAE018D26C9C00469734 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		76A308C318C8FB940065D4B1 /* KPCC.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = KPCC.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -142,6 +152,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				76349D2418D8F8D80027C3B8 /* SystemConfiguration.framework in Frameworks */,
 				76349D0318D388C80027C3B8 /* libz.dylib in Frameworks */,
 				76349D0418D388C80027C3B8 /* AVFoundation.framework in Frameworks */,
 				76349D0518D388C80027C3B8 /* MediaPlayer.framework in Frameworks */,
@@ -201,6 +212,15 @@
 			path = Flurry;
 			sourceTree = "<group>";
 		};
+		76349D1E18D8F8A30027C3B8 /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				76349D1F18D8F8A30027C3B8 /* Reachability.h */,
+				76349D2018D8F8A30027C3B8 /* Reachability.m */,
+			);
+			path = Helpers;
+			sourceTree = "<group>";
+		};
 		76A308BA18C8FB940065D4B1 = {
 			isa = PBXGroup;
 			children = (
@@ -225,6 +245,7 @@
 		76A308C518C8FB940065D4B1 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				76349D2318D8F8D80027C3B8 /* SystemConfiguration.framework */,
 				76349CA918D3747E0027C3B8 /* libz.dylib */,
 				768EAAE018D26C9C00469734 /* AVFoundation.framework */,
 				768EAADE18D26C5500469734 /* MediaPlayer.framework */,
@@ -239,6 +260,7 @@
 		76A308CC18C8FB940065D4B1 /* KPCC */ = {
 			isa = PBXGroup;
 			children = (
+				76349D1E18D8F8A30027C3B8 /* Helpers */,
 				76E75F1C18CE4682008E3197 /* ThirdParty */,
 				76A3090118C93C3A0065D4B1 /* Managers */,
 				76A308D518C8FB940065D4B1 /* SCPRAppDelegate.h */,
@@ -287,6 +309,8 @@
 			children = (
 				76A3090218C93C880065D4B1 /* AudioManager.h */,
 				76A3090318C93C880065D4B1 /* AudioManager.m */,
+				76349D1918D8C74F0027C3B8 /* NetworkManager.h */,
+				76349D1A18D8C74F0027C3B8 /* NetworkManager.m */,
 			);
 			name = Managers;
 			sourceTree = "<group>";
@@ -470,6 +494,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				76349D1C18D8C74F0027C3B8 /* NetworkManager.m in Sources */,
 				76349CF318D388C80027C3B8 /* STKHTTPDataSource.m in Sources */,
 				76349CF418D388C80027C3B8 /* STKAudioPlayer.m in Sources */,
 				76349CF518D388C80027C3B8 /* STKQueueEntry.m in Sources */,
@@ -485,6 +510,7 @@
 				76349CFF18D388C80027C3B8 /* STKDataSourceWrapper.m in Sources */,
 				76349D0018D388C80027C3B8 /* SCPRFirstViewController.m in Sources */,
 				76349D0118D388C80027C3B8 /* STKLocalFileDataSource.m in Sources */,
+				76349D2218D8F8A30027C3B8 /* Reachability.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -492,6 +518,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				76349D1B18D8C74F0027C3B8 /* NetworkManager.m in Sources */,
 				76E75F3D18CE4682008E3197 /* STKHTTPDataSource.m in Sources */,
 				76E75F3618CE4682008E3197 /* STKAudioPlayer.m in Sources */,
 				76E75F3F18CE4682008E3197 /* STKQueueEntry.m in Sources */,
@@ -507,6 +534,7 @@
 				76E75F3C18CE4682008E3197 /* STKDataSourceWrapper.m in Sources */,
 				76A308E018C8FB940065D4B1 /* SCPRFirstViewController.m in Sources */,
 				76E75F3E18CE4682008E3197 /* STKLocalFileDataSource.m in Sources */,
+				76349D2118D8F8A30027C3B8 /* Reachability.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

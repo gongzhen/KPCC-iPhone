@@ -12,8 +12,10 @@
 #import "STKAudioPlayer.h"
 #import "STKHTTPDataSource.h"
 
-#define kLiveStreamURL @"http://live.scpr.org/kpcclive?preskip=true"
+#define kLiveStreamURL @"http://live.scpr.org/kpcclive"
+#define kLiveStreamNoPreRollURL @"http://live.scpr.org/kpcclive?preskip=true"
 #define kLiveStreamAACURL @"http://live.scpr.org/aac"
+#define kLiveStreamPreRollThreshold 600
 
 
 @interface AudioManager : NSObject<STKAudioPlayerDelegate>
@@ -24,6 +26,7 @@
 @property STKDataSource *audioDataSource;
 
 @property BOOL streamPlaying;
+@property long lastPreRoll;
 
 - (void)startStream;
 - (void)stopStream;

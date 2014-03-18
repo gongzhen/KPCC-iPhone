@@ -16,25 +16,28 @@ static AudioManager *singleton = nil;
     if ( !singleton ) {
         @synchronized(self) {
             singleton = [[AudioManager alloc] init];
-            [singleton buildStreamer:kLiveStreamURL];
+            [singleton buildStreamer];
         }
     }
     
     return singleton;
 }
 
-- (void)buildStreamer:(NSString*)urlForStream {
-    
-    if ( !urlForStream ) {
-        urlForStream = kLiveStreamURL;
-    }
+- (void)buildStreamer {
     self.streamPlaying = NO;
     self.audioPlayer = [[STKAudioPlayer alloc]init];
-    self.audioDataSource = [STKAudioPlayer dataSourceFromURL:[NSURL URLWithString:urlForStream]];
 }
 
-- (void)startStream {    
-    [self.audioPlayer setDataSource:self.audioDataSource withQueueItemId:nil];
+- (void)startStream {
+    long currentTimeSeconds = [[NSDate date] timeIntervalSince1970] / 1000;
+    if (self.lastPreRoll < (currentTimeSeconds - kLiveStreamPreRollThreshold)) {
+        self.lastPreRoll = currentTimeSeconds;
+        self.audioDataSource = [STKAudioPlayer dataSourceFromURL:[NSURL URLWithString:kLiveStreamURL]];
+    } else {
+        self.audioDataSource = [STKAudioPlayer dataSourceFromURL:[NSURL URLWithString:kLiveStreamNoPreRollURL]];
+    }
+    
+    [self.audioPlayer playDataSource:self.audioDataSource];
 
     self.streamPlaying = YES;
 
@@ -45,7 +48,7 @@ static AudioManager *singleton = nil;
 }
 
 - (void)stopStream {
-    [self.audioPlayer stop];
+    [self.audioPlayer pause];
     self.streamPlaying = NO;
     
     NSDictionary *audioMetaData = @{ MPMediaItemPropertyArtist : @"89.3 KPCC",

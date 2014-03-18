@@ -121,8 +121,8 @@
     [super viewWillDisappear:animated];
     
     // End recieving events
-    // [[UIApplication sharedApplication] endReceivingRemoteControlEvents];
-    // [self resignFirstResponder];
+    [[UIApplication sharedApplication] endReceivingRemoteControlEvents];
+    [self resignFirstResponder];
 }
 
 - (void)didReceiveMemoryWarning

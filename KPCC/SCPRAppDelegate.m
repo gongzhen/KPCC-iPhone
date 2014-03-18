@@ -8,6 +8,7 @@
 
 #import "SCPRAppDelegate.h"
 #import <AVFoundation/AVFoundation.h>
+#import "Flurry.h"
 
 #ifdef ENABLE_TESTFLIGHT
 #import "TestFlight.h"
@@ -28,6 +29,11 @@
 #ifdef ENABLE_TESTFLIGHT
     [TestFlight takeOff: [[globalConfig objectForKey:@"TestFlight"] objectForKey:@"AppToken"]];
 #endif
+    
+    [Flurry setCrashReportingEnabled:YES];
+    [Flurry setDebugLogEnabled:YES];
+    [Flurry startSession: [[globalConfig objectForKey:@"Flurry"] objectForKey:@"DebugKey"] ];
+    [Flurry setBackgroundSessionEnabled:NO];
     
     // Override point for customization after application launch.
     return YES;
