@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "Reachability.h"
 
+
 #define kServerBase @"http://www.scpr.org/api/v2"
 #define kFailoverThreshold 4
 
@@ -31,8 +32,9 @@ typedef enum {
     Reachability *_networkHealthReachability;
 }
 
-+ (NetworkManager*)shared;
+@property NSInteger failoverCount;
 
++ (NetworkManager*)shared;
 
 @property (nonatomic,strong) Reachability *networkHealthReachability;
 

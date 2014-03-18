@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>B641EB3F-DC48-4548-8AA4-3F1A2246EA76</string>
+	<key>IDESourceControlProjectName</key>
+	<string>KPCC</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>998732EE-86B5-4BD9-80E2-17C8003E3257</key>
+		<string>ssh://github.com/SCPR/KPCC-iPhone.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>KPCC.xcworkspace</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>998732EE-86B5-4BD9-80E2-17C8003E3257</key>
+		<string>..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>ssh://github.com/SCPR/KPCC-iPhone.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>110</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>998732EE-86B5-4BD9-80E2-17C8003E3257</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>998732EE-86B5-4BD9-80E2-17C8003E3257</string>
+			<key>IDESourceControlWCCName</key>
+			<string>KPCC-iPhone</string>
+		</dict>
+	</array>
+</dict>
+</plist>

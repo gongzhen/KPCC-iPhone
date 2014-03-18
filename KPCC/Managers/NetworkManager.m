@@ -7,8 +7,24 @@
 //
 
 #import "NetworkManager.h"
+#import "SBJson.h"
+#import "SBJsonParser.h"
+
+static NetworkManager *singleton = nil;
 
 @implementation NetworkManager
+
++ (NetworkManager*)shared {
+    if ( !singleton ) {
+        @synchronized(self) {
+            singleton = [[NetworkManager alloc] init];
+            singleton.networkHealthReachability = [Reachability reachabilityForInternetConnection];
+            [singleton.networkHealthReachability startNotifier];
+        }
+    }
+    
+    return singleton;
+}
 
 - (NetworkHealth)checkNetworkHealth:(NSString *)server {
     if ([self.networkHealthReachability isReachable]) {
@@ -31,7 +47,7 @@
     [self requestFromSCPRWithEndpoint:endpoint andDisplay:display flags:nil];
 }
 
-- (void)requestFromKPCCWithEndpoint:(NSString *)endpoint andDisplay:(id<ContentProcessor>)display flags:(NSDictionary *)flags {
+- (void)requestFromSCPRWithEndpoint:(NSString *)endpoint andDisplay:(id<ContentProcessor>)display flags:(NSDictionary *)flags {
     NSURL *url = [NSURL URLWithString:endpoint];
     NSURLRequest *request = [NSURLRequest requestWithURL:url];
     
@@ -47,10 +63,11 @@
                                
                                NSString *dataString = [[NSString alloc] initWithData:d
                                                                             encoding:NSUTF8StringEncoding];
-                               if ( dataString ) {
-                                   id chunk = [dataString JSONValue];
-                                   if ( chunk ) {
-                                       
+                               if (dataString) {
+                                   SBJsonParser *parser = [[SBJsonParser alloc] init];
+                                   id chunk = [parser objectWithString:dataString];
+                                   
+                                   if (chunk) {
                                        NSDictionary *elements = @{ @"chunk" : chunk,
                                                                    @"port" : display };
                                        
@@ -61,35 +78,26 @@
                                        }
                                        
                                        self.failoverCount = 0;
-                                       dispatch_async(dispatch_get_main_queue(), ^{
-                                           
-                                           if ( [flags objectForKey:@"events"] ) {
-                                               [self processEventsData:elements];
-                                           } else {
-                                               [self processContentData:elements];
-                                           }
-                                       });
-                                       
-                                       
                                    } else {
                                        
                                        if ( self.failoverCount < kFailoverThreshold ) {
                                            self.failoverCount++;
-                                           [self requestFromKPCCWithEndpoint:endpoint
+                                           [self requestFromSCPRWithEndpoint:endpoint
                                                                   andDisplay:display
                                                                        flags:flags];
                                            return;
                                        } else {
                                            self.failoverCount = 0;
                                        }
-                                       
-                                       [[AnalyticsManager shared] failureFetchingContent:endpoint];
                                    }
-                               } else {
-                                   [[AnalyticsManager shared] failureFetchingContent:endpoint];
                                }
-                               
                            }];
+}
+
+- (void)fetchProgramInformationFor:(NSDate *)thisTime display:(id<ContentProcessor>)display {
+    NSString *urlString = [NSString stringWithFormat:@"%@/schedule/at?time=%d",kServerBase,(NSInteger)[thisTime timeIntervalSince1970]];
+    [self requestFromSCPRWithEndpoint:urlString
+                           andDisplay:display];
 }
 
 
