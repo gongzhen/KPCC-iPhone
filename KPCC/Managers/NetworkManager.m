@@ -7,8 +7,6 @@
 //
 
 #import "NetworkManager.h"
-#import "SBJson.h"
-#import "SBJsonParser.h"
 #import "AFNetworking.h"
 
 static NetworkManager *singleton = nil;
