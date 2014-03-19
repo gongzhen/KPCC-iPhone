@@ -40,21 +40,11 @@ static AudioManager *singleton = nil;
     [self.audioPlayer playDataSource:self.audioDataSource];
 
     self.streamPlaying = YES;
-
-    NSDictionary *audioMetaData = @{ MPMediaItemPropertyArtist : @"89.3 KPCC",
-                                     MPMediaItemPropertyTitle : @"Live" };
-    
-    [[MPNowPlayingInfoCenter defaultCenter] setNowPlayingInfo:audioMetaData];
 }
 
 - (void)stopStream {
     [self.audioPlayer pause];
     self.streamPlaying = NO;
-    
-    NSDictionary *audioMetaData = @{ MPMediaItemPropertyArtist : @"89.3 KPCC",
-                                     MPMediaItemPropertyTitle : @"---" };
-    
-    [[MPNowPlayingInfoCenter defaultCenter] setNowPlayingInfo:audioMetaData];
 }
 
 

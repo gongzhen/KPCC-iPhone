@@ -19,6 +19,7 @@
 @property (nonatomic,strong) IBOutlet UIButton *playButton;
 @property (nonatomic,strong) IBOutlet UIButton *stopButton;
 @property (nonatomic,strong) IBOutlet UILabel *streamStatusLabel;
+@property (nonatomic,strong) IBOutlet UILabel *programTitleLabel;
 @property (nonatomic,strong) IBOutlet UIView *meter;
 
 - (IBAction)buttonTapped:(id)sender;

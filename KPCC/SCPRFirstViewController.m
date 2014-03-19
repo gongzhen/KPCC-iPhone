@@ -25,6 +25,8 @@
     [[UIApplication sharedApplication] beginReceivingRemoteControlEvents];
     [self becomeFirstResponder];
     
+    [[NetworkManager shared] fetchProgramInformationFor:[NSDate date] display:self];
+    
     [self setupTimer];
 }
 
@@ -109,7 +111,6 @@
 - (void)playStream
 {
     [[AudioManager shared] startStream];
-    [[NetworkManager shared] fetchProgramInformationFor:[NSDate date] display:self];
 }
 
 - (void)stopStream
@@ -123,9 +124,9 @@
     if ( [content count] == 0 ) {
         return;
     }
-    
-    NSLog(@"handling processed content -- %@", content);
-    
+
+    [self.programTitleLabel setText:[[content objectAtIndex:0] objectForKey:@"title"]];
+
     NSDictionary *audioMetaData = @{ MPMediaItemPropertyArtist : @"89.3 KPCC",
                                      MPMediaItemPropertyTitle : [[content objectAtIndex:0] objectForKey:@"title"] };
     
