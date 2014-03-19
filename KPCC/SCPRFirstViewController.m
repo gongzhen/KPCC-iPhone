@@ -124,16 +124,12 @@
         return;
     }
     
-    NSLog(@"handling processed content");
+    NSLog(@"handling processed content -- %@", content);
     
-    /*NSDictionary *program = [content objectAtIndex:0];
-    self.queueViewController.currentPlayingDetails.alpha = 1.0;
+    NSDictionary *audioMetaData = @{ MPMediaItemPropertyArtist : @"89.3 KPCC",
+                                     MPMediaItemPropertyTitle : [[content objectAtIndex:0] objectForKey:@"title"] };
     
-    [self.queueViewController.currentPlayingDetails titleizeText:[program objectForKey:@"title"]
-                                                            bold:YES];
-    
-    [[ContentManager shared] loadAudioMetaDataForAudio:[program objectForKey:@"title"]];
-    [[MPNowPlayingInfoCenter defaultCenter] setNowPlayingInfo:[[ContentManager shared] audioMetaData]];*/
+    [[MPNowPlayingInfoCenter defaultCenter] setNowPlayingInfo:audioMetaData];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
