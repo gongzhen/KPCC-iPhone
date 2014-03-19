@@ -15,6 +15,8 @@
 
 
 @protocol ContentProcessor <NSObject>
+@optional
+- (void)handleProcessedContent:(NSArray*)content flags:(NSDictionary*)flags;
 @end
 
 
@@ -39,8 +41,9 @@ typedef enum {
 @property (nonatomic,strong) Reachability *networkHealthReachability;
 
 - (NetworkHealth)checkNetworkHealth:(NSString*)server;
-- (void)fetchProgramInformationFor:(NSDate*)thisTime display:(id<ContentProcessor>)display;
 
+- (void)fetchProgramInformationFor:(NSDate*)thisTime display:(id<ContentProcessor>)display;
+- (void)processResponseData:(NSDictionary*)content;
 - (void)requestFromSCPRWithEndpoint:(NSString*)endpoint andDisplay:(id<ContentProcessor>)display;
 - (void)requestFromSCPRWithEndpoint:(NSString *)endpoint andDisplay:(id<ContentProcessor>)display flags:(NSDictionary*)flags;
 

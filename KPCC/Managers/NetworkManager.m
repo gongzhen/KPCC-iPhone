@@ -9,6 +9,7 @@
 #import "NetworkManager.h"
 #import "SBJson.h"
 #import "SBJsonParser.h"
+#import "AFNetworking.h"
 
 static NetworkManager *singleton = nil;
 
@@ -48,50 +49,43 @@ static NetworkManager *singleton = nil;
 }
 
 - (void)requestFromSCPRWithEndpoint:(NSString *)endpoint andDisplay:(id<ContentProcessor>)display flags:(NSDictionary *)flags {
-    NSURL *url = [NSURL URLWithString:endpoint];
-    NSURLRequest *request = [NSURLRequest requestWithURL:url];
-    
-    NSOperationQueue *queue = [[NSOperationQueue alloc] init];;
-    
-    [NSURLConnection sendAsynchronousRequest:request
-                                       queue:queue
-                           completionHandler:^(NSURLResponse *r, NSData *d, NSError *e) {
-                               
-                               if (e) {
-                                   return;
-                               }
-                               
-                               NSString *dataString = [[NSString alloc] initWithData:d
-                                                                            encoding:NSUTF8StringEncoding];
-                               if (dataString) {
-                                   SBJsonParser *parser = [[SBJsonParser alloc] init];
-                                   id chunk = [parser objectWithString:dataString];
-                                   
-                                   if (chunk) {
-                                       NSDictionary *elements = @{ @"chunk" : chunk,
-                                                                   @"port" : display };
-                                       
-                                       if ( flags && [flags count] > 0 ) {
-                                           elements = @{ @"chunk" : chunk,
-                                                         @"port" : display,
-                                                         @"flags" : flags };
-                                       }
-                                       
-                                       self.failoverCount = 0;
-                                   } else {
-                                       
-                                       if ( self.failoverCount < kFailoverThreshold ) {
-                                           self.failoverCount++;
-                                           [self requestFromSCPRWithEndpoint:endpoint
-                                                                  andDisplay:display
-                                                                       flags:flags];
-                                           return;
-                                       } else {
-                                           self.failoverCount = 0;
-                                       }
-                                   }
-                               }
-                           }];
+
+    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+    [manager GET:endpoint parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        
+        if (responseObject) {
+            NSDictionary *elements = @{ @"chunk" : responseObject,
+                                        @"port" : display };
+            
+            NSLog(@"RETURNED - %@", elements);
+            
+            if ( flags && [flags count] > 0 ) {
+                elements = @{ @"chunk" : responseObject,
+                              @"port" : display,
+                              @"flags" : flags };
+            }
+            
+            self.failoverCount = 0;
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self processResponseData:elements];
+            });
+
+        } else {
+            
+            if ( self.failoverCount < kFailoverThreshold ) {
+                self.failoverCount++;
+                [self requestFromSCPRWithEndpoint:endpoint
+                                       andDisplay:display
+                                            flags:flags];
+                return;
+            } else {
+                self.failoverCount = 0;
+            }
+        }
+        
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        NSLog(@"Error: %@", error);
+    }];
 }
 
 - (void)fetchProgramInformationFor:(NSDate *)thisTime display:(id<ContentProcessor>)display {
