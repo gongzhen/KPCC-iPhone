@@ -24,14 +24,16 @@
     //Once the view has loaded then we can register to begin recieving controls and we can become the first responder
     [[UIApplication sharedApplication] beginReceivingRemoteControlEvents];
     [self becomeFirstResponder];
-    
-    [[NetworkManager shared] fetchProgramInformationFor:[NSDate date] display:self];
-    
+
     [self setupTimer];
 }
 
 - (BOOL)canBecomeFirstResponder {
     return YES;
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    [[NetworkManager shared] fetchProgramInformationFor:[NSDate date] display:self];
 }
 
 - (void)remoteControlReceivedWithEvent:(UIEvent *)event {
@@ -48,16 +50,24 @@
 }
 
 - (IBAction)buttonTapped:(id)sender {
-    if (sender == self.playButton) {
+    if (sender == self.actionButton) {
+        [self playOrPauseTapped];
+    }
+}
+
+-(void) playOrPauseTapped {
+    STKAudioPlayerState stkAudioPlayerState = [[AudioManager shared] audioPlayer].state;
+
+    if (stkAudioPlayerState != STKAudioPlayerStatePlaying) {
         [self playStream];
-    } else if (sender == self.stopButton) {
+    } else {
         [self stopStream];
     }
 }
 
 -(void) setupTimer
 {
-	timer = [NSTimer timerWithTimeInterval:0.001 target:self selector:@selector(tick) userInfo:nil repeats:YES];
+	timer = [NSTimer timerWithTimeInterval:0.01 target:self selector:@selector(tick) userInfo:nil repeats:YES];
 	[[NSRunLoop currentRunLoop] addTimer:timer forMode:NSRunLoopCommonModes];
 }
 
@@ -66,6 +76,18 @@
 {
     STKAudioPlayerState stkAudioPlayerState = [[AudioManager shared] audioPlayer].state;
     NSString *audioPlayerStateString;
+    
+    if (stkAudioPlayerState != STKAudioPlayerStatePlaying) {
+
+        if ([self.actionButton imageForState:UIControlStateNormal] == [UIImage imageNamed:@"pauseButton"]) {
+            
+            NSLog(@"not playing, setting pause");
+
+            [self.actionButton setImage:[UIImage imageNamed:@"playButton"] forState:UIControlStateHighlighted];
+            [self.actionButton setImage:[UIImage imageNamed:@"playButton"] forState:UIControlStateNormal];
+        }
+    }
+    
     
     switch (stkAudioPlayerState) {
         case STKAudioPlayerStateReady:
@@ -94,6 +116,11 @@
         
         case STKAudioPlayerStatePlaying:
             audioPlayerStateString = @"playing";
+            if ([self.actionButton imageForState:UIControlStateNormal] == [UIImage imageNamed:@"playButton"]) {
+                [self.actionButton setImage:[UIImage imageNamed:@"pauseButton"] forState:UIControlStateHighlighted];
+                [self.actionButton setImage:[UIImage imageNamed:@"pauseButton"] forState:UIControlStateNormal];
+                NSLog(@"play button already selected");
+            }
             break;
         
         case STKAudioPlayerStateStopped:
