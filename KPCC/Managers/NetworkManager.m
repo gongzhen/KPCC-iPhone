@@ -94,5 +94,26 @@ static NetworkManager *singleton = nil;
                            andDisplay:display];
 }
 
+- (void)processResponseData:(NSDictionary *)content {
+    
+    NSDictionary *flags = @{};
+    if ([content objectForKey:@"flags"]) {
+        flags = [content objectForKey:@"flags"];
+    }
+    
+    id<ContentProcessor> display = [content objectForKey:@"port"];
+    id data = [content objectForKey:@"chunk"];
+    
+    if (data == [NSNull null]) {
+        [display handleProcessedContent:@[] flags:flags];
+        return;
+    }
+    
+    if ([data isKindOfClass:[NSDictionary class]]) {
+        [display handleProcessedContent:@[data] flags:flags];
+    } else {
+        [display handleProcessedContent:data flags:flags];
+    }
+}
 
 @end

@@ -7,9 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "STKAudioPlayer.h"
+#import "AudioManager.h"
+#import "NetworkManager.h"
 
-@interface SCPRFirstViewController : UIViewController
+@interface SCPRFirstViewController : UIViewController <ContentProcessor>
 {
 @private
     NSTimer *timer;

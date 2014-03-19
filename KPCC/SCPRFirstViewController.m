@@ -7,7 +7,6 @@
 //
 
 #import "SCPRFirstViewController.h"
-#import "AudioManager.h"
 #import <AVFoundation/AVFoundation.h>
 
 
@@ -110,11 +109,31 @@
 - (void)playStream
 {
     [[AudioManager shared] startStream];
+    [[NetworkManager shared] fetchProgramInformationFor:[NSDate date] display:self];
 }
 
 - (void)stopStream
 {
     [[AudioManager shared] stopStream];
+}
+
+#pragma mark - ContentProcessor
+- (void)handleProcessedContent:(NSArray *)content flags:(NSDictionary *)flags {
+    
+    if ( [content count] == 0 ) {
+        return;
+    }
+    
+    NSLog(@"handling processed content");
+    
+    /*NSDictionary *program = [content objectAtIndex:0];
+    self.queueViewController.currentPlayingDetails.alpha = 1.0;
+    
+    [self.queueViewController.currentPlayingDetails titleizeText:[program objectForKey:@"title"]
+                                                            bold:YES];
+    
+    [[ContentManager shared] loadAudioMetaDataForAudio:[program objectForKey:@"title"]];
+    [[MPNowPlayingInfoCenter defaultCenter] setNowPlayingInfo:[[ContentManager shared] audioMetaData]];*/
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
