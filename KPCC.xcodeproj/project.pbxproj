@@ -42,7 +42,7 @@
 		76349D1C18D8C74F0027C3B8 /* NetworkManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 76349D1A18D8C74F0027C3B8 /* NetworkManager.m */; };
 		76349D2118D8F8A30027C3B8 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 76349D2018D8F8A30027C3B8 /* Reachability.m */; };
 		76349D2218D8F8A30027C3B8 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 76349D2018D8F8A30027C3B8 /* Reachability.m */; };
-		76349D2418D8F8D80027C3B8 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 76349D2318D8F8D80027C3B8 /* SystemConfiguration.framework */; };
+		768BBF1A18DA614300ACAD83 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 768BBF1918DA614300ACAD83 /* libPods.a */; };
 		768EAADF18D26C5500469734 /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 768EAADE18D26C5500469734 /* MediaPlayer.framework */; };
 		768EAAE118D26C9C00469734 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 768EAAE018D26C9C00469734 /* AVFoundation.framework */; };
 		76A308C718C8FB940065D4B1 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 76A308C618C8FB940065D4B1 /* Foundation.framework */; };
@@ -101,6 +101,7 @@
 		76349D1F18D8F8A30027C3B8 /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
 		76349D2018D8F8A30027C3B8 /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reachability.m; sourceTree = "<group>"; };
 		76349D2318D8F8D80027C3B8 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		768BBF1918DA614300ACAD83 /* libPods.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libPods.a; path = "Pods/build/Debug-iphoneos/libPods.a"; sourceTree = "<group>"; };
 		768EAADE18D26C5500469734 /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
 		768EAAE018D26C9C00469734 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		76A308C318C8FB940065D4B1 /* KPCC.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = KPCC.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -155,7 +156,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				76349D2418D8F8D80027C3B8 /* SystemConfiguration.framework in Frameworks */,
 				76349D0318D388C80027C3B8 /* libz.dylib in Frameworks */,
 				76349D0418D388C80027C3B8 /* AVFoundation.framework in Frameworks */,
 				76349D0518D388C80027C3B8 /* MediaPlayer.framework in Frameworks */,
@@ -164,6 +164,7 @@
 				76349D0818D388C80027C3B8 /* UIKit.framework in Frameworks */,
 				76349D0918D388C80027C3B8 /* Foundation.framework in Frameworks */,
 				76349D1818D3B53E0027C3B8 /* libFlurry_4.3.2.a in Frameworks */,
+				768BBF1A18DA614300ACAD83 /* libPods.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -250,6 +251,7 @@
 		76A308C518C8FB940065D4B1 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				768BBF1918DA614300ACAD83 /* libPods.a */,
 				76349D2318D8F8D80027C3B8 /* SystemConfiguration.framework */,
 				76349CA918D3747E0027C3B8 /* libz.dylib */,
 				768EAAE018D26C9C00469734 /* AVFoundation.framework */,
@@ -627,6 +629,7 @@
 /* Begin XCBuildConfiguration section */
 		76349D1018D388C80027C3B8 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 3D27774292D34CDA90CFAEC3 /* Pods.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
@@ -644,6 +647,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/KPCC/ThirdParty/TestFlight",
 					"$(PROJECT_DIR)/KPCC/ThirdParty/Flurry",
+					"$(PROJECT_DIR)/Pods/build/Debug-iphoneos",
 				);
 				PRODUCT_NAME = "KPCC Testflight";
 				TARGETED_DEVICE_FAMILY = 1;
@@ -653,6 +657,7 @@
 		};
 		76349D1118D388C80027C3B8 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 3D27774292D34CDA90CFAEC3 /* Pods.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
@@ -666,6 +671,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/KPCC/ThirdParty/TestFlight",
 					"$(PROJECT_DIR)/KPCC/ThirdParty/Flurry",
+					"$(PROJECT_DIR)/Pods/build/Debug-iphoneos",
 				);
 				PRODUCT_NAME = "KPCC Testflight";
 				TARGETED_DEVICE_FAMILY = 1;
