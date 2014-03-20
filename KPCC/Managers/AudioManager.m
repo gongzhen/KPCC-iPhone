@@ -35,9 +35,9 @@ static AudioManager *singleton = nil;
     long currentTimeSeconds = [[NSDate date] timeIntervalSince1970] / 1000;
     if (self.lastPreRoll < (currentTimeSeconds - kLiveStreamPreRollThreshold)) {
         self.lastPreRoll = currentTimeSeconds;
-        self.audioDataSource = [STKAudioPlayer dataSourceFromURL:[NSURL URLWithString:kLiveStreamURL]];
+        self.audioDataSource = [STKAudioPlayer dataSourceFromURL:[NSURL URLWithString:kLiveStreamAACURL]];
     } else {
-        self.audioDataSource = [STKAudioPlayer dataSourceFromURL:[NSURL URLWithString:kLiveStreamNoPreRollURL]];
+        self.audioDataSource = [STKAudioPlayer dataSourceFromURL:[NSURL URLWithString:kLiveStreamAACNoPreRollURL]];
     }
     
     [self.audioPlayer playDataSource:self.audioDataSource];

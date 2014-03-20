@@ -15,6 +15,7 @@
 #define kLiveStreamURL @"http://live.scpr.org/kpcclive"
 #define kLiveStreamNoPreRollURL @"http://live.scpr.org/kpcclive?preskip=true"
 #define kLiveStreamAACURL @"http://live.scpr.org/aac"
+#define kLiveStreamAACNoPreRollURL @"http://live.scpr.org/aac?preskip=true"
 #define kLiveStreamPreRollThreshold 600
 
 
@@ -22,7 +23,6 @@
 
 + (AudioManager*)shared;
 
-//@property STKAudioPlayer *audioPlayer;
 @property STKAudioPlayer* audioPlayer;
 @property STKDataSource *audioDataSource;
 
