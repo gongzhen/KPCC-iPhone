@@ -79,12 +79,18 @@
                                     <action selector="buttonTapped:" destination="CZ4-MO-1fc" eventType="touchUpInside" id="3SU-lX-00E"/>
                                 </connections>
                             </button>
+                            <view alpha="0.5" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="mZa-Vb-a2i">
+                                <rect key="frame" x="260" y="391" width="40" height="0.0"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" red="0.035294117649999998" green="0.72549019609999998" blue="0.95294117649999999" alpha="1" colorSpace="calibratedRGB"/>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
                     <navigationItem key="navigationItem" title="KPCC" id="2dt-Cw-yzR"/>
                     <connections>
                         <outlet property="actionButton" destination="Ekb-Rq-a2S" id="Cyx-VL-5Yv"/>
+                        <outlet property="meter" destination="mZa-Vb-a2i" id="Ofg-nB-iA7"/>
                         <outlet property="programTitleLabel" destination="cz7-id-iht" id="3H9-JK-83x"/>
                         <outlet property="streamStatusLabel" destination="9YI-7X-xa4" id="r4u-wu-t52"/>
                     </connections>
