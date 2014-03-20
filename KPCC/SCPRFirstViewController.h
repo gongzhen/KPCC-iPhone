@@ -23,5 +23,7 @@
 
 - (IBAction)buttonTapped:(id)sender;
 
+@property BOOL isUISetForPlaying;
+@property BOOL isUISetForPaused;
 
 @end

@@ -33,7 +33,17 @@
 }
 
 - (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    
     [[NetworkManager shared] fetchProgramInformationFor:[NSDate date] display:self];
+    
+    if ([[AudioManager shared] audioPlayer].state == STKAudioPlayerStatePlaying) {
+        [self.actionButton setImage:[UIImage imageNamed:@"pauseButton"] forState:UIControlStateHighlighted];
+        [self.actionButton setImage:[UIImage imageNamed:@"pauseButton"] forState:UIControlStateNormal];
+    } else {
+        [self.actionButton setImage:[UIImage imageNamed:@"playButton"] forState:UIControlStateHighlighted];
+        [self.actionButton setImage:[UIImage imageNamed:@"playButton"] forState:UIControlStateNormal];
+    }
 }
 
 - (void)remoteControlReceivedWithEvent:(UIEvent *)event {
@@ -56,9 +66,7 @@
 }
 
 -(void) playOrPauseTapped {
-    STKAudioPlayerState stkAudioPlayerState = [[AudioManager shared] audioPlayer].state;
-
-    if (stkAudioPlayerState != STKAudioPlayerStatePlaying) {
+    if ([[AudioManager shared] audioPlayer].state != STKAudioPlayerStatePlaying) {
         [self playStream];
     } else {
         [self stopStream];
@@ -67,7 +75,7 @@
 
 -(void) setupTimer
 {
-	timer = [NSTimer timerWithTimeInterval:0.01 target:self selector:@selector(tick) userInfo:nil repeats:YES];
+	timer = [NSTimer timerWithTimeInterval:0.025 target:self selector:@selector(tick) userInfo:nil repeats:YES];
 	[[NSRunLoop currentRunLoop] addTimer:timer forMode:NSRunLoopCommonModes];
 }
 
@@ -79,13 +87,32 @@
     
     if (stkAudioPlayerState != STKAudioPlayerStatePlaying) {
 
-        if ([self.actionButton imageForState:UIControlStateNormal] == [UIImage imageNamed:@"pauseButton"]) {
-            
-            NSLog(@"not playing, setting pause");
+        if (!self.isUISetForPlaying) {
 
             [self.actionButton setImage:[UIImage imageNamed:@"playButton"] forState:UIControlStateHighlighted];
             [self.actionButton setImage:[UIImage imageNamed:@"playButton"] forState:UIControlStateNormal];
+            
+            [UIView animateWithDuration:0.44 animations:^{
+                self.meter.frame = CGRectMake(self.meter.frame.origin.x, 151 + 240, self.meter.frame.size.width, 0);
+            } completion:nil];
+            
+            self.isUISetForPaused = NO;
+            self.isUISetForPlaying = YES;
         }
+    } else {
+        
+        if (!self.isUISetForPaused) {
+            [self.actionButton setImage:[UIImage imageNamed:@"pauseButton"] forState:UIControlStateHighlighted];
+            [self.actionButton setImage:[UIImage imageNamed:@"pauseButton"] forState:UIControlStateNormal];
+            
+            self.isUISetForPaused = YES;
+            self.isUISetForPlaying = NO;
+        }
+        
+        [UIView animateWithDuration:0.1 animations:^{
+            CGFloat newHeight = 240 * (([[[AudioManager shared] audioPlayer] averagePowerInDecibelsForChannel:1] + 60) / 60);
+            self.meter.frame = CGRectMake(self.meter.frame.origin.x, 151 + newHeight, self.meter.frame.size.width, 240 - newHeight);
+        } completion:nil];
     }
     
     
@@ -100,6 +127,7 @@
             
         case STKAudioPlayerStateBuffering:
             audioPlayerStateString = @"buffering";
+            [[AudioManager shared] analyzeStreamError:audioPlayerStateString];
             break;
             
         case STKAudioPlayerStateDisposed:
@@ -116,10 +144,11 @@
         
         case STKAudioPlayerStatePlaying:
             audioPlayerStateString = @"playing";
-            if ([self.actionButton imageForState:UIControlStateNormal] == [UIImage imageNamed:@"playButton"]) {
+            if (!self.isUISetForPaused) {
                 [self.actionButton setImage:[UIImage imageNamed:@"pauseButton"] forState:UIControlStateHighlighted];
-                [self.actionButton setImage:[UIImage imageNamed:@"pauseButton"] forState:UIControlStateNormal];
-                NSLog(@"play button already selected");
+                [self.actionButton setImage:[UIImage imageNamed:@"pauseButton"] forState:UIControlStateHighlighted];
+                self.isUISetForPaused = YES;
+                self.isUISetForPlaying = NO;
             }
             break;
         
