@@ -55,8 +55,6 @@ static NetworkManager *singleton = nil;
             NSDictionary *elements = @{ @"chunk" : responseObject,
                                         @"port" : display };
             
-            NSLog(@"RETURNED - %@", elements);
-            
             if ( flags && [flags count] > 0 ) {
                 elements = @{ @"chunk" : responseObject,
                               @"port" : display,

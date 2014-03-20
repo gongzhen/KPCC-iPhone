@@ -22,7 +22,8 @@
 
 + (AudioManager*)shared;
 
-@property STKAudioPlayer *audioPlayer;
+//@property STKAudioPlayer *audioPlayer;
+@property STKAudioPlayer* audioPlayer;
 @property STKDataSource *audioDataSource;
 
 @property BOOL streamPlaying;
@@ -30,5 +31,7 @@
 
 - (void)startStream;
 - (void)stopStream;
+
+- (void)analyzeStreamError:(NSString*)comments;
 
 @end

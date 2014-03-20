@@ -7,10 +7,12 @@
 //
 
 #import "AudioManager.h"
+#import "NetworkManager.h"
 
 static AudioManager *singleton = nil;
 
 @implementation AudioManager
+//@synthesize audioPlayer;
 
 + (AudioManager*)shared {
     if ( !singleton ) {
@@ -26,6 +28,7 @@ static AudioManager *singleton = nil;
 - (void)buildStreamer {
     self.streamPlaying = NO;
     self.audioPlayer = [[STKAudioPlayer alloc]init];
+    self.audioPlayer.meteringEnabled = YES;
 }
 
 - (void)startStream {
@@ -48,6 +51,22 @@ static AudioManager *singleton = nil;
 }
 
 
+#pragma mark - Error Logging
+- (void)analyzeStreamError:(NSString *)comments {
+    
+    NSURL *liveURL = [NSURL URLWithString:kLiveStreamURL];
+    NetworkHealth netHealth = [[NetworkManager shared] checkNetworkHealth:[liveURL host]];
+    if ( NetworkHealthNetworkDown == netHealth ) {
+        //[self failStream:StreamStateLostConnectivity comments:comments];
+    } else if ( NetworkHealthServerDown == netHealth ) {
+        //[self failStream:StreamStateServerFail comments:comments];
+    } else {
+        //[self failStream:StreamStateUnknown comments:comments];
+    }
+    
+    NSLog(@"Stream error...");
+}
+
 #pragma mark - STKAudioPlayerDelegate
 - (void)audioPlayer:(STKAudioPlayer *)audioPlayer stateChanged:(STKAudioPlayerState)state previousState:(STKAudioPlayerState)previousState {
     NSLog(@"stateChanged: %i", state);
@@ -65,8 +84,16 @@ static AudioManager *singleton = nil;
     }
 }
 
-- (void)audioPlayer:(STKAudioPlayer *)audioPlayer didStartPlayingQueueItemId:(NSObject *)queueItemId {}
-- (void)audioPlayer:(STKAudioPlayer *)audioPlayer didFinishBufferingSourceWithQueueItemId:(NSObject *)queueItemId {}
+- (void)audioPlayer:(STKAudioPlayer *)audioPlayer didStartPlayingQueueItemId:(NSObject *)queueItemId {
+    NSLog(@"audioPlayer didStartPlaying");
+}
+- (void)audioPlayer:(STKAudioPlayer *)audioPlayer logInfo:(NSString *)line {
+    NSLog(@"audioPlayer LOG - %@", line);
+}
+
+- (void)audioPlayer:(STKAudioPlayer *)audioPlayer didFinishBufferingSourceWithQueueItemId:(NSObject *)queueItemId {
+    NSLog(@"didFinishBuffering!");
+}
 - (void)audioPlayer:(STKAudioPlayer *)audioPlayer didFinishPlayingQueueItemId:(NSObject *)queueItemId withReason:(STKAudioPlayerStopReason)stopReason andProgress:(double)progress andDuration:(double)duration {}
 
 @end
