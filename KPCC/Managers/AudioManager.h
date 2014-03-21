@@ -26,11 +26,11 @@
 @property STKAudioPlayer* audioPlayer;
 @property STKDataSource *audioDataSource;
 
-@property BOOL streamPlaying;
 @property long lastPreRoll;
 
 - (void)startStream;
 - (void)stopStream;
+- (BOOL)isStreamPlaying;
 
 - (void)analyzeStreamError:(NSString*)comments;
 

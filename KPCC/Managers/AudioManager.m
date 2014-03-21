@@ -26,7 +26,6 @@ static AudioManager *singleton = nil;
 }
 
 - (void)buildStreamer {
-    self.streamPlaying = NO;
     self.audioPlayer = [[STKAudioPlayer alloc]init];
     self.audioPlayer.meteringEnabled = YES;
 }
@@ -35,19 +34,24 @@ static AudioManager *singleton = nil;
     long currentTimeSeconds = [[NSDate date] timeIntervalSince1970] / 1000;
     if (self.lastPreRoll < (currentTimeSeconds - kLiveStreamPreRollThreshold)) {
         self.lastPreRoll = currentTimeSeconds;
-        self.audioDataSource = [STKAudioPlayer dataSourceFromURL:[NSURL URLWithString:kLiveStreamAACURL]];
+        self.audioDataSource = [STKAudioPlayer dataSourceFromURL:[NSURL URLWithString:kLiveStreamURL]];
     } else {
-        self.audioDataSource = [STKAudioPlayer dataSourceFromURL:[NSURL URLWithString:kLiveStreamAACNoPreRollURL]];
+        self.audioDataSource = [STKAudioPlayer dataSourceFromURL:[NSURL URLWithString:kLiveStreamNoPreRollURL]];
     }
     
     [self.audioPlayer playDataSource:self.audioDataSource];
-
-    self.streamPlaying = YES;
 }
 
 - (void)stopStream {
-    [self.audioPlayer pause];
-    self.streamPlaying = NO;
+    [self.audioPlayer stop];
+}
+
+- (BOOL)isStreamPlaying {
+    if (self.audioPlayer && self.audioPlayer.state == STKAudioPlayerStatePlaying) {
+        return YES;
+    } else {
+        return NO;
+    }
 }
 
 
