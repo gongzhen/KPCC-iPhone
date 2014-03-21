@@ -9,25 +9,24 @@
 #import "SCPRFirstViewController.h"
 #import <AVFoundation/AVFoundation.h>
 
-
 @interface SCPRFirstViewController ()
 -(void) setupTimer;
 @end
 
 @implementation SCPRFirstViewController
 
-- (void)viewDidLoad
-{
+- (void)viewDidLoad {
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
     
-    //Once the view has loaded then we can register to begin recieving controls and we can become the first responder
+    // Once the view has loaded then we can register to begin recieving system audio controls.
     [[UIApplication sharedApplication] beginReceivingRemoteControlEvents];
     [self becomeFirstResponder];
 
     [self setupTimer];
 }
 
+// Allows for interaction with system audio controls.
 - (BOOL)canBecomeFirstResponder {
     return YES;
 }
@@ -37,7 +36,7 @@
     
     [[NetworkManager shared] fetchProgramInformationFor:[NSDate date] display:self];
     
-    if ([[AudioManager shared] audioPlayer].state == STKAudioPlayerStatePlaying) {
+    if ([[AudioManager shared] isStreamPlaying]) {
         [self.actionButton setImage:[UIImage imageNamed:@"pauseButton"] forState:UIControlStateHighlighted];
         [self.actionButton setImage:[UIImage imageNamed:@"pauseButton"] forState:UIControlStateNormal];
     } else {
@@ -47,7 +46,7 @@
 }
 
 - (void)remoteControlReceivedWithEvent:(UIEvent *)event {
-    // If it is a remote control event handle it correctly
+    // Handle remote audio control events.
     if (event.type == UIEventTypeRemoteControl) {
         if (event.subtype == UIEventSubtypeRemoteControlPlay) {
             [self playStream];
@@ -59,6 +58,11 @@
     }
 }
 
+-(void) setupTimer {
+	timer = [NSTimer timerWithTimeInterval:0.025 target:self selector:@selector(tick) userInfo:nil repeats:YES];
+	[[NSRunLoop currentRunLoop] addTimer:timer forMode:NSRunLoopCommonModes];
+}
+
 - (IBAction)buttonTapped:(id)sender {
     if (sender == self.actionButton) {
         [self playOrPauseTapped];
@@ -66,22 +70,22 @@
 }
 
 -(void) playOrPauseTapped {
-    if ([[AudioManager shared] audioPlayer].state != STKAudioPlayerStatePlaying) {
+    if (![[AudioManager shared] isStreamPlaying]) {
         [self playStream];
     } else {
         [self stopStream];
     }
 }
 
--(void) setupTimer
-{
-	timer = [NSTimer timerWithTimeInterval:0.025 target:self selector:@selector(tick) userInfo:nil repeats:YES];
-	[[NSRunLoop currentRunLoop] addTimer:timer forMode:NSRunLoopCommonModes];
+- (void)playStream {
+    [[AudioManager shared] startStream];
 }
 
+- (void)stopStream {
+    [[AudioManager shared] stopStream];
+}
 
--(void) tick
-{
+-(void) tick {
     STKAudioPlayerState stkAudioPlayerState = [[AudioManager shared] audioPlayer].state;
     NSString *audioPlayerStateString;
     
@@ -93,7 +97,7 @@
             [self.actionButton setImage:[UIImage imageNamed:@"playButton"] forState:UIControlStateNormal];
             
             [UIView animateWithDuration:0.44 animations:^{
-                self.meter.frame = CGRectMake(self.meter.frame.origin.x, 151 + 240, self.meter.frame.size.width, 0);
+                self.meter.frame = CGRectMake(self.meter.frame.origin.x, 150 + 240, self.meter.frame.size.width, 0);
             } completion:nil];
             
             self.isUISetForPaused = NO;
@@ -110,8 +114,8 @@
         }
         
         [UIView animateWithDuration:0.1 animations:^{
-            CGFloat newHeight = 240 * (([[[AudioManager shared] audioPlayer] averagePowerInDecibelsForChannel:1] + 60) / 60);
-            self.meter.frame = CGRectMake(self.meter.frame.origin.x, 151 + newHeight, self.meter.frame.size.width, 240 - newHeight);
+            CGFloat newHeight = 240 * (([[[AudioManager shared] audioPlayer] averagePowerInDecibelsForChannel:0] + 60) / 60);
+            self.meter.frame = CGRectMake(self.meter.frame.origin.x, 150 + newHeight, self.meter.frame.size.width, 240 - newHeight);
         } completion:nil];
     }
     
@@ -164,15 +168,7 @@
     [self.streamStatusLabel setText:audioPlayerStateString];
 }
 
-- (void)playStream
-{
-    [[AudioManager shared] startStream];
-}
 
-- (void)stopStream
-{
-    [[AudioManager shared] stopStream];
-}
 
 #pragma mark - ContentProcessor
 - (void)handleProcessedContent:(NSArray *)content flags:(NSDictionary *)flags {
@@ -197,8 +193,7 @@
     [self resignFirstResponder];
 }
 
-- (void)didReceiveMemoryWarning
-{
+- (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
