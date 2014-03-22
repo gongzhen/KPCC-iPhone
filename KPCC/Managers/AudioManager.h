@@ -16,7 +16,7 @@
 #define kLiveStreamNoPreRollURL @"http://live.scpr.org/kpcclive?preskip=true"
 #define kLiveStreamAACURL @"http://live.scpr.org/aac"
 #define kLiveStreamAACNoPreRollURL @"http://live.scpr.org/aac?preskip=true"
-#define kLiveStreamPreRollThreshold 600
+#define kLiveStreamPreRollThreshold 3600
 
 
 @interface AudioManager : NSObject<STKAudioPlayerDelegate>
