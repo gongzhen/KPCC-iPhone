@@ -27,9 +27,9 @@ static NetworkManager *singleton = nil;
 
 - (NetworkHealth)checkNetworkHealth:(NSString *)server {
     if ([self.networkHealthReachability isReachable]) {
-        if ( server ) {
+        if (server) {
             Reachability *serverReach = [Reachability reachabilityWithHostname:server];
-            if ( [serverReach isReachable] ) {
+            if ([serverReach isReachable]) {
                 return NetworkHealthAllOK;
             } else {
                 return NetworkHealthServerDown;

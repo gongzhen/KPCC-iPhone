@@ -119,7 +119,6 @@
         } completion:nil];
     }
     
-    
     switch (stkAudioPlayerState) {
         case STKAudioPlayerStateReady:
             audioPlayerStateString = @"ready";
