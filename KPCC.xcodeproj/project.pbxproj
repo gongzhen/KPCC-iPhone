@@ -42,6 +42,10 @@
 		76349D1C18D8C74F0027C3B8 /* NetworkManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 76349D1A18D8C74F0027C3B8 /* NetworkManager.m */; };
 		76349D2118D8F8A30027C3B8 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 76349D2018D8F8A30027C3B8 /* Reachability.m */; };
 		76349D2218D8F8A30027C3B8 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 76349D2018D8F8A30027C3B8 /* Reachability.m */; };
+		76658AB518DCB0DC00026176 /* AnalyticsManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 76658AB418DCB0DC00026176 /* AnalyticsManager.m */; };
+		76658AB618DCB0DC00026176 /* AnalyticsManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 76658AB418DCB0DC00026176 /* AnalyticsManager.m */; };
+		76658AB918DCB51000026176 /* NSDate+Helper.m in Sources */ = {isa = PBXBuildFile; fileRef = 76658AB818DCB51000026176 /* NSDate+Helper.m */; };
+		76658ABA18DCB51000026176 /* NSDate+Helper.m in Sources */ = {isa = PBXBuildFile; fileRef = 76658AB818DCB51000026176 /* NSDate+Helper.m */; };
 		768BBF1A18DA614300ACAD83 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 768BBF1918DA614300ACAD83 /* libPods.a */; };
 		768EAADF18D26C5500469734 /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 768EAADE18D26C5500469734 /* MediaPlayer.framework */; };
 		768EAAE118D26C9C00469734 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 768EAAE018D26C9C00469734 /* AVFoundation.framework */; };
@@ -101,6 +105,10 @@
 		76349D1F18D8F8A30027C3B8 /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
 		76349D2018D8F8A30027C3B8 /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reachability.m; sourceTree = "<group>"; };
 		76349D2318D8F8D80027C3B8 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		76658AB318DCB0DB00026176 /* AnalyticsManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AnalyticsManager.h; path = Managers/AnalyticsManager.h; sourceTree = "<group>"; };
+		76658AB418DCB0DC00026176 /* AnalyticsManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AnalyticsManager.m; path = Managers/AnalyticsManager.m; sourceTree = "<group>"; };
+		76658AB718DCB51000026176 /* NSDate+Helper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDate+Helper.h"; sourceTree = "<group>"; };
+		76658AB818DCB51000026176 /* NSDate+Helper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDate+Helper.m"; sourceTree = "<group>"; };
 		768BBF1918DA614300ACAD83 /* libPods.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libPods.a; path = "Pods/build/Debug-iphoneos/libPods.a"; sourceTree = "<group>"; };
 		768EAADE18D26C5500469734 /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
 		768EAAE018D26C9C00469734 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
@@ -220,6 +228,8 @@
 		76349D1E18D8F8A30027C3B8 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
+				76658AB718DCB51000026176 /* NSDate+Helper.h */,
+				76658AB818DCB51000026176 /* NSDate+Helper.m */,
 				76349D1F18D8F8A30027C3B8 /* Reachability.h */,
 				76349D2018D8F8A30027C3B8 /* Reachability.m */,
 			);
@@ -319,6 +329,8 @@
 				76A3090318C93C880065D4B1 /* AudioManager.m */,
 				76349D1918D8C74F0027C3B8 /* NetworkManager.h */,
 				76349D1A18D8C74F0027C3B8 /* NetworkManager.m */,
+				76658AB318DCB0DB00026176 /* AnalyticsManager.h */,
+				76658AB418DCB0DC00026176 /* AnalyticsManager.m */,
 			);
 			name = Managers;
 			sourceTree = "<group>";
@@ -537,9 +549,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				76658AB618DCB0DC00026176 /* AnalyticsManager.m in Sources */,
 				76349D1C18D8C74F0027C3B8 /* NetworkManager.m in Sources */,
 				76349CF318D388C80027C3B8 /* STKHTTPDataSource.m in Sources */,
 				76349CF418D388C80027C3B8 /* STKAudioPlayer.m in Sources */,
+				76658ABA18DCB51000026176 /* NSDate+Helper.m in Sources */,
 				76349CF518D388C80027C3B8 /* STKQueueEntry.m in Sources */,
 				76349CF618D388C80027C3B8 /* STKAutoRecoveringHTTPDataSource.m in Sources */,
 				76349CF718D388C80027C3B8 /* SCPRAppDelegate.m in Sources */,
@@ -561,9 +575,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				76658AB518DCB0DC00026176 /* AnalyticsManager.m in Sources */,
 				76349D1B18D8C74F0027C3B8 /* NetworkManager.m in Sources */,
 				76E75F3D18CE4682008E3197 /* STKHTTPDataSource.m in Sources */,
 				76E75F3618CE4682008E3197 /* STKAudioPlayer.m in Sources */,
+				76658AB918DCB51000026176 /* NSDate+Helper.m in Sources */,
 				76E75F3F18CE4682008E3197 /* STKQueueEntry.m in Sources */,
 				76E75F3718CE4682008E3197 /* STKAutoRecoveringHTTPDataSource.m in Sources */,
 				76A308D718C8FB940065D4B1 /* SCPRAppDelegate.m in Sources */,
