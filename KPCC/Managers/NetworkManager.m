@@ -85,7 +85,7 @@ static NetworkManager *singleton = nil;
 }
 
 - (void)fetchProgramInformationFor:(NSDate *)thisTime display:(id<ContentProcessor>)display {
-    NSString *urlString = [NSString stringWithFormat:@"%@/schedule/at?time=%d",kServerBase,(NSInteger)[thisTime timeIntervalSince1970]];
+    NSString *urlString = [NSString stringWithFormat:@"%@/schedule/at?time=%d",kServerBase,(int)[thisTime timeIntervalSince1970]];
     [self requestFromSCPRWithEndpoint:urlString
                            andDisplay:display];
 }

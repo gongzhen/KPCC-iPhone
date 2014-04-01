@@ -72,7 +72,7 @@
 			text = @"Yesterday";
 			break;
 		default:
-			text = [NSString stringWithFormat:@"%d days ago", daysAgo];
+			text = [NSString stringWithFormat:@"%lu days ago", (unsigned long)daysAgo];
 	}
 	return text;
 }
@@ -114,7 +114,7 @@
       if ( days == 1 ) {
         noun = @"day";
       }
-      return [NSString stringWithFormat:@"%d %@ ago",days,noun];
+      return [NSString stringWithFormat:@"%ld %@ ago",(long)days,noun];
     } else {
       
       NSString *adjective = @"";
@@ -122,7 +122,7 @@
         adjective = @"An";
         noun = @"hour";
       } else {
-        adjective = [NSString stringWithFormat:@"%d",hours];
+        adjective = [NSString stringWithFormat:@"%ld",(long)hours];
         noun = @"hours";
       }
       
@@ -136,7 +136,7 @@
       adjective = @"A";
       noun = @"minute";
     } else {
-      adjective = [NSString stringWithFormat:@"%d",minutes];
+      adjective = [NSString stringWithFormat:@"%ld",(long)minutes];
       noun = @"minutes";
     }
     return  [NSString stringWithFormat:@"%@ %@ ago",adjective,noun];

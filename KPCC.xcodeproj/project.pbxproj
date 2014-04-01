@@ -687,7 +687,6 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/KPCC/ThirdParty/TestFlight",
 					"$(PROJECT_DIR)/KPCC/ThirdParty/Flurry",
-					"$(PROJECT_DIR)/Pods/build/Debug-iphoneos",
 				);
 				PRODUCT_NAME = "KPCC Testflight";
 				TARGETED_DEVICE_FAMILY = 1;
@@ -711,7 +710,6 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/KPCC/ThirdParty/TestFlight",
 					"$(PROJECT_DIR)/KPCC/ThirdParty/Flurry",
-					"$(PROJECT_DIR)/Pods/build/Debug-iphoneos",
 				);
 				PRODUCT_NAME = "KPCC Testflight";
 				TARGETED_DEVICE_FAMILY = 1;
