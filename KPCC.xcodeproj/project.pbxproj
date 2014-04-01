@@ -23,7 +23,6 @@
 		76349CFD18D388C80027C3B8 /* STKCoreFoundationDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 76E75F2918CE4682008E3197 /* STKCoreFoundationDataSource.m */; };
 		76349CFE18D388C80027C3B8 /* NSMutableArray+STKAudioPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 76E75F1F18CE4682008E3197 /* NSMutableArray+STKAudioPlayer.m */; };
 		76349CFF18D388C80027C3B8 /* STKDataSourceWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 76E75F2D18CE4682008E3197 /* STKDataSourceWrapper.m */; };
-		76349D0018D388C80027C3B8 /* SCPRFirstViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 76A308DF18C8FB940065D4B1 /* SCPRFirstViewController.m */; };
 		76349D0118D388C80027C3B8 /* STKLocalFileDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 76E75F3118CE4682008E3197 /* STKLocalFileDataSource.m */; };
 		76349D0318D388C80027C3B8 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 76349CA918D3747E0027C3B8 /* libz.dylib */; };
 		76349D0418D388C80027C3B8 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 768EAAE018D26C9C00469734 /* AVFoundation.framework */; };
@@ -49,6 +48,8 @@
 		768BBF1A18DA614300ACAD83 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 768BBF1918DA614300ACAD83 /* libPods.a */; };
 		768EAADF18D26C5500469734 /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 768EAADE18D26C5500469734 /* MediaPlayer.framework */; };
 		768EAAE118D26C9C00469734 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 768EAAE018D26C9C00469734 /* AVFoundation.framework */; };
+		769FD68D18EB250E00AAF1F4 /* SCPRHomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 769FD68C18EB250E00AAF1F4 /* SCPRHomeViewController.m */; };
+		769FD68E18EB250E00AAF1F4 /* SCPRHomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 769FD68C18EB250E00AAF1F4 /* SCPRHomeViewController.m */; };
 		76A308C718C8FB940065D4B1 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 76A308C618C8FB940065D4B1 /* Foundation.framework */; };
 		76A308C918C8FB940065D4B1 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 76A308C818C8FB940065D4B1 /* CoreGraphics.framework */; };
 		76A308CB18C8FB940065D4B1 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 76A308CA18C8FB940065D4B1 /* UIKit.framework */; };
@@ -56,7 +57,6 @@
 		76A308D318C8FB940065D4B1 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 76A308D218C8FB940065D4B1 /* main.m */; };
 		76A308D718C8FB940065D4B1 /* SCPRAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 76A308D618C8FB940065D4B1 /* SCPRAppDelegate.m */; };
 		76A308DA18C8FB940065D4B1 /* Main_iPhone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 76A308D818C8FB940065D4B1 /* Main_iPhone.storyboard */; };
-		76A308E018C8FB940065D4B1 /* SCPRFirstViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 76A308DF18C8FB940065D4B1 /* SCPRFirstViewController.m */; };
 		76A308E518C8FB940065D4B1 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 76A308E418C8FB940065D4B1 /* Images.xcassets */; };
 		76A308EC18C8FB950065D4B1 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 76A308EB18C8FB950065D4B1 /* XCTest.framework */; };
 		76A308ED18C8FB950065D4B1 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 76A308C618C8FB940065D4B1 /* Foundation.framework */; };
@@ -112,6 +112,8 @@
 		768BBF1918DA614300ACAD83 /* libPods.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libPods.a; path = "Pods/build/Debug-iphoneos/libPods.a"; sourceTree = "<group>"; };
 		768EAADE18D26C5500469734 /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
 		768EAAE018D26C9C00469734 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		769FD68B18EB250E00AAF1F4 /* SCPRHomeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCPRHomeViewController.h; sourceTree = "<group>"; };
+		769FD68C18EB250E00AAF1F4 /* SCPRHomeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SCPRHomeViewController.m; sourceTree = "<group>"; };
 		76A308C318C8FB940065D4B1 /* KPCC.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = KPCC.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		76A308C618C8FB940065D4B1 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		76A308C818C8FB940065D4B1 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -123,8 +125,6 @@
 		76A308D518C8FB940065D4B1 /* SCPRAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SCPRAppDelegate.h; sourceTree = "<group>"; };
 		76A308D618C8FB940065D4B1 /* SCPRAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SCPRAppDelegate.m; sourceTree = "<group>"; };
 		76A308D918C8FB940065D4B1 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main_iPhone.storyboard; sourceTree = "<group>"; };
-		76A308DE18C8FB940065D4B1 /* SCPRFirstViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SCPRFirstViewController.h; sourceTree = "<group>"; };
-		76A308DF18C8FB940065D4B1 /* SCPRFirstViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SCPRFirstViewController.m; sourceTree = "<group>"; };
 		76A308E418C8FB940065D4B1 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		76A308EA18C8FB950065D4B1 /* KPCCTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = KPCCTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		76A308EB18C8FB950065D4B1 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
@@ -248,6 +248,8 @@
 		76658ABC18E0AF8500026176 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				769FD68B18EB250E00AAF1F4 /* SCPRHomeViewController.h */,
+				769FD68C18EB250E00AAF1F4 /* SCPRHomeViewController.m */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -308,8 +310,6 @@
 				76A308D518C8FB940065D4B1 /* SCPRAppDelegate.h */,
 				76A308D618C8FB940065D4B1 /* SCPRAppDelegate.m */,
 				76A308D818C8FB940065D4B1 /* Main_iPhone.storyboard */,
-				76A308DE18C8FB940065D4B1 /* SCPRFirstViewController.h */,
-				76A308DF18C8FB940065D4B1 /* SCPRFirstViewController.m */,
 				76A308E418C8FB940065D4B1 /* Images.xcassets */,
 				76A308CD18C8FB940065D4B1 /* Supporting Files */,
 			);
@@ -584,12 +584,12 @@
 				76349CF818D388C80027C3B8 /* main.m in Sources */,
 				76349CF918D388C80027C3B8 /* AudioManager.m in Sources */,
 				76349CFA18D388C80027C3B8 /* STKBufferingDataSource.m in Sources */,
+				769FD68E18EB250E00AAF1F4 /* SCPRHomeViewController.m in Sources */,
 				76349CFB18D388C80027C3B8 /* STKDataSource.m in Sources */,
 				76349CFC18D388C80027C3B8 /* STKBufferChunk.m in Sources */,
 				76349CFD18D388C80027C3B8 /* STKCoreFoundationDataSource.m in Sources */,
 				76349CFE18D388C80027C3B8 /* NSMutableArray+STKAudioPlayer.m in Sources */,
 				76349CFF18D388C80027C3B8 /* STKDataSourceWrapper.m in Sources */,
-				76349D0018D388C80027C3B8 /* SCPRFirstViewController.m in Sources */,
 				76349D0118D388C80027C3B8 /* STKLocalFileDataSource.m in Sources */,
 				76349D2218D8F8A30027C3B8 /* Reachability.m in Sources */,
 			);
@@ -610,12 +610,12 @@
 				76A308D318C8FB940065D4B1 /* main.m in Sources */,
 				76A3090418C93C880065D4B1 /* AudioManager.m in Sources */,
 				76E75F3918CE4682008E3197 /* STKBufferingDataSource.m in Sources */,
+				769FD68D18EB250E00AAF1F4 /* SCPRHomeViewController.m in Sources */,
 				76E75F3B18CE4682008E3197 /* STKDataSource.m in Sources */,
 				76E75F3818CE4682008E3197 /* STKBufferChunk.m in Sources */,
 				76E75F3A18CE4682008E3197 /* STKCoreFoundationDataSource.m in Sources */,
 				76E75F3518CE4682008E3197 /* NSMutableArray+STKAudioPlayer.m in Sources */,
 				76E75F3C18CE4682008E3197 /* STKDataSourceWrapper.m in Sources */,
-				76A308E018C8FB940065D4B1 /* SCPRFirstViewController.m in Sources */,
 				76E75F3E18CE4682008E3197 /* STKLocalFileDataSource.m in Sources */,
 				76349D2118D8F8A30027C3B8 /* Reachability.m in Sources */,
 			);

@@ -1,5 +1,5 @@
 //
-//  SCPRFirstViewController.h
+//  SCPRHomeViewController.h
 //  KPCC
 //
 //  Created by John Meeker on 3/6/14.
@@ -10,7 +10,7 @@
 #import "AudioManager.h"
 #import "NetworkManager.h"
 
-@interface SCPRFirstViewController : UIViewController <ContentProcessor>
+@interface SCPRHomeViewController : UIViewController <ContentProcessor>
 {
 @private
     NSTimer *timer;

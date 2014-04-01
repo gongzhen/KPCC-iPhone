@@ -1,19 +1,19 @@
 //
-//  SCPRFirstViewController.m
+//  SCPRHomeViewController.m
 //  KPCC
 //
 //  Created by John Meeker on 3/6/14.
 //  Copyright (c) 2014 SCPR. All rights reserved.
 //
 
-#import "SCPRFirstViewController.h"
+#import "SCPRHomeViewController.h"
 #import <AVFoundation/AVFoundation.h>
 
-@interface SCPRFirstViewController ()
+@interface SCPRHomeViewController ()
 -(void) setupTimer;
 @end
 
-@implementation SCPRFirstViewController
+@implementation SCPRHomeViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];

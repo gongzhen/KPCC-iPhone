@@ -24,10 +24,10 @@
             </objects>
             <point key="canvasLocation" x="-393" y="-30"/>
         </scene>
-        <!--First View Controller - First-->
+        <!--Home View Controller - First-->
         <scene sceneID="W3I-pn-N6e">
             <objects>
-                <viewController title="First" id="CZ4-MO-1fc" customClass="SCPRFirstViewController" sceneMemberID="viewController">
+                <viewController title="First" id="CZ4-MO-1fc" customClass="SCPRHomeViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="FSB-MQ-Ti3"/>
                         <viewControllerLayoutGuide type="bottom" id="e4h-5o-pHz"/>
