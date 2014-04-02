@@ -7,6 +7,8 @@
 //
 
 #import "NetworkManager.h"
+#import <CoreTelephony/CTTelephonyNetworkInfo.h>
+#import <CoreTelephony/CTCarrier.h>
 #import "AFNetworking.h"
 
 static NetworkManager *singleton = nil;
@@ -40,6 +42,23 @@ static NetworkManager *singleton = nil;
     }
     
     return NetworkHealthNetworkDown;
+}
+
+- (NSString*)networkInformation {
+    
+    NetworkStatus remoteHostStatus = [self.networkHealthReachability currentReachabilityStatus];
+    
+    if ( remoteHostStatus == ReachableViaWiFi ) {
+        return @"Wi-Fi";
+    }
+    if ( remoteHostStatus == ReachableViaWWAN ) {
+        CTTelephonyNetworkInfo *netinfo = [[CTTelephonyNetworkInfo alloc] init];
+        CTCarrier *carrier = [netinfo subscriberCellularProvider];
+        NSString *carrierName = [carrier carrierName];
+        return carrierName;
+    }
+    
+    return @"No Connection";
 }
 
 - (void)requestFromSCPRWithEndpoint:(NSString *)endpoint andDisplay:(id<ContentProcessor>)display {

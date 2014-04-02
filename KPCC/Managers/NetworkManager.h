@@ -41,6 +41,7 @@ typedef enum {
 @property (nonatomic,strong) Reachability *networkHealthReachability;
 
 - (NetworkHealth)checkNetworkHealth:(NSString*)server;
+- (NSString *)networkInformation;
 
 - (void)fetchProgramInformationFor:(NSDate*)thisTime display:(id<ContentProcessor>)display;
 - (void)processResponseData:(NSDictionary*)content;

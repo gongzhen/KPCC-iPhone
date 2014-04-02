@@ -8,6 +8,7 @@
 
 #import "AnalyticsManager.h"
 #import "AudioManager.h"
+#import "NetworkManager.h"
 #import "NSDate+Helper.h"
 
 static AnalyticsManager *singleton = nil;
@@ -52,7 +53,8 @@ static AnalyticsManager *singleton = nil;
         NSDictionary *analysis = @{ @"cause" : [self stringForInterruptionCause:cause],
                                     @"timeDropped"  : [NSDate stringFromDate:[NSDate date]
                                                                   withFormat:@"YYYY-MM-dd hh:mm:ss"],
-                                    @"details" : comments };
+                                    @"details" : comments,
+                                    @"lastKnownConnectionType" : [[NetworkManager shared] networkInformation]};
         
         NSLog(@"Sending stream failure report to Flurry");
         [self logEvent:@"streamFailure" withParameters:analysis];
