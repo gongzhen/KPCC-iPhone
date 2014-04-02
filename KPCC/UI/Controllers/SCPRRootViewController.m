@@ -8,12 +8,14 @@
 
 #import "SCPRRootViewController.h"
 
-@interface SCPRRootViewController () <UIScrollViewDelegate>
+@interface SCPRRootViewController () <UIScrollViewDelegate, ContentProcessor>
+-(void) setupTimer;
 @property (nonatomic) UILabel *onAirLabel;
 @property (nonatomic) UILabel *programTitleLabel;
 @property (nonatomic) UIButton *actionButton;
 @property (nonatomic) UIView *horizontalDividerView;
 @property (nonatomic) UIView *audioMeter;
+@property (nonatomic) UILabel *streamerStatusTitleLabel;
 @property (nonatomic) UILabel *streamerStatusLabel;
 @end
 
@@ -26,6 +28,7 @@
 @synthesize actionButton = _actionButton;
 @synthesize horizontalDividerView = _horizontalDividerView;
 @synthesize audioMeter = _audioMeter;
+@synthesize streamerStatusTitleLabel = _streamerStatusTitleLabel;
 @synthesize streamerStatusLabel = _streamerStatusLabel;
 
 - (UILabel *)onAirLabel {
@@ -33,7 +36,6 @@
         _onAirLabel = [[UILabel alloc] init];
         _onAirLabel.textColor = [UIColor darkGrayColor];
         _onAirLabel.text = @"On air now:";
-        //[_onAirLabel sizeToFit];
     }
     return _onAirLabel;
 }
@@ -42,8 +44,6 @@
     if (!_programTitleLabel) {
         _programTitleLabel = [[UILabel alloc] init];
         _programTitleLabel.textColor = [UIColor colorWithRed:71.0f/255.0f green:111.0f/255.0f blue:192.0f/255.0f alpha:1.0f];
-        _programTitleLabel.text = @"All Things Considered";
-        //[_programTitleLabel sizeToFit];
     }
     return _programTitleLabel;
 }
@@ -51,7 +51,9 @@
 - (UIButton *)actionButton {
     if (!_actionButton) {
         _actionButton = [[UIButton alloc] init];
-        [_actionButton setBackgroundImage:[UIImage imageNamed:@"playButton"] forState:UIControlStateNormal];
+        [_actionButton setImage:[UIImage imageNamed:@"playButton"] forState:UIControlStateNormal];
+        [[_actionButton imageView] setContentMode:UIViewContentModeCenter];
+        [_actionButton addTarget:self action:@selector(playOrPauseTapped) forControlEvents:UIControlEventTouchUpInside];
     }
     return _actionButton;
 }
@@ -72,18 +74,59 @@
     return _audioMeter;
 }
 
+- (UILabel *)streamerStatusTitleLabel {
+    if (!_streamerStatusTitleLabel) {
+        _streamerStatusTitleLabel = [[UILabel alloc] init];
+        _streamerStatusTitleLabel.textColor = [UIColor lightGrayColor];
+        _streamerStatusTitleLabel.font = [_streamerStatusTitleLabel.font fontWithSize:15.0f];
+        _streamerStatusTitleLabel.text = @"Streamer Status:";
+    }
+    return _streamerStatusTitleLabel;
+}
+
 - (UILabel *)streamerStatusLabel {
     if (!_streamerStatusLabel) {
         _streamerStatusLabel = [[UILabel alloc] init];
         _streamerStatusLabel.textColor = [UIColor lightGrayColor];
         _streamerStatusLabel.font = [_streamerStatusLabel.font fontWithSize:15.0f];
-        _streamerStatusLabel.text = @"Streamer Status:";
+        [_streamerStatusLabel setTextAlignment:NSTextAlignmentCenter];
     }
     return _streamerStatusLabel;
 }
 
-
 #pragma mark - UIViewController
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    
+    [[NetworkManager shared] fetchProgramInformationFor:[NSDate date] display:self];
+    
+    if ([[AudioManager shared] isStreamPlaying]) {
+        [self.actionButton setImage:[UIImage imageNamed:@"pauseButton"] forState:UIControlStateHighlighted];
+        [self.actionButton setImage:[UIImage imageNamed:@"pauseButton"] forState:UIControlStateNormal];
+    } else {
+        [self.actionButton setImage:[UIImage imageNamed:@"playButton"] forState:UIControlStateHighlighted];
+        [self.actionButton setImage:[UIImage imageNamed:@"playButton"] forState:UIControlStateNormal];
+    }
+}
+
+// Allows for interaction with system audio controls.
+- (BOOL)canBecomeFirstResponder {
+    return YES;
+}
+
+- (void)remoteControlReceivedWithEvent:(UIEvent *)event {
+    // Handle remote audio control events.
+    if (event.type == UIEventTypeRemoteControl) {
+        if (event.subtype == UIEventSubtypeRemoteControlPlay) {
+            [self playStream];
+        } else if (event.subtype == UIEventSubtypeRemoteControlPause) {
+            [self stopStream];
+        } else if (event.subtype == UIEventSubtypeRemoteControlTogglePlayPause) {
+            [self stopStream];
+        }
+    }
+}
 
 - (void)viewDidLoad
 {
@@ -94,18 +137,24 @@
      [NSDictionary dictionaryWithObjectsAndKeys:
       [UIFont fontWithName:@"HelveticaNeue-Light" size:20.0f],
       NSFontAttributeName, nil]];
-    
-    UIScrollView *scrollview = [[UIScrollView alloc] initWithFrame:self.view.frame];
 
+    UIScrollView *scrollview = [[UIScrollView alloc] initWithFrame:self.view.frame];
     [scrollview addSubview:self.onAirLabel];
     [scrollview addSubview:self.programTitleLabel];
     [scrollview addSubview:self.actionButton];
     [scrollview addSubview:self.horizontalDividerView];
     [scrollview addSubview:self.audioMeter];
+    [scrollview addSubview:self.streamerStatusTitleLabel];
     [scrollview addSubview:self.streamerStatusLabel];
-    
+
     [scrollview setContentSize:CGSizeMake(self.view.frame.size.width, self.view.frame.size.height - 60)];
     [self.view addSubview:scrollview];
+
+    // Once the view has loaded then we can register to begin recieving system audio controls.
+    [[UIApplication sharedApplication] beginReceivingRemoteControlEvents];
+    [self becomeFirstResponder];
+
+    [self setupTimer];
 }
 
 - (void)viewDidLayoutSubviews {
@@ -115,17 +164,148 @@
     
     self.onAirLabel.frame = CGRectMake(20.0f, 20.0f, 90.0f, 20.f);
     self.programTitleLabel.frame = CGRectMake(120.f, 20.0f, size.width - 120.0f, 20.0f);
-    self.actionButton.frame = CGRectMake(size.width / 2.0f - 10.0f, size.height / 2.0f - 100.0f, 30.0f, 34.0f);
+    self.actionButton.frame = CGRectMake(size.width / 2.0f - 30.0f, size.height / 2.0f - 100.0f, 60.0f, 60.0f);
     self.horizontalDividerView.frame = CGRectMake(10.0f, size.height/ 2.0f + 80.0f, size.width - 10.0f, 1.0f);
     self.audioMeter.frame = CGRectMake(size.width - 50.0f, self.horizontalDividerView.frame.origin.y - 240.0f, 40.0f, 240.0f);
-    self.streamerStatusLabel.frame = CGRectMake(40.0f, self.horizontalDividerView.frame.origin.y + 20.0f, 130.0f, 20.0f);
+    self.streamerStatusTitleLabel.frame = CGRectMake(40.0f, self.horizontalDividerView.frame.origin.y + 20.0f, 130.0f, 20.0f);
+    self.streamerStatusLabel.frame = CGRectMake(180.0f, self.horizontalDividerView.frame.origin.y + 20.0f, size.width - 200.0f, 20.0f);
 }
+
+-(void)setupTimer {
+	timer = [NSTimer timerWithTimeInterval:0.025 target:self selector:@selector(tick) userInfo:nil repeats:YES];
+	[[NSRunLoop currentRunLoop] addTimer:timer forMode:NSRunLoopCommonModes];
+}
+
+-(void)playOrPauseTapped {
+    if (![[AudioManager shared] isStreamPlaying]) {
+        [self playStream];
+    } else {
+        [self stopStream];
+    }
+}
+
+- (void)playStream {
+    [[AudioManager shared] startStream];
+}
+
+- (void)stopStream {
+    [[AudioManager shared] stopStream];
+}
+
+-(void) tick {
+    STKAudioPlayerState stkAudioPlayerState = [[AudioManager shared] audioPlayer].state;
+    NSString *audioPlayerStateString;
+    
+    if (stkAudioPlayerState != STKAudioPlayerStatePlaying) {
+        
+        if (!self.isUISetForPlaying) {
+            
+            [self.actionButton setImage:[UIImage imageNamed:@"playButton"] forState:UIControlStateHighlighted];
+            [self.actionButton setImage:[UIImage imageNamed:@"playButton"] forState:UIControlStateNormal];
+            
+            [UIView animateWithDuration:0.44 animations:^{
+                self.audioMeter.frame = CGRectMake(self.audioMeter.frame.origin.x, self.horizontalDividerView.frame.origin.y, self.audioMeter.frame.size.width, 0);
+            } completion:nil];
+            
+            self.isUISetForPaused = NO;
+            self.isUISetForPlaying = YES;
+        }
+    } else {
+        
+        if (!self.isUISetForPaused) {
+            [self.actionButton setImage:[UIImage imageNamed:@"pauseButton"] forState:UIControlStateHighlighted];
+            [self.actionButton setImage:[UIImage imageNamed:@"pauseButton"] forState:UIControlStateNormal];
+            
+            self.isUISetForPaused = YES;
+            self.isUISetForPlaying = NO;
+        }
+        
+        [UIView animateWithDuration:0.1 animations:^{
+            CGFloat newHeight = 240 * (([[[AudioManager shared] audioPlayer] averagePowerInDecibelsForChannel:0] + 60) / 60);
+            self.audioMeter.frame = CGRectMake(self.audioMeter.frame.origin.x, self.horizontalDividerView.frame.origin.y - 240.0f + newHeight, self.audioMeter.frame.size.width, 240.0f - newHeight);
+        } completion:nil];
+    }
+    
+    switch (stkAudioPlayerState) {
+        case STKAudioPlayerStateReady:
+            audioPlayerStateString = @"ready";
+            break;
+            
+        case STKAudioPlayerStateRunning:
+            audioPlayerStateString = @"running";
+            break;
+            
+        case STKAudioPlayerStateBuffering:
+            audioPlayerStateString = @"buffering";
+            [[AudioManager shared] analyzeStreamError:audioPlayerStateString];
+            break;
+            
+        case STKAudioPlayerStateDisposed:
+            audioPlayerStateString = @"disposed";
+            break;
+            
+        case STKAudioPlayerStateError:
+            audioPlayerStateString = @"error";
+            break;
+            
+        case STKAudioPlayerStatePaused:
+            audioPlayerStateString = @"paused";
+            break;
+            
+        case STKAudioPlayerStatePlaying:
+            audioPlayerStateString = @"playing";
+            if (!self.isUISetForPaused) {
+                [self.actionButton setImage:[UIImage imageNamed:@"pauseButton"] forState:UIControlStateHighlighted];
+                [self.actionButton setImage:[UIImage imageNamed:@"pauseButton"] forState:UIControlStateHighlighted];
+                self.isUISetForPaused = YES;
+                self.isUISetForPlaying = NO;
+            }
+            break;
+            
+        case STKAudioPlayerStateStopped:
+            audioPlayerStateString = @"stopped";
+            break;
+            
+        default:
+            audioPlayerStateString = @"";
+            break;
+    }
+    
+    [self.streamerStatusLabel setText:audioPlayerStateString];
+}
+
+
+#pragma mark - ContentProcessor
+
+- (void)handleProcessedContent:(NSArray *)content flags:(NSDictionary *)flags {
+    
+    if ( [content count] == 0 ) {
+        return;
+    }
+    
+    [self.programTitleLabel setText:[[content objectAtIndex:0] objectForKey:@"title"]];
+    
+    NSDictionary *audioMetaData = @{ MPMediaItemPropertyArtist : @"89.3 KPCC",
+                                     MPMediaItemPropertyTitle : [[content objectAtIndex:0] objectForKey:@"title"] };
+    
+    [[MPNowPlayingInfoCenter defaultCenter] setNowPlayingInfo:audioMetaData];
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    
+    // End recieving events
+    [[UIApplication sharedApplication] endReceivingRemoteControlEvents];
+    [self resignFirstResponder];
+}
+
 
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
+
 
 /*
 #pragma mark - Navigation

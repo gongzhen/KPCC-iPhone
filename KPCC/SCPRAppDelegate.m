@@ -7,7 +7,6 @@
 //
 
 #import "SCPRAppDelegate.h"
-#import "SCPRHomeViewController.h"
 #import "SCPRRootViewController.h"
 #import <AVFoundation/AVFoundation.h>
 #import "Flurry.h"

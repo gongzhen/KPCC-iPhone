@@ -7,7 +7,16 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "AudioManager.h"
+#import "NetworkManager.h"
 
 @interface SCPRRootViewController : UIViewController
+{
+@private
+    NSTimer *timer;
+}
+
+@property BOOL isUISetForPlaying;
+@property BOOL isUISetForPaused;
 
 @end

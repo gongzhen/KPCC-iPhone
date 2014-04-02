@@ -48,8 +48,6 @@
 		768BBF1A18DA614300ACAD83 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 768BBF1918DA614300ACAD83 /* libPods.a */; };
 		768EAADF18D26C5500469734 /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 768EAADE18D26C5500469734 /* MediaPlayer.framework */; };
 		768EAAE118D26C9C00469734 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 768EAAE018D26C9C00469734 /* AVFoundation.framework */; };
-		769FD68D18EB250E00AAF1F4 /* SCPRHomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 769FD68C18EB250E00AAF1F4 /* SCPRHomeViewController.m */; };
-		769FD68E18EB250E00AAF1F4 /* SCPRHomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 769FD68C18EB250E00AAF1F4 /* SCPRHomeViewController.m */; };
 		769FD69D18EB6F4E00AAF1F4 /* SCPRRootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 769FD69C18EB6F4E00AAF1F4 /* SCPRRootViewController.m */; };
 		769FD69E18EB6F4E00AAF1F4 /* SCPRRootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 769FD69C18EB6F4E00AAF1F4 /* SCPRRootViewController.m */; };
 		76A308C718C8FB940065D4B1 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 76A308C618C8FB940065D4B1 /* Foundation.framework */; };
@@ -114,8 +112,6 @@
 		768BBF1918DA614300ACAD83 /* libPods.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libPods.a; path = "Pods/build/Debug-iphoneos/libPods.a"; sourceTree = "<group>"; };
 		768EAADE18D26C5500469734 /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
 		768EAAE018D26C9C00469734 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
-		769FD68B18EB250E00AAF1F4 /* SCPRHomeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCPRHomeViewController.h; sourceTree = "<group>"; };
-		769FD68C18EB250E00AAF1F4 /* SCPRHomeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SCPRHomeViewController.m; sourceTree = "<group>"; };
 		769FD69B18EB6F4E00AAF1F4 /* SCPRRootViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCPRRootViewController.h; sourceTree = "<group>"; };
 		769FD69C18EB6F4E00AAF1F4 /* SCPRRootViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SCPRRootViewController.m; sourceTree = "<group>"; };
 		76A308C318C8FB940065D4B1 /* KPCC.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = KPCC.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -252,8 +248,6 @@
 		76658ABC18E0AF8500026176 /* View Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				769FD68B18EB250E00AAF1F4 /* SCPRHomeViewController.h */,
-				769FD68C18EB250E00AAF1F4 /* SCPRHomeViewController.m */,
 				769FD69B18EB6F4E00AAF1F4 /* SCPRRootViewController.h */,
 				769FD69C18EB6F4E00AAF1F4 /* SCPRRootViewController.m */,
 			);
@@ -607,7 +601,6 @@
 				76349CF818D388C80027C3B8 /* main.m in Sources */,
 				76349CF918D388C80027C3B8 /* AudioManager.m in Sources */,
 				76349CFA18D388C80027C3B8 /* STKBufferingDataSource.m in Sources */,
-				769FD68E18EB250E00AAF1F4 /* SCPRHomeViewController.m in Sources */,
 				76349CFB18D388C80027C3B8 /* STKDataSource.m in Sources */,
 				76349CFC18D388C80027C3B8 /* STKBufferChunk.m in Sources */,
 				76349CFD18D388C80027C3B8 /* STKCoreFoundationDataSource.m in Sources */,
@@ -634,7 +627,6 @@
 				76A308D318C8FB940065D4B1 /* main.m in Sources */,
 				76A3090418C93C880065D4B1 /* AudioManager.m in Sources */,
 				76E75F3918CE4682008E3197 /* STKBufferingDataSource.m in Sources */,
-				769FD68D18EB250E00AAF1F4 /* SCPRHomeViewController.m in Sources */,
 				76E75F3B18CE4682008E3197 /* STKDataSource.m in Sources */,
 				76E75F3818CE4682008E3197 /* STKBufferChunk.m in Sources */,
 				76E75F3A18CE4682008E3197 /* STKCoreFoundationDataSource.m in Sources */,
