@@ -50,6 +50,8 @@
 		768EAAE118D26C9C00469734 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 768EAAE018D26C9C00469734 /* AVFoundation.framework */; };
 		769FD68D18EB250E00AAF1F4 /* SCPRHomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 769FD68C18EB250E00AAF1F4 /* SCPRHomeViewController.m */; };
 		769FD68E18EB250E00AAF1F4 /* SCPRHomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 769FD68C18EB250E00AAF1F4 /* SCPRHomeViewController.m */; };
+		769FD69D18EB6F4E00AAF1F4 /* SCPRRootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 769FD69C18EB6F4E00AAF1F4 /* SCPRRootViewController.m */; };
+		769FD69E18EB6F4E00AAF1F4 /* SCPRRootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 769FD69C18EB6F4E00AAF1F4 /* SCPRRootViewController.m */; };
 		76A308C718C8FB940065D4B1 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 76A308C618C8FB940065D4B1 /* Foundation.framework */; };
 		76A308C918C8FB940065D4B1 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 76A308C818C8FB940065D4B1 /* CoreGraphics.framework */; };
 		76A308CB18C8FB940065D4B1 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 76A308CA18C8FB940065D4B1 /* UIKit.framework */; };
@@ -114,6 +116,8 @@
 		768EAAE018D26C9C00469734 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		769FD68B18EB250E00AAF1F4 /* SCPRHomeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCPRHomeViewController.h; sourceTree = "<group>"; };
 		769FD68C18EB250E00AAF1F4 /* SCPRHomeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SCPRHomeViewController.m; sourceTree = "<group>"; };
+		769FD69B18EB6F4E00AAF1F4 /* SCPRRootViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCPRRootViewController.h; sourceTree = "<group>"; };
+		769FD69C18EB6F4E00AAF1F4 /* SCPRRootViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SCPRRootViewController.m; sourceTree = "<group>"; };
 		76A308C318C8FB940065D4B1 /* KPCC.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = KPCC.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		76A308C618C8FB940065D4B1 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		76A308C818C8FB940065D4B1 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -239,18 +243,21 @@
 		76658ABB18E0ADDF00026176 /* UI */ = {
 			isa = PBXGroup;
 			children = (
-				76658ABC18E0AF8500026176 /* Controllers */,
+				76658ABC18E0AF8500026176 /* View Controllers */,
 				76658ABD18E0AF8500026176 /* Views */,
 			);
 			path = UI;
 			sourceTree = "<group>";
 		};
-		76658ABC18E0AF8500026176 /* Controllers */ = {
+		76658ABC18E0AF8500026176 /* View Controllers */ = {
 			isa = PBXGroup;
 			children = (
 				769FD68B18EB250E00AAF1F4 /* SCPRHomeViewController.h */,
 				769FD68C18EB250E00AAF1F4 /* SCPRHomeViewController.m */,
+				769FD69B18EB6F4E00AAF1F4 /* SCPRRootViewController.h */,
+				769FD69C18EB6F4E00AAF1F4 /* SCPRRootViewController.m */,
 			);
+			name = "View Controllers";
 			path = Controllers;
 			sourceTree = "<group>";
 		};
@@ -259,6 +266,26 @@
 			children = (
 			);
 			path = Views;
+			sourceTree = "<group>";
+		};
+		769FD69918EB682E00AAF1F4 /* Classes */ = {
+			isa = PBXGroup;
+			children = (
+				769FD69A18EB685F00AAF1F4 /* Application */,
+				76A3090118C93C3A0065D4B1 /* Managers */,
+				76349D1E18D8F8A30027C3B8 /* Helpers */,
+				76658ABB18E0ADDF00026176 /* UI */,
+			);
+			name = Classes;
+			sourceTree = "<group>";
+		};
+		769FD69A18EB685F00AAF1F4 /* Application */ = {
+			isa = PBXGroup;
+			children = (
+				76A308D518C8FB940065D4B1 /* SCPRAppDelegate.h */,
+				76A308D618C8FB940065D4B1 /* SCPRAppDelegate.m */,
+			);
+			name = Application;
 			sourceTree = "<group>";
 		};
 		76A308BA18C8FB940065D4B1 = {
@@ -303,12 +330,8 @@
 		76A308CC18C8FB940065D4B1 /* KPCC */ = {
 			isa = PBXGroup;
 			children = (
-				76658ABB18E0ADDF00026176 /* UI */,
-				76349D1E18D8F8A30027C3B8 /* Helpers */,
+				769FD69918EB682E00AAF1F4 /* Classes */,
 				76E75F1C18CE4682008E3197 /* ThirdParty */,
-				76A3090118C93C3A0065D4B1 /* Managers */,
-				76A308D518C8FB940065D4B1 /* SCPRAppDelegate.h */,
-				76A308D618C8FB940065D4B1 /* SCPRAppDelegate.m */,
 				76A308D818C8FB940065D4B1 /* Main_iPhone.storyboard */,
 				76A308E418C8FB940065D4B1 /* Images.xcassets */,
 				76A308CD18C8FB940065D4B1 /* Supporting Files */,
@@ -591,6 +614,7 @@
 				76349CFE18D388C80027C3B8 /* NSMutableArray+STKAudioPlayer.m in Sources */,
 				76349CFF18D388C80027C3B8 /* STKDataSourceWrapper.m in Sources */,
 				76349D0118D388C80027C3B8 /* STKLocalFileDataSource.m in Sources */,
+				769FD69E18EB6F4E00AAF1F4 /* SCPRRootViewController.m in Sources */,
 				76349D2218D8F8A30027C3B8 /* Reachability.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -617,6 +641,7 @@
 				76E75F3518CE4682008E3197 /* NSMutableArray+STKAudioPlayer.m in Sources */,
 				76E75F3C18CE4682008E3197 /* STKDataSourceWrapper.m in Sources */,
 				76E75F3E18CE4682008E3197 /* STKLocalFileDataSource.m in Sources */,
+				769FD69D18EB6F4E00AAF1F4 /* SCPRRootViewController.m in Sources */,
 				76349D2118D8F8A30027C3B8 /* Reachability.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
