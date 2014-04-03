@@ -96,20 +96,6 @@
 
 #pragma mark - UIViewController
 
-- (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
-    
-    [[NetworkManager shared] fetchProgramInformationFor:[NSDate date] display:self];
-    
-    if ([[AudioManager shared] isStreamPlaying]) {
-        [self.actionButton setImage:[UIImage imageNamed:@"pauseButton"] forState:UIControlStateHighlighted];
-        [self.actionButton setImage:[UIImage imageNamed:@"pauseButton"] forState:UIControlStateNormal];
-    } else {
-        [self.actionButton setImage:[UIImage imageNamed:@"playButton"] forState:UIControlStateHighlighted];
-        [self.actionButton setImage:[UIImage imageNamed:@"playButton"] forState:UIControlStateNormal];
-    }
-}
-
 // Allows for interaction with system audio controls.
 - (BOOL)canBecomeFirstResponder {
     return YES;
@@ -149,10 +135,16 @@
 
     [scrollview setContentSize:CGSizeMake(self.view.frame.size.width, self.view.frame.size.height - 60)];
     [self.view addSubview:scrollview];
+    
+    // Fetch program info and update audio control state.
+    [self updateDataForUI];
 
     // Once the view has loaded then we can register to begin recieving system audio controls.
     [[UIApplication sharedApplication] beginReceivingRemoteControlEvents];
     [self becomeFirstResponder];
+    
+    // Observe when the application becomes active again, and update UI if need-be.
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateDataForUI) name:UIApplicationWillEnterForegroundNotification object:nil];
 
     [self setupTimer];
 }
@@ -169,6 +161,18 @@
     self.audioMeter.frame = CGRectMake(size.width - 50.0f, self.horizontalDividerView.frame.origin.y - 240.0f, 40.0f, 240.0f);
     self.streamerStatusTitleLabel.frame = CGRectMake(40.0f, self.horizontalDividerView.frame.origin.y + 20.0f, 130.0f, 20.0f);
     self.streamerStatusLabel.frame = CGRectMake(180.0f, self.horizontalDividerView.frame.origin.y + 20.0f, size.width - 200.0f, 20.0f);
+}
+
+- (void)updateDataForUI {
+    [[NetworkManager shared] fetchProgramInformationFor:[NSDate date] display:self];
+    
+    if ([[AudioManager shared] isStreamPlaying]) {
+        [self.actionButton setImage:[UIImage imageNamed:@"pauseButton"] forState:UIControlStateHighlighted];
+        [self.actionButton setImage:[UIImage imageNamed:@"pauseButton"] forState:UIControlStateNormal];
+    } else {
+        [self.actionButton setImage:[UIImage imageNamed:@"playButton"] forState:UIControlStateHighlighted];
+        [self.actionButton setImage:[UIImage imageNamed:@"playButton"] forState:UIControlStateNormal];
+    }
 }
 
 -(void)setupTimer {
