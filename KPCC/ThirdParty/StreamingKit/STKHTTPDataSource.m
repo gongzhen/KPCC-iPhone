@@ -232,14 +232,12 @@
 
 -(void) seekToOffset:(SInt64)offset
 {
-    //if (!hardClose) {
 
-        NSRunLoop* savedEventsRunLoop = eventsRunLoop;
+    NSRunLoop* savedEventsRunLoop = eventsRunLoop;
     
-        [self close];
+    [self close];
     
-        eventsRunLoop = savedEventsRunLoop;
-    //}
+    eventsRunLoop = savedEventsRunLoop;
 	
     NSAssert([NSRunLoop currentRunLoop] == eventsRunLoop, @"Seek called on wrong thread");
     
@@ -289,9 +287,12 @@
 		{
 			return;
 		}
-		NSLog(@"reconnect URL!! %@", url);
+        
+#pragma mark - SCPR overrides for StreamingKit
+		SCPRDebugLog(@"reconnect URL!! %@", url);
         url = [NSURL URLWithString:[[AudioManager shared] liveStreamURL]];
-        NSLog(@"reconnect URL -- NOW!! %@", url);
+        SCPRDebugLog(@"reconnect URL -- NOW!! %@", url);
+
         self->currentUrl = url;
 
         if (url == nil)

@@ -34,18 +34,17 @@ static AudioManager *singleton = nil;
 - (NSString *)liveStreamURL {
     long currentTimeSeconds = [[NSDate date] timeIntervalSince1970];
     
-    NSLog(@"currentTimeSeconds - LiveStreamThreshold: %ld", (currentTimeSeconds - kLiveStreamPreRollThreshold));
-    NSLog(@"Current lastPreRoll time: %ld", self.lastPreRoll);
+    SCPRDebugLog(@"currentTimeSeconds: %ld", currentTimeSeconds);
+    SCPRDebugLog(@"currentTimeSeconds - LiveStreamThreshold: %ld", (currentTimeSeconds - kLiveStreamPreRollThreshold));
+    SCPRDebugLog(@"currentTimeSeconds - lastPreRoll: %ld", (currentTimeSeconds - self.lastPreRoll));
+    SCPRDebugLog(@"Current lastPreRoll time: %ld", self.lastPreRoll);
 
-    if (self.lastPreRoll < (currentTimeSeconds - kLiveStreamPreRollThreshold + 5000)) {
-
-        //self.lastPreRoll = [[NSDate date] timeIntervalSince1970];
-        NSLog(@"liveStreamURL returning WITH preroll");
-
+    if (currentTimeSeconds - self.lastPreRoll > kLiveStreamPreRollThreshold || currentTimeSeconds - self.lastPreRoll < 3) {
+        SCPRDebugLog(@"liveStreamURL returning WITH preroll");
         return kLiveStreamAACURL;
     } else {
+        SCPRDebugLog(@"liveStreamURL returning NO preroll");
         return kLiveStreamAACNoPreRollURL;
-        NSLog(@"liveStreamURL returning NO preroll");
     }
 }
 
@@ -53,7 +52,7 @@ static AudioManager *singleton = nil;
     self.audioDataSource = [STKAudioPlayer dataSourceFromURL:[NSURL URLWithString:[self liveStreamURL]]];
 
     if ([[self liveStreamURL] isEqualToString:kLiveStreamAACURL]) {
-        NSLog(@"Setting lastPreRoll to now");
+        SCPRDebugLog(@"Setting lastPreRoll to now");
         self.lastPreRoll = [[NSDate date] timeIntervalSince1970];
     }
 
@@ -105,12 +104,6 @@ static AudioManager *singleton = nil;
 
 - (void)audioPlayer:(STKAudioPlayer *)audioPlayer stateChanged:(STKAudioPlayerState)state previousState:(STKAudioPlayerState)previousState {
     SCPRDebugLog();
-    
-    /*if (state == STKAudioPlayerStateBuffering && previousState == STKAudioPlayerStatePlaying) {
-        // TODO: WIP -- hacky way to restart stream without preroll after recovering from a drop.
-        NSLog(@"Restart stream manually");
-        [self startStream];
-    }*/
 }
 
 - (void)audioPlayer:(STKAudioPlayer*)audioPlayer unexpectedError:(STKAudioPlayerErrorCode)errorCode {
