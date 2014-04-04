@@ -7,6 +7,7 @@
 //
 
 #import "SCPRRootViewController.h"
+#import "SCPRUserReportViewController.h"
 
 @interface SCPRRootViewController () <UIScrollViewDelegate, ContentProcessor>
 -(void) setupTimer;
@@ -132,10 +133,6 @@
     [super viewDidLoad];
 
     self.navigationItem.title = @"KPCC";
-    [self.navigationController.navigationBar setTitleTextAttributes:
-     [NSDictionary dictionaryWithObjectsAndKeys:
-      [UIFont fontWithName:@"HelveticaNeue-Light" size:20.0f],
-      NSFontAttributeName, nil]];
 
     UIScrollView *scrollview = [[UIScrollView alloc] initWithFrame:self.view.frame];
     [scrollview addSubview:self.onAirLabel];
@@ -145,7 +142,7 @@
     [scrollview addSubview:self.audioMeter];
     [scrollview addSubview:self.streamerStatusTitleLabel];
     [scrollview addSubview:self.streamerStatusLabel];
-    //[scrollview addSubview:self.userReportButton];
+    [scrollview addSubview:self.userReportButton];
 
     [scrollview setContentSize:CGSizeMake(self.view.frame.size.width, self.view.frame.size.height - 60)];
     [self.view addSubview:scrollview];
@@ -295,6 +292,9 @@
 
 - (void)userReportTapped {
     NSLog(@"UserReportTapped!");
+
+    SCPRUserReportViewController *viewController = [[SCPRUserReportViewController alloc] initWithNibName:@"SCPRUserReportViewController" bundle:nil];
+    [self presentViewController:viewController animated:YES completion:nil];
 }
 
 

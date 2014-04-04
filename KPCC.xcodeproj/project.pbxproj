@@ -64,6 +64,10 @@
 		76A308F618C8FB950065D4B1 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 76A308F418C8FB950065D4B1 /* InfoPlist.strings */; };
 		76A308F818C8FB950065D4B1 /* KPCCTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 76A308F718C8FB950065D4B1 /* KPCCTests.m */; };
 		76A3090418C93C880065D4B1 /* AudioManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 76A3090318C93C880065D4B1 /* AudioManager.m */; };
+		76B9A9AC18EF59FD007A6D8C /* SCPRUserReportViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 76B9A9AA18EF59FD007A6D8C /* SCPRUserReportViewController.m */; };
+		76B9A9AD18EF59FD007A6D8C /* SCPRUserReportViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 76B9A9AA18EF59FD007A6D8C /* SCPRUserReportViewController.m */; };
+		76B9A9AE18EF59FD007A6D8C /* SCPRUserReportViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 76B9A9AB18EF59FD007A6D8C /* SCPRUserReportViewController.xib */; };
+		76B9A9AF18EF59FD007A6D8C /* SCPRUserReportViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 76B9A9AB18EF59FD007A6D8C /* SCPRUserReportViewController.xib */; };
 		76E75F3518CE4682008E3197 /* NSMutableArray+STKAudioPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 76E75F1F18CE4682008E3197 /* NSMutableArray+STKAudioPlayer.m */; };
 		76E75F3618CE4682008E3197 /* STKAudioPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 76E75F2118CE4682008E3197 /* STKAudioPlayer.m */; };
 		76E75F3718CE4682008E3197 /* STKAutoRecoveringHTTPDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 76E75F2318CE4682008E3197 /* STKAutoRecoveringHTTPDataSource.m */; };
@@ -133,6 +137,9 @@
 		76A308F718C8FB950065D4B1 /* KPCCTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = KPCCTests.m; sourceTree = "<group>"; };
 		76A3090218C93C880065D4B1 /* AudioManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AudioManager.h; path = Managers/AudioManager.h; sourceTree = "<group>"; };
 		76A3090318C93C880065D4B1 /* AudioManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AudioManager.m; path = Managers/AudioManager.m; sourceTree = "<group>"; };
+		76B9A9A918EF59FD007A6D8C /* SCPRUserReportViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCPRUserReportViewController.h; sourceTree = "<group>"; };
+		76B9A9AA18EF59FD007A6D8C /* SCPRUserReportViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SCPRUserReportViewController.m; sourceTree = "<group>"; };
+		76B9A9AB18EF59FD007A6D8C /* SCPRUserReportViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SCPRUserReportViewController.xib; sourceTree = "<group>"; };
 		76E75F1E18CE4682008E3197 /* NSMutableArray+STKAudioPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSMutableArray+STKAudioPlayer.h"; sourceTree = "<group>"; };
 		76E75F1F18CE4682008E3197 /* NSMutableArray+STKAudioPlayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSMutableArray+STKAudioPlayer.m"; sourceTree = "<group>"; };
 		76E75F2018CE4682008E3197 /* STKAudioPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STKAudioPlayer.h; sourceTree = "<group>"; };
@@ -250,6 +257,9 @@
 			children = (
 				769FD69B18EB6F4E00AAF1F4 /* SCPRRootViewController.h */,
 				769FD69C18EB6F4E00AAF1F4 /* SCPRRootViewController.m */,
+				76B9A9A918EF59FD007A6D8C /* SCPRUserReportViewController.h */,
+				76B9A9AA18EF59FD007A6D8C /* SCPRUserReportViewController.m */,
+				76B9A9AB18EF59FD007A6D8C /* SCPRUserReportViewController.xib */,
 			);
 			name = "View Controllers";
 			path = Controllers;
@@ -525,6 +535,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				76349D0B18D388C80027C3B8 /* Config.plist in Resources */,
+				76B9A9AF18EF59FD007A6D8C /* SCPRUserReportViewController.xib in Resources */,
 				76349D0C18D388C80027C3B8 /* Images.xcassets in Resources */,
 				76349D0D18D388C80027C3B8 /* Main_iPhone.storyboard in Resources */,
 				76349D0E18D388C80027C3B8 /* InfoPlist.strings in Resources */,
@@ -536,6 +547,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				76349CA818D373440027C3B8 /* Config.plist in Resources */,
+				76B9A9AE18EF59FD007A6D8C /* SCPRUserReportViewController.xib in Resources */,
 				76A308E518C8FB940065D4B1 /* Images.xcassets in Resources */,
 				76A308DA18C8FB940065D4B1 /* Main_iPhone.storyboard in Resources */,
 				76A308D118C8FB940065D4B1 /* InfoPlist.strings in Resources */,
@@ -593,6 +605,7 @@
 				76658AB618DCB0DC00026176 /* AnalyticsManager.m in Sources */,
 				76349D1C18D8C74F0027C3B8 /* NetworkManager.m in Sources */,
 				76349CF318D388C80027C3B8 /* STKHTTPDataSource.m in Sources */,
+				76B9A9AD18EF59FD007A6D8C /* SCPRUserReportViewController.m in Sources */,
 				76349CF418D388C80027C3B8 /* STKAudioPlayer.m in Sources */,
 				76658ABA18DCB51000026176 /* NSDate+Helper.m in Sources */,
 				76349CF518D388C80027C3B8 /* STKQueueEntry.m in Sources */,
@@ -619,6 +632,7 @@
 				76658AB518DCB0DC00026176 /* AnalyticsManager.m in Sources */,
 				76349D1B18D8C74F0027C3B8 /* NetworkManager.m in Sources */,
 				76E75F3D18CE4682008E3197 /* STKHTTPDataSource.m in Sources */,
+				76B9A9AC18EF59FD007A6D8C /* SCPRUserReportViewController.m in Sources */,
 				76E75F3618CE4682008E3197 /* STKAudioPlayer.m in Sources */,
 				76658AB918DCB51000026176 /* NSDate+Helper.m in Sources */,
 				76E75F3F18CE4682008E3197 /* STKQueueEntry.m in Sources */,
