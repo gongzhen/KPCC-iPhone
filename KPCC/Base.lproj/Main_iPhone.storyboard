@@ -24,10 +24,10 @@
             </objects>
             <point key="canvasLocation" x="-393" y="-30"/>
         </scene>
-        <!--Home View Controller - First-->
+        <!--Root View Controller - First-->
         <scene sceneID="W3I-pn-N6e">
             <objects>
-                <viewController title="First" id="CZ4-MO-1fc" customClass="SCPRHomeViewController" sceneMemberID="viewController">
+                <viewController title="First" id="CZ4-MO-1fc" customClass="SCPRRootViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="FSB-MQ-Ti3"/>
                         <viewControllerLayoutGuide type="bottom" id="e4h-5o-pHz"/>
@@ -75,9 +75,6 @@
                                 <state key="normal" image="playButton">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
-                                <connections>
-                                    <action selector="buttonTapped:" destination="CZ4-MO-1fc" eventType="touchUpInside" id="3SU-lX-00E"/>
-                                </connections>
                             </button>
                             <view alpha="0.5" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="mZa-Vb-a2i">
                                 <rect key="frame" x="260" y="391" width="40" height="0.0"/>
@@ -89,7 +86,6 @@
                     </view>
                     <navigationItem key="navigationItem" title="KPCC" id="2dt-Cw-yzR"/>
                     <connections>
-                        <outlet property="actionButton" destination="Ekb-Rq-a2S" id="Cyx-VL-5Yv"/>
                         <outlet property="meter" destination="mZa-Vb-a2i" id="Ofg-nB-iA7"/>
                         <outlet property="programTitleLabel" destination="cz7-id-iht" id="3H9-JK-83x"/>
                         <outlet property="streamStatusLabel" destination="9YI-7X-xa4" id="r4u-wu-t52"/>

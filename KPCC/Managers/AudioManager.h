@@ -18,8 +18,13 @@
 #define kLiveStreamAACNoPreRollURL @"http://live.scpr.org/aac?preskip=true"
 #define kLiveStreamPreRollThreshold 3600
 
+#ifdef DEBUG
+#	define SCPRDebugLog(fmt, ...) NSLog((@"%s [Line %d] " fmt), __PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__);
+#else
+#	define SCPRDebugLog(...)
+#endif
 
-@interface AudioManager : NSObject<STKAudioPlayerDelegate>
+@interface AudioManager : NSObject<STKAudioPlayerDelegate, STKDataSourceDelegate>
 
 + (AudioManager*)shared;
 
@@ -28,6 +33,7 @@
 
 @property long lastPreRoll;
 
+- (NSString *)liveStreamURL;
 - (void)startStream;
 - (void)stopStream;
 - (BOOL)isStreamPlaying;

@@ -31,15 +31,32 @@ static AudioManager *singleton = nil;
     self.audioPlayer.meteringEnabled = YES;
 }
 
-- (void)startStream {
+- (NSString *)liveStreamURL {
     long currentTimeSeconds = [[NSDate date] timeIntervalSince1970];
-    if (self.lastPreRoll < (currentTimeSeconds - kLiveStreamPreRollThreshold)) {
-        self.lastPreRoll = currentTimeSeconds;
-        self.audioDataSource = [STKAudioPlayer dataSourceFromURL:[NSURL URLWithString:kLiveStreamAACURL]];
-    } else {
-        self.audioDataSource = [STKAudioPlayer dataSourceFromURL:[NSURL URLWithString:kLiveStreamAACNoPreRollURL]];
-    }
     
+    NSLog(@"currentTimeSeconds - LiveStreamThreshold: %ld", (currentTimeSeconds - kLiveStreamPreRollThreshold));
+    NSLog(@"Current lastPreRoll time: %ld", self.lastPreRoll);
+
+    if (self.lastPreRoll < (currentTimeSeconds - kLiveStreamPreRollThreshold + 5000)) {
+
+        //self.lastPreRoll = [[NSDate date] timeIntervalSince1970];
+        NSLog(@"liveStreamURL returning WITH preroll");
+
+        return kLiveStreamAACURL;
+    } else {
+        return kLiveStreamAACNoPreRollURL;
+        NSLog(@"liveStreamURL returning NO preroll");
+    }
+}
+
+- (void)startStream {
+    self.audioDataSource = [STKAudioPlayer dataSourceFromURL:[NSURL URLWithString:[self liveStreamURL]]];
+
+    if ([[self liveStreamURL] isEqualToString:kLiveStreamAACURL]) {
+        NSLog(@"Setting lastPreRoll to now");
+        self.lastPreRoll = [[NSDate date] timeIntervalSince1970];
+    }
+
     [self.audioPlayer playDataSource:self.audioDataSource];
 }
 
@@ -57,6 +74,7 @@ static AudioManager *singleton = nil;
 
 
 #pragma mark - Error Logging
+
 - (void)analyzeStreamError:(NSString *)comments {
     
     NSURL *liveURL = [NSURL URLWithString:kLiveStreamURL];
@@ -83,18 +101,20 @@ static AudioManager *singleton = nil;
     }
 }
 
-#pragma mark - STKAudioPlayerDelegate
+#pragma mark - STKAudioPlayerDelegate protocol implementation
+
 - (void)audioPlayer:(STKAudioPlayer *)audioPlayer stateChanged:(STKAudioPlayerState)state previousState:(STKAudioPlayerState)previousState {
-    NSLog(@"STKAudioPlayerStateChanged to: %i .... previously: %i", state, previousState);
+    SCPRDebugLog();
     
-    if (state == STKAudioPlayerStateBuffering && previousState == STKAudioPlayerStatePlaying) {
+    /*if (state == STKAudioPlayerStateBuffering && previousState == STKAudioPlayerStatePlaying) {
         // TODO: WIP -- hacky way to restart stream without preroll after recovering from a drop.
+        NSLog(@"Restart stream manually");
         [self startStream];
-    }
+    }*/
 }
 
 - (void)audioPlayer:(STKAudioPlayer*)audioPlayer unexpectedError:(STKAudioPlayerErrorCode)errorCode {
-    NSLog(@"STKAudioPlayer UnexpectedError: %i", errorCode);
+    SCPRDebugLog();
     
     NSString *errorCodeString;
     switch (errorCode) {
@@ -135,15 +155,35 @@ static AudioManager *singleton = nil;
 }
 
 - (void)audioPlayer:(STKAudioPlayer *)audioPlayer didStartPlayingQueueItemId:(NSObject *)queueItemId {
-    NSLog(@"audioPlayer didStartPlaying");
+    SCPRDebugLog();
+
     [[AnalyticsManager shared] logEvent:@"streamStartedPlaying" withParameters:nil];
 }
 - (void)audioPlayer:(STKAudioPlayer *)audioPlayer logInfo:(NSString *)line {
-    NSLog(@"audioPlayerLog: %@", line);
+    SCPRDebugLog();
+
     [[AnalyticsManager shared] logEvent:@"audioPlayerLogItem" withParameters:@{@"event": line}];
 }
 
-- (void)audioPlayer:(STKAudioPlayer *)audioPlayer didFinishBufferingSourceWithQueueItemId:(NSObject *)queueItemId {}
-- (void)audioPlayer:(STKAudioPlayer *)audioPlayer didFinishPlayingQueueItemId:(NSObject *)queueItemId withReason:(STKAudioPlayerStopReason)stopReason andProgress:(double)progress andDuration:(double)duration {}
+- (void)audioPlayer:(STKAudioPlayer *)audioPlayer didFinishBufferingSourceWithQueueItemId:(NSObject *)queueItemId {
+    SCPRDebugLog();
+}
+- (void)audioPlayer:(STKAudioPlayer *)audioPlayer didFinishPlayingQueueItemId:(NSObject *)queueItemId withReason:(STKAudioPlayerStopReason)stopReason andProgress:(double)progress andDuration:(double)duration {
+    SCPRDebugLog();
+}
+
+#pragma mark - STKDataSourceDelegate protocol implementation
+
+-(void) dataSourceDataAvailable:(STKDataSource*)dataSource {
+    SCPRDebugLog();
+}
+
+-(void) dataSourceErrorOccured:(STKDataSource*)dataSource {
+    SCPRDebugLog();
+}
+
+-(void) dataSourceEof:(STKDataSource*)dataSource {
+    SCPRDebugLog();
+}
 
 @end

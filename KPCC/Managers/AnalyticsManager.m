@@ -33,7 +33,7 @@ static AnalyticsManager *singleton = nil;
     }
     
 #ifdef DEBUG
-    NSLog(@"Logging to Flurry now - %@ - with params %@", event, parameters);
+    //NSLog(@"Logging to Flurry now - %@ - with params %@", event, parameters);
 #endif
     [Flurry logEvent:event withParameters:userInfo timed:YES];
 }

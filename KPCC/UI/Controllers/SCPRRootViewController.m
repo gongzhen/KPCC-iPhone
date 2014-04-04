@@ -17,6 +17,7 @@
 @property (nonatomic) UIView *audioMeter;
 @property (nonatomic) UILabel *streamerStatusTitleLabel;
 @property (nonatomic) UILabel *streamerStatusLabel;
+@property (nonatomic) UIButton *userReportButton;
 @end
 
 @implementation SCPRRootViewController
@@ -30,6 +31,7 @@
 @synthesize audioMeter = _audioMeter;
 @synthesize streamerStatusTitleLabel = _streamerStatusTitleLabel;
 @synthesize streamerStatusLabel = _streamerStatusLabel;
+@synthesize userReportButton = _userReportButton;
 
 - (UILabel *)onAirLabel {
     if (!_onAirLabel) {
@@ -94,6 +96,17 @@
     return _streamerStatusLabel;
 }
 
+- (UIButton *)userReportButton {
+    if (!_userReportButton) {
+        _userReportButton = [[UIButton alloc] init];
+        [_userReportButton setTitle:@"Report something weird!" forState:UIControlStateNormal];
+        [_userReportButton setTitleColor:[UIColor redColor] forState:UIControlStateNormal];
+        [_userReportButton setTitleColor:[UIColor darkGrayColor] forState:UIControlStateHighlighted];
+        [_userReportButton addTarget:self action:@selector(userReportTapped) forControlEvents:UIControlEventTouchUpInside];
+    }
+    return _userReportButton;
+}
+
 #pragma mark - UIViewController
 
 // Allows for interaction with system audio controls.
@@ -132,6 +145,7 @@
     [scrollview addSubview:self.audioMeter];
     [scrollview addSubview:self.streamerStatusTitleLabel];
     [scrollview addSubview:self.streamerStatusLabel];
+    //[scrollview addSubview:self.userReportButton];
 
     [scrollview setContentSize:CGSizeMake(self.view.frame.size.width, self.view.frame.size.height - 60)];
     [self.view addSubview:scrollview];
@@ -161,6 +175,7 @@
     self.audioMeter.frame = CGRectMake(size.width - 50.0f, self.horizontalDividerView.frame.origin.y - 240.0f, 40.0f, 240.0f);
     self.streamerStatusTitleLabel.frame = CGRectMake(40.0f, self.horizontalDividerView.frame.origin.y + 20.0f, 130.0f, 20.0f);
     self.streamerStatusLabel.frame = CGRectMake(180.0f, self.horizontalDividerView.frame.origin.y + 20.0f, size.width - 200.0f, 20.0f);
+    self.userReportButton.frame = CGRectMake(0.0f, self.horizontalDividerView.frame.origin.y + 60.0f, size.width, 20.0f);
 }
 
 - (void)updateDataForUI {
@@ -276,6 +291,10 @@
     }
     
     [self.streamerStatusLabel setText:audioPlayerStateString];
+}
+
+- (void)userReportTapped {
+    NSLog(@"UserReportTapped!");
 }
 
 

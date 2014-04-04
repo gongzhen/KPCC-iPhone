@@ -118,6 +118,8 @@ static void PopulateOptionsWithDefault(STKAutoRecoveringHTTPDataSourceOptions* o
 
 -(id) initWithHTTPDataSource:(STKHTTPDataSource*)innerDataSourceIn andOptions:(STKAutoRecoveringHTTPDataSourceOptions)optionsIn
 {
+    NSLog(@"STKAutoRecovering.. initWithHTTPDataSource");
+    
     if (self = [super initWithDataSource:innerDataSourceIn])
     {
         self.innerDataSource.delegate = self;
@@ -326,6 +328,8 @@ static void PopulateOptionsWithDefault(STKAutoRecoveringHTTPDataSourceOptions* o
 
 -(void) processRetryOnError
 {
+    NSLog(@"processRetryOnError!!");
+
     if (![self hasGotNetworkConnection])
     {
         waitingForNetwork = YES;
@@ -371,7 +375,7 @@ static void PopulateOptionsWithDefault(STKAutoRecoveringHTTPDataSourceOptions* o
 
 -(void) dataSourceErrorOccured:(STKDataSource*)dataSource
 {
-    NSLog(@"dataSourceErrorOccured");
+    NSLog(@"dataSourceErrorOccured in HTTPAutoRecovery");
     
     if (self.innerDataSource.httpStatusCode == 416 /* Range out of bounds */)
     {

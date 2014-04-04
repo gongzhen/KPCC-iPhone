@@ -35,6 +35,8 @@
 #import "STKHTTPDataSource.h"
 #import "STKLocalFileDataSource.h"
 
+#import "AudioManager.h"
+
 @interface STKHTTPDataSource()
 {
 @private
@@ -217,6 +219,8 @@
 
 -(void) reconnect
 {
+    NSLog(@"HTTPDataSource reconnect!");
+    
     NSRunLoop* savedEventsRunLoop = eventsRunLoop;
     
     [self close];
@@ -228,11 +232,14 @@
 
 -(void) seekToOffset:(SInt64)offset
 {
-    NSRunLoop* savedEventsRunLoop = eventsRunLoop;
+    //if (!hardClose) {
+
+        NSRunLoop* savedEventsRunLoop = eventsRunLoop;
     
-    [self close];
+        [self close];
     
-    eventsRunLoop = savedEventsRunLoop;
+        eventsRunLoop = savedEventsRunLoop;
+    //}
 	
     NSAssert([NSRunLoop currentRunLoop] == eventsRunLoop, @"Seek called on wrong thread");
     
@@ -282,7 +289,9 @@
 		{
 			return;
 		}
-		
+		NSLog(@"reconnect URL!! %@", url);
+        url = [NSURL URLWithString:[[AudioManager shared] liveStreamURL]];
+        NSLog(@"reconnect URL -- NOW!! %@", url);
         self->currentUrl = url;
 
         if (url == nil)
