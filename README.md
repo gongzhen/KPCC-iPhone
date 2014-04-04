@@ -6,7 +6,7 @@ The KPCC iOS App for iPhone
 
 Config
 ==========
-  In order for this app to hook up to the variety of third-party services we use, you're going to have to setup a file 'KPCC/Config.plist' - as seen in SCPR/KPCC-iPad.
+  In order for this app to hook up to the variety of third-party services we use, you're going to have to setup a file 'KPCC/Config.plist' - as seen in [SCPR/KPCC-iPad](https://github.com/SCPR/KPCC-iPad).
 
   Here's what that might look like for you:
   ```xml
