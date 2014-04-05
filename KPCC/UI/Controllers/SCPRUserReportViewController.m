@@ -18,7 +18,7 @@
 
 @implementation SCPRUserReportViewController
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil{
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Custom initialization
@@ -36,7 +36,14 @@
 
     [self.cancelButton setAction:@selector(hideUserReportView)];
     [self.sendReportButton addTarget:self action:@selector(sendUserReportAction) forControlEvents:UIControlEventTouchUpInside];
-    
+
+    [self.cancelButton setTitleTextAttributes:
+     @{NSForegroundColorAttributeName:[UIColor whiteColor],
+       NSFontAttributeName:[UIFont fontWithName:@"HelveticaNeue-Light" size:16.0f]}
+                                     forState:UIControlStateNormal];
+
+    self.versionNumberLabel.text = [NSString stringWithFormat:@"%@",[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"]];
+
     //self.userReportDetails.delegate = self;
 }
 
@@ -99,14 +106,12 @@
                                                                                    @"StreamState" : audioPlayerStateString,
                                                                                    @"NetworkInfo" : [[NetworkManager shared] networkInformation],
                                                                                    @"LastPrerollPlayerSecondsAgo" : [NSString stringWithFormat:@"%ld", currentTimeSeconds - [[AudioManager shared] lastPreRoll]]}];
-        /*UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Thank you" message:@"This really helps!" delegate:self cancelButtonTitle:nil otherButtonTitles: @"OK",nil, nil];
-        [alert show];*/
         [self hideUserReportView];
     } else {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Access Denied" message:@"Come on, be original!" delegate:self cancelButtonTitle:nil otherButtonTitles: @"OK",nil, nil];
         [alert show];
     }
-    
+
 }
 
 - (void)didReceiveMemoryWarning

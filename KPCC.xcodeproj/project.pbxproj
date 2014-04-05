@@ -68,6 +68,8 @@
 		76B9A9AD18EF59FD007A6D8C /* SCPRUserReportViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 76B9A9AA18EF59FD007A6D8C /* SCPRUserReportViewController.m */; };
 		76B9A9AE18EF59FD007A6D8C /* SCPRUserReportViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 76B9A9AB18EF59FD007A6D8C /* SCPRUserReportViewController.xib */; };
 		76B9A9AF18EF59FD007A6D8C /* SCPRUserReportViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 76B9A9AB18EF59FD007A6D8C /* SCPRUserReportViewController.xib */; };
+		76B9A9B618EF79F6007A6D8C /* SCPRFooterView.m in Sources */ = {isa = PBXBuildFile; fileRef = 76B9A9B518EF79F6007A6D8C /* SCPRFooterView.m */; };
+		76B9A9B718EF79F6007A6D8C /* SCPRFooterView.m in Sources */ = {isa = PBXBuildFile; fileRef = 76B9A9B518EF79F6007A6D8C /* SCPRFooterView.m */; };
 		76E75F3518CE4682008E3197 /* NSMutableArray+STKAudioPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 76E75F1F18CE4682008E3197 /* NSMutableArray+STKAudioPlayer.m */; };
 		76E75F3618CE4682008E3197 /* STKAudioPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 76E75F2118CE4682008E3197 /* STKAudioPlayer.m */; };
 		76E75F3718CE4682008E3197 /* STKAutoRecoveringHTTPDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 76E75F2318CE4682008E3197 /* STKAutoRecoveringHTTPDataSource.m */; };
@@ -140,6 +142,8 @@
 		76B9A9A918EF59FD007A6D8C /* SCPRUserReportViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCPRUserReportViewController.h; sourceTree = "<group>"; };
 		76B9A9AA18EF59FD007A6D8C /* SCPRUserReportViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SCPRUserReportViewController.m; sourceTree = "<group>"; };
 		76B9A9AB18EF59FD007A6D8C /* SCPRUserReportViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SCPRUserReportViewController.xib; sourceTree = "<group>"; };
+		76B9A9B418EF79F6007A6D8C /* SCPRFooterView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCPRFooterView.h; sourceTree = "<group>"; };
+		76B9A9B518EF79F6007A6D8C /* SCPRFooterView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SCPRFooterView.m; sourceTree = "<group>"; };
 		76E75F1E18CE4682008E3197 /* NSMutableArray+STKAudioPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSMutableArray+STKAudioPlayer.h"; sourceTree = "<group>"; };
 		76E75F1F18CE4682008E3197 /* NSMutableArray+STKAudioPlayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSMutableArray+STKAudioPlayer.m"; sourceTree = "<group>"; };
 		76E75F2018CE4682008E3197 /* STKAudioPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STKAudioPlayer.h; sourceTree = "<group>"; };
@@ -268,6 +272,8 @@
 		76658ABD18E0AF8500026176 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				76B9A9B418EF79F6007A6D8C /* SCPRFooterView.h */,
+				76B9A9B518EF79F6007A6D8C /* SCPRFooterView.m */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -610,6 +616,7 @@
 				76658ABA18DCB51000026176 /* NSDate+Helper.m in Sources */,
 				76349CF518D388C80027C3B8 /* STKQueueEntry.m in Sources */,
 				76349CF618D388C80027C3B8 /* STKAutoRecoveringHTTPDataSource.m in Sources */,
+				76B9A9B718EF79F6007A6D8C /* SCPRFooterView.m in Sources */,
 				76349CF718D388C80027C3B8 /* SCPRAppDelegate.m in Sources */,
 				76349CF818D388C80027C3B8 /* main.m in Sources */,
 				76349CF918D388C80027C3B8 /* AudioManager.m in Sources */,
@@ -637,6 +644,7 @@
 				76658AB918DCB51000026176 /* NSDate+Helper.m in Sources */,
 				76E75F3F18CE4682008E3197 /* STKQueueEntry.m in Sources */,
 				76E75F3718CE4682008E3197 /* STKAutoRecoveringHTTPDataSource.m in Sources */,
+				76B9A9B618EF79F6007A6D8C /* SCPRFooterView.m in Sources */,
 				76A308D718C8FB940065D4B1 /* SCPRAppDelegate.m in Sources */,
 				76A308D318C8FB940065D4B1 /* main.m in Sources */,
 				76A3090418C93C880065D4B1 /* AudioManager.m in Sources */,

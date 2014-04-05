@@ -9,6 +9,7 @@
                 <outlet property="cancelButton" destination="Bcs-y5-tB7" id="12f-JV-ZTO"/>
                 <outlet property="sendReportButton" destination="c5L-Vd-mM5" id="Sgt-pG-lXn"/>
                 <outlet property="userReportDetails" destination="FSI-kj-KpG" id="ZSg-V0-kgN"/>
+                <outlet property="versionNumberLabel" destination="4vr-s3-Y3d" id="qSR-jF-jSY"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
         </placeholder>
@@ -51,6 +52,13 @@
                     </subviews>
                     <color key="backgroundColor" red="0.87762317518248179" green="0.5564552919708029" blue="0.40910127737226276" alpha="1" colorSpace="calibratedRGB"/>
                 </view>
+                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4vr-s3-Y3d">
+                    <rect key="frame" x="216" y="527" width="84" height="21"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="14"/>
+                    <color key="textColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                    <nil key="highlightedColor"/>
+                </label>
             </subviews>
             <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
             <simulatedStatusBarMetrics key="simulatedStatusBarMetrics" statusBarStyle="lightContent"/>

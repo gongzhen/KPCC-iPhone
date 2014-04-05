@@ -12,4 +12,5 @@
 @property IBOutlet UIBarButtonItem *cancelButton;
 @property IBOutlet UIButton *sendReportButton;
 @property IBOutlet UITextView *userReportDetails;
+@property IBOutlet UILabel *versionNumberLabel;
 @end

@@ -8,6 +8,7 @@
 
 #import "SCPRRootViewController.h"
 #import "SCPRUserReportViewController.h"
+#import "SCPRFooterView.h"
 
 @interface SCPRRootViewController () <UIScrollViewDelegate, ContentProcessor>
 -(void) setupTimer;
@@ -18,7 +19,9 @@
 @property (nonatomic) UIView *audioMeter;
 @property (nonatomic) UILabel *streamerStatusTitleLabel;
 @property (nonatomic) UILabel *streamerStatusLabel;
+@property (nonatomic) UIView *userReportView;
 @property (nonatomic) UIButton *userReportButton;
+@property (nonatomic) SCPRFooterView *footerView;
 @end
 
 @implementation SCPRRootViewController
@@ -32,12 +35,14 @@
 @synthesize audioMeter = _audioMeter;
 @synthesize streamerStatusTitleLabel = _streamerStatusTitleLabel;
 @synthesize streamerStatusLabel = _streamerStatusLabel;
+@synthesize userReportView = _userReportView;
 @synthesize userReportButton = _userReportButton;
 
 - (UILabel *)onAirLabel {
     if (!_onAirLabel) {
         _onAirLabel = [[UILabel alloc] init];
         _onAirLabel.textColor = [UIColor darkGrayColor];
+        _onAirLabel.font = [UIFont fontWithName:@"HelveticaNeue" size:18.0f];
         _onAirLabel.text = @"On air now:";
     }
     return _onAirLabel;
@@ -47,6 +52,7 @@
     if (!_programTitleLabel) {
         _programTitleLabel = [[UILabel alloc] init];
         _programTitleLabel.textColor = [UIColor colorWithRed:71.0f/255.0f green:111.0f/255.0f blue:192.0f/255.0f alpha:1.0f];
+        _programTitleLabel.font = [UIFont fontWithName:@"HelveticaNeue" size:18.0f];
     }
     return _programTitleLabel;
 }
@@ -81,7 +87,7 @@
     if (!_streamerStatusTitleLabel) {
         _streamerStatusTitleLabel = [[UILabel alloc] init];
         _streamerStatusTitleLabel.textColor = [UIColor lightGrayColor];
-        _streamerStatusTitleLabel.font = [_streamerStatusTitleLabel.font fontWithSize:15.0f];
+        _streamerStatusTitleLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:16.0f];
         _streamerStatusTitleLabel.text = @"Streamer Status:";
     }
     return _streamerStatusTitleLabel;
@@ -91,21 +97,38 @@
     if (!_streamerStatusLabel) {
         _streamerStatusLabel = [[UILabel alloc] init];
         _streamerStatusLabel.textColor = [UIColor lightGrayColor];
-        _streamerStatusLabel.font = [_streamerStatusLabel.font fontWithSize:15.0f];
+        _streamerStatusLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:16.0f];
         [_streamerStatusLabel setTextAlignment:NSTextAlignmentCenter];
     }
     return _streamerStatusLabel;
+}
+
+- (UIView *)userReportView {
+    if (!_userReportView) {
+        _userReportView = [[UIView alloc] init];
+        _userReportView.backgroundColor = [UIColor colorWithRed:240.0f/255.0f green:179.0f/255.0f blue:127.0f/255.0f alpha:1.0f];
+    }
+    return _userReportView;
 }
 
 - (UIButton *)userReportButton {
     if (!_userReportButton) {
         _userReportButton = [[UIButton alloc] init];
         [_userReportButton setTitle:@"Report something weird!" forState:UIControlStateNormal];
-        [_userReportButton setTitleColor:[UIColor redColor] forState:UIControlStateNormal];
+        [_userReportButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         [_userReportButton setTitleColor:[UIColor darkGrayColor] forState:UIControlStateHighlighted];
+        _userReportButton.titleLabel.font = [UIFont fontWithName:@"HelveticaNeue-LightItalic" size:20.0f];
         [_userReportButton addTarget:self action:@selector(userReportTapped) forControlEvents:UIControlEventTouchUpInside];
     }
     return _userReportButton;
+}
+
+- (SCPRFooterView *)footerView {
+    if (!_footerView) {
+        _footerView = [[SCPRFooterView alloc] init];
+        _footerView.backgroundColor = [UIColor colorWithRed:240.0f/255.0f green:179.0f/255.0f blue:127.0f/255.0f alpha:1.0f];
+    }
+    return _footerView;
 }
 
 #pragma mark - UIViewController
@@ -142,8 +165,10 @@
     [scrollview addSubview:self.audioMeter];
     [scrollview addSubview:self.streamerStatusTitleLabel];
     [scrollview addSubview:self.streamerStatusLabel];
+    [scrollview addSubview:self.userReportView];
     [scrollview addSubview:self.userReportButton];
-
+    [scrollview addSubview:self.footerView];
+    
     [scrollview setContentSize:CGSizeMake(self.view.frame.size.width, self.view.frame.size.height - 60)];
     [self.view addSubview:scrollview];
     
@@ -165,14 +190,19 @@
 
     CGSize size = self.view.bounds.size;
     
-    self.onAirLabel.frame = CGRectMake(20.0f, 20.0f, 90.0f, 20.f);
-    self.programTitleLabel.frame = CGRectMake(120.f, 20.0f, size.width - 120.0f, 20.0f);
+    self.onAirLabel.frame = CGRectMake(20.0f, 20.0f, 100.0f, 24.f);
+    self.programTitleLabel.frame = CGRectMake(120.f, 20.0f, size.width - 120.0f, 24.0f);
     self.actionButton.frame = CGRectMake(size.width / 2.0f - 30.0f, size.height / 2.0f - 100.0f, 60.0f, 60.0f);
-    self.horizontalDividerView.frame = CGRectMake(10.0f, size.height/ 2.0f + 80.0f, size.width - 10.0f, 1.0f);
+    self.horizontalDividerView.frame = CGRectMake(10.0f, size.height/ 2.0f + 60.0f, size.width - 10.0f, 1.0f);
     self.audioMeter.frame = CGRectMake(size.width - 50.0f, self.horizontalDividerView.frame.origin.y - 240.0f, 40.0f, 240.0f);
     self.streamerStatusTitleLabel.frame = CGRectMake(40.0f, self.horizontalDividerView.frame.origin.y + 20.0f, 130.0f, 20.0f);
     self.streamerStatusLabel.frame = CGRectMake(180.0f, self.horizontalDividerView.frame.origin.y + 20.0f, size.width - 200.0f, 20.0f);
-    self.userReportButton.frame = CGRectMake(0.0f, self.horizontalDividerView.frame.origin.y + 60.0f, size.width, 20.0f);
+    
+    float userReportViewOffsetY = self.horizontalDividerView.frame.origin.y + 80.0f;
+    self.userReportView.frame = CGRectMake(0.0f, userReportViewOffsetY, size.width, size.height  - userReportViewOffsetY - 60.0f);
+    self.userReportButton.frame = CGRectMake(0.0f, self.userReportView.frame.origin.y, size.width, self.userReportView.frame.size.height);
+    
+    self.footerView.frame = CGRectMake(0.0f, self.userReportView.frame.origin.y + self.userReportView.frame.size.height, size.width, 400.0f);
 }
 
 - (void)updateDataForUI {
@@ -291,10 +321,18 @@
 }
 
 - (void)userReportTapped {
-    NSLog(@"UserReportTapped!");
-
     SCPRUserReportViewController *viewController = [[SCPRUserReportViewController alloc] initWithNibName:@"SCPRUserReportViewController" bundle:nil];
     [self presentViewController:viewController animated:YES completion:nil];
+}
+
+-(UIImage *)convertViewToImage
+{
+    UIGraphicsBeginImageContext(self.view.bounds.size);
+    [self.view drawViewHierarchyInRect:self.view.bounds afterScreenUpdates:YES];
+    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    
+    return image;
 }
 
 
@@ -305,8 +343,32 @@
     if ( [content count] == 0 ) {
         return;
     }
-    
-    [self.programTitleLabel setText:[[content objectAtIndex:0] objectForKey:@"title"]];
+
+    if ([self.programTitleLabel.text isEqualToString:@""]) {
+        self.programTitleLabel.alpha = 0.0;
+
+        [self.programTitleLabel setText:[[content objectAtIndex:0] objectForKey:@"title"]];
+
+        [UIView animateWithDuration:0.22
+                         animations:^{
+                             self.programTitleLabel.alpha = 1.0;
+                         } completion:nil];
+    } else if (![self.programTitleLabel.text isEqualToString:[[content objectAtIndex:0] objectForKey:@"title"]]) {
+        
+        [UIView animateWithDuration:0.22
+                         animations:^{
+                             self.programTitleLabel.alpha = 0.0;
+                         } completion:nil];
+        
+        [self.programTitleLabel setText:[[content objectAtIndex:0] objectForKey:@"title"]];
+
+        [UIView animateWithDuration:0.22
+                         animations:^{
+                             self.programTitleLabel.alpha = 1.0;
+                         } completion:nil];
+    } else {
+        [self.programTitleLabel setText:[[content objectAtIndex:0] objectForKey:@"title"]];
+    }
     
     NSDictionary *audioMetaData = @{ MPMediaItemPropertyArtist : @"89.3 KPCC",
                                      MPMediaItemPropertyTitle : [[content objectAtIndex:0] objectForKey:@"title"] };
