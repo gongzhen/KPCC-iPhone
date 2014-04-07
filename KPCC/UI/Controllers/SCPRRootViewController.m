@@ -12,6 +12,7 @@
 
 @interface SCPRRootViewController () <UIScrollViewDelegate, ContentProcessor>
 -(void) setupTimer;
+@property (nonatomic, strong) NSString *currentProgramTitle;
 @property (nonatomic) UILabel *onAirLabel;
 @property (nonatomic) UILabel *programTitleLabel;
 @property (nonatomic) UIButton *actionButton;
@@ -232,6 +233,7 @@
 
 - (void)playStream {
     [[AudioManager shared] startStream];
+    [self updateNowPlayingInfoWithProgram:self.currentProgramTitle];
 }
 
 - (void)stopStream {
@@ -321,18 +323,9 @@
 }
 
 - (void)userReportTapped {
+    
     SCPRUserReportViewController *viewController = [[SCPRUserReportViewController alloc] initWithNibName:@"SCPRUserReportViewController" bundle:nil];
     [self presentViewController:viewController animated:YES completion:nil];
-}
-
--(UIImage *)convertViewToImage
-{
-    UIGraphicsBeginImageContext(self.view.bounds.size);
-    [self.view drawViewHierarchyInRect:self.view.bounds afterScreenUpdates:YES];
-    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
-    
-    return image;
 }
 
 
@@ -340,40 +333,51 @@
 
 - (void)handleProcessedContent:(NSArray *)content flags:(NSDictionary *)flags {
     
-    if ( [content count] == 0 ) {
+    if ([content count] == 0) {
         return;
     }
 
-    if ([self.programTitleLabel.text isEqualToString:@""]) {
-        self.programTitleLabel.alpha = 0.0;
+    if ([[content objectAtIndex:0] objectForKey:@"title"]) {
 
-        [self.programTitleLabel setText:[[content objectAtIndex:0] objectForKey:@"title"]];
+        self.currentProgramTitle = [[content objectAtIndex:0] objectForKey:@"title"];
 
-        [UIView animateWithDuration:0.22
-                         animations:^{
-                             self.programTitleLabel.alpha = 1.0;
-                         } completion:nil];
-    } else if (![self.programTitleLabel.text isEqualToString:[[content objectAtIndex:0] objectForKey:@"title"]]) {
+        if ([self.programTitleLabel.text isEqualToString:@""]) {
+            self.programTitleLabel.alpha = 0.0;
+            
+            [self.programTitleLabel setText:self.currentProgramTitle];
+            
+            [UIView animateWithDuration:0.22
+                             animations:^{
+                                 self.programTitleLabel.alpha = 1.0;
+                             } completion:nil];
+        } else if (![self.programTitleLabel.text isEqualToString:self.currentProgramTitle]) {
+            
+            [UIView animateWithDuration:0.22
+                             animations:^{
+                                 self.programTitleLabel.alpha = 0.0;
+                             } completion:nil];
+            
+            [self.programTitleLabel setText:self.currentProgramTitle];
+            
+            [UIView animateWithDuration:0.22
+                             animations:^{
+                                 self.programTitleLabel.alpha = 1.0;
+                             } completion:nil];
+        } else {
+            [self.programTitleLabel setText:self.currentProgramTitle];
+        }
         
-        [UIView animateWithDuration:0.22
-                         animations:^{
-                             self.programTitleLabel.alpha = 0.0;
-                         } completion:nil];
-        
-        [self.programTitleLabel setText:[[content objectAtIndex:0] objectForKey:@"title"]];
-
-        [UIView animateWithDuration:0.22
-                         animations:^{
-                             self.programTitleLabel.alpha = 1.0;
-                         } completion:nil];
-    } else {
-        [self.programTitleLabel setText:[[content objectAtIndex:0] objectForKey:@"title"]];
+        [self updateNowPlayingInfoWithProgram:self.currentProgramTitle];
     }
-    
-    NSDictionary *audioMetaData = @{ MPMediaItemPropertyArtist : @"89.3 KPCC",
-                                     MPMediaItemPropertyTitle : [[content objectAtIndex:0] objectForKey:@"title"] };
-    
-    [[MPNowPlayingInfoCenter defaultCenter] setNowPlayingInfo:audioMetaData];
+}
+
+- (void) updateNowPlayingInfoWithProgram:(NSString *)program {
+    if (program) {
+        NSDictionary *audioMetaData = @{ MPMediaItemPropertyArtist : @"89.3 KPCC",
+                                         MPMediaItemPropertyTitle : program };
+        
+        [[MPNowPlayingInfoCenter defaultCenter] setNowPlayingInfo:audioMetaData];
+    }
 }
 
 - (void)viewWillDisappear:(BOOL)animated {

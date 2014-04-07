@@ -31,7 +31,7 @@
 #endif
     
     [Flurry setCrashReportingEnabled:YES];
-    //[Flurry setDebugLogEnabled:YES];
+    [Flurry setDebugLogEnabled:YES];
     [Flurry startSession: [[globalConfig objectForKey:@"Flurry"] objectForKey:@"DebugKey"] ];
     [Flurry setBackgroundSessionEnabled:NO];
     

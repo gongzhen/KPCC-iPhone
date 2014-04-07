@@ -19,4 +19,5 @@
 @property BOOL isUISetForPlaying;
 @property BOOL isUISetForPaused;
 
+- (void)updateNowPlayingInfoWithProgram:(NSString*)program;
 @end
