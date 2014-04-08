@@ -24,6 +24,13 @@
 #	define SCPRDebugLog(...)
 #endif
 
+typedef enum {
+    StreamStateHealthy = 0,
+    StreamStateLostConnectivity = 1,
+    StreamStateServerFail = 2,
+    StreamStateUnknown = 3
+} StreamState;
+
 @interface AudioManager : NSObject<STKAudioPlayerDelegate, STKDataSourceDelegate>
 
 + (AudioManager*)shared;

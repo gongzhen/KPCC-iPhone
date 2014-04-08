@@ -27,8 +27,6 @@
     // Drawing code
     CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
     CGContextRef context = UIGraphicsGetCurrentContext();
-    
-    /*NSArray *gradientColors = [NSArray arrayWithObjects:(id) [UIColor colorWithRed:224.0f/255.0f green:142.0f/255.0f blue:104.0f/255.0f alpha:1.0f].CGColor, [UIColor colorWithRed:220.0f/255.0f green:220.0f/255.0f blue:220.0f/255.0f alpha:1.0f].CGColor, nil];*/
 
     NSArray *gradientColors = [NSArray arrayWithObjects:(id) self.backgroundColor.CGColor, [UIColor colorWithRed:220.0f/255.0f green:220.0f/255.0f blue:220.0f/255.0f alpha:1.0f].CGColor, nil];
     
