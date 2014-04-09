@@ -105,7 +105,7 @@
                                                                                    @"StreamPlaying?" : [NSString stringWithFormat:@"%@", [[AudioManager shared] isStreamPlaying] == 1 ? @"YES" : @"NO"],
                                                                                    @"StreamState" : audioPlayerStateString,
                                                                                    @"NetworkInfo" : [[NetworkManager shared] networkInformation],
-                                                                                   @"LastPrerollPlayerSecondsAgo" : [NSString stringWithFormat:@"%ld", currentTimeSeconds - [[AudioManager shared] lastPreRoll]]}];
+                                                                                   @"LastPrerollPlayedSecondsAgo" : [NSString stringWithFormat:@"%ld", currentTimeSeconds - [[AudioManager shared] lastPreRoll]]}];
         [self hideUserReportView];
     } else {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Access Denied" message:@"Come on, be original!" delegate:self cancelButtonTitle:nil otherButtonTitles: @"OK",nil, nil];

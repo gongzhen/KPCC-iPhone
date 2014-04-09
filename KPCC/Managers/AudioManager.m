@@ -147,6 +147,12 @@ static AudioManager *singleton = nil;
     SCPRDebugLog();
 
     [[NSNotificationCenter defaultCenter] postNotificationName:@"STKAudioPlayerStateNotification" object:nil];
+    
+    // Log stream error -- currentState: buffering -- previousState: playing
+    if (state == STKAudioPlayerStateBuffering && previousState == STKAudioPlayerStatePlaying) {
+        SCPRDebugLog(@"BUFFERING, WAS PLAYING");
+        [self analyzeStreamError:nil];
+    }
 }
 
 - (void)audioPlayer:(STKAudioPlayer*)audioPlayer unexpectedError:(STKAudioPlayerErrorCode)errorCode {

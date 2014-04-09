@@ -54,7 +54,8 @@ static AnalyticsManager *singleton = nil;
                                     @"timeDropped"  : [NSDate stringFromDate:[NSDate date]
                                                                   withFormat:@"YYYY-MM-dd hh:mm:ss"],
                                     @"details" : comments,
-                                    @"lastKnownConnectionType" : [[NetworkManager shared] networkInformation]};
+                                    @"NetworkInfo" : [[NetworkManager shared] networkInformation],
+                                    @"LastPrerollPlayedSecondsAgo" : [NSString stringWithFormat:@"%ld", currentTimeSeconds - [[AudioManager shared] lastPreRoll]]};
         
         NSLog(@"Sending stream failure report to Flurry");
         [self logEvent:@"streamFailure" withParameters:analysis];
