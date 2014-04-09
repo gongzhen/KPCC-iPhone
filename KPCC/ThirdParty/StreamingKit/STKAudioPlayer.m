@@ -622,7 +622,6 @@ static void AudioFileStreamPacketsProc(void* clientData, UInt32 numberBytes, UIn
 
 -(void) clearQueue
 {
-    NSLog(@"STKAudioPlayer .. clearQueue called");
     pthread_mutex_lock(&playerMutex);
     {
         if ([self.delegate respondsToSelector:@selector(audioPlayer:didCancelQueuedItems:)])
@@ -699,7 +698,6 @@ static void AudioFileStreamPacketsProc(void* clientData, UInt32 numberBytes, UIn
     pthread_mutex_lock(&playerMutex);
     {
         LOGINFO(([NSString stringWithFormat:@"Playing: %@", [queueItemId description]]));
-        NSLog(@"STKAudioPlayer .. setDataSource");
         
 		if (![self audioGraphIsRunning])
 		{
@@ -993,7 +991,6 @@ static void AudioFileStreamPacketsProc(void* clientData, UInt32 numberBytes, UIn
 
 -(void) wakeupPlaybackThread
 {
-    NSLog(@"STKAudioPlayer wakeupPlaybackThread called");
 	[self invokeOnPlaybackThread:^
 	{
 		[self processRunloop];
