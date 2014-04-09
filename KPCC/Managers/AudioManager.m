@@ -31,7 +31,7 @@ static AudioManager *singleton = nil;
     self.audioPlayer.meteringEnabled = YES;
     
     // Setup the local file audio player.
-    NSString *streamFailurePath = [[NSBundle mainBundle] pathForResource:@"Wood_Crash" ofType:@"mp3"];
+    NSString *streamFailurePath = [[NSBundle mainBundle] pathForResource:@"Glass_Crash" ofType:@"mp3"];
     self.localAudioPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:[NSURL URLWithString:streamFailurePath] error:nil];
     self.localAudioPlayer.numberOfLoops = -1;
 }
