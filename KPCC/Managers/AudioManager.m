@@ -71,6 +71,47 @@ static AudioManager *singleton = nil;
     }
 }
 
+- (NSString *)stringFromSTKAudioPlayerState:(STKAudioPlayerState)state {
+    switch (state) {
+        case STKAudioPlayerStatePlaying:
+            return @"playing";
+            break;
+
+        case STKAudioPlayerStateBuffering:
+            return @"buffering";
+            break;
+
+        case STKAudioPlayerStateDisposed:
+            return @"disposed";
+            break;
+
+        case STKAudioPlayerStatePaused:
+            return @"paused";
+            break;
+
+        case STKAudioPlayerStateReady:
+            return @"ready";
+            break;
+
+        case STKAudioPlayerStateRunning:
+            return @"running";
+            break;
+
+        case STKAudioPlayerStateStopped:
+            return @"stopped";
+            break;
+
+        case STKAudioPlayerStateError:
+            return @"error";
+            break;
+
+        default:
+            return nil;
+            break;
+    }
+    return nil;
+ }
+
 
 #pragma mark - Error Logging
 
@@ -104,6 +145,8 @@ static AudioManager *singleton = nil;
 
 - (void)audioPlayer:(STKAudioPlayer *)audioPlayer stateChanged:(STKAudioPlayerState)state previousState:(STKAudioPlayerState)previousState {
     SCPRDebugLog();
+
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"STKAudioPlayerStateNotification" object:nil];
 }
 
 - (void)audioPlayer:(STKAudioPlayer*)audioPlayer unexpectedError:(STKAudioPlayerErrorCode)errorCode {
