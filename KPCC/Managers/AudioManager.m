@@ -29,6 +29,11 @@ static AudioManager *singleton = nil;
     self.audioPlayer = [[STKAudioPlayer alloc]init];
     self.audioPlayer.delegate = self;
     self.audioPlayer.meteringEnabled = YES;
+    
+    // Setup the local file audio player.
+    NSString *streamFailurePath = [[NSBundle mainBundle] pathForResource:@"Wood_Crash" ofType:@"mp3"];
+    self.localAudioPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:[NSURL URLWithString:streamFailurePath] error:nil];
+    self.localAudioPlayer.numberOfLoops = -1;
 }
 
 - (NSString *)liveStreamURL {
@@ -152,6 +157,13 @@ static AudioManager *singleton = nil;
     if (state == STKAudioPlayerStateBuffering && previousState == STKAudioPlayerStatePlaying) {
         SCPRDebugLog(@"BUFFERING, WAS PLAYING");
         [self analyzeStreamError:nil];
+        
+        [self.localAudioPlayer play];
+    }
+    
+    // If recovering from stream failure, cancel playing of local audio file
+    if (state == STKAudioPlayerStatePlaying && self.localAudioPlayer.isPlaying) {
+        [self.localAudioPlayer stop];
     }
 }
 

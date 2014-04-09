@@ -35,8 +35,10 @@ typedef enum {
 
 + (AudioManager*)shared;
 
-@property STKAudioPlayer* audioPlayer;
+@property STKAudioPlayer *audioPlayer;
 @property STKDataSource *audioDataSource;
+
+@property AVAudioPlayer *localAudioPlayer;
 
 @property long lastPreRoll;
 
