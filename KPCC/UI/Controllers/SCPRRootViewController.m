@@ -183,6 +183,12 @@
     // Observe when the application becomes active again, and update UI if need-be.
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateDataForUI) name:UIApplicationWillEnterForegroundNotification object:nil];
 
+    // Register observer for STKAudioPlayerState
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(receivePlayerStateNotification) name:@"STKAudioPlayerStateNotification" object:nil];
+
+    // Set initial state of audio controls and UI
+    [self updateControlsAndUI];
+
     [self setupTimer];
 }
 
@@ -206,24 +212,35 @@
     self.footerView.frame = CGRectMake(0.0f, self.userReportView.frame.origin.y + self.userReportView.frame.size.height, size.width, 400.0f);
 }
 
-- (void)updateDataForUI {
-    [[NetworkManager shared] fetchProgramInformationFor:[NSDate date] display:self];
-    
-    if ([[AudioManager shared] isStreamPlaying]) {
-        [self.actionButton setImage:[UIImage imageNamed:@"pauseButton"] forState:UIControlStateHighlighted];
-        [self.actionButton setImage:[UIImage imageNamed:@"pauseButton"] forState:UIControlStateNormal];
-    } else {
-        [self.actionButton setImage:[UIImage imageNamed:@"playButton"] forState:UIControlStateHighlighted];
-        [self.actionButton setImage:[UIImage imageNamed:@"playButton"] forState:UIControlStateNormal];
-    }
-}
-
 -(void)setupTimer {
 	timer = [NSTimer timerWithTimeInterval:0.025 target:self selector:@selector(tick) userInfo:nil repeats:YES];
 	[[NSRunLoop currentRunLoop] addTimer:timer forMode:NSRunLoopCommonModes];
 }
 
--(void)playOrPauseTapped {
+- (void)receivePlayerStateNotification {
+    [self updateControlsAndUI];
+}
+
+- (void)updateDataForUI {
+    [[NetworkManager shared] fetchProgramInformationFor:[NSDate date] display:self];
+    
+    [self updateControlsAndUI];
+}
+
+- (void)updateControlsAndUI {
+
+    if ([[AudioManager shared] isStreamPlaying]) {
+        [self.actionButton setImage:[UIImage imageNamed:@"pauseButton"] forState:UIControlStateNormal];
+    } else {
+        [self.actionButton setImage:[UIImage imageNamed:@"playButton"] forState:UIControlStateNormal];
+    }
+
+    if ([[AudioManager shared] audioPlayer]) {
+        self.streamerStatusLabel.text = [[AudioManager shared] stringFromSTKAudioPlayerState:[[AudioManager shared] audioPlayer].state];
+    }
+}
+
+- (void)playOrPauseTapped {
     if (![[AudioManager shared] isStreamPlaying]) {
         [self playStream];
     } else {
@@ -240,90 +257,20 @@
     [[AudioManager shared] stopStream];
 }
 
--(void) tick {
-    STKAudioPlayerState stkAudioPlayerState = [[AudioManager shared] audioPlayer].state;
-    NSString *audioPlayerStateString;
-    
-    if (stkAudioPlayerState != STKAudioPlayerStatePlaying) {
-        
-        if (!self.isUISetForPlaying) {
-            
-            [self.actionButton setImage:[UIImage imageNamed:@"playButton"] forState:UIControlStateHighlighted];
-            [self.actionButton setImage:[UIImage imageNamed:@"playButton"] forState:UIControlStateNormal];
-            
+- (void) tick {
+    if ([[AudioManager shared] isStreamPlaying]) {
+        CGFloat newHeight = 240 * (([[[AudioManager shared] audioPlayer] averagePowerInDecibelsForChannel:0] + 60) / 60);
+        self.audioMeter.frame = CGRectMake(self.audioMeter.frame.origin.x, self.horizontalDividerView.frame.origin.y - 240.0f + newHeight, self.audioMeter.frame.size.width, 240.0f - newHeight);
+    } else {
+        if (self.audioMeter.frame.size.height > 0) {
             [UIView animateWithDuration:0.44 animations:^{
                 self.audioMeter.frame = CGRectMake(self.audioMeter.frame.origin.x, self.horizontalDividerView.frame.origin.y, self.audioMeter.frame.size.width, 0);
             } completion:nil];
-            
-            self.isUISetForPaused = NO;
-            self.isUISetForPlaying = YES;
         }
-    } else {
-        
-        if (!self.isUISetForPaused) {
-            [self.actionButton setImage:[UIImage imageNamed:@"pauseButton"] forState:UIControlStateHighlighted];
-            [self.actionButton setImage:[UIImage imageNamed:@"pauseButton"] forState:UIControlStateNormal];
-            
-            self.isUISetForPaused = YES;
-            self.isUISetForPlaying = NO;
-        }
-        
-        [UIView animateWithDuration:0.1 animations:^{
-            CGFloat newHeight = 240 * (([[[AudioManager shared] audioPlayer] averagePowerInDecibelsForChannel:0] + 60) / 60);
-            self.audioMeter.frame = CGRectMake(self.audioMeter.frame.origin.x, self.horizontalDividerView.frame.origin.y - 240.0f + newHeight, self.audioMeter.frame.size.width, 240.0f - newHeight);
-        } completion:nil];
     }
-    
-    switch (stkAudioPlayerState) {
-        case STKAudioPlayerStateReady:
-            audioPlayerStateString = @"ready";
-            break;
-            
-        case STKAudioPlayerStateRunning:
-            audioPlayerStateString = @"running";
-            break;
-            
-        case STKAudioPlayerStateBuffering:
-            audioPlayerStateString = @"buffering";
-            [[AudioManager shared] analyzeStreamError:audioPlayerStateString];
-            break;
-            
-        case STKAudioPlayerStateDisposed:
-            audioPlayerStateString = @"disposed";
-            break;
-            
-        case STKAudioPlayerStateError:
-            audioPlayerStateString = @"error";
-            break;
-            
-        case STKAudioPlayerStatePaused:
-            audioPlayerStateString = @"paused";
-            break;
-            
-        case STKAudioPlayerStatePlaying:
-            audioPlayerStateString = @"playing";
-            if (!self.isUISetForPaused) {
-                [self.actionButton setImage:[UIImage imageNamed:@"pauseButton"] forState:UIControlStateHighlighted];
-                [self.actionButton setImage:[UIImage imageNamed:@"pauseButton"] forState:UIControlStateHighlighted];
-                self.isUISetForPaused = YES;
-                self.isUISetForPlaying = NO;
-            }
-            break;
-            
-        case STKAudioPlayerStateStopped:
-            audioPlayerStateString = @"stopped";
-            break;
-            
-        default:
-            audioPlayerStateString = @"";
-            break;
-    }
-    
-    [self.streamerStatusLabel setText:audioPlayerStateString];
 }
 
 - (void)userReportTapped {
-    
     SCPRUserReportViewController *viewController = [[SCPRUserReportViewController alloc] initWithNibName:@"SCPRUserReportViewController" bundle:nil];
     [self presentViewController:viewController animated:YES completion:nil];
 }
@@ -380,12 +327,14 @@
     }
 }
 
-- (void)viewWillDisappear:(BOOL)animated {
-    [super viewWillDisappear:animated];
-    
+- (void)dealloc {
+
     // End recieving events
     [[UIApplication sharedApplication] endReceivingRemoteControlEvents];
     [self resignFirstResponder];
+    
+    // Remove observers
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"STKAudioPlayerStateNotification" object:nil];
 }
 
 
