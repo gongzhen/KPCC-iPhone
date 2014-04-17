@@ -28,12 +28,7 @@ static AudioManager *singleton = nil;
 - (void)buildStreamer {
     self.audioPlayer = [[STKAudioPlayer alloc]init];
     self.audioPlayer.delegate = self;
-    self.audioPlayer.meteringEnabled = YES;
-    
-    // Setup the local file audio player.
-    NSString *streamFailurePath = [[NSBundle mainBundle] pathForResource:@"Glass_Crash" ofType:@"mp3"];
-    self.localAudioPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:[NSURL URLWithString:streamFailurePath] error:nil];
-    self.localAudioPlayer.numberOfLoops = -1;
+    self.audioPlayer.meteringEnabled = YES;    
 }
 
 - (NSString *)liveStreamURL {
@@ -122,7 +117,7 @@ static AudioManager *singleton = nil;
 
 - (void)analyzeStreamError:(NSString *)comments {
     
-    NSURL *liveURL = [NSURL URLWithString:kLiveStreamURL];
+    NSURL *liveURL = [NSURL URLWithString:kLiveStreamAACURL];
     NetworkHealth netHealth = [[NetworkManager shared] checkNetworkHealth:[liveURL host]];
 
     switch (netHealth) {
@@ -158,12 +153,35 @@ static AudioManager *singleton = nil;
         SCPRDebugLog(@"BUFFERING, WAS PLAYING");
         [self analyzeStreamError:nil];
         
+        // Setup the local file audio player, play respective failure sounds depending on error.
+        NSString *localAudioFilePath;
+        if ([[NetworkManager shared] checkNetworkHealth:[[NSURL URLWithString:kLiveStreamAACURL] host]] == NetworkHealthServerDown) {
+            localAudioFilePath = [[NSBundle mainBundle] pathForResource:kFailedStreamAudioFile ofType:@"mp3"];
+
+            if ([self.delegate respondsToSelector:@selector(handleUIForFailedStream)]) {
+                [self.delegate handleUIForFailedStream];
+            }
+        } else {
+            localAudioFilePath = [[NSBundle mainBundle] pathForResource:kFailedConnectionAudioFile ofType:@"mp3"];
+
+            if ([self.delegate respondsToSelector:@selector(handleUIForFailedConnection)]) {
+                [self.delegate handleUIForFailedConnection];
+            }
+        }
+
+        // Init the local audio player, set to loop indefinitely, and play.
+        self.localAudioPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:[NSURL URLWithString:localAudioFilePath] error:nil];
+        self.localAudioPlayer.numberOfLoops = -1;
         [self.localAudioPlayer play];
     }
     
     // If recovering from stream failure, cancel playing of local audio file
-    if (state == STKAudioPlayerStatePlaying && self.localAudioPlayer.isPlaying) {
+    if (state == STKAudioPlayerStatePlaying && self.localAudioPlayer && self.localAudioPlayer.isPlaying) {
         [self.localAudioPlayer stop];
+        
+        if ([self.delegate respondsToSelector:@selector(handleUIForRecoveredStream)]) {
+            [self.delegate handleUIForRecoveredStream];
+        }
     }
 }
 

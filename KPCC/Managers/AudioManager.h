@@ -18,6 +18,9 @@
 #define kLiveStreamAACNoPreRollURL @"http://live.scpr.org/aac?preskip=true"
 #define kLiveStreamPreRollThreshold 3600
 
+#define kFailedConnectionAudioFile @"Wood_Crash"
+#define kFailedStreamAudioFile @"Glass_Crash"
+
 #ifdef DEBUG
 #	define SCPRDebugLog(fmt, ...) NSLog((@"%s [Line %d] " fmt), __PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__);
 #else
@@ -31,13 +34,22 @@ typedef enum {
     StreamStateUnknown = 3
 } StreamState;
 
+@protocol AudioManagerDelegate <NSObject>
+@optional
+- (void)handleUIForFailedConnection;
+- (void)handleUIForFailedStream;
+- (void)handleUIForRecoveredStream;
+@end
+
 @interface AudioManager : NSObject<STKAudioPlayerDelegate, STKDataSourceDelegate>
 
 + (AudioManager*)shared;
 
+/// Gets and sets the delegate used for receiving events from the AudioManager
+@property (readwrite, unsafe_unretained) id<AudioManagerDelegate> delegate;
+
 @property STKAudioPlayer *audioPlayer;
 @property STKDataSource *audioDataSource;
-
 @property AVAudioPlayer *localAudioPlayer;
 
 @property long lastPreRoll;
@@ -49,5 +61,7 @@ typedef enum {
 - (NSString *)stringFromSTKAudioPlayerState:(STKAudioPlayerState)state;
 
 - (void)analyzeStreamError:(NSString*)comments;
+
+
 
 @end

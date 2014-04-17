@@ -10,7 +10,7 @@
 #import "SCPRUserReportViewController.h"
 #import "SCPRFooterView.h"
 
-@interface SCPRRootViewController () <UIScrollViewDelegate, ContentProcessor>
+@interface SCPRRootViewController () <UIScrollViewDelegate, ContentProcessor, AudioManagerDelegate>
 -(void) setupTimer;
 @property (nonatomic, strong) NSString *currentProgramTitle;
 @property (nonatomic) UILabel *onAirLabel;
@@ -189,6 +189,9 @@
     // Set initial state of audio controls and UI
     [self updateControlsAndUI];
 
+    // Set the current view to recieve events from the AudioManagerDelegate.
+    [AudioManager shared].delegate = self;
+    
     [self setupTimer];
 }
 
@@ -273,6 +276,21 @@
 - (void)userReportTapped {
     SCPRUserReportViewController *viewController = [[SCPRUserReportViewController alloc] initWithNibName:@"SCPRUserReportViewController" bundle:nil];
     [self presentViewController:viewController animated:YES completion:nil];
+}
+
+
+#pragma mark - AudioManagerDelegate
+
+- (void)handleUIForFailedConnection {
+    NSLog(@"#### handleUIForFailedConnection");
+}
+
+- (void)handleUIForFailedStream {
+    
+}
+
+- (void)handleUIForRecoveredStream {
+    
 }
 
 
