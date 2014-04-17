@@ -242,7 +242,6 @@
 		769FD69918EB682E00AAF1F4 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
-				76A308D518C8FB940065D4B1 /* SCPRAppDelegate.h */,
 				769FD69A18EB685F00AAF1F4 /* Application */,
 				76A3090118C93C3A0065D4B1 /* Managers */,
 				76349D1E18D8F8A30027C3B8 /* Helpers */,
@@ -254,6 +253,7 @@
 		769FD69A18EB685F00AAF1F4 /* Application */ = {
 			isa = PBXGroup;
 			children = (
+				76A308D518C8FB940065D4B1 /* SCPRAppDelegate.h */,
 				76A308D618C8FB940065D4B1 /* SCPRAppDelegate.m */,
 			);
 			name = Application;
