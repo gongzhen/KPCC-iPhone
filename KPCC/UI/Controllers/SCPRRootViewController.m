@@ -9,6 +9,7 @@
 #import "SCPRRootViewController.h"
 #import "SCPRUserReportViewController.h"
 #import "SCPRFooterView.h"
+#include "JDStatusBarNotification.h"
 
 @interface SCPRRootViewController () <UIScrollViewDelegate, ContentProcessor, AudioManagerDelegate>
 -(void) setupTimer;
@@ -282,15 +283,15 @@
 #pragma mark - AudioManagerDelegate
 
 - (void)handleUIForFailedConnection {
-    NSLog(@"#### handleUIForFailedConnection");
+    [JDStatusBarNotification showWithStatus:@"Oh No! The connection is bad." styleName:JDStatusBarStyleWarning];
 }
 
 - (void)handleUIForFailedStream {
-    
+    [JDStatusBarNotification showWithStatus:@"Oh No! Our stream has lost power." styleName:JDStatusBarStyleError];
 }
 
 - (void)handleUIForRecoveredStream {
-    
+    [JDStatusBarNotification showWithStatus:@"And we're back!" dismissAfter:4.0 styleName:JDStatusBarStyleSuccess];
 }
 
 

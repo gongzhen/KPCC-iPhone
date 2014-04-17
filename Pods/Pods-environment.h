@@ -48,6 +48,12 @@
 #define COCOAPODS_VERSION_MINOR_AFNetworking_UIKit 2
 #define COCOAPODS_VERSION_PATCH_AFNetworking_UIKit 2
 
+// JDStatusBarNotification
+#define COCOAPODS_POD_AVAILABLE_JDStatusBarNotification
+#define COCOAPODS_VERSION_MAJOR_JDStatusBarNotification 1
+#define COCOAPODS_VERSION_MINOR_JDStatusBarNotification 4
+#define COCOAPODS_VERSION_PATCH_JDStatusBarNotification 7
+
 // StreamingKit
 #define COCOAPODS_POD_AVAILABLE_StreamingKit
 #define COCOAPODS_VERSION_MAJOR_StreamingKit 0

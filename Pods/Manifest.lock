@@ -18,10 +18,12 @@ PODS:
   - AFNetworking/UIKit (2.2.2):
     - AFNetworking/NSURLConnection
     - AFNetworking/NSURLSession
+  - JDStatusBarNotification (1.4.7)
   - StreamingKit (0.2.0)
 
 DEPENDENCIES:
   - AFNetworking (~> 2.0)
+  - JDStatusBarNotification
   - StreamingKit (from `https://github.com/jmkr/StreamingKit.git`)
 
 EXTERNAL SOURCES:
@@ -30,6 +32,7 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   AFNetworking: dd8c1868e57451e3d17ebd3516f2a8c16f9646fe
+  JDStatusBarNotification: 8801f6fcd7e2c2a8b01aaea5a9b049b1cc395491
   StreamingKit: 0229a72fe6279048c8e3ff8815b3cd4e33c0b01f
 
 COCOAPODS: 0.32.1
