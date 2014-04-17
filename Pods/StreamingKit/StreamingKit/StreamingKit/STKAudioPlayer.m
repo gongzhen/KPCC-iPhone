@@ -42,6 +42,10 @@
 #import "libkern/OSAtomic.h"
 #import <float.h>
 
+#ifndef DBL_MAX
+#define DBL_MAX 1.7976931348623157e+308
+#endif
+
 #pragma mark Defines
 
 #define kOutputBus 0
@@ -526,7 +530,12 @@ static void AudioFileStreamPacketsProc(void* clientData, UInt32 numberBytes, UIn
     {
         currentlyPlayingEntry.dataSource.delegate = nil;
         [currentlyReadingEntry.dataSource unregisterForEvents];
+        
+        OSSpinLockLock(&currentEntryReferencesLock);
+        
 		currentlyPlayingEntry = nil;
+        
+        OSSpinLockUnlock(&currentEntryReferencesLock);
     }
     
     [self stopAudioUnitWithReason:STKAudioPlayerStopReasonDisposed];
@@ -924,20 +933,15 @@ static void AudioFileStreamPacketsProc(void* clientData, UInt32 numberBytes, UIn
     }
     
     OSSpinLockLock(&currentEntryReferencesLock);
-    
     STKQueueEntry* entry = currentlyPlayingEntry;
+	OSSpinLockUnlock(&currentEntryReferencesLock);
     
     if (entry == nil)
     {
-		OSSpinLockUnlock(&currentEntryReferencesLock);
-        
-        return 0;
+		return 0;
     }
     
     double retval = [entry duration];
-    
-	OSSpinLockUnlock(&currentEntryReferencesLock);
-    
     double progress = [self progress];
     
     if (retval < progress && retval > 0)
@@ -960,7 +964,9 @@ static void AudioFileStreamPacketsProc(void* clientData, UInt32 numberBytes, UIn
         return 0;
     }
     
+    OSSpinLockLock(&currentEntryReferencesLock);
     STKQueueEntry* entry = currentlyPlayingEntry;
+    OSSpinLockUnlock(&currentEntryReferencesLock);
     
     if (entry == nil)
     {
@@ -1252,7 +1258,6 @@ static void AudioFileStreamPacketsProc(void* clientData, UInt32 numberBytes, UIn
 
 -(BOOL) processRunloop
 {
-    //NSLog(@"STKAudioPlayer .. processRunLoop called");
     pthread_mutex_lock(&playerMutex);
     {
         if (disposeWasRequested)
@@ -1348,7 +1353,6 @@ static void AudioFileStreamPacketsProc(void* clientData, UInt32 numberBytes, UIn
         }
     }
     pthread_mutex_unlock(&playerMutex);
-
     
     return YES;
 }
@@ -1399,6 +1403,8 @@ static void AudioFileStreamPacketsProc(void* clientData, UInt32 numberBytes, UIn
 		
 		playbackThreadRunLoop = nil;
 
+		[self destroyAudioResources];
+		
 		[threadFinishedCondLock lock];
 		[threadFinishedCondLock unlockWithCondition:1];
 	}
@@ -2014,7 +2020,7 @@ static BOOL GetHardwareCodecClassDesc(UInt32 formatId, AudioClassDescription* cl
 	AudioComponentInstance convertUnit;
 	
 	CHECK_STATUS_AND_RETURN_VALUE(AUGraphAddNode(audioGraph, &convertUnitDescription, &convertNode), 0);
-	CHECK_STATUS_AND_RETURN_VALUE(status = AUGraphNodeInfo(audioGraph, convertNode, &mixerDescription, &convertUnit), 0);
+	CHECK_STATUS_AND_RETURN_VALUE(AUGraphNodeInfo(audioGraph, convertNode, &mixerDescription, &convertUnit), 0);
 	CHECK_STATUS_AND_RETURN_VALUE(AudioUnitSetProperty(convertUnit, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Input, 0, &srcFormat, sizeof(srcFormat)), 0);
   	CHECK_STATUS_AND_RETURN_VALUE(AudioUnitSetProperty(convertUnit, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Output, 0, &desFormat, sizeof(desFormat)), 0);
 	CHECK_STATUS_AND_RETURN_VALUE(AudioUnitSetProperty(convertUnit, kAudioUnitProperty_MaximumFramesPerSlice, kAudioUnitScope_Global, 0, &maxFramesPerSlice, sizeof(maxFramesPerSlice)), 0);
@@ -2531,11 +2537,15 @@ static OSStatus OutputRenderCallback(void* inRefCon, AudioUnitRenderActionFlags*
 {
     STKAudioPlayer* audioPlayer = (__bridge STKAudioPlayer*)inRefCon;
 
+    OSSpinLockLock(&audioPlayer->currentEntryReferencesLock);
+	STKQueueEntry* entry = audioPlayer->currentlyPlayingEntry;
+    STKQueueEntry* currentlyReadingEntry = audioPlayer->currentlyReadingEntry;
+    OSSpinLockUnlock(&audioPlayer->currentEntryReferencesLock);
+    
     OSSpinLockLock(&audioPlayer->pcmBufferSpinLock);
     
     BOOL waitForBuffer = NO;
 	BOOL muted = audioPlayer->muted;
-	STKQueueEntry* entry = audioPlayer->currentlyPlayingEntry;
     AudioBuffer* audioBuffer = audioPlayer->pcmAudioBuffer;
     UInt32 frameSizeInBytes = audioPlayer->pcmBufferFrameSizeInBytes;
     UInt32 used = audioPlayer->pcmBufferUsedFrameCount;
@@ -2553,10 +2563,10 @@ static OSStatus OutputRenderCallback(void* inRefCon, AudioUnitRenderActionFlags*
 			
 			if (entry->lastFrameQueued >= 0)
 			{
-				framesRequiredToStartPlaying = MIN(framesRequiredToStartPlaying, audioPlayer->currentlyPlayingEntry->lastFrameQueued);
+				framesRequiredToStartPlaying = MIN(framesRequiredToStartPlaying, entry->lastFrameQueued);
 			}
 			
-			if (entry && audioPlayer->currentlyReadingEntry == entry
+			if (entry && currentlyReadingEntry == entry
 				&& entry->framesQueued < framesRequiredToStartPlaying)
 			{
 				waitForBuffer = YES;
@@ -2766,13 +2776,19 @@ static OSStatus OutputRenderCallback(void* inRefCon, AudioUnitRenderActionFlags*
     {
         pthread_mutex_lock(&audioPlayer->playerMutex);
         
-        if (lastFramePlayed && entry == audioPlayer->currentlyPlayingEntry)
+        OSSpinLockLock(&audioPlayer->currentEntryReferencesLock);
+        STKQueueEntry* currentlyPlayingEntry = audioPlayer->currentlyPlayingEntry;
+        OSSpinLockUnlock(&audioPlayer->currentEntryReferencesLock);
+       
+        if (lastFramePlayed && entry == currentlyPlayingEntry)
         {
             [audioPlayer audioQueueFinishedPlaying:entry];
             
             while (extraFramesPlayedNotAssigned > 0)
             {
+                OSSpinLockLock(&audioPlayer->currentEntryReferencesLock);
                 STKQueueEntry* newEntry = audioPlayer->currentlyPlayingEntry;
+                OSSpinLockUnlock(&audioPlayer->currentEntryReferencesLock);
                 
                 if (newEntry != nil)
                 {

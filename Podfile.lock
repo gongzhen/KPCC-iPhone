@@ -18,11 +18,18 @@ PODS:
   - AFNetworking/UIKit (2.2.2):
     - AFNetworking/NSURLConnection
     - AFNetworking/NSURLSession
+  - StreamingKit (0.2.0)
 
 DEPENDENCIES:
   - AFNetworking (~> 2.0)
+  - StreamingKit (from `https://github.com/jmkr/StreamingKit.git`)
+
+EXTERNAL SOURCES:
+  StreamingKit:
+    :git: https://github.com/jmkr/StreamingKit.git
 
 SPEC CHECKSUMS:
   AFNetworking: dd8c1868e57451e3d17ebd3516f2a8c16f9646fe
+  StreamingKit: 0229a72fe6279048c8e3ff8815b3cd4e33c0b01f
 
 COCOAPODS: 0.32.1

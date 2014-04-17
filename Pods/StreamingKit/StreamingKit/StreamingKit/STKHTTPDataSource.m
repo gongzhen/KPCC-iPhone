@@ -155,7 +155,7 @@
         {
             httpHeaders = (__bridge_transfer NSDictionary*)CFHTTPMessageCopyAllHeaderFields((CFHTTPMessageRef)response);
             
-            self->httpStatusCode = CFHTTPMessageGetResponseStatusCode((CFHTTPMessageRef)response);
+            self->httpStatusCode = (UInt32)CFHTTPMessageGetResponseStatusCode((CFHTTPMessageRef)response);
             
             CFRelease(response);
         }
@@ -219,8 +219,6 @@
 
 -(void) reconnect
 {
-    NSLog(@"HTTPDataSource reconnect!");
-    
     NSRunLoop* savedEventsRunLoop = eventsRunLoop;
     
     [self close];
@@ -232,7 +230,6 @@
 
 -(void) seekToOffset:(SInt64)offset
 {
-
     NSRunLoop* savedEventsRunLoop = eventsRunLoop;
     
     [self close];
@@ -287,12 +284,12 @@
 		{
 			return;
 		}
-        
+		
 #pragma mark - SCPR overrides for StreamingKit
-		SCPRDebugLog(@"reconnect URL!! %@", url);
+        SCPRDebugLog(@"reconnect URL!! %@", url);
         url = [NSURL URLWithString:[[AudioManager shared] liveStreamURL]];
         SCPRDebugLog(@"reconnect URL -- NOW!! %@", url);
-
+        
         self->currentUrl = url;
 
         if (url == nil)

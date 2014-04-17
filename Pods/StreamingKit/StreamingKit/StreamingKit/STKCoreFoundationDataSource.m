@@ -102,7 +102,6 @@ static void ReadStreamCallbackProc(CFReadStreamRef stream, CFStreamEventType eve
 
 -(void) close
 {
-    NSLog(@"close called in STKCoreFoundationDataSource !");
     if (stream)
     {
         if (eventsRunLoop)
