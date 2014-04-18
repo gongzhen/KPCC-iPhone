@@ -57,7 +57,9 @@ typedef enum {
 - (NSString *)liveStreamURL;
 - (void)startStream;
 - (void)stopStream;
+- (void)stopAllAudio;
 - (BOOL)isStreamPlaying;
+- (BOOL)isStreamBuffering;
 - (NSString *)stringFromSTKAudioPlayerState:(STKAudioPlayerState)state;
 
 - (void)analyzeStreamError:(NSString*)comments;

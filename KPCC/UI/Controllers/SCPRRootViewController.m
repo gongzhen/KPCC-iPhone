@@ -143,12 +143,10 @@
 - (void)remoteControlReceivedWithEvent:(UIEvent *)event {
     // Handle remote audio control events.
     if (event.type == UIEventTypeRemoteControl) {
-        if (event.subtype == UIEventSubtypeRemoteControlPlay) {
-            [self playStream];
-        } else if (event.subtype == UIEventSubtypeRemoteControlPause) {
-            [self stopStream];
-        } else if (event.subtype == UIEventSubtypeRemoteControlTogglePlayPause) {
-            [self stopStream];
+        if (event.subtype == UIEventSubtypeRemoteControlPlay ||
+            event.subtype == UIEventSubtypeRemoteControlPause ||
+            event.subtype == UIEventSubtypeRemoteControlTogglePlayPause) {
+            [self playOrPauseTapped];
         }
     }
 }
@@ -233,7 +231,7 @@
 
 - (void)updateControlsAndUI {
 
-    if ([[AudioManager shared] isStreamPlaying]) {
+    if ([[AudioManager shared] isStreamPlaying] || [[AudioManager shared] isStreamBuffering]) {
         [self.actionButton setImage:[UIImage imageNamed:@"pauseButton"] forState:UIControlStateNormal];
     } else {
         [self.actionButton setImage:[UIImage imageNamed:@"playButton"] forState:UIControlStateNormal];
@@ -246,7 +244,12 @@
 
 - (void)playOrPauseTapped {
     if (![[AudioManager shared] isStreamPlaying]) {
-        [self playStream];
+        if ([[AudioManager shared] isStreamBuffering]) {
+            [self stopAllAudio];
+            [JDStatusBarNotification dismiss];
+        } else {
+            [self playStream];
+        }
     } else {
         [self stopStream];
     }
@@ -259,6 +262,10 @@
 
 - (void)stopStream {
     [[AudioManager shared] stopStream];
+}
+
+- (void)stopAllAudio {
+    [[AudioManager shared] stopAllAudio];
 }
 
 - (void) tick {

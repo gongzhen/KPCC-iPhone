@@ -63,8 +63,24 @@ static AudioManager *singleton = nil;
     [self.audioPlayer stop];
 }
 
+- (void)stopAllAudio {
+    [self stopStream];
+
+    if (self.localAudioPlayer && self.localAudioPlayer.isPlaying) {
+        [self.localAudioPlayer stop];
+    }
+}
+
 - (BOOL)isStreamPlaying {
     if (self.audioPlayer && self.audioPlayer.state == STKAudioPlayerStatePlaying) {
+        return YES;
+    } else {
+        return NO;
+    }
+}
+
+- (BOOL)isStreamBuffering {
+    if (self.audioPlayer && self.audioPlayer.state == STKAudioPlayerStateBuffering) {
         return YES;
     } else {
         return NO;
