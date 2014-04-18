@@ -41,18 +41,23 @@ Config
 
 Dependencies
 ==========
-The app uses CocoaPods to integrate third-party libraries with the project. Currently, we are only using this to load AFNetworking, but that will change in the future.
+The app uses CocoaPods to manage third-party libraries within the project:
+<h3>Podfile</h3>
+      platform :ios, '7.0'
+      pod 'AFNetworking', '~> 2.0'
+      pod 'StreamingKit', :git => 'https://github.com/jmkr/StreamingKit.git'
+      pod 'JDStatusBarNotification'
+      link_with ['KPCC', 'KPCC-TestFlight']
 
 We also incorporate several libraries that are included in the repository as compilable sources:
 <h3>Inline compilable dependencies:</h3>
 
 	    Flurry (v4.3.2)
 	    TestFlight (v3.0.0)
-	    StreamingKit (v0.2.0)
 
 
 Building & Running
 ==========
 You're going to have to install [CocoaPods](http://cocoapods.org/). After doing so:
 
-Run `pod install` from terminal in the project root, open `KPCC.xcworkspace`, and build to a device as you see fit.
+Run `pod install` from terminal in the project root, open `KPCC.xcworkspace`, and build to a device as you see fit. Ignore errors from TestFlight, Flurry, and other services that require the use of secret keys - the app should still run fine without them. You're going to have to use your own keys and set up a Config.plist to make use of these libraries.
