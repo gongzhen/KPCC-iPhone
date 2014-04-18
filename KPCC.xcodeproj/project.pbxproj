@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		76349CA618D372B30027C3B8 /* libTestFlight.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 76349CA218D372B30027C3B8 /* libTestFlight.a */; };
-		76349CA818D373440027C3B8 /* Config.plist in Resources */ = {isa = PBXBuildFile; fileRef = 76349CA718D373440027C3B8 /* Config.plist */; };
 		76349CAA18D3747E0027C3B8 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 76349CA918D3747E0027C3B8 /* libz.dylib */; };
 		76349CF718D388C80027C3B8 /* SCPRAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 76A308D618C8FB940065D4B1 /* SCPRAppDelegate.m */; };
 		76349CF818D388C80027C3B8 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 76A308D218C8FB940065D4B1 /* main.m */; };
@@ -20,7 +19,6 @@
 		76349D0718D388C80027C3B8 /* libTestFlight.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 76349CA218D372B30027C3B8 /* libTestFlight.a */; };
 		76349D0818D388C80027C3B8 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 76A308CA18C8FB940065D4B1 /* UIKit.framework */; };
 		76349D0918D388C80027C3B8 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 76A308C618C8FB940065D4B1 /* Foundation.framework */; };
-		76349D0B18D388C80027C3B8 /* Config.plist in Resources */ = {isa = PBXBuildFile; fileRef = 76349CA718D373440027C3B8 /* Config.plist */; };
 		76349D0C18D388C80027C3B8 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 76A308E418C8FB940065D4B1 /* Images.xcassets */; };
 		76349D0D18D388C80027C3B8 /* Main_iPhone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 76A308D818C8FB940065D4B1 /* Main_iPhone.storyboard */; };
 		76349D0E18D388C80027C3B8 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 76A308CF18C8FB940065D4B1 /* InfoPlist.strings */; };
@@ -82,7 +80,6 @@
 		76349CA318D372B30027C3B8 /* TestFlight+AsyncLogging.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TestFlight+AsyncLogging.h"; sourceTree = "<group>"; };
 		76349CA418D372B30027C3B8 /* TestFlight+ManualSessions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TestFlight+ManualSessions.h"; sourceTree = "<group>"; };
 		76349CA518D372B30027C3B8 /* TestFlight.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestFlight.h; sourceTree = "<group>"; };
-		76349CA718D373440027C3B8 /* Config.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Config.plist; path = KPCC/Config.plist; sourceTree = "<group>"; };
 		76349CA918D3747E0027C3B8 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 		76349D1218D388C80027C3B8 /* KPCC Testflight.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "KPCC Testflight.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		76349D1318D388C80027C3B8 /* Testflight-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "Testflight-Info.plist"; path = "/Users/jmeeker/Sites/KPCC-iPhone/Testflight-Info.plist"; sourceTree = "<absolute>"; };
@@ -262,7 +259,6 @@
 		76A308BA18C8FB940065D4B1 = {
 			isa = PBXGroup;
 			children = (
-				76349CA718D373440027C3B8 /* Config.plist */,
 				76A308CC18C8FB940065D4B1 /* KPCC */,
 				76A308F118C8FB950065D4B1 /* KPCCTests */,
 				76A308C518C8FB940065D4B1 /* Frameworks */,
@@ -480,7 +476,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				76349D0B18D388C80027C3B8 /* Config.plist in Resources */,
 				76B9A9AF18EF59FD007A6D8C /* SCPRUserReportViewController.xib in Resources */,
 				76349D0C18D388C80027C3B8 /* Images.xcassets in Resources */,
 				76B9A9C018F609FF007A6D8C /* Glass_Crash.mp3 in Resources */,
@@ -494,7 +489,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				76349CA818D373440027C3B8 /* Config.plist in Resources */,
 				76B9A9AE18EF59FD007A6D8C /* SCPRUserReportViewController.xib in Resources */,
 				76A308E518C8FB940065D4B1 /* Images.xcassets in Resources */,
 				76B9A9BF18F609FF007A6D8C /* Glass_Crash.mp3 in Resources */,
