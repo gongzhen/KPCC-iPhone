@@ -58,9 +58,9 @@
 		76B9A9B618EF79F6007A6D8C /* SCPRFooterView.m in Sources */ = {isa = PBXBuildFile; fileRef = 76B9A9B518EF79F6007A6D8C /* SCPRFooterView.m */; };
 		76B9A9B718EF79F6007A6D8C /* SCPRFooterView.m in Sources */ = {isa = PBXBuildFile; fileRef = 76B9A9B518EF79F6007A6D8C /* SCPRFooterView.m */; };
 		76B9A9BF18F609FF007A6D8C /* Glass_Crash.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 76B9A9BD18F609FF007A6D8C /* Glass_Crash.mp3 */; };
-		76B9A9C018F609FF007A6D8C /* Glass_Crash.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 76B9A9BD18F609FF007A6D8C /* Glass_Crash.mp3 */; };
 		76B9A9C118F609FF007A6D8C /* Wood_Crash.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 76B9A9BE18F609FF007A6D8C /* Wood_Crash.mp3 */; };
-		76B9A9C218F609FF007A6D8C /* Wood_Crash.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 76B9A9BE18F609FF007A6D8C /* Wood_Crash.mp3 */; };
+		76D71D441905A56A00F4852F /* Glass_Crash.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 76B9A9BD18F609FF007A6D8C /* Glass_Crash.mp3 */; };
+		76D71D451905A56A00F4852F /* Wood_Crash.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 76B9A9BE18F609FF007A6D8C /* Wood_Crash.mp3 */; };
 		D60D1CDDD065418D8BE73D8C /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C4832A831DF6416997B73FBF /* libPods.a */; };
 /* End PBXBuildFile section */
 
@@ -476,12 +476,12 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				76D71D441905A56A00F4852F /* Glass_Crash.mp3 in Resources */,
+				76D71D451905A56A00F4852F /* Wood_Crash.mp3 in Resources */,
 				76B9A9AF18EF59FD007A6D8C /* SCPRUserReportViewController.xib in Resources */,
 				76349D0C18D388C80027C3B8 /* Images.xcassets in Resources */,
-				76B9A9C018F609FF007A6D8C /* Glass_Crash.mp3 in Resources */,
 				76349D0D18D388C80027C3B8 /* Main_iPhone.storyboard in Resources */,
 				76349D0E18D388C80027C3B8 /* InfoPlist.strings in Resources */,
-				76B9A9C218F609FF007A6D8C /* Wood_Crash.mp3 in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

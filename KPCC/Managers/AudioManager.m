@@ -184,9 +184,9 @@ static AudioManager *singleton = nil;
                 [self.delegate handleUIForFailedConnection];
             }
         }
-
+        
         // Init the local audio player, set to loop indefinitely, and play.
-        self.localAudioPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:[NSURL URLWithString:localAudioFilePath] error:nil];
+        self.localAudioPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:[NSURL fileURLWithPath:localAudioFilePath] error:nil];
         self.localAudioPlayer.numberOfLoops = -1;
         [self.localAudioPlayer play];
     }
@@ -194,7 +194,7 @@ static AudioManager *singleton = nil;
     // If recovering from stream failure, cancel playing of local audio file
     if (state == STKAudioPlayerStatePlaying && self.localAudioPlayer && self.localAudioPlayer.isPlaying) {
         [self.localAudioPlayer stop];
-        
+
         if ([self.delegate respondsToSelector:@selector(handleUIForRecoveredStream)]) {
             [self.delegate handleUIForRecoveredStream];
         }
