@@ -635,6 +635,7 @@
 					"DEBUG=1",
 					"$(inherited)",
 					ENABLE_TESTFLIGHT,
+					HLS_SUPPORT,
 				);
 				INFOPLIST_FILE = "Testflight-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
@@ -757,6 +758,7 @@
 					"DEBUG=1",
 					"$(inherited)",
 					ENABLE_TESTFLIGHT,
+					HLS_SUPPORT,
 				);
 				INFOPLIST_FILE = "KPCC/KPCC-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;

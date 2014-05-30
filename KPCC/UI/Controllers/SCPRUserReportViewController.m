@@ -62,6 +62,9 @@
         long currentTimeSeconds = [[NSDate date] timeIntervalSince1970];
         
         NSString *audioPlayerStateString;
+#ifdef HLS_SUPPORT
+        audioPlayerStateString = [[AudioManager shared] isStreamPlaying] ? @"playing" : @"not playing";
+#else
         switch ([[AudioManager shared].audioPlayer state]) {
             case STKAudioPlayerStateReady:
                 audioPlayerStateString = @"ready";
@@ -99,6 +102,7 @@
                 audioPlayerStateString = @"";
                 break;
         }
+#endif
         
         
         [[AnalyticsManager shared] logEvent:@"userReportedIssue" withParameters:@{ @"UserReport" :  reportToSend,

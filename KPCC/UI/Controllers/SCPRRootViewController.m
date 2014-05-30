@@ -181,10 +181,16 @@
     
     // Observe when the application becomes active again, and update UI if need-be.
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateDataForUI) name:UIApplicationWillEnterForegroundNotification object:nil];
-
+#ifdef HLS_SUPPORT
+    [[[AudioManager shared] audioPlayer] addObserver:self
+                       forKeyPath:@"rate"
+                          options:NSKeyValueObservingOptionOld|NSKeyValueObservingOptionNew
+                          context:NULL];
+#else
     // Register observer for STKAudioPlayerState
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(receivePlayerStateNotification) name:@"STKAudioPlayerStateNotification" object:nil];
-
+#endif
+    
     // Set initial state of audio controls and UI
     [self updateControlsAndUI];
 
@@ -223,6 +229,14 @@
     [self updateControlsAndUI];
 }
 
+#ifdef HLS_SUPPORT
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
+    if ([keyPath isEqualToString:@"rate"]) {
+        [self updateControlsAndUI];
+    }
+}
+#endif
+
 - (void)updateDataForUI {
     [[NetworkManager shared] fetchProgramInformationFor:[NSDate date] display:self];
     
@@ -238,7 +252,11 @@
     }
 
     if ([[AudioManager shared] audioPlayer]) {
+#ifdef HLS_SUPPORT
+        self.streamerStatusLabel.text = [[AudioManager shared] isStreamPlaying] ? @"playing" : @"not playing";
+#else
         self.streamerStatusLabel.text = [[AudioManager shared] stringFromSTKAudioPlayerState:[[AudioManager shared] audioPlayer].state];
+#endif
     }
 }
 
@@ -269,6 +287,9 @@
 }
 
 - (void) tick {
+#ifdef HLS_SUPPORT
+    
+#else
     if ([[AudioManager shared] isStreamPlaying]) {
         CGFloat newHeight = 240 * (([[[AudioManager shared] audioPlayer] averagePowerInDecibelsForChannel:0] + 60) / 60);
         self.audioMeter.frame = CGRectMake(self.audioMeter.frame.origin.x, self.horizontalDividerView.frame.origin.y - 240.0f + newHeight, self.audioMeter.frame.size.width, 240.0f - newHeight);
@@ -279,6 +300,7 @@
             } completion:nil];
         }
     }
+#endif
 }
 
 - (void)userReportTapped {

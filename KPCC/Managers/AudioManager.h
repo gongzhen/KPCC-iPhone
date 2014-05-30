@@ -12,6 +12,8 @@
 #import "STKAudioPlayer.h"
 #import "STKHTTPDataSource.h"
 
+#define kHLSLiveStreamURL @"http://streammachine-hls001.scprdev.org/sg/kpcc-aac.m3u8"
+
 #define kLiveStreamURL @"http://live.scpr.org/kpcclive"
 #define kLiveStreamNoPreRollURL @"http://live.scpr.org/kpcclive?preskip=true"
 #define kLiveStreamAACURL @"http://live.scpr.org/aac"
@@ -48,8 +50,14 @@ typedef enum {
 /// Gets and sets the delegate used for receiving events from the AudioManager
 @property (readwrite, unsafe_unretained) id<AudioManagerDelegate> delegate;
 
-@property STKAudioPlayer *audioPlayer;
-@property STKDataSource *audioDataSource;
+// Native audio player
+#ifdef HLS_SUPPORT
+    @property AVPlayer *audioPlayer;
+#else
+    @property STKAudioPlayer *audioPlayer;
+    @property STKDataSource *audioDataSource;
+#endif
+
 @property AVAudioPlayer *localAudioPlayer;
 
 @property long lastPreRoll;

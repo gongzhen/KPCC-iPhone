@@ -26,9 +26,14 @@ static AudioManager *singleton = nil;
 }
 
 - (void)buildStreamer {
+#ifdef HLS_SUPPORT
+    self.audioPlayer = [AVPlayer playerWithURL:[NSURL URLWithString:kHLSLiveStreamURL]];
+#else
     self.audioPlayer = [[STKAudioPlayer alloc]init];
     self.audioPlayer.delegate = self;
-    self.audioPlayer.meteringEnabled = YES;    
+    self.audioPlayer.meteringEnabled = YES;
+#endif
+    
 }
 
 - (NSString *)liveStreamURL {
@@ -49,6 +54,10 @@ static AudioManager *singleton = nil;
 }
 
 - (void)startStream {
+#ifdef HLS_SUPPORT
+    [self.audioPlayer play];
+    
+#else
     self.audioDataSource = [STKAudioPlayer dataSourceFromURL:[NSURL URLWithString:[self liveStreamURL]]];
 
     if ([[self liveStreamURL] isEqualToString:kLiveStreamAACURL]) {
@@ -57,10 +66,15 @@ static AudioManager *singleton = nil;
     }
 
     [self.audioPlayer playDataSource:self.audioDataSource];
+#endif
 }
 
 - (void)stopStream {
+#ifdef HLS_SUPPORT
+    [self.audioPlayer setRate:0.0];
+#else
     [self.audioPlayer stop];
+#endif
 }
 
 - (void)stopAllAudio {
@@ -72,19 +86,31 @@ static AudioManager *singleton = nil;
 }
 
 - (BOOL)isStreamPlaying {
+#ifdef HLS_SUPPORT
+    if (self.audioPlayer && self.audioPlayer.rate > 0.0) {
+        return YES;
+    } else {
+        return NO;
+    }
+#else
     if (self.audioPlayer && self.audioPlayer.state == STKAudioPlayerStatePlaying) {
         return YES;
     } else {
         return NO;
     }
+#endif
 }
 
 - (BOOL)isStreamBuffering {
+#ifdef HLS_SUPPORT
+    return NO;
+#else
     if (self.audioPlayer && self.audioPlayer.state == STKAudioPlayerStateBuffering) {
         return YES;
     } else {
         return NO;
     }
+#endif
 }
 
 - (NSString *)stringFromSTKAudioPlayerState:(STKAudioPlayerState)state {
@@ -138,7 +164,7 @@ static AudioManager *singleton = nil;
 
     switch (netHealth) {
         case NetworkHealthAllOK:
-            if (![self isStreamPlaying] && self.audioPlayer.state != STKAudioPlayerStateBuffering) {
+            if (![self isStreamPlaying] && ![self isStreamBuffering]) {
                 [[AnalyticsManager shared] failStream:StreamStateUnknown comments:comments];
             }
             break;
