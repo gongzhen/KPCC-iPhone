@@ -87,7 +87,7 @@ static AudioManager *singleton = nil;
 
 - (BOOL)isStreamPlaying {
 #ifdef HLS_SUPPORT
-    if (self.audioPlayer && self.audioPlayer.rate > 0.0) {
+    if ([self.audioPlayer rate] > 0.0) {
         return YES;
     } else {
         return NO;

@@ -287,11 +287,13 @@
 }
 
 - (void) tick {
-#ifdef HLS_SUPPORT
-    
-#else
+
     if ([[AudioManager shared] isStreamPlaying]) {
+#ifdef HLS_SUPPORT
+        CGFloat newHeight = 100.0;
+#else
         CGFloat newHeight = 240 * (([[[AudioManager shared] audioPlayer] averagePowerInDecibelsForChannel:0] + 60) / 60);
+#endif
         self.audioMeter.frame = CGRectMake(self.audioMeter.frame.origin.x, self.horizontalDividerView.frame.origin.y - 240.0f + newHeight, self.audioMeter.frame.size.width, 240.0f - newHeight);
     } else {
         if (self.audioMeter.frame.size.height > 0) {
@@ -300,7 +302,6 @@
             } completion:nil];
         }
     }
-#endif
 }
 
 - (void)userReportTapped {
