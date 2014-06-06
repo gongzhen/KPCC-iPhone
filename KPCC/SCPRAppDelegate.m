@@ -40,10 +40,11 @@
     
     // Initialize the window
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-    self.window.backgroundColor = [UIColor whiteColor];
     
     // Launch our root view controller
-    SCPRRootViewController *viewController = [[SCPRRootViewController alloc] init];
+    //SCPRRootViewController *viewController = [[SCPRRootViewController alloc] init];
+    UIViewController *viewController = [[UIStoryboard storyboardWithName:@"Storyboard" bundle:nil] instantiateInitialViewController];
+
     UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:viewController];
     self.window.rootViewController = navigationController;
     

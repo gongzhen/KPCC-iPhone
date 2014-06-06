@@ -37,8 +37,12 @@ static AudioManager *singleton = nil;
 }
 
 - (NSString *)liveStreamURL {
+
+#ifdef HLS_SUPPORT
+    return kHLSLiveStreamURL;
+#else
+
     long currentTimeSeconds = [[NSDate date] timeIntervalSince1970];
-    
     SCPRDebugLog(@"currentTimeSeconds: %ld", currentTimeSeconds);
     SCPRDebugLog(@"currentTimeSeconds - LiveStreamThreshold: %ld", (currentTimeSeconds - kLiveStreamPreRollThreshold));
     SCPRDebugLog(@"currentTimeSeconds - lastPreRoll: %ld", (currentTimeSeconds - self.lastPreRoll));
@@ -51,6 +55,7 @@ static AudioManager *singleton = nil;
         SCPRDebugLog(@"liveStreamURL returning NO preroll");
         return kLiveStreamAACNoPreRollURL;
     }
+#endif
 }
 
 - (void)startStream {
