@@ -61,6 +61,10 @@
 		76B9A9C118F609FF007A6D8C /* Wood_Crash.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 76B9A9BE18F609FF007A6D8C /* Wood_Crash.mp3 */; };
 		76D71D441905A56A00F4852F /* Glass_Crash.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 76B9A9BD18F609FF007A6D8C /* Glass_Crash.mp3 */; };
 		76D71D451905A56A00F4852F /* Wood_Crash.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 76B9A9BE18F609FF007A6D8C /* Wood_Crash.mp3 */; };
+		76EF5E87193E8BED00568A9D /* SCPRHomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 76EF5E86193E8BED00568A9D /* SCPRHomeViewController.swift */; };
+		76EF5E88193E8BED00568A9D /* SCPRHomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 76EF5E86193E8BED00568A9D /* SCPRHomeViewController.swift */; };
+		76EF5E8A193E8D6B00568A9D /* Storyboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 76EF5E89193E8D6B00568A9D /* Storyboard.storyboard */; };
+		76EF5E8B193E8D6B00568A9D /* Storyboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 76EF5E89193E8D6B00568A9D /* Storyboard.storyboard */; };
 		D60D1CDDD065418D8BE73D8C /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C4832A831DF6416997B73FBF /* libPods.a */; };
 /* End PBXBuildFile section */
 
@@ -125,6 +129,10 @@
 		76B9A9B518EF79F6007A6D8C /* SCPRFooterView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SCPRFooterView.m; sourceTree = "<group>"; };
 		76B9A9BD18F609FF007A6D8C /* Glass_Crash.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = Glass_Crash.mp3; sourceTree = "<group>"; };
 		76B9A9BE18F609FF007A6D8C /* Wood_Crash.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = Wood_Crash.mp3; sourceTree = "<group>"; };
+		76EF5E84193E8BEC00568A9D /* KPCC-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "KPCC-Bridging-Header.h"; sourceTree = "<group>"; };
+		76EF5E85193E8BEC00568A9D /* TestFlight-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TestFlight-Bridging-Header.h"; sourceTree = "<group>"; };
+		76EF5E86193E8BED00568A9D /* SCPRHomeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SCPRHomeViewController.swift; sourceTree = "<group>"; };
+		76EF5E89193E8D6B00568A9D /* Storyboard.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Storyboard.storyboard; sourceTree = "<group>"; };
 		C4832A831DF6416997B73FBF /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -210,6 +218,7 @@
 			children = (
 				76658ABC18E0AF8500026176 /* View Controllers */,
 				76658ABD18E0AF8500026176 /* Views */,
+				76EF5E89193E8D6B00568A9D /* Storyboard.storyboard */,
 			);
 			path = UI;
 			sourceTree = "<group>";
@@ -222,6 +231,9 @@
 				76B9A9A918EF59FD007A6D8C /* SCPRUserReportViewController.h */,
 				76B9A9AA18EF59FD007A6D8C /* SCPRUserReportViewController.m */,
 				76B9A9AB18EF59FD007A6D8C /* SCPRUserReportViewController.xib */,
+				76EF5E86193E8BED00568A9D /* SCPRHomeViewController.swift */,
+				76EF5E84193E8BEC00568A9D /* KPCC-Bridging-Header.h */,
+				76EF5E85193E8BEC00568A9D /* TestFlight-Bridging-Header.h */,
 			);
 			name = "View Controllers";
 			path = Controllers;
@@ -481,6 +493,7 @@
 				76B9A9AF18EF59FD007A6D8C /* SCPRUserReportViewController.xib in Resources */,
 				76349D0C18D388C80027C3B8 /* Images.xcassets in Resources */,
 				76349D0D18D388C80027C3B8 /* Main_iPhone.storyboard in Resources */,
+				76EF5E8B193E8D6B00568A9D /* Storyboard.storyboard in Resources */,
 				76349D0E18D388C80027C3B8 /* InfoPlist.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -494,6 +507,7 @@
 				76B9A9BF18F609FF007A6D8C /* Glass_Crash.mp3 in Resources */,
 				76A308DA18C8FB940065D4B1 /* Main_iPhone.storyboard in Resources */,
 				76A308D118C8FB940065D4B1 /* InfoPlist.strings in Resources */,
+				76EF5E8A193E8D6B00568A9D /* Storyboard.storyboard in Resources */,
 				76B9A9C118F609FF007A6D8C /* Wood_Crash.mp3 in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -548,6 +562,7 @@
 			files = (
 				76658AB618DCB0DC00026176 /* AnalyticsManager.m in Sources */,
 				76349D1C18D8C74F0027C3B8 /* NetworkManager.m in Sources */,
+				76EF5E88193E8BED00568A9D /* SCPRHomeViewController.swift in Sources */,
 				76B9A9AD18EF59FD007A6D8C /* SCPRUserReportViewController.m in Sources */,
 				76658ABA18DCB51000026176 /* NSDate+Helper.m in Sources */,
 				76B9A9B718EF79F6007A6D8C /* SCPRFooterView.m in Sources */,
@@ -565,6 +580,7 @@
 			files = (
 				76658AB518DCB0DC00026176 /* AnalyticsManager.m in Sources */,
 				76349D1B18D8C74F0027C3B8 /* NetworkManager.m in Sources */,
+				76EF5E87193E8BED00568A9D /* SCPRHomeViewController.swift in Sources */,
 				76B9A9AC18EF59FD007A6D8C /* SCPRUserReportViewController.m in Sources */,
 				76658AB918DCB51000026176 /* NSDate+Helper.m in Sources */,
 				76B9A9B618EF79F6007A6D8C /* SCPRFooterView.m in Sources */,
@@ -628,6 +644,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "KPCC/KPCC-Prefix.pch";
@@ -638,12 +655,15 @@
 				);
 				INFOPLIST_FILE = "Testflight-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/KPCC/ThirdParty/TestFlight",
 					"$(PROJECT_DIR)/KPCC/ThirdParty/Flurry",
 				);
 				PRODUCT_NAME = "KPCC Testflight";
+				SWIFT_OBJC_BRIDGING_HEADER = "KPCC/UI/Controllers/TestFlight-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
@@ -655,18 +675,21 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "KPCC/KPCC-Prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = ENABLE_TESTFLIGHT;
 				INFOPLIST_FILE = "Testflight-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/KPCC/ThirdParty/TestFlight",
 					"$(PROJECT_DIR)/KPCC/ThirdParty/Flurry",
 				);
 				PRODUCT_NAME = "KPCC Testflight";
+				SWIFT_OBJC_BRIDGING_HEADER = "KPCC/UI/Controllers/TestFlight-Bridging-Header.h";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
@@ -750,6 +773,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer: John Meeker (R8B7L4868Q)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "KPCC/KPCC-Prefix.pch";
@@ -760,12 +784,15 @@
 				);
 				INFOPLIST_FILE = "KPCC/KPCC-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/KPCC/ThirdParty/TestFlight",
 					"$(PROJECT_DIR)/KPCC/ThirdParty/Flurry",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "KPCC/UI/Controllers/KPCC-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
@@ -777,17 +804,20 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Distribution: Southern California Public Radio (SXALEDSVFU)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "KPCC/KPCC-Prefix.pch";
 				INFOPLIST_FILE = "KPCC/KPCC-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/KPCC/ThirdParty/TestFlight",
 					"$(PROJECT_DIR)/KPCC/ThirdParty/Flurry",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "KPCC/UI/Controllers/KPCC-Bridging-Header.h";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
