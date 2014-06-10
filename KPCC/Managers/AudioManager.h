@@ -9,8 +9,6 @@
 #import <Foundation/Foundation.h>
 #import <AVFoundation/AVFoundation.h>
 #import <MediaPlayer/MediaPlayer.h>
-#import "STKAudioPlayer.h"
-#import "STKHTTPDataSource.h"
 
 #define kHLSLiveStreamURL @"http://streammachine-hls001.scprdev.org/sg/kpcc-aac.m3u8"
 
@@ -43,14 +41,13 @@ typedef enum {
 - (void)handleUIForRecoveredStream;
 @end
 
-@interface AudioManager : NSObject<STKAudioPlayerDelegate, STKDataSourceDelegate>
+@interface AudioManager : NSObject
 
 + (AudioManager*)shared;
 
 /// Gets and sets the delegate used for receiving events from the AudioManager
 @property (readwrite, unsafe_unretained) id<AudioManagerDelegate> delegate;
 
-// Native audio player
 @property AVPlayer *audioPlayer;
 @property AVAudioPlayer *localAudioPlayer;
 
@@ -62,7 +59,6 @@ typedef enum {
 - (void)stopAllAudio;
 - (BOOL)isStreamPlaying;
 - (BOOL)isStreamBuffering;
-- (NSString *)stringFromSTKAudioPlayerState:(STKAudioPlayerState)state;
 
 - (void)analyzeStreamError:(NSString*)comments;
 

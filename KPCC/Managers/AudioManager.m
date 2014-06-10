@@ -103,6 +103,7 @@ static AudioManager *singleton = nil;
     }
 }
 
+/*
 #pragma mark - STKAudioPlayerDelegate protocol implementation
 
 - (void)audioPlayer:(STKAudioPlayer *)audioPlayer stateChanged:(STKAudioPlayerState)state previousState:(STKAudioPlayerState)previousState {
@@ -218,6 +219,6 @@ static AudioManager *singleton = nil;
 
 -(void) dataSourceEof:(STKDataSource*)dataSource {
     SCPRDebugLog();
-}
+}*/
 
 @end
