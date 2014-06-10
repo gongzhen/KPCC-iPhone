@@ -635,7 +635,6 @@
 					"DEBUG=1",
 					"$(inherited)",
 					ENABLE_TESTFLIGHT,
-					HLS_SUPPORT,
 				);
 				INFOPLIST_FILE = "Testflight-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
@@ -659,10 +658,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "KPCC/KPCC-Prefix.pch";
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					ENABLE_TESTFLIGHT,
-					HLS_SUPPORT,
-				);
+				GCC_PREPROCESSOR_DEFINITIONS = ENABLE_TESTFLIGHT;
 				INFOPLIST_FILE = "Testflight-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LIBRARY_SEARCH_PATHS = (
@@ -761,7 +757,6 @@
 					"DEBUG=1",
 					"$(inherited)",
 					ENABLE_TESTFLIGHT,
-					HLS_SUPPORT,
 				);
 				INFOPLIST_FILE = "KPCC/KPCC-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;

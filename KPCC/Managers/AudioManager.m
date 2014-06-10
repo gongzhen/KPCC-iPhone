@@ -26,14 +26,7 @@ static AudioManager *singleton = nil;
 }
 
 - (void)buildStreamer {
-#ifdef HLS_SUPPORT
     self.audioPlayer = [AVPlayer playerWithURL:[NSURL URLWithString:kHLSLiveStreamURL]];
-#else
-    self.audioPlayer = [[STKAudioPlayer alloc]init];
-    self.audioPlayer.delegate = self;
-    self.audioPlayer.meteringEnabled = YES;
-#endif
-    
 }
 
 - (NSString *)liveStreamURL {
@@ -54,27 +47,11 @@ static AudioManager *singleton = nil;
 }
 
 - (void)startStream {
-#ifdef HLS_SUPPORT
     [self.audioPlayer play];
-    
-#else
-    self.audioDataSource = [STKAudioPlayer dataSourceFromURL:[NSURL URLWithString:[self liveStreamURL]]];
-
-    if ([[self liveStreamURL] isEqualToString:kLiveStreamAACURL]) {
-        SCPRDebugLog(@"Setting lastPreRoll to now");
-        self.lastPreRoll = [[NSDate date] timeIntervalSince1970];
-    }
-
-    [self.audioPlayer playDataSource:self.audioDataSource];
-#endif
 }
 
 - (void)stopStream {
-#ifdef HLS_SUPPORT
     [self.audioPlayer setRate:0.0];
-#else
-    [self.audioPlayer stop];
-#endif
 }
 
 - (void)stopAllAudio {
@@ -86,73 +63,16 @@ static AudioManager *singleton = nil;
 }
 
 - (BOOL)isStreamPlaying {
-#ifdef HLS_SUPPORT
     if ([self.audioPlayer rate] > 0.0) {
         return YES;
     } else {
         return NO;
     }
-#else
-    if (self.audioPlayer && self.audioPlayer.state == STKAudioPlayerStatePlaying) {
-        return YES;
-    } else {
-        return NO;
-    }
-#endif
 }
 
 - (BOOL)isStreamBuffering {
-#ifdef HLS_SUPPORT
     return NO;
-#else
-    if (self.audioPlayer && self.audioPlayer.state == STKAudioPlayerStateBuffering) {
-        return YES;
-    } else {
-        return NO;
-    }
-#endif
 }
-
-- (NSString *)stringFromSTKAudioPlayerState:(STKAudioPlayerState)state {
-    switch (state) {
-        case STKAudioPlayerStatePlaying:
-            return @"playing";
-            break;
-
-        case STKAudioPlayerStateBuffering:
-            return @"buffering";
-            break;
-
-        case STKAudioPlayerStateDisposed:
-            return @"disposed";
-            break;
-
-        case STKAudioPlayerStatePaused:
-            return @"paused";
-            break;
-
-        case STKAudioPlayerStateReady:
-            return @"ready";
-            break;
-
-        case STKAudioPlayerStateRunning:
-            return @"running";
-            break;
-
-        case STKAudioPlayerStateStopped:
-            return @"stopped";
-            break;
-
-        case STKAudioPlayerStateError:
-            return @"error";
-            break;
-
-        default:
-            return nil;
-            break;
-    }
-    return nil;
- }
 
 
 #pragma mark - Error Logging

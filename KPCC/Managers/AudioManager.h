@@ -51,13 +51,7 @@ typedef enum {
 @property (readwrite, unsafe_unretained) id<AudioManagerDelegate> delegate;
 
 // Native audio player
-#ifdef HLS_SUPPORT
-    @property AVPlayer *audioPlayer;
-#else
-    @property STKAudioPlayer *audioPlayer;
-    @property STKDataSource *audioDataSource;
-#endif
-
+@property AVPlayer *audioPlayer;
 @property AVAudioPlayer *localAudioPlayer;
 
 @property long lastPreRoll;

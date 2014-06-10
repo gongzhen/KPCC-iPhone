@@ -60,50 +60,10 @@
     if (![reportToSend isEqualToString:@"What's happening..."]) {
         
         long currentTimeSeconds = [[NSDate date] timeIntervalSince1970];
-        
+
+        // TODO: more descriptive logging on state of AVPlayer
         NSString *audioPlayerStateString;
-#ifdef HLS_SUPPORT
         audioPlayerStateString = [[AudioManager shared] isStreamPlaying] ? @"playing" : @"not playing";
-#else
-        switch ([[AudioManager shared].audioPlayer state]) {
-            case STKAudioPlayerStateReady:
-                audioPlayerStateString = @"ready";
-                break;
-                
-            case STKAudioPlayerStateRunning:
-                audioPlayerStateString = @"running";
-                break;
-                
-            case STKAudioPlayerStateBuffering:
-                audioPlayerStateString = @"buffering";
-                break;
-                
-            case STKAudioPlayerStateDisposed:
-                audioPlayerStateString = @"disposed";
-                break;
-                
-            case STKAudioPlayerStateError:
-                audioPlayerStateString = @"error";
-                break;
-                
-            case STKAudioPlayerStatePaused:
-                audioPlayerStateString = @"paused";
-                break;
-                
-            case STKAudioPlayerStatePlaying:
-                audioPlayerStateString = @"playing";
-                break;
-                
-            case STKAudioPlayerStateStopped:
-                audioPlayerStateString = @"stopped";
-                break;
-                
-            default:
-                audioPlayerStateString = @"";
-                break;
-        }
-#endif
-        
         
         [[AnalyticsManager shared] logEvent:@"userReportedIssue" withParameters:@{ @"UserReport" :  reportToSend,
                                                                                    @"StreamPlaying?" : [NSString stringWithFormat:@"%@", [[AudioManager shared] isStreamPlaying] == 1 ? @"YES" : @"NO"],
