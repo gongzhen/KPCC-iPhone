@@ -26,15 +26,37 @@ static AudioManager *singleton = nil;
 }
 
 - (void)buildStreamer {
-    self.audioPlayer = [AVPlayer playerWithURL:[NSURL URLWithString:kHLSLiveStreamURL]];
+    
+    NSURL *url = [NSURL URLWithString:kHLSLiveStreamURL];
+    
+   self.playerItem = [AVPlayerItem playerItemWithURL:url];
+   //[self.playerItem addObserver:self forKeyPath:@"status" options:0 context:&ItemStatusContext];
+   
+    self.audioPlayer = [AVPlayer playerWithPlayerItem:self.playerItem];
+    //self.audioPlayer = [AVPlayer playerWithURL:[NSURL URLWithString:kHLSLiveStreamURL]];
 }
 
 - (NSString *)liveStreamURL {
 
-#ifdef HLS_SUPPORT
-    return kHLSLiveStreamURL;
-#else
+    if (self.audioPlayer) {
 
+        NSLog(@"%@",[[NSString alloc] initWithData:[self.audioPlayer.currentItem.accessLog extendedLogData] encoding:[self.audioPlayer.currentItem.accessLog extendedLogDataStringEncoding]]);
+
+        NSArray *avpl = self.audioPlayer.currentItem.accessLog.events;
+        int i = 0;
+        for (AVPlayerItemAccessLogEvent *pi in avpl) {
+            NSLog(@"%i: %f", i, [pi indicatedBitrate]);
+            i++;
+        }
+        
+        if ([self.audioPlayer.currentItem.accessLog.events.lastObject URI]) {
+            return [NSString stringWithFormat:@"%@",[self.audioPlayer.currentItem.accessLog.events.lastObject URI]];
+        }
+    }
+
+    return kHLSLiveStreamURL;
+
+/*
     long currentTimeSeconds = [[NSDate date] timeIntervalSince1970];
     SCPRDebugLog(@"currentTimeSeconds: %ld", currentTimeSeconds);
     SCPRDebugLog(@"currentTimeSeconds - LiveStreamThreshold: %ld", (currentTimeSeconds - kLiveStreamPreRollThreshold));
@@ -48,7 +70,28 @@ static AudioManager *singleton = nil;
         SCPRDebugLog(@"liveStreamURL returning NO preroll");
         return kLiveStreamAACNoPreRollURL;
     }
-#endif
+*/
+}
+
+- (double)indicatedBitrate {
+    if (self.audioPlayer){
+        return [self.audioPlayer.currentItem.accessLog.events.lastObject indicatedBitrate];
+    }
+    return 0.0;
+}
+
+- (double)observedMaxBitrate {
+    if (self.audioPlayer){
+        return [self.audioPlayer.currentItem.accessLog.events.lastObject observedMaxBitrate];
+    }
+    return 0.0;
+}
+
+- (double)observedMinBitrate {
+    if (self.audioPlayer){
+        return [self.audioPlayer.currentItem.accessLog.events.lastObject observedMinBitrate];
+    }
+    return 0.0;
 }
 
 - (void)startStream {
@@ -56,7 +99,8 @@ static AudioManager *singleton = nil;
 }
 
 - (void)stopStream {
-    [self.audioPlayer setRate:0.0];
+    [self.audioPlayer pause];
+//    [self.audioPlayer setRate:0.0];
 }
 
 - (void)stopAllAudio {

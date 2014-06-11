@@ -49,6 +49,7 @@ typedef enum {
 @property (readwrite, unsafe_unretained) id<AudioManagerDelegate> delegate;
 
 @property AVPlayer *audioPlayer;
+@property AVPlayerItem *playerItem;
 @property AVAudioPlayer *localAudioPlayer;
 
 @property long lastPreRoll;
@@ -59,6 +60,9 @@ typedef enum {
 - (void)stopAllAudio;
 - (BOOL)isStreamPlaying;
 - (BOOL)isStreamBuffering;
+- (double)indicatedBitrate;
+- (double)observedMaxBitrate;
+- (double)observedMinBitrate;
 
 - (void)analyzeStreamError:(NSString*)comments;
 

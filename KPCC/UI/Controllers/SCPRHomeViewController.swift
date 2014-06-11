@@ -15,6 +15,9 @@ class SCPRHomeViewController: UIViewController, AudioManagerDelegate, ContentPro
     @IBOutlet var programTitleLabel : UILabel
     @IBOutlet var streamerStatusLabel : UILabel
     @IBOutlet var streamerUrlLabel : UILabel
+    @IBOutlet var streamIndicatedBitrateLabel : UILabel
+    @IBOutlet var maxObservedBitrateLabel : UILabel
+    @IBOutlet var minObservedBitrateLabel : UILabel
     @IBOutlet var actionButton : UIButton
     var currentProgramTitle : String = ""
     @IBAction func buttonTapped(button: AnyObject) {
@@ -88,6 +91,9 @@ class SCPRHomeViewController: UIViewController, AudioManagerDelegate, ContentPro
         }
         
         streamerUrlLabel.text = AudioManager.shared().liveStreamURL()
+        streamIndicatedBitrateLabel.text = String(CFloat(AudioManager.shared().indicatedBitrate()))
+        maxObservedBitrateLabel.text = String(CFloat(AudioManager.shared().observedMaxBitrate()))
+        minObservedBitrateLabel.text = String(CFloat(AudioManager.shared().observedMinBitrate()))
     }
     
     func playOrPauseTapped() -> Void {
