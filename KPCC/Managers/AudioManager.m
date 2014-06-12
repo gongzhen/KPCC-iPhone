@@ -12,6 +12,9 @@
 
 static AudioManager *singleton = nil;
 
+// Define this constant for the key-value observation context.
+static const NSString *ItemStatusContext;
+
 @implementation AudioManager
 
 + (AudioManager*)shared {
@@ -25,12 +28,29 @@ static AudioManager *singleton = nil;
     return singleton;
 }
 
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object
+                        change:(NSDictionary *)change context:(void *)context {
+    
+    if (object == self.audioPlayer.currentItem && [keyPath isEqualToString:@"status"]) {
+        if ([self.audioPlayer.currentItem status] == AVPlayerStatusFailed) {
+            NSError *error = [self.audioPlayer.currentItem error];
+            // Respond to error: for example, display an alert sheet.
+            NSLog(@"current item ERROR! --- %@", error);
+            return;
+        }
+        
+        NSLog(@"current item STATUS --- %d", [self.audioPlayer.currentItem status]);
+    }
+}
+
+
+
 - (void)buildStreamer {
     
     NSURL *url = [NSURL URLWithString:kHLSLiveStreamURL];
     
    self.playerItem = [AVPlayerItem playerItemWithURL:url];
-   //[self.playerItem addObserver:self forKeyPath:@"status" options:0 context:&ItemStatusContext];
+   [self.playerItem addObserver:self forKeyPath:@"status" options:NSKeyValueObservingOptionNew context:nil];
    
     self.audioPlayer = [AVPlayer playerWithPlayerItem:self.playerItem];
     //self.audioPlayer = [AVPlayer playerWithURL:[NSURL URLWithString:kHLSLiveStreamURL]];
