@@ -32,6 +32,14 @@
 		76658AB618DCB0DC00026176 /* AnalyticsManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 76658AB418DCB0DC00026176 /* AnalyticsManager.m */; };
 		76658AB918DCB51000026176 /* NSDate+Helper.m in Sources */ = {isa = PBXBuildFile; fileRef = 76658AB818DCB51000026176 /* NSDate+Helper.m */; };
 		76658ABA18DCB51000026176 /* NSDate+Helper.m in Sources */ = {isa = PBXBuildFile; fileRef = 76658AB818DCB51000026176 /* NSDate+Helper.m */; };
+		7685BD5C194BBCB90075BB16 /* pauseButton.png in Resources */ = {isa = PBXBuildFile; fileRef = 7685BD58194BBCB90075BB16 /* pauseButton.png */; };
+		7685BD5D194BBCB90075BB16 /* pauseButton.png in Resources */ = {isa = PBXBuildFile; fileRef = 7685BD58194BBCB90075BB16 /* pauseButton.png */; };
+		7685BD5E194BBCB90075BB16 /* pauseButton@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7685BD59194BBCB90075BB16 /* pauseButton@2x.png */; };
+		7685BD5F194BBCB90075BB16 /* pauseButton@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7685BD59194BBCB90075BB16 /* pauseButton@2x.png */; };
+		7685BD60194BBCB90075BB16 /* playButton.png in Resources */ = {isa = PBXBuildFile; fileRef = 7685BD5A194BBCB90075BB16 /* playButton.png */; };
+		7685BD61194BBCB90075BB16 /* playButton.png in Resources */ = {isa = PBXBuildFile; fileRef = 7685BD5A194BBCB90075BB16 /* playButton.png */; };
+		7685BD62194BBCB90075BB16 /* playButton@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7685BD5B194BBCB90075BB16 /* playButton@2x.png */; };
+		7685BD63194BBCB90075BB16 /* playButton@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7685BD5B194BBCB90075BB16 /* playButton@2x.png */; };
 		768BBF1A18DA614300ACAD83 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 768BBF1918DA614300ACAD83 /* libPods.a */; };
 		768EAADF18D26C5500469734 /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 768EAADE18D26C5500469734 /* MediaPlayer.framework */; };
 		768EAAE118D26C9C00469734 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 768EAAE018D26C9C00469734 /* AVFoundation.framework */; };
@@ -98,6 +106,10 @@
 		76658AB418DCB0DC00026176 /* AnalyticsManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AnalyticsManager.m; path = Managers/AnalyticsManager.m; sourceTree = "<group>"; };
 		76658AB718DCB51000026176 /* NSDate+Helper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDate+Helper.h"; sourceTree = "<group>"; };
 		76658AB818DCB51000026176 /* NSDate+Helper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDate+Helper.m"; sourceTree = "<group>"; };
+		7685BD58194BBCB90075BB16 /* pauseButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = pauseButton.png; sourceTree = "<group>"; };
+		7685BD59194BBCB90075BB16 /* pauseButton@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "pauseButton@2x.png"; sourceTree = "<group>"; };
+		7685BD5A194BBCB90075BB16 /* playButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = playButton.png; sourceTree = "<group>"; };
+		7685BD5B194BBCB90075BB16 /* playButton@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "playButton@2x.png"; sourceTree = "<group>"; };
 		768BBF1918DA614300ACAD83 /* libPods.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libPods.a; path = "Pods/build/Debug-iphoneos/libPods.a"; sourceTree = "<group>"; };
 		768EAADE18D26C5500469734 /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
 		768EAAE018D26C9C00469734 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
@@ -248,6 +260,17 @@
 			path = Views;
 			sourceTree = "<group>";
 		};
+		7685BD57194BBCB90075BB16 /* Images */ = {
+			isa = PBXGroup;
+			children = (
+				7685BD58194BBCB90075BB16 /* pauseButton.png */,
+				7685BD59194BBCB90075BB16 /* pauseButton@2x.png */,
+				7685BD5A194BBCB90075BB16 /* playButton.png */,
+				7685BD5B194BBCB90075BB16 /* playButton@2x.png */,
+			);
+			path = Images;
+			sourceTree = "<group>";
+		};
 		769FD69918EB682E00AAF1F4 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
@@ -365,6 +388,7 @@
 		76B9A9BC18F609FF007A6D8C /* Assets */ = {
 			isa = PBXGroup;
 			children = (
+				7685BD57194BBCB90075BB16 /* Images */,
 				76B9A9BD18F609FF007A6D8C /* Glass_Crash.mp3 */,
 				76B9A9BE18F609FF007A6D8C /* Wood_Crash.mp3 */,
 			);
@@ -491,7 +515,11 @@
 				76D71D441905A56A00F4852F /* Glass_Crash.mp3 in Resources */,
 				76D71D451905A56A00F4852F /* Wood_Crash.mp3 in Resources */,
 				76B9A9AF18EF59FD007A6D8C /* SCPRUserReportViewController.xib in Resources */,
+				7685BD63194BBCB90075BB16 /* playButton@2x.png in Resources */,
+				7685BD61194BBCB90075BB16 /* playButton.png in Resources */,
+				7685BD5F194BBCB90075BB16 /* pauseButton@2x.png in Resources */,
 				76349D0C18D388C80027C3B8 /* Images.xcassets in Resources */,
+				7685BD5D194BBCB90075BB16 /* pauseButton.png in Resources */,
 				76349D0D18D388C80027C3B8 /* Main_iPhone.storyboard in Resources */,
 				76EF5E8B193E8D6B00568A9D /* Storyboard.storyboard in Resources */,
 				76349D0E18D388C80027C3B8 /* InfoPlist.strings in Resources */,
@@ -505,7 +533,11 @@
 				76B9A9AE18EF59FD007A6D8C /* SCPRUserReportViewController.xib in Resources */,
 				76A308E518C8FB940065D4B1 /* Images.xcassets in Resources */,
 				76B9A9BF18F609FF007A6D8C /* Glass_Crash.mp3 in Resources */,
+				7685BD62194BBCB90075BB16 /* playButton@2x.png in Resources */,
+				7685BD60194BBCB90075BB16 /* playButton.png in Resources */,
+				7685BD5E194BBCB90075BB16 /* pauseButton@2x.png in Resources */,
 				76A308DA18C8FB940065D4B1 /* Main_iPhone.storyboard in Resources */,
+				7685BD5C194BBCB90075BB16 /* pauseButton.png in Resources */,
 				76A308D118C8FB940065D4B1 /* InfoPlist.strings in Resources */,
 				76EF5E8A193E8D6B00568A9D /* Storyboard.storyboard in Resources */,
 				76B9A9C118F609FF007A6D8C /* Wood_Crash.mp3 in Resources */,
