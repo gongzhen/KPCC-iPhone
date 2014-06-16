@@ -28,7 +28,7 @@ class SCPRHomeViewController: UIViewController, AudioManagerDelegate, ContentPro
     
     // For beta
     var timer = NSTimer()
-    
+
     override func canBecomeFirstResponder() -> Bool {
         return true
     }
@@ -54,7 +54,7 @@ class SCPRHomeViewController: UIViewController, AudioManagerDelegate, ContentPro
         super.viewDidLoad()
         
         self.navigationItem.title = "KPCC"
-        
+
         // Fetch program info and update audio control state.
         updateDataForUI()
         
@@ -164,9 +164,8 @@ class SCPRHomeViewController: UIViewController, AudioManagerDelegate, ContentPro
             return;
         }
         
+        // TODO: create Program model and insert into managed object context
         let program = content.objectAtIndex(0) as? NSDictionary
-        
-        
         
         if let title = content.objectAtIndex(0).objectForKey("title") as? NSString {
             currentProgramTitle = title

@@ -7,3 +7,4 @@
 #import "SCPRUserReportViewController.h"
 #import "SCPRFooterView.h"
 #include "JDStatusBarNotification.h"
+#import "SCPRAppDelegate.h"
