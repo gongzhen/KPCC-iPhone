@@ -26,6 +26,9 @@ class SCPRHomeViewController: UIViewController, AudioManagerDelegate, ContentPro
         }
     }
     
+    // For beta
+    var timer = NSTimer()
+    
     override func canBecomeFirstResponder() -> Bool {
         return true
     }
@@ -68,6 +71,16 @@ class SCPRHomeViewController: UIViewController, AudioManagerDelegate, ContentPro
         // Set the current view to recieve events from the AudioManagerDelegate.
         AudioManager.shared().delegate = self
         
+        // For beta
+        timer = NSTimer(timeInterval: 1.0, target: self, selector: "tick", userInfo: nil, repeats: true)
+        NSRunLoop.currentRunLoop().addTimer(timer, forMode: NSRunLoopCommonModes)
+    }
+    
+    // For beta to update UI
+    func tick() -> Void {
+        streamIndicatedBitrateLabel.text = String(CFloat(AudioManager.shared().indicatedBitrate()))
+        maxObservedBitrateLabel.text = String(CFloat(AudioManager.shared().observedMaxBitrate()))
+        minObservedBitrateLabel.text = String(CFloat(AudioManager.shared().observedMinBitrate()))
     }
     
     func receivePlayerStateNotification() -> Void {
@@ -80,6 +93,7 @@ class SCPRHomeViewController: UIViewController, AudioManagerDelegate, ContentPro
     }
     
     func updateControlsAndUI() -> Void {
+        NSLog(String(actionButton.imageView.image.description))
         if AudioManager.shared().isStreamPlaying() || AudioManager.shared().isStreamBuffering() {
             actionButton.setImage(UIImage(named: "pauseButton"), forState: UIControlState.Normal)
         } else {
@@ -93,7 +107,7 @@ class SCPRHomeViewController: UIViewController, AudioManagerDelegate, ContentPro
         streamerUrlLabel.text = AudioManager.shared().liveStreamURL()
         streamIndicatedBitrateLabel.text = String(CFloat(AudioManager.shared().indicatedBitrate()))
         maxObservedBitrateLabel.text = String(CFloat(AudioManager.shared().observedMaxBitrate()))
-        minObservedBitrateLabel.text = String(CFloat(AudioManager.shared().observedMinBitrate()))
+        minObservedBitrateLabel.text = String(CFloat(AudioManager.shared().observedMinBitrate()))        
     }
     
     func playOrPauseTapped() -> Void {

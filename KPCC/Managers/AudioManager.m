@@ -31,15 +31,61 @@ static const NSString *ItemStatusContext;
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object
                         change:(NSDictionary *)change context:(void *)context {
     
+    // Monitoring AVPlayer->currentItem status.
     if (object == self.audioPlayer.currentItem && [keyPath isEqualToString:@"status"]) {
-        if ([self.audioPlayer.currentItem status] == AVPlayerStatusFailed) {
+        if ([self.audioPlayer.currentItem status] == AVPlayerItemStatusFailed) {
             NSError *error = [self.audioPlayer.currentItem error];
-            // Respond to error: for example, display an alert sheet.
-            NSLog(@"current item ERROR! --- %@", error);
+            NSLog(@"AVPlayerItemStatus ERROR! --- %@", error);
             return;
+        } else if ([self.audioPlayer.currentItem status] == AVPlayerItemStatusReadyToPlay) {
+            NSLog(@"AVPlayerItemStatus - ReadyToPlay");
+        } else if ([self.audioPlayer.currentItem status] == AVPlayerItemStatusUnknown) {
+            NSLog(@"AVPlayerItemStatus - Unknown");
         }
+    }
+    
+    // Monitoring AVPlayer->currentItem with empty playback buffer.
+    if (object == self.audioPlayer.currentItem && [keyPath isEqualToString:@"playbackBufferEmpty"]) {
+        [self analyzeStreamError:nil];
+    }
+    
+    if (object == self.audioPlayer.currentItem && [keyPath isEqualToString:@"playbackLikelyToKeepUp"]) {
+        [self analyzeStreamError:nil];
+    }
+    
+    // Monitoring AVPlayer status.
+    if (object == self.audioPlayer && [keyPath isEqualToString:@"status"]) {
+        if ([self.audioPlayer status] == AVPlayerStatusFailed) {
+            NSError *error = [self.audioPlayer error];
+            NSLog(@"AVPlayerStatus ERROR! --- %@", error);
+            return;
+        } else if ([self.audioPlayer status] == AVPlayerStatusReadyToPlay) {
+            NSLog(@"AVPlayerStatus - ReadyToPlay");
+        } else if ([self.audioPlayer status] == AVPlayerStatusUnknown) {
+            NSLog(@"AVPlayerStatus - Unknown");
+        }
+    }
+    
+    // Monitoring AVPlayer rate.
+    if (object == self.audioPlayer && [keyPath isEqualToString:@"rate"]) {
         
-        NSLog(@"current item STATUS --- %d", [self.audioPlayer.currentItem status]);
+        CGFloat oldRate = [[change objectForKey:@"old"] floatValue];
+        CGFloat newRate = [[change objectForKey:@"new"] floatValue];
+        
+        // Now playing, was stopped.
+        if (oldRate == 0.0 && newRate == 1.0) {
+            
+            [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
+            
+            // If recovering from stream failure, cancel playing of local audio file
+            if (self.localAudioPlayer && self.localAudioPlayer.isPlaying) {
+                [self.localAudioPlayer stop];
+                
+                if ([self.delegate respondsToSelector:@selector(handleUIForRecoveredStream)]) {
+                    [self.delegate handleUIForRecoveredStream];
+                }
+            }
+        }
     }
 }
 
@@ -50,10 +96,19 @@ static const NSString *ItemStatusContext;
     NSURL *url = [NSURL URLWithString:kHLSLiveStreamURL];
     
    self.playerItem = [AVPlayerItem playerItemWithURL:url];
-   [self.playerItem addObserver:self forKeyPath:@"status" options:NSKeyValueObservingOptionNew context:nil];
+    [self.playerItem addObserver:self forKeyPath:@"status" options:NSKeyValueObservingOptionOld|NSKeyValueObservingOptionNew context:nil];
+    [self.playerItem addObserver:self forKeyPath:@"playbackBufferEmpty" options:NSKeyValueObservingOptionNew context:nil];
+    [self.playerItem addObserver:self forKeyPath:@"playbackLikelyToKeepUp" options:NSKeyValueObservingOptionNew context:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playerItemFailedToPlayToEndTime:) name:AVPlayerItemFailedToPlayToEndTimeNotification object:self.playerItem];
    
     self.audioPlayer = [AVPlayer playerWithPlayerItem:self.playerItem];
-    //self.audioPlayer = [AVPlayer playerWithURL:[NSURL URLWithString:kHLSLiveStreamURL]];
+    [self.audioPlayer addObserver:self forKeyPath:@"status" options:NSKeyValueObservingOptionOld|NSKeyValueObservingOptionNew context:nil];
+    [self.audioPlayer addObserver:self forKeyPath:@"rate" options:NSKeyValueObservingOptionOld|NSKeyValueObservingOptionNew context:nil];
+}
+
+- (void)playerItemFailedToPlayToEndTime:(NSNotification *)notification {
+    NSError *error = notification.userInfo[AVPlayerItemFailedToPlayToEndTimeErrorKey];
+    NSLog(@"playerItemFailedToPlayToEndTime! --- %@", error);
 }
 
 - (NSString *)liveStreamURL {
@@ -118,9 +173,13 @@ static const NSString *ItemStatusContext;
     [self.audioPlayer play];
 }
 
+- (void)pauseStream {
+    [self.audioPlayer pause];
+}
+
 - (void)stopStream {
     [self.audioPlayer pause];
-//    [self.audioPlayer setRate:0.0];
+    //[self.audioPlayer setRate:0.0];
 }
 
 - (void)stopAllAudio {
@@ -148,21 +207,34 @@ static const NSString *ItemStatusContext;
 
 - (void)analyzeStreamError:(NSString *)comments {
     
-    NSURL *liveURL = [NSURL URLWithString:kLiveStreamAACURL];
+    NSURL *liveURL = [NSURL URLWithString:kHLSLiveStreamURL];
     NetworkHealth netHealth = [[NetworkManager shared] checkNetworkHealth:[liveURL host]];
 
     switch (netHealth) {
         case NetworkHealthAllOK:
-            if (![self isStreamPlaying] && ![self isStreamBuffering]) {
-                [[AnalyticsManager shared] failStream:StreamStateUnknown comments:comments];
+            // If recovering from stream failure, cancel playing of local audio file
+            if (self.localAudioPlayer && self.localAudioPlayer.isPlaying) {
+                [self.localAudioPlayer stop];
+                
+                if ([self.delegate respondsToSelector:@selector(handleUIForRecoveredStream)]) {
+                    [self.delegate handleUIForRecoveredStream];
+                }
             }
             break;
             
         case NetworkHealthNetworkDown:
+            [self localAudioFallback:[[NSBundle mainBundle] pathForResource:kFailedConnectionAudioFile ofType:@"mp3"]];
+            if ([self.delegate respondsToSelector:@selector(handleUIForFailedConnection)]) {
+                [self.delegate handleUIForFailedConnection];
+            }
             [[AnalyticsManager shared] failStream:StreamStateLostConnectivity comments:comments];
             break;
         
         case NetworkHealthServerDown:
+            [self localAudioFallback:[[NSBundle mainBundle] pathForResource:kFailedStreamAudioFile ofType:@"mp3"]];
+            if ([self.delegate respondsToSelector:@selector(handleUIForFailedStream)]) {
+                [self.delegate handleUIForFailedStream];
+            }
             [[AnalyticsManager shared] failStream:StreamStateServerFail comments:comments];
             break;
             
@@ -172,122 +244,16 @@ static const NSString *ItemStatusContext;
     }
 }
 
-/*
-#pragma mark - STKAudioPlayerDelegate protocol implementation
-
-- (void)audioPlayer:(STKAudioPlayer *)audioPlayer stateChanged:(STKAudioPlayerState)state previousState:(STKAudioPlayerState)previousState {
-    SCPRDebugLog();
-
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"STKAudioPlayerStateNotification" object:nil];
+- (void)localAudioFallback:(NSString *)filePath {
     
-    // Log stream error -- currentState: buffering -- previousState: playing
-    if (state == STKAudioPlayerStateBuffering && previousState == STKAudioPlayerStatePlaying) {
-        SCPRDebugLog(@"BUFFERING, WAS PLAYING");
-        [self analyzeStreamError:nil];
-        
-        // Setup the local file audio player, play respective failure sounds depending on error.
-        NSString *localAudioFilePath;
-        if ([[NetworkManager shared] checkNetworkHealth:[[NSURL URLWithString:kLiveStreamAACURL] host]] == NetworkHealthServerDown) {
-            localAudioFilePath = [[NSBundle mainBundle] pathForResource:kFailedStreamAudioFile ofType:@"mp3"];
-
-            if ([self.delegate respondsToSelector:@selector(handleUIForFailedStream)]) {
-                [self.delegate handleUIForFailedStream];
-            }
-        } else {
-            localAudioFilePath = [[NSBundle mainBundle] pathForResource:kFailedConnectionAudioFile ofType:@"mp3"];
-
-            if ([self.delegate respondsToSelector:@selector(handleUIForFailedConnection)]) {
-                [self.delegate handleUIForFailedConnection];
-            }
-        }
-        
-        // Init the local audio player, set to loop indefinitely, and play.
-        self.localAudioPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:[NSURL fileURLWithPath:localAudioFilePath] error:nil];
-        self.localAudioPlayer.numberOfLoops = -1;
-        [self.localAudioPlayer play];
+    if (!filePath) {
+        return;
     }
     
-    // If recovering from stream failure, cancel playing of local audio file
-    if (state == STKAudioPlayerStatePlaying && self.localAudioPlayer && self.localAudioPlayer.isPlaying) {
-        [self.localAudioPlayer stop];
-
-        if ([self.delegate respondsToSelector:@selector(handleUIForRecoveredStream)]) {
-            [self.delegate handleUIForRecoveredStream];
-        }
-    }
+    // Init the local audio player, set to loop indefinitely, and play.
+    self.localAudioPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:[NSURL fileURLWithPath:filePath] error:nil];
+    self.localAudioPlayer.numberOfLoops = -1;
+    [self.localAudioPlayer play];
 }
-
-- (void)audioPlayer:(STKAudioPlayer*)audioPlayer unexpectedError:(STKAudioPlayerErrorCode)errorCode {
-    SCPRDebugLog();
-    
-    NSString *errorCodeString;
-    switch (errorCode) {
-        case STKAudioPlayerErrorAudioSystemError:
-            errorCodeString = @"STKAudioPlayerErrorAudioSystemError";
-            break;
-
-        case STKAudioPlayerErrorCodecError:
-            errorCodeString = @"STKAudioPlayerErrorCodecError";
-            break;
-
-        case STKAudioPlayerErrorDataNotFound:
-            errorCodeString = @"STKAudioPlayerErrorDataNotFound";
-            break;
-
-        case STKAudioPlayerErrorDataSource:
-            errorCodeString = @"STKAudioPlayerErrorDataSource";
-            break;
-
-        case STKAudioPlayerErrorStreamParseBytesFailed:
-            errorCodeString = @"STKAudioPlayerErrorStreamParseBytesFailed";
-            break;
-
-        case STKAudioPlayerErrorOther:
-            errorCodeString = @"STKAudioPlayerErrorOther";
-            break;
-
-        case STKAudioPlayerErrorNone:
-            errorCodeString = @"STKAudioPlayerErrorNone";
-            break;
-
-        default:
-            errorCodeString = @"STKAudioPlayerErrorUnknownCode";
-            break;
-    }
-    
-    [self analyzeStreamError:errorCodeString];
-}
-
-- (void)audioPlayer:(STKAudioPlayer *)audioPlayer didStartPlayingQueueItemId:(NSObject *)queueItemId {
-    SCPRDebugLog();
-
-    [[AnalyticsManager shared] logEvent:@"streamStartedPlaying" withParameters:nil];
-}
-- (void)audioPlayer:(STKAudioPlayer *)audioPlayer logInfo:(NSString *)line {
-    SCPRDebugLog();
-
-    [[AnalyticsManager shared] logEvent:@"audioPlayerLogItem" withParameters:@{@"event": line}];
-}
-
-- (void)audioPlayer:(STKAudioPlayer *)audioPlayer didFinishBufferingSourceWithQueueItemId:(NSObject *)queueItemId {
-    SCPRDebugLog();
-}
-- (void)audioPlayer:(STKAudioPlayer *)audioPlayer didFinishPlayingQueueItemId:(NSObject *)queueItemId withReason:(STKAudioPlayerStopReason)stopReason andProgress:(double)progress andDuration:(double)duration {
-    SCPRDebugLog();
-}
-
-#pragma mark - STKDataSourceDelegate protocol implementation
-
--(void) dataSourceDataAvailable:(STKDataSource*)dataSource {
-    SCPRDebugLog();
-}
-
--(void) dataSourceErrorOccured:(STKDataSource*)dataSource {
-    SCPRDebugLog();
-}
-
--(void) dataSourceEof:(STKDataSource*)dataSource {
-    SCPRDebugLog();
-}*/
 
 @end
