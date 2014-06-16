@@ -74,17 +74,7 @@ static const NSString *ItemStatusContext;
         
         // Now playing, was stopped.
         if (oldRate == 0.0 && newRate == 1.0) {
-            
             [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
-            
-            // If recovering from stream failure, cancel playing of local audio file
-            if (self.localAudioPlayer && self.localAudioPlayer.isPlaying) {
-                [self.localAudioPlayer stop];
-                
-                if ([self.delegate respondsToSelector:@selector(handleUIForRecoveredStream)]) {
-                    [self.delegate handleUIForRecoveredStream];
-                }
-            }
         }
     }
 }
@@ -92,7 +82,6 @@ static const NSString *ItemStatusContext;
 
 
 - (void)buildStreamer {
-    
     NSURL *url = [NSURL URLWithString:kHLSLiveStreamURL];
     
    self.playerItem = [AVPlayerItem playerItemWithURL:url];
@@ -178,8 +167,7 @@ static const NSString *ItemStatusContext;
 }
 
 - (void)stopStream {
-    [self.audioPlayer pause];
-    //[self.audioPlayer setRate:0.0];
+    [self.audioPlayer setRate:0.0];
 }
 
 - (void)stopAllAudio {
@@ -249,6 +237,8 @@ static const NSString *ItemStatusContext;
     if (!filePath) {
         return;
     }
+    
+    [self stopStream];
     
     // Init the local audio player, set to loop indefinitely, and play.
     self.localAudioPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:[NSURL fileURLWithPath:filePath] error:nil];

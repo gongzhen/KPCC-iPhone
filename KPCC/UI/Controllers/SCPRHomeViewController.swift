@@ -154,6 +154,8 @@ class SCPRHomeViewController: UIViewController, AudioManagerDelegate, ContentPro
     
     func handleUIForRecoveredStream() -> Void {
         JDStatusBarNotification.showWithStatus("And we're back!", dismissAfter:4.0, styleName: JDStatusBarStyleSuccess)
+        playStream()
+        updateControlsAndUI()
     }
     
     // ContentProcessor
