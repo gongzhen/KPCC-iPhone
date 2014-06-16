@@ -164,6 +164,10 @@ class SCPRHomeViewController: UIViewController, AudioManagerDelegate, ContentPro
             return;
         }
         
+        let program = content.objectAtIndex(0) as? NSDictionary
+        
+        
+        
         if let title = content.objectAtIndex(0).objectForKey("title") as? NSString {
             currentProgramTitle = title
             programTitleLabel.text = currentProgramTitle

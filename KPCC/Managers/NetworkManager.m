@@ -7,9 +7,6 @@
 //
 
 #import "NetworkManager.h"
-#import <CoreTelephony/CTTelephonyNetworkInfo.h>
-#import <CoreTelephony/CTCarrier.h>
-#import "AFNetworking.h"
 
 static NetworkManager *singleton = nil;
 

@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		760E3C48194FB54600D86D91 /* DataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 760E3C46194FB54600D86D91 /* DataModel.xcdatamodeld */; };
+		760E3C49194FB54600D86D91 /* DataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 760E3C46194FB54600D86D91 /* DataModel.xcdatamodeld */; };
+		760E3C4C194FB61B00D86D91 /* Program.m in Sources */ = {isa = PBXBuildFile; fileRef = 760E3C4B194FB61B00D86D91 /* Program.m */; };
+		760E3C4D194FB61B00D86D91 /* Program.m in Sources */ = {isa = PBXBuildFile; fileRef = 760E3C4B194FB61B00D86D91 /* Program.m */; };
 		76349CA618D372B30027C3B8 /* libTestFlight.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 76349CA218D372B30027C3B8 /* libTestFlight.a */; };
 		76349CAA18D3747E0027C3B8 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 76349CA918D3747E0027C3B8 /* libz.dylib */; };
 		76349CF718D388C80027C3B8 /* SCPRAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 76A308D618C8FB940065D4B1 /* SCPRAppDelegate.m */; };
@@ -88,6 +92,9 @@
 
 /* Begin PBXFileReference section */
 		3D27774292D34CDA90CFAEC3 /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = "<group>"; };
+		760E3C47194FB54600D86D91 /* DataModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = DataModel.xcdatamodel; sourceTree = "<group>"; };
+		760E3C4A194FB61B00D86D91 /* Program.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Program.h; sourceTree = "<group>"; };
+		760E3C4B194FB61B00D86D91 /* Program.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Program.m; sourceTree = "<group>"; };
 		76349CA218D372B30027C3B8 /* libTestFlight.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libTestFlight.a; sourceTree = "<group>"; };
 		76349CA318D372B30027C3B8 /* TestFlight+AsyncLogging.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TestFlight+AsyncLogging.h"; sourceTree = "<group>"; };
 		76349CA418D372B30027C3B8 /* TestFlight+ManualSessions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TestFlight+ManualSessions.h"; sourceTree = "<group>"; };
@@ -194,6 +201,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		760E3C45194FB4F700D86D91 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				760E3C46194FB54600D86D91 /* DataModel.xcdatamodeld */,
+				760E3C4A194FB61B00D86D91 /* Program.h */,
+				760E3C4B194FB61B00D86D91 /* Program.m */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
 		76349CA118D372B30027C3B8 /* TestFlight */ = {
 			isa = PBXGroup;
 			children = (
@@ -274,6 +291,7 @@
 		769FD69918EB682E00AAF1F4 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				760E3C45194FB4F700D86D91 /* Models */,
 				769FD69A18EB685F00AAF1F4 /* Application */,
 				76A3090118C93C3A0065D4B1 /* Managers */,
 				76349D1E18D8F8A30027C3B8 /* Helpers */,
@@ -601,6 +619,8 @@
 				76349CF718D388C80027C3B8 /* SCPRAppDelegate.m in Sources */,
 				76349CF818D388C80027C3B8 /* main.m in Sources */,
 				76349CF918D388C80027C3B8 /* AudioManager.m in Sources */,
+				760E3C4D194FB61B00D86D91 /* Program.m in Sources */,
+				760E3C49194FB54600D86D91 /* DataModel.xcdatamodeld in Sources */,
 				769FD69E18EB6F4E00AAF1F4 /* SCPRRootViewController.m in Sources */,
 				76349D2218D8F8A30027C3B8 /* Reachability.m in Sources */,
 			);
@@ -619,6 +639,8 @@
 				76A308D718C8FB940065D4B1 /* SCPRAppDelegate.m in Sources */,
 				76A308D318C8FB940065D4B1 /* main.m in Sources */,
 				76A3090418C93C880065D4B1 /* AudioManager.m in Sources */,
+				760E3C4C194FB61B00D86D91 /* Program.m in Sources */,
+				760E3C48194FB54600D86D91 /* DataModel.xcdatamodeld in Sources */,
 				769FD69D18EB6F4E00AAF1F4 /* SCPRRootViewController.m in Sources */,
 				76349D2118D8F8A30027C3B8 /* Reachability.m in Sources */,
 			);
@@ -935,6 +957,19 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		760E3C46194FB54600D86D91 /* DataModel.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				760E3C47194FB54600D86D91 /* DataModel.xcdatamodel */,
+			);
+			currentVersion = 760E3C47194FB54600D86D91 /* DataModel.xcdatamodel */;
+			path = DataModel.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = 76A308BB18C8FB940065D4B1 /* Project object */;
 }

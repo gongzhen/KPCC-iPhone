@@ -8,7 +8,9 @@
 
 #import <Foundation/Foundation.h>
 #import "Reachability.h"
-
+#import <CoreTelephony/CTTelephonyNetworkInfo.h>
+#import <CoreTelephony/CTCarrier.h>
+#import "AFNetworking.h"
 
 #define kServerBase @"http://www.scpr.org/api/v2"
 #define kFailoverThreshold 4
