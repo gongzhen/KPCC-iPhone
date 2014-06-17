@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6154.17" systemVersion="13D65" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="rbX-u6-Qyr">
     <dependencies>
+        <deployment defaultVersion="1792" identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6153.11"/>
     </dependencies>
     <scenes>
@@ -16,7 +17,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <navigationBar contentMode="scaleToFill" fixedFrame="YES" barStyle="black" translatesAutoresizingMaskIntoConstraints="NO" id="dGQ-Px-03o">
+                            <navigationBar contentMode="scaleToFill" ambiguous="YES" misplaced="YES" barStyle="black" translatesAutoresizingMaskIntoConstraints="NO" id="dGQ-Px-03o">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                                 <color key="barTintColor" red="0.97254901959999995" green="0.41602451470000001" blue="0.1543275513" alpha="1" colorSpace="calibratedRGB"/>
                                 <textAttributes key="titleTextAttributes">
@@ -92,13 +93,13 @@
                                 <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="64000" textAlignment="right" lineBreakMode="middleTruncation" baselineAdjustment="alignBaselines" minimumFontSize="8" translatesAutoresizingMaskIntoConstraints="NO" id="HRZ-cs-ZKm">
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="64000" textAlignment="right" lineBreakMode="middleTruncation" baselineAdjustment="alignBaselines" minimumFontSize="8" translatesAutoresizingMaskIntoConstraints="NO" id="HRZ-cs-ZKm">
                                 <rect key="frame" x="212" y="426" width="88" height="21"/>
                                 <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="16"/>
                                 <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <button opaque="NO" contentMode="center" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Wfj-nk-Ap3">
+                            <button opaque="NO" contentMode="center" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Wfj-nk-Ap3">
                                 <rect key="frame" x="130" y="172" width="60" height="60"/>
                                 <color key="tintColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <state key="normal" image="playButton.png"/>
@@ -106,8 +107,29 @@
                                     <action selector="buttonTapped:" destination="rbX-u6-Qyr" eventType="touchUpInside" id="Ur3-ph-ZKL"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="R5Z-JM-vdM">
+                                <rect key="frame" x="0.0" y="511" width="320" height="57"/>
+                                <color key="backgroundColor" red="0.87762317519999999" green="0.55645529199999999" blue="0.40910127740000002" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="57" id="fui-3u-018"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" name="HelveticaNeue-LightItalic" family="Helvetica Neue" pointSize="20"/>
+                                <state key="normal" title="Report a Problem"/>
+                                <connections>
+                                    <action selector="buttonTapped:" destination="rbX-u6-Qyr" eventType="touchUpInside" id="oJo-fT-Jqe"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="R5Z-JM-vdM" firstAttribute="leading" secondItem="yrB-Qs-gOW" secondAttribute="leading" id="5jV-dm-BHe"/>
+                            <constraint firstItem="R5Z-JM-vdM" firstAttribute="leading" secondItem="dGQ-Px-03o" secondAttribute="leading" id="61E-av-zTU"/>
+                            <constraint firstAttribute="trailing" secondItem="R5Z-JM-vdM" secondAttribute="trailing" id="9Wi-1M-jFC"/>
+                            <constraint firstItem="R5Z-JM-vdM" firstAttribute="trailing" secondItem="dGQ-Px-03o" secondAttribute="trailing" id="G3e-w6-119"/>
+                            <constraint firstAttribute="bottom" secondItem="R5Z-JM-vdM" secondAttribute="bottom" id="esn-XZ-aey"/>
+                            <constraint firstItem="R5Z-JM-vdM" firstAttribute="top" secondItem="HRZ-cs-ZKm" secondAttribute="bottom" constant="64" id="fu7-At-nZl"/>
+                            <constraint firstItem="R5Z-JM-vdM" firstAttribute="centerX" secondItem="Wfj-nk-Ap3" secondAttribute="centerX" id="iWL-fW-WkQ"/>
+                        </constraints>
                     </view>
                     <simulatedStatusBarMetrics key="simulatedStatusBarMetrics"/>
                     <nil key="simulatedTopBarMetrics"/>
@@ -121,6 +143,7 @@
                         <outlet property="streamIndicatedBitrateLabel" destination="elQ-Ly-teZ" id="54M-KI-RYZ"/>
                         <outlet property="streamerStatusLabel" destination="Ze7-0h-RCN" id="iSu-bt-OwG"/>
                         <outlet property="streamerUrlLabel" destination="nqB-rt-Akp" id="jgX-MB-FxX"/>
+                        <outlet property="userReportButton" destination="R5Z-JM-vdM" id="Tiy-Ej-1mJ"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="i8s-Pl-0LN" userLabel="First Responder" sceneMemberID="firstResponder"/>

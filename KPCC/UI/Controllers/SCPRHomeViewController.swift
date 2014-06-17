@@ -19,10 +19,14 @@ class SCPRHomeViewController: UIViewController, AudioManagerDelegate, ContentPro
     @IBOutlet var maxObservedBitrateLabel : UILabel
     @IBOutlet var minObservedBitrateLabel : UILabel
     @IBOutlet var actionButton : UIButton
+    @IBOutlet var userReportButton : UIButton
     var currentProgramTitle : String = ""
     @IBAction func buttonTapped(button: AnyObject) {
         if button as NSObject == actionButton {
             playOrPauseTapped()
+        }
+        if button as NSObject == userReportButton {
+            userReportTapped()
         }
     }
     
@@ -81,6 +85,11 @@ class SCPRHomeViewController: UIViewController, AudioManagerDelegate, ContentPro
         streamIndicatedBitrateLabel.text = String(CFloat(AudioManager.shared().indicatedBitrate()))
         maxObservedBitrateLabel.text = String(CFloat(AudioManager.shared().observedMaxBitrate()))
         minObservedBitrateLabel.text = String(CFloat(AudioManager.shared().observedMinBitrate()))
+    }
+    
+    func userReportTapped() -> Void {
+        let viewController = SCPRUserReportViewController(nibName: "SCPRUserReportViewController", bundle: nil)
+        self.presentViewController(viewController, animated: true, completion: nil)
     }
     
     func receivePlayerStateNotification() -> Void {
