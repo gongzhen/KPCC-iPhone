@@ -136,10 +136,9 @@ class SCPRHomeViewController: UIViewController, AudioManagerDelegate, ContentPro
         AudioManager.shared().stopAllAudio()
     }
     
-    func updateNowPlayingInfoWithProgram(program: String!) {
-        if program {
-            //MPNowPlayingInfoCenter.defaultCenter().setValue(MPMediaItemPropertyArtist, forKey: "89.3 KPCC")
-            //MPNowPlayingInfoCenter.defaultCenter().setValue(MPMediaItemPropertyTitle, forKey: program)
+    func updateNowPlayingInfoWithProgram(program : String?) {
+        if let programTitle = program {
+            MPNowPlayingInfoCenter.defaultCenter().nowPlayingInfo = [MPMediaItemPropertyArtist : "89.3 KPCC",  MPMediaItemPropertyTitle : programTitle]
         }
     }
     
