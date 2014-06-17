@@ -54,12 +54,6 @@ class SCPRHomeViewController: UIViewController, AudioManagerDelegate, ContentPro
         }
     }
     
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        
-        actionButton.center = CGPointMake(actionButton.center.x, (CGRectGetMaxY(programTitleLabel.frame) + CGRectGetMinY(streamerStatusLabel.frame)) / 2)
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         
