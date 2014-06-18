@@ -13,6 +13,7 @@ import UIKit
 class SCPRHomeViewController: UIViewController, AudioManagerDelegate, ContentProcessor {
     
     @IBOutlet var programTitleLabel : UILabel
+    @IBOutlet var programTimeLabel : UILabel
     @IBOutlet var streamerStatusLabel : UILabel
     @IBOutlet var streamerUrlLabel : UILabel
     @IBOutlet var streamIndicatedBitrateLabel : UILabel
@@ -173,13 +174,58 @@ class SCPRHomeViewController: UIViewController, AudioManagerDelegate, ContentPro
         }
         
         // TODO: create Program model and insert into managed object context
-        let program = content.objectAtIndex(0) as? NSDictionary
+        let program = content.objectAtIndex(0) as NSDictionary
+        NSLog(program.description)
         
-        if let title = content.objectAtIndex(0).objectForKey("title") as? NSString {
+        if let title = program.objectForKey("title") as? NSString {
             currentProgramTitle = title
             programTitleLabel.text = currentProgramTitle
             updateNowPlayingInfoWithProgram(currentProgramTitle)
         }
+        
+        
+        // Set program runtime label.
+        if let startsAt = program.objectForKey("starts_at") as? NSString {
+            var startTime = dateFromRFCString(startsAt)
+            var timeString = prettyStringFromRFCDateString(startsAt)
+            
+            if let endsAt = program.objectForKey("ends_at") as? NSString {
+                timeString = timeString + " - " + prettyStringFromRFCDateString(endsAt)
+            }
+
+            programTimeLabel.text = timeString
+        }
+    }
+    
+    
+    // Date helper functions .. TODO: move these somewhere better
+    func dateFromRFCString(dateString: NSString) -> NSDate {
+        if (dateString == NSNull()) {
+            return NSDate.date();
+        }
+        
+        var rfc3339DateFormatter = NSDateFormatter()
+        rfc3339DateFormatter.dateFormat = "yyyy-MM-dd'T'HHmmssZZZ"
+        rfc3339DateFormatter.timeZone = NSTimeZone(forSecondsFromGMT: 0)
+        
+        var fixedDateString = dateString.stringByReplacingOccurrencesOfString(":", withString: "")
+
+        // Convert the RFC 3339 date time string to an NSDate.
+        var date = rfc3339DateFormatter.dateFromString(fixedDateString)
+        if (!date) {
+            rfc3339DateFormatter.dateFormat = "yyyy-MM-dd'T'HHmmss.000ZZZ"
+            return rfc3339DateFormatter.dateFromString(fixedDateString)
+        }
+        return date;
+    }
+    
+    func prettyStringFromRFCDateString(rawDate: NSString) -> NSString {
+        let date = dateFromRFCString(rawDate)
+        var outputFormatter = NSDateFormatter()
+        outputFormatter.dateFormat = "h:ss a"
+        outputFormatter.timeZone = NSTimeZone(forSecondsFromGMT: NSTimeZone.localTimeZone().secondsFromGMT)
+        var dateString = outputFormatter.stringFromDate(date)
+        return dateString
     }
 
 }

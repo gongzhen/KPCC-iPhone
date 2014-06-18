@@ -9,6 +9,7 @@
 #import "AudioManager.h"
 #import "NetworkManager.h"
 #import "AnalyticsManager.h"
+#import "AVPlayer+Additions.h"
 
 static AudioManager *singleton = nil;
 
@@ -138,24 +139,15 @@ static const NSString *ItemStatusContext;
 }
 
 - (double)indicatedBitrate {
-    if (self.audioPlayer){
-        return [self.audioPlayer.currentItem.accessLog.events.lastObject indicatedBitrate];
-    }
-    return 0.0;
+    return [self.audioPlayer indicatedBitrate];
 }
 
 - (double)observedMaxBitrate {
-    if (self.audioPlayer){
-        return [self.audioPlayer.currentItem.accessLog.events.lastObject observedMaxBitrate];
-    }
-    return 0.0;
+    return [self.audioPlayer observedMaxBitrate];
 }
 
 - (double)observedMinBitrate {
-    if (self.audioPlayer){
-        return [self.audioPlayer.currentItem.accessLog.events.lastObject observedMinBitrate];
-    }
-    return 0.0;
+    return [self.audioPlayer observedMinBitrate];
 }
 
 - (void)startStream {
@@ -187,6 +179,7 @@ static const NSString *ItemStatusContext;
 }
 
 - (BOOL)isStreamBuffering {
+    //return [self.audioPlayer is]
     return NO;
 }
 
