@@ -176,8 +176,11 @@ class SCPRHomeViewController: UIViewController, AudioManagerDelegate, ContentPro
         // TODO: create Program model and insert into managed object context
         let program = content.objectAtIndex(0) as NSDictionary
         NSLog(program.description)
+        var newProgram : Program = NSEntityDescription.insertNewObjectForEntityForName("Program", inManagedObjectContext: ContentManager.shared().managedObjectContext) as Program
+        
         
         if let title = program.objectForKey("title") as? NSString {
+            newProgram.title = title
             currentProgramTitle = title
             programTitleLabel.text = currentProgramTitle
             updateNowPlayingInfoWithProgram(currentProgramTitle)
@@ -187,9 +190,14 @@ class SCPRHomeViewController: UIViewController, AudioManagerDelegate, ContentPro
         // Set program runtime label.
         if let startsAt = program.objectForKey("starts_at") as? NSString {
             var startTime = dateFromRFCString(startsAt)
+            newProgram.starts_at = startTime
+            
             var timeString = prettyStringFromRFCDateString(startsAt)
             
             if let endsAt = program.objectForKey("ends_at") as? NSString {
+                var endTime = dateFromRFCString(endsAt)
+                newProgram.ends_at = endTime
+                
                 timeString = timeString + " - " + prettyStringFromRFCDateString(endsAt)
             }
 

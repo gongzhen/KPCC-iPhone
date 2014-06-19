@@ -13,6 +13,8 @@
 		760E3C4D194FB61B00D86D91 /* Program.m in Sources */ = {isa = PBXBuildFile; fileRef = 760E3C4B194FB61B00D86D91 /* Program.m */; };
 		760EA99219521E98009B504E /* AVPlayer+Additions.m in Sources */ = {isa = PBXBuildFile; fileRef = 760EA99119521E98009B504E /* AVPlayer+Additions.m */; };
 		760EA99319521E98009B504E /* AVPlayer+Additions.m in Sources */ = {isa = PBXBuildFile; fileRef = 760EA99119521E98009B504E /* AVPlayer+Additions.m */; };
+		760EA9961953724E009B504E /* ContentManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 760EA9951953724E009B504E /* ContentManager.m */; };
+		760EA9971953724E009B504E /* ContentManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 760EA9951953724E009B504E /* ContentManager.m */; };
 		76349CA618D372B30027C3B8 /* libTestFlight.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 76349CA218D372B30027C3B8 /* libTestFlight.a */; };
 		76349CAA18D3747E0027C3B8 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 76349CA918D3747E0027C3B8 /* libz.dylib */; };
 		76349CF718D388C80027C3B8 /* SCPRAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 76A308D618C8FB940065D4B1 /* SCPRAppDelegate.m */; };
@@ -99,6 +101,8 @@
 		760E3C4B194FB61B00D86D91 /* Program.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Program.m; sourceTree = "<group>"; };
 		760EA99019521E98009B504E /* AVPlayer+Additions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "AVPlayer+Additions.h"; sourceTree = "<group>"; };
 		760EA99119521E98009B504E /* AVPlayer+Additions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "AVPlayer+Additions.m"; sourceTree = "<group>"; };
+		760EA9941953724E009B504E /* ContentManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ContentManager.h; path = Managers/ContentManager.h; sourceTree = "<group>"; };
+		760EA9951953724E009B504E /* ContentManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ContentManager.m; path = Managers/ContentManager.m; sourceTree = "<group>"; };
 		76349CA218D372B30027C3B8 /* libTestFlight.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libTestFlight.a; sourceTree = "<group>"; };
 		76349CA318D372B30027C3B8 /* TestFlight+AsyncLogging.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TestFlight+AsyncLogging.h"; sourceTree = "<group>"; };
 		76349CA418D372B30027C3B8 /* TestFlight+ManualSessions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TestFlight+ManualSessions.h"; sourceTree = "<group>"; };
@@ -405,6 +409,8 @@
 				76349D1A18D8C74F0027C3B8 /* NetworkManager.m */,
 				76658AB318DCB0DB00026176 /* AnalyticsManager.h */,
 				76658AB418DCB0DC00026176 /* AnalyticsManager.m */,
+				760EA9941953724E009B504E /* ContentManager.h */,
+				760EA9951953724E009B504E /* ContentManager.m */,
 			);
 			name = Managers;
 			sourceTree = "<group>";
@@ -628,6 +634,7 @@
 				760E3C4D194FB61B00D86D91 /* Program.m in Sources */,
 				760E3C49194FB54600D86D91 /* DataModel.xcdatamodeld in Sources */,
 				760EA99319521E98009B504E /* AVPlayer+Additions.m in Sources */,
+				760EA9971953724E009B504E /* ContentManager.m in Sources */,
 				769FD69E18EB6F4E00AAF1F4 /* SCPRRootViewController.m in Sources */,
 				76349D2218D8F8A30027C3B8 /* Reachability.m in Sources */,
 			);
@@ -649,6 +656,7 @@
 				760E3C4C194FB61B00D86D91 /* Program.m in Sources */,
 				760E3C48194FB54600D86D91 /* DataModel.xcdatamodeld in Sources */,
 				760EA99219521E98009B504E /* AVPlayer+Additions.m in Sources */,
+				760EA9961953724E009B504E /* ContentManager.m in Sources */,
 				769FD69D18EB6F4E00AAF1F4 /* SCPRRootViewController.m in Sources */,
 				76349D2118D8F8A30027C3B8 /* Reachability.m in Sources */,
 			);
