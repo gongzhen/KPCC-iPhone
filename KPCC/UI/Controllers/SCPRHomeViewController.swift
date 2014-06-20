@@ -79,6 +79,10 @@ class SCPRHomeViewController: UIViewController, AudioManagerDelegate, ContentPro
         // For beta
         timer = NSTimer(timeInterval: 1.0, target: self, selector: "tick", userInfo: nil, repeats: true)
         NSRunLoop.currentRunLoop().addTimer(timer, forMode: NSRunLoopCommonModes)
+        
+        // Experiment with CoreData fetch
+        var program = Program.fetchObjectFromContext(ContentManager.shared().managedObjectContext)
+        updateUIWithProgram(program)
     }
     
     // For beta to update UI
@@ -118,6 +122,28 @@ class SCPRHomeViewController: UIViewController, AudioManagerDelegate, ContentPro
         streamIndicatedBitrateLabel.text = String(CFloat(AudioManager.shared().indicatedBitrate()))
         maxObservedBitrateLabel.text = String(CFloat(AudioManager.shared().observedMaxBitrate()))
         minObservedBitrateLabel.text = String(CFloat(AudioManager.shared().observedMinBitrate()))        
+    }
+    
+    func updateUIWithProgram(program : Program?) {
+        if (!program) {
+            return
+        }
+        
+        if let title = program!.title {
+            currentProgramTitle = title
+            programTitleLabel.text = currentProgramTitle
+            updateNowPlayingInfoWithProgram(currentProgramTitle)
+        }
+        
+        // Set program runtime label.
+        if let startsAtDate = program!.starts_at {
+            var timeString = prettyStringFromRFCDate(startsAtDate)
+            if let endsAtDate = program!.ends_at {
+                timeString = timeString + " - " + prettyStringFromRFCDate(endsAtDate)
+            }
+
+            programTimeLabel.text = timeString
+        }
     }
     
     func playOrPauseTapped() -> Void {
@@ -189,9 +215,14 @@ class SCPRHomeViewController: UIViewController, AudioManagerDelegate, ContentPro
         // Set program runtime label.
         if let startsAt = program.objectForKey("starts_at") as? NSString {
             var startTime = dateFromRFCString(startsAt)
+            
+            NSLog("NEW start time: %@", startTime.description)
+
             newProgram.starts_at = startTime
             
             var timeString = prettyStringFromRFCDateString(startsAt)
+            
+            NSLog("timeString: %@", timeString)
             
             if let endsAt = program.objectForKey("ends_at") as? NSString {
                 var endTime = dateFromRFCString(endsAt)
@@ -241,5 +272,13 @@ class SCPRHomeViewController: UIViewController, AudioManagerDelegate, ContentPro
         var dateString = outputFormatter.stringFromDate(date)
         return dateString
     }
-
+    
+    func prettyStringFromRFCDate(date: NSDate) -> NSString {
+        var outputFormatter = NSDateFormatter()
+        outputFormatter.dateFormat = "h:ss a"
+        outputFormatter.timeZone = NSTimeZone(forSecondsFromGMT: NSTimeZone.localTimeZone().secondsFromGMT)
+        var dateString = outputFormatter.stringFromDate(date)
+        return dateString
+    }
+ 
 }

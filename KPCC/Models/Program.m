@@ -50,4 +50,27 @@
     //                                     inManagedObjectContext:context];
 }
 
++ (instancetype)fetchObjectFromContext:(NSManagedObjectContext *)context {
+    // Fetch or Create new Program
+    NSEntityDescription *entityDescription = [NSEntityDescription entityForName:[self entityName] inManagedObjectContext:context];
+    NSFetchRequest *request = [[NSFetchRequest alloc] init];
+    [request setEntity:entityDescription];
+    
+    NSError *error = nil;
+    NSArray *result = [context executeFetchRequest:request error:&error];
+    
+    if (result == nil) {
+        NSLog(@"fetch result = nil");
+        // Handle the error here
+    } else {
+        if([result count] > 0) {
+            NSLog(@"fetch saved Program");
+            return (Program *)[result objectAtIndex:0];
+        }
+    }
+    
+    // Not found
+    return nil;
+}
+
 @end

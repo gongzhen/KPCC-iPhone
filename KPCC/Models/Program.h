@@ -20,5 +20,6 @@
 @property (nonatomic, retain) NSString * program;
 
 + (instancetype)insertNewObjectIntoContext:(NSManagedObjectContext *)context;
++ (instancetype)fetchObjectFromContext:(NSManagedObjectContext *)context;
 
 @end
