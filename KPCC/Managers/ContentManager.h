@@ -18,5 +18,6 @@
 @property (strong, nonatomic) NSPersistentStoreCoordinator *persistentStoreCoordinator;
 
 - (NSString*)modelBase;
+- (void)saveContext;
 
 @end

@@ -215,15 +215,10 @@ class SCPRHomeViewController: UIViewController, AudioManagerDelegate, ContentPro
         // Set program runtime label.
         if let startsAt = program.objectForKey("starts_at") as? NSString {
             var startTime = dateFromRFCString(startsAt)
-            
-            NSLog("NEW start time: %@", startTime.description)
-
             newProgram.starts_at = startTime
-            
+
             var timeString = prettyStringFromRFCDateString(startsAt)
-            
-            NSLog("timeString: %@", timeString)
-            
+
             if let endsAt = program.objectForKey("ends_at") as? NSString {
                 var endTime = dateFromRFCString(endsAt)
                 newProgram.ends_at = endTime
@@ -234,12 +229,9 @@ class SCPRHomeViewController: UIViewController, AudioManagerDelegate, ContentPro
             programTimeLabel.text = timeString
         }
         
+        
         // Save the Program to persistant storage.
-        var error : NSError?
-        let saved = ContentManager.shared().managedObjectContext.save(&error)
-        if !saved {
-            NSLog("Uh, oh. An error happened.")
-        }
+        ContentManager.shared().saveContext()
     }
     
     
