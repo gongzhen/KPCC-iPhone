@@ -176,8 +176,7 @@ class SCPRHomeViewController: UIViewController, AudioManagerDelegate, ContentPro
         // TODO: create Program model and insert into managed object context
         let program = content.objectAtIndex(0) as NSDictionary
         NSLog(program.description)
-        var newProgram : Program = NSEntityDescription.insertNewObjectForEntityForName("Program", inManagedObjectContext: ContentManager.shared().managedObjectContext) as Program
-        
+        var newProgram = Program.insertNewObjectIntoContext(ContentManager.shared().managedObjectContext)
         
         if let title = program.objectForKey("title") as? NSString {
             newProgram.title = title
@@ -202,6 +201,13 @@ class SCPRHomeViewController: UIViewController, AudioManagerDelegate, ContentPro
             }
 
             programTimeLabel.text = timeString
+        }
+        
+        // Save the Program to persistant storage.
+        var error : NSError?
+        let saved = ContentManager.shared().managedObjectContext.save(&error)
+        if !saved {
+            NSLog("Uh, oh. An error happened.")
         }
     }
     

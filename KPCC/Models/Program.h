@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <CoreData/CoreData.h>
+#import "ContentManager.h"
 
 
 @interface Program : NSManagedObject
@@ -18,5 +18,7 @@
 @property (nonatomic, retain) NSString * public_url;
 @property (nonatomic, retain) NSNumber * is_recurring;
 @property (nonatomic, retain) NSString * program;
+
++ (instancetype)insertNewObjectIntoContext:(NSManagedObjectContext *)context;
 
 @end

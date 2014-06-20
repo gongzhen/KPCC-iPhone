@@ -18,4 +18,13 @@
 @dynamic is_recurring;
 @dynamic program;
 
++ (NSString *)entityName {
+    return @"Program";
+}
+
++ (instancetype)insertNewObjectIntoContext:(NSManagedObjectContext *)context {
+    return [NSEntityDescription insertNewObjectForEntityForName:[self entityName]
+                                         inManagedObjectContext:context];
+}
+
 @end
