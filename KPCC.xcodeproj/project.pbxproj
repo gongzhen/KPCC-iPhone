@@ -28,7 +28,6 @@
 		76349D0818D388C80027C3B8 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 76A308CA18C8FB940065D4B1 /* UIKit.framework */; };
 		76349D0918D388C80027C3B8 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 76A308C618C8FB940065D4B1 /* Foundation.framework */; };
 		76349D0C18D388C80027C3B8 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 76A308E418C8FB940065D4B1 /* Images.xcassets */; };
-		76349D0D18D388C80027C3B8 /* Main_iPhone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 76A308D818C8FB940065D4B1 /* Main_iPhone.storyboard */; };
 		76349D0E18D388C80027C3B8 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 76A308CF18C8FB940065D4B1 /* InfoPlist.strings */; };
 		76349D1718D3B53D0027C3B8 /* libFlurry_4.3.2.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 76349D1618D3B53D0027C3B8 /* libFlurry_4.3.2.a */; };
 		76349D1818D3B53E0027C3B8 /* libFlurry_4.3.2.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 76349D1618D3B53D0027C3B8 /* libFlurry_4.3.2.a */; };
@@ -59,7 +58,6 @@
 		76A308D118C8FB940065D4B1 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 76A308CF18C8FB940065D4B1 /* InfoPlist.strings */; };
 		76A308D318C8FB940065D4B1 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 76A308D218C8FB940065D4B1 /* main.m */; };
 		76A308D718C8FB940065D4B1 /* SCPRAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 76A308D618C8FB940065D4B1 /* SCPRAppDelegate.m */; };
-		76A308DA18C8FB940065D4B1 /* Main_iPhone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 76A308D818C8FB940065D4B1 /* Main_iPhone.storyboard */; };
 		76A308E518C8FB940065D4B1 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 76A308E418C8FB940065D4B1 /* Images.xcassets */; };
 		76A308EC18C8FB950065D4B1 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 76A308EB18C8FB950065D4B1 /* XCTest.framework */; };
 		76A308ED18C8FB950065D4B1 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 76A308C618C8FB940065D4B1 /* Foundation.framework */; };
@@ -140,7 +138,6 @@
 		76A308D418C8FB940065D4B1 /* KPCC-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "KPCC-Prefix.pch"; sourceTree = "<group>"; };
 		76A308D518C8FB940065D4B1 /* SCPRAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SCPRAppDelegate.h; sourceTree = "<group>"; };
 		76A308D618C8FB940065D4B1 /* SCPRAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SCPRAppDelegate.m; sourceTree = "<group>"; };
-		76A308D918C8FB940065D4B1 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main_iPhone.storyboard; sourceTree = "<group>"; };
 		76A308E418C8FB940065D4B1 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		76A308EA18C8FB950065D4B1 /* KPCCTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = KPCCTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		76A308EB18C8FB950065D4B1 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
@@ -363,7 +360,6 @@
 				76B9A9BC18F609FF007A6D8C /* Assets */,
 				769FD69918EB682E00AAF1F4 /* Classes */,
 				76E75F1C18CE4682008E3197 /* ThirdParty */,
-				76A308D818C8FB940065D4B1 /* Main_iPhone.storyboard */,
 				76A308E418C8FB940065D4B1 /* Images.xcassets */,
 				76A308CD18C8FB940065D4B1 /* Supporting Files */,
 			);
@@ -550,7 +546,6 @@
 				7685BD5F194BBCB90075BB16 /* pauseButton@2x.png in Resources */,
 				76349D0C18D388C80027C3B8 /* Images.xcassets in Resources */,
 				7685BD5D194BBCB90075BB16 /* pauseButton.png in Resources */,
-				76349D0D18D388C80027C3B8 /* Main_iPhone.storyboard in Resources */,
 				76EF5E8B193E8D6B00568A9D /* Storyboard.storyboard in Resources */,
 				76349D0E18D388C80027C3B8 /* InfoPlist.strings in Resources */,
 			);
@@ -566,7 +561,6 @@
 				7685BD62194BBCB90075BB16 /* playButton@2x.png in Resources */,
 				7685BD60194BBCB90075BB16 /* playButton.png in Resources */,
 				7685BD5E194BBCB90075BB16 /* pauseButton@2x.png in Resources */,
-				76A308DA18C8FB940065D4B1 /* Main_iPhone.storyboard in Resources */,
 				7685BD5C194BBCB90075BB16 /* pauseButton.png in Resources */,
 				76A308D118C8FB940065D4B1 /* InfoPlist.strings in Resources */,
 				76EF5E8A193E8D6B00568A9D /* Storyboard.storyboard in Resources */,
@@ -687,14 +681,6 @@
 				76A308D018C8FB940065D4B1 /* en */,
 			);
 			name = InfoPlist.strings;
-			sourceTree = "<group>";
-		};
-		76A308D818C8FB940065D4B1 /* Main_iPhone.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				76A308D918C8FB940065D4B1 /* Base */,
-			);
-			name = Main_iPhone.storyboard;
 			sourceTree = "<group>";
 		};
 		76A308F418C8FB950065D4B1 /* InfoPlist.strings */ = {
