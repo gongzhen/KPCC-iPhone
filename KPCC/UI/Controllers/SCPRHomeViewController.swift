@@ -23,13 +23,18 @@ class SCPRHomeViewController: UIViewController, AudioManagerDelegate, ContentPro
     @IBOutlet var actionButton : UIButton
     @IBOutlet var userReportButton : UIButton
     @IBOutlet var audioSlider : UISlider
+    @IBOutlet var backToProgramStartButton : UIButton
     var currentProgramTitle : String = ""
+    var currentProgram : Program = Program()
     @IBAction func buttonTapped(button: AnyObject) {
         if button as NSObject == actionButton {
             playOrPauseTapped()
         }
         if button as NSObject == userReportButton {
             userReportTapped()
+        }
+        if button as NSObject == backToProgramStartButton {
+            backToProgramStartTapped()
         }
     }
     
@@ -150,10 +155,16 @@ class SCPRHomeViewController: UIViewController, AudioManagerDelegate, ContentPro
         }
     }
     
+    
+    // Time shifting
     func updateSlider() -> Void {
         AudioManager.shared().seekToPercent(audioSlider.value)
     }
     
+    func backToProgramStartTapped() -> Void {
+        AudioManager.shared().seekToDate(currentProgram.starts_at)
+    }
+
     func playOrPauseTapped() -> Void {
         if !AudioManager.shared().isStreamPlaying() {
             if AudioManager.shared().isStreamBuffering() {
@@ -211,9 +222,8 @@ class SCPRHomeViewController: UIViewController, AudioManagerDelegate, ContentPro
             return;
         }
         
-        // TODO: create Program model and insert into managed object context
+        // Create Program and insert into managed object context
         let program = content.objectAtIndex(0) as NSDictionary
-        NSLog(program.description)
         var newProgram = Program.insertNewObjectIntoContext(ContentManager.shared().managedObjectContext)
         
         if let title = program.objectForKey("title") as? NSString {
@@ -241,6 +251,7 @@ class SCPRHomeViewController: UIViewController, AudioManagerDelegate, ContentPro
             programTimeLabel.text = timeString
         }
         
+        //currentProgram = newProgram
         
         // Save the Program to persistant storage.
         ContentManager.shared().saveContext()

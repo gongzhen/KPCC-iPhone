@@ -73,13 +73,15 @@ typedef enum {
 - (void)startStream;
 - (void)stopStream;
 - (void)stopAllAudio;
-- (void)seekToPercent:(CGFloat)percent;
 - (BOOL)isStreamPlaying;
 - (BOOL)isStreamBuffering;
 - (double)indicatedBitrate;
 - (double)observedMaxBitrate;
 - (double)observedMinBitrate;
 - (NSString *)currentDateTimeString;
+
+- (void)seekToPercent:(CGFloat)percent;
+- (void)seekToDate:(NSDate *)date;
 
 - (void)analyzeStreamError:(NSString*)comments;
 

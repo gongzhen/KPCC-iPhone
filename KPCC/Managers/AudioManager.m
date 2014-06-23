@@ -135,6 +135,10 @@ static const NSString *ItemStatusContext;
     }
 }
 
+- (void)seekToDate:(NSDate *)date {
+    [self.audioPlayer.currentItem seekToDate:date];
+}
+
 - (NSString *)currentDateTimeString {
     return [[self programDateTimeFormatter] stringFromDate:self.currentDate];
 }
