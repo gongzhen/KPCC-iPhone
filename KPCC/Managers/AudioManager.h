@@ -34,11 +34,18 @@ typedef enum {
     StreamStateUnknown = 3
 } StreamState;
 
+typedef enum {
+    StreamStatusStopped = 0,
+    StreamStatusPlaying = 1,
+    StreamStatusPaused = 2
+} StreamStatus;
+
 @protocol AudioManagerDelegate <NSObject>
 @optional
 - (void)handleUIForFailedConnection;
 - (void)handleUIForFailedStream;
 - (void)handleUIForRecoveredStream;
+- (void)onTimeChange;
 @end
 
 @interface AudioManager : NSObject
@@ -52,7 +59,12 @@ typedef enum {
 @property AVPlayerItem *playerItem;
 @property AVAudioPlayer *localAudioPlayer;
 
+@property StreamStatus status;
 @property long lastPreRoll;
+@property NSDate *currentDate;
+
+@property (strong,nonatomic) NSDateFormatter *dateFormatter;
+
 
 - (NSString *)liveStreamURL;
 - (void)startStream;
@@ -63,6 +75,7 @@ typedef enum {
 - (double)indicatedBitrate;
 - (double)observedMaxBitrate;
 - (double)observedMinBitrate;
+- (NSString *)currentDateTimeString;
 
 - (void)analyzeStreamError:(NSString*)comments;
 

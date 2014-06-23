@@ -14,6 +14,7 @@ class SCPRHomeViewController: UIViewController, AudioManagerDelegate, ContentPro
     
     @IBOutlet var programTitleLabel : UILabel
     @IBOutlet var programTimeLabel : UILabel
+    @IBOutlet var timeLabel: UILabel
     @IBOutlet var streamerStatusLabel : UILabel
     @IBOutlet var streamerUrlLabel : UILabel
     @IBOutlet var streamIndicatedBitrateLabel : UILabel
@@ -193,6 +194,10 @@ class SCPRHomeViewController: UIViewController, AudioManagerDelegate, ContentPro
         updateControlsAndUI()
     }
     
+    func onTimeChange() -> Void {
+        timeLabel.text = AudioManager.shared().currentDateTimeString()
+    }
+    
     // ContentProcessor
     func handleProcessedContent(content: NSArray, flags: NSDictionary) -> Void {
         if content.count == 0 {
@@ -259,7 +264,7 @@ class SCPRHomeViewController: UIViewController, AudioManagerDelegate, ContentPro
     func prettyStringFromRFCDateString(rawDate: NSString) -> NSString {
         let date = dateFromRFCString(rawDate)
         var outputFormatter = NSDateFormatter()
-        outputFormatter.dateFormat = "h:ss a"
+        outputFormatter.dateFormat = "h:mm a"
         outputFormatter.timeZone = NSTimeZone(forSecondsFromGMT: NSTimeZone.localTimeZone().secondsFromGMT)
         var dateString = outputFormatter.stringFromDate(date)
         return dateString
@@ -267,7 +272,7 @@ class SCPRHomeViewController: UIViewController, AudioManagerDelegate, ContentPro
     
     func prettyStringFromRFCDate(date: NSDate) -> NSString {
         var outputFormatter = NSDateFormatter()
-        outputFormatter.dateFormat = "h:ss a"
+        outputFormatter.dateFormat = "h:mm a"
         outputFormatter.timeZone = NSTimeZone(forSecondsFromGMT: NSTimeZone.localTimeZone().secondsFromGMT)
         var dateString = outputFormatter.stringFromDate(date)
         return dateString

@@ -83,6 +83,8 @@ static const NSString *ItemStatusContext;
 
 
 - (void)buildStreamer {
+    self.status = StreamStatusStopped;
+    
     NSURL *url = [NSURL URLWithString:kHLSLiveStreamURL];
     
    self.playerItem = [AVPlayerItem playerItemWithURL:url];
@@ -94,6 +96,40 @@ static const NSString *ItemStatusContext;
     self.audioPlayer = [AVPlayer playerWithPlayerItem:self.playerItem];
     [self.audioPlayer addObserver:self forKeyPath:@"status" options:NSKeyValueObservingOptionOld|NSKeyValueObservingOptionNew context:nil];
     [self.audioPlayer addObserver:self forKeyPath:@"rate" options:NSKeyValueObservingOptionOld|NSKeyValueObservingOptionNew context:nil];
+    
+    [self startObservingTime];
+}
+
+- (void)startObservingTime {
+    AVPlayer *audioPlayer = self.audioPlayer;
+    __unsafe_unretained typeof(self) weakSelf = self;
+
+    id playbackObserver = [self.audioPlayer addPeriodicTimeObserverForInterval:CMTimeMake(1000, 1000)  queue:nil usingBlock:^(CMTime time) {
+        weakSelf.currentDate = audioPlayer.currentItem.currentDate;
+
+        NSArray *seekRange = audioPlayer.currentItem.seekableTimeRanges;
+        if (seekRange && [seekRange count] > 0) {
+            CMTimeRange range = [[seekRange objectAtIndex:0] CMTimeRangeValue];
+
+            NSDate *minDate = [NSDate dateWithTimeInterval:( -1 * (CMTimeGetSeconds(time) - CMTimeGetSeconds(range.start))) sinceDate:weakSelf.currentDate];
+            NSDate *maxDate = [NSDate dateWithTimeInterval:(CMTimeGetSeconds(CMTimeRangeGetEnd(range)) - CMTimeGetSeconds(time)) sinceDate:weakSelf.currentDate];
+
+            if ([weakSelf.delegate respondsToSelector:@selector(onTimeChange)]) {
+                [weakSelf.delegate onTimeChange];
+            }
+        } else {
+            NSLog(@"no seekable time range for current item");
+        }
+    }];
+}
+
+- (NSString *)currentDateTimeString {
+    if (_dateFormatter == nil) {
+        _dateFormatter = [[NSDateFormatter alloc] init];
+        [_dateFormatter setDateFormat:@"h:mm:ss a"];
+        [_dateFormatter setTimeZone:[NSTimeZone timeZoneForSecondsFromGMT: [[NSTimeZone localTimeZone] secondsFromGMT]]];
+    }
+    return [_dateFormatter stringFromDate:self.currentDate];
 }
 
 - (void)playerItemFailedToPlayToEndTime:(NSNotification *)notification {
@@ -151,15 +187,21 @@ static const NSString *ItemStatusContext;
 }
 
 - (void)startStream {
+    if (!self.audioPlayer) {
+        [self buildStreamer];
+    }
     [self.audioPlayer play];
+    self.status = StreamStatusPlaying;
 }
 
 - (void)pauseStream {
     [self.audioPlayer pause];
+    self.status = StreamStatusPaused;
 }
 
 - (void)stopStream {
     [self.audioPlayer setRate:0.0];
+    self.status = StreamStatusStopped;
 }
 
 - (void)stopAllAudio {
