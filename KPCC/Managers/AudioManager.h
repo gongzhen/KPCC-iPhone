@@ -61,7 +61,10 @@ typedef enum {
 
 @property StreamStatus status;
 @property long lastPreRoll;
+
 @property NSDate *currentDate;
+@property NSDate *minSeekableDate;
+@property NSDate *maxSeekableDate;
 
 @property (strong,nonatomic) NSDateFormatter *dateFormatter;
 
@@ -70,6 +73,7 @@ typedef enum {
 - (void)startStream;
 - (void)stopStream;
 - (void)stopAllAudio;
+- (void)seekToPercent:(CGFloat)percent;
 - (BOOL)isStreamPlaying;
 - (BOOL)isStreamBuffering;
 - (double)indicatedBitrate;
@@ -78,6 +82,7 @@ typedef enum {
 - (NSString *)currentDateTimeString;
 
 - (void)analyzeStreamError:(NSString*)comments;
+
 
 
 

@@ -140,12 +140,20 @@
                                             <action selector="buttonTapped:" destination="rbX-u6-Qyr" eventType="touchUpInside" id="Ur3-ph-ZKL"/>
                                         </connections>
                                     </button>
+                                    <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="Sms-MW-dft">
+                                        <rect key="frame" x="18" y="144" width="284" height="31"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="280" id="fce-YD-X2r"/>
+                                        </constraints>
+                                    </slider>
                                 </subviews>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <constraints>
+                                    <constraint firstAttribute="bottom" secondItem="Sms-MW-dft" secondAttribute="bottom" id="01n-Ad-dl5"/>
                                     <constraint firstItem="Wfj-nk-Ap3" firstAttribute="centerX" secondItem="Wi6-WW-4fP" secondAttribute="centerX" id="3t6-od-g9Y"/>
                                     <constraint firstItem="Wfj-nk-Ap3" firstAttribute="top" secondItem="Wi6-WW-4fP" secondAttribute="top" constant="23" id="C0s-5A-X1w"/>
                                     <constraint firstItem="Wfj-nk-Ap3" firstAttribute="centerY" secondItem="Wi6-WW-4fP" secondAttribute="centerY" id="Db9-LA-4PG"/>
+                                    <constraint firstItem="Sms-MW-dft" firstAttribute="centerX" secondItem="Wfj-nk-Ap3" secondAttribute="centerX" id="Uui-TI-WPB"/>
                                 </constraints>
                             </view>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="exH-vG-mz4">
@@ -220,6 +228,7 @@
                     <simulatedOrientationMetrics key="simulatedOrientationMetrics"/>
                     <connections>
                         <outlet property="actionButton" destination="Wfj-nk-Ap3" id="lqN-1j-cBC"/>
+                        <outlet property="audioSlider" destination="Sms-MW-dft" id="CjK-MR-VwB"/>
                         <outlet property="maxObservedBitrateLabel" destination="xmh-lf-hsA" id="YDs-W5-sQP"/>
                         <outlet property="minObservedBitrateLabel" destination="HRZ-cs-ZKm" id="s46-XK-70C"/>
                         <outlet property="programTimeLabel" destination="exH-vG-mz4" id="pkx-we-HKD"/>

@@ -22,6 +22,7 @@ class SCPRHomeViewController: UIViewController, AudioManagerDelegate, ContentPro
     @IBOutlet var minObservedBitrateLabel : UILabel
     @IBOutlet var actionButton : UIButton
     @IBOutlet var userReportButton : UIButton
+    @IBOutlet var audioSlider : UISlider
     var currentProgramTitle : String = ""
     @IBAction func buttonTapped(button: AnyObject) {
         if button as NSObject == actionButton {
@@ -84,6 +85,8 @@ class SCPRHomeViewController: UIViewController, AudioManagerDelegate, ContentPro
         // Experiment with CoreData fetch
         var program = Program.fetchObjectFromContext(ContentManager.shared().managedObjectContext)
         updateUIWithProgram(program)
+        
+        audioSlider.addTarget(self, action:"updateSlider", forControlEvents: UIControlEvents.ValueChanged)
     }
     
     // For beta to update UI
@@ -145,6 +148,10 @@ class SCPRHomeViewController: UIViewController, AudioManagerDelegate, ContentPro
 
             programTimeLabel.text = timeString
         }
+    }
+    
+    func updateSlider() -> Void {
+        AudioManager.shared().seekToPercent(audioSlider.value)
     }
     
     func playOrPauseTapped() -> Void {

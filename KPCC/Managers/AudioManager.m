@@ -111,8 +111,8 @@ static const NSString *ItemStatusContext;
         if (seekRange && [seekRange count] > 0) {
             CMTimeRange range = [[seekRange objectAtIndex:0] CMTimeRangeValue];
 
-            NSDate *minDate = [NSDate dateWithTimeInterval:( -1 * (CMTimeGetSeconds(time) - CMTimeGetSeconds(range.start))) sinceDate:weakSelf.currentDate];
-            NSDate *maxDate = [NSDate dateWithTimeInterval:(CMTimeGetSeconds(CMTimeRangeGetEnd(range)) - CMTimeGetSeconds(time)) sinceDate:weakSelf.currentDate];
+            weakSelf.minSeekableDate = [NSDate dateWithTimeInterval:( -1 * (CMTimeGetSeconds(time) - CMTimeGetSeconds(range.start))) sinceDate:weakSelf.currentDate];
+            weakSelf.maxSeekableDate = [NSDate dateWithTimeInterval:(CMTimeGetSeconds(CMTimeRangeGetEnd(range)) - CMTimeGetSeconds(time)) sinceDate:weakSelf.currentDate];
 
             if ([weakSelf.delegate respondsToSelector:@selector(onTimeChange)]) {
                 [weakSelf.delegate onTimeChange];
@@ -123,13 +123,37 @@ static const NSString *ItemStatusContext;
     }];
 }
 
+- (void)seekToPercent:(CGFloat)percent {
+    NSArray *seekRange = self.audioPlayer.currentItem.seekableTimeRanges;
+    if (seekRange && [seekRange count] > 0) {
+        CMTimeRange range = [[seekRange objectAtIndex:0] CMTimeRangeValue];
+
+        CMTime seekTime = CMTimeMakeWithSeconds( CMTimeGetSeconds(range.start) + ( CMTimeGetSeconds(range.duration) * (percent / 100)),
+                                                range.start.timescale);
+
+        [self.audioPlayer.currentItem seekToTime:seekTime];
+    }
+}
+
 - (NSString *)currentDateTimeString {
+    return [[self programDateTimeFormatter] stringFromDate:self.currentDate];
+}
+
+- (NSString *)minSeekableDateTimeString {
+    return [[self programDateTimeFormatter] stringFromDate:self.minSeekableDate];
+}
+
+- (NSString *)maxSeekableDateTimeString {
+    return [[self programDateTimeFormatter] stringFromDate:self.maxSeekableDate];
+}
+
+- (NSDateFormatter *)programDateTimeFormatter {
     if (_dateFormatter == nil) {
         _dateFormatter = [[NSDateFormatter alloc] init];
         [_dateFormatter setDateFormat:@"h:mm:ss a"];
         [_dateFormatter setTimeZone:[NSTimeZone timeZoneForSecondsFromGMT: [[NSTimeZone localTimeZone] secondsFromGMT]]];
     }
-    return [_dateFormatter stringFromDate:self.currentDate];
+    return _dateFormatter;
 }
 
 - (void)playerItemFailedToPlayToEndTime:(NSNotification *)notification {
