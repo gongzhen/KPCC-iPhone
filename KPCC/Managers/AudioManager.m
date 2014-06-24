@@ -104,7 +104,7 @@ static const NSString *ItemStatusContext;
     AVPlayer *audioPlayer = self.audioPlayer;
     __unsafe_unretained typeof(self) weakSelf = self;
 
-    [self.audioPlayer addPeriodicTimeObserverForInterval:CMTimeMake(1, 1000)  queue:nil usingBlock:^(CMTime time) {
+    [self.audioPlayer addPeriodicTimeObserverForInterval:CMTimeMake(1, 10)  queue:nil usingBlock:^(CMTime time) {
         weakSelf.currentDate = audioPlayer.currentItem.currentDate;
 
         NSArray *seekRange = audioPlayer.currentItem.seekableTimeRanges;
