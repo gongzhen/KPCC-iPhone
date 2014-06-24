@@ -24,6 +24,9 @@ class SCPRHomeViewController: UIViewController, AudioManagerDelegate, ContentPro
     @IBOutlet var userReportButton : UIButton
     @IBOutlet var audioSlider : UISlider
     @IBOutlet var backToProgramStartButton : UIButton
+    @IBOutlet var forwardToLiveButton : UIButton
+    @IBOutlet var forwardSeekButton : UIButton
+    @IBOutlet var backwardSeekButton : UIButton
     var currentProgramTitle : String = ""
     var currentProgramStartTime : NSDate = NSDate()
     @IBAction func buttonTapped(button: AnyObject) {
@@ -35,6 +38,15 @@ class SCPRHomeViewController: UIViewController, AudioManagerDelegate, ContentPro
         }
         if button as NSObject == backToProgramStartButton {
             backToProgramStartTapped()
+        }
+        if button as NSObject == forwardToLiveButton {
+            forwardToLiveTapped()
+        }
+        if button as NSObject == forwardSeekButton {
+            forwardSeekTapped()
+        }
+        if button as NSObject == backwardSeekButton {
+            backwardSeekTapped()
         }
     }
     
@@ -165,6 +177,18 @@ class SCPRHomeViewController: UIViewController, AudioManagerDelegate, ContentPro
         if (currentProgramStartTime != nil && currentProgramStartTime != NSDate()) {
             AudioManager.shared().seekToDate(currentProgramStartTime)
         }
+    }
+    
+    func forwardToLiveTapped() -> Void {
+        AudioManager.shared().forwardSeekLive()
+    }
+
+    func forwardSeekTapped() -> Void {
+        AudioManager.shared().forwardSeekThirtySeconds()
+    }
+    
+    func backwardSeekTapped() -> Void {
+        AudioManager.shared().backwardSeekThirtySeconds()
     }
 
     func playOrPauseTapped() -> Void {

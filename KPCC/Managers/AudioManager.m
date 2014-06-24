@@ -104,7 +104,7 @@ static const NSString *ItemStatusContext;
     AVPlayer *audioPlayer = self.audioPlayer;
     __unsafe_unretained typeof(self) weakSelf = self;
 
-    id playbackObserver = [self.audioPlayer addPeriodicTimeObserverForInterval:CMTimeMake(1000, 1000)  queue:nil usingBlock:^(CMTime time) {
+    [self.audioPlayer addPeriodicTimeObserverForInterval:CMTimeMake(1, 1000)  queue:nil usingBlock:^(CMTime time) {
         weakSelf.currentDate = audioPlayer.currentItem.currentDate;
 
         NSArray *seekRange = audioPlayer.currentItem.seekableTimeRanges;
@@ -136,7 +136,33 @@ static const NSString *ItemStatusContext;
 }
 
 - (void)seekToDate:(NSDate *)date {
+    NSLog(@"## seeking to date: %@", date.description);
     [self.audioPlayer.currentItem seekToDate:date];
+}
+
+- (void)forwardSeekLive {
+    double time = MAXFLOAT;
+    [self.audioPlayer seekToTime: CMTimeMakeWithSeconds(time, NSEC_PER_SEC)];
+}
+
+- (void)forwardSeekThirtySeconds {
+    NSDate *currentDate = self.audioPlayer.currentItem.currentDate;
+    if (currentDate) {
+        [self.audioPlayer pause];
+        [self.audioPlayer seekToDate:[currentDate dateByAddingTimeInterval:(30)] completionHandler:^(BOOL finished) {
+            [self.audioPlayer play];
+        }];
+    }
+}
+
+- (void)backwardSeekThirtySeconds {
+    NSDate *currentDate = self.audioPlayer.currentItem.currentDate;
+    if (currentDate) {
+        [self.audioPlayer pause];
+        [self.audioPlayer seekToDate:[currentDate dateByAddingTimeInterval:(-30)] completionHandler:^(BOOL finished) {
+            [self.audioPlayer play];
+        }];
+    }
 }
 
 - (NSString *)currentDateTimeString {
@@ -170,13 +196,6 @@ static const NSString *ItemStatusContext;
     if (self.audioPlayer) {
 
         NSLog(@"%@",[[NSString alloc] initWithData:[self.audioPlayer.currentItem.accessLog extendedLogData] encoding:[self.audioPlayer.currentItem.accessLog extendedLogDataStringEncoding]]);
-
-        NSArray *avpl = self.audioPlayer.currentItem.accessLog.events;
-        int i = 0;
-        for (AVPlayerItemAccessLogEvent *pi in avpl) {
-            NSLog(@"%i: %f", i, [pi indicatedBitrate]);
-            i++;
-        }
         
         if ([self.audioPlayer.currentItem.accessLog.events.lastObject URI]) {
             return [NSString stringWithFormat:@"%@",[self.audioPlayer.currentItem.accessLog.events.lastObject URI]];

@@ -82,6 +82,9 @@ typedef enum {
 
 - (void)seekToPercent:(CGFloat)percent;
 - (void)seekToDate:(NSDate *)date;
+- (void)forwardSeekLive;
+- (void)forwardSeekThirtySeconds;
+- (void)backwardSeekThirtySeconds;
 
 - (void)analyzeStreamError:(NSString*)comments;
 
