@@ -25,7 +25,7 @@ class SCPRHomeViewController: UIViewController, AudioManagerDelegate, ContentPro
     @IBOutlet var audioSlider : UISlider
     @IBOutlet var backToProgramStartButton : UIButton
     var currentProgramTitle : String = ""
-    var currentProgram : Program = Program()
+    var currentProgramStartTime : NSDate = NSDate()
     @IBAction func buttonTapped(button: AnyObject) {
         if button as NSObject == actionButton {
             playOrPauseTapped()
@@ -162,7 +162,9 @@ class SCPRHomeViewController: UIViewController, AudioManagerDelegate, ContentPro
     }
     
     func backToProgramStartTapped() -> Void {
-        AudioManager.shared().seekToDate(currentProgram.starts_at)
+        if (currentProgramStartTime != nil && currentProgramStartTime != NSDate()) {
+            AudioManager.shared().seekToDate(currentProgramStartTime)
+        }
     }
 
     func playOrPauseTapped() -> Void {
@@ -237,6 +239,7 @@ class SCPRHomeViewController: UIViewController, AudioManagerDelegate, ContentPro
         // Set program runtime label.
         if let startsAt = program.objectForKey("starts_at") as? NSString {
             var startTime = dateFromRFCString(startsAt)
+            currentProgramStartTime = startTime
             newProgram.starts_at = startTime
 
             var timeString = prettyStringFromRFCDateString(startsAt)
@@ -250,8 +253,6 @@ class SCPRHomeViewController: UIViewController, AudioManagerDelegate, ContentPro
 
             programTimeLabel.text = timeString
         }
-        
-        //currentProgram = newProgram
         
         // Save the Program to persistant storage.
         ContentManager.shared().saveContext()
