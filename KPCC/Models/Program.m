@@ -69,7 +69,7 @@
         }
     }
     
-    // Not fou
+    // Not found
     return nil;
 }
 
