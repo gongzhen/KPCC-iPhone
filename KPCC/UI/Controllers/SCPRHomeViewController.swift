@@ -29,6 +29,7 @@ class SCPRHomeViewController: UIViewController, AudioManagerDelegate, ContentPro
     @IBOutlet var backwardSeekButton : UIButton
     var currentProgramTitle : String = ""
     var currentProgramStartTime : NSDate = NSDate()
+    var currentProgramEndTime : NSDate = NSDate()
     @IBAction func buttonTapped(button: AnyObject) {
         if button as NSObject == actionButton {
             playOrPauseTapped()
@@ -202,11 +203,11 @@ class SCPRHomeViewController: UIViewController, AudioManagerDelegate, ContentPro
         } else {
             stopStream()
         }
+        updateNowPlayingInfoWithProgram(currentProgramTitle)
     }
     
     func playStream() -> Void {
         AudioManager.shared().startStream()
-        updateNowPlayingInfoWithProgram(currentProgramTitle)
     }
     
     func stopStream() -> Void {
@@ -219,7 +220,11 @@ class SCPRHomeViewController: UIViewController, AudioManagerDelegate, ContentPro
     
     func updateNowPlayingInfoWithProgram(program : String?) {
         if let programTitle = program {
-            MPNowPlayingInfoCenter.defaultCenter().nowPlayingInfo = [MPMediaItemPropertyArtist : "89.3 KPCC",  MPMediaItemPropertyTitle : programTitle]
+            MPNowPlayingInfoCenter.defaultCenter().nowPlayingInfo =
+                [MPMediaItemPropertyArtist : "89.3 KPCC",
+                    MPMediaItemPropertyTitle : programTitle,
+                    MPNowPlayingInfoPropertyPlaybackRate : AudioManager.shared().audioPlayer.rate,
+                    MPMediaItemPropertyPlaybackDuration : currentProgramEndTime.timeIntervalSinceDate(AudioManager.shared().audioPlayer.currentItem.currentDate())]
         }
     }
     
@@ -270,6 +275,7 @@ class SCPRHomeViewController: UIViewController, AudioManagerDelegate, ContentPro
 
             if let endsAt = program.objectForKey("ends_at") as? NSString {
                 var endTime = dateFromRFCString(endsAt)
+                currentProgramEndTime = endTime
                 newProgram.ends_at = endTime
                 
                 timeString = timeString + " - " + prettyStringFromRFCDateString(endsAt)
