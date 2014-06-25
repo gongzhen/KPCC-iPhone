@@ -30,6 +30,7 @@ class SCPRHomeViewController: UIViewController, AudioManagerDelegate, ContentPro
     var currentProgramTitle : String = ""
     var currentProgramStartTime : NSDate = NSDate()
     var currentProgramEndTime : NSDate = NSDate()
+    var currentProgram : Program!
     @IBAction func buttonTapped(button: AnyObject) {
         if button as NSObject == actionButton {
             playOrPauseTapped()
@@ -65,6 +66,12 @@ class SCPRHomeViewController: UIViewController, AudioManagerDelegate, ContentPro
                 event.subtype == UIEventSubtype.RemoteControlPause ||
                 event.subtype == UIEventSubtype.RemoteControlTogglePlayPause) {
                     playOrPauseTapped()
+            }
+            if (event.subtype == UIEventSubtype.RemoteControlNextTrack) {
+                forwardSeekTapped()
+            }
+            if (event.subtype == UIEventSubtype.RemoteControlPreviousTrack) {
+                backwardSeekTapped()
             }
         }
     }
@@ -146,29 +153,6 @@ class SCPRHomeViewController: UIViewController, AudioManagerDelegate, ContentPro
         minObservedBitrateLabel.text = String(CFloat(AudioManager.shared().observedMinBitrate()))        
     }
     
-    func updateUIWithProgram(program : Program?) {
-        if (!program) {
-            return
-        }
-        
-        if let title = program!.title {
-            currentProgramTitle = title
-            programTitleLabel.text = currentProgramTitle
-            updateNowPlayingInfoWithProgram(currentProgramTitle)
-        }
-        
-        // Set program runtime label.
-        if let startsAtDate = program!.starts_at {
-            var timeString = prettyStringFromRFCDate(startsAtDate)
-            if let endsAtDate = program!.ends_at {
-                timeString = timeString + " - " + prettyStringFromRFCDate(endsAtDate)
-            }
-
-            programTimeLabel.text = timeString
-        }
-    }
-    
-    
     // Time shifting
     func updateSlider() -> Void {
         //AudioManager.shared().seekToPercent(audioSlider.value)
@@ -203,7 +187,7 @@ class SCPRHomeViewController: UIViewController, AudioManagerDelegate, ContentPro
         } else {
             stopStream()
         }
-        updateNowPlayingInfoWithProgram(currentProgramTitle)
+        updateNowPlayingInfoWithProgram(currentProgram)
     }
     
     func playStream() -> Void {
@@ -218,14 +202,47 @@ class SCPRHomeViewController: UIViewController, AudioManagerDelegate, ContentPro
         AudioManager.shared().stopAllAudio()
     }
     
-    func updateNowPlayingInfoWithProgram(program : String?) {
-        if let programTitle = program {
-            MPNowPlayingInfoCenter.defaultCenter().nowPlayingInfo =
-                [MPMediaItemPropertyArtist : "89.3 KPCC",
-                    MPMediaItemPropertyTitle : programTitle,
-                    MPNowPlayingInfoPropertyPlaybackRate : AudioManager.shared().audioPlayer.rate,
-                    MPMediaItemPropertyPlaybackDuration : currentProgramEndTime.timeIntervalSinceDate(AudioManager.shared().audioPlayer.currentItem.currentDate())]
+    func updateUIWithProgram(program : Program?) {
+        if (!program) {
+            return
         }
+        
+        if let title = program!.title {
+            currentProgramTitle = title
+            programTitleLabel.text = currentProgramTitle
+        }
+        
+        // Set program runtime label.
+        if let startsAtDate = program!.starts_at {
+            var timeString = prettyStringFromRFCDate(startsAtDate)
+            if let endsAtDate = program!.ends_at {
+                timeString = timeString + " - " + prettyStringFromRFCDate(endsAtDate)
+            }
+            
+            programTimeLabel.text = timeString
+        }
+        
+        updateNowPlayingInfoWithProgram(program)
+    }
+    
+    func updateNowPlayingInfoWithProgram(program : Program?) {
+        if (!program) {
+            return
+        }
+        
+        var nowPlayingInfo = NSMutableDictionary(dictionary: MPNowPlayingInfoCenter.defaultCenter().nowPlayingInfo)
+        nowPlayingInfo.setObject("89.3 KPCC", forKey: MPMediaItemPropertyArtist)
+        nowPlayingInfo.setObject(AudioManager.shared().audioPlayer.rate, forKey: MPNowPlayingInfoPropertyPlaybackRate)
+        
+        if let title = program!.title {
+            nowPlayingInfo.setObject(title, forKey: MPMediaItemPropertyTitle)
+        }
+        
+        if AudioManager.shared().isStreamPlaying() {
+            nowPlayingInfo.setObject(currentProgramEndTime.timeIntervalSinceDate(AudioManager.shared().audioPlayer.currentItem.currentDate()), forKey: MPMediaItemPropertyPlaybackDuration)
+        }
+        
+        MPNowPlayingInfoCenter.defaultCenter().nowPlayingInfo = nowPlayingInfo
     }
     
     // AudioManagerDelegate
@@ -261,7 +278,6 @@ class SCPRHomeViewController: UIViewController, AudioManagerDelegate, ContentPro
             newProgram.title = title
             currentProgramTitle = title
             programTitleLabel.text = currentProgramTitle
-            updateNowPlayingInfoWithProgram(currentProgramTitle)
         }
         
         
@@ -285,6 +301,9 @@ class SCPRHomeViewController: UIViewController, AudioManagerDelegate, ContentPro
 
             programTimeLabel.text = timeString
         }
+        
+        currentProgram = newProgram
+        updateNowPlayingInfoWithProgram(currentProgram)
         
         // Save the Program to persistant storage.
         ContentManager.shared().saveContext()
