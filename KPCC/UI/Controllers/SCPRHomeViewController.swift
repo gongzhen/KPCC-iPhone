@@ -171,7 +171,7 @@ class SCPRHomeViewController: UIViewController, AudioManagerDelegate, ContentPro
     
     // Time shifting
     func updateSlider() -> Void {
-        AudioManager.shared().seekToPercent(audioSlider.value)
+        //AudioManager.shared().seekToPercent(audioSlider.value)
     }
     
     func backToProgramStartTapped() -> Void {
@@ -279,6 +279,8 @@ class SCPRHomeViewController: UIViewController, AudioManagerDelegate, ContentPro
                 newProgram.ends_at = endTime
                 
                 timeString = timeString + " - " + prettyStringFromRFCDateString(endsAt)
+                
+                MPNowPlayingInfoCenter.defaultCenter().nowPlayingInfo = [MPMediaItemPropertyPlaybackDuration : endTime.timeIntervalSinceDate(startTime)]
             }
 
             programTimeLabel.text = timeString
@@ -288,8 +290,7 @@ class SCPRHomeViewController: UIViewController, AudioManagerDelegate, ContentPro
         ContentManager.shared().saveContext()
     }
     
-    
-    // Date helper functions .. TODO: move these somewhere better
+    // Date helper functions
     func dateFromRFCString(dateString: NSString) -> NSDate {
         if (dateString == NSNull()) {
             return NSDate.date();
@@ -300,7 +301,7 @@ class SCPRHomeViewController: UIViewController, AudioManagerDelegate, ContentPro
         rfc3339DateFormatter.timeZone = NSTimeZone(forSecondsFromGMT: 0)
         
         var fixedDateString = dateString.stringByReplacingOccurrencesOfString(":", withString: "")
-
+        
         // Convert the RFC 3339 date time string to an NSDate.
         var date = rfc3339DateFormatter.dateFromString(fixedDateString)
         if (!date) {

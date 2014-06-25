@@ -15,6 +15,10 @@
 		760EA99319521E98009B504E /* AVPlayer+Additions.m in Sources */ = {isa = PBXBuildFile; fileRef = 760EA99119521E98009B504E /* AVPlayer+Additions.m */; };
 		760EA9961953724E009B504E /* ContentManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 760EA9951953724E009B504E /* ContentManager.m */; };
 		760EA9971953724E009B504E /* ContentManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 760EA9951953724E009B504E /* ContentManager.m */; };
+		76177297195B593400F69EFC /* SCPRHomeViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 76177296195B593400F69EFC /* SCPRHomeViewModel.m */; };
+		76177298195B593400F69EFC /* SCPRHomeViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 76177296195B593400F69EFC /* SCPRHomeViewModel.m */; };
+		7617729B195B646300F69EFC /* Utils.m in Sources */ = {isa = PBXBuildFile; fileRef = 7617729A195B646300F69EFC /* Utils.m */; };
+		7617729C195B646300F69EFC /* Utils.m in Sources */ = {isa = PBXBuildFile; fileRef = 7617729A195B646300F69EFC /* Utils.m */; };
 		761CC5A4195A2878006A6C7C /* Testflight-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 761CC5A3195A2878006A6C7C /* Testflight-Info.plist */; };
 		76349CA618D372B30027C3B8 /* libTestFlight.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 76349CA218D372B30027C3B8 /* libTestFlight.a */; };
 		76349CAA18D3747E0027C3B8 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 76349CA918D3747E0027C3B8 /* libz.dylib */; };
@@ -102,6 +106,10 @@
 		760EA99119521E98009B504E /* AVPlayer+Additions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "AVPlayer+Additions.m"; sourceTree = "<group>"; };
 		760EA9941953724E009B504E /* ContentManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ContentManager.h; path = Managers/ContentManager.h; sourceTree = "<group>"; };
 		760EA9951953724E009B504E /* ContentManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ContentManager.m; path = Managers/ContentManager.m; sourceTree = "<group>"; };
+		76177295195B593400F69EFC /* SCPRHomeViewModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCPRHomeViewModel.h; sourceTree = "<group>"; };
+		76177296195B593400F69EFC /* SCPRHomeViewModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SCPRHomeViewModel.m; sourceTree = "<group>"; };
+		76177299195B646300F69EFC /* Utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Utils.h; path = Managers/Utils.h; sourceTree = "<group>"; };
+		7617729A195B646300F69EFC /* Utils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Utils.m; path = Managers/Utils.m; sourceTree = "<group>"; };
 		761CC5A3195A2878006A6C7C /* Testflight-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Testflight-Info.plist"; sourceTree = "<group>"; };
 		76349CA218D372B30027C3B8 /* libTestFlight.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libTestFlight.a; sourceTree = "<group>"; };
 		76349CA318D372B30027C3B8 /* TestFlight+AsyncLogging.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TestFlight+AsyncLogging.h"; sourceTree = "<group>"; };
@@ -154,8 +162,8 @@
 		76B9A9B518EF79F6007A6D8C /* SCPRFooterView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SCPRFooterView.m; sourceTree = "<group>"; };
 		76B9A9BD18F609FF007A6D8C /* Glass_Crash.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = Glass_Crash.mp3; sourceTree = "<group>"; };
 		76B9A9BE18F609FF007A6D8C /* Wood_Crash.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = Wood_Crash.mp3; sourceTree = "<group>"; };
-		76EF5E84193E8BEC00568A9D /* KPCC-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "KPCC-Bridging-Header.h"; sourceTree = "<group>"; };
-		76EF5E85193E8BEC00568A9D /* TestFlight-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TestFlight-Bridging-Header.h"; sourceTree = "<group>"; };
+		76EF5E84193E8BEC00568A9D /* KPCC-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "KPCC-Bridging-Header.h"; path = "UI/Controllers/KPCC-Bridging-Header.h"; sourceTree = "<group>"; };
+		76EF5E85193E8BEC00568A9D /* TestFlight-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "TestFlight-Bridging-Header.h"; path = "UI/Controllers/TestFlight-Bridging-Header.h"; sourceTree = "<group>"; };
 		76EF5E86193E8BED00568A9D /* SCPRHomeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SCPRHomeViewController.swift; sourceTree = "<group>"; };
 		76EF5E89193E8D6B00568A9D /* Storyboard.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Storyboard.storyboard; sourceTree = "<group>"; };
 		C4832A831DF6416997B73FBF /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -217,6 +225,15 @@
 			path = Models;
 			sourceTree = "<group>";
 		};
+		76177294195B58D000F69EFC /* View Models */ = {
+			isa = PBXGroup;
+			children = (
+				76177295195B593400F69EFC /* SCPRHomeViewModel.h */,
+				76177296195B593400F69EFC /* SCPRHomeViewModel.m */,
+			);
+			path = "View Models";
+			sourceTree = "<group>";
+		};
 		76349CA118D372B30027C3B8 /* TestFlight */ = {
 			isa = PBXGroup;
 			children = (
@@ -253,6 +270,7 @@
 		76658ABB18E0ADDF00026176 /* UI */ = {
 			isa = PBXGroup;
 			children = (
+				76177294195B58D000F69EFC /* View Models */,
 				76658ABC18E0AF8500026176 /* View Controllers */,
 				76658ABD18E0AF8500026176 /* Views */,
 				76EF5E89193E8D6B00568A9D /* Storyboard.storyboard */,
@@ -269,8 +287,6 @@
 				76B9A9AA18EF59FD007A6D8C /* SCPRUserReportViewController.m */,
 				76B9A9AB18EF59FD007A6D8C /* SCPRUserReportViewController.xib */,
 				76EF5E86193E8BED00568A9D /* SCPRHomeViewController.swift */,
-				76EF5E84193E8BEC00568A9D /* KPCC-Bridging-Header.h */,
-				76EF5E85193E8BEC00568A9D /* TestFlight-Bridging-Header.h */,
 			);
 			name = "View Controllers";
 			path = Controllers;
@@ -311,6 +327,8 @@
 		769FD69A18EB685F00AAF1F4 /* Application */ = {
 			isa = PBXGroup;
 			children = (
+				76EF5E84193E8BEC00568A9D /* KPCC-Bridging-Header.h */,
+				76EF5E85193E8BEC00568A9D /* TestFlight-Bridging-Header.h */,
 				76A308D518C8FB940065D4B1 /* SCPRAppDelegate.h */,
 				76A308D618C8FB940065D4B1 /* SCPRAppDelegate.m */,
 			);
@@ -408,6 +426,8 @@
 				76658AB418DCB0DC00026176 /* AnalyticsManager.m */,
 				760EA9941953724E009B504E /* ContentManager.h */,
 				760EA9951953724E009B504E /* ContentManager.m */,
+				76177299195B646300F69EFC /* Utils.h */,
+				7617729A195B646300F69EFC /* Utils.m */,
 			);
 			name = Managers;
 			sourceTree = "<group>";
@@ -629,10 +649,12 @@
 				76349CF918D388C80027C3B8 /* AudioManager.m in Sources */,
 				760E3C4D194FB61B00D86D91 /* Program.m in Sources */,
 				760E3C49194FB54600D86D91 /* DataModel.xcdatamodeld in Sources */,
+				76177298195B593400F69EFC /* SCPRHomeViewModel.m in Sources */,
 				760EA99319521E98009B504E /* AVPlayer+Additions.m in Sources */,
 				760EA9971953724E009B504E /* ContentManager.m in Sources */,
 				769FD69E18EB6F4E00AAF1F4 /* SCPRRootViewController.m in Sources */,
 				76349D2218D8F8A30027C3B8 /* Reachability.m in Sources */,
+				7617729C195B646300F69EFC /* Utils.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -651,10 +673,12 @@
 				76A3090418C93C880065D4B1 /* AudioManager.m in Sources */,
 				760E3C4C194FB61B00D86D91 /* Program.m in Sources */,
 				760E3C48194FB54600D86D91 /* DataModel.xcdatamodeld in Sources */,
+				76177297195B593400F69EFC /* SCPRHomeViewModel.m in Sources */,
 				760EA99219521E98009B504E /* AVPlayer+Additions.m in Sources */,
 				760EA9961953724E009B504E /* ContentManager.m in Sources */,
 				769FD69D18EB6F4E00AAF1F4 /* SCPRRootViewController.m in Sources */,
 				76349D2118D8F8A30027C3B8 /* Reachability.m in Sources */,
+				7617729B195B646300F69EFC /* Utils.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

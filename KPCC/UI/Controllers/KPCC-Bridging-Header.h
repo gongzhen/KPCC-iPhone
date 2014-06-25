@@ -4,6 +4,7 @@
 #import "AudioManager.h"
 #import "NetworkManager.h"
 #import "ContentManager.h"
+#import "Utils.h"
 #import "SCPRRootViewController.h"
 #import "SCPRUserReportViewController.h"
 #import "SCPRFooterView.h"
