@@ -28,8 +28,6 @@ class SCPRHomeViewController: UIViewController, AudioManagerDelegate, ContentPro
     @IBOutlet var forwardSeekButton : UIButton
     @IBOutlet var backwardSeekButton : UIButton
     var currentProgramTitle : String = ""
-    var currentProgramStartTime : NSDate = NSDate()
-    var currentProgramEndTime : NSDate = NSDate()
     var currentProgram : Program!
     @IBAction func buttonTapped(button: AnyObject) {
         if button as NSObject == actionButton {
@@ -82,6 +80,13 @@ class SCPRHomeViewController: UIViewController, AudioManagerDelegate, ContentPro
         }
     }
     
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidDisappear(animated);
+        
+        // Set the current view to recieve events from the AudioManagerDelegate.
+        AudioManager.shared().delegate = self
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -100,9 +105,6 @@ class SCPRHomeViewController: UIViewController, AudioManagerDelegate, ContentPro
         // Add observer to AVPlayer "rate" object
         AudioManager.shared().audioPlayer.addObserver(self, forKeyPath: "rate", options: NSKeyValueObservingOptions.Old|NSKeyValueObservingOptions.New, context: nil)
         
-        // Set the current view to recieve events from the AudioManagerDelegate.
-        AudioManager.shared().delegate = self
-        
         // For beta
         timer = NSTimer(timeInterval: 1.0, target: self, selector: "tick", userInfo: nil, repeats: true)
         NSRunLoop.currentRunLoop().addTimer(timer, forMode: NSRunLoopCommonModes)
@@ -111,7 +113,7 @@ class SCPRHomeViewController: UIViewController, AudioManagerDelegate, ContentPro
         var program = Program.fetchObjectFromContext(ContentManager.shared().managedObjectContext)
         updateUIWithProgram(program)
         
-        audioSlider.addTarget(self, action:"updateSlider", forControlEvents: UIControlEvents.ValueChanged)
+        //audioSlider.addTarget(self, action:"updateSlider", forControlEvents: UIControlEvents.ValueChanged)
     }
     
     // For beta to update UI
@@ -159,8 +161,8 @@ class SCPRHomeViewController: UIViewController, AudioManagerDelegate, ContentPro
     }
     
     func backToProgramStartTapped() -> Void {
-        if (currentProgramStartTime != nil && currentProgramStartTime != NSDate()) {
-            AudioManager.shared().seekToDate(currentProgramStartTime)
+        if let programStartTime = currentProgram!.starts_at {
+            AudioManager.shared().seekToDate(programStartTime)
         }
     }
     
@@ -239,7 +241,9 @@ class SCPRHomeViewController: UIViewController, AudioManagerDelegate, ContentPro
         }
         
         if AudioManager.shared().isStreamPlaying() {
-            nowPlayingInfo.setObject(currentProgramEndTime.timeIntervalSinceDate(AudioManager.shared().audioPlayer.currentItem.currentDate()), forKey: MPMediaItemPropertyPlaybackDuration)
+            if let programEndTime = program!.ends_at {
+                nowPlayingInfo.setObject(programEndTime.timeIntervalSinceDate(AudioManager.shared().audioPlayer.currentItem.currentDate()), forKey: MPMediaItemPropertyPlaybackDuration)
+            }
         }
         
         MPNowPlayingInfoCenter.defaultCenter().nowPlayingInfo = nowPlayingInfo
@@ -284,14 +288,12 @@ class SCPRHomeViewController: UIViewController, AudioManagerDelegate, ContentPro
         // Set program runtime label.
         if let startsAt = program.objectForKey("starts_at") as? NSString {
             var startTime = dateFromRFCString(startsAt)
-            currentProgramStartTime = startTime
             newProgram.starts_at = startTime
 
             var timeString = prettyStringFromRFCDateString(startsAt)
 
             if let endsAt = program.objectForKey("ends_at") as? NSString {
                 var endTime = dateFromRFCString(endsAt)
-                currentProgramEndTime = endTime
                 newProgram.ends_at = endTime
                 
                 timeString = timeString + " - " + prettyStringFromRFCDateString(endsAt)
