@@ -88,7 +88,7 @@ class SCPRHomeViewController: UIViewController, AudioManagerDelegate, ContentPro
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.navigationItem.title = "KPCC"
+        //self.navigationItem.title = "KPCC"
 
         // Fetch program info and update audio control state.
         updateDataForUI()

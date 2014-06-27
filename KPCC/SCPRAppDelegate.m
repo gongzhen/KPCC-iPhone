@@ -42,11 +42,8 @@
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     
     // Launch our root view controller
-    //SCPRRootViewController *viewController = [[SCPRRootViewController alloc] init];
     UIViewController *viewController = [[UIStoryboard storyboardWithName:@"Storyboard" bundle:nil] instantiateInitialViewController];
-
-    UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:viewController];
-    self.window.rootViewController = navigationController;
+    self.window.rootViewController = viewController;
     
     // Override point for customization after application launch.
     return YES;

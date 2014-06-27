@@ -55,6 +55,8 @@
 		768BBF1A18DA614300ACAD83 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 768BBF1918DA614300ACAD83 /* libPods.a */; };
 		768EAADF18D26C5500469734 /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 768EAADE18D26C5500469734 /* MediaPlayer.framework */; };
 		768EAAE118D26C9C00469734 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 768EAAE018D26C9C00469734 /* AVFoundation.framework */; };
+		7695FD15195E299000F63DE9 /* SCPRNavigationBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 7695FD14195E299000F63DE9 /* SCPRNavigationBar.m */; };
+		7695FD16195E299000F63DE9 /* SCPRNavigationBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 7695FD14195E299000F63DE9 /* SCPRNavigationBar.m */; };
 		769FD69D18EB6F4E00AAF1F4 /* SCPRRootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 769FD69C18EB6F4E00AAF1F4 /* SCPRRootViewController.m */; };
 		769FD69E18EB6F4E00AAF1F4 /* SCPRRootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 769FD69C18EB6F4E00AAF1F4 /* SCPRRootViewController.m */; };
 		76A308C718C8FB940065D4B1 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 76A308C618C8FB940065D4B1 /* Foundation.framework */; };
@@ -135,6 +137,8 @@
 		768BBF1918DA614300ACAD83 /* libPods.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libPods.a; path = "Pods/build/Debug-iphoneos/libPods.a"; sourceTree = "<group>"; };
 		768EAADE18D26C5500469734 /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
 		768EAAE018D26C9C00469734 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		7695FD13195E299000F63DE9 /* SCPRNavigationBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCPRNavigationBar.h; sourceTree = "<group>"; };
+		7695FD14195E299000F63DE9 /* SCPRNavigationBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SCPRNavigationBar.m; sourceTree = "<group>"; };
 		769FD69B18EB6F4E00AAF1F4 /* SCPRRootViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCPRRootViewController.h; sourceTree = "<group>"; };
 		769FD69C18EB6F4E00AAF1F4 /* SCPRRootViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SCPRRootViewController.m; sourceTree = "<group>"; };
 		76A308C318C8FB940065D4B1 /* KPCC.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = KPCC.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -297,6 +301,8 @@
 			children = (
 				76B9A9B418EF79F6007A6D8C /* SCPRFooterView.h */,
 				76B9A9B518EF79F6007A6D8C /* SCPRFooterView.m */,
+				7695FD13195E299000F63DE9 /* SCPRNavigationBar.h */,
+				7695FD14195E299000F63DE9 /* SCPRNavigationBar.m */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -651,6 +657,7 @@
 				760E3C49194FB54600D86D91 /* DataModel.xcdatamodeld in Sources */,
 				76177298195B593400F69EFC /* SCPRHomeViewModel.m in Sources */,
 				760EA99319521E98009B504E /* AVPlayer+Additions.m in Sources */,
+				7695FD16195E299000F63DE9 /* SCPRNavigationBar.m in Sources */,
 				760EA9971953724E009B504E /* ContentManager.m in Sources */,
 				769FD69E18EB6F4E00AAF1F4 /* SCPRRootViewController.m in Sources */,
 				76349D2218D8F8A30027C3B8 /* Reachability.m in Sources */,
@@ -675,6 +682,7 @@
 				760E3C48194FB54600D86D91 /* DataModel.xcdatamodeld in Sources */,
 				76177297195B593400F69EFC /* SCPRHomeViewModel.m in Sources */,
 				760EA99219521E98009B504E /* AVPlayer+Additions.m in Sources */,
+				7695FD15195E299000F63DE9 /* SCPRNavigationBar.m in Sources */,
 				760EA9961953724E009B504E /* ContentManager.m in Sources */,
 				769FD69D18EB6F4E00AAF1F4 /* SCPRRootViewController.m in Sources */,
 				76349D2118D8F8A30027C3B8 /* Reachability.m in Sources */,
