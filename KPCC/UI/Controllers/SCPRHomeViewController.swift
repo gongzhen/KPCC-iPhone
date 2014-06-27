@@ -189,6 +189,7 @@ class SCPRHomeViewController: UIViewController, AudioManagerDelegate, ContentPro
     
     func stopTapped() -> Void {
         AudioManager.shared().stopAllAudio()
+        updateNowPlayingInfoWithProgram(currentProgram)
     }
     
     func playStream() -> Void {
@@ -235,11 +236,12 @@ class SCPRHomeViewController: UIViewController, AudioManagerDelegate, ContentPro
             nowPlayingInfo.setObject(title, forKey: MPMediaItemPropertyTitle)
         }
         
+        /* Remove playback duration for now.
         if AudioManager.shared().isStreamPlaying() {
             if let programEndTime = program!.ends_at {
                 nowPlayingInfo.setObject(programEndTime.timeIntervalSinceDate(AudioManager.shared().audioPlayer.currentItem.currentDate()), forKey: MPMediaItemPropertyPlaybackDuration)
             }
-        }
+        }*/
         
         MPNowPlayingInfoCenter.defaultCenter().nowPlayingInfo = nowPlayingInfo
     }
