@@ -21,6 +21,7 @@ class SCPRHomeViewController: UIViewController, AudioManagerDelegate, ContentPro
     @IBOutlet var maxObservedBitrateLabel : UILabel
     @IBOutlet var minObservedBitrateLabel : UILabel
     @IBOutlet var actionButton : UIButton
+    @IBOutlet var stopButton : UIButton
     @IBOutlet var userReportButton : UIButton
     @IBOutlet var audioSlider : UISlider
     @IBOutlet var backToProgramStartButton : UIButton
@@ -32,6 +33,9 @@ class SCPRHomeViewController: UIViewController, AudioManagerDelegate, ContentPro
     @IBAction func buttonTapped(button: AnyObject) {
         if button as NSObject == actionButton {
             playOrPauseTapped()
+        }
+        if button as NSObject == stopButton {
+            stopTapped()
         }
         if button as NSObject == userReportButton {
             userReportTapped()
@@ -74,12 +78,6 @@ class SCPRHomeViewController: UIViewController, AudioManagerDelegate, ContentPro
         }
     }
     
-    override func observeValueForKeyPath(keyPath: String!, ofObject object: AnyObject!, change: NSDictionary!, context: CMutableVoidPointer) {
-        if keyPath == "rate" {
-            updateControlsAndUI()
-        }
-    }
-    
     override func viewDidAppear(animated: Bool) {
         super.viewDidDisappear(animated);
         
@@ -101,9 +99,6 @@ class SCPRHomeViewController: UIViewController, AudioManagerDelegate, ContentPro
         
         // Observe when the application becomes active again, and update UI if need-be.
         NSNotificationCenter.defaultCenter().addObserver(self, selector:"updateDataForUI", name: UIApplicationWillEnterForegroundNotification, object: nil)
-        
-        // Add observer to AVPlayer "rate" object
-        AudioManager.shared().audioPlayer.addObserver(self, forKeyPath: "rate", options: NSKeyValueObservingOptions.Old|NSKeyValueObservingOptions.New, context: nil)
         
         // For beta
         timer = NSTimer(timeInterval: 1.0, target: self, selector: "tick", userInfo: nil, repeats: true)
@@ -181,27 +176,27 @@ class SCPRHomeViewController: UIViewController, AudioManagerDelegate, ContentPro
     func playOrPauseTapped() -> Void {
         if !AudioManager.shared().isStreamPlaying() {
             if AudioManager.shared().isStreamBuffering() {
-                stopAllAudio()
+                AudioManager.shared().stopAllAudio()
                 JDStatusBarNotification.dismiss()
             } else {
                 playStream()
             }
         } else {
-            stopStream()
+            pauseStream()
         }
         updateNowPlayingInfoWithProgram(currentProgram)
+    }
+    
+    func stopTapped() -> Void {
+        AudioManager.shared().stopAllAudio()
     }
     
     func playStream() -> Void {
         AudioManager.shared().startStream()
     }
     
-    func stopStream() -> Void {
-        AudioManager.shared().stopStream()
-    }
-    
-    func stopAllAudio() -> Void {
-        AudioManager.shared().stopAllAudio()
+    func pauseStream() -> Void {
+        AudioManager.shared().pauseStream()
     }
     
     func updateUIWithProgram(program : Program?) {
@@ -234,7 +229,7 @@ class SCPRHomeViewController: UIViewController, AudioManagerDelegate, ContentPro
         
         var nowPlayingInfo = NSMutableDictionary(dictionary: MPNowPlayingInfoCenter.defaultCenter().nowPlayingInfo)
         nowPlayingInfo.setObject("89.3 KPCC", forKey: MPMediaItemPropertyArtist)
-        nowPlayingInfo.setObject(AudioManager.shared().audioPlayer.rate, forKey: MPNowPlayingInfoPropertyPlaybackRate)
+        nowPlayingInfo.setObject(AudioManager.shared().isStreamPlaying() ? 1.0 : 0.0, forKey: MPNowPlayingInfoPropertyPlaybackRate)
         
         if let title = program!.title {
             nowPlayingInfo.setObject(title, forKey: MPMediaItemPropertyTitle)
@@ -266,6 +261,10 @@ class SCPRHomeViewController: UIViewController, AudioManagerDelegate, ContentPro
     
     func onTimeChange() -> Void {
         timeLabel.text = AudioManager.shared().currentDateTimeString()
+    }
+    
+    func onRateChange() -> Void {
+        updateControlsAndUI()
     }
     
     // ContentProcessor

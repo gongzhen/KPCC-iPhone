@@ -73,6 +73,10 @@ static const NSString *ItemStatusContext;
         CGFloat oldRate = [[change objectForKey:@"old"] floatValue];
         CGFloat newRate = [[change objectForKey:@"new"] floatValue];
         
+        if ([self.delegate respondsToSelector:@selector(onRateChange)]) {
+            [self.delegate onRateChange];
+        }
+        
         // Now playing, was stopped.
         if (oldRate == 0.0 && newRate == 1.0) {
             [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
@@ -104,7 +108,7 @@ static const NSString *ItemStatusContext;
     AVPlayer *audioPlayer = self.audioPlayer;
     __unsafe_unretained typeof(self) weakSelf = self;
 
-    [self.audioPlayer addPeriodicTimeObserverForInterval:CMTimeMake(1, 10)  queue:nil usingBlock:^(CMTime time) {
+    self.timeObserver = [self.audioPlayer addPeriodicTimeObserverForInterval:CMTimeMake(1, 10)  queue:nil usingBlock:^(CMTime time) {
         weakSelf.currentDate = audioPlayer.currentItem.currentDate;
 
         NSArray *seekRange = audioPlayer.currentItem.seekableTimeRanges;
@@ -136,7 +140,6 @@ static const NSString *ItemStatusContext;
 }
 
 - (void)seekToDate:(NSDate *)date {
-    NSLog(@"## seeking to date: %@", date.description);
     [self.audioPlayer.currentItem seekToDate:date];
 }
 
@@ -247,7 +250,7 @@ static const NSString *ItemStatusContext;
 }
 
 - (void)stopStream {
-    [self.audioPlayer setRate:0.0];
+    [self takedownAudioPlayer];
     self.status = StreamStatusStopped;
 }
 
@@ -259,8 +262,30 @@ static const NSString *ItemStatusContext;
     }
 }
 
+- (void)takedownAudioPlayer {
+    [self.audioPlayer pause];
+    
+    if (self.timeObserver) {
+        [self.audioPlayer removeTimeObserver:self.timeObserver];
+        self.timeObserver = nil;
+    }
+
+    @try {
+        [self.audioPlayer removeObserver:self forKeyPath:@"rate"];
+        [self.audioPlayer removeObserver:self forKeyPath:@"status"];
+        [self.playerItem removeObserver:self forKeyPath:@"status"];
+        [self.playerItem removeObserver:self forKeyPath:@"playbackBufferEmpty"];
+        [self.playerItem removeObserver:self forKeyPath:@"playbackLikelyToKeepUp"];
+    } @catch (NSException *e) {
+        // Wasn't necessary
+    }
+
+    self.audioPlayer = nil;
+    self.playerItem = nil;
+}
+
 - (BOOL)isStreamPlaying {
-    if ([self.audioPlayer rate] > 0.0) {
+    if (self.audioPlayer && [self.audioPlayer rate] > 0.0) {
         return YES;
     } else {
         return NO;

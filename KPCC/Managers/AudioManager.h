@@ -46,6 +46,7 @@ typedef enum {
 - (void)handleUIForFailedStream;
 - (void)handleUIForRecoveredStream;
 - (void)onTimeChange;
+- (void)onRateChange;
 @end
 
 @interface AudioManager : NSObject
@@ -54,6 +55,8 @@ typedef enum {
 
 /// Gets and sets the delegate used for receiving events from the AudioManager
 @property (readwrite, unsafe_unretained) id<AudioManagerDelegate> delegate;
+
+@property (nonatomic,strong) id timeObserver;
 
 @property AVPlayer *audioPlayer;
 @property AVPlayerItem *playerItem;
@@ -71,6 +74,7 @@ typedef enum {
 
 - (NSString *)liveStreamURL;
 - (void)startStream;
+- (void)pauseStream;
 - (void)stopStream;
 - (void)stopAllAudio;
 - (BOOL)isStreamPlaying;
