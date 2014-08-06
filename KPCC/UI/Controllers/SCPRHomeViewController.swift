@@ -12,22 +12,22 @@ import UIKit
 
 class SCPRHomeViewController: UIViewController, AudioManagerDelegate, ContentProcessor {
     
-    @IBOutlet var programTitleLabel : UILabel
-    @IBOutlet var programTimeLabel : UILabel
-    @IBOutlet var timeLabel: UILabel
-    @IBOutlet var streamerStatusLabel : UILabel
-    @IBOutlet var streamerUrlLabel : UILabel
-    @IBOutlet var streamIndicatedBitrateLabel : UILabel
-    @IBOutlet var maxObservedBitrateLabel : UILabel
-    @IBOutlet var minObservedBitrateLabel : UILabel
-    @IBOutlet var actionButton : UIButton
-    @IBOutlet var stopButton : UIButton
-    @IBOutlet var userReportButton : UIButton
-    @IBOutlet var audioSlider : UISlider
-    @IBOutlet var backToProgramStartButton : UIButton
-    @IBOutlet var forwardToLiveButton : UIButton
-    @IBOutlet var forwardSeekButton : UIButton
-    @IBOutlet var backwardSeekButton : UIButton
+    @IBOutlet var programTitleLabel : UILabel!
+    @IBOutlet var programTimeLabel : UILabel!
+    @IBOutlet var timeLabel: UILabel!
+    @IBOutlet var streamerStatusLabel : UILabel!
+    @IBOutlet var streamerUrlLabel : UILabel!
+    @IBOutlet var streamIndicatedBitrateLabel : UILabel!
+    @IBOutlet var maxObservedBitrateLabel : UILabel!
+    @IBOutlet var minObservedBitrateLabel : UILabel!
+    @IBOutlet var actionButton : UIButton!
+    @IBOutlet var stopButton : UIButton!
+    @IBOutlet var userReportButton : UIButton!
+    @IBOutlet var audioSlider : UISlider!
+    @IBOutlet var backToProgramStartButton : UIButton!
+    @IBOutlet var forwardToLiveButton : UIButton!
+    @IBOutlet var forwardSeekButton : UIButton!
+    @IBOutlet var backwardSeekButton : UIButton!
     var currentProgramTitle : String = ""
     var currentProgram : Program!
     @IBAction func buttonTapped(button: AnyObject) {
@@ -53,6 +53,8 @@ class SCPRHomeViewController: UIViewController, AudioManagerDelegate, ContentPro
             backwardSeekTapped()
         }
     }
+    
+    required init(coder aDecoder: NSCoder!) { super.init(coder: aDecoder) }
     
     // For beta
     var timer = NSTimer()
@@ -106,16 +108,19 @@ class SCPRHomeViewController: UIViewController, AudioManagerDelegate, ContentPro
         
         // Experiment with CoreData fetch
         var program = Program.fetchObjectFromContext(ContentManager.shared().managedObjectContext)
-        updateUIWithProgram(program)
+        if (program) {
+            updateUIWithProgram(program)
+        }
+        
         
         //audioSlider.addTarget(self, action:"updateSlider", forControlEvents: UIControlEvents.ValueChanged)
     }
     
     // For beta to update UI
     func tick() -> Void {
-        streamIndicatedBitrateLabel.text = String(CFloat(AudioManager.shared().indicatedBitrate()))
-        maxObservedBitrateLabel.text = String(CFloat(AudioManager.shared().observedMaxBitrate()))
-        minObservedBitrateLabel.text = String(CFloat(AudioManager.shared().observedMinBitrate()))
+        streamIndicatedBitrateLabel.text = NSString.stringWithString("\(AudioManager.shared().indicatedBitrate())")
+        maxObservedBitrateLabel.text = NSString.stringWithString("\(AudioManager.shared().observedMaxBitrate())")
+        minObservedBitrateLabel.text = NSString.stringWithString("\(AudioManager.shared().observedMinBitrate())")
     }
     
     func userReportTapped() -> Void {
@@ -133,7 +138,6 @@ class SCPRHomeViewController: UIViewController, AudioManagerDelegate, ContentPro
     }
     
     func updateControlsAndUI() -> Void {
-        NSLog(String(actionButton.imageView.image.description))
         if AudioManager.shared().isStreamPlaying() || AudioManager.shared().isStreamBuffering() {
             actionButton.setImage(UIImage(named: "pauseButton"), forState: UIControlState.Normal)
         } else {
@@ -145,9 +149,9 @@ class SCPRHomeViewController: UIViewController, AudioManagerDelegate, ContentPro
         }
         
         streamerUrlLabel.text = AudioManager.shared().liveStreamURL()
-        streamIndicatedBitrateLabel.text = String(CFloat(AudioManager.shared().indicatedBitrate()))
-        maxObservedBitrateLabel.text = String(CFloat(AudioManager.shared().observedMaxBitrate()))
-        minObservedBitrateLabel.text = String(CFloat(AudioManager.shared().observedMinBitrate()))        
+        streamIndicatedBitrateLabel.text = NSString.stringWithString("\(AudioManager.shared().indicatedBitrate())")
+        maxObservedBitrateLabel.text = NSString.stringWithString("\(AudioManager.shared().observedMaxBitrate())")
+        minObservedBitrateLabel.text = NSString.stringWithString("\(AudioManager.shared().observedMinBitrate())")
     }
     
     // Time shifting
@@ -200,20 +204,20 @@ class SCPRHomeViewController: UIViewController, AudioManagerDelegate, ContentPro
         AudioManager.shared().pauseStream()
     }
     
-    func updateUIWithProgram(program : Program?) {
-        if (!program) {
+    func updateUIWithProgram(program : Program) {
+        if (program == nil) {
             return
         }
         
-        if let title = program!.title {
+        if let title = program.title {
             currentProgramTitle = title
             programTitleLabel.text = currentProgramTitle
         }
         
         // Set program runtime label.
-        if let startsAtDate = program!.starts_at {
+        if let startsAtDate = program.starts_at {
             var timeString = prettyStringFromRFCDate(startsAtDate)
-            if let endsAtDate = program!.ends_at {
+            if let endsAtDate = program.ends_at {
                 timeString = timeString + " - " + prettyStringFromRFCDate(endsAtDate)
             }
             
@@ -223,8 +227,8 @@ class SCPRHomeViewController: UIViewController, AudioManagerDelegate, ContentPro
         updateNowPlayingInfoWithProgram(program)
     }
     
-    func updateNowPlayingInfoWithProgram(program : Program?) {
-        if (!program) {
+    func updateNowPlayingInfoWithProgram(program : Program) {
+        if (program == nil) {
             return
         }
         
@@ -232,7 +236,7 @@ class SCPRHomeViewController: UIViewController, AudioManagerDelegate, ContentPro
         nowPlayingInfo.setObject("89.3 KPCC", forKey: MPMediaItemPropertyArtist)
         nowPlayingInfo.setObject(AudioManager.shared().isStreamPlaying() ? 1.0 : 0.0, forKey: MPNowPlayingInfoPropertyPlaybackRate)
         
-        if let title = program!.title {
+        if let title = program.title {
             nowPlayingInfo.setObject(title, forKey: MPMediaItemPropertyTitle)
         }
         

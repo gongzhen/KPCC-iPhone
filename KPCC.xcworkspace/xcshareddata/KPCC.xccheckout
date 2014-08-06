@@ -10,29 +10,29 @@
 	<string>KPCC</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
-		<key>998732EE-86B5-4BD9-80E2-17C8003E3257</key>
+		<key>CD3D32D175EB0B5B1C202F6C54B9125036F3AE42</key>
 		<string>ssh://github.com/SCPR/KPCC-iPhone.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
 	<string>KPCC.xcworkspace</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
-		<key>998732EE-86B5-4BD9-80E2-17C8003E3257</key>
+		<key>CD3D32D175EB0B5B1C202F6C54B9125036F3AE42</key>
 		<string>..</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
 	<string>ssh://github.com/SCPR/KPCC-iPhone.git</string>
 	<key>IDESourceControlProjectVersion</key>
-	<integer>110</integer>
+	<integer>111</integer>
 	<key>IDESourceControlProjectWCCIdentifier</key>
-	<string>998732EE-86B5-4BD9-80E2-17C8003E3257</string>
+	<string>CD3D32D175EB0B5B1C202F6C54B9125036F3AE42</string>
 	<key>IDESourceControlProjectWCConfigurations</key>
 	<array>
 		<dict>
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
 			<string>public.vcs.git</string>
 			<key>IDESourceControlWCCIdentifierKey</key>
-			<string>998732EE-86B5-4BD9-80E2-17C8003E3257</string>
+			<string>CD3D32D175EB0B5B1C202F6C54B9125036F3AE42</string>
 			<key>IDESourceControlWCCName</key>
 			<string>KPCC-iPhone</string>
 		</dict>
