@@ -53,6 +53,52 @@
 		7685BD62194BBCB90075BB16 /* playButton@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7685BD5B194BBCB90075BB16 /* playButton@2x.png */; };
 		7685BD63194BBCB90075BB16 /* playButton@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7685BD5B194BBCB90075BB16 /* playButton@2x.png */; };
 		768BBF1A18DA614300ACAD83 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 768BBF1918DA614300ACAD83 /* libPods.a */; };
+		768C064819958FDA00F829EB /* SCPRMasterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 768C064719958FD900F829EB /* SCPRMasterViewController.m */; };
+		768C064919958FDA00F829EB /* SCPRMasterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 768C064719958FD900F829EB /* SCPRMasterViewController.m */; };
+		768C06521995905D00F829EB /* btn_live_rewind_small.png in Resources */ = {isa = PBXBuildFile; fileRef = 768C064A1995905D00F829EB /* btn_live_rewind_small.png */; };
+		768C06531995905D00F829EB /* btn_live_rewind_small.png in Resources */ = {isa = PBXBuildFile; fileRef = 768C064A1995905D00F829EB /* btn_live_rewind_small.png */; };
+		768C06541995905D00F829EB /* btn_live_rewind_small@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 768C064B1995905D00F829EB /* btn_live_rewind_small@2x.png */; };
+		768C06551995905D00F829EB /* btn_live_rewind_small@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 768C064B1995905D00F829EB /* btn_live_rewind_small@2x.png */; };
+		768C06561995905D00F829EB /* btn_pause.png in Resources */ = {isa = PBXBuildFile; fileRef = 768C064C1995905D00F829EB /* btn_pause.png */; };
+		768C06571995905D00F829EB /* btn_pause.png in Resources */ = {isa = PBXBuildFile; fileRef = 768C064C1995905D00F829EB /* btn_pause.png */; };
+		768C06581995905D00F829EB /* btn_pause@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 768C064D1995905D00F829EB /* btn_pause@2x.png */; };
+		768C06591995905D00F829EB /* btn_pause@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 768C064D1995905D00F829EB /* btn_pause@2x.png */; };
+		768C065A1995905D00F829EB /* btn_play_large.png in Resources */ = {isa = PBXBuildFile; fileRef = 768C064E1995905D00F829EB /* btn_play_large.png */; };
+		768C065B1995905D00F829EB /* btn_play_large.png in Resources */ = {isa = PBXBuildFile; fileRef = 768C064E1995905D00F829EB /* btn_play_large.png */; };
+		768C065C1995905D00F829EB /* btn_play_large@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 768C064F1995905D00F829EB /* btn_play_large@2x.png */; };
+		768C065D1995905D00F829EB /* btn_play_large@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 768C064F1995905D00F829EB /* btn_play_large@2x.png */; };
+		768C065E1995905D00F829EB /* chevron_down.png in Resources */ = {isa = PBXBuildFile; fileRef = 768C06501995905D00F829EB /* chevron_down.png */; };
+		768C065F1995905D00F829EB /* chevron_down.png in Resources */ = {isa = PBXBuildFile; fileRef = 768C06501995905D00F829EB /* chevron_down.png */; };
+		768C06601995905D00F829EB /* chevron_down@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 768C06511995905D00F829EB /* chevron_down@2x.png */; };
+		768C06611995905D00F829EB /* chevron_down@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 768C06511995905D00F829EB /* chevron_down@2x.png */; };
+		768C066F199590CC00F829EB /* FreigSanProBlk.otf in Resources */ = {isa = PBXBuildFile; fileRef = 768C0663199590CC00F829EB /* FreigSanProBlk.otf */; };
+		768C0670199590CC00F829EB /* FreigSanProBlk.otf in Resources */ = {isa = PBXBuildFile; fileRef = 768C0663199590CC00F829EB /* FreigSanProBlk.otf */; };
+		768C0671199590CC00F829EB /* FreigSanProBlkIt.otf in Resources */ = {isa = PBXBuildFile; fileRef = 768C0664199590CC00F829EB /* FreigSanProBlkIt.otf */; };
+		768C0672199590CC00F829EB /* FreigSanProBlkIt.otf in Resources */ = {isa = PBXBuildFile; fileRef = 768C0664199590CC00F829EB /* FreigSanProBlkIt.otf */; };
+		768C0673199590CC00F829EB /* FreigSanProBold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 768C0665199590CC00F829EB /* FreigSanProBold.otf */; };
+		768C0674199590CC00F829EB /* FreigSanProBold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 768C0665199590CC00F829EB /* FreigSanProBold.otf */; };
+		768C0675199590CC00F829EB /* FreigSanProBoldIt.otf in Resources */ = {isa = PBXBuildFile; fileRef = 768C0666199590CC00F829EB /* FreigSanProBoldIt.otf */; };
+		768C0676199590CC00F829EB /* FreigSanProBoldIt.otf in Resources */ = {isa = PBXBuildFile; fileRef = 768C0666199590CC00F829EB /* FreigSanProBoldIt.otf */; };
+		768C0677199590CC00F829EB /* FreigSanProBook.otf in Resources */ = {isa = PBXBuildFile; fileRef = 768C0667199590CC00F829EB /* FreigSanProBook.otf */; };
+		768C0678199590CC00F829EB /* FreigSanProBook.otf in Resources */ = {isa = PBXBuildFile; fileRef = 768C0667199590CC00F829EB /* FreigSanProBook.otf */; };
+		768C0679199590CC00F829EB /* FreigSanProBookIt.otf in Resources */ = {isa = PBXBuildFile; fileRef = 768C0668199590CC00F829EB /* FreigSanProBookIt.otf */; };
+		768C067A199590CC00F829EB /* FreigSanProBookIt.otf in Resources */ = {isa = PBXBuildFile; fileRef = 768C0668199590CC00F829EB /* FreigSanProBookIt.otf */; };
+		768C067B199590CC00F829EB /* FreigSanProLig.otf in Resources */ = {isa = PBXBuildFile; fileRef = 768C0669199590CC00F829EB /* FreigSanProLig.otf */; };
+		768C067C199590CC00F829EB /* FreigSanProLig.otf in Resources */ = {isa = PBXBuildFile; fileRef = 768C0669199590CC00F829EB /* FreigSanProLig.otf */; };
+		768C067D199590CC00F829EB /* FreigSanProLigIt.otf in Resources */ = {isa = PBXBuildFile; fileRef = 768C066A199590CC00F829EB /* FreigSanProLigIt.otf */; };
+		768C067E199590CC00F829EB /* FreigSanProLigIt.otf in Resources */ = {isa = PBXBuildFile; fileRef = 768C066A199590CC00F829EB /* FreigSanProLigIt.otf */; };
+		768C067F199590CC00F829EB /* FreigSanProMed.otf in Resources */ = {isa = PBXBuildFile; fileRef = 768C066B199590CC00F829EB /* FreigSanProMed.otf */; };
+		768C0680199590CC00F829EB /* FreigSanProMed.otf in Resources */ = {isa = PBXBuildFile; fileRef = 768C066B199590CC00F829EB /* FreigSanProMed.otf */; };
+		768C0681199590CC00F829EB /* FreigSanProMedIt.otf in Resources */ = {isa = PBXBuildFile; fileRef = 768C066C199590CC00F829EB /* FreigSanProMedIt.otf */; };
+		768C0682199590CC00F829EB /* FreigSanProMedIt.otf in Resources */ = {isa = PBXBuildFile; fileRef = 768C066C199590CC00F829EB /* FreigSanProMedIt.otf */; };
+		768C0683199590CC00F829EB /* FreigSanProSem.otf in Resources */ = {isa = PBXBuildFile; fileRef = 768C066D199590CC00F829EB /* FreigSanProSem.otf */; };
+		768C0684199590CC00F829EB /* FreigSanProSem.otf in Resources */ = {isa = PBXBuildFile; fileRef = 768C066D199590CC00F829EB /* FreigSanProSem.otf */; };
+		768C0685199590CC00F829EB /* FreigSanProSemIt.otf in Resources */ = {isa = PBXBuildFile; fileRef = 768C066E199590CC00F829EB /* FreigSanProSemIt.otf */; };
+		768C0686199590CC00F829EB /* FreigSanProSemIt.otf in Resources */ = {isa = PBXBuildFile; fileRef = 768C066E199590CC00F829EB /* FreigSanProSemIt.otf */; };
+		768C068A1995911600F829EB /* program_tile_generic.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 768C06881995911600F829EB /* program_tile_generic.jpg */; };
+		768C068B1995911600F829EB /* program_tile_generic.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 768C06881995911600F829EB /* program_tile_generic.jpg */; };
+		768C068C1995911600F829EB /* program_tile_generic@2x.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 768C06891995911600F829EB /* program_tile_generic@2x.jpg */; };
+		768C068D1995911600F829EB /* program_tile_generic@2x.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 768C06891995911600F829EB /* program_tile_generic@2x.jpg */; };
 		768EAADF18D26C5500469734 /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 768EAADE18D26C5500469734 /* MediaPlayer.framework */; };
 		768EAAE118D26C9C00469734 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 768EAAE018D26C9C00469734 /* AVFoundation.framework */; };
 		7695FD15195E299000F63DE9 /* SCPRNavigationBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 7695FD14195E299000F63DE9 /* SCPRNavigationBar.m */; };
@@ -135,6 +181,30 @@
 		7685BD5A194BBCB90075BB16 /* playButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = playButton.png; sourceTree = "<group>"; };
 		7685BD5B194BBCB90075BB16 /* playButton@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "playButton@2x.png"; sourceTree = "<group>"; };
 		768BBF1918DA614300ACAD83 /* libPods.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libPods.a; path = "Pods/build/Debug-iphoneos/libPods.a"; sourceTree = "<group>"; };
+		768C064619958FD900F829EB /* SCPRMasterViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCPRMasterViewController.h; sourceTree = "<group>"; };
+		768C064719958FD900F829EB /* SCPRMasterViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SCPRMasterViewController.m; sourceTree = "<group>"; };
+		768C064A1995905D00F829EB /* btn_live_rewind_small.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = btn_live_rewind_small.png; sourceTree = "<group>"; };
+		768C064B1995905D00F829EB /* btn_live_rewind_small@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "btn_live_rewind_small@2x.png"; sourceTree = "<group>"; };
+		768C064C1995905D00F829EB /* btn_pause.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = btn_pause.png; sourceTree = "<group>"; };
+		768C064D1995905D00F829EB /* btn_pause@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "btn_pause@2x.png"; sourceTree = "<group>"; };
+		768C064E1995905D00F829EB /* btn_play_large.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = btn_play_large.png; sourceTree = "<group>"; };
+		768C064F1995905D00F829EB /* btn_play_large@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "btn_play_large@2x.png"; sourceTree = "<group>"; };
+		768C06501995905D00F829EB /* chevron_down.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = chevron_down.png; sourceTree = "<group>"; };
+		768C06511995905D00F829EB /* chevron_down@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "chevron_down@2x.png"; sourceTree = "<group>"; };
+		768C0663199590CC00F829EB /* FreigSanProBlk.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = FreigSanProBlk.otf; sourceTree = "<group>"; };
+		768C0664199590CC00F829EB /* FreigSanProBlkIt.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = FreigSanProBlkIt.otf; sourceTree = "<group>"; };
+		768C0665199590CC00F829EB /* FreigSanProBold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = FreigSanProBold.otf; sourceTree = "<group>"; };
+		768C0666199590CC00F829EB /* FreigSanProBoldIt.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = FreigSanProBoldIt.otf; sourceTree = "<group>"; };
+		768C0667199590CC00F829EB /* FreigSanProBook.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = FreigSanProBook.otf; sourceTree = "<group>"; };
+		768C0668199590CC00F829EB /* FreigSanProBookIt.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = FreigSanProBookIt.otf; sourceTree = "<group>"; };
+		768C0669199590CC00F829EB /* FreigSanProLig.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = FreigSanProLig.otf; sourceTree = "<group>"; };
+		768C066A199590CC00F829EB /* FreigSanProLigIt.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = FreigSanProLigIt.otf; sourceTree = "<group>"; };
+		768C066B199590CC00F829EB /* FreigSanProMed.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = FreigSanProMed.otf; sourceTree = "<group>"; };
+		768C066C199590CC00F829EB /* FreigSanProMedIt.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = FreigSanProMedIt.otf; sourceTree = "<group>"; };
+		768C066D199590CC00F829EB /* FreigSanProSem.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = FreigSanProSem.otf; sourceTree = "<group>"; };
+		768C066E199590CC00F829EB /* FreigSanProSemIt.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = FreigSanProSemIt.otf; sourceTree = "<group>"; };
+		768C06881995911600F829EB /* program_tile_generic.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = program_tile_generic.jpg; sourceTree = "<group>"; };
+		768C06891995911600F829EB /* program_tile_generic@2x.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "program_tile_generic@2x.jpg"; sourceTree = "<group>"; };
 		768EAADE18D26C5500469734 /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
 		768EAAE018D26C9C00469734 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		7695FD13195E299000F63DE9 /* SCPRNavigationBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCPRNavigationBar.h; sourceTree = "<group>"; };
@@ -291,6 +361,8 @@
 				76B9A9AA18EF59FD007A6D8C /* SCPRUserReportViewController.m */,
 				76B9A9AB18EF59FD007A6D8C /* SCPRUserReportViewController.xib */,
 				76EF5E86193E8BED00568A9D /* SCPRHomeViewController.swift */,
+				768C064619958FD900F829EB /* SCPRMasterViewController.h */,
+				768C064719958FD900F829EB /* SCPRMasterViewController.m */,
 			);
 			name = "View Controllers";
 			path = Controllers;
@@ -310,12 +382,49 @@
 		7685BD57194BBCB90075BB16 /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				768C06871995911600F829EB /* program_images */,
 				7685BD58194BBCB90075BB16 /* pauseButton.png */,
+				768C064A1995905D00F829EB /* btn_live_rewind_small.png */,
+				768C064B1995905D00F829EB /* btn_live_rewind_small@2x.png */,
+				768C064C1995905D00F829EB /* btn_pause.png */,
+				768C064D1995905D00F829EB /* btn_pause@2x.png */,
+				768C064E1995905D00F829EB /* btn_play_large.png */,
+				768C064F1995905D00F829EB /* btn_play_large@2x.png */,
+				768C06501995905D00F829EB /* chevron_down.png */,
+				768C06511995905D00F829EB /* chevron_down@2x.png */,
 				7685BD59194BBCB90075BB16 /* pauseButton@2x.png */,
 				7685BD5A194BBCB90075BB16 /* playButton.png */,
 				7685BD5B194BBCB90075BB16 /* playButton@2x.png */,
 			);
 			path = Images;
+			sourceTree = "<group>";
+		};
+		768C0662199590CC00F829EB /* Fonts */ = {
+			isa = PBXGroup;
+			children = (
+				768C0663199590CC00F829EB /* FreigSanProBlk.otf */,
+				768C0664199590CC00F829EB /* FreigSanProBlkIt.otf */,
+				768C0665199590CC00F829EB /* FreigSanProBold.otf */,
+				768C0666199590CC00F829EB /* FreigSanProBoldIt.otf */,
+				768C0667199590CC00F829EB /* FreigSanProBook.otf */,
+				768C0668199590CC00F829EB /* FreigSanProBookIt.otf */,
+				768C0669199590CC00F829EB /* FreigSanProLig.otf */,
+				768C066A199590CC00F829EB /* FreigSanProLigIt.otf */,
+				768C066B199590CC00F829EB /* FreigSanProMed.otf */,
+				768C066C199590CC00F829EB /* FreigSanProMedIt.otf */,
+				768C066D199590CC00F829EB /* FreigSanProSem.otf */,
+				768C066E199590CC00F829EB /* FreigSanProSemIt.otf */,
+			);
+			path = Fonts;
+			sourceTree = "<group>";
+		};
+		768C06871995911600F829EB /* program_images */ = {
+			isa = PBXGroup;
+			children = (
+				768C06881995911600F829EB /* program_tile_generic.jpg */,
+				768C06891995911600F829EB /* program_tile_generic@2x.jpg */,
+			);
+			path = program_images;
 			sourceTree = "<group>";
 		};
 		769FD69918EB682E00AAF1F4 /* Classes */ = {
@@ -441,6 +550,7 @@
 		76B9A9BC18F609FF007A6D8C /* Assets */ = {
 			isa = PBXGroup;
 			children = (
+				768C0662199590CC00F829EB /* Fonts */,
 				7685BD57194BBCB90075BB16 /* Images */,
 				76B9A9BD18F609FF007A6D8C /* Glass_Crash.mp3 */,
 				76B9A9BE18F609FF007A6D8C /* Wood_Crash.mp3 */,
@@ -565,14 +675,36 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				768C06551995905D00F829EB /* btn_live_rewind_small@2x.png in Resources */,
+				768C0684199590CC00F829EB /* FreigSanProSem.otf in Resources */,
+				768C0674199590CC00F829EB /* FreigSanProBold.otf in Resources */,
+				768C0678199590CC00F829EB /* FreigSanProBook.otf in Resources */,
+				768C065B1995905D00F829EB /* btn_play_large.png in Resources */,
 				76D71D441905A56A00F4852F /* Glass_Crash.mp3 in Resources */,
 				76D71D451905A56A00F4852F /* Wood_Crash.mp3 in Resources */,
+				768C0682199590CC00F829EB /* FreigSanProMedIt.otf in Resources */,
 				76B9A9AF18EF59FD007A6D8C /* SCPRUserReportViewController.xib in Resources */,
+				768C0672199590CC00F829EB /* FreigSanProBlkIt.otf in Resources */,
+				768C067C199590CC00F829EB /* FreigSanProLig.otf in Resources */,
+				768C065D1995905D00F829EB /* btn_play_large@2x.png in Resources */,
 				7685BD63194BBCB90075BB16 /* playButton@2x.png in Resources */,
 				7685BD61194BBCB90075BB16 /* playButton.png in Resources */,
+				768C06611995905D00F829EB /* chevron_down@2x.png in Resources */,
+				768C067A199590CC00F829EB /* FreigSanProBookIt.otf in Resources */,
+				768C0680199590CC00F829EB /* FreigSanProMed.otf in Resources */,
+				768C0686199590CC00F829EB /* FreigSanProSemIt.otf in Resources */,
 				7685BD5F194BBCB90075BB16 /* pauseButton@2x.png in Resources */,
 				76349D0C18D388C80027C3B8 /* Images.xcassets in Resources */,
+				768C06591995905D00F829EB /* btn_pause@2x.png in Resources */,
+				768C068D1995911600F829EB /* program_tile_generic@2x.jpg in Resources */,
+				768C0676199590CC00F829EB /* FreigSanProBoldIt.otf in Resources */,
+				768C06571995905D00F829EB /* btn_pause.png in Resources */,
 				7685BD5D194BBCB90075BB16 /* pauseButton.png in Resources */,
+				768C0670199590CC00F829EB /* FreigSanProBlk.otf in Resources */,
+				768C068B1995911600F829EB /* program_tile_generic.jpg in Resources */,
+				768C06531995905D00F829EB /* btn_live_rewind_small.png in Resources */,
+				768C067E199590CC00F829EB /* FreigSanProLigIt.otf in Resources */,
+				768C065F1995905D00F829EB /* chevron_down.png in Resources */,
 				76EF5E8B193E8D6B00568A9D /* Storyboard.storyboard in Resources */,
 				76349D0E18D388C80027C3B8 /* InfoPlist.strings in Resources */,
 			);
@@ -582,17 +714,39 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				768C065C1995905D00F829EB /* btn_play_large@2x.png in Resources */,
 				76B9A9AE18EF59FD007A6D8C /* SCPRUserReportViewController.xib in Resources */,
+				768C067D199590CC00F829EB /* FreigSanProLigIt.otf in Resources */,
+				768C0675199590CC00F829EB /* FreigSanProBoldIt.otf in Resources */,
 				76A308E518C8FB940065D4B1 /* Images.xcassets in Resources */,
 				76B9A9BF18F609FF007A6D8C /* Glass_Crash.mp3 in Resources */,
+				768C0679199590CC00F829EB /* FreigSanProBookIt.otf in Resources */,
+				768C067F199590CC00F829EB /* FreigSanProMed.otf in Resources */,
+				768C068A1995911600F829EB /* program_tile_generic.jpg in Resources */,
+				768C0683199590CC00F829EB /* FreigSanProSem.otf in Resources */,
 				7685BD62194BBCB90075BB16 /* playButton@2x.png in Resources */,
+				768C065E1995905D00F829EB /* chevron_down.png in Resources */,
 				7685BD60194BBCB90075BB16 /* playButton.png in Resources */,
+				768C0681199590CC00F829EB /* FreigSanProMedIt.otf in Resources */,
 				7685BD5E194BBCB90075BB16 /* pauseButton@2x.png in Resources */,
 				7685BD5C194BBCB90075BB16 /* pauseButton.png in Resources */,
+				768C06561995905D00F829EB /* btn_pause.png in Resources */,
+				768C065A1995905D00F829EB /* btn_play_large.png in Resources */,
+				768C0685199590CC00F829EB /* FreigSanProSemIt.otf in Resources */,
+				768C0673199590CC00F829EB /* FreigSanProBold.otf in Resources */,
+				768C0677199590CC00F829EB /* FreigSanProBook.otf in Resources */,
+				768C067B199590CC00F829EB /* FreigSanProLig.otf in Resources */,
+				768C068C1995911600F829EB /* program_tile_generic@2x.jpg in Resources */,
 				76A308D118C8FB940065D4B1 /* InfoPlist.strings in Resources */,
+				768C06581995905D00F829EB /* btn_pause@2x.png in Resources */,
+				768C06541995905D00F829EB /* btn_live_rewind_small@2x.png in Resources */,
 				76EF5E8A193E8D6B00568A9D /* Storyboard.storyboard in Resources */,
 				76B9A9C118F609FF007A6D8C /* Wood_Crash.mp3 in Resources */,
 				761CC5A4195A2878006A6C7C /* Testflight-Info.plist in Resources */,
+				768C06521995905D00F829EB /* btn_live_rewind_small.png in Resources */,
+				768C066F199590CC00F829EB /* FreigSanProBlk.otf in Resources */,
+				768C06601995905D00F829EB /* chevron_down@2x.png in Resources */,
+				768C0671199590CC00F829EB /* FreigSanProBlkIt.otf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -657,6 +811,7 @@
 				760E3C49194FB54600D86D91 /* DataModel.xcdatamodeld in Sources */,
 				76177298195B593400F69EFC /* SCPRHomeViewModel.m in Sources */,
 				760EA99319521E98009B504E /* AVPlayer+Additions.m in Sources */,
+				768C064919958FDA00F829EB /* SCPRMasterViewController.m in Sources */,
 				7695FD16195E299000F63DE9 /* SCPRNavigationBar.m in Sources */,
 				760EA9971953724E009B504E /* ContentManager.m in Sources */,
 				769FD69E18EB6F4E00AAF1F4 /* SCPRRootViewController.m in Sources */,
@@ -682,6 +837,7 @@
 				760E3C48194FB54600D86D91 /* DataModel.xcdatamodeld in Sources */,
 				76177297195B593400F69EFC /* SCPRHomeViewModel.m in Sources */,
 				760EA99219521E98009B504E /* AVPlayer+Additions.m in Sources */,
+				768C064819958FDA00F829EB /* SCPRMasterViewController.m in Sources */,
 				7695FD15195E299000F63DE9 /* SCPRNavigationBar.m in Sources */,
 				760EA9961953724E009B504E /* ContentManager.m in Sources */,
 				769FD69D18EB6F4E00AAF1F4 /* SCPRRootViewController.m in Sources */,

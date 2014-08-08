@@ -22,6 +22,13 @@
         [swipeDown setEnabled:YES];
         [self addGestureRecognizer:swipeDown];
     }
+    
+    
+    //NSString *fontName = @"Lato-Bold";
+    //return [UIFont fontWithName:fontName size:size];
+    
+//    self.titleTextAttributes
+    
     return self;
 }
 

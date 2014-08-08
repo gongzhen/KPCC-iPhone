@@ -74,17 +74,17 @@
 # pragma mark - Stylesheet
 
 - (void)applyStylesheet {
-    [[UINavigationBar appearance] setBarTintColor:[UIColor colorWithRed:248.0f/255.0f green:106.0f/255.0f blue:39.0f/255.0f alpha:1.0f]];
+    [[UINavigationBar appearance] setBarTintColor:[UIColor colorWithRed:248.0f/255.0f green:126.0f/255.0f blue:33.0f/255.0f alpha:1.0f]];
     [[UINavigationBar appearance] setBarStyle:UIBarStyleBlackTranslucent];
-    
+
     [[UINavigationBar appearance] setTitleTextAttributes:
      [NSDictionary dictionaryWithObjectsAndKeys:
       [UIColor whiteColor], NSForegroundColorAttributeName,
-      [UIFont fontWithName:@"HelveticaNeue-Light" size:20.0f], NSFontAttributeName,nil]];
+      [UIFont fontWithName:@"FreightSansProMedium-Regular" size:23.0f], NSFontAttributeName, nil]];
     
     [[UIBarButtonItem appearanceWhenContainedIn:[UINavigationBar class], nil]
     setTitleTextAttributes: @{NSForegroundColorAttributeName:[UIColor whiteColor],
-                              NSFontAttributeName:[UIFont fontWithName:@"HelveticaNeue-Light" size:16.0f]
+                              NSFontAttributeName:[UIFont fontWithName:@"FreightSansProLight-Regular" size:16.0f]
                               }
      forState:UIControlStateNormal];
 }
