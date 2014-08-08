@@ -16,4 +16,7 @@
 
 @interface SCPRNavigationBar : UINavigationBar
 
+@property IBOutlet UIGestureRecognizer *tapRecognizer;
+- (IBAction)handleTap;
+
 @end

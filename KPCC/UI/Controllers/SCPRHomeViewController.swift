@@ -54,6 +54,10 @@ class SCPRHomeViewController: UIViewController, AudioManagerDelegate, ContentPro
         }
     }
     
+    @IBAction func handleViewTap() {
+        self.dismissViewControllerAnimated(true, nil)
+    }
+    
     required init(coder aDecoder: NSCoder!) { super.init(coder: aDecoder) }
     
     // For beta
