@@ -7,6 +7,7 @@
 //
 
 #import "SCPRMasterViewController.h"
+#import "AudioManager.h"
 
 @interface SCPRMasterViewController ()
 
@@ -22,6 +23,42 @@
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+- (IBAction)playOrPauseTapped:(id)sender {
+//    Swifty!
+//
+//    if !AudioManager.shared().isStreamPlaying() {
+//        if AudioManager.shared().isStreamBuffering() {
+//            AudioManager.shared().stopAllAudio()
+//            JDStatusBarNotification.dismiss()
+//        } else {
+//            playStream()
+//        }
+//    } else {
+//        pauseStream()
+//    }
+
+
+    if (![[AudioManager shared] isStreamPlaying]) {
+        if ([[AudioManager shared] isStreamBuffering]) {
+            [[AudioManager shared] stopAllAudio];
+            // Dismiss JDStatusBar
+        } else {
+            [self playStream];
+        }
+    } else {
+        [self pauseStream];
+    }
+    //updateNowPlayingInfoWithProgram(currentProgram)
+}
+
+- (void)playStream {
+    [[AudioManager shared] startStream];
+}
+
+- (void)pauseStream {
+    [[AudioManager shared] pauseStream];
 }
 
 /*

@@ -3,7 +3,6 @@
     <dependencies>
         <deployment defaultVersion="1792" identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6198"/>
-        <capability name="Constraints with attributes relative to the layout margin" minToolsVersion="6.0"/>
     </dependencies>
     <customFonts key="customFonts">
         <mutableArray key="FreigSanProLig.otf">
@@ -26,35 +25,32 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" image="program_tile_generic.jpg" translatesAutoresizingMaskIntoConstraints="NO" id="jYj-xG-3QJ">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="program_tile_generic.jpg" translatesAutoresizingMaskIntoConstraints="NO" id="jYj-xG-3QJ">
                                 <rect key="frame" x="0.0" y="64" width="320" height="508"/>
                             </imageView>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ibQ-JJ-YMx">
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ibQ-JJ-YMx">
                                 <rect key="frame" x="72" y="223" width="177" height="122"/>
                                 <state key="normal" image="btn_play_large.png">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
+                                <connections>
+                                    <action selector="playOrPauseTapped:" destination="4pL-7p-2vt" eventType="touchUpInside" id="NNm-W0-b3b"/>
+                                </connections>
                             </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Radiolab" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8XD-hP-Zya">
-                                <rect key="frame" x="16" y="116" width="288" height="45"/>
-                                <fontDescription key="fontDescription" name="FreightSansProLight-Regular" family="FreightSans Pro" pointSize="46"/>
-                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <nil key="highlightedColor"/>
-                            </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="ON NOW" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HL8-Wv-cqf">
                                 <rect key="frame" x="124" y="87" width="73" height="21"/>
                                 <fontDescription key="fontDescription" name="FreightSansProMedium-Regular" family="FreightSans Pro" pointSize="15"/>
                                 <color key="textColor" red="0.97254901959999995" green="0.4941176471" blue="0.12941176469999999" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Radiolab" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8XD-hP-Zya">
+                                <rect key="frame" x="16" y="116" width="288" height="45"/>
+                                <fontDescription key="fontDescription" name="FreightSansProLight-Regular" family="FreightSans Pro" pointSize="46"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                        <constraints>
-                            <constraint firstItem="ibQ-JJ-YMx" firstAttribute="centerX" secondItem="f6n-R2-H79" secondAttribute="centerX" id="3Mb-7K-g7r"/>
-                            <constraint firstItem="ibQ-JJ-YMx" firstAttribute="centerX" secondItem="jYj-xG-3QJ" secondAttribute="centerX" id="T8h-St-anb"/>
-                            <constraint firstItem="ibQ-JJ-YMx" firstAttribute="leading" secondItem="QEk-eP-ZIb" secondAttribute="leadingMargin" constant="56" id="X57-qA-nNj"/>
-                            <constraint firstItem="ibQ-JJ-YMx" firstAttribute="centerY" secondItem="QEk-eP-ZIb" secondAttribute="centerY" id="s1G-ap-pkH"/>
-                        </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="KPCC Live" id="pkk-9h-rMs"/>
                     <simulatedStatusBarMetrics key="simulatedStatusBarMetrics"/>
