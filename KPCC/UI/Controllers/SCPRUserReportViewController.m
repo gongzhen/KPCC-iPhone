@@ -37,10 +37,10 @@
     [self.cancelButton setAction:@selector(hideUserReportView)];
     [self.sendReportButton addTarget:self action:@selector(sendUserReportAction) forControlEvents:UIControlEventTouchUpInside];
 
-    [self.cancelButton setTitleTextAttributes:
+    /*[self.cancelButton setTitleTextAttributes:
      @{NSForegroundColorAttributeName:[UIColor whiteColor],
        NSFontAttributeName:[UIFont fontWithName:@"HelveticaNeue-Light" size:16.0f]}
-                                     forState:UIControlStateNormal];
+                                     forState:UIControlStateNormal];*/
 
     self.versionNumberLabel.text = [NSString stringWithFormat:@"%@",[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"]];
 

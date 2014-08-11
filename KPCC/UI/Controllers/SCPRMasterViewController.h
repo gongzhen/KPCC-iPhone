@@ -7,9 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "AudioManager.h"
 
 @interface SCPRMasterViewController : UIViewController
 
 @property IBOutlet UIImageView *programImageView;
+@property IBOutlet UIButton *playPauseButton;
 
 @end

@@ -7,9 +7,8 @@
 //
 
 #import "SCPRMasterViewController.h"
-#import "AudioManager.h"
 
-@interface SCPRMasterViewController ()
+@interface SCPRMasterViewController () <AudioManagerDelegate>
 
 @end
 
@@ -20,9 +19,13 @@
     // Do any additional setup after loading the view.
 }
 
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+
+    // Set the current view to recieve events from the AudioManagerDelegate.
+    [AudioManager shared].delegate = self;
+
+    [self updateControlsAndUI];
 }
 
 - (IBAction)playOrPauseTapped:(id)sender {
@@ -59,6 +62,31 @@
 
 - (void)pauseStream {
     [[AudioManager shared] pauseStream];
+}
+- (void)receivePlayerStateNotification {
+    [self updateControlsAndUI];
+}
+
+- (void)updateControlsAndUI {
+
+    if ([[AudioManager shared] isStreamPlaying] || [[AudioManager shared] isStreamBuffering]) {
+        [self.playPauseButton setImage:[UIImage imageNamed:@"btn_pause"] forState:UIControlStateNormal];
+    } else {
+        [self.playPauseButton setImage:[UIImage imageNamed:@"btn_play_large"] forState:UIControlStateNormal];
+    }
+}
+
+
+#pragma mark - AudioManagerDelegate
+
+-(void) onRateChange {
+    [self updateControlsAndUI];
+}
+
+
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
 }
 
 /*
