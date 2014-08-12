@@ -8,9 +8,12 @@
 
 #import <UIKit/UIKit.h>
 #import "AudioManager.h"
+#import "NetworkManager.h"
+#import "Program.h"
 
 @interface SCPRMasterViewController : UIViewController
 
+@property IBOutlet UILabel *programTitleLabel;
 @property IBOutlet UIImageView *programImageView;
 @property IBOutlet UIButton *playPauseButton;
 

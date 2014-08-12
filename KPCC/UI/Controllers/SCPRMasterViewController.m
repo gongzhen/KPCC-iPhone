@@ -8,16 +8,11 @@
 
 #import "SCPRMasterViewController.h"
 
-@interface SCPRMasterViewController () <AudioManagerDelegate>
+@interface SCPRMasterViewController () <AudioManagerDelegate, ContentProcessor>
 
 @end
 
 @implementation SCPRMasterViewController
-
-- (void)viewDidLoad {
-    [super viewDidLoad];
-    // Do any additional setup after loading the view.
-}
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
@@ -28,21 +23,15 @@
     [self updateControlsAndUI];
 }
 
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    // Do any additional setup after loading the view.
+
+    // Fetch program info and update audio control state.
+    [self updateDataForUI];
+}
+
 - (IBAction)playOrPauseTapped:(id)sender {
-//    Swifty!
-//
-//    if !AudioManager.shared().isStreamPlaying() {
-//        if AudioManager.shared().isStreamBuffering() {
-//            AudioManager.shared().stopAllAudio()
-//            JDStatusBarNotification.dismiss()
-//        } else {
-//            playStream()
-//        }
-//    } else {
-//        pauseStream()
-//    }
-
-
     if (![[AudioManager shared] isStreamPlaying]) {
         if ([[AudioManager shared] isStreamBuffering]) {
             [[AudioManager shared] stopAllAudio];
@@ -67,20 +56,77 @@
     [self updateControlsAndUI];
 }
 
-- (void)updateControlsAndUI {
+- (void)updateDataForUI {
+    [[NetworkManager shared] fetchProgramInformationFor:[NSDate date] display:self];
+}
 
-    if ([[AudioManager shared] isStreamPlaying] || [[AudioManager shared] isStreamBuffering]) {
-        [self.playPauseButton setImage:[UIImage imageNamed:@"btn_pause"] forState:UIControlStateNormal];
-    } else {
-        [self.playPauseButton setImage:[UIImage imageNamed:@"btn_play_large"] forState:UIControlStateNormal];
+- (void)updateControlsAndUI {
+    [UIView animateWithDuration:0.1 animations:^{
+        [self.playPauseButton setAlpha:0.0];
+    } completion:^(BOOL finished) {
+        if ([[AudioManager shared] isStreamPlaying] || [[AudioManager shared] isStreamBuffering]) {
+            [self.playPauseButton setImage:[UIImage imageNamed:@"btn_pause"] forState:UIControlStateNormal];
+        } else {
+            [self.playPauseButton setImage:[UIImage imageNamed:@"btn_play_large"] forState:UIControlStateNormal];
+        }
+
+        [UIView animateWithDuration:0.1 animations:^{
+            [self.playPauseButton setAlpha:1.0];
+        }];
+    }];
+
+}
+
+- (void)updateUIWithProgram:(Program*)program {
+    if (!program) {
+        return;
+    }
+
+    if ([program title]) {
+        if ([program title].length <= 14) {
+            [self.programTitleLabel setFont:[self.programTitleLabel.font fontWithSize:46.0]];
+        } else if ([program title].length > 14 && [program title].length <= 18) {
+            [self.programTitleLabel setFont:[self.programTitleLabel.font fontWithSize:35.0]];
+        } else {
+            [self.programTitleLabel setFont:[self.programTitleLabel.font fontWithSize:30.0]];
+        }
+        [self.programTitleLabel setText:[program title]];
     }
 }
 
 
 #pragma mark - AudioManagerDelegate
 
--(void) onRateChange {
+- (void)onRateChange {
     [self updateControlsAndUI];
+}
+
+
+#pragma mark - ContentProcessor 
+
+- (void)handleProcessedContent:(NSArray *)content flags:(NSDictionary *)flags {
+    if ([content count] == 0) {
+        return;
+    }
+
+    // Create Program and insert into managed object context
+    if ([content objectAtIndex:0]) {
+        NSDictionary *programDict = [content objectAtIndex:0];
+
+        Program *programObj = [Program insertNewObjectIntoContext:[[ContentManager shared] managedObjectContext]];
+
+        if ([programDict objectForKey:@"title"]) {
+            programObj.title = [programDict objectForKey:@"title"];
+        }
+
+        [self updateUIWithProgram:programObj];
+
+//        currentProgram = newProgram
+//        updateNowPlayingInfoWithProgram(currentProgram)
+
+        // Save the Program to persistant storage.
+        [[ContentManager shared] saveContext];
+    }
 }
 
 
