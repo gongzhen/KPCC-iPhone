@@ -69,16 +69,73 @@
 - (void)updateControlsAndUI {
     [UIView animateWithDuration:0.1 animations:^{
         [self.playPauseButton setAlpha:0.0];
+        [self.rewindToShowStartButton setAlpha:0.0];
     } completion:^(BOOL finished) {
+
+        CGAffineTransform t;// = CGAffineTransformMakeScale(1.2, 1.2);
+
         if ([[AudioManager shared] isStreamPlaying] || [[AudioManager shared] isStreamBuffering]) {
             [self.playPauseButton setImage:[UIImage imageNamed:@"btn_pause"] forState:UIControlStateNormal];
+
+            [self.playPauseButton setFrame:CGRectMake(_playPauseButton.frame.origin.x,
+                                                      402.0 /*_playPauseButton.frame.origin.y*/,
+                                                      _playPauseButton.frame.size.width,
+                                                      _playPauseButton.frame.size.height)];
+
+            t = CGAffineTransformMakeScale(1.2, 1.2);
+
         } else {
             [self.playPauseButton setImage:[UIImage imageNamed:@"btn_play_large"] forState:UIControlStateNormal];
+
+            t = CGAffineTransformMakeScale(1.0, 1.0);
         }
+
+        CGPoint center = _programImageView.center; // or any point you want
+        [UIView animateWithDuration:0.25 animations:^{
+            //_programImageView.transform = t;
+            //_programImageView.center = center;
+        }];
+
 
         [UIView animateWithDuration:0.1 animations:^{
             [self.playPauseButton setAlpha:1.0];
         }];
+    }];
+
+
+    [UIView animateWithDuration:0.25 animations:^{
+
+        if ([[AudioManager shared] isStreamPlaying] || [[AudioManager shared] isStreamBuffering]) {
+
+            [self.liveDescriptionLabel setFrame:CGRectMake(_liveDescriptionLabel.frame.origin.x,
+                                                           286.0 /*_liveDescriptionLabel.frame.origin.y*/,
+                                                           _liveDescriptionLabel.frame.size.width,
+                                                           _liveDescriptionLabel.frame.size.height)];
+
+            [self.programTitleLabel setFrame:CGRectMake(_programTitleLabel.frame.origin.x,
+                                                        303.0 /*_programTitleLabel.frame.origin.y*/,
+                                                        _programTitleLabel.frame.size.width,
+                                                        _programTitleLabel.frame.size.height)];
+
+        } else {
+
+            [self.rewindToShowStartButton setAlpha:1.0];
+
+            [self.playPauseButton setFrame:CGRectMake(_playPauseButton.frame.origin.x,
+                                                      225.0 /*_playPauseButton.frame.origin.y*/,
+                                                      _playPauseButton.frame.size.width,
+                                                      _playPauseButton.frame.size.height)];
+
+            [self.liveDescriptionLabel setFrame:CGRectMake(_liveDescriptionLabel.frame.origin.x,
+                                                           95.0 /*_liveDescriptionLabel.frame.origin.y*/,
+                                                           _liveDescriptionLabel.frame.size.width,
+                                                           _liveDescriptionLabel.frame.size.height)];
+
+            [self.programTitleLabel setFrame:CGRectMake(_programTitleLabel.frame.origin.x,
+                                                        113.0 /*_programTitleLabel.frame.origin.y*/,
+                                                        _programTitleLabel.frame.size.width,
+                                                        _programTitleLabel.frame.size.height)];
+        }
     }];
 
 }
