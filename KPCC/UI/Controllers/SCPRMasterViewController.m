@@ -45,6 +45,12 @@
     //updateNowPlayingInfoWithProgram(currentProgram)
 }
 
+- (IBAction)rewindToStartTapped:(id)sender {
+    if (_currentProgram) {
+        [[AudioManager shared] seekToDate:_currentProgram.starts_at];
+    }
+}
+
 - (void)playStream {
     [[AudioManager shared] startStream];
 }
@@ -121,7 +127,7 @@
 
         [self updateUIWithProgram:programObj];
 
-//        currentProgram = newProgram
+        self.currentProgram = programObj;
 //        updateNowPlayingInfoWithProgram(currentProgram)
 
         // Save the Program to persistant storage.

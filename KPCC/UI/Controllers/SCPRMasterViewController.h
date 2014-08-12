@@ -16,5 +16,8 @@
 @property IBOutlet UILabel *programTitleLabel;
 @property IBOutlet UIImageView *programImageView;
 @property IBOutlet UIButton *playPauseButton;
+@property IBOutlet UIButton *rewindToShowStartButton;
+
+@property (nonatomic,strong) Program *currentProgram;
 
 @end
