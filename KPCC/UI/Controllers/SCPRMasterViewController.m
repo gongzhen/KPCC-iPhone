@@ -127,7 +127,7 @@
             [self.playPauseButton setImage:[UIImage imageNamed:@"btn_pause"] forState:UIControlStateNormal];
 
             [self.playPauseButton setFrame:CGRectMake(_playPauseButton.frame.origin.x,
-                                                      402.0 /*_playPauseButton.frame.origin.y*/,
+                                                      385.0 /*_playPauseButton.frame.origin.y*/,
                                                       _playPauseButton.frame.size.width,
                                                       _playPauseButton.frame.size.height)];
 
@@ -155,6 +155,8 @@
     [UIView animateWithDuration:0.25 animations:^{
 
         if ([[AudioManager shared] isStreamPlaying] || [[AudioManager shared] isStreamBuffering]) {
+            
+            [self.horizDividerLine setAlpha:0.4];
 
             [self.liveDescriptionLabel setFrame:CGRectMake(_liveDescriptionLabel.frame.origin.x,
                                                            286.0 /*_liveDescriptionLabel.frame.origin.y*/,
@@ -169,6 +171,7 @@
         } else {
 
             [self.rewindToShowStartButton setAlpha:1.0];
+            [self.horizDividerLine setAlpha:0.0];
 
             [self.playPauseButton setFrame:CGRectMake(_playPauseButton.frame.origin.x,
                                                       225.0 /*_playPauseButton.frame.origin.y*/,
@@ -212,7 +215,7 @@
     }
 
     NSDictionary *audioMetaData = @{ MPMediaItemPropertyArtist : @"89.3 KPCC",
-                                     MPMediaItemPropertyTitle : program.title,
+                                     MPMediaItemPropertyTitle : program.title//,
                                      /*MPNowPlayingInfoPropertyPlaybackRate : [[NSNumber alloc] initWithFloat:10],
                                      MPMediaItemPropertyAlbumTitle : @"LIVE",
                                      MPNowPlayingInfoPropertyElapsedPlaybackTime: [[NSNumber alloc] initWithDouble:40]*/ };

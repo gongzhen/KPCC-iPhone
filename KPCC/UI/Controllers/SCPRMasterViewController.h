@@ -18,6 +18,7 @@
 @property IBOutlet UIButton *playPauseButton;
 @property IBOutlet UIButton *rewindToShowStartButton;
 @property IBOutlet UILabel *liveDescriptionLabel;
+@property IBOutlet UIView *horizDividerLine;
 
 @property (nonatomic,strong) Program *currentProgram;
 
