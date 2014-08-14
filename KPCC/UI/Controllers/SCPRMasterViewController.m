@@ -14,6 +14,29 @@
 
 @implementation SCPRMasterViewController
 
+
+#pragma mark - UIViewController
+
+// Allows for interaction with system audio controls.
+- (BOOL)canBecomeFirstResponder {
+    return YES;
+}
+
+- (void)remoteControlReceivedWithEvent:(UIEvent *)event {
+    // Handle remote audio control events.
+    if (event.type == UIEventTypeRemoteControl) {
+        if (event.subtype == UIEventSubtypeRemoteControlPlay ||
+            event.subtype == UIEventSubtypeRemoteControlPause ||
+            event.subtype == UIEventSubtypeRemoteControlTogglePlayPause) {
+            [self playOrPauseTapped:nil];
+        } else if (event.subtype == UIEventSubtypeRemoteControlPreviousTrack) {
+            [self rewindFifteen];
+        } else if (event.subtype == UIEventSubtypeRemoteControlNextTrack) {
+            [self fastForwardFifteen];
+        }
+    }
+}
+
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
 
@@ -25,24 +48,41 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view.
 
     // Fetch program info and update audio control state.
     [self updateDataForUI];
+    
+    // Make sure the system follows our playback status - to support the playback when the app enters the background mode.
+    [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback error:nil];
+    [[AVAudioSession sharedInstance] setActive: YES error: nil];
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+
+    // Once the view has appeared we can register to begin receiving system audio controls.
+    [[UIApplication sharedApplication] beginReceivingRemoteControlEvents];
+    [self becomeFirstResponder];
+}
+
+- (void)viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear:animated];
+
+    //End receiving events.
+    [[UIApplication sharedApplication] endReceivingRemoteControlEvents];
+    [self resignFirstResponder];
 }
 
 - (IBAction)playOrPauseTapped:(id)sender {
     if (![[AudioManager shared] isStreamPlaying]) {
         if ([[AudioManager shared] isStreamBuffering]) {
             [[AudioManager shared] stopAllAudio];
-            // Dismiss JDStatusBar
         } else {
             [self playStream];
         }
     } else {
         [self pauseStream];
     }
-    //updateNowPlayingInfoWithProgram(currentProgram)
 }
 
 - (IBAction)rewindToStartTapped:(id)sender {
@@ -58,6 +98,15 @@
 - (void)pauseStream {
     [[AudioManager shared] pauseStream];
 }
+
+- (void)rewindFifteen {
+    [[AudioManager shared] backwardSeekFifteenSeconds];
+}
+
+- (void)fastForwardFifteen {
+    [[AudioManager shared] forwardSeekFifteenSeconds];
+}
+
 - (void)receivePlayerStateNotification {
     [self updateControlsAndUI];
 }
@@ -157,6 +206,20 @@
     }
 }
 
+- (void)updateNowPlayingInfoWithProgram:(Program*)program {
+    if (!program) {
+        return;
+    }
+
+    NSDictionary *audioMetaData = @{ MPMediaItemPropertyArtist : @"89.3 KPCC",
+                                     MPMediaItemPropertyTitle : program.title,
+                                     /*MPNowPlayingInfoPropertyPlaybackRate : [[NSNumber alloc] initWithFloat:10],
+                                     MPMediaItemPropertyAlbumTitle : @"LIVE",
+                                     MPNowPlayingInfoPropertyElapsedPlaybackTime: [[NSNumber alloc] initWithDouble:40]*/ };
+
+    [[MPNowPlayingInfoCenter defaultCenter] setNowPlayingInfo:audioMetaData];
+}
+
 
 #pragma mark - AudioManagerDelegate
 
@@ -185,7 +248,7 @@
         [self updateUIWithProgram:programObj];
 
         self.currentProgram = programObj;
-//        updateNowPlayingInfoWithProgram(currentProgram)
+        [self updateNowPlayingInfoWithProgram:programObj];
 
         // Save the Program to persistant storage.
         [[ContentManager shared] saveContext];

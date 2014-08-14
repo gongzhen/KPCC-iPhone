@@ -89,6 +89,8 @@ typedef enum {
 - (void)forwardSeekLive;
 - (void)forwardSeekThirtySeconds;
 - (void)backwardSeekThirtySeconds;
+- (void)forwardSeekFifteenSeconds;
+- (void)backwardSeekFifteenSeconds;
 
 - (void)analyzeStreamError:(NSString*)comments;
 

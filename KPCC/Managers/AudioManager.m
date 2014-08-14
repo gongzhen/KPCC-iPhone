@@ -168,6 +168,26 @@ static const NSString *ItemStatusContext;
     }
 }
 
+- (void)forwardSeekFifteenSeconds {
+    NSDate *currentDate = self.audioPlayer.currentItem.currentDate;
+    if (currentDate) {
+        [self.audioPlayer pause];
+        [self.audioPlayer seekToDate:[currentDate dateByAddingTimeInterval:(15)] completionHandler:^(BOOL finished) {
+            [self.audioPlayer play];
+        }];
+    }
+}
+
+- (void)backwardSeekFifteenSeconds {
+    NSDate *currentDate = self.audioPlayer.currentItem.currentDate;
+    if (currentDate) {
+        [self.audioPlayer pause];
+        [self.audioPlayer seekToDate:[currentDate dateByAddingTimeInterval:(-15)] completionHandler:^(BOOL finished) {
+            [self.audioPlayer play];
+        }];
+    }
+}
+
 - (NSString *)currentDateTimeString {
     return [[self programDateTimeFormatter] stringFromDate:self.currentDate];
 }
