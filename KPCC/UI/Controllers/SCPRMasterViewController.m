@@ -118,7 +118,15 @@
 - (void)updateControlsAndUI {
     [UIView animateWithDuration:0.1 animations:^{
         [self.playPauseButton setAlpha:0.0];
-        [self.rewindToShowStartButton setAlpha:0.0];
+
+        if ([[AudioManager shared] isStreamPlaying] || [[AudioManager shared] isStreamBuffering]) {
+            [self.liveDescriptionLabel setText:@"LIVE"];
+            [self.rewindToShowStartButton setAlpha:0.0];
+        } else {
+            [self.liveDescriptionLabel setText:@"ON NOW"];
+            [self.liveRewindAltButton setAlpha:0.0];
+        }
+        
     } completion:^(BOOL finished) {
 
         CGAffineTransform t;// = CGAffineTransformMakeScale(1.2, 1.2);
@@ -126,15 +134,20 @@
         if ([[AudioManager shared] isStreamPlaying] || [[AudioManager shared] isStreamBuffering]) {
             [self.playPauseButton setImage:[UIImage imageNamed:@"btn_pause"] forState:UIControlStateNormal];
 
-            [self.playPauseButton setFrame:CGRectMake(_playPauseButton.frame.origin.x,
-                                                      385.0 /*_playPauseButton.frame.origin.y*/,
+            /*[self.playPauseButton setFrame:CGRectMake(_playPauseButton.frame.origin.x,
+                                                      385.0,
                                                       _playPauseButton.frame.size.width,
-                                                      _playPauseButton.frame.size.height)];
+                                                      _playPauseButton.frame.size.height)];*/
 
             t = CGAffineTransformMakeScale(1.2, 1.2);
 
         } else {
             [self.playPauseButton setImage:[UIImage imageNamed:@"btn_play_large"] forState:UIControlStateNormal];
+
+/*            [self.playPauseButton setFrame:CGRectMake(_playPauseButton.frame.origin.x,
+                                                      225.0,
+                                                      _playPauseButton.frame.size.width,
+                                                      _playPauseButton.frame.size.height)];*/
 
             t = CGAffineTransformMakeScale(1.0, 1.0);
         }
@@ -157,14 +170,20 @@
         if ([[AudioManager shared] isStreamPlaying] || [[AudioManager shared] isStreamBuffering]) {
             
             [self.horizDividerLine setAlpha:0.4];
+            [self.liveRewindAltButton setAlpha:1.0];
+
+            [self.playPauseButton setFrame:CGRectMake(_playPauseButton.frame.origin.x,
+                                                      385.0,
+                                                      _playPauseButton.frame.size.width,
+                                                      _playPauseButton.frame.size.height)];
 
             [self.liveDescriptionLabel setFrame:CGRectMake(_liveDescriptionLabel.frame.origin.x,
-                                                           286.0 /*_liveDescriptionLabel.frame.origin.y*/,
+                                                           286.0,
                                                            _liveDescriptionLabel.frame.size.width,
                                                            _liveDescriptionLabel.frame.size.height)];
 
             [self.programTitleLabel setFrame:CGRectMake(_programTitleLabel.frame.origin.x,
-                                                        303.0 /*_programTitleLabel.frame.origin.y*/,
+                                                        303.0,
                                                         _programTitleLabel.frame.size.width,
                                                         _programTitleLabel.frame.size.height)];
 
@@ -174,17 +193,17 @@
             [self.horizDividerLine setAlpha:0.0];
 
             [self.playPauseButton setFrame:CGRectMake(_playPauseButton.frame.origin.x,
-                                                      225.0 /*_playPauseButton.frame.origin.y*/,
+                                                      225.0,
                                                       _playPauseButton.frame.size.width,
                                                       _playPauseButton.frame.size.height)];
 
             [self.liveDescriptionLabel setFrame:CGRectMake(_liveDescriptionLabel.frame.origin.x,
-                                                           95.0 /*_liveDescriptionLabel.frame.origin.y*/,
+                                                           95.0,
                                                            _liveDescriptionLabel.frame.size.width,
                                                            _liveDescriptionLabel.frame.size.height)];
 
             [self.programTitleLabel setFrame:CGRectMake(_programTitleLabel.frame.origin.x,
-                                                        113.0 /*_programTitleLabel.frame.origin.y*/,
+                                                        113.0,
                                                         _programTitleLabel.frame.size.width,
                                                         _programTitleLabel.frame.size.height)];
         }
