@@ -43,7 +43,7 @@
     // Set the current view to recieve events from the AudioManagerDelegate.
     [AudioManager shared].delegate = self;
 
-    [self updateControlsAndUI];
+    //[self updateControlsAndUI:NO];
 }
 
 - (void)viewDidLoad {
@@ -63,14 +63,8 @@
     // Once the view has appeared we can register to begin receiving system audio controls.
     [[UIApplication sharedApplication] beginReceivingRemoteControlEvents];
     [self becomeFirstResponder];
-}
-
-- (void)viewDidDisappear:(BOOL)animated {
-    [super viewDidDisappear:animated];
-
-    //End receiving events.
-    [[UIApplication sharedApplication] endReceivingRemoteControlEvents];
-    [self resignFirstResponder];
+    
+    [self updateControlsAndUI:NO];
 }
 
 - (IBAction)playOrPauseTapped:(id)sender {
@@ -87,6 +81,7 @@
 
 - (IBAction)rewindToStartTapped:(id)sender {
     if (_currentProgram) {
+        _seekRequested = YES;
         [[AudioManager shared] seekToDate:_currentProgram.starts_at];
     }
 }
@@ -100,22 +95,25 @@
 }
 
 - (void)rewindFifteen {
+    _seekRequested = YES;
     [[AudioManager shared] backwardSeekFifteenSeconds];
 }
 
 - (void)fastForwardFifteen {
+    _seekRequested = YES;
     [[AudioManager shared] forwardSeekFifteenSeconds];
 }
 
 - (void)receivePlayerStateNotification {
-    [self updateControlsAndUI];
+    [self updateControlsAndUI:YES];
 }
 
 - (void)updateDataForUI {
     [[NetworkManager shared] fetchProgramInformationFor:[NSDate date] display:self];
 }
 
-- (void)updateControlsAndUI {
+- (void)updateControlsAndUI:(BOOL)animated {
+
     [UIView animateWithDuration:0.1 animations:^{
         [self.playPauseButton setAlpha:0.0];
 
@@ -134,20 +132,10 @@
         if ([[AudioManager shared] isStreamPlaying] || [[AudioManager shared] isStreamBuffering]) {
             [self.playPauseButton setImage:[UIImage imageNamed:@"btn_pause"] forState:UIControlStateNormal];
 
-            /*[self.playPauseButton setFrame:CGRectMake(_playPauseButton.frame.origin.x,
-                                                      385.0,
-                                                      _playPauseButton.frame.size.width,
-                                                      _playPauseButton.frame.size.height)];*/
-
             t = CGAffineTransformMakeScale(1.2, 1.2);
 
         } else {
             [self.playPauseButton setImage:[UIImage imageNamed:@"btn_play_large"] forState:UIControlStateNormal];
-
-/*            [self.playPauseButton setFrame:CGRectMake(_playPauseButton.frame.origin.x,
-                                                      225.0,
-                                                      _playPauseButton.frame.size.width,
-                                                      _playPauseButton.frame.size.height)];*/
 
             t = CGAffineTransformMakeScale(1.0, 1.0);
         }
@@ -165,50 +153,60 @@
     }];
 
 
-    [UIView animateWithDuration:0.25 animations:^{
+    if (animated) {
+        [UIView animateWithDuration:0.25 animations:^{
+            [self setUIPositioning];
+        }];
+    } else {
+        [self setUIPositioning];        
+    }
 
+}
+
+- (void)setUIPositioning {
+    if (!_seekRequested) {
+        
         if ([[AudioManager shared] isStreamPlaying] || [[AudioManager shared] isStreamBuffering]) {
-            
             [self.horizDividerLine setAlpha:0.4];
             [self.liveRewindAltButton setAlpha:1.0];
-
+            
             [self.playPauseButton setFrame:CGRectMake(_playPauseButton.frame.origin.x,
                                                       385.0,
                                                       _playPauseButton.frame.size.width,
                                                       _playPauseButton.frame.size.height)];
-
+            
             [self.liveDescriptionLabel setFrame:CGRectMake(_liveDescriptionLabel.frame.origin.x,
                                                            286.0,
                                                            _liveDescriptionLabel.frame.size.width,
                                                            _liveDescriptionLabel.frame.size.height)];
-
+            
             [self.programTitleLabel setFrame:CGRectMake(_programTitleLabel.frame.origin.x,
                                                         303.0,
                                                         _programTitleLabel.frame.size.width,
                                                         _programTitleLabel.frame.size.height)];
-
+            
         } else {
-
             [self.rewindToShowStartButton setAlpha:1.0];
             [self.horizDividerLine setAlpha:0.0];
-
+            
             [self.playPauseButton setFrame:CGRectMake(_playPauseButton.frame.origin.x,
                                                       225.0,
                                                       _playPauseButton.frame.size.width,
                                                       _playPauseButton.frame.size.height)];
-
+            
             [self.liveDescriptionLabel setFrame:CGRectMake(_liveDescriptionLabel.frame.origin.x,
                                                            95.0,
                                                            _liveDescriptionLabel.frame.size.width,
                                                            _liveDescriptionLabel.frame.size.height)];
-
+            
             [self.programTitleLabel setFrame:CGRectMake(_programTitleLabel.frame.origin.x,
                                                         113.0,
                                                         _programTitleLabel.frame.size.width,
                                                         _programTitleLabel.frame.size.height)];
         }
-    }];
-
+    } else {
+        _seekRequested = NO;
+    }
 }
 
 - (void)updateUIWithProgram:(Program*)program {
@@ -246,7 +244,7 @@
 #pragma mark - AudioManagerDelegate
 
 - (void)onRateChange {
-    [self updateControlsAndUI];
+    [self updateControlsAndUI:YES];
 }
 
 
@@ -277,6 +275,11 @@
     }
 }
 
+- (void)dealloc {
+    //End receiving events.
+    [[UIApplication sharedApplication] endReceivingRemoteControlEvents];
+    [self resignFirstResponder];
+}
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];

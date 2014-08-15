@@ -22,5 +22,6 @@
 @property IBOutlet UIView *horizDividerLine;
 
 @property (nonatomic,strong) Program *currentProgram;
+@property Boolean seekRequested;
 
 @end
