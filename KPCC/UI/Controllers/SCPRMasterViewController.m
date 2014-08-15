@@ -40,10 +40,9 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
 
-    // Set the current view to recieve events from the AudioManagerDelegate.
+    // Set the current view to receive events from the AudioManagerDelegate.
     [AudioManager shared].delegate = self;
 
-    //[self updateControlsAndUI:NO];
 }
 
 - (void)viewDidLoad {
@@ -64,7 +63,7 @@
     [[UIApplication sharedApplication] beginReceivingRemoteControlEvents];
     [self becomeFirstResponder];
     
-    [self updateControlsAndUI:NO];
+    [self updateControlsAndUI:YES];
 }
 
 - (IBAction)playOrPauseTapped:(id)sender {
@@ -114,9 +113,62 @@
 
 - (void)updateControlsAndUI:(BOOL)animated {
 
-    [UIView animateWithDuration:0.1 animations:^{
-        [self.playPauseButton setAlpha:0.0];
+    // First set contents of background, live-status labels, and play button.
+    [self setUIContents:animated];
 
+    // Set positioning of UI elements.
+    if (animated) {
+        [UIView animateWithDuration:0.25 animations:^{
+            [self setUIPositioning];
+        }];
+    } else {
+        [self setUIPositioning];
+    }
+
+}
+
+- (void)setUIContents:(BOOL)animated {
+
+    if (animated) {
+        [UIView animateWithDuration:0.1 animations:^{
+            [self.playPauseButton setAlpha:0.0];
+
+            if ([[AudioManager shared] isStreamPlaying] || [[AudioManager shared] isStreamBuffering]) {
+                [self.liveDescriptionLabel setText:@"LIVE"];
+                [self.rewindToShowStartButton setAlpha:0.0];
+            } else {
+                [self.liveDescriptionLabel setText:@"ON NOW"];
+                [self.liveRewindAltButton setAlpha:0.0];
+            }
+
+        } completion:^(BOOL finished) {
+
+            CGAffineTransform t;// = CGAffineTransformMakeScale(1.2, 1.2);
+
+            if ([[AudioManager shared] isStreamPlaying] || [[AudioManager shared] isStreamBuffering]) {
+                [self.playPauseButton setImage:[UIImage imageNamed:@"btn_pause"] forState:UIControlStateNormal];
+
+                t = CGAffineTransformMakeScale(1.2, 1.2);
+
+            } else {
+                [self.playPauseButton setImage:[UIImage imageNamed:@"btn_play_large"] forState:UIControlStateNormal];
+
+                t = CGAffineTransformMakeScale(1.0, 1.0);
+            }
+
+            CGPoint center = _programImageView.center; // or any point you want
+            [UIView animateWithDuration:0.25 animations:^{
+                //_programImageView.transform = t;
+                //_programImageView.center = center;
+            }];
+
+
+            [UIView animateWithDuration:0.1 animations:^{
+                [self.playPauseButton setAlpha:1.0];
+            }];
+        }];
+
+    } else {
         if ([[AudioManager shared] isStreamPlaying] || [[AudioManager shared] isStreamBuffering]) {
             [self.liveDescriptionLabel setText:@"LIVE"];
             [self.rewindToShowStartButton setAlpha:0.0];
@@ -124,43 +176,13 @@
             [self.liveDescriptionLabel setText:@"ON NOW"];
             [self.liveRewindAltButton setAlpha:0.0];
         }
-        
-    } completion:^(BOOL finished) {
-
-        CGAffineTransform t;// = CGAffineTransformMakeScale(1.2, 1.2);
 
         if ([[AudioManager shared] isStreamPlaying] || [[AudioManager shared] isStreamBuffering]) {
             [self.playPauseButton setImage:[UIImage imageNamed:@"btn_pause"] forState:UIControlStateNormal];
-
-            t = CGAffineTransformMakeScale(1.2, 1.2);
-
         } else {
             [self.playPauseButton setImage:[UIImage imageNamed:@"btn_play_large"] forState:UIControlStateNormal];
-
-            t = CGAffineTransformMakeScale(1.0, 1.0);
         }
-
-        CGPoint center = _programImageView.center; // or any point you want
-        [UIView animateWithDuration:0.25 animations:^{
-            //_programImageView.transform = t;
-            //_programImageView.center = center;
-        }];
-
-
-        [UIView animateWithDuration:0.1 animations:^{
-            [self.playPauseButton setAlpha:1.0];
-        }];
-    }];
-
-
-    if (animated) {
-        [UIView animateWithDuration:0.25 animations:^{
-            [self setUIPositioning];
-        }];
-    } else {
-        [self setUIPositioning];        
     }
-
 }
 
 - (void)setUIPositioning {
