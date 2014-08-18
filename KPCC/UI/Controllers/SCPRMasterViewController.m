@@ -320,7 +320,21 @@
     NSLog(@"slug2x - %@", slug2x);
     
     // Async request to fetch image and set in background tile view. Via AFNetworking.
-    [self.programImageView setImageWithURL:[NSURL URLWithString:[dict objectForKey:slug2x]]];
+    NSURL *imageUrl = [NSURL URLWithString:[dict objectForKey:slug2x]];
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:imageUrl];
+
+    [UIView animateWithDuration:0.3 animations:^{
+        [self.programImageView setAlpha:0.0];
+    }];
+    [self.programImageView setImageWithURLRequest:request placeholderImage:nil success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {
+        _programImageView.image = image;
+        [UIView animateWithDuration:0.15 animations:^{
+            [self.programImageView setAlpha:1.0];
+        }];
+    } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error) {
+
+    }];
+
 }
 
 - (void)dealloc {
