@@ -286,6 +286,10 @@
         if ([programDict objectForKey:@"title"]) {
             programObj.title = [programDict objectForKey:@"title"];
         }
+        
+        if ([programDict objectForKey:@"slug"]) {
+            programObj.program_slug = [programDict objectForKey:@"slug"];
+        }
 
         [self updateUIWithProgram:programObj];
 

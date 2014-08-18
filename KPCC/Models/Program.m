@@ -16,7 +16,7 @@
 @dynamic starts_at;
 @dynamic public_url;
 @dynamic is_recurring;
-@dynamic program;
+@dynamic program_slug;
 
 + (NSString *)entityName {
     return @"Program";

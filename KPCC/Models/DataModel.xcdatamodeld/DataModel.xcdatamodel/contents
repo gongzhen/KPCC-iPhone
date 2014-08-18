@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="6172.12" systemVersion="13D65" minimumToolsVersion="Xcode 4.3" macOSVersion="Automatic" iOSVersion="Automatic">
+<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="6220.8" systemVersion="14A314h" minimumToolsVersion="Xcode 4.3" macOSVersion="Automatic" iOSVersion="Automatic">
     <entity name="Program" representedClassName="Program" syncable="YES">
         <attribute name="ends_at" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="is_recurring" optional="YES" attributeType="Boolean" syncable="YES"/>
-        <attribute name="program" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="program_slug" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="public_url" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="starts_at" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
     <elements>
-        <element name="Program" positionX="-63" positionY="-18" width="128" height="30"/>
+        <element name="Program" positionX="-63" positionY="-18" width="128" height="135"/>
     </elements>
 </model>
