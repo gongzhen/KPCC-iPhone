@@ -8,6 +8,9 @@
 
 #import "SCPRMasterViewController.h"
 
+#import "AFNetworking.h"
+#import "UIImageView+AFNetworking.h"
+
 @interface SCPRMasterViewController () <AudioManagerDelegate, ContentProcessor>
 
 @end
@@ -286,11 +289,12 @@
         if ([programDict objectForKey:@"title"]) {
             programObj.title = [programDict objectForKey:@"title"];
         }
-        
-        if ([programDict objectForKey:@"slug"]) {
-            programObj.program_slug = [programDict objectForKey:@"slug"];
-        }
 
+        if ([[programDict objectForKey:@"program"] objectForKey:@"slug"]) {
+            programObj.program_slug = [[programDict objectForKey:@"program"] objectForKey:@"slug"];
+        }
+        
+        [self loadProgramImage:programObj.program_slug];
         [self updateUIWithProgram:programObj];
 
         self.currentProgram = programObj;
@@ -299,6 +303,24 @@
         // Save the Program to persistant storage.
         [[ContentManager shared] saveContext];
     }
+}
+
+- (void)loadProgramImage:(NSString *)slug {
+
+    // Load JSON with program image urls.
+    NSError *fileError = nil;
+    NSString *filePath = [[NSBundle mainBundle] pathForResource:[@"program_image_urls" stringByDeletingPathExtension] ofType:@"json"];
+    NSData* data = [NSData dataWithContentsOfFile:filePath];
+    
+    NSDictionary *dict = (NSDictionary*)[NSJSONSerialization JSONObjectWithData:data
+                                                options:kNilOptions error:&fileError];
+
+    NSLog(@"DICT! %@", dict);
+    NSString *slug2x = [NSString stringWithFormat:@"%@-2x", slug];
+    NSLog(@"slug2x - %@", slug2x);
+    
+    // Async request to fetch image and set in background tile view. Via AFNetworking.
+    [self.programImageView setImageWithURL:[NSURL URLWithString:[dict objectForKey:slug2x]]];
 }
 
 - (void)dealloc {
