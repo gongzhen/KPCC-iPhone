@@ -53,7 +53,10 @@
 
     // Fetch program info and update audio control state.
     [self updateDataForUI];
-    
+
+    // Observe when the application becomes active again, and update UI if need-be.
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateDataForUI) name:UIApplicationWillEnterForegroundNotification object:nil];
+
     // Make sure the system follows our playback status - to support the playback when the app enters the background mode.
     [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback error:nil];
     [[AVAudioSession sharedInstance] setActive: YES error: nil];
@@ -70,6 +73,10 @@
 }
 
 - (IBAction)playOrPauseTapped:(id)sender {
+    if (_seekRequested) {
+        _seekRequested = NO;
+    }
+
     if (![[AudioManager shared] isStreamPlaying]) {
         if ([[AudioManager shared] isStreamBuffering]) {
             [[AudioManager shared] stopAllAudio];
@@ -147,22 +154,42 @@
         } completion:^(BOOL finished) {
 
             CGAffineTransform t;// = CGAffineTransformMakeScale(1.2, 1.2);
-
+            double transformRate = 0.0;
+            
             if ([[AudioManager shared] isStreamPlaying] || [[AudioManager shared] isStreamBuffering]) {
                 [self.playPauseButton setImage:[UIImage imageNamed:@"btn_pause"] forState:UIControlStateNormal];
 
                 t = CGAffineTransformMakeScale(1.2, 1.2);
+                transformRate = 1.2;
 
             } else {
                 [self.playPauseButton setImage:[UIImage imageNamed:@"btn_play_large"] forState:UIControlStateNormal];
 
                 t = CGAffineTransformMakeScale(1.0, 1.0);
+                transformRate = 1.0;
             }
-
-            CGPoint center = _programImageView.center; // or any point you want
-            [UIView animateWithDuration:0.25 animations:^{
-                //_programImageView.transform = t;
-                //_programImageView.center = center;
+            
+            //CGAffineTransform translate = CGAffineTransformMakeTranslation(self.programImageView.frame.origin.x - ((self.view.frame.size.width * transformRate - self.view.frame.size.width)/2) ,self.programImageView.frame.origin.y);
+            //CGAffineTransform scale = t;//CGAffineTransformMakeScale(0.6, 0.6);
+            //CGAffineTransform transform =  CGAffineTransformConcat(translate, scale);
+            //transform = CGAffineTransformRotate(transform, degreesToRadians(-10));
+            
+            CGPoint center = self.programImageView.center;
+            CATransform3D transform = CATransform3DIdentity;
+            transform = CATransform3DTranslate(transform, self.view.center.x,  self.view.center.y, 0);
+            transform = CATransform3DScale(transform, transformRate, transformRate, 1);
+            
+            [UIView beginAnimations:@"MoveAndRotateAnimation" context:nil];
+            [UIView setAnimationCurve:UIViewAnimationCurveEaseInOut];
+            [UIView setAnimationDuration:2.0];
+            
+            self.programImageView.layer.transform = transform;
+            self.programImageView.center = center;
+            
+            [UIView commitAnimations];
+            
+            [UIView animateWithDuration:.5 animations:^{
+                self.programImageView.layer.transform = CATransform3DIdentity;
             }];
 
 
@@ -320,20 +347,23 @@
     NSLog(@"slug2x - %@", slug2x);
     
     // Async request to fetch image and set in background tile view. Via AFNetworking.
-    NSURL *imageUrl = [NSURL URLWithString:[dict objectForKey:slug2x]];
-    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:imageUrl];
-
-    [UIView animateWithDuration:0.3 animations:^{
-        [self.programImageView setAlpha:0.0];
-    }];
-    [self.programImageView setImageWithURLRequest:request placeholderImage:nil success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {
-        _programImageView.image = image;
-        [UIView animateWithDuration:0.15 animations:^{
-            [self.programImageView setAlpha:1.0];
+    if ([dict objectForKey:slug2x]) {
+        NSURL *imageUrl = [NSURL URLWithString:[dict objectForKey:slug2x]];
+        NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:imageUrl];
+        
+        [UIView animateWithDuration:0.3 animations:^{
+            [self.programImageView setAlpha:0.0];
         }];
-    } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error) {
+        UIImageView *programIV = self.programImageView;
+        [self.programImageView setImageWithURLRequest:request placeholderImage:nil success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {
+            programIV.image = image;
+            [UIView animateWithDuration:0.15 animations:^{
+                [programIV setAlpha:1.0];
+            }];
+        } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error) {
 
-    }];
+        }];
+    }
 
 }
 
