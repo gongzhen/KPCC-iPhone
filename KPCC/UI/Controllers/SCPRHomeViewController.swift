@@ -58,7 +58,7 @@ class SCPRHomeViewController: UIViewController, AudioManagerDelegate, ContentPro
         self.dismissViewControllerAnimated(true, nil)
     }
     
-    required init(coder aDecoder: NSCoder!) { super.init(coder: aDecoder) }
+    required init(coder aDecoder: NSCoder) { super.init(coder: aDecoder) }
     
     // For beta
     var timer = NSTimer()
@@ -112,7 +112,7 @@ class SCPRHomeViewController: UIViewController, AudioManagerDelegate, ContentPro
         
         // Experiment with CoreData fetch
         var program = Program.fetchObjectFromContext(ContentManager.shared().managedObjectContext)
-        if (program) {
+        if ((program) != nil) {
             updateUIWithProgram(program)
         }
         
@@ -148,7 +148,7 @@ class SCPRHomeViewController: UIViewController, AudioManagerDelegate, ContentPro
             actionButton.setImage(UIImage(named: "playButton"), forState: UIControlState.Normal)
         }
         
-        if AudioManager.shared().audioPlayer {
+        if (AudioManager.shared().audioPlayer != nil) {
             streamerStatusLabel.text = AudioManager.shared().isStreamPlaying() ? "playing" : "not playing"
         }
         
@@ -208,30 +208,30 @@ class SCPRHomeViewController: UIViewController, AudioManagerDelegate, ContentPro
         AudioManager.shared().pauseStream()
     }
     
-    func updateUIWithProgram(program : Program) {
+    func updateUIWithProgram(program : Program?) {
         if (program == nil) {
             return
         }
         
-        if let title = program.title {
+        if let title = program?.title {
             currentProgramTitle = title
             programTitleLabel.text = currentProgramTitle
         }
         
         // Set program runtime label.
-        if let startsAtDate = program.starts_at {
+        if let startsAtDate = program?.starts_at {
             var timeString = prettyStringFromRFCDate(startsAtDate)
-            if let endsAtDate = program.ends_at {
+            if let endsAtDate = program?.ends_at {
                 timeString = timeString + " - " + prettyStringFromRFCDate(endsAtDate)
             }
             
             programTimeLabel.text = timeString
         }
         
-        updateNowPlayingInfoWithProgram(program)
+        updateNowPlayingInfoWithProgram(program!)
     }
     
-    func updateNowPlayingInfoWithProgram(program : Program) {
+    func updateNowPlayingInfoWithProgram(program : Program?) {
         if (program == nil) {
             return
         }
@@ -240,7 +240,7 @@ class SCPRHomeViewController: UIViewController, AudioManagerDelegate, ContentPro
         nowPlayingInfo.setObject("89.3 KPCC", forKey: MPMediaItemPropertyArtist)
         nowPlayingInfo.setObject(AudioManager.shared().isStreamPlaying() ? 1.0 : 0.0, forKey: MPNowPlayingInfoPropertyPlaybackRate)
         
-        if let title = program.title {
+        if let title = program?.title {
             nowPlayingInfo.setObject(title, forKey: MPMediaItemPropertyTitle)
         }
         
@@ -334,11 +334,11 @@ class SCPRHomeViewController: UIViewController, AudioManagerDelegate, ContentPro
         
         // Convert the RFC 3339 date time string to an NSDate.
         var date = rfc3339DateFormatter.dateFromString(fixedDateString)
-        if (!date) {
+        if (date == nil) {
             rfc3339DateFormatter.dateFormat = "yyyy-MM-dd'T'HHmmss.000ZZZ"
-            return rfc3339DateFormatter.dateFromString(fixedDateString)
+            return rfc3339DateFormatter.dateFromString(fixedDateString)!
         }
-        return date;
+        return date!;
     }
     
     func prettyStringFromRFCDateString(rawDate: NSString) -> NSString {
