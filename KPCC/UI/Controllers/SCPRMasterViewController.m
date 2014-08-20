@@ -176,21 +176,21 @@
             
             CGPoint center = self.programImageView.center;
             CATransform3D transform = CATransform3DIdentity;
-            transform = CATransform3DTranslate(transform, self.view.center.x,  self.view.center.y, 0);
-            transform = CATransform3DScale(transform, transformRate, transformRate, 1);
+            //transform = CATransform3DTranslate(transform, self.view.center.x,  self.view.center.y, 0);
+            //transform = CATransform3DScale(transform, transformRate, transformRate, 1);
             
-            [UIView beginAnimations:@"MoveAndRotateAnimation" context:nil];
-            [UIView setAnimationCurve:UIViewAnimationCurveEaseInOut];
-            [UIView setAnimationDuration:2.0];
+            //[UIView beginAnimations:@"MoveAndRotateAnimation" context:nil];
+            //[UIView setAnimationCurve:UIViewAnimationCurveEaseInOut];
+            //[UIView setAnimationDuration:2.0];
             
-            self.programImageView.layer.transform = transform;
-            self.programImageView.center = center;
+            //self.programImageView.layer.transform = transform;
+            //self.programImageView.center = center;
             
-            [UIView commitAnimations];
+            //[UIView commitAnimations];
             
-            [UIView animateWithDuration:.5 animations:^{
-                self.programImageView.layer.transform = CATransform3DIdentity;
-            }];
+            //[UIView animateWithDuration:.5 animations:^{
+            //    self.programImageView.layer.transform = CATransform3DIdentity;
+            //}];
 
 
             [UIView animateWithDuration:0.1 animations:^{
@@ -323,9 +323,9 @@
         
         [self loadProgramImage:programObj.program_slug];
         [self updateUIWithProgram:programObj];
+        [self updateNowPlayingInfoWithProgram:programObj];
 
         self.currentProgram = programObj;
-        [self updateNowPlayingInfoWithProgram:programObj];
 
         // Save the Program to persistant storage.
         [[ContentManager shared] saveContext];
@@ -363,6 +363,8 @@
         } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error) {
 
         }];
+    } else {
+        [self.programImageView setImage:[UIImage imageNamed:@"program_tile_generic"]];
     }
 
 }
