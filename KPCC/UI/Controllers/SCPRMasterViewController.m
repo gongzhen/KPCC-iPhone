@@ -217,7 +217,7 @@
 
 - (void)setUIPositioning {
     if (!_seekRequested) {
-        
+
         if ([[AudioManager shared] isStreamPlaying] || [[AudioManager shared] isStreamBuffering]) {
             [self.horizDividerLine setAlpha:0.4];
             [self.liveRewindAltButton setAlpha:1.0];
@@ -333,40 +333,51 @@
 }
 
 - (void)loadProgramImage:(NSString *)slug {
-
-    // Load JSON with program image urls.
-    NSError *fileError = nil;
-    NSString *filePath = [[NSBundle mainBundle] pathForResource:[@"program_image_urls" stringByDeletingPathExtension] ofType:@"json"];
-    NSData* data = [NSData dataWithContentsOfFile:filePath];
     
-    NSDictionary *dict = (NSDictionary*)[NSJSONSerialization JSONObjectWithData:data
-                                                options:kNilOptions error:&fileError];
+    if (!_currentProgram || (_currentProgram.program_slug != slug)){
 
-    NSLog(@"DICT! %@", dict);
-    NSString *slug2x = [NSString stringWithFormat:@"%@-2x", slug];
-    NSLog(@"slug2x - %@", slug2x);
-    
-    // Async request to fetch image and set in background tile view. Via AFNetworking.
-    if ([dict objectForKey:slug2x]) {
-        NSURL *imageUrl = [NSURL URLWithString:[dict objectForKey:slug2x]];
-        NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:imageUrl];
+        // Load JSON with program image urls.
+        NSError *fileError = nil;
+        NSString *filePath = [[NSBundle mainBundle] pathForResource:[@"program_image_urls" stringByDeletingPathExtension] ofType:@"json"];
+        NSData* data = [NSData dataWithContentsOfFile:filePath];
         
-        [UIView animateWithDuration:0.3 animations:^{
-            [self.programImageView setAlpha:0.0];
-        }];
-        UIImageView *programIV = self.programImageView;
-        [self.programImageView setImageWithURLRequest:request placeholderImage:nil success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {
-            programIV.image = image;
-            [UIView animateWithDuration:0.15 animations:^{
-                [programIV setAlpha:1.0];
+        NSDictionary *dict = (NSDictionary*)[NSJSONSerialization JSONObjectWithData:data
+                                                                            options:kNilOptions
+                                                                              error:&fileError];
+
+
+        NSString *slugWithScale;
+        if ([Utils isRetina]) {
+            slugWithScale = [NSString stringWithFormat:@"%@-2x", slug];
+        } else {
+            slugWithScale = slug;
+        }
+        NSLog(@"slugWithScale - %@", slugWithScale);
+
+        // Async request to fetch image and set in background tile view. Via AFNetworking.
+        if ([dict objectForKey:slugWithScale]) {
+            NSURL *imageUrl = [NSURL URLWithString:[dict objectForKey:slugWithScale]];
+            NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:imageUrl];
+
+            [UIView animateWithDuration:0.3 animations:^{
+                [self.programImageView setAlpha:0.0];
             }];
-        } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error) {
-
-        }];
-    } else {
-        [self.programImageView setImage:[UIImage imageNamed:@"program_tile_generic"]];
+            UIImageView *programIV = self.programImageView;
+            [self.programImageView setImageWithURLRequest:request placeholderImage:nil success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {
+                programIV.image = image;
+                [UIView animateWithDuration:0.15 animations:^{
+                    [programIV setAlpha:1.0];
+                }];
+            } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error) {
+                [programIV setImage:[UIImage imageNamed:@"program_tile_generic.jpg"]];
+                [UIView animateWithDuration:0.15 animations:^{
+                    [programIV setAlpha:1.0];
+                }];
+            }];
+        } else {
+            [self.programImageView setImage:[UIImage imageNamed:@"program_tile_generic.jpg"]];
+        }
     }
-
 }
 
 - (void)dealloc {

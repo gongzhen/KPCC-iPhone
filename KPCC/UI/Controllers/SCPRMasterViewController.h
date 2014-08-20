@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "Utils.h"
 #import "AudioManager.h"
 #import "NetworkManager.h"
 #import "Program.h"
