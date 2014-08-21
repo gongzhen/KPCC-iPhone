@@ -47,6 +47,7 @@ typedef enum {
 - (void)handleUIForRecoveredStream;
 - (void)onTimeChange;
 - (void)onRateChange;
+- (void)onSeekCompleted;
 @end
 
 @interface AudioManager : NSObject

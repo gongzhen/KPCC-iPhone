@@ -140,51 +140,53 @@ static const NSString *ItemStatusContext;
 }
 
 - (void)seekToDate:(NSDate *)date {
-    [self.audioPlayer.currentItem seekToDate:date];
+    [self.audioPlayer pause];
+    [self.audioPlayer.currentItem seekToDate:date completionHandler:^(BOOL finished) {
+        [self.audioPlayer play];
+
+        if ([self.delegate respondsToSelector:@selector(onSeekCompleted)]) {
+            [self.delegate onSeekCompleted];
+        }
+    }];
 }
 
 - (void)forwardSeekLive {
     double time = MAXFLOAT;
-    [self.audioPlayer seekToTime: CMTimeMakeWithSeconds(time, NSEC_PER_SEC)];
+    [self.audioPlayer pause];
+    [self.audioPlayer seekToTime: CMTimeMakeWithSeconds(time, NSEC_PER_SEC) completionHandler:^(BOOL finished) {
+        [self.audioPlayer play];
+
+        if ([self.delegate respondsToSelector:@selector(onSeekCompleted)]) {
+            [self.delegate onSeekCompleted];
+        }
+    }];
 }
 
 - (void)forwardSeekThirtySeconds {
     NSDate *currentDate = self.audioPlayer.currentItem.currentDate;
     if (currentDate) {
-        [self.audioPlayer pause];
-        [self.audioPlayer seekToDate:[currentDate dateByAddingTimeInterval:(30)] completionHandler:^(BOOL finished) {
-            [self.audioPlayer play];
-        }];
+        [self seekToDate:[currentDate dateByAddingTimeInterval:(30)]];
     }
 }
 
 - (void)backwardSeekThirtySeconds {
     NSDate *currentDate = self.audioPlayer.currentItem.currentDate;
     if (currentDate) {
-        [self.audioPlayer pause];
-        [self.audioPlayer seekToDate:[currentDate dateByAddingTimeInterval:(-30)] completionHandler:^(BOOL finished) {
-            [self.audioPlayer play];
-        }];
+        [self seekToDate:[currentDate dateByAddingTimeInterval:(-30)]];
     }
 }
 
 - (void)forwardSeekFifteenSeconds {
     NSDate *currentDate = self.audioPlayer.currentItem.currentDate;
     if (currentDate) {
-        [self.audioPlayer pause];
-        [self.audioPlayer seekToDate:[currentDate dateByAddingTimeInterval:(15)] completionHandler:^(BOOL finished) {
-            [self.audioPlayer play];
-        }];
+        [self seekToDate:[currentDate dateByAddingTimeInterval:(15)]];
     }
 }
 
 - (void)backwardSeekFifteenSeconds {
     NSDate *currentDate = self.audioPlayer.currentItem.currentDate;
     if (currentDate) {
-        [self.audioPlayer pause];
-        [self.audioPlayer seekToDate:[currentDate dateByAddingTimeInterval:(-15)] completionHandler:^(BOOL finished) {
-            [self.audioPlayer play];
-        }];
+        [self seekToDate:[currentDate dateByAddingTimeInterval:(-15)]];
     }
 }
 
