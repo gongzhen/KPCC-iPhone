@@ -21,6 +21,7 @@
 @property IBOutlet UIButton *liveRewindAltButton;
 @property IBOutlet UILabel *liveDescriptionLabel;
 @property IBOutlet UIView *horizDividerLine;
+@property IBOutlet UIButton *backToLiveButton;
 
 @property (nonatomic,strong) Program *currentProgram;
 @property Boolean seekRequested;

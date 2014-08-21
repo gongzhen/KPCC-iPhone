@@ -95,6 +95,11 @@
     }
 }
 
+- (IBAction)backToLiveTapped:(id)sender {
+    _seekRequested = YES;
+    [[AudioManager shared] forwardSeekLive];
+}
+
 - (void)playStream {
     [[AudioManager shared] startStream];
 }
@@ -149,6 +154,7 @@
             } else {
                 [self.liveDescriptionLabel setText:@"ON NOW"];
                 [self.liveRewindAltButton setAlpha:0.0];
+                [self.backToLiveButton setAlpha:0.0];
             }
 
         } completion:^(BOOL finished) {
@@ -205,6 +211,7 @@
         } else {
             [self.liveDescriptionLabel setText:@"ON NOW"];
             [self.liveRewindAltButton setAlpha:0.0];
+            [self.backToLiveButton setAlpha:0.0];
         }
 
         if ([[AudioManager shared] isStreamPlaying] || [[AudioManager shared] isStreamBuffering]) {
@@ -221,6 +228,7 @@
         if ([[AudioManager shared] isStreamPlaying] || [[AudioManager shared] isStreamBuffering]) {
             [self.horizDividerLine setAlpha:0.4];
             [self.liveRewindAltButton setAlpha:1.0];
+            [self.backToLiveButton setAlpha:1.0];
             
             [self.playPauseButton setFrame:CGRectMake(_playPauseButton.frame.origin.x,
                                                       385.0,
@@ -297,6 +305,26 @@
 
 - (void)onRateChange {
     [self updateControlsAndUI:YES];
+}
+
+- (void)onTimeChange {
+    
+}
+
+- (void)onSeekCompleted {
+    // NSLog(@"curr Date: %@", [[AudioManager shared] currentDate]);
+    // NSLog(@"max seekable Date: %@", [[AudioManager shared] maxSeekableDate]);
+
+    if ([[[AudioManager shared] maxSeekableDate] timeIntervalSinceDate:[[AudioManager shared] currentDate]] > 60) {
+        
+        NSTimeInterval ti = [[[AudioManager shared] maxSeekableDate] timeIntervalSinceDate:[[AudioManager shared] currentDate]];
+        NSLog(@"diff in secs %f ", ti);
+        NSInteger mins = (ti/60);
+
+        [self.liveDescriptionLabel setText:[NSString stringWithFormat:@"%li MINUTES BEHIND LIVE", (long)mins]];
+    } else {
+        [self.liveDescriptionLabel setText:@"LIVE"];
+    }
 }
 
 
