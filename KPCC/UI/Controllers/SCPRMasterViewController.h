@@ -11,6 +11,8 @@
 #import "AudioManager.h"
 #import "NetworkManager.h"
 #import "Program.h"
+#import "FXBlurView.h"
+#import <pop/POP.h>
 
 @interface SCPRMasterViewController : UIViewController
 
@@ -22,6 +24,7 @@
 @property IBOutlet UILabel *liveDescriptionLabel;
 @property IBOutlet UIView *horizDividerLine;
 @property IBOutlet UIButton *backToLiveButton;
+@property IBOutlet FXBlurView *blurView;
 
 @property (nonatomic,strong) Program *currentProgram;
 @property Boolean seekRequested;

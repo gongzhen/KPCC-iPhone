@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6206.8" systemVersion="14A329f" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="tBl-Ag-e49">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6206.8" systemVersion="13D65" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="tBl-Ag-e49">
     <dependencies>
         <deployment defaultVersion="1792" identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7026.1"/>
@@ -30,6 +30,10 @@
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="program_tile_generic.jpg" translatesAutoresizingMaskIntoConstraints="NO" id="jYj-xG-3QJ">
                                 <rect key="frame" x="0.0" y="64" width="320" height="508"/>
                             </imageView>
+                            <view alpha="0.0" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="LAZ-J2-lj5" customClass="FXBlurView">
+                                <rect key="frame" x="0.0" y="64" width="320" height="504"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            </view>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ibQ-JJ-YMx">
                                 <rect key="frame" x="99" y="225" width="122" height="122"/>
                                 <state key="normal" image="btn_play_large.png">
@@ -98,6 +102,7 @@
                     <simulatedOrientationMetrics key="simulatedOrientationMetrics"/>
                     <connections>
                         <outlet property="backToLiveButton" destination="wPs-aM-sN3" id="9ox-AU-hBD"/>
+                        <outlet property="blurView" destination="LAZ-J2-lj5" id="MOo-Zb-mB0"/>
                         <outlet property="horizDividerLine" destination="WKa-sf-CFh" id="6oW-f8-WXW"/>
                         <outlet property="liveDescriptionLabel" destination="HL8-Wv-cqf" id="jXM-E3-DQA"/>
                         <outlet property="liveRewindAltButton" destination="weC-tD-l1U" id="dQp-kI-r1z"/>

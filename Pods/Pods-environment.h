@@ -48,9 +48,21 @@
 #define COCOAPODS_VERSION_MINOR_AFNetworking_UIKit 2
 #define COCOAPODS_VERSION_PATCH_AFNetworking_UIKit 2
 
+// FXBlurView
+#define COCOAPODS_POD_AVAILABLE_FXBlurView
+#define COCOAPODS_VERSION_MAJOR_FXBlurView 1
+#define COCOAPODS_VERSION_MINOR_FXBlurView 6
+#define COCOAPODS_VERSION_PATCH_FXBlurView 2
+
 // JDStatusBarNotification
 #define COCOAPODS_POD_AVAILABLE_JDStatusBarNotification
 #define COCOAPODS_VERSION_MAJOR_JDStatusBarNotification 1
 #define COCOAPODS_VERSION_MINOR_JDStatusBarNotification 4
 #define COCOAPODS_VERSION_PATCH_JDStatusBarNotification 7
+
+// pop
+#define COCOAPODS_POD_AVAILABLE_pop
+#define COCOAPODS_VERSION_MAJOR_pop 1
+#define COCOAPODS_VERSION_MINOR_pop 0
+#define COCOAPODS_VERSION_PATCH_pop 6
 

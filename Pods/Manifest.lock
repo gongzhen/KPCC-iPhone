@@ -18,14 +18,20 @@ PODS:
   - AFNetworking/UIKit (2.2.2):
     - AFNetworking/NSURLConnection
     - AFNetworking/NSURLSession
+  - FXBlurView (1.6.2)
   - JDStatusBarNotification (1.4.7)
+  - pop (1.0.6)
 
 DEPENDENCIES:
   - AFNetworking (~> 2.0)
+  - FXBlurView (~> 1.6)
   - JDStatusBarNotification
+  - pop (~> 1.0)
 
 SPEC CHECKSUMS:
   AFNetworking: 68e1959e25ba8fccd98a5d94b8b5e6c4a25e7bd7
+  FXBlurView: 47496afc9160097fa34af35fc4b310bd85d65dca
   JDStatusBarNotification: ac0b8550e761a0ab01696a6592564ff17698ca43
+  pop: e518794da38942c05255eb64b36d894e70cb4f00
 
-COCOAPODS: 0.32.1
+COCOAPODS: 0.33.1

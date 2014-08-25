@@ -60,6 +60,11 @@
     // Make sure the system follows our playback status - to support the playback when the app enters the background mode.
     [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback error:nil];
     [[AVAudioSession sharedInstance] setActive: YES error: nil];
+    
+    // Config blur view.
+    [self.blurView setTintColor:[UIColor clearColor]];
+    [self.blurView setBlurRadius:10.0f];
+    [self.blurView setDynamic:NO];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -143,6 +148,8 @@
 }
 
 - (void)setUIContents:(BOOL)animated {
+    
+    [self.blurView setNeedsDisplay];
 
     if (animated) {
         [UIView animateWithDuration:0.1 animations:^{
@@ -151,53 +158,43 @@
             if ([[AudioManager shared] isStreamPlaying] || [[AudioManager shared] isStreamBuffering]) {
                 [self.liveDescriptionLabel setText:@"LIVE"];
                 [self.rewindToShowStartButton setAlpha:0.0];
+                //[self.blurView setAlpha:1.0];
             } else {
                 [self.liveDescriptionLabel setText:@"ON NOW"];
                 [self.liveRewindAltButton setAlpha:0.0];
                 [self.backToLiveButton setAlpha:0.0];
+                [self.blurView setAlpha:0.0];
             }
 
         } completion:^(BOOL finished) {
 
             CGAffineTransform t;// = CGAffineTransformMakeScale(1.2, 1.2);
             double transformRate = 0.0;
-            
+
+            POPSpringAnimation *scaleAnimation = [POPSpringAnimation animationWithPropertyNamed:kPOPLayerScaleXY];
+
             if ([[AudioManager shared] isStreamPlaying] || [[AudioManager shared] isStreamBuffering]) {
                 [self.playPauseButton setImage:[UIImage imageNamed:@"btn_pause"] forState:UIControlStateNormal];
 
                 t = CGAffineTransformMakeScale(1.2, 1.2);
                 transformRate = 1.2;
 
+                scaleAnimation.fromValue  = [NSValue valueWithCGSize:CGSizeMake(1.0f, 1.0f)];
+                scaleAnimation.toValue  = [NSValue valueWithCGSize:CGSizeMake(1.2f, 1.2f)];//@(0.0f);
+
             } else {
                 [self.playPauseButton setImage:[UIImage imageNamed:@"btn_play_large"] forState:UIControlStateNormal];
 
                 t = CGAffineTransformMakeScale(1.0, 1.0);
                 transformRate = 1.0;
-            }
-            
-            //CGAffineTransform translate = CGAffineTransformMakeTranslation(self.programImageView.frame.origin.x - ((self.view.frame.size.width * transformRate - self.view.frame.size.width)/2) ,self.programImageView.frame.origin.y);
-            //CGAffineTransform scale = t;//CGAffineTransformMakeScale(0.6, 0.6);
-            //CGAffineTransform transform =  CGAffineTransformConcat(translate, scale);
-            //transform = CGAffineTransformRotate(transform, degreesToRadians(-10));
-            
-            CGPoint center = self.programImageView.center;
-            CATransform3D transform = CATransform3DIdentity;
-            //transform = CATransform3DTranslate(transform, self.view.center.x,  self.view.center.y, 0);
-            //transform = CATransform3DScale(transform, transformRate, transformRate, 1);
-            
-            //[UIView beginAnimations:@"MoveAndRotateAnimation" context:nil];
-            //[UIView setAnimationCurve:UIViewAnimationCurveEaseInOut];
-            //[UIView setAnimationDuration:2.0];
-            
-            //self.programImageView.layer.transform = transform;
-            //self.programImageView.center = center;
-            
-            //[UIView commitAnimations];
-            
-            //[UIView animateWithDuration:.5 animations:^{
-            //    self.programImageView.layer.transform = CATransform3DIdentity;
-            //}];
 
+                scaleAnimation.fromValue  = [NSValue valueWithCGSize:CGSizeMake(1.2f, 1.2f)];
+                scaleAnimation.toValue  = [NSValue valueWithCGSize:CGSizeMake(1.0f, 1.0f)];//@(0.0f);
+            }
+
+            //scaleAnimation.springBounciness = 20.0f;
+            //scaleAnimation.springSpeed = 20.0f;
+            [self.programImageView.layer pop_addAnimation:scaleAnimation forKey:@"scaleAnimation"];
 
             [UIView animateWithDuration:0.1 animations:^{
                 [self.playPauseButton setAlpha:1.0];
