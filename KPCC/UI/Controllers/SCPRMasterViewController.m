@@ -65,6 +65,8 @@
     [self.blurView setTintColor:[UIColor clearColor]];
     [self.blurView setBlurRadius:10.0f];
     [self.blurView setDynamic:NO];
+    
+    //[self.navigationController.navigationBar.topItem setTitle:@"KPCC Live"];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
