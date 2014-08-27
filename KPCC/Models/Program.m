@@ -86,6 +86,41 @@
     return [self updateProgramObject:programObj withDictionary:dictionary];
 }
 
++ (void)insertProgramsWithArray:(NSArray *)array inManagedObjectContext:(NSManagedObjectContext *)context {
+    if (!array || [array count] == 0) {
+        return;
+    }
+
+    NSArray *storedRecords = [self fetchAllProgramsInContext:context];
+    if ([storedRecords count] != 0) {
+
+        for (NSDictionary *program in array) {
+            NSPredicate *predicate = [NSPredicate predicateWithFormat:@"program_slug LIKE %@", [[program objectForKey:@"program"] objectForKey:@"slug"]];
+            NSArray *matchedArray = [storedRecords filteredArrayUsingPredicate:predicate];
+
+            Program* programObj = nil;
+
+            if ([matchedArray count] > 0) {
+                // Update existing Program
+                NSLog(@"Update Program");
+                programObj = [matchedArray objectAtIndex:0];
+            } else {
+                // Creating new Program
+                NSLog(@"Create new Program");
+                programObj = (Program *)[NSEntityDescription insertNewObjectForEntityForName:[self entityName] inManagedObjectContext:context];
+            }
+        }
+    } else {
+        // Import initial Programs
+        NSLog(@"Importing initial");
+        
+        for (NSDictionary *program in array) {
+            Program *programObj = (Program *)[NSEntityDescription insertNewObjectForEntityForName:[self entityName] inManagedObjectContext:context];
+            [self updateProgramObject:programObj withDictionary:program];
+        }
+    }
+}
+
 + (instancetype)updateProgramObject:(Program *)program withDictionary:(NSDictionary *)dictionary {
 
     if ([dictionary objectForKey:@"title"]) {

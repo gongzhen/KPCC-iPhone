@@ -102,9 +102,10 @@
     }
     
     // Process each Program and insert into CoreData.
-    for (NSDictionary *programDict in content) {
-        [Program insertProgramWithDictionary:programDict inManagedObjectContext:[[ContentManager shared] managedObjectContext]];
-    }
+    //for (NSDictionary *programDict in content) {
+    //    [Program insertProgramWithDictionary:programDict inManagedObjectContext:[[ContentManager shared] managedObjectContext]];
+    //}
+    [Program insertProgramsWithArray:content inManagedObjectContext:[[ContentManager shared] managedObjectContext]];
 
     // Save all changes made.
     [[ContentManager shared] saveContext];
