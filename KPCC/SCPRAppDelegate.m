@@ -44,6 +44,9 @@
     // Launch our root view controller
     UIViewController *viewController = [[UIStoryboard storyboardWithName:@"Storyboard" bundle:nil] instantiateInitialViewController];
     self.window.rootViewController = viewController;
+
+    // Fetch initial list of Programs from SCPRV4 and store in CoreData for later usage.
+    [[NetworkManager shared] fetchAllProgramInformation:self];
     
     // Override point for customization after application launch.
     return YES;
@@ -71,6 +74,7 @@
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
 }
 
+
 # pragma mark - Stylesheet
 
 - (void)applyStylesheet {
@@ -87,6 +91,23 @@
                               NSFontAttributeName:[UIFont fontWithName:@"FreightSansProLight-Regular" size:16.0f]
                               }
      forState:UIControlStateNormal];
+}
+
+
+#pragma mark - ContentProcessor
+
+- (void)handleProcessedContent:(NSArray *)content flags:(NSDictionary *)flags {
+    if ([content count] == 0) {
+        return;
+    }
+    
+    // Process each Program and insert into CoreData.
+    for (NSDictionary *programDict in content) {
+        [Program insertProgramWithDictionary:programDict inManagedObjectContext:[[ContentManager shared] managedObjectContext]];
+    }
+
+    // Save all changes made.
+    [[ContentManager shared] saveContext];
 }
 
 @end

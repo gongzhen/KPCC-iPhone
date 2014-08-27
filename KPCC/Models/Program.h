@@ -21,5 +21,7 @@
 
 + (instancetype)insertNewObjectIntoContext:(NSManagedObjectContext *)context;
 + (instancetype)fetchObjectFromContext:(NSManagedObjectContext *)context;
++ (instancetype)insertProgramWithDictionary:(NSDictionary *)dictionary inManagedObjectContext:(NSManagedObjectContext *)context;
++ (instancetype)fetchProgramWithSlug:(NSString *)slug fromManagedObjectContext:(NSManagedObjectContext *)context;
 
 @end

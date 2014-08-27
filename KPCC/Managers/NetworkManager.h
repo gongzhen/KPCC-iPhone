@@ -46,6 +46,7 @@ typedef enum {
 - (NSString *)networkInformation;
 
 - (void)fetchProgramInformationFor:(NSDate*)thisTime display:(id<ContentProcessor>)display;
+- (void)fetchAllProgramInformation:(id<ContentProcessor>)display;
 - (void)processResponseData:(NSDictionary*)content;
 - (void)requestFromSCPRWithEndpoint:(NSString*)endpoint andDisplay:(id<ContentProcessor>)display;
 - (void)requestFromSCPRWithEndpoint:(NSString *)endpoint andDisplay:(id<ContentProcessor>)display flags:(NSDictionary*)flags;

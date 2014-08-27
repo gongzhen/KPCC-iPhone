@@ -338,7 +338,7 @@
     if ([content objectAtIndex:0]) {
         NSDictionary *programDict = [content objectAtIndex:0];
 
-        Program *programObj = [Program insertNewObjectIntoContext:[[ContentManager shared] managedObjectContext]];
+        /*Program *programObj = [Program insertNewObjectIntoContext:[[ContentManager shared] managedObjectContext]];
 
         if ([programDict objectForKey:@"title"]) {
             programObj.title = [programDict objectForKey:@"title"];
@@ -346,8 +346,9 @@
 
         if ([[programDict objectForKey:@"program"] objectForKey:@"slug"]) {
             programObj.program_slug = [[programDict objectForKey:@"program"] objectForKey:@"slug"];
-        }
-        
+        }*/
+        Program *programObj = [Program insertProgramWithDictionary:programDict inManagedObjectContext:[[ContentManager shared] managedObjectContext]];
+
         [self loadProgramImage:programObj.program_slug];
         [self updateUIWithProgram:programObj];
         [self updateNowPlayingInfoWithProgram:programObj];

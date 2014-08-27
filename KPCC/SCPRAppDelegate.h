@@ -7,8 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "NetworkManager.h"
+#import "Program.h"
 
-@interface SCPRAppDelegate : UIResponder <UIApplicationDelegate>
+@interface SCPRAppDelegate : UIResponder <UIApplicationDelegate, ContentProcessor>
 
 @property (strong, nonatomic) UIWindow *window;
 

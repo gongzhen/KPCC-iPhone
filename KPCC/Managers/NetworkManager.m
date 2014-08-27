@@ -106,6 +106,12 @@ static NetworkManager *singleton = nil;
                            andDisplay:display];
 }
 
+- (void)fetchAllProgramInformation:(id<ContentProcessor>)display {
+    NSString *urlString = [NSString stringWithFormat:@"%@/schedule",kServerBase];
+    [self requestFromSCPRWithEndpoint:urlString
+                           andDisplay:display];
+}
+
 - (void)processResponseData:(NSDictionary *)content {
     
     NSDictionary *flags = @{};
