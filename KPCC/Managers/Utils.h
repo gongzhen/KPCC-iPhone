@@ -14,6 +14,7 @@
 + (NSString*)prettyStringFromRFCDateString:(NSString*)rawDate;
 + (NSString*)prettyStringFromRFCDate:(NSDate*)date;
 
++ (BOOL)pureNil:(id)object;
 + (BOOL)isRetina;
 
 @end

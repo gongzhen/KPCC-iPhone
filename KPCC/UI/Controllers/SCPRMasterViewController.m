@@ -214,8 +214,8 @@
                 scaleAnimation.toValue  = [NSValue valueWithCGSize:CGSizeMake(1.0f, 1.0f)];
             }
 
-            //scaleAnimation.springBounciness = 20.0f;
-            //scaleAnimation.springSpeed = 20.0f;
+            scaleAnimation.springBounciness = 2.0f;
+            scaleAnimation.springSpeed = 2.0f;
             if (!_seekRequested) {
                 [self.programImageView.layer pop_addAnimation:scaleAnimation forKey:@"scaleAnimation"];
             }
@@ -368,24 +368,14 @@
     if ([content objectAtIndex:0]) {
         NSDictionary *programDict = [content objectAtIndex:0];
 
-        /*Program *programObj = [Program insertNewObjectIntoContext:[[ContentManager shared] managedObjectContext]];
-
-        if ([programDict objectForKey:@"title"]) {
-            programObj.title = [programDict objectForKey:@"title"];
-        }
-
-        if ([[programDict objectForKey:@"program"] objectForKey:@"slug"]) {
-            programObj.program_slug = [[programDict objectForKey:@"program"] objectForKey:@"slug"];
-        }*/
         Program *programObj = [Program insertProgramWithDictionary:programDict inManagedObjectContext:[[ContentManager shared] managedObjectContext]];
-
         [self loadProgramImage:programObj.program_slug];
         [self updateUIWithProgram:programObj];
         [self updateNowPlayingInfoWithProgram:programObj];
 
         self.currentProgram = programObj;
 
-        // Save the Program to persistant storage.
+        // Save any programObj changes to CoreData.
         [[ContentManager shared] saveContext];
     }
 }

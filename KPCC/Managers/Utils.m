@@ -42,6 +42,19 @@
     return [dateFormatter stringFromDate:date];
 }
 
++ (BOOL)pureNil:(id)object {
+    if (!object) {
+        return YES;
+    }
+    if (object == nil) {
+        return YES;
+    }
+    if (object == [NSNull null]) {
+        return YES;
+    }
+    return NO;
+}
+
 + (BOOL)isRetina{
     return ([[UIScreen mainScreen] respondsToSelector:@selector(displayLinkWithTarget:selector:)] && ([UIScreen mainScreen].scale == 2.0))?1:0;
 }
