@@ -65,6 +65,7 @@ static NetworkManager *singleton = nil;
 - (void)requestFromSCPRWithEndpoint:(NSString *)endpoint andDisplay:(id<ContentProcessor>)display flags:(NSDictionary *)flags {
 
     AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+    manager.responseSerializer = [AFJSONResponseSerializer serializerWithReadingOptions: NSJSONReadingMutableContainers];
     [manager GET:endpoint parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
         
         if (responseObject) {
@@ -107,7 +108,7 @@ static NetworkManager *singleton = nil;
 }
 
 - (void)fetchAllProgramInformation:(id<ContentProcessor>)display {
-    NSString *urlString = [NSString stringWithFormat:@"%@/schedule",kServerBase];
+    NSString *urlString = [NSString stringWithFormat:@"%@/programs",kServerBase];
     [self requestFromSCPRWithEndpoint:urlString
                            andDisplay:display];
 }

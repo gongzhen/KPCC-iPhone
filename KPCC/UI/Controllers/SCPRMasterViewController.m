@@ -31,7 +31,7 @@
         if (event.subtype == UIEventSubtypeRemoteControlPlay ||
             event.subtype == UIEventSubtypeRemoteControlPause ||
             event.subtype == UIEventSubtypeRemoteControlTogglePlayPause) {
-            [self playOrPauseTapped:nil];
+            //[self playOrPauseTapped:nil];
         } else if (event.subtype == UIEventSubtypeRemoteControlPreviousTrack) {
             [self rewindFifteen];
         } else if (event.subtype == UIEventSubtypeRemoteControlNextTrack) {
@@ -67,6 +67,25 @@
     [self.blurView setDynamic:NO];
     
     //[self.navigationController.navigationBar.topItem setTitle:@"KPCC Live"];
+    MPRemoteCommandCenter *rcc = [MPRemoteCommandCenter sharedCommandCenter];
+
+    MPSkipIntervalCommand *skipBackwardIntervalCommand = [rcc skipBackwardCommand];
+    [skipBackwardIntervalCommand setEnabled:YES];
+    [skipBackwardIntervalCommand addTarget:self action:@selector(skipBackwardEvent:)];
+    skipBackwardIntervalCommand.preferredIntervals = @[@(15)];
+    
+    MPSkipIntervalCommand *skipForwardIntervalCommand = [rcc skipForwardCommand];
+    skipForwardIntervalCommand.preferredIntervals = @[@(15)];  // Max 99
+    [skipForwardIntervalCommand setEnabled:YES];
+    [skipForwardIntervalCommand addTarget:self action:@selector(skipForwardEvent:)];
+    
+    MPRemoteCommand *pauseCommand = [rcc pauseCommand];
+    [pauseCommand setEnabled:YES];
+    [pauseCommand addTarget:self action:@selector(playOrPauseTapped:)];
+    //
+    MPRemoteCommand *playCommand = [rcc playCommand];
+    [playCommand setEnabled:YES];
+    [playCommand addTarget:self action:@selector(playOrPauseTapped:)];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -77,6 +96,16 @@
     [self becomeFirstResponder];
     
     [self updateControlsAndUI:YES];
+}
+
+-(void)skipBackwardEvent: (MPSkipIntervalCommandEvent *)skipEvent {
+    NSLog(@"Skip backward by %f", skipEvent.interval);
+    [self rewindFifteen];
+}
+
+-(void)skipForwardEvent: (MPSkipIntervalCommandEvent *)skipEvent {
+    NSLog(@"Skip forward by %f", skipEvent.interval);
+    [self fastForwardFifteen];
 }
 
 - (IBAction)playOrPauseTapped:(id)sender {
@@ -170,33 +199,26 @@
 
         } completion:^(BOOL finished) {
 
-            CGAffineTransform t;// = CGAffineTransformMakeScale(1.2, 1.2);
-            double transformRate = 0.0;
-
             POPSpringAnimation *scaleAnimation = [POPSpringAnimation animationWithPropertyNamed:kPOPLayerScaleXY];
 
             if ([[AudioManager shared] isStreamPlaying] || [[AudioManager shared] isStreamBuffering]) {
                 [self.playPauseButton setImage:[UIImage imageNamed:@"btn_pause"] forState:UIControlStateNormal];
 
-                t = CGAffineTransformMakeScale(1.2, 1.2);
-                transformRate = 1.2;
-
                 scaleAnimation.fromValue  = [NSValue valueWithCGSize:CGSizeMake(1.0f, 1.0f)];
-                scaleAnimation.toValue  = [NSValue valueWithCGSize:CGSizeMake(1.2f, 1.2f)];//@(0.0f);
+                scaleAnimation.toValue  = [NSValue valueWithCGSize:CGSizeMake(1.2f, 1.2f)];
 
             } else {
                 [self.playPauseButton setImage:[UIImage imageNamed:@"btn_play_large"] forState:UIControlStateNormal];
 
-                t = CGAffineTransformMakeScale(1.0, 1.0);
-                transformRate = 1.0;
-
                 scaleAnimation.fromValue  = [NSValue valueWithCGSize:CGSizeMake(1.2f, 1.2f)];
-                scaleAnimation.toValue  = [NSValue valueWithCGSize:CGSizeMake(1.0f, 1.0f)];//@(0.0f);
+                scaleAnimation.toValue  = [NSValue valueWithCGSize:CGSizeMake(1.0f, 1.0f)];
             }
 
             //scaleAnimation.springBounciness = 20.0f;
             //scaleAnimation.springSpeed = 20.0f;
-            [self.programImageView.layer pop_addAnimation:scaleAnimation forKey:@"scaleAnimation"];
+            if (!_seekRequested) {
+                [self.programImageView.layer pop_addAnimation:scaleAnimation forKey:@"scaleAnimation"];
+            }
 
             [UIView animateWithDuration:0.1 animations:^{
                 [self.playPauseButton setAlpha:1.0];
@@ -222,50 +244,55 @@
 }
 
 - (void)setUIPositioning {
-    if (!_seekRequested) {
+
 
         if ([[AudioManager shared] isStreamPlaying] || [[AudioManager shared] isStreamBuffering]) {
             [self.horizDividerLine setAlpha:0.4];
             [self.liveRewindAltButton setAlpha:1.0];
             [self.backToLiveButton setAlpha:1.0];
             
-            [self.playPauseButton setFrame:CGRectMake(_playPauseButton.frame.origin.x,
-                                                      385.0,
-                                                      _playPauseButton.frame.size.width,
-                                                      _playPauseButton.frame.size.height)];
-            
-            [self.liveDescriptionLabel setFrame:CGRectMake(_liveDescriptionLabel.frame.origin.x,
-                                                           286.0,
-                                                           _liveDescriptionLabel.frame.size.width,
-                                                           _liveDescriptionLabel.frame.size.height)];
-            
-            [self.programTitleLabel setFrame:CGRectMake(_programTitleLabel.frame.origin.x,
-                                                        303.0,
-                                                        _programTitleLabel.frame.size.width,
-                                                        _programTitleLabel.frame.size.height)];
-            
+            if (!_seekRequested) {
+                [self.playPauseButton setFrame:CGRectMake(_playPauseButton.frame.origin.x,
+                                                          385.0,
+                                                          _playPauseButton.frame.size.width,
+                                                          _playPauseButton.frame.size.height)];
+                
+                [self.liveDescriptionLabel setFrame:CGRectMake(_liveDescriptionLabel.frame.origin.x,
+                                                               286.0,
+                                                               _liveDescriptionLabel.frame.size.width,
+                                                               _liveDescriptionLabel.frame.size.height)];
+                
+                [self.programTitleLabel setFrame:CGRectMake(_programTitleLabel.frame.origin.x,
+                                                            303.0,
+                                                            _programTitleLabel.frame.size.width,
+                                                            _programTitleLabel.frame.size.height)];
+            }
         } else {
             [self.rewindToShowStartButton setAlpha:1.0];
             [self.horizDividerLine setAlpha:0.0];
             
-            [self.playPauseButton setFrame:CGRectMake(_playPauseButton.frame.origin.x,
-                                                      225.0,
-                                                      _playPauseButton.frame.size.width,
-                                                      _playPauseButton.frame.size.height)];
+            if (!_seekRequested) {
+                [self.playPauseButton setFrame:CGRectMake(_playPauseButton.frame.origin.x,
+                                                          225.0,
+                                                          _playPauseButton.frame.size.width,
+                                                          _playPauseButton.frame.size.height)];
+                
+                [self.liveDescriptionLabel setFrame:CGRectMake(_liveDescriptionLabel.frame.origin.x,
+                                                               95.0,
+                                                               _liveDescriptionLabel.frame.size.width,
+                                                               _liveDescriptionLabel.frame.size.height)];
+                
+                [self.programTitleLabel setFrame:CGRectMake(_programTitleLabel.frame.origin.x,
+                                                            113.0,
+                                                            _programTitleLabel.frame.size.width,
+                                                            _programTitleLabel.frame.size.height)];
+            }
             
-            [self.liveDescriptionLabel setFrame:CGRectMake(_liveDescriptionLabel.frame.origin.x,
-                                                           95.0,
-                                                           _liveDescriptionLabel.frame.size.width,
-                                                           _liveDescriptionLabel.frame.size.height)];
             
-            [self.programTitleLabel setFrame:CGRectMake(_programTitleLabel.frame.origin.x,
-                                                        113.0,
-                                                        _programTitleLabel.frame.size.width,
-                                                        _programTitleLabel.frame.size.height)];
         }
-    } else {
-        _seekRequested = NO;
-    }
+    //} else {
+        //_seekRequested = NO;
+    //}
 }
 
 - (void)updateUIWithProgram:(Program*)program {
@@ -324,6 +351,7 @@
     } else {
         [self.liveDescriptionLabel setText:@"LIVE"];
     }
+
 }
 
 
@@ -333,6 +361,8 @@
     if ([content count] == 0) {
         return;
     }
+    
+    // NSLog(@"content %@", content);
 
     // Create Program and insert into managed object context
     if ([content objectAtIndex:0]) {

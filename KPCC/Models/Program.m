@@ -7,6 +7,7 @@
 //
 
 #import "Program.h"
+#import "Utils.h"
 
 
 @implementation Program
@@ -48,28 +49,27 @@
     return nil;
 }
 
-+ (instancetype)findOrCreateProgram:(NSDictionary *)dictionary inManagedObjectContext:(NSManagedObjectContext *)context {
-
-    if ([[dictionary objectForKey:@"program"] objectForKey:@"slug"]) {
-        [self fetchProgramWithSlug:[[dictionary objectForKey:@"program"] objectForKey:@"slug"] fromManagedObjectContext:context];
-    }
-    
-
-    return nil;
-}
-
 + (instancetype)insertProgramWithDictionary:(NSDictionary *)dictionary inManagedObjectContext:(NSManagedObjectContext *)context {
     
     Program* programObj = nil;
     
-    NSArray *storedRecords = [self fetchAllProgramsInContext:context];
+    if ([dictionary objectForKey:@"program"] != [NSNull null] && [[dictionary objectForKey:@"program"] objectForKey:@"slug"] != [NSNull null]) {
+        programObj = [self fetchProgramWithSlug:[[dictionary objectForKey:@"program"] objectForKey:@"slug"] fromManagedObjectContext:context];
+    }
+
+    if (programObj == nil) {
+        NSLog(@"Create new Program with Dictionary");
+        programObj = (Program *)[NSEntityDescription insertNewObjectForEntityForName:[self entityName] inManagedObjectContext:context];
+    }
+
+    /*NSArray *storedRecords = [self fetchAllProgramsInContext:context];
     if ([storedRecords count] != 0) {
         NSPredicate *predicate = [NSPredicate predicateWithFormat:@"program_slug LIKE %@", [[dictionary objectForKey:@"program"] objectForKey:@"slug"]];
         NSArray *matchedArray = [storedRecords filteredArrayUsingPredicate:predicate];
 
         if ([matchedArray count] > 0) {
             // Update existing Program
-            NSLog(@"Update Program");
+            NSLog(@"Update Program - %@", [matchedArray objectAtIndex:0]);
             programObj = [matchedArray objectAtIndex:0];
         } else {
             // Creating new Program
@@ -81,7 +81,7 @@
         NSLog(@"Importing initial");
         
         programObj = (Program *)[NSEntityDescription insertNewObjectForEntityForName:[self entityName] inManagedObjectContext:context];
-    }
+    }*/
 
     return [self updateProgramObject:programObj withDictionary:dictionary];
 }
@@ -92,22 +92,32 @@
     }
 
     NSArray *storedRecords = [self fetchAllProgramsInContext:context];
+    
+    NSLog(@"Inserting/Updating %ld Programs into CoreData", (unsigned long)[array count]);
+    NSLog(@"Already %ld Programs exist in CoreData", (unsigned long)[storedRecords count]);
+    
     if ([storedRecords count] != 0) {
 
         for (NSDictionary *program in array) {
-            NSPredicate *predicate = [NSPredicate predicateWithFormat:@"program_slug LIKE %@", [[program objectForKey:@"program"] objectForKey:@"slug"]];
+            NSPredicate *predicate = [NSPredicate predicateWithFormat:@"program_slug LIKE %@", [program objectForKey:@"slug"]];
             NSArray *matchedArray = [storedRecords filteredArrayUsingPredicate:predicate];
+            NSLog(@"Matched Array size %ld", (unsigned long)[matchedArray count]);
 
             Program* programObj = nil;
+            //programObj = [self fetchProgramWithSlug:[program objectForKey:@"slug"] fromManagedObjectContext:context];
 
-            if ([matchedArray count] > 0) {
+            if ([matchedArray count] == 1) {
                 // Update existing Program
-                NSLog(@"Update Program");
+                NSLog(@"Update Program - %@", [[matchedArray objectAtIndex:0] program_slug]);
                 programObj = [matchedArray objectAtIndex:0];
+                [self updateProgramObject:programObj withDictionary:program];
+            } else if ([matchedArray count] > 1) {
+                NSLog(@"UH OH! More than one Program for - %@ - exists in CoreData", [[matchedArray objectAtIndex:0] program_slug]);
             } else {
                 // Creating new Program
-                NSLog(@"Create new Program");
+                NSLog(@"Create new Program - %@",  [program objectForKey:@"slug"]);
                 programObj = (Program *)[NSEntityDescription insertNewObjectForEntityForName:[self entityName] inManagedObjectContext:context];
+                [self updateProgramObject:programObj withDictionary:program];
             }
         }
     } else {
@@ -123,13 +133,48 @@
 
 + (instancetype)updateProgramObject:(Program *)program withDictionary:(NSDictionary *)dictionary {
 
-    if ([dictionary objectForKey:@"title"]) {
-        program.title = [dictionary objectForKey:@"title"];
-    }
+    /**
+     * We have to handle Program dictionaries in two possible forms at this point.
+     * One in the form returned from the /schedule endpoint, and one in the form
+     * from the /programs endpoint.
+     * See SCPRv4 API docs for details - https://github.com/SCPR/api-docs/tree/master/KPCC/v2
+     */
+    if ([dictionary objectForKey:@"program"] != [NSNull null]) {
+        if ([dictionary objectForKey:@"title"] != [NSNull null]) {
+            program.title = [dictionary objectForKey:@"title"];
+        }
 
-    if ([[dictionary objectForKey:@"program"] objectForKey:@"slug"]) {
-        program.program_slug = [[dictionary objectForKey:@"program"] objectForKey:@"slug"];
+        if ([[dictionary objectForKey:@"program"] objectForKey:@"slug"] != [NSNull null]) {
+            program.program_slug = [[dictionary objectForKey:@"program"] objectForKey:@"slug"];
+        }
+
+        if ([dictionary objectForKey:@"starts_at"] != [NSNull null]) {
+            program.starts_at = [Utils dateFromRFCString:[dictionary objectForKey:@"starts_at"]];
+        }
+
+        if ([dictionary objectForKey:@"ends_at"] != [NSNull null]) {
+            program.ends_at = [Utils dateFromRFCString:[dictionary objectForKey:@"ends_at"]];
+        }
+
+        if ([dictionary objectForKey:@"public_url"] != [NSNull null]) {
+            program.public_url = [dictionary objectForKey:@"public_url"];
+        }
+
+    } else {
+        if ([dictionary objectForKey:@"title"] != [NSNull null]) {
+            program.title = [dictionary objectForKey:@"title"];
+        }
+
+        if ([dictionary objectForKey:@"slug"] != [NSNull null]) {
+            program.program_slug = [dictionary objectForKey:@"slug"];
+        }
+        
+        if ([dictionary objectForKey:@"public_url"] != [NSNull null]) {
+            program.public_url = [dictionary objectForKey:@"public_url"];
+        }
     }
+    
+    // TODO: Add more data fields as necessary.
 
     return program;
 }
@@ -185,7 +230,7 @@
     NSEntityDescription *entityDescription = [NSEntityDescription entityForName:[self entityName] inManagedObjectContext:context];
     NSFetchRequest *request = [[NSFetchRequest alloc] init];
     [request setEntity:entityDescription];
-    [request setPredicate:[NSPredicate predicateWithFormat:@"program_slug LIKE %@", slug]];
+    [request setPredicate:[NSPredicate predicateWithFormat:@"program_slug = %@", slug]];
 
     NSError *error = nil;
     NSArray *result = [context executeFetchRequest:request error:&error];
@@ -201,7 +246,6 @@
         return (Program *)[result objectAtIndex:0];
     }
 
-    // Not found
     return nil;
 }
 
