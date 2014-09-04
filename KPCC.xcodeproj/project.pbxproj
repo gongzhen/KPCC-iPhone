@@ -9,6 +9,12 @@
 /* Begin PBXBuildFile section */
 		52D91F2F19A2537400B8A02F /* program_image_urls.json in Resources */ = {isa = PBXBuildFile; fileRef = 52D91F2E19A2537400B8A02F /* program_image_urls.json */; };
 		52D91F3019A2537400B8A02F /* program_image_urls.json in Resources */ = {isa = PBXBuildFile; fileRef = 52D91F2E19A2537400B8A02F /* program_image_urls.json */; };
+		52E68B7D19B8EEA60028F8AE /* PulldownMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = 52E68B7C19B8EEA60028F8AE /* PulldownMenu.m */; };
+		52E68B7E19B8EEA60028F8AE /* PulldownMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = 52E68B7C19B8EEA60028F8AE /* PulldownMenu.m */; };
+		52E68B8219B8F2D10028F8AE /* SCPRNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 52E68B8019B8F2D10028F8AE /* SCPRNavigationController.m */; };
+		52E68B8319B8F2D10028F8AE /* SCPRNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 52E68B8019B8F2D10028F8AE /* SCPRNavigationController.m */; };
+		52E68B8419B8F2D10028F8AE /* SCPRNavigationController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 52E68B8119B8F2D10028F8AE /* SCPRNavigationController.xib */; };
+		52E68B8519B8F2D10028F8AE /* SCPRNavigationController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 52E68B8119B8F2D10028F8AE /* SCPRNavigationController.xib */; };
 		760E3C48194FB54600D86D91 /* DataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 760E3C46194FB54600D86D91 /* DataModel.xcdatamodeld */; };
 		760E3C49194FB54600D86D91 /* DataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 760E3C46194FB54600D86D91 /* DataModel.xcdatamodeld */; };
 		760E3C4C194FB61B00D86D91 /* Program.m in Sources */ = {isa = PBXBuildFile; fileRef = 760E3C4B194FB61B00D86D91 /* Program.m */; };
@@ -150,6 +156,11 @@
 /* Begin PBXFileReference section */
 		3D27774292D34CDA90CFAEC3 /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = "<group>"; };
 		52D91F2E19A2537400B8A02F /* program_image_urls.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = program_image_urls.json; sourceTree = "<group>"; };
+		52E68B7B19B8EEA60028F8AE /* PulldownMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PulldownMenu.h; sourceTree = "<group>"; };
+		52E68B7C19B8EEA60028F8AE /* PulldownMenu.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PulldownMenu.m; sourceTree = "<group>"; };
+		52E68B7F19B8F2D10028F8AE /* SCPRNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCPRNavigationController.h; sourceTree = "<group>"; };
+		52E68B8019B8F2D10028F8AE /* SCPRNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SCPRNavigationController.m; sourceTree = "<group>"; };
+		52E68B8119B8F2D10028F8AE /* SCPRNavigationController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SCPRNavigationController.xib; sourceTree = "<group>"; };
 		760E3C47194FB54600D86D91 /* DataModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = DataModel.xcdatamodel; sourceTree = "<group>"; };
 		760E3C4A194FB61B00D86D91 /* Program.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Program.h; sourceTree = "<group>"; };
 		760E3C4B194FB61B00D86D91 /* Program.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Program.m; sourceTree = "<group>"; };
@@ -300,6 +311,15 @@
 			path = json;
 			sourceTree = "<group>";
 		};
+		52E68B7A19B8EEA60028F8AE /* iOSPullDownMenu */ = {
+			isa = PBXGroup;
+			children = (
+				52E68B7B19B8EEA60028F8AE /* PulldownMenu.h */,
+				52E68B7C19B8EEA60028F8AE /* PulldownMenu.m */,
+			);
+			path = iOSPullDownMenu;
+			sourceTree = "<group>";
+		};
 		760E3C45194FB4F700D86D91 /* Models */ = {
 			isa = PBXGroup;
 			children = (
@@ -374,6 +394,9 @@
 				76EF5E86193E8BED00568A9D /* SCPRHomeViewController.swift */,
 				768C064619958FD900F829EB /* SCPRMasterViewController.h */,
 				768C064719958FD900F829EB /* SCPRMasterViewController.m */,
+				52E68B7F19B8F2D10028F8AE /* SCPRNavigationController.h */,
+				52E68B8019B8F2D10028F8AE /* SCPRNavigationController.m */,
+				52E68B8119B8F2D10028F8AE /* SCPRNavigationController.xib */,
 			);
 			name = "View Controllers";
 			path = Controllers;
@@ -573,6 +596,7 @@
 		76E75F1C18CE4682008E3197 /* ThirdParty */ = {
 			isa = PBXGroup;
 			children = (
+				52E68B7A19B8EEA60028F8AE /* iOSPullDownMenu */,
 				76349D1418D3B53D0027C3B8 /* Flurry */,
 				76349CA118D372B30027C3B8 /* TestFlight */,
 			);
@@ -706,6 +730,7 @@
 				768C067A199590CC00F829EB /* FreigSanProBookIt.otf in Resources */,
 				768C0680199590CC00F829EB /* FreigSanProMed.otf in Resources */,
 				768C0686199590CC00F829EB /* FreigSanProSemIt.otf in Resources */,
+				52E68B8519B8F2D10028F8AE /* SCPRNavigationController.xib in Resources */,
 				7685BD5F194BBCB90075BB16 /* pauseButton@2x.png in Resources */,
 				76349D0C18D388C80027C3B8 /* Images.xcassets in Resources */,
 				768C06591995905D00F829EB /* btn_pause@2x.png in Resources */,
@@ -756,6 +781,7 @@
 				768C06541995905D00F829EB /* btn_live_rewind_small@2x.png in Resources */,
 				76EF5E8A193E8D6B00568A9D /* Storyboard.storyboard in Resources */,
 				76B9A9C118F609FF007A6D8C /* Wood_Crash.mp3 in Resources */,
+				52E68B8419B8F2D10028F8AE /* SCPRNavigationController.xib in Resources */,
 				761CC5A4195A2878006A6C7C /* Testflight-Info.plist in Resources */,
 				768C06521995905D00F829EB /* btn_live_rewind_small.png in Resources */,
 				768C066F199590CC00F829EB /* FreigSanProBlk.otf in Resources */,
@@ -819,6 +845,7 @@
 				76658ABA18DCB51000026176 /* NSDate+Helper.m in Sources */,
 				76B9A9B718EF79F6007A6D8C /* SCPRFooterView.m in Sources */,
 				76349CF718D388C80027C3B8 /* SCPRAppDelegate.m in Sources */,
+				52E68B8319B8F2D10028F8AE /* SCPRNavigationController.m in Sources */,
 				76349CF818D388C80027C3B8 /* main.m in Sources */,
 				76349CF918D388C80027C3B8 /* AudioManager.m in Sources */,
 				760E3C4D194FB61B00D86D91 /* Program.m in Sources */,
@@ -827,6 +854,7 @@
 				760EA99319521E98009B504E /* AVPlayer+Additions.m in Sources */,
 				768C064919958FDA00F829EB /* SCPRMasterViewController.m in Sources */,
 				7695FD16195E299000F63DE9 /* SCPRNavigationBar.m in Sources */,
+				52E68B7E19B8EEA60028F8AE /* PulldownMenu.m in Sources */,
 				760EA9971953724E009B504E /* ContentManager.m in Sources */,
 				769FD69E18EB6F4E00AAF1F4 /* SCPRRootViewController.m in Sources */,
 				76349D2218D8F8A30027C3B8 /* Reachability.m in Sources */,
@@ -845,6 +873,7 @@
 				76658AB918DCB51000026176 /* NSDate+Helper.m in Sources */,
 				76B9A9B618EF79F6007A6D8C /* SCPRFooterView.m in Sources */,
 				76A308D718C8FB940065D4B1 /* SCPRAppDelegate.m in Sources */,
+				52E68B8219B8F2D10028F8AE /* SCPRNavigationController.m in Sources */,
 				76A308D318C8FB940065D4B1 /* main.m in Sources */,
 				76A3090418C93C880065D4B1 /* AudioManager.m in Sources */,
 				760E3C4C194FB61B00D86D91 /* Program.m in Sources */,
@@ -853,6 +882,7 @@
 				760EA99219521E98009B504E /* AVPlayer+Additions.m in Sources */,
 				768C064819958FDA00F829EB /* SCPRMasterViewController.m in Sources */,
 				7695FD15195E299000F63DE9 /* SCPRNavigationBar.m in Sources */,
+				52E68B7D19B8EEA60028F8AE /* PulldownMenu.m in Sources */,
 				760EA9961953724E009B504E /* ContentManager.m in Sources */,
 				769FD69D18EB6F4E00AAF1F4 /* SCPRRootViewController.m in Sources */,
 				76349D2118D8F8A30027C3B8 /* Reachability.m in Sources */,
