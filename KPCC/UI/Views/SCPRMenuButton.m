@@ -20,6 +20,7 @@
 - (void)animateToClose;
 - (void)setup;
 - (void)removeAllAnimations;
+- (void)pullMenuOpened:(NSNotification*)notification;
 @end
 
 @implementation SCPRMenuButton
@@ -164,12 +165,27 @@
     [self addTarget:self
              action:@selector(touchUpInsideHandler:)
    forControlEvents:UIControlEventTouchUpInside];
+    
+    // Add observers for pull down menu open/close to update button state.
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(animateToClose)
+                                                 name:@"pull_down_menu_opened"
+                                               object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(animateToMenu)
+                                                 name:@"pull_down_menu_closed"
+                                               object:nil];
 }
 
 - (void)removeAllAnimations {
     [self.topLayer pop_removeAllAnimations];
     [self.middleLayer pop_removeAllAnimations];
     [self.bottomLayer pop_removeAllAnimations];
+}
+
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 @end

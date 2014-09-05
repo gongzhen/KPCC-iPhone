@@ -19,22 +19,21 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
-    
+
     pulldownMenu = [[PulldownMenu alloc] initWithNavigationController:self];
     [self.view insertSubview:pulldownMenu belowSubview:self.navigationBar];
-    
+
     [pulldownMenu insertButton:@"Menu Item 1"];
     [pulldownMenu insertButton:@"Menu Item 2"];
     [pulldownMenu insertButton:@"Menu Item 3"];
-    
+
     pulldownMenu.delegate = self;
-    
+
     [pulldownMenu loadMenu];
-    
-    
 
     for (UIViewController* viewController in self.viewControllers){
         // You need to do this because the push is not called if you created this controller as part of the storyboard
+        NSLog(@"adding button to vc : %@", viewController.title);
         [self addButton:viewController.navigationItem];
     }
 }
@@ -47,10 +46,14 @@
 -(void) addButton:(UINavigationItem *)item{
     if (item.leftBarButtonItem == nil){
         SCPRMenuButton *button = [SCPRMenuButton button];
-        //[button addTarget:self action:@selector(animateTitleLabel:) forControlEvents:UIControlEventTouchUpInside];
+        [button addTarget:self action:@selector(menuPressed:) forControlEvents:UIControlEventTouchUpInside];
         //button.tintColor = [UIColor blueColor];
         item.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:button];
     }
+}
+
+- (void)menuPressed:(id)sender {
+    [pulldownMenu animateDropDown];
 }
 
 
@@ -63,9 +66,14 @@
 -(void)pullDownAnimated:(BOOL)open {
     if (open) {
         NSLog(@"Pull down menu open!");
-        //self.navigationItem.leftBarButtonItem
+        //dispatch_async(dispatch_get_main_queue(), ^{
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"pull_down_menu_opened"
+                                                                object:nil];
+        //});
     } else {
         NSLog(@"Pull down menu closed!");
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"pull_down_menu_closed"
+                                                            object:nil];
     }
 }
 
