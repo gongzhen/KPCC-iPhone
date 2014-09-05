@@ -86,11 +86,11 @@
       [UIColor whiteColor], NSForegroundColorAttributeName,
       [UIFont fontWithName:@"FreightSansProMedium-Regular" size:23.0f], NSFontAttributeName, nil]];
     
-    [[UIBarButtonItem appearanceWhenContainedIn:[UINavigationBar class], nil]
+    /*[[UIBarButtonItem appearanceWhenContainedIn:[UINavigationBar class], nil]
     setTitleTextAttributes: @{NSForegroundColorAttributeName:[UIColor whiteColor],
                               NSFontAttributeName:[UIFont fontWithName:@"FreightSansProLight-Regular" size:16.0f]
                               }
-     forState:UIControlStateNormal];
+     forState:UIControlStateNormal];*/
 }
 
 

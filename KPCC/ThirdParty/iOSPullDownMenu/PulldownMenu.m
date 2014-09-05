@@ -35,9 +35,9 @@
     animationDuration = 0.3f;
     topMarginPortrait = 0;
     topMarginLandscape = 0;
-    cellColor = [UIColor grayColor];
+    cellColor = [UIColor clearColor];
     cellSelectedColor = [UIColor blackColor];
-    cellFont = [UIFont fontWithName:@"GillSans-Bold" size:19.0f];
+    cellFont = [UIFont fontWithName:@"FreightSansProMedium-Regular" size:19.0f];
     cellTextColor = [UIColor whiteColor];
     cellSelectionStyle = UITableViewCellSelectionStyleDefault;
     
@@ -97,14 +97,22 @@
     
     fullyOpen = NO;
     
+    blurView = [[FXBlurView alloc] initWithFrame:CGRectMake(0, 0, 320, tableHeight+handleHeight)];
+    [blurView setTintColor:[UIColor clearColor]];
+    [blurView setBlurRadius:10.0f];
+    [blurView setDynamic:YES];
+    [blurView setAlpha:0.5];
+    [self addSubview:blurView];
+    
     menuList = [[UITableView alloc] init];
     [menuList setRowHeight:cellHeight];
     [menuList setDataSource:self];
     [menuList setDelegate:self];
+    [menuList setBackgroundColor:[UIColor clearColor]];
     [self addSubview:menuList];
     
     handle = [[UIView alloc] init];
-    [handle setBackgroundColor:[UIColor blackColor]];
+    [handle setBackgroundColor:[UIColor clearColor]];
     
     [self addSubview:handle];
     

@@ -7,7 +7,7 @@
 //
 
 #import "SCPRMasterViewController.h"
-
+#import "SCPRMenuButton.h"
 #import "AFNetworking.h"
 #import "UIImageView+AFNetworking.h"
 
@@ -86,6 +86,13 @@
     MPRemoteCommand *playCommand = [rcc playCommand];
     [playCommand setEnabled:YES];
     [playCommand addTarget:self action:@selector(playOrPauseTapped:)];
+    
+    SCPRMenuButton *button = [SCPRMenuButton button];
+    //[button addTarget:self action:@selector(animateTitleLabel:) forControlEvents:UIControlEventTouchUpInside];
+    //button.tintColor = [UIColor blueColor];
+    UIBarButtonItem *barButton = [[UIBarButtonItem alloc] initWithCustomView:button];
+    
+//    self.navigationItem.rightBarButtonItem = barButton;
 }
 
 - (void)viewDidAppear:(BOOL)animated {

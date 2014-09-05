@@ -1,47 +1,58 @@
 //
-//  SCPRNavigationBar.m
+//  SCPRMenuButton.m
 //  KPCC
 //
-//  Created by John Meeker on 6/27/14.
+//  Created by John Meeker on 9/4/14.
 //  Copyright (c) 2014 SCPR. All rights reserved.
 //
 
-#import "SCPRNavigationBar.h"
+#import "SCPRMenuButton.h"
 #import <POP/POP.h>
 
-@interface SCPRNavigationBar()
+@interface SCPRMenuButton()
 @property(nonatomic) CALayer *topLayer;
 @property(nonatomic) CALayer *middleLayer;
 @property(nonatomic) CALayer *bottomLayer;
 @property(nonatomic) BOOL showMenu;
 
-- (void)touchUpInsideHandler:(SCPRNavigationBar *)sender;
+- (void)touchUpInsideHandler:(SCPRMenuButton *)sender;
 - (void)animateToMenu;
 - (void)animateToClose;
 - (void)setup;
 - (void)removeAllAnimations;
 @end
 
-@implementation SCPRNavigationBar
+@implementation SCPRMenuButton
 
-- (instancetype)initWithCoder:(NSCoder *)aDecoder
-{
-    self = [super initWithCoder:aDecoder];
++ (instancetype)button {
+    return [self buttonWithOrigin:CGPointZero];
+}
+
++ (instancetype)buttonWithOrigin:(CGPoint)origin {
+    return [[self alloc] initWithFrame:CGRectMake(origin.x,
+                                                  origin.y,
+                                                  24,
+                                                  17)];
+}
+
+- (id)initWithFrame:(CGRect)frame {
+    self = [super initWithFrame:frame];
     if (self) {
-        // Initialization code
-        //[self setup];
+        [self setup];
     }
-    
     return self;
 }
 
-- (void)didSwipeDown {
-    NSLog(@"didSwipeDown");
+#pragma mark - Instance methods
+
+- (void)tintColorDidChange {
+    CGColorRef color = [self.tintColor CGColor];
+    self.topLayer.backgroundColor = color;
+    self.middleLayer.backgroundColor = color;
+    self.bottomLayer.backgroundColor = color;
 }
 
-- (IBAction)handleTap {
-    NSLog(@"didTap");
-}
+#pragma mark - Private Instance methods
 
 - (void)animateToMenu {
     [self removeAllAnimations];
@@ -54,13 +65,13 @@
     
     POPBasicAnimation *positionTopAnimation = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerPosition];
     positionTopAnimation.duration = 0.3;
-    positionTopAnimation.toValue = [NSValue valueWithCGPoint:CGPointMake(CGRectGetMidX(self.bounds) + 62.0f,
-                                                                         roundf(CGRectGetMinY(self.bounds)+(height/2)) + 13.0f )];
+    positionTopAnimation.toValue = [NSValue valueWithCGPoint:CGPointMake(CGRectGetMidX(self.bounds),
+                                                                         roundf(CGRectGetMinY(self.bounds)+(height/2)))];
     
     POPBasicAnimation *positionBottomAnimation = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerPosition];
-    positionBottomAnimation.duration = 0.3;
-    positionBottomAnimation.toValue = [NSValue valueWithCGPoint:CGPointMake(CGRectGetMidX(self.bounds) + 62.0f,
-                                                                            roundf(CGRectGetMaxY(self.bounds)-(height/2)) - 13.0f )];
+    positionTopAnimation.duration = 0.3;
+    positionBottomAnimation.toValue = [NSValue valueWithCGPoint:CGPointMake(CGRectGetMidX(self.bounds),
+                                                                            roundf(CGRectGetMaxY(self.bounds)-(height/2)))];
     
     POPSpringAnimation *transformTopAnimation = [POPSpringAnimation animationWithPropertyNamed:kPOPLayerRotation];
     transformTopAnimation.toValue = @(0);
@@ -83,7 +94,7 @@
 
 - (void)animateToClose {
     [self removeAllAnimations];
-    CGPoint center = CGPointMake(CGRectGetMidX(self.bounds) + 60.0f, CGRectGetMidY(self.bounds));
+    CGPoint center = CGPointMake(CGRectGetMidX(self.bounds), CGRectGetMidY(self.bounds));
     
     POPBasicAnimation *fadeAnimation = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
     fadeAnimation.toValue = @0;
@@ -116,7 +127,7 @@
     [self.bottomLayer pop_addAnimation:transformBottomAnimation forKey:@"rotateBottomAnimation"];
 }
 
-- (void)touchUpInsideHandler:(SCPRNavigationBar *)sender {
+- (void)touchUpInsideHandler:(SCPRMenuButton *)sender {
     if (self.showMenu) {
         [self animateToMenu];
     } else {
@@ -128,22 +139,21 @@
 - (void)setup {
     CGFloat height = 2.f;
     CGFloat width = CGRectGetWidth(self.bounds);
-    CGFloat cornerRadius =  0.5f;
+    CGFloat cornerRadius =  1.f;
     CGColorRef color = [self.tintColor CGColor];
-    CGRect bounds = self.topItem.titleView.bounds;
-
+    
     self.topLayer = [CALayer layer];
-    self.topLayer.frame = CGRectMake(CGRectGetMidX(self.bounds) + 54.0f, CGRectGetMinY(self.bounds) + 13.0f, 16.0f, height);
+    self.topLayer.frame = CGRectMake(0, CGRectGetMinY(self.bounds), width, height);
     self.topLayer.cornerRadius = cornerRadius;
     self.topLayer.backgroundColor = color;
-
+    
     self.middleLayer = [CALayer layer];
-    self.middleLayer.frame = CGRectMake(CGRectGetMidX(self.bounds) + 54.0f, CGRectGetMidY(self.bounds)-(height/2), 16.0f, height);
+    self.middleLayer.frame = CGRectMake(0, CGRectGetMidY(self.bounds)-(height/2), width, height);
     self.middleLayer.cornerRadius = cornerRadius;
     self.middleLayer.backgroundColor = color;
-
+    
     self.bottomLayer = [CALayer layer];
-    self.bottomLayer.frame = CGRectMake(CGRectGetMidX(self.bounds) + 54.0f, CGRectGetMaxY(self.bounds)-height - 13.0f, 16.0f, height);
+    self.bottomLayer.frame = CGRectMake(0, CGRectGetMaxY(self.bounds)-height, width, height);
     self.bottomLayer.cornerRadius = cornerRadius;
     self.bottomLayer.backgroundColor = color;
     
@@ -151,17 +161,9 @@
     [self.layer addSublayer:self.middleLayer];
     [self.layer addSublayer:self.bottomLayer];
     
-    UITapGestureRecognizer *tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(touchUpInsideHandler:)];
-    [tapRecognizer setNumberOfTapsRequired:1];
-//    [self addGestureRecognizer:tapRecognizer];
-    
-    
-    UISwipeGestureRecognizer *swipeDown;
-    swipeDown = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(didSwipeDown)];
-    [swipeDown setDirection:UISwipeGestureRecognizerDirectionDown];
-    [swipeDown setNumberOfTouchesRequired:1];
-    [swipeDown setEnabled:YES];
-    [self addGestureRecognizer:swipeDown];
+    [self addTarget:self
+             action:@selector(touchUpInsideHandler:)
+   forControlEvents:UIControlEventTouchUpInside];
 }
 
 - (void)removeAllAnimations {

@@ -15,6 +15,8 @@
 		52E68B8319B8F2D10028F8AE /* SCPRNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 52E68B8019B8F2D10028F8AE /* SCPRNavigationController.m */; };
 		52E68B8419B8F2D10028F8AE /* SCPRNavigationController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 52E68B8119B8F2D10028F8AE /* SCPRNavigationController.xib */; };
 		52E68B8519B8F2D10028F8AE /* SCPRNavigationController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 52E68B8119B8F2D10028F8AE /* SCPRNavigationController.xib */; };
+		52E68B8819B919300028F8AE /* SCPRMenuButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 52E68B8719B919300028F8AE /* SCPRMenuButton.m */; };
+		52E68B8919B919300028F8AE /* SCPRMenuButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 52E68B8719B919300028F8AE /* SCPRMenuButton.m */; };
 		760E3C48194FB54600D86D91 /* DataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 760E3C46194FB54600D86D91 /* DataModel.xcdatamodeld */; };
 		760E3C49194FB54600D86D91 /* DataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 760E3C46194FB54600D86D91 /* DataModel.xcdatamodeld */; };
 		760E3C4C194FB61B00D86D91 /* Program.m in Sources */ = {isa = PBXBuildFile; fileRef = 760E3C4B194FB61B00D86D91 /* Program.m */; };
@@ -161,6 +163,9 @@
 		52E68B7F19B8F2D10028F8AE /* SCPRNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCPRNavigationController.h; sourceTree = "<group>"; };
 		52E68B8019B8F2D10028F8AE /* SCPRNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SCPRNavigationController.m; sourceTree = "<group>"; };
 		52E68B8119B8F2D10028F8AE /* SCPRNavigationController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SCPRNavigationController.xib; sourceTree = "<group>"; };
+		52E68B8619B919300028F8AE /* SCPRMenuButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCPRMenuButton.h; sourceTree = "<group>"; };
+		52E68B8719B919300028F8AE /* SCPRMenuButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SCPRMenuButton.m; sourceTree = "<group>"; };
+		52E68B8A19B927920028F8AE /* DataModel 2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "DataModel 2.xcdatamodel"; sourceTree = "<group>"; };
 		760E3C47194FB54600D86D91 /* DataModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = DataModel.xcdatamodel; sourceTree = "<group>"; };
 		760E3C4A194FB61B00D86D91 /* Program.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Program.h; sourceTree = "<group>"; };
 		760E3C4B194FB61B00D86D91 /* Program.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Program.m; sourceTree = "<group>"; };
@@ -409,6 +414,8 @@
 				76B9A9B518EF79F6007A6D8C /* SCPRFooterView.m */,
 				7695FD13195E299000F63DE9 /* SCPRNavigationBar.h */,
 				7695FD14195E299000F63DE9 /* SCPRNavigationBar.m */,
+				52E68B8619B919300028F8AE /* SCPRMenuButton.h */,
+				52E68B8719B919300028F8AE /* SCPRMenuButton.m */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -852,6 +859,7 @@
 				760E3C49194FB54600D86D91 /* DataModel.xcdatamodeld in Sources */,
 				76177298195B593400F69EFC /* SCPRHomeViewModel.m in Sources */,
 				760EA99319521E98009B504E /* AVPlayer+Additions.m in Sources */,
+				52E68B8919B919300028F8AE /* SCPRMenuButton.m in Sources */,
 				768C064919958FDA00F829EB /* SCPRMasterViewController.m in Sources */,
 				7695FD16195E299000F63DE9 /* SCPRNavigationBar.m in Sources */,
 				52E68B7E19B8EEA60028F8AE /* PulldownMenu.m in Sources */,
@@ -880,6 +888,7 @@
 				760E3C48194FB54600D86D91 /* DataModel.xcdatamodeld in Sources */,
 				76177297195B593400F69EFC /* SCPRHomeViewModel.m in Sources */,
 				760EA99219521E98009B504E /* AVPlayer+Additions.m in Sources */,
+				52E68B8819B919300028F8AE /* SCPRMenuButton.m in Sources */,
 				768C064819958FDA00F829EB /* SCPRMasterViewController.m in Sources */,
 				7695FD15195E299000F63DE9 /* SCPRNavigationBar.m in Sources */,
 				52E68B7D19B8EEA60028F8AE /* PulldownMenu.m in Sources */,
@@ -1209,6 +1218,7 @@
 		760E3C46194FB54600D86D91 /* DataModel.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				52E68B8A19B927920028F8AE /* DataModel 2.xcdatamodel */,
 				760E3C47194FB54600D86D91 /* DataModel.xcdatamodel */,
 			);
 			currentVersion = 760E3C47194FB54600D86D91 /* DataModel.xcdatamodel */;

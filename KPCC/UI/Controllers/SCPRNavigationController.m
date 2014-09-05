@@ -7,6 +7,8 @@
 //
 
 #import "SCPRNavigationController.h"
+#import "SCPRMenuButton.h"
+#import <POP/POP.h>
 
 @interface SCPRNavigationController ()
 
@@ -28,6 +30,27 @@
     pulldownMenu.delegate = self;
     
     [pulldownMenu loadMenu];
+    
+    
+
+    for (UIViewController* viewController in self.viewControllers){
+        // You need to do this because the push is not called if you created this controller as part of the storyboard
+        [self addButton:viewController.navigationItem];
+    }
+}
+
+-(void) pushViewController:(UIViewController *)viewController animated:(BOOL)animated{
+    [self addButton:viewController.navigationItem];
+    [super pushViewController:viewController animated:animated];
+}
+
+-(void) addButton:(UINavigationItem *)item{
+    if (item.leftBarButtonItem == nil){
+        SCPRMenuButton *button = [SCPRMenuButton button];
+        //[button addTarget:self action:@selector(animateTitleLabel:) forControlEvents:UIControlEventTouchUpInside];
+        //button.tintColor = [UIColor blueColor];
+        item.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:button];
+    }
 }
 
 
@@ -40,6 +63,7 @@
 -(void)pullDownAnimated:(BOOL)open {
     if (open) {
         NSLog(@"Pull down menu open!");
+        //self.navigationItem.leftBarButtonItem
     } else {
         NSLog(@"Pull down menu closed!");
     }

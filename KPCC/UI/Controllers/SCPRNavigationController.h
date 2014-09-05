@@ -14,6 +14,6 @@
     PulldownMenu *pulldownMenu;
 }
 
-@property (nonatomic, retain) PulldownMenu *pulldownMenu;
+//@property (nonatomic, retain) PulldownMenu *_pulldownMenu;
 
 @end

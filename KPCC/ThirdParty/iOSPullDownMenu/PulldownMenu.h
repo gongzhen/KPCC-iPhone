@@ -6,12 +6,16 @@
 
 #import <UIKit/UIKit.h>
 
+#import "FXBlurView.h"
+
 @protocol PulldownMenuDelegate
     -(void)menuItemSelected:(NSIndexPath *)indexPath;
     -(void)pullDownAnimated:(BOOL)open;
 @end
 
 @interface PulldownMenu : UIView<UITableViewDataSource, UITableViewDelegate> {
+    FXBlurView *blurView;
+    
     UITableView *menuList;
     NSMutableArray *menuItems;
     
