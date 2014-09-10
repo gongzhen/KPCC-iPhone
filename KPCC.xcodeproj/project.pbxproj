@@ -113,6 +113,8 @@
 		7695FD16195E299000F63DE9 /* SCPRNavigationBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 7695FD14195E299000F63DE9 /* SCPRNavigationBar.m */; };
 		769B907719C0D46200E812C7 /* libFlurry_5.3.0.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 769B907619C0D46200E812C7 /* libFlurry_5.3.0.a */; };
 		769B907819C0D46200E812C7 /* libFlurry_5.3.0.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 769B907619C0D46200E812C7 /* libFlurry_5.3.0.a */; };
+		769B907A19C0D5C300E812C7 /* Config.plist in Resources */ = {isa = PBXBuildFile; fileRef = 769B907919C0D5C300E812C7 /* Config.plist */; };
+		769B907B19C0D5C300E812C7 /* Config.plist in Resources */ = {isa = PBXBuildFile; fileRef = 769B907919C0D5C300E812C7 /* Config.plist */; };
 		769FD69D18EB6F4E00AAF1F4 /* SCPRRootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 769FD69C18EB6F4E00AAF1F4 /* SCPRRootViewController.m */; };
 		769FD69E18EB6F4E00AAF1F4 /* SCPRRootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 769FD69C18EB6F4E00AAF1F4 /* SCPRRootViewController.m */; };
 		76A308C718C8FB940065D4B1 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 76A308C618C8FB940065D4B1 /* Foundation.framework */; };
@@ -228,6 +230,7 @@
 		7695FD13195E299000F63DE9 /* SCPRNavigationBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCPRNavigationBar.h; sourceTree = "<group>"; };
 		7695FD14195E299000F63DE9 /* SCPRNavigationBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SCPRNavigationBar.m; sourceTree = "<group>"; };
 		769B907619C0D46200E812C7 /* libFlurry_5.3.0.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libFlurry_5.3.0.a; sourceTree = "<group>"; };
+		769B907919C0D5C300E812C7 /* Config.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Config.plist; sourceTree = "<group>"; };
 		769FD69B18EB6F4E00AAF1F4 /* SCPRRootViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCPRRootViewController.h; sourceTree = "<group>"; };
 		769FD69C18EB6F4E00AAF1F4 /* SCPRRootViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SCPRRootViewController.m; sourceTree = "<group>"; };
 		76A308C318C8FB940065D4B1 /* KPCC.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = KPCC.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -532,6 +535,7 @@
 		76A308CC18C8FB940065D4B1 /* KPCC */ = {
 			isa = PBXGroup;
 			children = (
+				769B907919C0D5C300E812C7 /* Config.plist */,
 				76B9A9BC18F609FF007A6D8C /* Assets */,
 				769FD69918EB682E00AAF1F4 /* Classes */,
 				76E75F1C18CE4682008E3197 /* ThirdParty */,
@@ -731,6 +735,7 @@
 				768C067C199590CC00F829EB /* FreigSanProLig.otf in Resources */,
 				768C065D1995905D00F829EB /* btn_play_large@2x.png in Resources */,
 				7685BD63194BBCB90075BB16 /* playButton@2x.png in Resources */,
+				769B907B19C0D5C300E812C7 /* Config.plist in Resources */,
 				52D91F3019A2537400B8A02F /* program_image_urls.json in Resources */,
 				7685BD61194BBCB90075BB16 /* playButton.png in Resources */,
 				768C06611995905D00F829EB /* chevron_down@2x.png in Resources */,
@@ -787,6 +792,7 @@
 				768C06581995905D00F829EB /* btn_pause@2x.png in Resources */,
 				768C06541995905D00F829EB /* btn_live_rewind_small@2x.png in Resources */,
 				76EF5E8A193E8D6B00568A9D /* Storyboard.storyboard in Resources */,
+				769B907A19C0D5C300E812C7 /* Config.plist in Resources */,
 				76B9A9C118F609FF007A6D8C /* Wood_Crash.mp3 in Resources */,
 				52E68B8419B8F2D10028F8AE /* SCPRNavigationController.xib in Resources */,
 				761CC5A4195A2878006A6C7C /* Testflight-Info.plist in Resources */,
