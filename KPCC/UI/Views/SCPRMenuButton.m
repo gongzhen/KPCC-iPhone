@@ -138,9 +138,9 @@
 }
 
 - (void)setup {
-    CGFloat height = 2.f;
+    CGFloat height = 1.f;
     CGFloat width = CGRectGetWidth(self.bounds);
-    CGFloat cornerRadius =  1.f;
+    CGFloat cornerRadius =  0.5f;
     CGColorRef color = [self.tintColor CGColor];
     
     self.topLayer = [CALayer layer];

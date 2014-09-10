@@ -101,7 +101,7 @@
     // Once the view has appeared we can register to begin receiving system audio controls.
     [[UIApplication sharedApplication] beginReceivingRemoteControlEvents];
     [self becomeFirstResponder];
-    
+
     [self updateControlsAndUI:YES];
 }
 

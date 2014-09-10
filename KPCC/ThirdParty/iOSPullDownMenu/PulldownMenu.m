@@ -36,7 +36,7 @@
     topMarginPortrait = 0;
     topMarginLandscape = 0;
     cellColor = [UIColor clearColor];
-    cellSelectedColor = [UIColor blackColor];
+    cellSelectedColor = [UIColor lightGrayColor];
     cellFont = [UIFont fontWithName:@"FreightSansProMedium-Regular" size:19.0f];
     cellTextColor = [UIColor whiteColor];
     cellSelectionStyle = UITableViewCellSelectionStyleDefault;
@@ -135,7 +135,9 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
     [self.delegate menuItemSelected:indexPath];
+
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
@@ -159,6 +161,7 @@
     
     UIView *cellSelectedBackgroundView = [[UIView alloc] initWithFrame:cell.frame];
     cellSelectedBackgroundView.backgroundColor = cellSelectedColor;
+    cellSelectedBackgroundView.alpha = 0.7f;
     cell.selectedBackgroundView = cellSelectedBackgroundView;
     cell.selectionStyle = cellSelectionStyle;
     

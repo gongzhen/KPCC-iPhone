@@ -106,9 +106,10 @@
     //    [Program insertProgramWithDictionary:programDict inManagedObjectContext:[[ContentManager shared] managedObjectContext]];
     //}
     NSLog(@"SCPRv4 returned %ld programs", (unsigned long)[content count]);
-    for (NSDictionary *programDict in content) {
-        //NSLog(@"printing each slug.. %@", [programDict objectForKey:@"slug"] );
-    }
+    /* for (NSDictionary *programDict in content) {
+        NSLog(@"printing each slug.. %@", [programDict objectForKey:@"slug"] );
+    }*/
+
     [Program insertProgramsWithArray:content inManagedObjectContext:[[ContentManager shared] managedObjectContext]];
 
     // Save all changes made.

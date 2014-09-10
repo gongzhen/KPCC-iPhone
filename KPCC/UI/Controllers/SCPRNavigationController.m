@@ -41,13 +41,13 @@
 -(void) pushViewController:(UIViewController *)viewController animated:(BOOL)animated{
     [self addButton:viewController.navigationItem];
     [super pushViewController:viewController animated:animated];
+    [pulldownMenu animateDropDown];
 }
 
 -(void) addButton:(UINavigationItem *)item{
     if (item.leftBarButtonItem == nil){
         SCPRMenuButton *button = [SCPRMenuButton button];
         [button addTarget:self action:@selector(menuPressed:) forControlEvents:UIControlEventTouchUpInside];
-        //button.tintColor = [UIColor blueColor];
         item.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:button];
     }
 }
@@ -61,15 +61,19 @@
 
 -(void)menuItemSelected:(NSIndexPath *)indexPath {
     NSLog(@"%ld",(long)indexPath.item);
+
+    // Push test vc.
+    UIViewController *vc = [[UIViewController alloc] init];
+    vc.view.backgroundColor = [UIColor blackColor];
+    vc.view.alpha = 0.7;
+    [self pushViewController:vc animated:YES];
 }
 
 -(void)pullDownAnimated:(BOOL)open {
     if (open) {
         NSLog(@"Pull down menu open!");
-        //dispatch_async(dispatch_get_main_queue(), ^{
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"pull_down_menu_opened"
-                                                                object:nil];
-        //});
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"pull_down_menu_opened"
+                                                            object:nil];
     } else {
         NSLog(@"Pull down menu closed!");
         [[NSNotificationCenter defaultCenter] postNotificationName:@"pull_down_menu_closed"

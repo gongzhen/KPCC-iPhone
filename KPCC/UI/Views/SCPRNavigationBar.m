@@ -7,6 +7,7 @@
 //
 
 #import "SCPRNavigationBar.h"
+#import "SCPRMenuButton.h"
 #import <POP/POP.h>
 
 @interface SCPRNavigationBar()
@@ -29,7 +30,7 @@
     self = [super initWithCoder:aDecoder];
     if (self) {
         // Initialization code
-        //[self setup];
+        // [self setup];
     }
     
     return self;
@@ -132,6 +133,7 @@
     CGColorRef color = [self.tintColor CGColor];
     CGRect bounds = self.topItem.titleView.bounds;
 
+    /*
     self.topLayer = [CALayer layer];
     self.topLayer.frame = CGRectMake(CGRectGetMidX(self.bounds) + 54.0f, CGRectGetMinY(self.bounds) + 13.0f, 16.0f, height);
     self.topLayer.cornerRadius = cornerRadius;
@@ -154,8 +156,8 @@
     UITapGestureRecognizer *tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(touchUpInsideHandler:)];
     [tapRecognizer setNumberOfTapsRequired:1];
 //    [self addGestureRecognizer:tapRecognizer];
-    
-    
+    */
+
     UISwipeGestureRecognizer *swipeDown;
     swipeDown = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(didSwipeDown)];
     [swipeDown setDirection:UISwipeGestureRecognizerDirectionDown];
