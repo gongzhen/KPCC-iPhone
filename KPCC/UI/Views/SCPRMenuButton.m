@@ -13,11 +13,15 @@
 @property(nonatomic) CALayer *topLayer;
 @property(nonatomic) CALayer *middleLayer;
 @property(nonatomic) CALayer *bottomLayer;
+@property(nonatomic) CALayer *backArrowTopLayer;
+@property(nonatomic) CALayer *backArrowBottomLayer;
 @property(nonatomic) BOOL showMenu;
+@property(nonatomic) BOOL showBackArrow;
 
 - (void)touchUpInsideHandler:(SCPRMenuButton *)sender;
 - (void)animateToMenu;
 - (void)animateToClose;
+- (void)animateToBack;
 - (void)setup;
 - (void)removeAllAnimations;
 - (void)pullMenuOpened:(NSNotification*)notification;
@@ -86,6 +90,20 @@
     transformBottomAnimation.springSpeed = 20;
     transformBottomAnimation.dynamicsTension = 1000;
     
+    if (self.showBackArrow) {
+        POPSpringAnimation *scaleTopAnimation = [POPSpringAnimation animation];
+        scaleTopAnimation.property = [POPAnimatableProperty propertyWithName:kPOPLayerBounds];
+        scaleTopAnimation.toValue = [NSValue valueWithCGRect:CGRectMake(0, 0, CGRectGetWidth(self.bounds), 1)];
+
+        POPSpringAnimation *scaleBottomAnimation = [POPSpringAnimation animation];
+        scaleBottomAnimation.property = [POPAnimatableProperty propertyWithName:kPOPLayerBounds];
+        scaleBottomAnimation.toValue = [NSValue valueWithCGRect:CGRectMake(0, 0, CGRectGetWidth(self.bounds), 1)];
+
+        [self.topLayer pop_addAnimation:scaleTopAnimation forKey:@"scaleTopAnimation"];
+        [self.bottomLayer pop_addAnimation:scaleBottomAnimation forKey:@"scaleBottomAnimation"];
+        self.showBackArrow = NO;
+    }
+
     [self.topLayer pop_addAnimation:positionTopAnimation forKey:@"positionTopAnimation"];
     [self.topLayer pop_addAnimation:transformTopAnimation forKey:@"rotateTopAnimation"];
     [self.middleLayer pop_addAnimation:fadeAnimation forKey:@"fadeAnimation"];
@@ -120,12 +138,79 @@
     transformBottomAnimation.springBounciness = 20.0f;
     transformBottomAnimation.springSpeed = 20;
     transformBottomAnimation.dynamicsTension = 1000;
-    
+
+    if (self.showBackArrow) {
+        POPSpringAnimation *scaleTopAnimation = [POPSpringAnimation animation];
+        scaleTopAnimation.property = [POPAnimatableProperty propertyWithName:kPOPLayerBounds];
+        scaleTopAnimation.toValue = [NSValue valueWithCGRect:CGRectMake(0, 0, CGRectGetWidth(self.bounds), 1)];
+
+        POPSpringAnimation *scaleBottomAnimation = [POPSpringAnimation animation];
+        scaleBottomAnimation.property = [POPAnimatableProperty propertyWithName:kPOPLayerBounds];
+        scaleBottomAnimation.toValue = [NSValue valueWithCGRect:CGRectMake(0, 0, CGRectGetWidth(self.bounds), 1)];
+
+        [self.topLayer pop_addAnimation:scaleTopAnimation forKey:@"scaleTopAnimation"];
+        [self.bottomLayer pop_addAnimation:scaleBottomAnimation forKey:@"scaleBottomAnimation"];
+        self.showBackArrow = NO;
+    }
+
     [self.topLayer pop_addAnimation:positionTopAnimation forKey:@"positionTopAnimation"];
     [self.topLayer pop_addAnimation:transformTopAnimation forKey:@"rotateTopAnimation"];
     [self.middleLayer pop_addAnimation:fadeAnimation forKey:@"fadeAnimation"];
     [self.bottomLayer pop_addAnimation:positionBottomAnimation forKey:@"positionBottomAnimation"];
     [self.bottomLayer pop_addAnimation:transformBottomAnimation forKey:@"rotateBottomAnimation"];
+}
+
+- (void)animateToBack {
+    [self removeAllAnimations];
+    CGPoint topLeft = CGPointMake(CGRectGetMinX(self.bounds)+4, CGRectGetMidY(self.bounds)-4);
+    CGPoint bottomLeft = CGPointMake(CGRectGetMinX(self.bounds)+4, CGRectGetMidY(self.bounds)+4);
+    
+    POPBasicAnimation *fadeAnimation = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
+    fadeAnimation.toValue = @0;
+    fadeAnimation.duration = 0.3;
+    
+    POPBasicAnimation *positionTopAnimation = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerPosition];
+    positionTopAnimation.toValue = [NSValue valueWithCGPoint:topLeft];
+    positionTopAnimation.duration = 0.3;
+
+    POPSpringAnimation *scaleTopAnimation = [POPSpringAnimation animation];
+    scaleTopAnimation.property = [POPAnimatableProperty propertyWithName:kPOPLayerBounds];
+    scaleTopAnimation.toValue = [NSValue valueWithCGRect:CGRectMake(0, 0, CGRectGetWidth(self.bounds)/2, 1)];
+    
+    //POPBasicAnimation *scaleTopAnimation = [POPBasicAnimation animation];
+    //scaleTopAnimation.property = [POPAnimatableProperty propertyWithName:kPOPLayerScaleXY];
+    //scaleTopAnimation.toValue= [NSValue valueWithCGPoint:CGPointMake(0.5, 1.0)];
+    //scaleTopAnimation.duration = 0.3;
+    
+    POPBasicAnimation *positionBottomAnimation = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerPosition];
+    positionBottomAnimation.toValue = [NSValue valueWithCGPoint:bottomLeft];
+    positionTopAnimation.duration = 0.3;
+
+    POPSpringAnimation *scaleBottomAnimation = [POPSpringAnimation animation];
+    scaleBottomAnimation.property = [POPAnimatableProperty propertyWithName:kPOPLayerBounds];
+    scaleBottomAnimation.toValue = [NSValue valueWithCGRect:CGRectMake(0, 0, CGRectGetWidth(self.bounds)/2, 1)];
+    
+    POPSpringAnimation *transformTopAnimation = [POPSpringAnimation animationWithPropertyNamed:kPOPLayerRotation];
+    transformTopAnimation.toValue = @(-M_PI_4);
+    transformTopAnimation.springBounciness = 20.f;
+    transformTopAnimation.springSpeed = 20;
+    transformTopAnimation.dynamicsTension = 1000;
+    
+    POPSpringAnimation *transformBottomAnimation = [POPSpringAnimation animationWithPropertyNamed:kPOPLayerRotation];
+    transformBottomAnimation.toValue = @(M_PI_4);
+    transformBottomAnimation.springBounciness = 20.0f;
+    transformBottomAnimation.springSpeed = 20;
+    transformBottomAnimation.dynamicsTension = 1000;
+    
+    [self.topLayer pop_addAnimation:positionTopAnimation forKey:@"positionTopAnimation"];
+    [self.topLayer pop_addAnimation:transformTopAnimation forKey:@"rotateTopAnimation"];
+    [self.topLayer pop_addAnimation:scaleTopAnimation forKey:@"scaleTopAnimation"];
+    //[self.middleLayer pop_addAnimation:fadeAnimation forKey:@"fadeAnimation"];
+    [self.bottomLayer pop_addAnimation:positionBottomAnimation forKey:@"positionBottomAnimation"];
+    [self.bottomLayer pop_addAnimation:transformBottomAnimation forKey:@"rotateBottomAnimation"];
+    [self.bottomLayer pop_addAnimation:scaleBottomAnimation forKey:@"scaleBottomAnimation"];
+    
+    self.showBackArrow = YES;
 }
 
 - (void)touchUpInsideHandler:(SCPRMenuButton *)sender {
@@ -167,7 +252,7 @@
    forControlEvents:UIControlEventTouchUpInside];
     
     // Add observers for pull down menu open/close to update button state.
-    [[NSNotificationCenter defaultCenter] addObserver:self
+    /*[[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(animateToClose)
                                                  name:@"pull_down_menu_opened"
                                                object:nil];
@@ -175,7 +260,7 @@
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(animateToMenu)
                                                  name:@"pull_down_menu_closed"
-                                               object:nil];
+                                               object:nil];*/
 }
 
 - (void)removeAllAnimations {

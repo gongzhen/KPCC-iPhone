@@ -14,4 +14,6 @@
 + (instancetype)button;
 + (instancetype)buttonWithOrigin:(CGPoint)origin;
 
+- (void)animateToBack;
+
 @end

@@ -38,13 +38,19 @@
     }
 }
 
--(void) pushViewController:(UIViewController *)viewController animated:(BOOL)animated{
-    [self addButton:viewController.navigationItem];
+- (void)pushViewController:(UIViewController *)viewController animated:(BOOL)animated{
+    if (viewController.navigationItem.leftBarButtonItem == nil){
+        SCPRMenuButton *button = [SCPRMenuButton button];
+        [button animateToBack];
+        [button addTarget:self action:@selector(backPressed:) forControlEvents:UIControlEventTouchUpInside];
+        viewController.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:button];
+    }
+
     [super pushViewController:viewController animated:animated];
     [pulldownMenu animateDropDown];
 }
 
--(void) addButton:(UINavigationItem *)item{
+- (void)addButton:(UINavigationItem *)item{
     if (item.leftBarButtonItem == nil){
         SCPRMenuButton *button = [SCPRMenuButton button];
         [button addTarget:self action:@selector(menuPressed:) forControlEvents:UIControlEventTouchUpInside];
@@ -52,8 +58,13 @@
     }
 }
 
+
 - (void)menuPressed:(id)sender {
     [pulldownMenu animateDropDown];
+}
+
+- (void)backPressed:(id)sender {
+    [self popToRootViewControllerAnimated:YES];
 }
 
 
