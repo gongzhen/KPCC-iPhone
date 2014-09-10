@@ -1,25 +1,27 @@
 PODS:
-  - AFNetworking (2.2.2):
+  - AFNetworking (2.4.1):
     - AFNetworking/NSURLConnection
     - AFNetworking/NSURLSession
     - AFNetworking/Reachability
     - AFNetworking/Security
     - AFNetworking/Serialization
     - AFNetworking/UIKit
-  - AFNetworking/NSURLConnection (2.2.2):
+  - AFNetworking/NSURLConnection (2.4.1):
     - AFNetworking/Reachability
     - AFNetworking/Security
     - AFNetworking/Serialization
-  - AFNetworking/NSURLSession (2.2.2):
-    - AFNetworking/NSURLConnection
-  - AFNetworking/Reachability (2.2.2)
-  - AFNetworking/Security (2.2.2)
-  - AFNetworking/Serialization (2.2.2)
-  - AFNetworking/UIKit (2.2.2):
+  - AFNetworking/NSURLSession (2.4.1):
+    - AFNetworking/Reachability
+    - AFNetworking/Security
+    - AFNetworking/Serialization
+  - AFNetworking/Reachability (2.4.1)
+  - AFNetworking/Security (2.4.1)
+  - AFNetworking/Serialization (2.4.1)
+  - AFNetworking/UIKit (2.4.1):
     - AFNetworking/NSURLConnection
     - AFNetworking/NSURLSession
   - FXBlurView (1.6.2)
-  - JDStatusBarNotification (1.4.7)
+  - JDStatusBarNotification (1.4.8)
   - pop (1.0.6)
 
 DEPENDENCIES:
@@ -29,9 +31,9 @@ DEPENDENCIES:
   - pop (~> 1.0)
 
 SPEC CHECKSUMS:
-  AFNetworking: 68e1959e25ba8fccd98a5d94b8b5e6c4a25e7bd7
+  AFNetworking: 0aabc6fae66d6e5d039eeb21c315843c7aae51ab
   FXBlurView: 47496afc9160097fa34af35fc4b310bd85d65dca
-  JDStatusBarNotification: ac0b8550e761a0ab01696a6592564ff17698ca43
+  JDStatusBarNotification: c68611370dedc0ef865fb0fc1768dfbaf8fd961f
   pop: e518794da38942c05255eb64b36d894e70cb4f00
 
 COCOAPODS: 0.33.1
