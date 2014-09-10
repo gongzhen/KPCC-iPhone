@@ -10,6 +10,7 @@
 #import "Utils.h"
 #import "AudioManager.h"
 #import "NetworkManager.h"
+#import "DesignManager.h"
 #import "Program.h"
 #import "FXBlurView.h"
 #import <pop/POP.h>

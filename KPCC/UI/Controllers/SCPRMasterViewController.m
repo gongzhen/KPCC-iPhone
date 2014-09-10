@@ -86,13 +86,6 @@
     MPRemoteCommand *playCommand = [rcc playCommand];
     [playCommand setEnabled:YES];
     [playCommand addTarget:self action:@selector(playOrPauseTapped:)];
-    
-    SCPRMenuButton *button = [SCPRMenuButton button];
-    //[button addTarget:self action:@selector(animateTitleLabel:) forControlEvents:UIControlEventTouchUpInside];
-    //button.tintColor = [UIColor blueColor];
-    UIBarButtonItem *barButton = [[UIBarButtonItem alloc] initWithCustomView:button];
-    
-//    self.navigationItem.rightBarButtonItem = barButton;
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -368,15 +361,17 @@
     if ([content count] == 0) {
         return;
     }
-    
-    // NSLog(@"content %@", content);
 
     // Create Program and insert into managed object context
     if ([content objectAtIndex:0]) {
         NSDictionary *programDict = [content objectAtIndex:0];
 
         Program *programObj = [Program insertProgramWithDictionary:programDict inManagedObjectContext:[[ContentManager shared] managedObjectContext]];
-        [self loadProgramImage:programObj.program_slug];
+
+        if (!_currentProgram || (![_currentProgram.program_slug isEqualToString:programObj.program_slug])){
+            [[DesignManager shared] loadProgramImage:programObj.program_slug andImageView:self.programImageView];
+        }
+
         [self updateUIWithProgram:programObj];
         [self updateNowPlayingInfoWithProgram:programObj];
 
@@ -384,54 +379,6 @@
 
         // Save any programObj changes to CoreData.
         [[ContentManager shared] saveContext];
-    }
-}
-
-- (void)loadProgramImage:(NSString *)slug {
-    
-    if (!_currentProgram || (_currentProgram.program_slug != slug)){
-
-        // Load JSON with program image urls.
-        NSError *fileError = nil;
-        NSString *filePath = [[NSBundle mainBundle] pathForResource:[@"program_image_urls" stringByDeletingPathExtension] ofType:@"json"];
-        NSData* data = [NSData dataWithContentsOfFile:filePath];
-        
-        NSDictionary *dict = (NSDictionary*)[NSJSONSerialization JSONObjectWithData:data
-                                                                            options:kNilOptions
-                                                                              error:&fileError];
-
-
-        NSString *slugWithScale;
-        if ([Utils isRetina]) {
-            slugWithScale = [NSString stringWithFormat:@"%@-2x", slug];
-        } else {
-            slugWithScale = slug;
-        }
-        NSLog(@"slugWithScale - %@", slugWithScale);
-
-        // Async request to fetch image and set in background tile view. Via AFNetworking.
-        if ([dict objectForKey:slugWithScale]) {
-            NSURL *imageUrl = [NSURL URLWithString:[dict objectForKey:slugWithScale]];
-            NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:imageUrl];
-
-            [UIView animateWithDuration:0.3 animations:^{
-                [self.programImageView setAlpha:0.0];
-            }];
-            UIImageView *programIV = self.programImageView;
-            [self.programImageView setImageWithURLRequest:request placeholderImage:nil success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {
-                programIV.image = image;
-                [UIView animateWithDuration:0.15 animations:^{
-                    [programIV setAlpha:1.0];
-                }];
-            } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error) {
-                [programIV setImage:[UIImage imageNamed:@"program_tile_generic.jpg"]];
-                [UIView animateWithDuration:0.15 animations:^{
-                    [programIV setAlpha:1.0];
-                }];
-            }];
-        } else {
-            [self.programImageView setImage:[UIImage imageNamed:@"program_tile_generic.jpg"]];
-        }
     }
 }
 

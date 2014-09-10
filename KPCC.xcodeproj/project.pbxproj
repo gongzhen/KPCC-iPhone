@@ -115,6 +115,8 @@
 		769B907819C0D46200E812C7 /* libFlurry_5.3.0.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 769B907619C0D46200E812C7 /* libFlurry_5.3.0.a */; };
 		769B907A19C0D5C300E812C7 /* Config.plist in Resources */ = {isa = PBXBuildFile; fileRef = 769B907919C0D5C300E812C7 /* Config.plist */; };
 		769B907B19C0D5C300E812C7 /* Config.plist in Resources */ = {isa = PBXBuildFile; fileRef = 769B907919C0D5C300E812C7 /* Config.plist */; };
+		769B907E19C1186E00E812C7 /* DesignManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 769B907D19C1186E00E812C7 /* DesignManager.m */; };
+		769B907F19C1186E00E812C7 /* DesignManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 769B907D19C1186E00E812C7 /* DesignManager.m */; };
 		769FD69D18EB6F4E00AAF1F4 /* SCPRRootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 769FD69C18EB6F4E00AAF1F4 /* SCPRRootViewController.m */; };
 		769FD69E18EB6F4E00AAF1F4 /* SCPRRootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 769FD69C18EB6F4E00AAF1F4 /* SCPRRootViewController.m */; };
 		76A308C718C8FB940065D4B1 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 76A308C618C8FB940065D4B1 /* Foundation.framework */; };
@@ -231,6 +233,8 @@
 		7695FD14195E299000F63DE9 /* SCPRNavigationBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SCPRNavigationBar.m; sourceTree = "<group>"; };
 		769B907619C0D46200E812C7 /* libFlurry_5.3.0.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libFlurry_5.3.0.a; sourceTree = "<group>"; };
 		769B907919C0D5C300E812C7 /* Config.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Config.plist; sourceTree = "<group>"; };
+		769B907C19C1186E00E812C7 /* DesignManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DesignManager.h; path = Managers/DesignManager.h; sourceTree = "<group>"; };
+		769B907D19C1186E00E812C7 /* DesignManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DesignManager.m; path = Managers/DesignManager.m; sourceTree = "<group>"; };
 		769FD69B18EB6F4E00AAF1F4 /* SCPRRootViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCPRRootViewController.h; sourceTree = "<group>"; };
 		769FD69C18EB6F4E00AAF1F4 /* SCPRRootViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SCPRRootViewController.m; sourceTree = "<group>"; };
 		76A308C318C8FB940065D4B1 /* KPCC.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = KPCC.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -588,6 +592,8 @@
 				760EA9951953724E009B504E /* ContentManager.m */,
 				76177299195B646300F69EFC /* Utils.h */,
 				7617729A195B646300F69EFC /* Utils.m */,
+				769B907C19C1186E00E812C7 /* DesignManager.h */,
+				769B907D19C1186E00E812C7 /* DesignManager.m */,
 			);
 			name = Managers;
 			sourceTree = "<group>";
@@ -870,6 +876,7 @@
 				7695FD16195E299000F63DE9 /* SCPRNavigationBar.m in Sources */,
 				52E68B7E19B8EEA60028F8AE /* PulldownMenu.m in Sources */,
 				760EA9971953724E009B504E /* ContentManager.m in Sources */,
+				769B907F19C1186E00E812C7 /* DesignManager.m in Sources */,
 				769FD69E18EB6F4E00AAF1F4 /* SCPRRootViewController.m in Sources */,
 				76349D2218D8F8A30027C3B8 /* Reachability.m in Sources */,
 				7617729C195B646300F69EFC /* Utils.m in Sources */,
@@ -899,6 +906,7 @@
 				7695FD15195E299000F63DE9 /* SCPRNavigationBar.m in Sources */,
 				52E68B7D19B8EEA60028F8AE /* PulldownMenu.m in Sources */,
 				760EA9961953724E009B504E /* ContentManager.m in Sources */,
+				769B907E19C1186E00E812C7 /* DesignManager.m in Sources */,
 				769FD69D18EB6F4E00AAF1F4 /* SCPRRootViewController.m in Sources */,
 				76349D2118D8F8A30027C3B8 /* Reachability.m in Sources */,
 				7617729B195B646300F69EFC /* Utils.m in Sources */,
