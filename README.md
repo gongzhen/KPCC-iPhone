@@ -48,12 +48,14 @@ The app uses CocoaPods to manage third-party libraries within the project:
       platform :ios, '7.0'
       pod 'AFNetworking', '~> 2.0'
       pod 'JDStatusBarNotification'
+      pod 'pop', '~> 1.0'
+      pod 'FXBlurView', '~> 1.6'
       link_with ['KPCC', 'KPCC-TestFlight']
 
 We also incorporate several libraries that are included in the repository as compilable sources:
 <h3>Inline compilable dependencies:</h3>
 
-	    Flurry (v4.3.2)
+	    Flurry (v5.3.0)
 	    TestFlight (v3.0.0)
 
 
@@ -63,4 +65,4 @@ You're going to have to install [CocoaPods](http://cocoapods.org/). After doing 
 
 Run `pod install` from terminal in the project root, open `KPCC.xcworkspace`, and build to a device as you see fit. Ignore errors from TestFlight, Flurry, and other services that require the use of secret keys - the app should still run fine without them. You're going to have to use your own keys and set up a Config.plist to make use of these libraries.
 
-As stated above, this app plays nice with Swift, so you're going to have to download the Xcode 6 beta and build for simulator/devices running >= iOS7.
+As stated above, this app plays nice with Swift, so you're going to have to download Xcode 6 and build for simulator/devices running >= iOS7.
