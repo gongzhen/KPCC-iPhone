@@ -28,35 +28,34 @@
     [pulldownMenu insertButton:@"Menu Item 3"];
 
     pulldownMenu.delegate = self;
-
     [pulldownMenu loadMenu];
+
+    // "Global" menu button to be used across all pushed view controllers.
+    menuButton = [SCPRMenuButton buttonWithOrigin:CGPointMake(10.f, 10.f)];
+    [menuButton addTarget:self action:@selector(menuPressed:) forControlEvents:UIControlEventTouchUpInside];
 
     for (UIViewController* viewController in self.viewControllers){
         // You need to do this because the push is not called if you created this controller as part of the storyboard
         NSLog(@"adding button to vc : %@", viewController.title);
         [self addButton:viewController.navigationItem];
     }
-    
-    // TEST
-    menuButton = [SCPRMenuButton buttonWithOrigin:CGPointMake(10.f, 10.f)];
-    [menuButton addTarget:self action:@selector(menuPressed:) forControlEvents:UIControlEventTouchUpInside];
-    //[self.navigationBar addSubview:menuButton];
 }
 
 - (void)pushViewController:(UIViewController *)viewController animated:(BOOL)animated{
     [super pushViewController:viewController animated:animated];
-    [pulldownMenu animateDropDown];
+    if (viewController.navigationItem.leftBarButtonItem == nil){
+        viewController.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:menuButton];
+    }
+
+    //[pulldownMenu animateDropDown];
     [menuButton animateToBack];
 }
 
 - (void)addButton:(UINavigationItem *)item{
     if (item.leftBarButtonItem == nil){
-        SCPRMenuButton *button = [SCPRMenuButton button];
-        [button addTarget:self action:@selector(menuPressed:) forControlEvents:UIControlEventTouchUpInside];
-        item.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:button];
+        item.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:menuButton];
     }
 }
-
 
 - (void)menuPressed:(id)sender {
     [pulldownMenu animateDropDown];
