@@ -91,7 +91,11 @@
 # pragma mark - MenuButtonDelegate
 - (void)backPressed {
     [self popViewControllerAnimated:YES];
-    [menuButton animateToClose];
+
+    if (self == [self.navigationController.viewControllers objectAtIndex:0]){
+        [menuButton animateToClose];
+    }
+
 }
 
 - (void)menuPressed {
