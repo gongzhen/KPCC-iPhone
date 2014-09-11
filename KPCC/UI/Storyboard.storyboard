@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6245" systemVersion="13E28" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="tBl-Ag-e49">
     <dependencies>
-        <deployment defaultVersion="1792" identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6238"/>
     </dependencies>
     <customFonts key="customFonts">
@@ -456,22 +455,12 @@
                         <textAttributes key="titleTextAttributes">
                             <fontDescription key="fontDescription" type="boldSystem" pointSize="23"/>
                         </textAttributes>
-                        <connections>
-                            <outlet property="tapRecognizer" destination="meA-kc-29b" id="KH3-HX-Fbk"/>
-                            <outletCollection property="gestureRecognizers" destination="meA-kc-29b" appends="YES" id="gfj-G9-9SN"/>
-                        </connections>
                     </navigationBar>
                     <connections>
                         <segue destination="4pL-7p-2vt" kind="relationship" relationship="rootViewController" id="MT8-Ip-9xc"/>
                     </connections>
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="bWD-33-KYP" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <tapGestureRecognizer numberOfTapsRequired="2" id="meA-kc-29b">
-                    <connections>
-                        <action selector="handleTap" destination="Vti-i6-DG1" id="q9d-Qb-Pni"/>
-                        <segue destination="rbX-u6-Qyr" kind="modal" id="gVe-Qh-KHu"/>
-                    </connections>
-                </tapGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="-60" y="119"/>
         </scene>

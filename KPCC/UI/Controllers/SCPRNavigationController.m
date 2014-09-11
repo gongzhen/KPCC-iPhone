@@ -36,18 +36,17 @@
         NSLog(@"adding button to vc : %@", viewController.title);
         [self addButton:viewController.navigationItem];
     }
+    
+    // TEST
+    menuButton = [SCPRMenuButton buttonWithOrigin:CGPointMake(10.f, 10.f)];
+    [menuButton addTarget:self action:@selector(menuPressed:) forControlEvents:UIControlEventTouchUpInside];
+    //[self.navigationBar addSubview:menuButton];
 }
 
 - (void)pushViewController:(UIViewController *)viewController animated:(BOOL)animated{
-    if (viewController.navigationItem.leftBarButtonItem == nil){
-        SCPRMenuButton *button = [SCPRMenuButton button];
-        [button animateToBack];
-        [button addTarget:self action:@selector(backPressed:) forControlEvents:UIControlEventTouchUpInside];
-        viewController.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:button];
-    }
-
     [super pushViewController:viewController animated:animated];
     [pulldownMenu animateDropDown];
+    [menuButton animateToBack];
 }
 
 - (void)addButton:(UINavigationItem *)item{
@@ -64,6 +63,7 @@
 }
 
 - (void)backPressed:(id)sender {
+    [menuButton animateToMenu];
     [self popToRootViewControllerAnimated:YES];
 }
 

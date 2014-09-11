@@ -15,5 +15,7 @@
 + (instancetype)buttonWithOrigin:(CGPoint)origin;
 
 - (void)animateToBack;
+- (void)animateToMenu;
+- (void)animateToClose;
 
 @end

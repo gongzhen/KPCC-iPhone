@@ -166,7 +166,7 @@
     CGPoint bottomLeft = CGPointMake(CGRectGetMinX(self.bounds)+4, CGRectGetMidY(self.bounds)+4);
     
     POPBasicAnimation *fadeAnimation = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
-    fadeAnimation.toValue = @0;
+    fadeAnimation.toValue = @1;
     fadeAnimation.duration = 0.3;
     
     POPBasicAnimation *positionTopAnimation = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerPosition];
@@ -176,11 +176,6 @@
     POPSpringAnimation *scaleTopAnimation = [POPSpringAnimation animation];
     scaleTopAnimation.property = [POPAnimatableProperty propertyWithName:kPOPLayerBounds];
     scaleTopAnimation.toValue = [NSValue valueWithCGRect:CGRectMake(0, 0, CGRectGetWidth(self.bounds)/2, 1)];
-    
-    //POPBasicAnimation *scaleTopAnimation = [POPBasicAnimation animation];
-    //scaleTopAnimation.property = [POPAnimatableProperty propertyWithName:kPOPLayerScaleXY];
-    //scaleTopAnimation.toValue= [NSValue valueWithCGPoint:CGPointMake(0.5, 1.0)];
-    //scaleTopAnimation.duration = 0.3;
     
     POPBasicAnimation *positionBottomAnimation = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerPosition];
     positionBottomAnimation.toValue = [NSValue valueWithCGPoint:bottomLeft];
@@ -205,7 +200,7 @@
     [self.topLayer pop_addAnimation:positionTopAnimation forKey:@"positionTopAnimation"];
     [self.topLayer pop_addAnimation:transformTopAnimation forKey:@"rotateTopAnimation"];
     [self.topLayer pop_addAnimation:scaleTopAnimation forKey:@"scaleTopAnimation"];
-    //[self.middleLayer pop_addAnimation:fadeAnimation forKey:@"fadeAnimation"];
+    [self.middleLayer pop_addAnimation:fadeAnimation forKey:@"fadeAnimation"];
     [self.bottomLayer pop_addAnimation:positionBottomAnimation forKey:@"positionBottomAnimation"];
     [self.bottomLayer pop_addAnimation:transformBottomAnimation forKey:@"rotateBottomAnimation"];
     [self.bottomLayer pop_addAnimation:scaleBottomAnimation forKey:@"scaleBottomAnimation"];

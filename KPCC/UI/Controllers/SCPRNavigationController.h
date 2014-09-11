@@ -7,11 +7,12 @@
 //
 
 #import <UIKit/UIKit.h>
-
+#import "SCPRMenuButton.h"
 #import "PulldownMenu.h"
 
 @interface SCPRNavigationController : UINavigationController<PulldownMenuDelegate> {
     PulldownMenu *pulldownMenu;
+    SCPRMenuButton *menuButton;
 }
 
 //@property (nonatomic, retain) PulldownMenu *_pulldownMenu;

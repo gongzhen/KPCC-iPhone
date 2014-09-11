@@ -73,16 +73,16 @@
     [skipBackwardIntervalCommand setEnabled:YES];
     [skipBackwardIntervalCommand addTarget:self action:@selector(skipBackwardEvent:)];
     skipBackwardIntervalCommand.preferredIntervals = @[@(15)];
-    
+
     MPSkipIntervalCommand *skipForwardIntervalCommand = [rcc skipForwardCommand];
     skipForwardIntervalCommand.preferredIntervals = @[@(15)];  // Max 99
     [skipForwardIntervalCommand setEnabled:YES];
     [skipForwardIntervalCommand addTarget:self action:@selector(skipForwardEvent:)];
-    
+
     MPRemoteCommand *pauseCommand = [rcc pauseCommand];
     [pauseCommand setEnabled:YES];
     [pauseCommand addTarget:self action:@selector(playOrPauseTapped:)];
-    //
+
     MPRemoteCommand *playCommand = [rcc playCommand];
     [playCommand setEnabled:YES];
     [playCommand addTarget:self action:@selector(playOrPauseTapped:)];
@@ -293,6 +293,22 @@
     //} else {
         //_seekRequested = NO;
     //}
+}
+
+- (void)setPlayingUI:(BOOL)animated {
+    
+}
+
+- (void)setPausedUI:(BOOL)animated {
+
+}
+
+- (void)setMenuUI:(BOOL)animated {
+    POPBasicAnimation *fadeAnimation = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
+    fadeAnimation.toValue = @1;
+    fadeAnimation.duration = 0.3;
+
+    [self.blurView.layer pop_addAnimation:fadeAnimation forKey:@"blurViewFadeAnimation"];
 }
 
 - (void)updateUIWithProgram:(Program*)program {

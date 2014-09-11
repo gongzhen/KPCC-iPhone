@@ -8,15 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@protocol SCPRNavigationBarDelegate <NSObject>
-
-- (void)navBarDidFinishSwipeDown;
-
-@end
-
 @interface SCPRNavigationBar : UINavigationBar
-
-@property IBOutlet UIGestureRecognizer *tapRecognizer;
-- (IBAction)handleTap;
 
 @end
