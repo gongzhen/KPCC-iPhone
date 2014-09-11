@@ -32,7 +32,8 @@
 
     // "Global" menu button to be used across all pushed view controllers.
     menuButton = [SCPRMenuButton buttonWithOrigin:CGPointMake(10.f, 10.f)];
-    [menuButton addTarget:self action:@selector(menuPressed:) forControlEvents:UIControlEventTouchUpInside];
+    menuButton.delegate = self;
+//    [menuButton addTarget:self action:@selector(menuPressed:) forControlEvents:UIControlEventTouchUpInside];
 
     for (UIViewController* viewController in self.viewControllers){
         // You need to do this because the push is not called if you created this controller as part of the storyboard
@@ -61,15 +62,10 @@
     [pulldownMenu animateDropDown];
 }
 
-- (void)backPressed:(id)sender {
-    [menuButton animateToMenu];
-    [self popToRootViewControllerAnimated:YES];
-}
-
 
 # pragma mark - PulldownMenuDelegate
 
--(void)menuItemSelected:(NSIndexPath *)indexPath {
+- (void)menuItemSelected:(NSIndexPath *)indexPath {
     NSLog(@"%ld",(long)indexPath.item);
 
     // Push test vc.
@@ -79,7 +75,7 @@
     [self pushViewController:vc animated:YES];
 }
 
--(void)pullDownAnimated:(BOOL)open {
+- (void)pullDownAnimated:(BOOL)open {
     if (open) {
         NSLog(@"Pull down menu open!");
         [[NSNotificationCenter defaultCenter] postNotificationName:@"pull_down_menu_opened"
@@ -91,6 +87,20 @@
     }
 }
 
+
+# pragma mark - MenuButtonDelegate
+- (void)backPressed {
+    [self popViewControllerAnimated:YES];
+    [menuButton animateToClose];
+}
+
+- (void)menuPressed {
+    [pulldownMenu animateDropDown];
+}
+
+- (void)closePressed {
+    [pulldownMenu animateDropDown];
+}
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];

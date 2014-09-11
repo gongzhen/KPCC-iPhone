@@ -29,6 +29,8 @@
 
 @implementation SCPRMenuButton
 
+@synthesize delegate;
+
 + (instancetype)button {
     return [self buttonWithOrigin:CGPointZero];
 }
@@ -209,9 +211,15 @@
 }
 
 - (void)touchUpInsideHandler:(SCPRMenuButton *)sender {
+    if (self.showBackArrow) {
+        [delegate backPressed];
+    }
+    
     if (self.showMenu) {
+        [delegate menuPressed];
         [self animateToMenu];
     } else {
+        [delegate closePressed];
         [self animateToClose];
     }
     self.showMenu = !self.showMenu;
