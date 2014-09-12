@@ -17,6 +17,30 @@
 		52E68B8519B8F2D10028F8AE /* SCPRNavigationController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 52E68B8119B8F2D10028F8AE /* SCPRNavigationController.xib */; };
 		52E68B8819B919300028F8AE /* SCPRMenuButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 52E68B8719B919300028F8AE /* SCPRMenuButton.m */; };
 		52E68B8919B919300028F8AE /* SCPRMenuButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 52E68B8719B919300028F8AE /* SCPRMenuButton.m */; };
+		52EFF78719C3688D0059A0E3 /* menu-antenna.png in Resources */ = {isa = PBXBuildFile; fileRef = 52EFF77B19C3688D0059A0E3 /* menu-antenna.png */; };
+		52EFF78819C3688D0059A0E3 /* menu-antenna.png in Resources */ = {isa = PBXBuildFile; fileRef = 52EFF77B19C3688D0059A0E3 /* menu-antenna.png */; };
+		52EFF78919C3688D0059A0E3 /* menu-antenna@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 52EFF77C19C3688D0059A0E3 /* menu-antenna@2x.png */; };
+		52EFF78A19C3688D0059A0E3 /* menu-antenna@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 52EFF77C19C3688D0059A0E3 /* menu-antenna@2x.png */; };
+		52EFF78B19C3688D0059A0E3 /* menu-clock.png in Resources */ = {isa = PBXBuildFile; fileRef = 52EFF77D19C3688D0059A0E3 /* menu-clock.png */; };
+		52EFF78C19C3688D0059A0E3 /* menu-clock.png in Resources */ = {isa = PBXBuildFile; fileRef = 52EFF77D19C3688D0059A0E3 /* menu-clock.png */; };
+		52EFF78D19C3688D0059A0E3 /* menu-clock@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 52EFF77E19C3688D0059A0E3 /* menu-clock@2x.png */; };
+		52EFF78E19C3688D0059A0E3 /* menu-clock@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 52EFF77E19C3688D0059A0E3 /* menu-clock@2x.png */; };
+		52EFF78F19C3688D0059A0E3 /* menu-glasses.png in Resources */ = {isa = PBXBuildFile; fileRef = 52EFF77F19C3688D0059A0E3 /* menu-glasses.png */; };
+		52EFF79019C3688D0059A0E3 /* menu-glasses.png in Resources */ = {isa = PBXBuildFile; fileRef = 52EFF77F19C3688D0059A0E3 /* menu-glasses.png */; };
+		52EFF79119C3688D0059A0E3 /* menu-glasses@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 52EFF78019C3688D0059A0E3 /* menu-glasses@2x.png */; };
+		52EFF79219C3688D0059A0E3 /* menu-glasses@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 52EFF78019C3688D0059A0E3 /* menu-glasses@2x.png */; };
+		52EFF79319C3688D0059A0E3 /* menu-heart-plus.png in Resources */ = {isa = PBXBuildFile; fileRef = 52EFF78119C3688D0059A0E3 /* menu-heart-plus.png */; };
+		52EFF79419C3688D0059A0E3 /* menu-heart-plus.png in Resources */ = {isa = PBXBuildFile; fileRef = 52EFF78119C3688D0059A0E3 /* menu-heart-plus.png */; };
+		52EFF79519C3688D0059A0E3 /* menu-heart-plus@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 52EFF78219C3688D0059A0E3 /* menu-heart-plus@2x.png */; };
+		52EFF79619C3688D0059A0E3 /* menu-heart-plus@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 52EFF78219C3688D0059A0E3 /* menu-heart-plus@2x.png */; };
+		52EFF79719C3688D0059A0E3 /* menu-microphone.png in Resources */ = {isa = PBXBuildFile; fileRef = 52EFF78319C3688D0059A0E3 /* menu-microphone.png */; };
+		52EFF79819C3688D0059A0E3 /* menu-microphone.png in Resources */ = {isa = PBXBuildFile; fileRef = 52EFF78319C3688D0059A0E3 /* menu-microphone.png */; };
+		52EFF79919C3688D0059A0E3 /* menu-microphone@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 52EFF78419C3688D0059A0E3 /* menu-microphone@2x.png */; };
+		52EFF79A19C3688D0059A0E3 /* menu-microphone@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 52EFF78419C3688D0059A0E3 /* menu-microphone@2x.png */; };
+		52EFF79B19C3688D0059A0E3 /* menu-settings.png in Resources */ = {isa = PBXBuildFile; fileRef = 52EFF78519C3688D0059A0E3 /* menu-settings.png */; };
+		52EFF79C19C3688D0059A0E3 /* menu-settings.png in Resources */ = {isa = PBXBuildFile; fileRef = 52EFF78519C3688D0059A0E3 /* menu-settings.png */; };
+		52EFF79D19C3688D0059A0E3 /* menu-settings@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 52EFF78619C3688D0059A0E3 /* menu-settings@2x.png */; };
+		52EFF79E19C3688D0059A0E3 /* menu-settings@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 52EFF78619C3688D0059A0E3 /* menu-settings@2x.png */; };
 		760E3C48194FB54600D86D91 /* DataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 760E3C46194FB54600D86D91 /* DataModel.xcdatamodeld */; };
 		760E3C49194FB54600D86D91 /* DataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 760E3C46194FB54600D86D91 /* DataModel.xcdatamodeld */; };
 		760E3C4C194FB61B00D86D91 /* Program.m in Sources */ = {isa = PBXBuildFile; fileRef = 760E3C4B194FB61B00D86D91 /* Program.m */; };
@@ -170,6 +194,18 @@
 		52E68B8619B919300028F8AE /* SCPRMenuButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCPRMenuButton.h; sourceTree = "<group>"; };
 		52E68B8719B919300028F8AE /* SCPRMenuButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SCPRMenuButton.m; sourceTree = "<group>"; };
 		52E68B8A19B927920028F8AE /* DataModel 2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "DataModel 2.xcdatamodel"; sourceTree = "<group>"; };
+		52EFF77B19C3688D0059A0E3 /* menu-antenna.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "menu-antenna.png"; sourceTree = "<group>"; };
+		52EFF77C19C3688D0059A0E3 /* menu-antenna@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "menu-antenna@2x.png"; sourceTree = "<group>"; };
+		52EFF77D19C3688D0059A0E3 /* menu-clock.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "menu-clock.png"; sourceTree = "<group>"; };
+		52EFF77E19C3688D0059A0E3 /* menu-clock@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "menu-clock@2x.png"; sourceTree = "<group>"; };
+		52EFF77F19C3688D0059A0E3 /* menu-glasses.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "menu-glasses.png"; sourceTree = "<group>"; };
+		52EFF78019C3688D0059A0E3 /* menu-glasses@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "menu-glasses@2x.png"; sourceTree = "<group>"; };
+		52EFF78119C3688D0059A0E3 /* menu-heart-plus.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "menu-heart-plus.png"; sourceTree = "<group>"; };
+		52EFF78219C3688D0059A0E3 /* menu-heart-plus@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "menu-heart-plus@2x.png"; sourceTree = "<group>"; };
+		52EFF78319C3688D0059A0E3 /* menu-microphone.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "menu-microphone.png"; sourceTree = "<group>"; };
+		52EFF78419C3688D0059A0E3 /* menu-microphone@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "menu-microphone@2x.png"; sourceTree = "<group>"; };
+		52EFF78519C3688D0059A0E3 /* menu-settings.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "menu-settings.png"; sourceTree = "<group>"; };
+		52EFF78619C3688D0059A0E3 /* menu-settings@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "menu-settings@2x.png"; sourceTree = "<group>"; };
 		760E3C47194FB54600D86D91 /* DataModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = DataModel.xcdatamodel; sourceTree = "<group>"; };
 		760E3C4A194FB61B00D86D91 /* Program.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Program.h; sourceTree = "<group>"; };
 		760E3C4B194FB61B00D86D91 /* Program.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Program.m; sourceTree = "<group>"; };
@@ -332,6 +368,25 @@
 			path = iOSPullDownMenu;
 			sourceTree = "<group>";
 		};
+		52EFF77A19C3688D0059A0E3 /* menu */ = {
+			isa = PBXGroup;
+			children = (
+				52EFF77B19C3688D0059A0E3 /* menu-antenna.png */,
+				52EFF77C19C3688D0059A0E3 /* menu-antenna@2x.png */,
+				52EFF77D19C3688D0059A0E3 /* menu-clock.png */,
+				52EFF77E19C3688D0059A0E3 /* menu-clock@2x.png */,
+				52EFF77F19C3688D0059A0E3 /* menu-glasses.png */,
+				52EFF78019C3688D0059A0E3 /* menu-glasses@2x.png */,
+				52EFF78119C3688D0059A0E3 /* menu-heart-plus.png */,
+				52EFF78219C3688D0059A0E3 /* menu-heart-plus@2x.png */,
+				52EFF78319C3688D0059A0E3 /* menu-microphone.png */,
+				52EFF78419C3688D0059A0E3 /* menu-microphone@2x.png */,
+				52EFF78519C3688D0059A0E3 /* menu-settings.png */,
+				52EFF78619C3688D0059A0E3 /* menu-settings@2x.png */,
+			);
+			path = menu;
+			sourceTree = "<group>";
+		};
 		760E3C45194FB4F700D86D91 /* Models */ = {
 			isa = PBXGroup;
 			children = (
@@ -430,6 +485,7 @@
 		7685BD57194BBCB90075BB16 /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				52EFF77A19C3688D0059A0E3 /* menu */,
 				768C06871995911600F829EB /* program_images */,
 				7685BD58194BBCB90075BB16 /* pauseButton.png */,
 				768C064A1995905D00F829EB /* btn_live_rewind_small.png */,
@@ -732,32 +788,44 @@
 				768C0684199590CC00F829EB /* FreigSanProSem.otf in Resources */,
 				768C0674199590CC00F829EB /* FreigSanProBold.otf in Resources */,
 				768C0678199590CC00F829EB /* FreigSanProBook.otf in Resources */,
+				52EFF79E19C3688D0059A0E3 /* menu-settings@2x.png in Resources */,
 				768C065B1995905D00F829EB /* btn_play_large.png in Resources */,
+				52EFF78C19C3688D0059A0E3 /* menu-clock.png in Resources */,
 				76D71D441905A56A00F4852F /* Glass_Crash.mp3 in Resources */,
 				76D71D451905A56A00F4852F /* Wood_Crash.mp3 in Resources */,
 				768C0682199590CC00F829EB /* FreigSanProMedIt.otf in Resources */,
 				76B9A9AF18EF59FD007A6D8C /* SCPRUserReportViewController.xib in Resources */,
 				768C0672199590CC00F829EB /* FreigSanProBlkIt.otf in Resources */,
+				52EFF79419C3688D0059A0E3 /* menu-heart-plus.png in Resources */,
 				768C067C199590CC00F829EB /* FreigSanProLig.otf in Resources */,
 				768C065D1995905D00F829EB /* btn_play_large@2x.png in Resources */,
 				7685BD63194BBCB90075BB16 /* playButton@2x.png in Resources */,
 				769B907B19C0D5C300E812C7 /* Config.plist in Resources */,
+				52EFF79019C3688D0059A0E3 /* menu-glasses.png in Resources */,
+				52EFF78819C3688D0059A0E3 /* menu-antenna.png in Resources */,
 				52D91F3019A2537400B8A02F /* program_image_urls.json in Resources */,
 				7685BD61194BBCB90075BB16 /* playButton.png in Resources */,
 				768C06611995905D00F829EB /* chevron_down@2x.png in Resources */,
 				768C067A199590CC00F829EB /* FreigSanProBookIt.otf in Resources */,
 				768C0680199590CC00F829EB /* FreigSanProMed.otf in Resources */,
+				52EFF79619C3688D0059A0E3 /* menu-heart-plus@2x.png in Resources */,
+				52EFF79819C3688D0059A0E3 /* menu-microphone.png in Resources */,
+				52EFF79A19C3688D0059A0E3 /* menu-microphone@2x.png in Resources */,
 				768C0686199590CC00F829EB /* FreigSanProSemIt.otf in Resources */,
 				52E68B8519B8F2D10028F8AE /* SCPRNavigationController.xib in Resources */,
 				7685BD5F194BBCB90075BB16 /* pauseButton@2x.png in Resources */,
 				76349D0C18D388C80027C3B8 /* Images.xcassets in Resources */,
 				768C06591995905D00F829EB /* btn_pause@2x.png in Resources */,
 				768C068D1995911600F829EB /* program_tile_generic@2x.jpg in Resources */,
+				52EFF79219C3688D0059A0E3 /* menu-glasses@2x.png in Resources */,
+				52EFF79C19C3688D0059A0E3 /* menu-settings.png in Resources */,
 				768C0676199590CC00F829EB /* FreigSanProBoldIt.otf in Resources */,
+				52EFF78A19C3688D0059A0E3 /* menu-antenna@2x.png in Resources */,
 				768C06571995905D00F829EB /* btn_pause.png in Resources */,
 				7685BD5D194BBCB90075BB16 /* pauseButton.png in Resources */,
 				768C0670199590CC00F829EB /* FreigSanProBlk.otf in Resources */,
 				768C068B1995911600F829EB /* program_tile_generic.jpg in Resources */,
+				52EFF78E19C3688D0059A0E3 /* menu-clock@2x.png in Resources */,
 				768C06531995905D00F829EB /* btn_live_rewind_small.png in Resources */,
 				768C067E199590CC00F829EB /* FreigSanProLigIt.otf in Resources */,
 				768C065F1995905D00F829EB /* chevron_down.png in Resources */,
@@ -773,39 +841,51 @@
 				768C065C1995905D00F829EB /* btn_play_large@2x.png in Resources */,
 				76B9A9AE18EF59FD007A6D8C /* SCPRUserReportViewController.xib in Resources */,
 				768C067D199590CC00F829EB /* FreigSanProLigIt.otf in Resources */,
+				52EFF78B19C3688D0059A0E3 /* menu-clock.png in Resources */,
+				52EFF79119C3688D0059A0E3 /* menu-glasses@2x.png in Resources */,
 				768C0675199590CC00F829EB /* FreigSanProBoldIt.otf in Resources */,
 				76A308E518C8FB940065D4B1 /* Images.xcassets in Resources */,
 				76B9A9BF18F609FF007A6D8C /* Glass_Crash.mp3 in Resources */,
 				768C0679199590CC00F829EB /* FreigSanProBookIt.otf in Resources */,
+				52EFF78919C3688D0059A0E3 /* menu-antenna@2x.png in Resources */,
 				768C067F199590CC00F829EB /* FreigSanProMed.otf in Resources */,
 				768C068A1995911600F829EB /* program_tile_generic.jpg in Resources */,
 				768C0683199590CC00F829EB /* FreigSanProSem.otf in Resources */,
 				7685BD62194BBCB90075BB16 /* playButton@2x.png in Resources */,
 				768C065E1995905D00F829EB /* chevron_down.png in Resources */,
+				52EFF79719C3688D0059A0E3 /* menu-microphone.png in Resources */,
 				7685BD60194BBCB90075BB16 /* playButton.png in Resources */,
 				768C0681199590CC00F829EB /* FreigSanProMedIt.otf in Resources */,
 				7685BD5E194BBCB90075BB16 /* pauseButton@2x.png in Resources */,
 				7685BD5C194BBCB90075BB16 /* pauseButton.png in Resources */,
+				52EFF79D19C3688D0059A0E3 /* menu-settings@2x.png in Resources */,
 				768C06561995905D00F829EB /* btn_pause.png in Resources */,
+				52EFF79319C3688D0059A0E3 /* menu-heart-plus.png in Resources */,
 				768C065A1995905D00F829EB /* btn_play_large.png in Resources */,
+				52EFF78D19C3688D0059A0E3 /* menu-clock@2x.png in Resources */,
 				52D91F2F19A2537400B8A02F /* program_image_urls.json in Resources */,
 				768C0685199590CC00F829EB /* FreigSanProSemIt.otf in Resources */,
 				768C0673199590CC00F829EB /* FreigSanProBold.otf in Resources */,
 				768C0677199590CC00F829EB /* FreigSanProBook.otf in Resources */,
 				768C067B199590CC00F829EB /* FreigSanProLig.otf in Resources */,
 				768C068C1995911600F829EB /* program_tile_generic@2x.jpg in Resources */,
+				52EFF78719C3688D0059A0E3 /* menu-antenna.png in Resources */,
+				52EFF79519C3688D0059A0E3 /* menu-heart-plus@2x.png in Resources */,
+				52EFF79B19C3688D0059A0E3 /* menu-settings.png in Resources */,
 				76A308D118C8FB940065D4B1 /* InfoPlist.strings in Resources */,
 				768C06581995905D00F829EB /* btn_pause@2x.png in Resources */,
 				768C06541995905D00F829EB /* btn_live_rewind_small@2x.png in Resources */,
 				76EF5E8A193E8D6B00568A9D /* Storyboard.storyboard in Resources */,
 				769B907A19C0D5C300E812C7 /* Config.plist in Resources */,
 				76B9A9C118F609FF007A6D8C /* Wood_Crash.mp3 in Resources */,
+				52EFF78F19C3688D0059A0E3 /* menu-glasses.png in Resources */,
 				52E68B8419B8F2D10028F8AE /* SCPRNavigationController.xib in Resources */,
 				761CC5A4195A2878006A6C7C /* Testflight-Info.plist in Resources */,
 				768C06521995905D00F829EB /* btn_live_rewind_small.png in Resources */,
 				768C066F199590CC00F829EB /* FreigSanProBlk.otf in Resources */,
 				768C06601995905D00F829EB /* chevron_down@2x.png in Resources */,
 				768C0671199590CC00F829EB /* FreigSanProBlkIt.otf in Resources */,
+				52EFF79919C3688D0059A0E3 /* menu-microphone@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
