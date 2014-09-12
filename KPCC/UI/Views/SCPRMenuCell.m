@@ -13,7 +13,7 @@
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
 
-    self.menuItemLabel = [[UILabel alloc] initWithFrame:CGRectMake(60, 0, self.frame.size.width - 31, 62)];
+    self.menuItemLabel = [[UILabel alloc] initWithFrame:CGRectMake(60, 0, self.frame.size.width - 60, 62)];
     [self.contentView addSubview:self.menuItemLabel];
 
     self.iconImageView = [[UIImageView alloc]initWithFrame:CGRectMake(15, CGRectGetMidY(self.frame), 0, 0)];
