@@ -72,10 +72,11 @@
     [[AVAudioSession sharedInstance] setActive: YES error: nil];
     
     // Config blur view.
+    [self.blurView setAlpha:0.0];
     [self.blurView setTintColor:[UIColor clearColor]];
     [self.blurView setBlurRadius:10.0f];
     [self.blurView setDynamic:NO];
-    
+
     //[self.navigationController.navigationBar.topItem setTitle:@"KPCC Live"];
     MPRemoteCommandCenter *rcc = [MPRemoteCommandCenter sharedCommandCenter];
 
@@ -190,7 +191,7 @@
 
 - (void)setUIContents:(BOOL)animated {
     
-    [self.blurView setNeedsDisplay];
+    //[self.blurView setNeedsDisplay];
 
     if (animated) {
         [UIView animateWithDuration:0.1 animations:^{
@@ -204,7 +205,7 @@
                 [self.liveDescriptionLabel setText:@"ON NOW"];
                 [self.liveRewindAltButton setAlpha:0.0];
                 [self.backToLiveButton setAlpha:0.0];
-                [self.blurView setAlpha:0.0];
+                //[self.blurView setAlpha:0.0];
             }
 
         } completion:^(BOOL finished) {
@@ -313,11 +314,21 @@
 
 }
 
-- (void)setMenuUI:(BOOL)animated {
+- (void)cloakForMenu:(BOOL)animated {
+    [self.blurView setNeedsDisplay];
     POPBasicAnimation *fadeAnimation = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
     fadeAnimation.toValue = @1;
     fadeAnimation.duration = 0.3;
 
+    [self.blurView.layer pop_addAnimation:fadeAnimation forKey:@"blurViewFadeAnimation"];
+}
+
+- (void)decloakForMenu:(BOOL)animated {
+    [self.blurView setNeedsDisplay];
+    POPBasicAnimation *fadeAnimation = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
+    fadeAnimation.toValue = @0;
+    fadeAnimation.duration = 0.3;
+    
     [self.blurView.layer pop_addAnimation:fadeAnimation forKey:@"blurViewFadeAnimation"];
 }
 

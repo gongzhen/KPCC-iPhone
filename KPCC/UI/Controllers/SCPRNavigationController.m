@@ -7,6 +7,7 @@
 //
 
 #import "SCPRNavigationController.h"
+#import "SCPRMasterViewController.h"
 #import "SCPRMenuButton.h"
 #import <POP/POP.h>
 
@@ -119,7 +120,9 @@
 - (void)menuPressed {
     if (self.menuOpen) {
         [pulldownMenu closeDropDown:YES];
+        [[[Utils del] masterViewController] decloakForMenu:YES];
     } else {
+        [[[Utils del] masterViewController] cloakForMenu:YES];
         [pulldownMenu openDropDown:YES];
     }
     self.menuOpen = !self.menuOpen;

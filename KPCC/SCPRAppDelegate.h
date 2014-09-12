@@ -10,8 +10,11 @@
 #import "NetworkManager.h"
 #import "Program.h"
 
+@class SCPRMasterViewController;
+
 @interface SCPRAppDelegate : UIResponder <UIApplicationDelegate, ContentProcessor>
 
 @property (strong, nonatomic) UIWindow *window;
+@property (strong, nonatomic) SCPRMasterViewController *masterViewController;
 
 @end

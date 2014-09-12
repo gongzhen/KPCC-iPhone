@@ -10,6 +10,10 @@
 
 @implementation Utils
 
++ (SCPRAppDelegate*)del {
+    return (SCPRAppDelegate*)[UIApplication sharedApplication].delegate;
+}
+
 + (NSDate*)dateFromRFCString:(NSString*)dateString {
     if ([dateString isEqual:[NSNull null] ]) {
         return nil;

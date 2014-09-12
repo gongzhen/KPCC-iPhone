@@ -7,8 +7,13 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "SCPRAppDelegate.h"
+
+//@class SCPRMasterViewController;
 
 @interface Utils : NSObject
+
++ (SCPRAppDelegate*)del;
 
 + (NSDate*)dateFromRFCString:(NSString*)dateString;
 + (NSString*)prettyStringFromRFCDateString:(NSString*)rawDate;

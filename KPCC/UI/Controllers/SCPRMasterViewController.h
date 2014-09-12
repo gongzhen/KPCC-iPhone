@@ -33,4 +33,7 @@
 @property (nonatomic,strong) Program *currentProgram;
 @property Boolean seekRequested;
 
+- (void)cloakForMenu:(BOOL)animated;
+- (void)decloakForMenu:(BOOL)animated;
+
 @end

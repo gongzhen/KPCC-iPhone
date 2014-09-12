@@ -7,7 +7,8 @@
 //
 
 #import "SCPRAppDelegate.h"
-#import "SCPRRootViewController.h"
+#import "SCPRMasterViewController.h"
+#import "SCPRNavigationController.h"
 #import <AVFoundation/AVFoundation.h>
 #import "Flurry.h"
 
@@ -42,8 +43,9 @@
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     
     // Launch our root view controller
-    UIViewController *viewController = [[UIStoryboard storyboardWithName:@"Storyboard" bundle:nil] instantiateInitialViewController];
-    self.window.rootViewController = viewController;
+    SCPRNavigationController *navigationController = [[UIStoryboard storyboardWithName:@"Storyboard" bundle:nil] instantiateInitialViewController];
+    self.masterViewController = navigationController.viewControllers.firstObject;
+    self.window.rootViewController = navigationController;
 
     // Fetch initial list of Programs from SCPRV4 and store in CoreData for later usage.
     [[NetworkManager shared] fetchAllProgramInformation:self];

@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "Utils.h"
 #import "SCPRMenuButton.h"
 #import "PulldownMenu.h"
 
