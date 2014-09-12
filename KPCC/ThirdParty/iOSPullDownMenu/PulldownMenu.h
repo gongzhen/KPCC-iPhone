@@ -44,6 +44,7 @@
 @property (nonatomic) UIColor *cellTextColor;
 @property (nonatomic) UITableViewCellSelectionStyle cellSelectionStyle;
 @property (nonatomic) UIFont *cellFont;
+@property (nonatomic) UIColor *separatorColor;
 @property (nonatomic) float cellHeight;
 @property (nonatomic) BOOL fullyOpen;
 

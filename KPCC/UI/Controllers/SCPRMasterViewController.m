@@ -74,7 +74,7 @@
     // Config blur view.
     [self.blurView setAlpha:0.0];
     [self.blurView setTintColor:[UIColor clearColor]];
-    [self.blurView setBlurRadius:10.0f];
+    [self.blurView setBlurRadius:20.0f];
     [self.blurView setDynamic:NO];
 
     //[self.navigationController.navigationBar.topItem setTitle:@"KPCC Live"];

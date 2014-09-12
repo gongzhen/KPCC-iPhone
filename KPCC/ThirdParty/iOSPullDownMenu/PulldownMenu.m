@@ -20,6 +20,7 @@
             cellTextColor,
             cellSelectedColor,
             cellSelectionStyle,
+            separatorColor,
             fullyOpen,
             delegate;
 
@@ -30,16 +31,17 @@
     menuItems = [[NSMutableArray alloc] init];
     
     // Setting defaults
-    cellHeight = 60.0f;
+    cellHeight = 62.0f;
     handleHeight = 15.0f;
     animationDuration = 0.3f;
     topMarginPortrait = 0;
     topMarginLandscape = 0;
     cellColor = [UIColor clearColor];
     cellSelectedColor = [UIColor lightGrayColor];
-    cellFont = [UIFont fontWithName:@"FreightSansProMedium-Regular" size:19.0f];
+    cellFont = [UIFont fontWithName:@"FreightSansProLight-Regular" size:24.0f];
     cellTextColor = [UIColor whiteColor];
     cellSelectionStyle = UITableViewCellSelectionStyleDefault;
+    separatorColor = [UIColor colorWithRed:222.f/255.f green:228.f/255.f blue:229.f/255.f alpha:0.3f];
     
     return self;
 }
@@ -97,18 +99,19 @@
     
     fullyOpen = NO;
     
-    blurView = [[FXBlurView alloc] initWithFrame:CGRectMake(0, 0, 320, tableHeight+handleHeight)];
-    [blurView setTintColor:[UIColor clearColor]];
-    [blurView setBlurRadius:10.0f];
-    [blurView setDynamic:YES];
-    [blurView setAlpha:0.5];
-    [self addSubview:blurView];
+    //blurView = [[FXBlurView alloc] initWithFrame:CGRectMake(0, 0, 320, tableHeight+handleHeight)];
+    //[blurView setTintColor:[UIColor clearColor]];
+    //[blurView setBlurRadius:10.0f];
+    //[blurView setDynamic:YES];
+    //[blurView setAlpha:0.5];
+    //[self addSubview:blurView];
     
     menuList = [[UITableView alloc] init];
     [menuList setRowHeight:cellHeight];
     [menuList setDataSource:self];
     [menuList setDelegate:self];
     [menuList setBackgroundColor:[UIColor clearColor]];
+    [menuList setSeparatorColor:separatorColor];
     [self addSubview:menuList];
     
     handle = [[UIView alloc] init];
