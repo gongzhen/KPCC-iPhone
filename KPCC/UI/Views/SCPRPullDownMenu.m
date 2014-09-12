@@ -22,7 +22,7 @@
 
 - (id)init {
     self = [super init];
-    
+
     menuItemsDictionary = @{kMenuItemKPCCLive : kIconKPCCLive,
                             kMenuItemPrograms : kIconPrograms,
                             kMenuItemSettings : kIconSettings };
@@ -41,7 +41,6 @@
 - (SCPRMenuCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
 
     SCPRMenuCell *cell = [tableView dequeueReusableCellWithIdentifier:@"menuListCell"];
-
     if (cell == nil) {
         cell = [[SCPRMenuCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"menuListCell"];
     }
@@ -62,22 +61,11 @@
     if (iconNamed) {
         UIImage *iconImg = [UIImage imageNamed:[NSString stringWithFormat:@"menu-%@", iconNamed]];
         [cell.iconImageView setImage:iconImg];
-        NSLog(@"cell height %f", cell.frame.size.height/2);
-        cell.iconImageView.frame = CGRectMake(cell.iconImageView.frame.origin.x, 31.f - iconImg.size.height/2,
+        cell.iconImageView.frame = CGRectMake(cell.iconImageView.frame.origin.x, [super cellHeight]/2 - iconImg.size.height/2,
                                      iconImg.size.width, iconImg.size.height);
-
-        //cell.iconImageView.image = [UIImage imageNamed:[NSString stringWithFormat:@"menu-%@", iconNamed]];
     }
 
     return cell;
 }
-
-/*
-// Only override drawRect: if you perform custom drawing.
-// An empty implementation adversely affects performance during animation.
-- (void)drawRect:(CGRect)rect {
-    // Drawing code
-}
-*/
 
 @end
