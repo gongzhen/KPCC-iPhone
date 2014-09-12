@@ -12,7 +12,6 @@
 @protocol MenuButtonDelegate
     -(void)backPressed;
     -(void)menuPressed;
-    -(void)closePressed;
 @end
 
 @interface SCPRMenuButton : UIControl

@@ -214,11 +214,10 @@
     if (self.showBackArrow) {
         [delegate backPressed];
     } else {
+        [delegate menuPressed];
         if (self.showMenu) {
-            [delegate menuPressed];
             [self animateToMenu];
         } else {
-            [delegate closePressed];
             [self animateToClose];
         }
         self.showMenu = !self.showMenu;

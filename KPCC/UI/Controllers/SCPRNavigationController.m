@@ -11,14 +11,20 @@
 #import <POP/POP.h>
 
 @interface SCPRNavigationController ()
-
+@property(nonatomic) BOOL menuOpen;
 @end
 
 @implementation SCPRNavigationController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view from its nib.
+
+    __weak SCPRNavigationController *weakSelf = self;
+    
+    if ([self respondsToSelector:@selector(interactivePopGestureRecognizer)]) {
+        self.interactivePopGestureRecognizer.delegate = weakSelf;
+        self.delegate = weakSelf;
+    }
 
     pulldownMenu = [[PulldownMenu alloc] initWithNavigationController:self];
     [self.view insertSubview:pulldownMenu belowSubview:self.navigationBar];
@@ -33,22 +39,28 @@
     // "Global" menu button to be used across all pushed view controllers.
     menuButton = [SCPRMenuButton buttonWithOrigin:CGPointMake(10.f, 10.f)];
     menuButton.delegate = self;
-//    [menuButton addTarget:self action:@selector(menuPressed:) forControlEvents:UIControlEventTouchUpInside];
 
     for (UIViewController* viewController in self.viewControllers){
-        // You need to do this because the push is not called if you created this controller as part of the storyboard
         NSLog(@"adding button to vc : %@", viewController.title);
         [self addButton:viewController.navigationItem];
     }
 }
 
 - (void)pushViewController:(UIViewController *)viewController animated:(BOOL)animated{
+    if ([self respondsToSelector:@selector(interactivePopGestureRecognizer)]) {
+        self.interactivePopGestureRecognizer.enabled = NO;
+    }
+    
     [super pushViewController:viewController animated:animated];
     if (viewController.navigationItem.leftBarButtonItem == nil){
         viewController.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:menuButton];
     }
 
-    //[pulldownMenu animateDropDown];
+    if (self.menuOpen) {
+        [pulldownMenu closeDropDown:NO];
+        self.menuOpen = !self.menuOpen;
+    }
+
     [menuButton animateToBack];
 }
 
@@ -58,8 +70,12 @@
     }
 }
 
-- (void)menuPressed:(id)sender {
-    [pulldownMenu animateDropDown];
+
+#pragma mark - UINavigationControllerDelegate
+
+- (void)navigationController:(UINavigationController *)navigationController didShowViewController:(UIViewController *)viewController animated:(BOOL)animate {
+    // Enable the gesture again once the new controller is shown
+    self.interactivePopGestureRecognizer.enabled = ([self respondsToSelector:@selector(interactivePopGestureRecognizer)] && [self.viewControllers count] > 1);
 }
 
 
@@ -80,30 +96,33 @@
         NSLog(@"Pull down menu open!");
         [[NSNotificationCenter defaultCenter] postNotificationName:@"pull_down_menu_opened"
                                                             object:nil];
+        [menuButton animateToClose];
     } else {
         NSLog(@"Pull down menu closed!");
         [[NSNotificationCenter defaultCenter] postNotificationName:@"pull_down_menu_closed"
                                                             object:nil];
+        [menuButton animateToMenu];
     }
 }
 
 
 # pragma mark - MenuButtonDelegate
+
 - (void)backPressed {
     [self popViewControllerAnimated:YES];
 
-    if (self == [self.navigationController.viewControllers objectAtIndex:0]){
-        [menuButton animateToClose];
+    if ([self.viewControllers count] == 1) {
+        [menuButton animateToMenu];
     }
-
 }
 
 - (void)menuPressed {
-    [pulldownMenu animateDropDown];
-}
-
-- (void)closePressed {
-    [pulldownMenu animateDropDown];
+    if (self.menuOpen) {
+        [pulldownMenu closeDropDown:YES];
+    } else {
+        [pulldownMenu openDropDown:YES];
+    }
+    self.menuOpen = !self.menuOpen;
 }
 
 - (void)didReceiveMemoryWarning {

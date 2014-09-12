@@ -52,5 +52,7 @@
 - (void)insertButton:(NSString *)title;
 - (void)loadMenu;
 - (void)animateDropDown;
+- (void)openDropDown:(BOOL)animated;
+- (void)closeDropDown:(BOOL)animated;
 
 @end

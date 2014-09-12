@@ -50,6 +50,16 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+//    pulldownMenu = [[PulldownMenu alloc] initWithView:self.view];
+//    [self.view addSubview:pulldownMenu];
+//    
+//    [pulldownMenu insertButton:@"Menu Item 1"];
+//    [pulldownMenu insertButton:@"Menu Item 2"];
+//    [pulldownMenu insertButton:@"Menu Item 3"];
+//    
+//    pulldownMenu.delegate = self;
+//    [pulldownMenu loadMenu];
 
     // Fetch program info and update audio control state.
     [self updateDataForUI];

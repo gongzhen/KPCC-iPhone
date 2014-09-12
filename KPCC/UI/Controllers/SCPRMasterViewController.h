@@ -14,8 +14,11 @@
 #import "Program.h"
 #import "FXBlurView.h"
 #import <pop/POP.h>
+#import "PulldownMenu.h"
 
-@interface SCPRMasterViewController : UIViewController
+@interface SCPRMasterViewController : UIViewController<PulldownMenuDelegate> {
+    PulldownMenu *pulldownMenu;
+}
 
 @property IBOutlet UILabel *programTitleLabel;
 @property IBOutlet UIImageView *programImageView;

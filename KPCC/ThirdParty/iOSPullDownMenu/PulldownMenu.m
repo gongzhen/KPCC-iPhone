@@ -230,6 +230,62 @@
                      }];
 }
 
+- (void)openDropDown:(BOOL)animated
+{
+    if (animated)
+    {
+        [UIView animateWithDuration: animationDuration
+                              delay: 0.0
+                            options: UIViewAnimationOptionCurveEaseOut
+                         animations:^{
+                             if (!fullyOpen)
+                             {
+                                 self.center = CGPointMake(self.frame.size.width / 2, ((self.frame.size.height / 2) + topMargin));
+                                 fullyOpen = YES;
+                             }
+                         }
+                         completion:^(BOOL finished){
+                             [delegate pullDownAnimated:fullyOpen];
+                         }];
+    }
+    else
+    {
+        if (!fullyOpen)
+        {
+            self.center = CGPointMake(self.frame.size.width / 2, ((self.frame.size.height / 2) + topMargin));
+            fullyOpen = YES;
+        }
+    }
+}
+
+- (void)closeDropDown:(BOOL)animated
+{
+    if (animated)
+    {
+        [UIView animateWithDuration: animationDuration
+                              delay: 0.0
+                            options: UIViewAnimationOptionCurveEaseOut
+                         animations:^{
+                             if (fullyOpen)
+                             {
+                                 self.center = CGPointMake(self.frame.size.width / 2, -((self.frame.size.height / 2) + topMargin));
+                                 fullyOpen = NO;
+                             }
+                         }
+                         completion:^(BOOL finished){
+                             [delegate pullDownAnimated:fullyOpen];
+                         }];
+    }
+    else
+    {
+        if (fullyOpen)
+        {
+            self.center = CGPointMake(self.frame.size.width / 2, -((self.frame.size.height / 2) + topMargin));
+            fullyOpen = NO;
+        }
+    }
+}
+
 - (void)createConstraints
 {
     
