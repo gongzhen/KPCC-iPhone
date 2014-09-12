@@ -316,20 +316,32 @@
 
 - (void)cloakForMenu:(BOOL)animated {
     [self.blurView setNeedsDisplay];
-    POPBasicAnimation *fadeAnimation = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
-    fadeAnimation.toValue = @1;
-    fadeAnimation.duration = 0.3;
 
-    [self.blurView.layer pop_addAnimation:fadeAnimation forKey:@"blurViewFadeAnimation"];
+    POPBasicAnimation *blurFadeAnimation = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
+    blurFadeAnimation.toValue = @1;
+    blurFadeAnimation.duration = 0.3;
+
+    POPBasicAnimation *controlsFadeAnimation = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
+    controlsFadeAnimation.toValue = @0;
+    controlsFadeAnimation.duration = 0.3;
+
+    [self.blurView.layer pop_addAnimation:blurFadeAnimation forKey:@"blurViewFadeAnimation"];
+    [self.playerControlsView.layer pop_addAnimation:controlsFadeAnimation forKey:@"controlsViewFadeAnimation"];
 }
 
 - (void)decloakForMenu:(BOOL)animated {
     [self.blurView setNeedsDisplay];
+
     POPBasicAnimation *fadeAnimation = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
     fadeAnimation.toValue = @0;
     fadeAnimation.duration = 0.3;
-    
+
+    POPBasicAnimation *controlsFadeAnimation = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
+    controlsFadeAnimation.toValue = @1;
+    controlsFadeAnimation.duration = 0.3;
+
     [self.blurView.layer pop_addAnimation:fadeAnimation forKey:@"blurViewFadeAnimation"];
+    [self.playerControlsView.layer pop_addAnimation:controlsFadeAnimation forKey:@"controlsViewFadeAnimation"];
 }
 
 - (void)updateUIWithProgram:(Program*)program {

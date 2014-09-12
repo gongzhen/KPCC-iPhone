@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6245" systemVersion="13E28" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="tBl-Ag-e49">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6245" systemVersion="14A343f" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="tBl-Ag-e49">
     <dependencies>
         <deployment defaultVersion="1792" identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6238"/>
@@ -30,67 +30,73 @@
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="program_tile_generic.jpg" translatesAutoresizingMaskIntoConstraints="NO" id="jYj-xG-3QJ">
                                 <rect key="frame" x="0.0" y="64" width="320" height="508"/>
                             </imageView>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ibQ-JJ-YMx">
-                                <rect key="frame" x="99" y="225" width="122" height="122"/>
-                                <state key="normal" image="btn_play_large.png">
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <action selector="playOrPauseTapped:" destination="4pL-7p-2vt" eventType="touchUpInside" id="NNm-W0-b3b"/>
-                                </connections>
-                            </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="ON NOW" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HL8-Wv-cqf">
-                                <rect key="frame" x="16" y="95" width="288" height="17"/>
-                                <fontDescription key="fontDescription" name="FreightSansProMedium-Regular" family="FreightSans Pro" pointSize="15"/>
-                                <color key="textColor" red="0.97254901959999995" green="0.4941176471" blue="0.12941176469999999" alpha="1" colorSpace="calibratedRGB"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8XD-hP-Zya">
-                                <rect key="frame" x="0.0" y="113" width="320" height="54"/>
-                                <fontDescription key="fontDescription" name="FreightSansProLight-Regular" family="FreightSans Pro" pointSize="46"/>
-                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <view alpha="0.0" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="WKa-sf-CFh">
-                                <rect key="frame" x="10" y="380" width="300" height="1"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                            </view>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="weC-tD-l1U">
-                                <rect key="frame" x="283" y="525" width="21" height="23"/>
-                                <state key="normal" image="btn_live_rewind_small.png"/>
-                                <connections>
-                                    <action selector="rewindToStartTapped:" destination="4pL-7p-2vt" eventType="touchUpInside" id="1vH-rL-E95"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="bottom" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9Zj-eH-3uf">
-                                <rect key="frame" x="16" y="380" width="288" height="23"/>
-                                <fontDescription key="fontDescription" name="FreightSansProLight-Regular" family="FreightSans Pro" pointSize="18"/>
-                                <state key="normal" title=" Rewind to the start of this show" image="btn_live_rewind_small.png">
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <state key="highlighted">
-                                    <color key="titleColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <action selector="rewindToStartTapped:" destination="4pL-7p-2vt" eventType="touchUpInside" id="seX-pK-doX"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="bottom" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wPs-aM-sN3">
-                                <rect key="frame" x="16" y="358" width="288" height="23"/>
-                                <fontDescription key="fontDescription" name="FreightSansProLight-Regular" family="FreightSans Pro" pointSize="18"/>
-                                <state key="normal" title="Back to Live">
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <state key="highlighted">
-                                    <color key="titleColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <action selector="backToLiveTapped:" destination="4pL-7p-2vt" eventType="touchUpInside" id="rTa-LU-ieq"/>
-                                </connections>
-                            </button>
                             <view alpha="0.0" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="LAZ-J2-lj5" customClass="FXBlurView">
                                 <rect key="frame" x="0.0" y="64" width="320" height="504"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            </view>
+                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="m78-b6-vle">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pSM-s0-r5H">
+                                        <rect key="frame" x="99" y="225" width="122" height="122"/>
+                                        <state key="normal" image="btn_play_large.png">
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="playOrPauseTapped:" destination="4pL-7p-2vt" eventType="touchUpInside" id="WHu-nV-XJd"/>
+                                        </connections>
+                                    </button>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="ON NOW" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="g8v-J1-2Ng">
+                                        <rect key="frame" x="16" y="95" width="288" height="17"/>
+                                        <fontDescription key="fontDescription" name="FreightSansProMedium-Regular" family="FreightSans Pro" pointSize="15"/>
+                                        <color key="textColor" red="0.97254901959999995" green="0.4941176471" blue="0.12941176469999999" alpha="1" colorSpace="calibratedRGB"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ao2-yr-kyf">
+                                        <rect key="frame" x="0.0" y="113" width="320" height="54"/>
+                                        <fontDescription key="fontDescription" name="FreightSansProLight-Regular" family="FreightSans Pro" pointSize="46"/>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <view alpha="0.0" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="np1-OZ-drV">
+                                        <rect key="frame" x="10" y="380" width="300" height="1"/>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                    </view>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="TfG-Pl-Djp">
+                                        <rect key="frame" x="283" y="525" width="21" height="23"/>
+                                        <state key="normal" image="btn_live_rewind_small.png"/>
+                                        <connections>
+                                            <action selector="rewindToStartTapped:" destination="4pL-7p-2vt" eventType="touchUpInside" id="cL1-mu-0qd"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="bottom" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uVS-5U-Chc">
+                                        <rect key="frame" x="16" y="380" width="288" height="23"/>
+                                        <fontDescription key="fontDescription" name="FreightSansProLight-Regular" family="FreightSans Pro" pointSize="18"/>
+                                        <state key="normal" title=" Rewind to the start of this show" image="btn_live_rewind_small.png">
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <state key="highlighted">
+                                            <color key="titleColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="rewindToStartTapped:" destination="4pL-7p-2vt" eventType="touchUpInside" id="st2-bd-HVL"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="bottom" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1zm-63-H3R">
+                                        <rect key="frame" x="16" y="358" width="288" height="23"/>
+                                        <fontDescription key="fontDescription" name="FreightSansProLight-Regular" family="FreightSans Pro" pointSize="18"/>
+                                        <state key="normal" title="Back to Live">
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <state key="highlighted">
+                                            <color key="titleColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="backToLiveTapped:" destination="4pL-7p-2vt" eventType="touchUpInside" id="Yvm-Zo-met"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                             </view>
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
@@ -101,15 +107,16 @@
                     <nil key="simulatedBottomBarMetrics"/>
                     <simulatedOrientationMetrics key="simulatedOrientationMetrics"/>
                     <connections>
-                        <outlet property="backToLiveButton" destination="wPs-aM-sN3" id="9ox-AU-hBD"/>
+                        <outlet property="backToLiveButton" destination="1zm-63-H3R" id="AGg-Pt-ffb"/>
                         <outlet property="blurView" destination="LAZ-J2-lj5" id="MOo-Zb-mB0"/>
-                        <outlet property="horizDividerLine" destination="WKa-sf-CFh" id="6oW-f8-WXW"/>
-                        <outlet property="liveDescriptionLabel" destination="HL8-Wv-cqf" id="jXM-E3-DQA"/>
-                        <outlet property="liveRewindAltButton" destination="weC-tD-l1U" id="dQp-kI-r1z"/>
-                        <outlet property="playPauseButton" destination="ibQ-JJ-YMx" id="fu4-0u-5Jw"/>
+                        <outlet property="horizDividerLine" destination="np1-OZ-drV" id="L00-cG-v4j"/>
+                        <outlet property="liveDescriptionLabel" destination="g8v-J1-2Ng" id="sUp-r5-wI2"/>
+                        <outlet property="liveRewindAltButton" destination="TfG-Pl-Djp" id="cmL-9t-cLA"/>
+                        <outlet property="playPauseButton" destination="pSM-s0-r5H" id="ZeI-Th-4ug"/>
+                        <outlet property="playerControlsView" destination="m78-b6-vle" id="I5X-JA-tsY"/>
                         <outlet property="programImageView" destination="jYj-xG-3QJ" id="XVU-26-yf0"/>
-                        <outlet property="programTitleLabel" destination="8XD-hP-Zya" id="cdP-YJ-WzI"/>
-                        <outlet property="rewindToShowStartButton" destination="9Zj-eH-3uf" id="HHD-gr-Mo4"/>
+                        <outlet property="programTitleLabel" destination="ao2-yr-kyf" id="BIo-g3-SA9"/>
+                        <outlet property="rewindToShowStartButton" destination="uVS-5U-Chc" id="2MJ-Vt-jm5"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Tsp-6Z-muj" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -464,6 +471,57 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="bWD-33-KYP" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-60" y="119"/>
+        </scene>
+        <!--View Controller-->
+        <scene sceneID="oHY-TK-hOD">
+            <objects>
+                <viewController id="Vqj-yp-fEf" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="2vL-oF-duW"/>
+                        <viewControllerLayoutGuide type="bottom" id="Tws-3n-jK6"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="EeX-Lj-pOU">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="l17-FP-Koo" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+        </scene>
+        <!--View Controller-->
+        <scene sceneID="gwn-Az-0Ch">
+            <objects>
+                <viewController id="DjN-Te-ISx" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="1Xp-CT-67b"/>
+                        <viewControllerLayoutGuide type="bottom" id="ukp-pf-GBB"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="umL-kn-fOo">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="hQE-UO-aX0" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+        </scene>
+        <!--View Controller-->
+        <scene sceneID="8sL-jc-hxD">
+            <objects>
+                <viewController id="rTp-Nf-qw9" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="qyj-wf-gNB"/>
+                        <viewControllerLayoutGuide type="bottom" id="9kN-4o-Juf"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="ftA-sY-6pq">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="hUS-iY-DaW" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
         </scene>
     </scenes>
     <resources>

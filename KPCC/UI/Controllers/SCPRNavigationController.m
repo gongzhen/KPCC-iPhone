@@ -30,9 +30,9 @@
     pulldownMenu = [[PulldownMenu alloc] initWithNavigationController:self];
     [self.view insertSubview:pulldownMenu belowSubview:self.navigationBar];
 
-    [pulldownMenu insertButton:@"Menu Item 1"];
-    [pulldownMenu insertButton:@"Menu Item 2"];
-    [pulldownMenu insertButton:@"Menu Item 3"];
+    [pulldownMenu insertButton:@"KPCC Live"];
+    [pulldownMenu insertButton:@"Programs"];
+    [pulldownMenu insertButton:@"Settings"];
 
     pulldownMenu.delegate = self;
     [pulldownMenu loadMenu];
