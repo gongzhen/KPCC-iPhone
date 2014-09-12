@@ -34,7 +34,7 @@
                                 <rect key="frame" x="0.0" y="64" width="320" height="504"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             </view>
-                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="m78-b6-vle">
+                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="m78-b6-vle" userLabel="Player Controls View">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pSM-s0-r5H">
@@ -98,6 +98,11 @@
                                 </subviews>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                             </view>
+                            <view alpha="0.0" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="sYL-12-Hgi" userLabel="Dark Bg View">
+                                <rect key="frame" x="0.0" y="64" width="320" height="504"/>
+                                <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.80000000000000004" colorSpace="custom" customColorSpace="sRGB"/>
+                                <color key="tintColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
@@ -109,6 +114,7 @@
                     <connections>
                         <outlet property="backToLiveButton" destination="1zm-63-H3R" id="AGg-Pt-ffb"/>
                         <outlet property="blurView" destination="LAZ-J2-lj5" id="MOo-Zb-mB0"/>
+                        <outlet property="darkBgView" destination="sYL-12-Hgi" id="tPF-W9-NAM"/>
                         <outlet property="horizDividerLine" destination="np1-OZ-drV" id="L00-cG-v4j"/>
                         <outlet property="liveDescriptionLabel" destination="g8v-J1-2Ng" id="sUp-r5-wI2"/>
                         <outlet property="liveRewindAltButton" destination="TfG-Pl-Djp" id="cmL-9t-cLA"/>

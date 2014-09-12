@@ -30,6 +30,7 @@
 @property IBOutlet UIButton *backToLiveButton;
 @property IBOutlet FXBlurView *blurView;
 @property IBOutlet UIView *playerControlsView;
+@property IBOutlet UIView *darkBgView;
 
 @property (nonatomic,strong) Program *currentProgram;
 @property Boolean seekRequested;

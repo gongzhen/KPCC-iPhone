@@ -76,6 +76,9 @@
     [self.blurView setTintColor:[UIColor clearColor]];
     [self.blurView setBlurRadius:20.0f];
     [self.blurView setDynamic:NO];
+    
+    // Config dark background view. Will sit on top of blur view, between player controls view.
+    [self.darkBgView setAlpha:0.0];
 
     //[self.navigationController.navigationBar.topItem setTitle:@"KPCC Live"];
     MPRemoteCommandCenter *rcc = [MPRemoteCommandCenter sharedCommandCenter];
@@ -321,11 +324,16 @@
     blurFadeAnimation.toValue = @1;
     blurFadeAnimation.duration = 0.3;
 
+    POPBasicAnimation *darkBgFadeAnimation = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
+    darkBgFadeAnimation.toValue = @0.8;
+    darkBgFadeAnimation.duration = 0.3;
+
     POPBasicAnimation *controlsFadeAnimation = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
     controlsFadeAnimation.toValue = @0;
     controlsFadeAnimation.duration = 0.3;
 
     [self.blurView.layer pop_addAnimation:blurFadeAnimation forKey:@"blurViewFadeAnimation"];
+    [self.darkBgView.layer pop_addAnimation:darkBgFadeAnimation forKey:@"darkBgFadeAnimation"];
     [self.playerControlsView.layer pop_addAnimation:controlsFadeAnimation forKey:@"controlsViewFadeAnimation"];
 }
 
@@ -336,11 +344,16 @@
     fadeAnimation.toValue = @0;
     fadeAnimation.duration = 0.3;
 
+    POPBasicAnimation *darkBgFadeAnimation = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
+    darkBgFadeAnimation.toValue = @0;
+    darkBgFadeAnimation.duration = 0.3;
+
     POPBasicAnimation *controlsFadeAnimation = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
     controlsFadeAnimation.toValue = @1;
     controlsFadeAnimation.duration = 0.3;
 
     [self.blurView.layer pop_addAnimation:fadeAnimation forKey:@"blurViewFadeAnimation"];
+    [self.darkBgView.layer pop_addAnimation:darkBgFadeAnimation forKey:@"darkBgFadeAnimation"];
     [self.playerControlsView.layer pop_addAnimation:controlsFadeAnimation forKey:@"controlsViewFadeAnimation"];
 }
 
