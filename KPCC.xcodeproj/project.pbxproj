@@ -181,6 +181,10 @@
 		52EFF86F19C368C00059A0E3 /* program_avatar_writers-almanac.png in Resources */ = {isa = PBXBuildFile; fileRef = 52EFF7E419C368C00059A0E3 /* program_avatar_writers-almanac.png */; };
 		52EFF87019C368C00059A0E3 /* program_avatar_writers-almanac@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 52EFF7E519C368C00059A0E3 /* program_avatar_writers-almanac@2x.png */; };
 		52EFF87119C368C00059A0E3 /* program_avatar_writers-almanac@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 52EFF7E519C368C00059A0E3 /* program_avatar_writers-almanac@2x.png */; };
+		52EFF87419C375CA0059A0E3 /* SCPRPullDownMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = 52EFF87319C375CA0059A0E3 /* SCPRPullDownMenu.m */; };
+		52EFF87519C375CA0059A0E3 /* SCPRPullDownMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = 52EFF87319C375CA0059A0E3 /* SCPRPullDownMenu.m */; };
+		52EFF87819C37D350059A0E3 /* SCPRMenuCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 52EFF87719C37D350059A0E3 /* SCPRMenuCell.m */; };
+		52EFF87919C37D350059A0E3 /* SCPRMenuCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 52EFF87719C37D350059A0E3 /* SCPRMenuCell.m */; };
 		760E3C48194FB54600D86D91 /* DataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 760E3C46194FB54600D86D91 /* DataModel.xcdatamodeld */; };
 		760E3C49194FB54600D86D91 /* DataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 760E3C46194FB54600D86D91 /* DataModel.xcdatamodeld */; };
 		760E3C4C194FB61B00D86D91 /* Program.m in Sources */ = {isa = PBXBuildFile; fileRef = 760E3C4B194FB61B00D86D91 /* Program.m */; };
@@ -416,6 +420,10 @@
 		52EFF7E319C368C00059A0E3 /* program_avatar_wits@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "program_avatar_wits@2x.png"; sourceTree = "<group>"; };
 		52EFF7E419C368C00059A0E3 /* program_avatar_writers-almanac.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "program_avatar_writers-almanac.png"; sourceTree = "<group>"; };
 		52EFF7E519C368C00059A0E3 /* program_avatar_writers-almanac@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "program_avatar_writers-almanac@2x.png"; sourceTree = "<group>"; };
+		52EFF87219C375CA0059A0E3 /* SCPRPullDownMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCPRPullDownMenu.h; sourceTree = "<group>"; };
+		52EFF87319C375CA0059A0E3 /* SCPRPullDownMenu.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SCPRPullDownMenu.m; sourceTree = "<group>"; };
+		52EFF87619C37D350059A0E3 /* SCPRMenuCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCPRMenuCell.h; sourceTree = "<group>"; };
+		52EFF87719C37D350059A0E3 /* SCPRMenuCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SCPRMenuCell.m; sourceTree = "<group>"; };
 		760E3C47194FB54600D86D91 /* DataModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = DataModel.xcdatamodel; sourceTree = "<group>"; };
 		760E3C4A194FB61B00D86D91 /* Program.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Program.h; sourceTree = "<group>"; };
 		760E3C4B194FB61B00D86D91 /* Program.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Program.m; sourceTree = "<group>"; };
@@ -765,6 +773,10 @@
 				7695FD14195E299000F63DE9 /* SCPRNavigationBar.m */,
 				52E68B8619B919300028F8AE /* SCPRMenuButton.h */,
 				52E68B8719B919300028F8AE /* SCPRMenuButton.m */,
+				52EFF87219C375CA0059A0E3 /* SCPRPullDownMenu.h */,
+				52EFF87319C375CA0059A0E3 /* SCPRPullDownMenu.m */,
+				52EFF87619C37D350059A0E3 /* SCPRMenuCell.h */,
+				52EFF87719C37D350059A0E3 /* SCPRMenuCell.m */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -1368,10 +1380,12 @@
 				76658AB618DCB0DC00026176 /* AnalyticsManager.m in Sources */,
 				76349D1C18D8C74F0027C3B8 /* NetworkManager.m in Sources */,
 				76EF5E88193E8BED00568A9D /* SCPRHomeViewController.swift in Sources */,
+				52EFF87919C37D350059A0E3 /* SCPRMenuCell.m in Sources */,
 				76B9A9AD18EF59FD007A6D8C /* SCPRUserReportViewController.m in Sources */,
 				76658ABA18DCB51000026176 /* NSDate+Helper.m in Sources */,
 				76B9A9B718EF79F6007A6D8C /* SCPRFooterView.m in Sources */,
 				76349CF718D388C80027C3B8 /* SCPRAppDelegate.m in Sources */,
+				52EFF87519C375CA0059A0E3 /* SCPRPullDownMenu.m in Sources */,
 				52E68B8319B8F2D10028F8AE /* SCPRNavigationController.m in Sources */,
 				76349CF818D388C80027C3B8 /* main.m in Sources */,
 				76349CF918D388C80027C3B8 /* AudioManager.m in Sources */,
@@ -1398,10 +1412,12 @@
 				76658AB518DCB0DC00026176 /* AnalyticsManager.m in Sources */,
 				76349D1B18D8C74F0027C3B8 /* NetworkManager.m in Sources */,
 				76EF5E87193E8BED00568A9D /* SCPRHomeViewController.swift in Sources */,
+				52EFF87819C37D350059A0E3 /* SCPRMenuCell.m in Sources */,
 				76B9A9AC18EF59FD007A6D8C /* SCPRUserReportViewController.m in Sources */,
 				76658AB918DCB51000026176 /* NSDate+Helper.m in Sources */,
 				76B9A9B618EF79F6007A6D8C /* SCPRFooterView.m in Sources */,
 				76A308D718C8FB940065D4B1 /* SCPRAppDelegate.m in Sources */,
+				52EFF87419C375CA0059A0E3 /* SCPRPullDownMenu.m in Sources */,
 				52E68B8219B8F2D10028F8AE /* SCPRNavigationController.m in Sources */,
 				76A308D318C8FB940065D4B1 /* main.m in Sources */,
 				76A3090418C93C880065D4B1 /* AudioManager.m in Sources */,

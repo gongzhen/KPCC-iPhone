@@ -8,6 +8,8 @@
 
 #import "PulldownMenu.h"
 
-@interface SCPRPullDownMenu : PulldownMenu
+@interface SCPRPullDownMenu : PulldownMenu {
+    NSDictionary *menuItemsDictionary;
+}
 
 @end

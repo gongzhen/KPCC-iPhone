@@ -10,4 +10,7 @@
 
 @interface SCPRMenuCell : UITableViewCell
 
+@property (nonatomic,strong) UILabel* menuItemLabel;
+@property (nonatomic,strong) UIImageView* iconImageView;
+
 @end

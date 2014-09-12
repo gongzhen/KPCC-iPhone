@@ -99,13 +99,6 @@
     
     fullyOpen = NO;
     
-    //blurView = [[FXBlurView alloc] initWithFrame:CGRectMake(0, 0, 320, tableHeight+handleHeight)];
-    //[blurView setTintColor:[UIColor clearColor]];
-    //[blurView setBlurRadius:10.0f];
-    //[blurView setDynamic:YES];
-    //[blurView setAlpha:0.5];
-    //[self addSubview:blurView];
-    
     menuList = [[UITableView alloc] init];
     [menuList setRowHeight:cellHeight];
     [menuList setDataSource:self];

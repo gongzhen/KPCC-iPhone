@@ -27,12 +27,8 @@
         self.delegate = weakSelf;
     }
 
-    pulldownMenu = [[PulldownMenu alloc] initWithNavigationController:self];
+    pulldownMenu = [[SCPRPullDownMenu alloc] initWithNavigationController:self];
     [self.view insertSubview:pulldownMenu belowSubview:self.navigationBar];
-
-    [pulldownMenu insertButton:@"KPCC Live"];
-    [pulldownMenu insertButton:@"Programs"];
-    [pulldownMenu insertButton:@"Settings"];
 
     pulldownMenu.delegate = self;
     [pulldownMenu loadMenu];
