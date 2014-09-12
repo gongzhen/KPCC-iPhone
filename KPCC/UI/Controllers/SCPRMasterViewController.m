@@ -325,7 +325,7 @@
     blurFadeAnimation.duration = 0.3;
 
     POPBasicAnimation *darkBgFadeAnimation = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
-    darkBgFadeAnimation.toValue = @0.8;
+    darkBgFadeAnimation.toValue = @0.35;
     darkBgFadeAnimation.duration = 0.3;
 
     POPBasicAnimation *controlsFadeAnimation = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
