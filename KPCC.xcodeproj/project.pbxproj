@@ -185,6 +185,10 @@
 		52EFF87519C375CA0059A0E3 /* SCPRPullDownMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = 52EFF87319C375CA0059A0E3 /* SCPRPullDownMenu.m */; };
 		52EFF87819C37D350059A0E3 /* SCPRMenuCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 52EFF87719C37D350059A0E3 /* SCPRMenuCell.m */; };
 		52EFF87919C37D350059A0E3 /* SCPRMenuCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 52EFF87719C37D350059A0E3 /* SCPRMenuCell.m */; };
+		52EFF88719C3BC020059A0E3 /* item-chevron-right.png in Resources */ = {isa = PBXBuildFile; fileRef = 52EFF88519C3BC020059A0E3 /* item-chevron-right.png */; };
+		52EFF88819C3BC020059A0E3 /* item-chevron-right.png in Resources */ = {isa = PBXBuildFile; fileRef = 52EFF88519C3BC020059A0E3 /* item-chevron-right.png */; };
+		52EFF88919C3BC020059A0E3 /* item-chevron-right@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 52EFF88619C3BC020059A0E3 /* item-chevron-right@2x.png */; };
+		52EFF88A19C3BC020059A0E3 /* item-chevron-right@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 52EFF88619C3BC020059A0E3 /* item-chevron-right@2x.png */; };
 		760E3C48194FB54600D86D91 /* DataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 760E3C46194FB54600D86D91 /* DataModel.xcdatamodeld */; };
 		760E3C49194FB54600D86D91 /* DataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 760E3C46194FB54600D86D91 /* DataModel.xcdatamodeld */; };
 		760E3C4C194FB61B00D86D91 /* Program.m in Sources */ = {isa = PBXBuildFile; fileRef = 760E3C4B194FB61B00D86D91 /* Program.m */; };
@@ -424,6 +428,8 @@
 		52EFF87319C375CA0059A0E3 /* SCPRPullDownMenu.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SCPRPullDownMenu.m; sourceTree = "<group>"; };
 		52EFF87619C37D350059A0E3 /* SCPRMenuCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCPRMenuCell.h; sourceTree = "<group>"; };
 		52EFF87719C37D350059A0E3 /* SCPRMenuCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SCPRMenuCell.m; sourceTree = "<group>"; };
+		52EFF88519C3BC020059A0E3 /* item-chevron-right.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "item-chevron-right.png"; sourceTree = "<group>"; };
+		52EFF88619C3BC020059A0E3 /* item-chevron-right@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "item-chevron-right@2x.png"; sourceTree = "<group>"; };
 		760E3C47194FB54600D86D91 /* DataModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = DataModel.xcdatamodel; sourceTree = "<group>"; };
 		760E3C4A194FB61B00D86D91 /* Program.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Program.h; sourceTree = "<group>"; };
 		760E3C4B194FB61B00D86D91 /* Program.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Program.m; sourceTree = "<group>"; };
@@ -784,6 +790,8 @@
 		7685BD57194BBCB90075BB16 /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				52EFF88519C3BC020059A0E3 /* item-chevron-right.png */,
+				52EFF88619C3BC020059A0E3 /* item-chevron-right@2x.png */,
 				52EFF79F19C368C00059A0E3 /* program_avatars */,
 				52EFF77A19C3688D0059A0E3 /* menu */,
 				768C06871995911600F829EB /* program_images */,
@@ -1107,6 +1115,7 @@
 				52EFF83519C368C00059A0E3 /* program_avatar_on-the-media@2x.png in Resources */,
 				76D71D441905A56A00F4852F /* Glass_Crash.mp3 in Resources */,
 				52EFF81D19C368C00059A0E3 /* program_avatar_marketplace-morning@2x.png in Resources */,
+				52EFF88819C3BC020059A0E3 /* item-chevron-right.png in Resources */,
 				76D71D451905A56A00F4852F /* Wood_Crash.mp3 in Resources */,
 				52EFF7EF19C368C00059A0E3 /* program_avatar_ask-me-another.png in Resources */,
 				52EFF84519C368C00059A0E3 /* program_avatar_snap-judgment@2x.png in Resources */,
@@ -1177,6 +1186,7 @@
 				768C06591995905D00F829EB /* btn_pause@2x.png in Resources */,
 				52EFF81919C368C00059A0E3 /* program_avatar_loh-life@2x.png in Resources */,
 				768C068D1995911600F829EB /* program_tile_generic@2x.jpg in Resources */,
+				52EFF88A19C3BC020059A0E3 /* item-chevron-right@2x.png in Resources */,
 				52EFF79219C3688D0059A0E3 /* menu-glasses@2x.png in Resources */,
 				52EFF79C19C3688D0059A0E3 /* menu-settings.png in Resources */,
 				52EFF81B19C368C00059A0E3 /* program_avatar_marketplace-morning.png in Resources */,
@@ -1254,6 +1264,7 @@
 				768C0681199590CC00F829EB /* FreigSanProMedIt.otf in Resources */,
 				7685BD5E194BBCB90075BB16 /* pauseButton@2x.png in Resources */,
 				52EFF84419C368C00059A0E3 /* program_avatar_snap-judgment@2x.png in Resources */,
+				52EFF88719C3BC020059A0E3 /* item-chevron-right.png in Resources */,
 				7685BD5C194BBCB90075BB16 /* pauseButton.png in Resources */,
 				52EFF79D19C3688D0059A0E3 /* menu-settings@2x.png in Resources */,
 				768C06561995905D00F829EB /* btn_pause.png in Resources */,
@@ -1313,6 +1324,7 @@
 				52E68B8419B8F2D10028F8AE /* SCPRNavigationController.xib in Resources */,
 				52EFF85819C368C00059A0E3 /* program_avatar_the-world@2x.png in Resources */,
 				52EFF80019C368C00059A0E3 /* program_avatar_car-talk@2x.png in Resources */,
+				52EFF88919C3BC020059A0E3 /* item-chevron-right@2x.png in Resources */,
 				761CC5A4195A2878006A6C7C /* Testflight-Info.plist in Resources */,
 				52EFF81E19C368C00059A0E3 /* program_avatar_marketplace.png in Resources */,
 				52EFF83A19C368C00059A0E3 /* program_avatar_radiolab.png in Resources */,

@@ -18,6 +18,10 @@
 
     self.iconImageView = [[UIImageView alloc]initWithFrame:CGRectMake(15, CGRectGetMidY(self.frame), 0, 0)];
     [self.contentView addSubview:self.iconImageView];
+    
+    self.rightChevronImageView = [[UIImageView alloc]initWithFrame:CGRectMake(CGRectGetMaxX(self.frame) - 20, 24, 9, 14)];
+    self.rightChevronImageView.image = [UIImage imageNamed:@"item-chevron-right"];
+    [self.contentView addSubview:self.rightChevronImageView];
 
     return self;
 }

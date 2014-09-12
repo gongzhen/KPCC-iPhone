@@ -57,6 +57,12 @@
     cell.menuItemLabel.font = [super cellFont];
     [cell.menuItemLabel setText:[menuItems objectAtIndex:indexPath.item]];
 
+    if ([[menuItems objectAtIndex:indexPath.item] isEqualToString:kMenuItemKPCCLive]) {
+        [cell.rightChevronImageView setHidden:YES];
+    } else {
+        [cell.rightChevronImageView setHidden:NO];
+    }
+
     NSString *iconNamed = [menuItemsDictionary objectForKey:[menuItems objectAtIndex:indexPath.item]];
     if (iconNamed) {
         UIImage *iconImg = [UIImage imageNamed:[NSString stringWithFormat:@"menu-%@", iconNamed]];
@@ -66,6 +72,21 @@
     }
 
     return cell;
+}
+
+-(void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath{
+
+    if ([tableView respondsToSelector:@selector(setSeparatorInset:)]) {
+        [tableView setSeparatorInset:UIEdgeInsetsMake(0, 8, 0, 8)];
+    }
+
+    if ([tableView respondsToSelector:@selector(setLayoutMargins:)]) {
+        [tableView setLayoutMargins:UIEdgeInsetsMake(0, 8, 0, 8)];
+    }
+
+    if ([cell respondsToSelector:@selector(setLayoutMargins:)]) {
+        [cell setLayoutMargins:UIEdgeInsetsMake(0, 8, 0, 8)];
+    }
 }
 
 @end

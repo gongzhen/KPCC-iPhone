@@ -12,5 +12,6 @@
 
 @property (nonatomic,strong) UILabel* menuItemLabel;
 @property (nonatomic,strong) UIImageView* iconImageView;
+@property (nonatomic,strong) UIImageView* rightChevronImageView;
 
 @end
