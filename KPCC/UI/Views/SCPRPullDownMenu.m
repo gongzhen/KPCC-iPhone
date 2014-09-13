@@ -9,13 +9,19 @@
 #import "SCPRPullDownMenu.h"
 #import "SCPRMenuCell.h"
 
-#define kMenuItemKPCCLive @"KPCC Live"
-#define kMenuItemPrograms @"Programs"
-#define kMenuItemSettings @"Settings"
+#define kMenuItemKPCCLive   @"KPCC Live"
+#define kMenuItemPrograms   @"Programs"
+#define kMenuItemShortList  @"The Short List"
+#define kMenuItemAlarm      @"Alarm Clock"
+#define kMenuItemDonate     @"Donate"
+#define kMenuItemSettings   @"Settings"
 
-#define kIconKPCCLive @"antenna"
-#define kIconPrograms @"microphone"
-#define kIconSettings @"settings"
+#define kIconKPCCLive   @"antenna"
+#define kIconPrograms   @"microphone"
+#define kIconShortList  @"glasses"
+#define kIconAlarm      @"clock"
+#define kIconDonate     @"heart-plus"
+#define kIconSettings   @"settings"
 
 
 @implementation SCPRPullDownMenu
@@ -23,13 +29,25 @@
 - (id)init {
     self = [super init];
 
-    menuItemsDictionary = @{kMenuItemKPCCLive : kIconKPCCLive,
-                            kMenuItemPrograms : kIconPrograms,
-                            kMenuItemSettings : kIconSettings };
+    NSOrderedSet* orderedItems = [NSOrderedSet orderedSetWithObjects:   kMenuItemKPCCLive,
+                                                                        kMenuItemPrograms,
+                                                                        kMenuItemShortList,
+                                                                        kMenuItemAlarm,
+                                                                        kMenuItemDonate,
+                                                                        kMenuItemSettings, nil];
 
-    for (NSString *menuItem in menuItemsDictionary) {
+    menuItemsDictionary = @{kMenuItemKPCCLive   : kIconKPCCLive,
+                            kMenuItemPrograms   : kIconPrograms,
+                            kMenuItemShortList  : kIconShortList,
+                            kMenuItemAlarm      : kIconAlarm,
+                            kMenuItemDonate     : kIconDonate,
+                            kMenuItemSettings   : kIconSettings };
+
+    for (NSString *menuItem in orderedItems) {
         [self insertButton:menuItem];
     }
+
+//    [menuList setScrollEnabled:NO];
 
     return self;
 }

@@ -32,9 +32,9 @@
     
     // Setting defaults
     cellHeight = 62.0f;
-    handleHeight = 15.0f;
+    handleHeight = -100.0f;
     animationDuration = 0.3f;
-    topMarginPortrait = 0;
+    topMarginPortrait = 18;
     topMarginLandscape = 0;
     cellColor = [UIColor clearColor];
     cellSelectedColor = [UIColor lightGrayColor];
@@ -95,7 +95,7 @@
     
     [self updateValues];
     
-    [self setFrame:CGRectMake(0, 0, 0, tableHeight+handleHeight)];
+    [self setFrame:CGRectMake(0, 0, 0, masterView.frame.size.height)];
     
     fullyOpen = NO;
     
@@ -103,6 +103,7 @@
     [menuList setRowHeight:cellHeight];
     [menuList setDataSource:self];
     [menuList setDelegate:self];
+//    [menuList setScrollEnabled:NO];
     [menuList setBackgroundColor:[UIColor clearColor]];
     [menuList setSeparatorColor:separatorColor];
     [self addSubview:menuList];
