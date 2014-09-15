@@ -8,6 +8,7 @@
 
 #import "SCPRMasterViewController.h"
 #import "SCPRMenuButton.h"
+#import "SCPRProgramsTableViewController.h"
 #import "AFNetworking.h"
 #import "UIImageView+AFNetworking.h"
 
@@ -65,7 +66,7 @@
     NSLog(@"%ld",(long)indexPath.item);
 
     // Push test vc.
-    UIViewController *vc = [[UIViewController alloc] init];
+    SCPRProgramsTableViewController *vc = [[SCPRProgramsTableViewController alloc] init];
     vc.view.backgroundColor = [UIColor clearColor];
     //vc.view.alpha = 0.7;
     [self.navigationController pushViewController:vc animated:YES];

@@ -26,7 +26,7 @@
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
     
     self.programsList = [Program fetchAllProgramsInContext:[[ContentManager shared] managedObjectContext]];
-    NSLog(@"programsList? %@", self.programsList);
+    NSLog(@"programsList? %d", [self.programsList count]);
 }
 
 - (void)didReceiveMemoryWarning {
@@ -37,26 +37,29 @@
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-#warning Potentially incomplete method implementation.
     // Return the number of sections.
-    return 0;
+    return 1;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-#warning Incomplete method implementation.
     // Return the number of rows in the section.
-    return 0;
+    return [self.programsList count];
 }
 
-/*
+
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:<#@"reuseIdentifier"#> forIndexPath:indexPath];
-    
-    // Configure the cell...
-    
+
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"programTableCell"];
+
+    if (cell == nil) {
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"programTableCell"];
+    }
+
+    cell.textLabel.text = [NSString stringWithFormat:@"%@", [[self.programsList objectAtIndex:indexPath.row] title]];
+
     return cell;
 }
-*/
+
 
 /*
 // Override to support conditional editing of the table view.
