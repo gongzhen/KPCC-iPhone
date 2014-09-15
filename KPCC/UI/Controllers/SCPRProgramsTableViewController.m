@@ -7,9 +7,11 @@
 //
 
 #import "SCPRProgramsTableViewController.h"
+#import "Program.h"
+#import "ContentManager.h"
 
 @interface SCPRProgramsTableViewController ()
-
+@property NSArray *programsList;
 @end
 
 @implementation SCPRProgramsTableViewController
@@ -22,6 +24,9 @@
     
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
+    
+    self.programsList = [Program fetchAllProgramsInContext:[[ContentManager shared] managedObjectContext]];
+    NSLog(@"programsList? %@", self.programsList);
 }
 
 - (void)didReceiveMemoryWarning {

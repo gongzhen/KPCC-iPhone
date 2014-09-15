@@ -224,6 +224,10 @@
 		76658AB618DCB0DC00026176 /* AnalyticsManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 76658AB418DCB0DC00026176 /* AnalyticsManager.m */; };
 		76658AB918DCB51000026176 /* NSDate+Helper.m in Sources */ = {isa = PBXBuildFile; fileRef = 76658AB818DCB51000026176 /* NSDate+Helper.m */; };
 		76658ABA18DCB51000026176 /* NSDate+Helper.m in Sources */ = {isa = PBXBuildFile; fileRef = 76658AB818DCB51000026176 /* NSDate+Helper.m */; };
+		766FDD0E19C7AB9A006BF8E1 /* SCPRProgramsTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 766FDD0C19C7AB9A006BF8E1 /* SCPRProgramsTableViewController.m */; };
+		766FDD0F19C7AB9A006BF8E1 /* SCPRProgramsTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 766FDD0C19C7AB9A006BF8E1 /* SCPRProgramsTableViewController.m */; };
+		766FDD1019C7AB9A006BF8E1 /* SCPRProgramsTableViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 766FDD0D19C7AB9A006BF8E1 /* SCPRProgramsTableViewController.xib */; };
+		766FDD1119C7AB9A006BF8E1 /* SCPRProgramsTableViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 766FDD0D19C7AB9A006BF8E1 /* SCPRProgramsTableViewController.xib */; };
 		7685BD5C194BBCB90075BB16 /* pauseButton.png in Resources */ = {isa = PBXBuildFile; fileRef = 7685BD58194BBCB90075BB16 /* pauseButton.png */; };
 		7685BD5D194BBCB90075BB16 /* pauseButton.png in Resources */ = {isa = PBXBuildFile; fileRef = 7685BD58194BBCB90075BB16 /* pauseButton.png */; };
 		7685BD5E194BBCB90075BB16 /* pauseButton@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7685BD59194BBCB90075BB16 /* pauseButton@2x.png */; };
@@ -458,6 +462,9 @@
 		76658AB418DCB0DC00026176 /* AnalyticsManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AnalyticsManager.m; path = Managers/AnalyticsManager.m; sourceTree = "<group>"; };
 		76658AB718DCB51000026176 /* NSDate+Helper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDate+Helper.h"; sourceTree = "<group>"; };
 		76658AB818DCB51000026176 /* NSDate+Helper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDate+Helper.m"; sourceTree = "<group>"; };
+		766FDD0B19C7AB9A006BF8E1 /* SCPRProgramsTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCPRProgramsTableViewController.h; sourceTree = "<group>"; };
+		766FDD0C19C7AB9A006BF8E1 /* SCPRProgramsTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SCPRProgramsTableViewController.m; sourceTree = "<group>"; };
+		766FDD0D19C7AB9A006BF8E1 /* SCPRProgramsTableViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SCPRProgramsTableViewController.xib; sourceTree = "<group>"; };
 		7685BD58194BBCB90075BB16 /* pauseButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = pauseButton.png; sourceTree = "<group>"; };
 		7685BD59194BBCB90075BB16 /* pauseButton@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "pauseButton@2x.png"; sourceTree = "<group>"; };
 		7685BD5A194BBCB90075BB16 /* playButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = playButton.png; sourceTree = "<group>"; };
@@ -765,6 +772,9 @@
 				52E68B7F19B8F2D10028F8AE /* SCPRNavigationController.h */,
 				52E68B8019B8F2D10028F8AE /* SCPRNavigationController.m */,
 				52E68B8119B8F2D10028F8AE /* SCPRNavigationController.xib */,
+				766FDD0B19C7AB9A006BF8E1 /* SCPRProgramsTableViewController.h */,
+				766FDD0C19C7AB9A006BF8E1 /* SCPRProgramsTableViewController.m */,
+				766FDD0D19C7AB9A006BF8E1 /* SCPRProgramsTableViewController.xib */,
 			);
 			name = "View Controllers";
 			path = Controllers;
@@ -1146,6 +1156,7 @@
 				52EFF7E919C368C00059A0E3 /* program_avatar_airtalk@2x.png in Resources */,
 				52EFF83319C368C00059A0E3 /* program_avatar_on-the-media.png in Resources */,
 				52EFF86319C368C00059A0E3 /* program_avatar_weekend-edition-saturday.png in Resources */,
+				766FDD1119C7AB9A006BF8E1 /* SCPRProgramsTableViewController.xib in Resources */,
 				52EFF83919C368C00059A0E3 /* program_avatar_prairie-home-companion@2x.png in Resources */,
 				52EFF78819C3688D0059A0E3 /* menu-antenna.png in Resources */,
 				52D91F3019A2537400B8A02F /* program_image_urls.json in Resources */,
@@ -1309,6 +1320,7 @@
 				768C06541995905D00F829EB /* btn_live_rewind_small@2x.png in Resources */,
 				52EFF7FE19C368C00059A0E3 /* program_avatar_car-talk.png in Resources */,
 				52EFF7FA19C368C00059A0E3 /* program_avatar_bullseye.png in Resources */,
+				766FDD1019C7AB9A006BF8E1 /* SCPRProgramsTableViewController.xib in Resources */,
 				52EFF7F819C368C00059A0E3 /* program_avatar_bbc-world-service@2x.png in Resources */,
 				52EFF82619C368C00059A0E3 /* program_avatar_moth-radio-hour.png in Resources */,
 				76EF5E8A193E8D6B00568A9D /* Storyboard.storyboard in Resources */,
@@ -1405,6 +1417,7 @@
 				760E3C49194FB54600D86D91 /* DataModel.xcdatamodeld in Sources */,
 				76177298195B593400F69EFC /* SCPRHomeViewModel.m in Sources */,
 				760EA99319521E98009B504E /* AVPlayer+Additions.m in Sources */,
+				766FDD0F19C7AB9A006BF8E1 /* SCPRProgramsTableViewController.m in Sources */,
 				52E68B8919B919300028F8AE /* SCPRMenuButton.m in Sources */,
 				768C064919958FDA00F829EB /* SCPRMasterViewController.m in Sources */,
 				7695FD16195E299000F63DE9 /* SCPRNavigationBar.m in Sources */,
@@ -1437,6 +1450,7 @@
 				760E3C48194FB54600D86D91 /* DataModel.xcdatamodeld in Sources */,
 				76177297195B593400F69EFC /* SCPRHomeViewModel.m in Sources */,
 				760EA99219521E98009B504E /* AVPlayer+Additions.m in Sources */,
+				766FDD0E19C7AB9A006BF8E1 /* SCPRProgramsTableViewController.m in Sources */,
 				52E68B8819B919300028F8AE /* SCPRMenuButton.m in Sources */,
 				768C064819958FDA00F829EB /* SCPRMasterViewController.m in Sources */,
 				7695FD15195E299000F63DE9 /* SCPRNavigationBar.m in Sources */,

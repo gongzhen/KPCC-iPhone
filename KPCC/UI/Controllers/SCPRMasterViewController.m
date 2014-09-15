@@ -66,8 +66,8 @@
 
     // Push test vc.
     UIViewController *vc = [[UIViewController alloc] init];
-    vc.view.backgroundColor = [UIColor blackColor];
-    vc.view.alpha = 0.7;
+    vc.view.backgroundColor = [UIColor clearColor];
+    //vc.view.alpha = 0.7;
     [self.navigationController pushViewController:vc animated:YES];
 }
 
@@ -469,6 +469,8 @@
 
         if (!_currentProgram || (![_currentProgram.program_slug isEqualToString:programObj.program_slug])){
             [[DesignManager shared] loadProgramImage:programObj.program_slug andImageView:self.programImageView];
+            //[[[[UIApplication sharedApplication] delegate] window] setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"program_tile_generic"]]];
+            //[self.view setBackgroundColor:[UIColor clearColor]];
         }
 
         [self updateUIWithProgram:programObj];
