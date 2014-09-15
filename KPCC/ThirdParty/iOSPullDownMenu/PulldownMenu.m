@@ -32,7 +32,7 @@
     
     // Setting defaults
     cellHeight = 62.0f;
-    handleHeight = -100.0f;
+    handleHeight = 10.0f;
     animationDuration = 0.3f;
     topMarginPortrait = 40;
     topMarginLandscape = 0;
@@ -420,7 +420,7 @@
     [masterView addConstraint: pullDownCenterXPositionConstraint];
     [masterView addConstraint: pullDownWidthConstraint];
     [masterView addConstraint: pullDownHeightConstraint];
-    [masterView addConstraint: pullDownHeightMaxConstraint];
+    //[masterView addConstraint: pullDownHeightMaxConstraint];
     
     [masterView addConstraint: pullHandleHeightConstraint];
     [masterView addConstraint: pullHandleWidthConstraint];
