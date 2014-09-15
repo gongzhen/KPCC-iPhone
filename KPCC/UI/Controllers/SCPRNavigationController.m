@@ -27,11 +27,11 @@
         self.delegate = weakSelf;
     }
 
-    pulldownMenu = [[SCPRPullDownMenu alloc] initWithNavigationController:self];
-    [self.view insertSubview:pulldownMenu belowSubview:self.navigationBar];
-
-    pulldownMenu.delegate = self;
-    [pulldownMenu loadMenu];
+//    pulldownMenu = [[SCPRPullDownMenu alloc] initWithNavigationController:self];
+//    [self.view insertSubview:pulldownMenu belowSubview:self.navigationBar];
+//
+//    pulldownMenu.delegate = self;
+//    [pulldownMenu loadMenu];
 
     // "Global" menu button to be used across all pushed view controllers.
     menuButton = [SCPRMenuButton buttonWithOrigin:CGPointMake(10.f, 10.f)];
@@ -39,7 +39,7 @@
 
     for (UIViewController* viewController in self.viewControllers){
         NSLog(@"adding button to vc : %@", viewController.title);
-        [self addButton:viewController.navigationItem];
+        //[self addButton:viewController.navigationItem];
     }
 }
 

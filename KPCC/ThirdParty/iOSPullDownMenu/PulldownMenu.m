@@ -34,7 +34,7 @@
     cellHeight = 62.0f;
     handleHeight = -100.0f;
     animationDuration = 0.3f;
-    topMarginPortrait = 18;
+    topMarginPortrait = 40;
     topMarginLandscape = 0;
     cellColor = [UIColor clearColor];
     cellSelectedColor = [UIColor lightGrayColor];
@@ -103,7 +103,7 @@
     [menuList setRowHeight:cellHeight];
     [menuList setDataSource:self];
     [menuList setDelegate:self];
-//    [menuList setScrollEnabled:NO];
+//  [menuList setScrollEnabled:NO];
     [menuList setBackgroundColor:[UIColor clearColor]];
     [menuList setSeparatorColor:separatorColor];
     [self addSubview:menuList];

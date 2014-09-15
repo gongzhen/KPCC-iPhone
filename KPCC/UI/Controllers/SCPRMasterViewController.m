@@ -11,8 +11,8 @@
 #import "AFNetworking.h"
 #import "UIImageView+AFNetworking.h"
 
-@interface SCPRMasterViewController () <AudioManagerDelegate, ContentProcessor>
-
+@interface SCPRMasterViewController () <AudioManagerDelegate, ContentProcessor, MenuButtonDelegate>
+@property BOOL menuOpen;
 @end
 
 @implementation SCPRMasterViewController
@@ -48,18 +48,55 @@
 
 }
 
+- (void)menuPressed {
+    if (self.menuOpen) {
+        [pulldownMenu closeDropDown:YES];
+        [self decloakForMenu:YES];
+    } else {
+        [self cloakForMenu:YES];
+        [pulldownMenu openDropDown:YES];
+    }
+    self.menuOpen = !self.menuOpen;
+}
+
+# pragma mark - PulldownMenuDelegate
+
+- (void)menuItemSelected:(NSIndexPath *)indexPath {
+    NSLog(@"%ld",(long)indexPath.item);
+
+    // Push test vc.
+    UIViewController *vc = [[UIViewController alloc] init];
+    vc.view.backgroundColor = [UIColor blackColor];
+    vc.view.alpha = 0.7;
+    [self.navigationController pushViewController:vc animated:YES];
+}
+
+- (void)pullDownAnimated:(BOOL)open {
+    if (open) {
+        NSLog(@"Pull down menu open!");
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"pull_down_menu_opened"
+                                                            object:nil];
+        //[menuButton animateToClose];
+    } else {
+        NSLog(@"Pull down menu closed!");
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"pull_down_menu_closed"
+                                                            object:nil];
+        //[menuButton animateToMenu];
+    }
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
+
+    pulldownMenu = [[SCPRPullDownMenu alloc] initWithView:self.view];
+    [self.view addSubview:pulldownMenu];
+
+    pulldownMenu.delegate = self;
+    [pulldownMenu loadMenu];
     
-//    pulldownMenu = [[PulldownMenu alloc] initWithView:self.view];
-//    [self.view addSubview:pulldownMenu];
-//    
-//    [pulldownMenu insertButton:@"Menu Item 1"];
-//    [pulldownMenu insertButton:@"Menu Item 2"];
-//    [pulldownMenu insertButton:@"Menu Item 3"];
-//    
-//    pulldownMenu.delegate = self;
-//    [pulldownMenu loadMenu];
+    SCPRMenuButton *menuButton = [SCPRMenuButton buttonWithOrigin:CGPointMake(10.f, 10.f)];
+    menuButton.delegate = self;
+    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:menuButton];
 
     // Fetch program info and update audio control state.
     [self updateDataForUI];
