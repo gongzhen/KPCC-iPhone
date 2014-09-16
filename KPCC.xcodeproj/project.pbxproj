@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		523E86D019C8A292006FC366 /* SCPRProgramDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 523E86CE19C8A292006FC366 /* SCPRProgramDetailViewController.m */; };
+		523E86D119C8A292006FC366 /* SCPRProgramDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 523E86CE19C8A292006FC366 /* SCPRProgramDetailViewController.m */; };
+		523E86D219C8A292006FC366 /* SCPRProgramDetailViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 523E86CF19C8A292006FC366 /* SCPRProgramDetailViewController.xib */; };
+		523E86D319C8A292006FC366 /* SCPRProgramDetailViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 523E86CF19C8A292006FC366 /* SCPRProgramDetailViewController.xib */; };
 		52D91F2F19A2537400B8A02F /* program_image_urls.json in Resources */ = {isa = PBXBuildFile; fileRef = 52D91F2E19A2537400B8A02F /* program_image_urls.json */; };
 		52D91F3019A2537400B8A02F /* program_image_urls.json in Resources */ = {isa = PBXBuildFile; fileRef = 52D91F2E19A2537400B8A02F /* program_image_urls.json */; };
 		52E68B7D19B8EEA60028F8AE /* PulldownMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = 52E68B7C19B8EEA60028F8AE /* PulldownMenu.m */; };
@@ -337,6 +341,9 @@
 
 /* Begin PBXFileReference section */
 		3D27774292D34CDA90CFAEC3 /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = "<group>"; };
+		523E86CD19C8A292006FC366 /* SCPRProgramDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCPRProgramDetailViewController.h; sourceTree = "<group>"; };
+		523E86CE19C8A292006FC366 /* SCPRProgramDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SCPRProgramDetailViewController.m; sourceTree = "<group>"; };
+		523E86CF19C8A292006FC366 /* SCPRProgramDetailViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SCPRProgramDetailViewController.xib; sourceTree = "<group>"; };
 		52D91F2E19A2537400B8A02F /* program_image_urls.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = program_image_urls.json; sourceTree = "<group>"; };
 		52E68B7B19B8EEA60028F8AE /* PulldownMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PulldownMenu.h; sourceTree = "<group>"; };
 		52E68B7C19B8EEA60028F8AE /* PulldownMenu.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PulldownMenu.m; sourceTree = "<group>"; };
@@ -775,6 +782,9 @@
 				766FDD0B19C7AB9A006BF8E1 /* SCPRProgramsTableViewController.h */,
 				766FDD0C19C7AB9A006BF8E1 /* SCPRProgramsTableViewController.m */,
 				766FDD0D19C7AB9A006BF8E1 /* SCPRProgramsTableViewController.xib */,
+				523E86CD19C8A292006FC366 /* SCPRProgramDetailViewController.h */,
+				523E86CE19C8A292006FC366 /* SCPRProgramDetailViewController.m */,
+				523E86CF19C8A292006FC366 /* SCPRProgramDetailViewController.xib */,
 			);
 			name = "View Controllers";
 			path = Controllers;
@@ -1166,6 +1176,7 @@
 				52EFF7FB19C368C00059A0E3 /* program_avatar_bullseye.png in Resources */,
 				52EFF81319C368C00059A0E3 /* program_avatar_loh-down-on-science.png in Resources */,
 				768C067A199590CC00F829EB /* FreigSanProBookIt.otf in Resources */,
+				523E86D319C8A292006FC366 /* SCPRProgramDetailViewController.xib in Resources */,
 				52EFF7F119C368C00059A0E3 /* program_avatar_ask-me-another@2x.png in Resources */,
 				52EFF80119C368C00059A0E3 /* program_avatar_car-talk@2x.png in Resources */,
 				768C0680199590CC00F829EB /* FreigSanProMed.otf in Resources */,
@@ -1245,6 +1256,7 @@
 				52EFF86219C368C00059A0E3 /* program_avatar_weekend-edition-saturday.png in Resources */,
 				52EFF79119C3688D0059A0E3 /* menu-glasses@2x.png in Resources */,
 				768C0675199590CC00F829EB /* FreigSanProBoldIt.otf in Resources */,
+				523E86D219C8A292006FC366 /* SCPRProgramDetailViewController.xib in Resources */,
 				76A308E518C8FB940065D4B1 /* Images.xcassets in Resources */,
 				76B9A9BF18F609FF007A6D8C /* Glass_Crash.mp3 in Resources */,
 				768C0679199590CC00F829EB /* FreigSanProBookIt.otf in Resources */,
@@ -1405,6 +1417,7 @@
 				76349D1C18D8C74F0027C3B8 /* NetworkManager.m in Sources */,
 				76EF5E88193E8BED00568A9D /* SCPRHomeViewController.swift in Sources */,
 				52EFF87919C37D350059A0E3 /* SCPRMenuCell.m in Sources */,
+				523E86D119C8A292006FC366 /* SCPRProgramDetailViewController.m in Sources */,
 				76B9A9AD18EF59FD007A6D8C /* SCPRUserReportViewController.m in Sources */,
 				76658ABA18DCB51000026176 /* NSDate+Helper.m in Sources */,
 				76B9A9B718EF79F6007A6D8C /* SCPRFooterView.m in Sources */,
@@ -1438,6 +1451,7 @@
 				76349D1B18D8C74F0027C3B8 /* NetworkManager.m in Sources */,
 				76EF5E87193E8BED00568A9D /* SCPRHomeViewController.swift in Sources */,
 				52EFF87819C37D350059A0E3 /* SCPRMenuCell.m in Sources */,
+				523E86D019C8A292006FC366 /* SCPRProgramDetailViewController.m in Sources */,
 				76B9A9AC18EF59FD007A6D8C /* SCPRUserReportViewController.m in Sources */,
 				76658AB918DCB51000026176 /* NSDate+Helper.m in Sources */,
 				76B9A9B618EF79F6007A6D8C /* SCPRFooterView.m in Sources */,
