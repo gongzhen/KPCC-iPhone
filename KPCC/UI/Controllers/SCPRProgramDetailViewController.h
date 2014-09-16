@@ -7,7 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "Program.h"
 
 @interface SCPRProgramDetailViewController : UIViewController
+
+@property (nonatomic,strong) Program *program;
 
 @end

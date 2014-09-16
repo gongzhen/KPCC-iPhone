@@ -7,9 +7,11 @@
 //
 
 #import "SCPRProgramDetailViewController.h"
+#import "DesignManager.h"
+#import "Program.h"
 
 @interface SCPRProgramDetailViewController ()
-
+@property UIImageView *programBgImage;
 @end
 
 @implementation SCPRProgramDetailViewController
@@ -17,6 +19,12 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
+
+    self.programBgImage = [[UIImageView alloc] initWithFrame:CGRectMake(0, 64, self.view.frame.size.width, self.view.frame.size.height - 64)];
+
+    [[DesignManager shared] loadProgramImage:_program.program_slug andImageView:self.programBgImage];
+
+    [self.view addSubview: self.programBgImage];
 }
 
 - (void)didReceiveMemoryWarning {

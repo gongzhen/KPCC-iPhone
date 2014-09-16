@@ -7,6 +7,7 @@
 //
 
 #import "SCPRProgramsTableViewController.h"
+#import "SCPRProgramDetailViewController.h"
 #import "ContentManager.h"
 #import "DesignManager.h"
 
@@ -44,7 +45,7 @@
     [[DesignManager shared] loadProgramImage:currentProgram.program_slug andImageView:self.programBgImage];
 
     self.programsList = [Program fetchAllProgramsInContext:[[ContentManager shared] managedObjectContext]];
-    NSLog(@"programsList? %d", [self.programsList count]);
+    NSLog(@"programsList? %lu", (unsigned long)[self.programsList count]);
 }
 
 - (void)didReceiveMemoryWarning {
@@ -115,21 +116,22 @@
 }
 */
 
-/*
+
 #pragma mark - Table view delegate
 
 // In a xib-based application, navigation from a table can be handled in -tableView:didSelectRowAtIndexPath:
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     // Navigation logic may go here, for example:
     // Create the next view controller.
-    <#DetailViewController#> *detailViewController = [[<#DetailViewController#> alloc] initWithNibName:<#@"Nib name"#> bundle:nil];
+    SCPRProgramDetailViewController *programDetailViewController = [[SCPRProgramDetailViewController alloc] initWithNibName:nil bundle:nil];
     
     // Pass the selected object to the new view controller.
+    programDetailViewController.program = [self.programsList objectAtIndex:indexPath.row];
     
     // Push the view controller.
-    [self.navigationController pushViewController:detailViewController animated:YES];
+    [self.navigationController pushViewController:programDetailViewController animated:YES];
 }
-*/
+
 
 /*
 #pragma mark - Navigation
