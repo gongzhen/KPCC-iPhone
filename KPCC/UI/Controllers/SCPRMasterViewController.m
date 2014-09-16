@@ -260,56 +260,50 @@
 
 - (void)setUIPositioning {
 
+    if ([[AudioManager shared] isStreamPlaying] || [[AudioManager shared] isStreamBuffering]) {
+        [self.horizDividerLine setAlpha:0.4];
+        [self.liveRewindAltButton setAlpha:1.0];
+        [self.backToLiveButton setAlpha:1.0];
 
-        if ([[AudioManager shared] isStreamPlaying] || [[AudioManager shared] isStreamBuffering]) {
-            [self.horizDividerLine setAlpha:0.4];
-            [self.liveRewindAltButton setAlpha:1.0];
-            [self.backToLiveButton setAlpha:1.0];
-            
-            if (!_seekRequested) {
-                [self.playPauseButton setFrame:CGRectMake(_playPauseButton.frame.origin.x,
-                                                          385.0,
-                                                          _playPauseButton.frame.size.width,
-                                                          _playPauseButton.frame.size.height)];
-                
-                [self.liveDescriptionLabel setFrame:CGRectMake(_liveDescriptionLabel.frame.origin.x,
-                                                               286.0,
-                                                               _liveDescriptionLabel.frame.size.width,
-                                                               _liveDescriptionLabel.frame.size.height)];
-                
-                [self.programTitleLabel setFrame:CGRectMake(_programTitleLabel.frame.origin.x,
-                                                            303.0,
-                                                            _programTitleLabel.frame.size.width,
-                                                            _programTitleLabel.frame.size.height)];
-            }
-        } else {
-            if (!_setPlaying) {
-                [self.rewindToShowStartButton setAlpha:1.0];
-                [self.horizDividerLine setAlpha:0.0];
-            }
+        if (!_seekRequested) {
+            [self.playPauseButton setFrame:CGRectMake(_playPauseButton.frame.origin.x,
+                                                      385.0,
+                                                      _playPauseButton.frame.size.width,
+                                                      _playPauseButton.frame.size.height)];
 
-            if (!_seekRequested) {
-                [self.playPauseButton setFrame:CGRectMake(_playPauseButton.frame.origin.x,
-                                                          225.0,
-                                                          _playPauseButton.frame.size.width,
-                                                          _playPauseButton.frame.size.height)];
-                
-                [self.liveDescriptionLabel setFrame:CGRectMake(_liveDescriptionLabel.frame.origin.x,
-                                                               95.0,
-                                                               _liveDescriptionLabel.frame.size.width,
-                                                               _liveDescriptionLabel.frame.size.height)];
-                
-                [self.programTitleLabel setFrame:CGRectMake(_programTitleLabel.frame.origin.x,
-                                                            113.0,
-                                                            _programTitleLabel.frame.size.width,
-                                                            _programTitleLabel.frame.size.height)];
-            }
-            
-            
+            [self.liveDescriptionLabel setFrame:CGRectMake(_liveDescriptionLabel.frame.origin.x,
+                                                           286.0,
+                                                           _liveDescriptionLabel.frame.size.width,
+                                                           _liveDescriptionLabel.frame.size.height)];
+
+            [self.programTitleLabel setFrame:CGRectMake(_programTitleLabel.frame.origin.x,
+                                                        303.0,
+                                                        _programTitleLabel.frame.size.width,
+                                                        _programTitleLabel.frame.size.height)];
         }
-    //} else {
-        //_seekRequested = NO;
-    //}
+    } else {
+        if (!_setPlaying) {
+            [self.rewindToShowStartButton setAlpha:1.0];
+            [self.horizDividerLine setAlpha:0.0];
+        }
+
+        if (!_seekRequested) {
+            [self.playPauseButton setFrame:CGRectMake(_playPauseButton.frame.origin.x,
+                                                      225.0,
+                                                      _playPauseButton.frame.size.width,
+                                                      _playPauseButton.frame.size.height)];
+            
+            [self.liveDescriptionLabel setFrame:CGRectMake(_liveDescriptionLabel.frame.origin.x,
+                                                           95.0,
+                                                           _liveDescriptionLabel.frame.size.width,
+                                                           _liveDescriptionLabel.frame.size.height)];
+            
+            [self.programTitleLabel setFrame:CGRectMake(_programTitleLabel.frame.origin.x,
+                                                        113.0,
+                                                        _programTitleLabel.frame.size.width,
+                                                        _programTitleLabel.frame.size.height)];
+        }
+    }
 }
 
 - (void)setPlayingUI:(BOOL)animated {
