@@ -66,7 +66,7 @@
     NSLog(@"%ld",(long)indexPath.item);
 
     // Push test vc.
-    SCPRProgramsTableViewController *vc = [[SCPRProgramsTableViewController alloc] init];
+    SCPRProgramsTableViewController *vc = [[SCPRProgramsTableViewController alloc] initWithBackgroundProgram:self.currentProgram];
     vc.view.backgroundColor = [UIColor clearColor];
     //vc.view.alpha = 0.7;
     [self.navigationController pushViewController:vc animated:YES];

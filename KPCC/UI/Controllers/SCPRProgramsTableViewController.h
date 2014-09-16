@@ -7,7 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "Program.h"
 
 @interface SCPRProgramsTableViewController : UITableViewController
-
+- (id)initWithBackgroundProgram:(Program*)program;
 @end

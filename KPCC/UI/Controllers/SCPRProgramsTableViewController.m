@@ -7,24 +7,42 @@
 //
 
 #import "SCPRProgramsTableViewController.h"
-#import "Program.h"
 #import "ContentManager.h"
+#import "DesignManager.h"
 
 @interface SCPRProgramsTableViewController ()
+@property Program *currentProgram;
+@property UIImageView *programBgImage;
 @property NSArray *programsList;
 @end
 
 @implementation SCPRProgramsTableViewController
 
+@synthesize currentProgram;
+
+- (id)init {
+    self = [super init];
+    return self;
+}
+
+- (id)initWithBackgroundProgram:(Program*)program {
+    self = [self init];
+
+    self.currentProgram = program;
+
+    return self;
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
+
+    self.view.backgroundColor = [UIColor clearColor];
+    self.programBgImage = [[UIImageView alloc] initWithFrame:self.view.frame];
     
-    // Uncomment the following line to preserve selection between presentations.
-    // self.clearsSelectionOnViewWillAppear = NO;
-    
-    // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    // self.navigationItem.rightBarButtonItem = self.editButtonItem;
-    
+    self.tableView.backgroundColor = [UIColor clearColor];
+
+    [[DesignManager shared] loadProgramImage:currentProgram.program_slug andImageView:self.programBgImage];
+
     self.programsList = [Program fetchAllProgramsInContext:[[ContentManager shared] managedObjectContext]];
     NSLog(@"programsList? %d", [self.programsList count]);
 }
@@ -55,6 +73,8 @@
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"programTableCell"];
     }
 
+    //cell.backgroundColor = [UIColor clearColor];
+    //cell.textLabel.textColor = [UIColor whiteColor];
     cell.textLabel.text = [NSString stringWithFormat:@"%@", [[self.programsList objectAtIndex:indexPath.row] title]];
 
     return cell;
