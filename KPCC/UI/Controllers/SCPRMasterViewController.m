@@ -434,23 +434,20 @@
 }
 
 - (void)onTimeChange {
-    
-}
-
-- (void)onSeekCompleted {
-    // NSLog(@"curr Date: %@", [[AudioManager shared] currentDate]);
-    // NSLog(@"max seekable Date: %@", [[AudioManager shared] maxSeekableDate]);
-
     if ([[[AudioManager shared] maxSeekableDate] timeIntervalSinceDate:[[AudioManager shared] currentDate]] > 60) {
-        
         NSTimeInterval ti = [[[AudioManager shared] maxSeekableDate] timeIntervalSinceDate:[[AudioManager shared] currentDate]];
-        NSLog(@"diff in secs %f ", ti);
         NSInteger mins = (ti/60);
 
         [self.liveDescriptionLabel setText:[NSString stringWithFormat:@"%li MINUTES BEHIND LIVE", (long)mins]];
+        [self.backToLiveButton setHidden:NO];
+
     } else {
         [self.liveDescriptionLabel setText:@"LIVE"];
+        [self.backToLiveButton setHidden:YES];
     }
+}
+
+- (void)onSeekCompleted {
 
 }
 
