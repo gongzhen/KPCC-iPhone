@@ -14,10 +14,10 @@
 
 @interface SCPRMasterViewController () <AudioManagerDelegate, ContentProcessor, MenuButtonDelegate>
 @property BOOL menuOpen;
+@property BOOL setPlaying;
 @end
 
 @implementation SCPRMasterViewController
-
 
 #pragma mark - UIViewController
 
@@ -47,43 +47,6 @@
     // Set the current view to receive events from the AudioManagerDelegate.
     [AudioManager shared].delegate = self;
 
-}
-
-- (void)menuPressed {
-    if (self.menuOpen) {
-        [pulldownMenu closeDropDown:YES];
-        [self decloakForMenu:YES];
-    } else {
-        [self cloakForMenu:YES];
-        [pulldownMenu openDropDown:YES];
-    }
-    self.menuOpen = !self.menuOpen;
-}
-
-# pragma mark - PulldownMenuDelegate
-
-- (void)menuItemSelected:(NSIndexPath *)indexPath {
-    NSLog(@"%ld",(long)indexPath.item);
-
-    // Push test vc.
-    SCPRProgramsTableViewController *vc = [[SCPRProgramsTableViewController alloc] initWithBackgroundProgram:self.currentProgram];
-    vc.view.backgroundColor = [UIColor clearColor];
-    //vc.view.alpha = 0.7;
-    [self.navigationController pushViewController:vc animated:YES];
-}
-
-- (void)pullDownAnimated:(BOOL)open {
-    if (open) {
-        NSLog(@"Pull down menu open!");
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"pull_down_menu_opened"
-                                                            object:nil];
-        //[menuButton animateToClose];
-    } else {
-        NSLog(@"Pull down menu closed!");
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"pull_down_menu_closed"
-                                                            object:nil];
-        //[menuButton animateToMenu];
-    }
 }
 
 - (void)viewDidLoad {
@@ -166,12 +129,16 @@
     }
 
     if (![[AudioManager shared] isStreamPlaying]) {
+        self.setPlaying = YES;
+
         if ([[AudioManager shared] isStreamBuffering]) {
             [[AudioManager shared] stopAllAudio];
         } else {
             [self playStream];
         }
     } else {
+        self.setPlaying = NO;
+
         [self pauseStream];
     }
 }
@@ -231,8 +198,6 @@
 }
 
 - (void)setUIContents:(BOOL)animated {
-    
-    //[self.blurView setNeedsDisplay];
 
     if (animated) {
         [UIView animateWithDuration:0.1 animations:^{
@@ -241,12 +206,10 @@
             if ([[AudioManager shared] isStreamPlaying] || [[AudioManager shared] isStreamBuffering]) {
                 [self.liveDescriptionLabel setText:@"LIVE"];
                 [self.rewindToShowStartButton setAlpha:0.0];
-                //[self.blurView setAlpha:1.0];
             } else {
                 [self.liveDescriptionLabel setText:@"ON NOW"];
                 [self.liveRewindAltButton setAlpha:0.0];
                 [self.backToLiveButton setAlpha:0.0];
-                //[self.blurView setAlpha:0.0];
             }
 
         } completion:^(BOOL finished) {
@@ -320,9 +283,11 @@
                                                             _programTitleLabel.frame.size.height)];
             }
         } else {
-            [self.rewindToShowStartButton setAlpha:1.0];
-            [self.horizDividerLine setAlpha:0.0];
-            
+            if (!_setPlaying) {
+                [self.rewindToShowStartButton setAlpha:1.0];
+                [self.horizDividerLine setAlpha:0.0];
+            }
+
             if (!_seekRequested) {
                 [self.playPauseButton setFrame:CGRectMake(_playPauseButton.frame.origin.x,
                                                           225.0,
@@ -353,6 +318,18 @@
 
 - (void)setPausedUI:(BOOL)animated {
 
+}
+
+
+- (void)menuPressed {
+    if (self.menuOpen) {
+        [pulldownMenu closeDropDown:YES];
+        [self decloakForMenu:YES];
+    } else {
+        [self cloakForMenu:YES];
+        [pulldownMenu openDropDown:YES];
+    }
+    self.menuOpen = !self.menuOpen;
 }
 
 - (void)cloakForMenu:(BOOL)animated {
@@ -394,6 +371,35 @@
     [self.darkBgView.layer pop_addAnimation:darkBgFadeAnimation forKey:@"darkBgFadeAnimation"];
     [self.playerControlsView.layer pop_addAnimation:controlsFadeAnimation forKey:@"controlsViewFadeAnimation"];
 }
+
+
+# pragma mark - PulldownMenuDelegate
+
+- (void)menuItemSelected:(NSIndexPath *)indexPath {
+    NSLog(@"%ld",(long)indexPath.item);
+
+    // Push test vc.
+    SCPRProgramsTableViewController *vc = [[SCPRProgramsTableViewController alloc] initWithBackgroundProgram:self.currentProgram];
+    vc.view.backgroundColor = [UIColor clearColor];
+    //vc.view.alpha = 0.7;
+    [self.navigationController pushViewController:vc animated:YES];
+}
+
+- (void)pullDownAnimated:(BOOL)open {
+    if (open) {
+        NSLog(@"Pull down menu open!");
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"pull_down_menu_opened"
+                                                            object:nil];
+        //[menuButton animateToClose];
+    } else {
+        NSLog(@"Pull down menu closed!");
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"pull_down_menu_closed"
+                                                            object:nil];
+        //[menuButton animateToMenu];
+    }
+}
+
+
 
 - (void)updateUIWithProgram:(Program*)program {
     if (!program) {
