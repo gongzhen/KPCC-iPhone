@@ -38,9 +38,41 @@
 
     [[DesignManager shared] loadProgramImage:_program.program_slug andImageView:self.programBgImage];
     [[NetworkManager shared] fetchEpisodesForProgram:_program.program_slug dispay:self];
-    
 
-    
+}
+
+
+#pragma mark - Table view data source
+
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+    // Return the number of sections.
+    return 1;
+}
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    // Return the number of rows in the section.
+    return [self.episodesList count];
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"episodeTableCell"];
+
+    if (cell == nil) {
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"episodeTableCell"];
+    }
+
+    cell.textLabel.text = [NSString stringWithFormat:@"%@", [[self.episodesList objectAtIndex:indexPath.row] objectForKey:@"title"]];
+    return cell;
+}
+
+
+#pragma mark - Table view delegate
+
+// In a xib-based application, navigation from a table can be handled in -tableView:didSelectRowAtIndexPath:
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+
 }
 
 
@@ -52,6 +84,8 @@
     }
 
     self.episodesList = content;
+    
+    [self.episodesTable reloadData];
 }
 
 - (void)didReceiveMemoryWarning {

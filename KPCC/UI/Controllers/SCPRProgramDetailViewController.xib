@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6245" systemVersion="14A361c" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
     <dependencies>
+        <deployment defaultVersion="1792" identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6238"/>
     </dependencies>
     <objects>
@@ -30,10 +31,10 @@
                             </variation>
                         </imageView>
                         <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="HiQ-1M-uUR">
-                            <rect key="frame" x="0.0" y="188" width="320" height="316"/>
+                            <rect key="frame" x="0.0" y="262" width="320" height="242"/>
                             <subviews>
                                 <tableView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="6c5-yo-1RK">
-                                    <rect key="frame" x="0.0" y="-62" width="320" height="378"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="320" height="242"/>
                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                     <connections>
                                         <outlet property="dataSource" destination="-1" id="l4t-1U-yqJ"/>
@@ -43,7 +44,7 @@
                             </subviews>
                         </scrollView>
                     </subviews>
-                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                     <constraints>
                         <constraint firstItem="Ulk-Yr-BZM" firstAttribute="leading" secondItem="9ri-IH-dkI" secondAttribute="leading" id="7z8-Qx-eDc"/>
                         <constraint firstItem="Ulk-Yr-BZM" firstAttribute="top" secondItem="9ri-IH-dkI" secondAttribute="top" constant="-16" id="CZr-9J-exD"/>
