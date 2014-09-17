@@ -113,6 +113,12 @@ static NetworkManager *singleton = nil;
                            andDisplay:display];
 }
 
+- (void)fetchEpisodesForProgram:(NSString *)slug dispay:(id<ContentProcessor>)display {
+    NSString *urlString = [NSString stringWithFormat:@"%@/episodes?program=%@",kServerBase,slug];
+    [self requestFromSCPRWithEndpoint:urlString
+                           andDisplay:display];
+}
+
 - (void)processResponseData:(NSDictionary *)content {
     
     NSDictionary *flags = @{};

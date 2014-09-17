@@ -11,10 +11,12 @@
 #import "Program.h"
 
 @interface SCPRProgramDetailViewController ()
-
+@property NSArray *episodesList;
 @end
 
 @implementation SCPRProgramDetailViewController
+
+@synthesize episodesList;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -35,8 +37,21 @@
     NSLog(@"programIV frame %@", NSStringFromCGRect(self.programBgImage.frame));
 
     [[DesignManager shared] loadProgramImage:_program.program_slug andImageView:self.programBgImage];
+    [[NetworkManager shared] fetchEpisodesForProgram:_program.program_slug dispay:self];
+    
+
+    
+}
 
 
+# pragma mark - ContentProcessor delegate
+
+- (void)handleProcessedContent:(NSArray *)content flags:(NSDictionary *)flags {
+    if ([content count] == 0) {
+        return;
+    }
+
+    self.episodesList = content;
 }
 
 - (void)didReceiveMemoryWarning {

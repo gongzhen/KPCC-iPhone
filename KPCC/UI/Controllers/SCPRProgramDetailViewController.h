@@ -8,11 +8,13 @@
 
 #import <UIKit/UIKit.h>
 #import "Program.h"
+#import "NetworkManager.h"
 
-@interface SCPRProgramDetailViewController : UIViewController
+@interface SCPRProgramDetailViewController : UIViewController<ContentProcessor, UITableViewDataSource, UITableViewDelegate>
 
 - (id)initWithProgram:(Program *)program;
 @property (nonatomic,strong) Program *program;
 @property IBOutlet UIImageView *programBgImage;
+@property IBOutlet UITableView *episodesTable;
 
 @end
