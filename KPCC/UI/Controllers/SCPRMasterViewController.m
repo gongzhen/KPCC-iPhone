@@ -47,6 +47,11 @@
     // Set the current view to receive events from the AudioManagerDelegate.
     [AudioManager shared].delegate = self;
 
+    if (self.menuOpen) {
+        [pulldownMenu loadMenu];
+        [pulldownMenu openDropDown:NO];
+
+    }
 }
 
 - (void)viewDidLoad {

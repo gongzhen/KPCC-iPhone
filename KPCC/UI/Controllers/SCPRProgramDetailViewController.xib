@@ -6,6 +6,7 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="SCPRProgramDetailViewController">
             <connections>
+                <outlet property="programBgImage" destination="Ulk-Yr-BZM" id="JGA-O3-iPO"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
         </placeholder>
@@ -13,7 +14,41 @@
         <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
             <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" image="program_tile_generic.jpg" translatesAutoresizingMaskIntoConstraints="NO" id="Ulk-Yr-BZM">
+                    <rect key="frame" x="0.0" y="64" width="320" height="504"/>
+                    <variation key="widthClass=compact" fixedFrame="YES">
+                        <rect key="frame" x="0.0" y="0.0" width="400" height="600"/>
+                    </variation>
+                </imageView>
+            </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+            <constraints>
+                <constraint firstItem="Ulk-Yr-BZM" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="D24-MV-MHU"/>
+                <constraint firstItem="Ulk-Yr-BZM" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="UFf-QJ-tLH"/>
+                <constraint firstAttribute="trailing" secondItem="Ulk-Yr-BZM" secondAttribute="trailing" id="VOf-Ab-q7G"/>
+                <constraint firstAttribute="bottom" secondItem="Ulk-Yr-BZM" secondAttribute="bottom" id="agC-lD-xV7"/>
+            </constraints>
+            <variation key="default">
+                <mask key="constraints">
+                    <exclude reference="D24-MV-MHU"/>
+                    <exclude reference="UFf-QJ-tLH"/>
+                    <exclude reference="VOf-Ab-q7G"/>
+                    <exclude reference="agC-lD-xV7"/>
+                </mask>
+            </variation>
+            <variation key="heightClass=regular">
+                <mask key="constraints">
+                    <include reference="D24-MV-MHU"/>
+                    <include reference="UFf-QJ-tLH"/>
+                    <include reference="VOf-Ab-q7G"/>
+                    <include reference="agC-lD-xV7"/>
+                </mask>
+            </variation>
+            <point key="canvasLocation" x="613" y="364"/>
         </view>
     </objects>
+    <resources>
+        <image name="program_tile_generic.jpg" width="320" height="508"/>
+    </resources>
 </document>

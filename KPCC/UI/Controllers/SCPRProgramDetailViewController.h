@@ -11,6 +11,8 @@
 
 @interface SCPRProgramDetailViewController : UIViewController
 
+- (id)initWithProgram:(Program *)program;
 @property (nonatomic,strong) Program *program;
+@property IBOutlet UIImageView *programBgImage;
 
 @end
