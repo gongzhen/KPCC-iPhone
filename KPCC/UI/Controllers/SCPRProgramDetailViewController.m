@@ -24,20 +24,19 @@
 - (id)initWithProgram:(Program *)program {
     self = [self initWithNibName:nil bundle:nil];
     self.program = program;
+    self.title = program.title;
     return self;
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view from its nib.
 
-    NSLog(@"detail curr program: %@", _program.program_slug);
     NSLog(@"program DetailVC after push %@", NSStringFromCGRect(self.view.frame));
-
     NSLog(@"programIV frame %@", NSStringFromCGRect(self.programBgImage.frame));
-    //self.programBgImage.frame = CGRectMake(0, 64, self.programBgImage.frame.size.width, self.programBgImage.frame.size.height - 64);
-    NSLog(@"programIV frame now %@", NSStringFromCGRect(self.programBgImage.frame));
+
     [[DesignManager shared] loadProgramImage:_program.program_slug andImageView:self.programBgImage];
+
+
 }
 
 - (void)didReceiveMemoryWarning {

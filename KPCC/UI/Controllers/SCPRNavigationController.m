@@ -47,15 +47,10 @@
     if ([self respondsToSelector:@selector(interactivePopGestureRecognizer)]) {
         self.interactivePopGestureRecognizer.enabled = NO;
     }
-    
+
     [super pushViewController:viewController animated:animated];
     if (viewController.navigationItem.leftBarButtonItem == nil){
         viewController.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:menuButton];
-    }
-
-    if (self.menuOpen) {
-        [pulldownMenu closeDropDown:NO];
-        self.menuOpen = !self.menuOpen;
     }
 
     [menuButton animateToBack];

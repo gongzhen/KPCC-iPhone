@@ -12,7 +12,6 @@
 
 @interface SCPRNavigationBar()
 - (void)touchUpInsideHandler:(SCPRNavigationBar *)sender;
-- (void)setup;
 @end
 
 @implementation SCPRNavigationBar
@@ -22,7 +21,7 @@
     self = [super initWithCoder:aDecoder];
     if (self) {
         // Initialization code
-        // [self setup];
+
     }
     return self;
 }
@@ -31,11 +30,9 @@
 
 }
 
-- (void)setup {
-
-    SCPRMenuButton *menuButton = [SCPRMenuButton button];
-    [menuButton addTarget:self action:@selector(touchUpInsideHandler:) forControlEvents:UIControlEventTouchUpInside];
-    [self addSubview:menuButton];
+- (void)layoutSubviews{
+    self.backItem.title = @"";
+    [super layoutSubviews];
 }
 
 @end
