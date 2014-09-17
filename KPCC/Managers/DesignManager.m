@@ -60,11 +60,13 @@ static DesignManager *singleton = nil;
         
         UIImageView *iv = imageView;
         [iv setImageWithURLRequest:request placeholderImage:nil success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {
+            NSLog(@"Loaded successfully: %ld", (long)[response statusCode]);
             imageView.image = image;
             [UIView animateWithDuration:0.15 animations:^{
                 [imageView setAlpha:1.0];
             }];
         } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error) {
+            NSLog(@"Loading FAILED: %ld", (long)[response statusCode]);
             [imageView setImage:[UIImage imageNamed:@"program_tile_generic.jpg"]];
             [UIView animateWithDuration:0.15 animations:^{
                 [imageView setAlpha:1.0];
