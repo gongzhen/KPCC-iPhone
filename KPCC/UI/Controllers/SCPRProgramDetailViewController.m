@@ -42,6 +42,7 @@
     [[NetworkManager shared] fetchEpisodesForProgram:_program.program_slug dispay:self];
     
     self.blurView.tintColor = [UIColor clearColor];
+    self.blurView.alpha = (self.episodesTable.contentOffset.y + 25) / 150;
     self.blurView.blurRadius = 20.f;
 
     UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 250)];
@@ -86,7 +87,7 @@
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     NSLog(@"scrollViewDidScroll %f", scrollView.contentOffset.y);
-    self.blurView.alpha = (scrollView.contentOffset.y + 50) / 150;
+    self.blurView.alpha = (scrollView.contentOffset.y + 25) / 150;
 }
 
 

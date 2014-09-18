@@ -34,7 +34,7 @@
     cellHeight = 62.0f;
     handleHeight = 10.0f;
     animationDuration = 0.3f;
-    topMarginPortrait = 40;
+    topMarginPortrait = 50;
     topMarginLandscape = 0;
     cellColor = [UIColor clearColor];
     cellSelectedColor = [UIColor lightGrayColor];

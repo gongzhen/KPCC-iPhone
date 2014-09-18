@@ -47,7 +47,7 @@
         [self insertButton:menuItem];
     }
 
-//    [menuList setScrollEnabled:NO];
+    [menuList setScrollEnabled:NO];
 
     return self;
 }
