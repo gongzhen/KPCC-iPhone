@@ -7,11 +7,13 @@
 //
 
 #import "SCPRProgramDetailViewController.h"
+#import "FXBlurView.h"
 #import "DesignManager.h"
 #import "Program.h"
 
 @interface SCPRProgramDetailViewController ()
 @property NSArray *episodesList;
+@property IBOutlet FXBlurView *blurView;
 @end
 
 @implementation SCPRProgramDetailViewController
@@ -38,6 +40,9 @@
 
     [[DesignManager shared] loadProgramImage:_program.program_slug andImageView:self.programBgImage];
     [[NetworkManager shared] fetchEpisodesForProgram:_program.program_slug dispay:self];
+    
+    self.blurView.tintColor = [UIColor clearColor];
+    self.blurView.blurRadius = 20.f;
 
     UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 250)];
     self.episodesTable.tableHeaderView = headerView;
@@ -80,7 +85,8 @@
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-    NSLog(@"scrollViewDidScroll");
+    NSLog(@"scrollViewDidScroll %f", scrollView.contentOffset.y);
+    self.blurView.alpha = (scrollView.contentOffset.y + 50) / 150;
 }
 
 

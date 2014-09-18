@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6245" systemVersion="14A361c" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
     <dependencies>
-        <deployment defaultVersion="1792" identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6238"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="SCPRProgramDetailViewController">
             <connections>
+                <outlet property="blurView" destination="M6V-1H-Jpj" id="Ahn-78-cg8"/>
                 <outlet property="episodesTable" destination="6c5-yo-1RK" id="KXJ-LS-ajN"/>
                 <outlet property="programBgImage" destination="Ulk-Yr-BZM" id="JGA-O3-iPO"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
@@ -30,7 +30,11 @@
                                 <rect key="frame" x="0.0" y="0.0" width="400" height="600"/>
                             </variation>
                         </imageView>
-                        <tableView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="6c5-yo-1RK">
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="M6V-1H-Jpj" customClass="FXBlurView">
+                            <rect key="frame" x="0.0" y="-16" width="320" height="536"/>
+                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        </view>
+                        <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="6c5-yo-1RK">
                             <rect key="frame" x="0.0" y="0.0" width="320" height="504"/>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                             <color key="sectionIndexColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -47,13 +51,21 @@
                         <constraint firstItem="Ulk-Yr-BZM" firstAttribute="top" secondItem="9ri-IH-dkI" secondAttribute="top" constant="-16" id="CZr-9J-exD"/>
                         <constraint firstAttribute="trailing" secondItem="Ulk-Yr-BZM" secondAttribute="trailing" id="LN3-cw-5fB"/>
                         <constraint firstItem="Ulk-Yr-BZM" firstAttribute="leading" secondItem="9ri-IH-dkI" secondAttribute="leading" id="NgN-x4-YZS"/>
+                        <constraint firstItem="M6V-1H-Jpj" firstAttribute="trailing" secondItem="6c5-yo-1RK" secondAttribute="trailing" id="WxA-Ge-SJ7"/>
                         <constraint firstItem="Ulk-Yr-BZM" firstAttribute="top" secondItem="9ri-IH-dkI" secondAttribute="top" constant="-16" id="aeZ-BZ-tEC"/>
                         <constraint firstItem="Ulk-Yr-BZM" firstAttribute="centerY" secondItem="9ri-IH-dkI" secondAttribute="centerY" id="cTP-X3-nud"/>
                         <constraint firstItem="Ulk-Yr-BZM" firstAttribute="leading" secondItem="9ri-IH-dkI" secondAttribute="leading" id="cV8-Dd-qNt"/>
+                        <constraint firstItem="M6V-1H-Jpj" firstAttribute="leading" secondItem="Ulk-Yr-BZM" secondAttribute="leading" id="epl-lV-gLS"/>
+                        <constraint firstItem="M6V-1H-Jpj" firstAttribute="leading" secondItem="6c5-yo-1RK" secondAttribute="leading" id="hr3-mw-n1m"/>
+                        <constraint firstItem="M6V-1H-Jpj" firstAttribute="trailing" secondItem="Ulk-Yr-BZM" secondAttribute="trailing" id="ige-oL-IC1"/>
                         <constraint firstItem="Ulk-Yr-BZM" firstAttribute="centerX" secondItem="9ri-IH-dkI" secondAttribute="centerX" id="m7i-AT-Mas"/>
                         <constraint firstAttribute="trailing" secondItem="Ulk-Yr-BZM" secondAttribute="trailing" id="mwE-eo-cYw"/>
                         <constraint firstAttribute="bottom" secondItem="Ulk-Yr-BZM" secondAttribute="bottom" constant="-16" id="nes-id-m6e"/>
+                        <constraint firstItem="M6V-1H-Jpj" firstAttribute="top" secondItem="Ulk-Yr-BZM" secondAttribute="top" id="qUM-Rn-gl0"/>
                         <constraint firstItem="Ulk-Yr-BZM" firstAttribute="top" secondItem="9ri-IH-dkI" secondAttribute="top" constant="-16" id="tQp-Qu-Pti"/>
+                        <constraint firstItem="6c5-yo-1RK" firstAttribute="top" secondItem="9ri-IH-dkI" secondAttribute="top" id="x2u-kb-CC8"/>
+                        <constraint firstItem="M6V-1H-Jpj" firstAttribute="centerY" secondItem="6c5-yo-1RK" secondAttribute="centerY" id="xEq-6f-yYi"/>
+                        <constraint firstItem="M6V-1H-Jpj" firstAttribute="bottom" secondItem="Ulk-Yr-BZM" secondAttribute="bottom" id="xPz-0F-Tzt"/>
                         <constraint firstItem="Ulk-Yr-BZM" firstAttribute="leading" secondItem="9ri-IH-dkI" secondAttribute="leading" id="zjf-Z8-A9z"/>
                     </constraints>
                 </view>
