@@ -11,6 +11,8 @@
 		523E86D119C8A292006FC366 /* SCPRProgramDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 523E86CE19C8A292006FC366 /* SCPRProgramDetailViewController.m */; };
 		523E86D219C8A292006FC366 /* SCPRProgramDetailViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 523E86CF19C8A292006FC366 /* SCPRProgramDetailViewController.xib */; };
 		523E86D319C8A292006FC366 /* SCPRProgramDetailViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 523E86CF19C8A292006FC366 /* SCPRProgramDetailViewController.xib */; };
+		523E86D919CB694B006FC366 /* Episode.m in Sources */ = {isa = PBXBuildFile; fileRef = 523E86D819CB694B006FC366 /* Episode.m */; };
+		523E86DA19CB694B006FC366 /* Episode.m in Sources */ = {isa = PBXBuildFile; fileRef = 523E86D819CB694B006FC366 /* Episode.m */; };
 		52D91F2F19A2537400B8A02F /* program_image_urls.json in Resources */ = {isa = PBXBuildFile; fileRef = 52D91F2E19A2537400B8A02F /* program_image_urls.json */; };
 		52D91F3019A2537400B8A02F /* program_image_urls.json in Resources */ = {isa = PBXBuildFile; fileRef = 52D91F2E19A2537400B8A02F /* program_image_urls.json */; };
 		52E68B7D19B8EEA60028F8AE /* PulldownMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = 52E68B7C19B8EEA60028F8AE /* PulldownMenu.m */; };
@@ -344,6 +346,8 @@
 		523E86CD19C8A292006FC366 /* SCPRProgramDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCPRProgramDetailViewController.h; sourceTree = "<group>"; };
 		523E86CE19C8A292006FC366 /* SCPRProgramDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SCPRProgramDetailViewController.m; sourceTree = "<group>"; };
 		523E86CF19C8A292006FC366 /* SCPRProgramDetailViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SCPRProgramDetailViewController.xib; sourceTree = "<group>"; };
+		523E86D719CB694B006FC366 /* Episode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Episode.h; sourceTree = "<group>"; };
+		523E86D819CB694B006FC366 /* Episode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Episode.m; sourceTree = "<group>"; };
 		52D91F2E19A2537400B8A02F /* program_image_urls.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = program_image_urls.json; sourceTree = "<group>"; };
 		52E68B7B19B8EEA60028F8AE /* PulldownMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PulldownMenu.h; sourceTree = "<group>"; };
 		52E68B7C19B8EEA60028F8AE /* PulldownMenu.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PulldownMenu.m; sourceTree = "<group>"; };
@@ -708,6 +712,8 @@
 				760E3C46194FB54600D86D91 /* DataModel.xcdatamodeld */,
 				760E3C4A194FB61B00D86D91 /* Program.h */,
 				760E3C4B194FB61B00D86D91 /* Program.m */,
+				523E86D719CB694B006FC366 /* Episode.h */,
+				523E86D819CB694B006FC366 /* Episode.m */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -1414,6 +1420,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				76658AB618DCB0DC00026176 /* AnalyticsManager.m in Sources */,
+				523E86DA19CB694B006FC366 /* Episode.m in Sources */,
 				76349D1C18D8C74F0027C3B8 /* NetworkManager.m in Sources */,
 				76EF5E88193E8BED00568A9D /* SCPRHomeViewController.swift in Sources */,
 				52EFF87919C37D350059A0E3 /* SCPRMenuCell.m in Sources */,
@@ -1448,6 +1455,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				76658AB518DCB0DC00026176 /* AnalyticsManager.m in Sources */,
+				523E86D919CB694B006FC366 /* Episode.m in Sources */,
 				76349D1B18D8C74F0027C3B8 /* NetworkManager.m in Sources */,
 				76EF5E87193E8BED00568A9D /* SCPRHomeViewController.swift in Sources */,
 				52EFF87819C37D350059A0E3 /* SCPRMenuCell.m in Sources */,
