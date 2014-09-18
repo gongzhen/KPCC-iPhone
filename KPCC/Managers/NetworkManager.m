@@ -114,7 +114,7 @@ static NetworkManager *singleton = nil;
 }
 
 - (void)fetchEpisodesForProgram:(NSString *)slug dispay:(id<ContentProcessor>)display {
-    NSString *urlString = [NSString stringWithFormat:@"%@/episodes?program=%@",kServerBase,slug];
+    NSString *urlString = [NSString stringWithFormat:@"%@/episodes?program=%@&limit=8",kServerBase,slug];
     [self requestFromSCPRWithEndpoint:urlString
                            andDisplay:display];
 }
