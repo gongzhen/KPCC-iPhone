@@ -10,4 +10,16 @@
 
 @interface Episode : NSObject
 
+-(id)initWithDict:(NSDictionary *)episodeDict;
+
+@property(nonatomic,strong) NSString        *title;
+@property(nonatomic,strong) NSString        *summary;
+@property(nonatomic,strong) NSDate          *airDate;
+@property(nonatomic,strong) NSString        *publicUrl;
+@property(nonatomic,strong) NSArray         *assets;
+@property(nonatomic,strong) NSDictionary    *audio;
+@property(nonatomic,strong) NSDictionary    *program;
+@property(nonatomic,strong) NSArray         *segments;
+@property(nonatomic,strong) NSString        *teaser;
+
 @end

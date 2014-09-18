@@ -10,9 +10,10 @@
 #import "FXBlurView.h"
 #import "DesignManager.h"
 #import "Program.h"
+#import "Episode.h"
 
 @interface SCPRProgramDetailViewController ()
-@property NSArray *episodesList;
+@property NSMutableArray *episodesList;
 @property IBOutlet FXBlurView *blurView;
 @end
 
@@ -72,7 +73,7 @@
 
     cell.backgroundColor = [UIColor clearColor];
     cell.textLabel.textColor = [UIColor whiteColor];
-    cell.textLabel.text = [NSString stringWithFormat:@"%@", [[self.episodesList objectAtIndex:indexPath.row] objectForKey:@"title"]];
+    cell.textLabel.text = [NSString stringWithFormat:@"%@", [[self.episodesList objectAtIndex:indexPath.row] title]];
     return cell;
 }
 
@@ -98,7 +99,12 @@
         return;
     }
 
-    self.episodesList = content;
+    NSMutableArray *episodesArray = [@[] mutableCopy];
+    for (NSMutableDictionary *episodeDict in content) {
+        Episode *episode = [[Episode alloc] initWithDict:episodeDict];
+        [episodesArray addObject:episode];
+    }
+    self.episodesList = episodesArray;
     
     [self.episodesTable reloadData];
 }
