@@ -39,6 +39,8 @@
     [[DesignManager shared] loadProgramImage:_program.program_slug andImageView:self.programBgImage];
     [[NetworkManager shared] fetchEpisodesForProgram:_program.program_slug dispay:self];
 
+    UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 250)];
+    self.episodesTable.tableHeaderView = headerView;
 }
 
 
@@ -62,6 +64,8 @@
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"episodeTableCell"];
     }
 
+    cell.backgroundColor = [UIColor clearColor];
+    cell.textLabel.textColor = [UIColor whiteColor];
     cell.textLabel.text = [NSString stringWithFormat:@"%@", [[self.episodesList objectAtIndex:indexPath.row] objectForKey:@"title"]];
     return cell;
 }
@@ -73,6 +77,10 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
 
+}
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    NSLog(@"scrollViewDidScroll");
 }
 
 
