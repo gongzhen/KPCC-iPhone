@@ -18,7 +18,7 @@
         self.airDate    = [Utils dateFromRFCString:episodeDict[@"air_date"]];
         self.publicUrl  = episodeDict[@"public_url"];
 //        self.assets     = episodeDict[@"assets"];
-//        self.audio      = episodeDict[@"audio"];
+        self.audio      = [[EpisodeAudio alloc] initWithDict:[episodeDict[@"audio"] objectAtIndex:0]];
 //        self.program    = episodeDict[@"program"];
 //        self.segments   = episodeDict[@"segments"];
         self.teaser     = episodeDict[@"teaser"];
