@@ -68,10 +68,7 @@
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"programTableCell"];
     }
 
-    //cell.backgroundColor = [UIColor clearColor];
-    //cell.textLabel.textColor = [UIColor whiteColor];
     cell.textLabel.text = [NSString stringWithFormat:@"%@", [[self.programsList objectAtIndex:indexPath.row] title]];
-
     return cell;
 }
 
