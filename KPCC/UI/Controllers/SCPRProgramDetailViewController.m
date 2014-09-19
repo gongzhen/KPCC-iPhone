@@ -104,7 +104,9 @@
     NSMutableArray *episodesArray = [@[] mutableCopy];
     for (NSMutableDictionary *episodeDict in content) {
         Episode *episode = [[Episode alloc] initWithDict:episodeDict];
-        [episodesArray addObject:episode];
+        if (episode.audio != nil) {
+            [episodesArray addObject:episode];
+        }
     }
     self.episodesList = episodesArray;
 
