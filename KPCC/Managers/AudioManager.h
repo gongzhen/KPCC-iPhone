@@ -72,6 +72,7 @@ typedef enum {
 
 @property (strong,nonatomic) NSDateFormatter *dateFormatter;
 
+- (void)playAudioWithURL:(NSString *)url;
 
 - (NSString *)liveStreamURL;
 - (void)startStream;

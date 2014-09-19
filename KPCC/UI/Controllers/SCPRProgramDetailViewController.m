@@ -9,6 +9,7 @@
 #import "SCPRProgramDetailViewController.h"
 #import "FXBlurView.h"
 #import "DesignManager.h"
+#import "AudioManager.h"
 #import "Program.h"
 #import "Episode.h"
 
@@ -83,7 +84,8 @@
 // In a xib-based application, navigation from a table can be handled in -tableView:didSelectRowAtIndexPath:
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-
+    NSLog(@"Audio?.. %@", [[[self.episodesList objectAtIndex:indexPath.row] audio] url]);
+    [[AudioManager shared] playAudioWithURL:[[[self.episodesList objectAtIndex:indexPath.row] audio] url]];
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {

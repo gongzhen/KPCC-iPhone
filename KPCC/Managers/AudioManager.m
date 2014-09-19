@@ -22,7 +22,7 @@ static const NSString *ItemStatusContext;
     if ( !singleton ) {
         @synchronized(self) {
             singleton = [[AudioManager alloc] init];
-            [singleton buildStreamer];
+            [singleton buildStreamer:kHLSLiveStreamURL];
         }
     }
     
@@ -86,10 +86,15 @@ static const NSString *ItemStatusContext;
 
 
 
-- (void)buildStreamer {
+- (void)buildStreamer:(NSString*)urlString {
     self.status = StreamStatusStopped;
     
-    NSURL *url = [NSURL URLWithString:kHLSLiveStreamURL];
+    NSURL *url;
+    if (urlString == nil) {
+        url = [NSURL URLWithString:kHLSLiveStreamURL];
+    } else {
+        url = [NSURL URLWithString:urlString];
+    }
     
    self.playerItem = [AVPlayerItem playerItemWithURL:url];
     [self.playerItem addObserver:self forKeyPath:@"status" options:NSKeyValueObservingOptionOld|NSKeyValueObservingOptionNew context:nil];
@@ -103,6 +108,14 @@ static const NSString *ItemStatusContext;
     
     [self startObservingTime];
 }
+
+
+- (void)playAudioWithURL:(NSString *)url {
+    [self takedownAudioPlayer];
+    [self buildStreamer:url];
+    [self startStream];
+}
+
 
 - (void)startObservingTime {
     AVPlayer *audioPlayer = self.audioPlayer;
@@ -260,7 +273,7 @@ static const NSString *ItemStatusContext;
 
 - (void)startStream {
     if (!self.audioPlayer) {
-        [self buildStreamer];
+        [self buildStreamer:kHLSLiveStreamURL];
     }
     [self.audioPlayer play];
     self.status = StreamStatusPlaying;
