@@ -473,9 +473,11 @@
         Program *programObj = [Program insertProgramWithDictionary:programDict inManagedObjectContext:[[ContentManager shared] managedObjectContext]];
 
         if (!_currentProgram || (![_currentProgram.program_slug isEqualToString:programObj.program_slug])){
-            [[DesignManager shared] loadProgramImage:programObj.program_slug andImageView:self.programImageView];
-            //[[[[UIApplication sharedApplication] delegate] window] setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"program_tile_generic"]]];
-            //[self.view setBackgroundColor:[UIColor clearColor]];
+            [[DesignManager shared] loadProgramImage:programObj.program_slug
+                                        andImageView:self.programImageView
+                                          completion:^(BOOL status) {
+                                              [self.blurView setNeedsDisplay];
+                                          }];
         }
 
         [self updateUIWithProgram:programObj];

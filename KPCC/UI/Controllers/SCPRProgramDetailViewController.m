@@ -39,13 +39,18 @@
 
     NSLog(@"program DetailVC after push %@", NSStringFromCGRect(self.view.frame));
     NSLog(@"programIV frame %@", NSStringFromCGRect(self.programBgImage.frame));
-
-    [[DesignManager shared] loadProgramImage:_program.program_slug andImageView:self.programBgImage];
-    [[NetworkManager shared] fetchEpisodesForProgram:_program.program_slug dispay:self];
     
     self.blurView.tintColor = [UIColor clearColor];
     self.blurView.alpha = (self.episodesTable.contentOffset.y + 25) / 150;
     self.blurView.blurRadius = 20.f;
+    self.blurView.dynamic = NO;
+
+    [[DesignManager shared] loadProgramImage:_program.program_slug
+                                andImageView:self.programBgImage
+                                  completion:^(BOOL status) {
+                                      [self.blurView setNeedsDisplay];
+                                  }];
+    [[NetworkManager shared] fetchEpisodesForProgram:_program.program_slug dispay:self];
 
     UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 250)];
     self.episodesTable.tableHeaderView = headerView;

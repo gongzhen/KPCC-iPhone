@@ -29,7 +29,7 @@ static DesignManager *singleton = nil;
  * User by SCPRMasterViewController to set program background image, given a program slug and image view.
  *
  */
-- (void)loadProgramImage:(NSString *)slug andImageView:(UIImageView *)imageView {
+- (void)loadProgramImage:(NSString *)slug andImageView:(UIImageView *)imageView completion:(void (^)(BOOL status))completion {
     
     // Load JSON with program image urls.
     NSError *fileError = nil;
@@ -65,15 +65,20 @@ static DesignManager *singleton = nil;
             [UIView animateWithDuration:0.15 animations:^{
                 [imageView setAlpha:1.0];
             }];
+
+            completion(true);
         } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error) {
             NSLog(@"Loading FAILED: %ld", (long)[response statusCode]);
             [imageView setImage:[UIImage imageNamed:@"program_tile_generic.jpg"]];
             [UIView animateWithDuration:0.15 animations:^{
                 [imageView setAlpha:1.0];
             }];
+
+            completion(true);
         }];
     } else {
         [imageView setImage:[UIImage imageNamed:@"program_tile_generic.jpg"]];
+        completion(true);
     }
 }
 

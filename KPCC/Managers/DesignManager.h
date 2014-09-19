@@ -12,6 +12,6 @@
 
 + (DesignManager*)shared;
 
-- (void)loadProgramImage:(NSString *)slug andImageView:(UIImageView *)imageView;
+- (void)loadProgramImage:(NSString *)slug andImageView:(UIImageView *)imageView completion:(void (^)(BOOL status))completion;
 
 @end

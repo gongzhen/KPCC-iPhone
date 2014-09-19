@@ -40,7 +40,11 @@
     
     self.tableView.backgroundColor = [UIColor clearColor];
 
-    [[DesignManager shared] loadProgramImage:currentProgram.program_slug andImageView:self.programBgImage];
+    [[DesignManager shared] loadProgramImage:currentProgram.program_slug
+                                andImageView:self.programBgImage
+                                  completion:^(BOOL status) {
+                                      // Load image completed.
+                                  }];
 
     self.programsList = [Program fetchAllProgramsInContext:[[ContentManager shared] managedObjectContext]];
     NSLog(@"programsList? %lu", (unsigned long)[self.programsList count]);
