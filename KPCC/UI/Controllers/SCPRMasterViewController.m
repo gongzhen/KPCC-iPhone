@@ -15,6 +15,7 @@
 @interface SCPRMasterViewController () <AudioManagerDelegate, ContentProcessor, MenuButtonDelegate>
 @property BOOL menuOpen;
 @property BOOL setPlaying;
+@property BOOL backgroundZoomed;
 @end
 
 @implementation SCPRMasterViewController
@@ -228,12 +229,13 @@
 
                 scaleAnimation.fromValue  = [NSValue valueWithCGSize:CGSizeMake(1.0f, 1.0f)];
                 scaleAnimation.toValue  = [NSValue valueWithCGSize:CGSizeMake(1.2f, 1.2f)];
-
+                self.backgroundZoomed = YES;
             } else {
                 [self.playPauseButton setImage:[UIImage imageNamed:@"btn_play_large"] forState:UIControlStateNormal];
 
                 scaleAnimation.fromValue  = [NSValue valueWithCGSize:CGSizeMake(1.2f, 1.2f)];
                 scaleAnimation.toValue  = [NSValue valueWithCGSize:CGSizeMake(1.0f, 1.0f)];
+                self.backgroundZoomed = NO;
             }
 
             scaleAnimation.springBounciness = 2.0f;
@@ -272,7 +274,7 @@
         [self.liveRewindAltButton setAlpha:1.0];
         [self.backToLiveButton setAlpha:1.0];
 
-        if (!_seekRequested) {
+        /*if (!_seekRequested) {
             [self.playPauseButton setFrame:CGRectMake(_playPauseButton.frame.origin.x,
                                                       385.0,
                                                       _playPauseButton.frame.size.width,
@@ -287,14 +289,14 @@
                                                         303.0,
                                                         _programTitleLabel.frame.size.width,
                                                         _programTitleLabel.frame.size.height)];
-        }
+        }*/
     } else {
         if (!_setPlaying) {
             [self.rewindToShowStartButton setAlpha:1.0];
             [self.horizDividerLine setAlpha:0.0];
         }
 
-        if (!_seekRequested) {
+        /*if (!_seekRequested) {
             [self.playPauseButton setFrame:CGRectMake(_playPauseButton.frame.origin.x,
                                                       225.0,
                                                       _playPauseButton.frame.size.width,
@@ -309,16 +311,20 @@
                                                         113.0,
                                                         _programTitleLabel.frame.size.width,
                                                         _programTitleLabel.frame.size.height)];
-        }
+        }*/
     }
 }
 
-- (void)setPlayingUI:(BOOL)animated {
+- (void)setLiveStreamingUI:(BOOL)animated {
     
 }
 
 - (void)setPausedUI:(BOOL)animated {
 
+}
+
+- (void)setOnDemandUI:(BOOL)animated {
+    
 }
 
 
