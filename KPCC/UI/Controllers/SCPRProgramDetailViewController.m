@@ -12,6 +12,7 @@
 #import "AudioManager.h"
 #import "Program.h"
 #import "Episode.h"
+#import "Segment.h"
 
 @interface SCPRProgramDetailViewController ()
 @property NSMutableArray *episodesList;
@@ -91,6 +92,9 @@
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     NSLog(@"Audio?.. %@", [[[self.episodesList objectAtIndex:indexPath.row] audio] url]);
     [[AudioManager shared] playAudioWithURL:[[[self.episodesList objectAtIndex:indexPath.row] audio] url]];
+
+    [self.navigationController popToRootViewControllerAnimated:YES];
+
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
@@ -111,8 +115,15 @@
         Episode *episode = [[Episode alloc] initWithDict:episodeDict];
         if (episode.audio != nil) {
             [episodesArray addObject:episode];
+        } else {
+            if (episode.segments != nil && [episode.segments count] > 0) {
+                for (Segment *segment in episode.segments) {
+                    [episodesArray addObject:segment];
+                }
+            }
         }
     }
+
     self.episodesList = episodesArray;
 
     [self.episodesTable reloadData];
