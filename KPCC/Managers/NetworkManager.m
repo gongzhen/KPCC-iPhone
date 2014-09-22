@@ -68,12 +68,22 @@ static NetworkManager *singleton = nil;
     manager.responseSerializer = [AFJSONResponseSerializer serializerWithReadingOptions: NSJSONReadingMutableContainers];
     [manager GET:endpoint parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
         
-        if (responseObject) {
-            NSDictionary *elements = @{ @"chunk" : responseObject,
+        if ([responseObject objectForKey:@"meta"] && [[[[responseObject objectForKey:@"meta"] objectForKey:@"status"] objectForKey:@"code"] intValue] == 200) {
+
+            NSArray *keys = [responseObject allKeys];
+            NSString *responseKey;
+            for (NSString *key in keys) {
+                if (![key isEqualToString:@"meta"]) {
+                    responseKey = key;
+                    break;
+                }
+            }
+
+            NSDictionary *elements = @{ @"chunk" : [responseObject objectForKey:responseKey],
                                         @"port" : display };
             
-            if ( flags && [flags count] > 0 ) {
-                elements = @{ @"chunk" : responseObject,
+            if (flags && [flags count] > 0) {
+                elements = @{ @"chunk" : [responseObject objectForKey:responseKey],
                               @"port" : display,
                               @"flags" : flags };
             }
@@ -85,7 +95,7 @@ static NetworkManager *singleton = nil;
 
         } else {
             
-            if ( self.failoverCount < kFailoverThreshold ) {
+            if (self.failoverCount < kFailoverThreshold) {
                 self.failoverCount++;
                 [self requestFromSCPRWithEndpoint:endpoint
                                        andDisplay:display
@@ -108,7 +118,7 @@ static NetworkManager *singleton = nil;
 }
 
 - (void)fetchAllProgramInformation:(id<ContentProcessor>)display {
-    NSString *urlString = [NSString stringWithFormat:@"%@/programs",kServerBase];
+    NSString *urlString = [NSString stringWithFormat:@"%@/programs?air_status=onair,online",kServerBase];
     [self requestFromSCPRWithEndpoint:urlString
                            andDisplay:display];
 }

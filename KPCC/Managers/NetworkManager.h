@@ -12,7 +12,7 @@
 #import <CoreTelephony/CTCarrier.h>
 #import "AFNetworking.h"
 
-#define kServerBase @"http://www.scpr.org/api/v2"
+#define kServerBase @"http://www.scpr.org/api/v3"
 #define kFailoverThreshold 4
 
 
