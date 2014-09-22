@@ -129,9 +129,7 @@
         }
 
         if ( ![Utils pureNil:[[dictionary objectForKey:@"program"] objectForKey:@"slug"]]) {
-            NSLog(@"Setting program slug? %@", [[dictionary objectForKey:@"program"] objectForKey:@"slug"] );
             program.program_slug = [[dictionary objectForKey:@"program"] objectForKey:@"slug"];
-            NSLog(@"Quick program slug? %@",  program.program_slug );
         }
 
         if ( ![Utils pureNil:[dictionary objectForKey:@"starts_at"]]) {

@@ -7,6 +7,7 @@
 //
 
 #import "Episode.h"
+#import "Segment.h"
 #import "Utils.h"
 
 @implementation Episode
@@ -17,15 +18,25 @@
         self.summary    = episodeDict[@"summary"];
         self.airDate    = [Utils dateFromRFCString:episodeDict[@"air_date"]];
         self.publicUrl  = episodeDict[@"public_url"];
+        self.teaser     = episodeDict[@"teaser"];
 //        self.assets     = episodeDict[@"assets"];
+//        self.program    = episodeDict[@"program"];
+
 
         if (episodeDict[@"audio"] && [episodeDict[@"audio"] count] > 0 ) {
-            self.audio      = [[EpisodeAudio alloc] initWithDict:[episodeDict[@"audio"] objectAtIndex:0]];
+            self.audio = [[EpisodeAudio alloc] initWithDict:[episodeDict[@"audio"] objectAtIndex:0]];
         }
 
-//        self.program    = episodeDict[@"program"];
-//        self.segments   = episodeDict[@"segments"];
-        self.teaser     = episodeDict[@"teaser"];
+
+        if (episodeDict[@"segments"] && [episodeDict[@"segments"] count] > 0) {
+            NSMutableArray *tmpSegments = [@[] mutableCopy];
+            for (NSDictionary *segmentDict in episodeDict[@"segments"]) {
+                Segment *segment = [[Segment alloc] initWithDict:segmentDict];
+                [tmpSegments addObject:segment];
+            }
+            self.segments = tmpSegments;
+        }
+
     }
     return self;
 }

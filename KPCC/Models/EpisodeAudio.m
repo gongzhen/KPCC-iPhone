@@ -13,14 +13,24 @@
 
 -(id)initWithDict:(NSDictionary *)dict {
     if((self = [super init])) {
-        self.audioId            = [NSNumber numberWithInteger:[dict[@"id"] integerValue]];
         self.audDescription     = dict[@"description"];
         self.url                = dict[@"url"];
         self.byline             = dict[@"byline"];
         self.uploadedAt         = [Utils dateFromRFCString:dict[@"uploaded_at"]];
-        self.position           = [NSNumber numberWithInteger:[dict[@"position"] integerValue]];
-        self.duration           = [NSNumber numberWithInteger:[dict[@"duration"] integerValue]];
-        self.filesize           = [NSNumber numberWithInteger:[dict[@"filesize"] integerValue]];
+
+        if (dict[@"id"] != nil) {
+            self.audioId = [NSNumber numberWithInteger:[dict[@"id"] integerValue]];
+        }
+
+        if (dict[@"position"] != nil) {
+            self.position = [NSNumber numberWithInteger:[dict[@"position"] integerValue]];
+        }
+
+        if (dict[@"duration"] != nil) {
+            self.duration = [NSNumber numberWithInteger:[dict[@"duration"] integerValue]];
+        }
+
+//        self.filesize           = [NSNumber numberWithInteger:[dict[@"filesize"] integerValue]];
     }
     return self;
 }
