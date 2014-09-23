@@ -213,8 +213,6 @@
 		760EA99319521E98009B504E /* AVPlayer+Additions.m in Sources */ = {isa = PBXBuildFile; fileRef = 760EA99119521E98009B504E /* AVPlayer+Additions.m */; };
 		760EA9961953724E009B504E /* ContentManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 760EA9951953724E009B504E /* ContentManager.m */; };
 		760EA9971953724E009B504E /* ContentManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 760EA9951953724E009B504E /* ContentManager.m */; };
-		76177297195B593400F69EFC /* SCPRHomeViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 76177296195B593400F69EFC /* SCPRHomeViewModel.m */; };
-		76177298195B593400F69EFC /* SCPRHomeViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 76177296195B593400F69EFC /* SCPRHomeViewModel.m */; };
 		7617729B195B646300F69EFC /* Utils.m in Sources */ = {isa = PBXBuildFile; fileRef = 7617729A195B646300F69EFC /* Utils.m */; };
 		7617729C195B646300F69EFC /* Utils.m in Sources */ = {isa = PBXBuildFile; fileRef = 7617729A195B646300F69EFC /* Utils.m */; };
 		761CC5A4195A2878006A6C7C /* Testflight-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 761CC5A3195A2878006A6C7C /* Testflight-Info.plist */; };
@@ -305,8 +303,6 @@
 		769B907B19C0D5C300E812C7 /* Config.plist in Resources */ = {isa = PBXBuildFile; fileRef = 769B907919C0D5C300E812C7 /* Config.plist */; };
 		769B907E19C1186E00E812C7 /* DesignManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 769B907D19C1186E00E812C7 /* DesignManager.m */; };
 		769B907F19C1186E00E812C7 /* DesignManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 769B907D19C1186E00E812C7 /* DesignManager.m */; };
-		769FD69D18EB6F4E00AAF1F4 /* SCPRRootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 769FD69C18EB6F4E00AAF1F4 /* SCPRRootViewController.m */; };
-		769FD69E18EB6F4E00AAF1F4 /* SCPRRootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 769FD69C18EB6F4E00AAF1F4 /* SCPRRootViewController.m */; };
 		76A308C718C8FB940065D4B1 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 76A308C618C8FB940065D4B1 /* Foundation.framework */; };
 		76A308C918C8FB940065D4B1 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 76A308C818C8FB940065D4B1 /* CoreGraphics.framework */; };
 		76A308CB18C8FB940065D4B1 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 76A308CA18C8FB940065D4B1 /* UIKit.framework */; };
@@ -467,8 +463,6 @@
 		760EA99119521E98009B504E /* AVPlayer+Additions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "AVPlayer+Additions.m"; sourceTree = "<group>"; };
 		760EA9941953724E009B504E /* ContentManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ContentManager.h; path = Managers/ContentManager.h; sourceTree = "<group>"; };
 		760EA9951953724E009B504E /* ContentManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ContentManager.m; path = Managers/ContentManager.m; sourceTree = "<group>"; };
-		76177295195B593400F69EFC /* SCPRHomeViewModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCPRHomeViewModel.h; sourceTree = "<group>"; };
-		76177296195B593400F69EFC /* SCPRHomeViewModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SCPRHomeViewModel.m; sourceTree = "<group>"; };
 		76177299195B646300F69EFC /* Utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Utils.h; path = Managers/Utils.h; sourceTree = "<group>"; };
 		7617729A195B646300F69EFC /* Utils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Utils.m; path = Managers/Utils.m; sourceTree = "<group>"; };
 		761CC5A3195A2878006A6C7C /* Testflight-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Testflight-Info.plist"; sourceTree = "<group>"; };
@@ -525,8 +519,6 @@
 		769B907919C0D5C300E812C7 /* Config.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Config.plist; sourceTree = "<group>"; };
 		769B907C19C1186E00E812C7 /* DesignManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DesignManager.h; path = Managers/DesignManager.h; sourceTree = "<group>"; };
 		769B907D19C1186E00E812C7 /* DesignManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DesignManager.m; path = Managers/DesignManager.m; sourceTree = "<group>"; };
-		769FD69B18EB6F4E00AAF1F4 /* SCPRRootViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCPRRootViewController.h; sourceTree = "<group>"; };
-		769FD69C18EB6F4E00AAF1F4 /* SCPRRootViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SCPRRootViewController.m; sourceTree = "<group>"; };
 		76A308C318C8FB940065D4B1 /* KPCC.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = KPCC.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		76A308C618C8FB940065D4B1 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		76A308C818C8FB940065D4B1 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -734,15 +726,6 @@
 			path = Models;
 			sourceTree = "<group>";
 		};
-		76177294195B58D000F69EFC /* View Models */ = {
-			isa = PBXGroup;
-			children = (
-				76177295195B593400F69EFC /* SCPRHomeViewModel.h */,
-				76177296195B593400F69EFC /* SCPRHomeViewModel.m */,
-			);
-			path = "View Models";
-			sourceTree = "<group>";
-		};
 		76349CA118D372B30027C3B8 /* TestFlight */ = {
 			isa = PBXGroup;
 			children = (
@@ -779,7 +762,6 @@
 		76658ABB18E0ADDF00026176 /* UI */ = {
 			isa = PBXGroup;
 			children = (
-				76177294195B58D000F69EFC /* View Models */,
 				76658ABC18E0AF8500026176 /* View Controllers */,
 				76658ABD18E0AF8500026176 /* Views */,
 				76EF5E89193E8D6B00568A9D /* Storyboard.storyboard */,
@@ -790,8 +772,6 @@
 		76658ABC18E0AF8500026176 /* View Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				769FD69B18EB6F4E00AAF1F4 /* SCPRRootViewController.h */,
-				769FD69C18EB6F4E00AAF1F4 /* SCPRRootViewController.m */,
 				76B9A9A918EF59FD007A6D8C /* SCPRUserReportViewController.h */,
 				76B9A9AA18EF59FD007A6D8C /* SCPRUserReportViewController.m */,
 				76B9A9AB18EF59FD007A6D8C /* SCPRUserReportViewController.xib */,
@@ -1457,7 +1437,6 @@
 				760E3C49194FB54600D86D91 /* DataModel.xcdatamodeld in Sources */,
 				52CC6D6719D110E300C67322 /* SCPRProgramsListViewController.m in Sources */,
 				52CC6D5F19D0DC7100C67322 /* Segment.m in Sources */,
-				76177298195B593400F69EFC /* SCPRHomeViewModel.m in Sources */,
 				760EA99319521E98009B504E /* AVPlayer+Additions.m in Sources */,
 				52E68B8919B919300028F8AE /* SCPRMenuButton.m in Sources */,
 				768C064919958FDA00F829EB /* SCPRMasterViewController.m in Sources */,
@@ -1465,7 +1444,6 @@
 				52E68B7E19B8EEA60028F8AE /* PulldownMenu.m in Sources */,
 				760EA9971953724E009B504E /* ContentManager.m in Sources */,
 				769B907F19C1186E00E812C7 /* DesignManager.m in Sources */,
-				769FD69E18EB6F4E00AAF1F4 /* SCPRRootViewController.m in Sources */,
 				76349D2218D8F8A30027C3B8 /* Reachability.m in Sources */,
 				7617729C195B646300F69EFC /* Utils.m in Sources */,
 			);
@@ -1495,7 +1473,6 @@
 				760E3C48194FB54600D86D91 /* DataModel.xcdatamodeld in Sources */,
 				52CC6D6619D110E300C67322 /* SCPRProgramsListViewController.m in Sources */,
 				52CC6D5E19D0DC7100C67322 /* Segment.m in Sources */,
-				76177297195B593400F69EFC /* SCPRHomeViewModel.m in Sources */,
 				760EA99219521E98009B504E /* AVPlayer+Additions.m in Sources */,
 				52E68B8819B919300028F8AE /* SCPRMenuButton.m in Sources */,
 				768C064819958FDA00F829EB /* SCPRMasterViewController.m in Sources */,
@@ -1503,7 +1480,6 @@
 				52E68B7D19B8EEA60028F8AE /* PulldownMenu.m in Sources */,
 				760EA9961953724E009B504E /* ContentManager.m in Sources */,
 				769B907E19C1186E00E812C7 /* DesignManager.m in Sources */,
-				769FD69D18EB6F4E00AAF1F4 /* SCPRRootViewController.m in Sources */,
 				76349D2118D8F8A30027C3B8 /* Reachability.m in Sources */,
 				7617729B195B646300F69EFC /* Utils.m in Sources */,
 			);
