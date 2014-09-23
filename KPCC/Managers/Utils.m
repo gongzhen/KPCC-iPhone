@@ -46,6 +46,13 @@
     return [dateFormatter stringFromDate:date];
 }
 
++ (NSString*)episodeDateStringFromRFCDate:(NSDate *)date {
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    [dateFormatter setDateFormat:@"MMMM d, yyyy"];
+    [dateFormatter setTimeZone:[NSTimeZone timeZoneForSecondsFromGMT:[[NSTimeZone localTimeZone] secondsFromGMT]]];
+    return [dateFormatter stringFromDate:date];
+}
+
 + (BOOL)pureNil:(id)object {
     if (!object) {
         return YES;

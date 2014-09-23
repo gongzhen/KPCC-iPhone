@@ -7,6 +7,8 @@
 //
 
 #import "SCPRProgramDetailViewController.h"
+#import "SCPRProgramDetailHeaderView.h"
+#import "SCPRProgramDetailTableViewCell.h"
 #import "FXBlurView.h"
 #import "DesignManager.h"
 #import "AudioManager.h"
@@ -38,9 +40,6 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 
-    NSLog(@"program DetailVC after push %@", NSStringFromCGRect(self.view.frame));
-    NSLog(@"programIV frame %@", NSStringFromCGRect(self.programBgImage.frame));
-    
     self.blurView.tintColor = [UIColor clearColor];
     self.blurView.alpha = (self.episodesTable.contentOffset.y + 25) / 150;
     self.blurView.blurRadius = 20.f;
@@ -51,9 +50,14 @@
                                   completion:^(BOOL status) {
                                       [self.blurView setNeedsDisplay];
                                   }];
-    [[NetworkManager shared] fetchEpisodesForProgram:_program.program_slug dispay:self];
 
-    UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 250)];
+    [[NetworkManager shared] fetchEpisodesForProgram:_program.program_slug dispay:self];
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+
+    SCPRProgramDetailHeaderView *headerView = [[SCPRProgramDetailHeaderView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 250)];
     self.episodesTable.tableHeaderView = headerView;
 }
 
@@ -72,16 +76,30 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
 
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"episodeTableCell"];
-
+    SCPRProgramDetailTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"programDetailTableCell"];
     if (cell == nil) {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"episodeTableCell"];
+        cell = [[SCPRProgramDetailTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"programDetailTableCell"];
     }
 
     cell.backgroundColor = [UIColor clearColor];
-    cell.textLabel.textColor = [UIColor whiteColor];
-    cell.textLabel.text = [NSString stringWithFormat:@"%@", [[self.episodesList objectAtIndex:indexPath.row] title]];
+    NSLog(@"episode kind? %@", [[self.episodesList objectAtIndex:indexPath.row] class]);
+    [cell setEpisode:[self.episodesList objectAtIndex:indexPath.row]];
     return cell;
+}
+
+-(void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath{
+    
+    if ([tableView respondsToSelector:@selector(setSeparatorInset:)]) {
+        [tableView setSeparatorInset:UIEdgeInsetsMake(0, 8, 0, 8)];
+    }
+    
+    if ([tableView respondsToSelector:@selector(setLayoutMargins:)]) {
+        [tableView setLayoutMargins:UIEdgeInsetsMake(0, 8, 0, 8)];
+    }
+    
+    if ([cell respondsToSelector:@selector(setLayoutMargins:)]) {
+        [cell setLayoutMargins:UIEdgeInsetsMake(0, 8, 0, 8)];
+    }
 }
 
 
@@ -98,7 +116,6 @@
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-    NSLog(@"scrollViewDidScroll %f", scrollView.contentOffset.y);
     self.blurView.alpha = (scrollView.contentOffset.y + 25) / 150;
 }
 

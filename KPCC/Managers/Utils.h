@@ -19,6 +19,8 @@
 + (NSString*)prettyStringFromRFCDateString:(NSString*)rawDate;
 + (NSString*)prettyStringFromRFCDate:(NSDate*)date;
 
++ (NSString*)episodeDateStringFromRFCDate:(NSDate *)date;
+
 + (BOOL)pureNil:(id)object;
 + (BOOL)isRetina;
 

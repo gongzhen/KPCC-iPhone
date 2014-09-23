@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6245" systemVersion="14A361c" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
     <dependencies>
-        <deployment defaultVersion="1792" identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6238"/>
     </dependencies>
     <objects>
@@ -48,7 +47,7 @@
                             <rect key="frame" x="0.0" y="-16" width="320" height="536"/>
                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         </view>
-                        <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="6c5-yo-1RK">
+                        <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="92" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="6c5-yo-1RK">
                             <rect key="frame" x="0.0" y="0.0" width="320" height="504"/>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                             <color key="separatorColor" red="0.87058823529411766" green="0.89411764705882357" blue="0.89803921568627454" alpha="0.29999999999999999" colorSpace="custom" customColorSpace="sRGB"/>
@@ -64,36 +63,16 @@
                     <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                     <constraints>
                         <constraint firstItem="6c5-yo-1RK" firstAttribute="trailing" secondItem="Ulk-Yr-BZM" secondAttribute="trailing" id="4Ky-hS-nfM"/>
-                        <constraint firstItem="Ulk-Yr-BZM" firstAttribute="leading" secondItem="9ri-IH-dkI" secondAttribute="leading" id="7z8-Qx-eDc"/>
                         <constraint firstItem="6c5-yo-1RK" firstAttribute="top" secondItem="9ri-IH-dkI" secondAttribute="top" id="93y-mr-1tG"/>
-                        <constraint firstItem="Ulk-Yr-BZM" firstAttribute="top" secondItem="9ri-IH-dkI" secondAttribute="top" constant="-16" id="CZr-9J-exD"/>
                         <constraint firstItem="6c5-yo-1RK" firstAttribute="top" secondItem="M6V-1H-Jpj" secondAttribute="top" id="CdY-Sb-YsH"/>
                         <constraint firstItem="6c5-yo-1RK" firstAttribute="top" secondItem="Ulk-Yr-BZM" secondAttribute="top" id="EdB-jb-yjy"/>
                         <constraint firstItem="Ulk-Yr-BZM" firstAttribute="leading" secondItem="9ri-IH-dkI" secondAttribute="leading" id="Kqc-et-Mpx"/>
-                        <constraint firstAttribute="trailing" secondItem="Ulk-Yr-BZM" secondAttribute="trailing" id="LN3-cw-5fB"/>
-                        <constraint firstItem="Ulk-Yr-BZM" firstAttribute="leading" secondItem="9ri-IH-dkI" secondAttribute="leading" id="NgN-x4-YZS"/>
                         <constraint firstItem="Ulk-Yr-BZM" firstAttribute="leading" secondItem="M6V-1H-Jpj" secondAttribute="leading" id="Pdt-on-phM"/>
                         <constraint firstAttribute="trailing" secondItem="6c5-yo-1RK" secondAttribute="trailing" id="Wt7-ot-ujQ"/>
-                        <constraint firstItem="M6V-1H-Jpj" firstAttribute="trailing" secondItem="6c5-yo-1RK" secondAttribute="trailing" id="WxA-Ge-SJ7"/>
                         <constraint firstItem="6c5-yo-1RK" firstAttribute="leading" secondItem="Ulk-Yr-BZM" secondAttribute="leading" id="Yth-Qj-hPl"/>
                         <constraint firstItem="6c5-yo-1RK" firstAttribute="bottom" secondItem="M6V-1H-Jpj" secondAttribute="bottom" id="aOs-Kc-oCh"/>
-                        <constraint firstItem="Ulk-Yr-BZM" firstAttribute="top" secondItem="9ri-IH-dkI" secondAttribute="top" constant="-16" id="aeZ-BZ-tEC"/>
-                        <constraint firstItem="Ulk-Yr-BZM" firstAttribute="centerY" secondItem="9ri-IH-dkI" secondAttribute="centerY" id="cTP-X3-nud"/>
-                        <constraint firstItem="Ulk-Yr-BZM" firstAttribute="leading" secondItem="9ri-IH-dkI" secondAttribute="leading" id="cV8-Dd-qNt"/>
-                        <constraint firstItem="M6V-1H-Jpj" firstAttribute="leading" secondItem="Ulk-Yr-BZM" secondAttribute="leading" id="epl-lV-gLS"/>
-                        <constraint firstItem="M6V-1H-Jpj" firstAttribute="leading" secondItem="6c5-yo-1RK" secondAttribute="leading" id="hr3-mw-n1m"/>
-                        <constraint firstItem="M6V-1H-Jpj" firstAttribute="trailing" secondItem="Ulk-Yr-BZM" secondAttribute="trailing" id="ige-oL-IC1"/>
-                        <constraint firstItem="Ulk-Yr-BZM" firstAttribute="centerX" secondItem="9ri-IH-dkI" secondAttribute="centerX" id="m7i-AT-Mas"/>
-                        <constraint firstAttribute="trailing" secondItem="Ulk-Yr-BZM" secondAttribute="trailing" id="mwE-eo-cYw"/>
-                        <constraint firstAttribute="bottom" secondItem="Ulk-Yr-BZM" secondAttribute="bottom" constant="-16" id="nes-id-m6e"/>
-                        <constraint firstItem="M6V-1H-Jpj" firstAttribute="top" secondItem="Ulk-Yr-BZM" secondAttribute="top" id="qUM-Rn-gl0"/>
-                        <constraint firstItem="Ulk-Yr-BZM" firstAttribute="top" secondItem="9ri-IH-dkI" secondAttribute="top" constant="-16" id="tQp-Qu-Pti"/>
                         <constraint firstAttribute="bottom" secondItem="6c5-yo-1RK" secondAttribute="bottom" id="vR7-3O-V19"/>
-                        <constraint firstItem="6c5-yo-1RK" firstAttribute="top" secondItem="9ri-IH-dkI" secondAttribute="top" id="x2u-kb-CC8"/>
-                        <constraint firstItem="M6V-1H-Jpj" firstAttribute="centerY" secondItem="6c5-yo-1RK" secondAttribute="centerY" id="xEq-6f-yYi"/>
-                        <constraint firstItem="M6V-1H-Jpj" firstAttribute="bottom" secondItem="Ulk-Yr-BZM" secondAttribute="bottom" id="xPz-0F-Tzt"/>
                         <constraint firstItem="M6V-1H-Jpj" firstAttribute="trailing" secondItem="6c5-yo-1RK" secondAttribute="trailing" id="zA1-8u-qpt"/>
-                        <constraint firstItem="Ulk-Yr-BZM" firstAttribute="leading" secondItem="9ri-IH-dkI" secondAttribute="leading" id="zjf-Z8-A9z"/>
                     </constraints>
                     <variation key="default">
                         <mask key="constraints">
@@ -120,29 +99,9 @@
                             <include reference="Yth-Qj-hPl"/>
                             <include reference="aOs-Kc-oCh"/>
                             <include reference="vR7-3O-V19"/>
-                            <exclude reference="x2u-kb-CC8"/>
-                            <exclude reference="WxA-Ge-SJ7"/>
-                            <exclude reference="epl-lV-gLS"/>
-                            <exclude reference="hr3-mw-n1m"/>
-                            <exclude reference="ige-oL-IC1"/>
-                            <exclude reference="qUM-Rn-gl0"/>
-                            <exclude reference="xEq-6f-yYi"/>
-                            <exclude reference="xPz-0F-Tzt"/>
                             <include reference="zA1-8u-qpt"/>
-                            <exclude reference="7z8-Qx-eDc"/>
-                            <exclude reference="CZr-9J-exD"/>
                             <include reference="Kqc-et-Mpx"/>
-                            <exclude reference="LN3-cw-5fB"/>
-                            <exclude reference="NgN-x4-YZS"/>
                             <include reference="Pdt-on-phM"/>
-                            <exclude reference="aeZ-BZ-tEC"/>
-                            <exclude reference="cTP-X3-nud"/>
-                            <exclude reference="cV8-Dd-qNt"/>
-                            <exclude reference="m7i-AT-Mas"/>
-                            <exclude reference="mwE-eo-cYw"/>
-                            <exclude reference="nes-id-m6e"/>
-                            <exclude reference="tQp-Qu-Pti"/>
-                            <exclude reference="zjf-Z8-A9z"/>
                         </mask>
                     </variation>
                 </view>

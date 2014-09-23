@@ -23,6 +23,10 @@
 		52CC6D6719D110E300C67322 /* SCPRProgramsListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 52CC6D6519D110E300C67322 /* SCPRProgramsListViewController.m */; };
 		52CC6D6919D112F400C67322 /* SCPRProgramsListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 52CC6D6819D112F400C67322 /* SCPRProgramsListViewController.xib */; };
 		52CC6D6A19D112F400C67322 /* SCPRProgramsListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 52CC6D6819D112F400C67322 /* SCPRProgramsListViewController.xib */; };
+		52D0FC1C19D1F24F009AECEE /* SCPRProgramDetailHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D0FC1B19D1F24F009AECEE /* SCPRProgramDetailHeaderView.m */; };
+		52D0FC1D19D1F24F009AECEE /* SCPRProgramDetailHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D0FC1B19D1F24F009AECEE /* SCPRProgramDetailHeaderView.m */; };
+		52D0FC2019D1FC0C009AECEE /* SCPRProgramDetailTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D0FC1F19D1FC0C009AECEE /* SCPRProgramDetailTableViewCell.m */; };
+		52D0FC2119D1FC0C009AECEE /* SCPRProgramDetailTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D0FC1F19D1FC0C009AECEE /* SCPRProgramDetailTableViewCell.m */; };
 		52D91F2F19A2537400B8A02F /* program_image_urls.json in Resources */ = {isa = PBXBuildFile; fileRef = 52D91F2E19A2537400B8A02F /* program_image_urls.json */; };
 		52D91F3019A2537400B8A02F /* program_image_urls.json in Resources */ = {isa = PBXBuildFile; fileRef = 52D91F2E19A2537400B8A02F /* program_image_urls.json */; };
 		52E68B7D19B8EEA60028F8AE /* PulldownMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = 52E68B7C19B8EEA60028F8AE /* PulldownMenu.m */; };
@@ -359,6 +363,10 @@
 		52CC6D6419D110E300C67322 /* SCPRProgramsListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCPRProgramsListViewController.h; sourceTree = "<group>"; };
 		52CC6D6519D110E300C67322 /* SCPRProgramsListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SCPRProgramsListViewController.m; sourceTree = "<group>"; };
 		52CC6D6819D112F400C67322 /* SCPRProgramsListViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SCPRProgramsListViewController.xib; sourceTree = "<group>"; };
+		52D0FC1A19D1F24F009AECEE /* SCPRProgramDetailHeaderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCPRProgramDetailHeaderView.h; sourceTree = "<group>"; };
+		52D0FC1B19D1F24F009AECEE /* SCPRProgramDetailHeaderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SCPRProgramDetailHeaderView.m; sourceTree = "<group>"; };
+		52D0FC1E19D1FC0C009AECEE /* SCPRProgramDetailTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCPRProgramDetailTableViewCell.h; sourceTree = "<group>"; };
+		52D0FC1F19D1FC0C009AECEE /* SCPRProgramDetailTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SCPRProgramDetailTableViewCell.m; sourceTree = "<group>"; };
 		52D91F2E19A2537400B8A02F /* program_image_urls.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = program_image_urls.json; sourceTree = "<group>"; };
 		52E68B7B19B8EEA60028F8AE /* PulldownMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PulldownMenu.h; sourceTree = "<group>"; };
 		52E68B7C19B8EEA60028F8AE /* PulldownMenu.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PulldownMenu.m; sourceTree = "<group>"; };
@@ -807,6 +815,10 @@
 				52EFF87719C37D350059A0E3 /* SCPRMenuCell.m */,
 				52CC6D6019D100DE00C67322 /* SCPRProgramTableViewCell.h */,
 				52CC6D6119D100DE00C67322 /* SCPRProgramTableViewCell.m */,
+				52D0FC1A19D1F24F009AECEE /* SCPRProgramDetailHeaderView.h */,
+				52D0FC1B19D1F24F009AECEE /* SCPRProgramDetailHeaderView.m */,
+				52D0FC1E19D1FC0C009AECEE /* SCPRProgramDetailTableViewCell.h */,
+				52D0FC1F19D1FC0C009AECEE /* SCPRProgramDetailTableViewCell.m */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -1420,6 +1432,7 @@
 				76658AB618DCB0DC00026176 /* AnalyticsManager.m in Sources */,
 				523E86DA19CB694B006FC366 /* Episode.m in Sources */,
 				76349D1C18D8C74F0027C3B8 /* NetworkManager.m in Sources */,
+				52D0FC1D19D1F24F009AECEE /* SCPRProgramDetailHeaderView.m in Sources */,
 				76EF5E88193E8BED00568A9D /* SCPRHomeViewController.swift in Sources */,
 				52EFF87919C37D350059A0E3 /* SCPRMenuCell.m in Sources */,
 				5248858F19CBA180005F59CC /* EpisodeAudio.m in Sources */,
@@ -1433,6 +1446,7 @@
 				76349CF818D388C80027C3B8 /* main.m in Sources */,
 				52CC6D6319D100DE00C67322 /* SCPRProgramTableViewCell.m in Sources */,
 				76349CF918D388C80027C3B8 /* AudioManager.m in Sources */,
+				52D0FC2119D1FC0C009AECEE /* SCPRProgramDetailTableViewCell.m in Sources */,
 				760E3C4D194FB61B00D86D91 /* Program.m in Sources */,
 				760E3C49194FB54600D86D91 /* DataModel.xcdatamodeld in Sources */,
 				52CC6D6719D110E300C67322 /* SCPRProgramsListViewController.m in Sources */,
@@ -1456,6 +1470,7 @@
 				76658AB518DCB0DC00026176 /* AnalyticsManager.m in Sources */,
 				523E86D919CB694B006FC366 /* Episode.m in Sources */,
 				76349D1B18D8C74F0027C3B8 /* NetworkManager.m in Sources */,
+				52D0FC1C19D1F24F009AECEE /* SCPRProgramDetailHeaderView.m in Sources */,
 				76EF5E87193E8BED00568A9D /* SCPRHomeViewController.swift in Sources */,
 				52EFF87819C37D350059A0E3 /* SCPRMenuCell.m in Sources */,
 				5248858E19CBA180005F59CC /* EpisodeAudio.m in Sources */,
@@ -1469,6 +1484,7 @@
 				76A308D318C8FB940065D4B1 /* main.m in Sources */,
 				52CC6D6219D100DE00C67322 /* SCPRProgramTableViewCell.m in Sources */,
 				76A3090418C93C880065D4B1 /* AudioManager.m in Sources */,
+				52D0FC2019D1FC0C009AECEE /* SCPRProgramDetailTableViewCell.m in Sources */,
 				760E3C4C194FB61B00D86D91 /* Program.m in Sources */,
 				760E3C48194FB54600D86D91 /* DataModel.xcdatamodeld in Sources */,
 				52CC6D6619D110E300C67322 /* SCPRProgramsListViewController.m in Sources */,
