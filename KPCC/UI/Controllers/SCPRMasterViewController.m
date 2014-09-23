@@ -44,6 +44,7 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    self.navigationItem.title = @"KPCC Live";
 
     // Set the current view to receive events from the AudioManagerDelegate.
     [AudioManager shared].delegate = self;
@@ -51,7 +52,6 @@
     if (self.menuOpen) {
         //[pulldownMenu loadMenu];
         [pulldownMenu openDropDown:NO];
-
     }
 }
 
@@ -67,8 +67,6 @@
     SCPRMenuButton *menuButton = [SCPRMenuButton buttonWithOrigin:CGPointMake(10.f, 10.f)];
     menuButton.delegate = self;
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:menuButton];
-
-    self.navigationItem.title = @"KPCC Live";
 
     // Fetch program info and update audio control state.
     [self updateDataForUI];

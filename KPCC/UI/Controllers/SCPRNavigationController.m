@@ -20,20 +20,17 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 
+    /**
+     * Lets us keep the iOS 7-style slide-over gesture when navigating back through view controllers.
+     * Problems were had when using a custom bar button item.
+     */
     __weak SCPRNavigationController *weakSelf = self;
-    
     if ([self respondsToSelector:@selector(interactivePopGestureRecognizer)]) {
         self.interactivePopGestureRecognizer.delegate = weakSelf;
         self.delegate = weakSelf;
     }
 
-//    pulldownMenu = [[SCPRPullDownMenu alloc] initWithNavigationController:self];
-//    [self.view insertSubview:pulldownMenu belowSubview:self.navigationBar];
-//
-//    pulldownMenu.delegate = self;
-//    [pulldownMenu loadMenu];
-
-    // "Global" menu button to be used across all pushed view controllers.
+    // Menu button to be used across all pushed view controllers.
     menuButton = [SCPRMenuButton buttonWithOrigin:CGPointMake(10.f, 10.f)];
     menuButton.delegate = self;
 
@@ -68,33 +65,6 @@
 - (void)navigationController:(UINavigationController *)navigationController didShowViewController:(UIViewController *)viewController animated:(BOOL)animate {
     // Enable the gesture again once the new controller is shown
     self.interactivePopGestureRecognizer.enabled = ([self respondsToSelector:@selector(interactivePopGestureRecognizer)] && [self.viewControllers count] > 1);
-}
-
-
-# pragma mark - PulldownMenuDelegate
-
-- (void)menuItemSelected:(NSIndexPath *)indexPath {
-    NSLog(@"%ld",(long)indexPath.item);
-
-    // Push test vc.
-    UIViewController *vc = [[UIViewController alloc] init];
-    vc.view.backgroundColor = [UIColor blackColor];
-    vc.view.alpha = 0.7;
-    [self pushViewController:vc animated:YES];
-}
-
-- (void)pullDownAnimated:(BOOL)open {
-    if (open) {
-        NSLog(@"Pull down menu open!");
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"pull_down_menu_opened"
-                                                            object:nil];
-        [menuButton animateToClose];
-    } else {
-        NSLog(@"Pull down menu closed!");
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"pull_down_menu_closed"
-                                                            object:nil];
-        [menuButton animateToMenu];
-    }
 }
 
 

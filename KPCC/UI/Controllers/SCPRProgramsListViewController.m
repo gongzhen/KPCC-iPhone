@@ -30,9 +30,13 @@
     return self;
 }
 
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    self.navigationItem.title = @"Programs";
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view.
 
     self.blurView.tintColor = [UIColor clearColor];
     self.blurView.blurRadius = 20.f;
