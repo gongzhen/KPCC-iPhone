@@ -17,6 +17,12 @@
 		5248858F19CBA180005F59CC /* EpisodeAudio.m in Sources */ = {isa = PBXBuildFile; fileRef = 5248858D19CBA180005F59CC /* EpisodeAudio.m */; };
 		52CC6D5E19D0DC7100C67322 /* Segment.m in Sources */ = {isa = PBXBuildFile; fileRef = 52CC6D5D19D0DC7100C67322 /* Segment.m */; };
 		52CC6D5F19D0DC7100C67322 /* Segment.m in Sources */ = {isa = PBXBuildFile; fileRef = 52CC6D5D19D0DC7100C67322 /* Segment.m */; };
+		52CC6D6219D100DE00C67322 /* SCPRProgramTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 52CC6D6119D100DE00C67322 /* SCPRProgramTableViewCell.m */; };
+		52CC6D6319D100DE00C67322 /* SCPRProgramTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 52CC6D6119D100DE00C67322 /* SCPRProgramTableViewCell.m */; };
+		52CC6D6619D110E300C67322 /* SCPRProgramsListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 52CC6D6519D110E300C67322 /* SCPRProgramsListViewController.m */; };
+		52CC6D6719D110E300C67322 /* SCPRProgramsListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 52CC6D6519D110E300C67322 /* SCPRProgramsListViewController.m */; };
+		52CC6D6919D112F400C67322 /* SCPRProgramsListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 52CC6D6819D112F400C67322 /* SCPRProgramsListViewController.xib */; };
+		52CC6D6A19D112F400C67322 /* SCPRProgramsListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 52CC6D6819D112F400C67322 /* SCPRProgramsListViewController.xib */; };
 		52D91F2F19A2537400B8A02F /* program_image_urls.json in Resources */ = {isa = PBXBuildFile; fileRef = 52D91F2E19A2537400B8A02F /* program_image_urls.json */; };
 		52D91F3019A2537400B8A02F /* program_image_urls.json in Resources */ = {isa = PBXBuildFile; fileRef = 52D91F2E19A2537400B8A02F /* program_image_urls.json */; };
 		52E68B7D19B8EEA60028F8AE /* PulldownMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = 52E68B7C19B8EEA60028F8AE /* PulldownMenu.m */; };
@@ -234,10 +240,6 @@
 		76658AB618DCB0DC00026176 /* AnalyticsManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 76658AB418DCB0DC00026176 /* AnalyticsManager.m */; };
 		76658AB918DCB51000026176 /* NSDate+Helper.m in Sources */ = {isa = PBXBuildFile; fileRef = 76658AB818DCB51000026176 /* NSDate+Helper.m */; };
 		76658ABA18DCB51000026176 /* NSDate+Helper.m in Sources */ = {isa = PBXBuildFile; fileRef = 76658AB818DCB51000026176 /* NSDate+Helper.m */; };
-		766FDD0E19C7AB9A006BF8E1 /* SCPRProgramsTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 766FDD0C19C7AB9A006BF8E1 /* SCPRProgramsTableViewController.m */; };
-		766FDD0F19C7AB9A006BF8E1 /* SCPRProgramsTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 766FDD0C19C7AB9A006BF8E1 /* SCPRProgramsTableViewController.m */; };
-		766FDD1019C7AB9A006BF8E1 /* SCPRProgramsTableViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 766FDD0D19C7AB9A006BF8E1 /* SCPRProgramsTableViewController.xib */; };
-		766FDD1119C7AB9A006BF8E1 /* SCPRProgramsTableViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 766FDD0D19C7AB9A006BF8E1 /* SCPRProgramsTableViewController.xib */; };
 		7685BD5C194BBCB90075BB16 /* pauseButton.png in Resources */ = {isa = PBXBuildFile; fileRef = 7685BD58194BBCB90075BB16 /* pauseButton.png */; };
 		7685BD5D194BBCB90075BB16 /* pauseButton.png in Resources */ = {isa = PBXBuildFile; fileRef = 7685BD58194BBCB90075BB16 /* pauseButton.png */; };
 		7685BD5E194BBCB90075BB16 /* pauseButton@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7685BD59194BBCB90075BB16 /* pauseButton@2x.png */; };
@@ -356,6 +358,11 @@
 		5248858D19CBA180005F59CC /* EpisodeAudio.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EpisodeAudio.m; sourceTree = "<group>"; };
 		52CC6D5C19D0DC7100C67322 /* Segment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Segment.h; sourceTree = "<group>"; };
 		52CC6D5D19D0DC7100C67322 /* Segment.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Segment.m; sourceTree = "<group>"; };
+		52CC6D6019D100DE00C67322 /* SCPRProgramTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCPRProgramTableViewCell.h; sourceTree = "<group>"; };
+		52CC6D6119D100DE00C67322 /* SCPRProgramTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SCPRProgramTableViewCell.m; sourceTree = "<group>"; };
+		52CC6D6419D110E300C67322 /* SCPRProgramsListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCPRProgramsListViewController.h; sourceTree = "<group>"; };
+		52CC6D6519D110E300C67322 /* SCPRProgramsListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SCPRProgramsListViewController.m; sourceTree = "<group>"; };
+		52CC6D6819D112F400C67322 /* SCPRProgramsListViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SCPRProgramsListViewController.xib; sourceTree = "<group>"; };
 		52D91F2E19A2537400B8A02F /* program_image_urls.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = program_image_urls.json; sourceTree = "<group>"; };
 		52E68B7B19B8EEA60028F8AE /* PulldownMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PulldownMenu.h; sourceTree = "<group>"; };
 		52E68B7C19B8EEA60028F8AE /* PulldownMenu.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PulldownMenu.m; sourceTree = "<group>"; };
@@ -481,9 +488,6 @@
 		76658AB418DCB0DC00026176 /* AnalyticsManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AnalyticsManager.m; path = Managers/AnalyticsManager.m; sourceTree = "<group>"; };
 		76658AB718DCB51000026176 /* NSDate+Helper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDate+Helper.h"; sourceTree = "<group>"; };
 		76658AB818DCB51000026176 /* NSDate+Helper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDate+Helper.m"; sourceTree = "<group>"; };
-		766FDD0B19C7AB9A006BF8E1 /* SCPRProgramsTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCPRProgramsTableViewController.h; sourceTree = "<group>"; };
-		766FDD0C19C7AB9A006BF8E1 /* SCPRProgramsTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SCPRProgramsTableViewController.m; sourceTree = "<group>"; };
-		766FDD0D19C7AB9A006BF8E1 /* SCPRProgramsTableViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SCPRProgramsTableViewController.xib; sourceTree = "<group>"; };
 		7685BD58194BBCB90075BB16 /* pauseButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = pauseButton.png; sourceTree = "<group>"; };
 		7685BD59194BBCB90075BB16 /* pauseButton@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "pauseButton@2x.png"; sourceTree = "<group>"; };
 		7685BD5A194BBCB90075BB16 /* playButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = playButton.png; sourceTree = "<group>"; };
@@ -797,12 +801,12 @@
 				52E68B7F19B8F2D10028F8AE /* SCPRNavigationController.h */,
 				52E68B8019B8F2D10028F8AE /* SCPRNavigationController.m */,
 				52E68B8119B8F2D10028F8AE /* SCPRNavigationController.xib */,
-				766FDD0B19C7AB9A006BF8E1 /* SCPRProgramsTableViewController.h */,
-				766FDD0C19C7AB9A006BF8E1 /* SCPRProgramsTableViewController.m */,
-				766FDD0D19C7AB9A006BF8E1 /* SCPRProgramsTableViewController.xib */,
 				523E86CD19C8A292006FC366 /* SCPRProgramDetailViewController.h */,
 				523E86CE19C8A292006FC366 /* SCPRProgramDetailViewController.m */,
 				523E86CF19C8A292006FC366 /* SCPRProgramDetailViewController.xib */,
+				52CC6D6419D110E300C67322 /* SCPRProgramsListViewController.h */,
+				52CC6D6519D110E300C67322 /* SCPRProgramsListViewController.m */,
+				52CC6D6819D112F400C67322 /* SCPRProgramsListViewController.xib */,
 			);
 			name = "View Controllers";
 			path = Controllers;
@@ -821,6 +825,8 @@
 				52EFF87319C375CA0059A0E3 /* SCPRPullDownMenu.m */,
 				52EFF87619C37D350059A0E3 /* SCPRMenuCell.h */,
 				52EFF87719C37D350059A0E3 /* SCPRMenuCell.m */,
+				52CC6D6019D100DE00C67322 /* SCPRProgramTableViewCell.h */,
+				52CC6D6119D100DE00C67322 /* SCPRProgramTableViewCell.m */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -1184,7 +1190,7 @@
 				52EFF7E919C368C00059A0E3 /* program_avatar_airtalk@2x.png in Resources */,
 				52EFF83319C368C00059A0E3 /* program_avatar_on-the-media.png in Resources */,
 				52EFF86319C368C00059A0E3 /* program_avatar_weekend-edition-saturday.png in Resources */,
-				766FDD1119C7AB9A006BF8E1 /* SCPRProgramsTableViewController.xib in Resources */,
+				52CC6D6A19D112F400C67322 /* SCPRProgramsListViewController.xib in Resources */,
 				52EFF83919C368C00059A0E3 /* program_avatar_prairie-home-companion@2x.png in Resources */,
 				52EFF78819C3688D0059A0E3 /* menu-antenna.png in Resources */,
 				52D91F3019A2537400B8A02F /* program_image_urls.json in Resources */,
@@ -1350,7 +1356,6 @@
 				768C06541995905D00F829EB /* btn_live_rewind_small@2x.png in Resources */,
 				52EFF7FE19C368C00059A0E3 /* program_avatar_car-talk.png in Resources */,
 				52EFF7FA19C368C00059A0E3 /* program_avatar_bullseye.png in Resources */,
-				766FDD1019C7AB9A006BF8E1 /* SCPRProgramsTableViewController.xib in Resources */,
 				52EFF7F819C368C00059A0E3 /* program_avatar_bbc-world-service@2x.png in Resources */,
 				52EFF82619C368C00059A0E3 /* program_avatar_moth-radio-hour.png in Resources */,
 				76EF5E8A193E8D6B00568A9D /* Storyboard.storyboard in Resources */,
@@ -1378,6 +1383,7 @@
 				768C066F199590CC00F829EB /* FreigSanProBlk.otf in Resources */,
 				768C06601995905D00F829EB /* chevron_down@2x.png in Resources */,
 				768C0671199590CC00F829EB /* FreigSanProBlkIt.otf in Resources */,
+				52CC6D6919D112F400C67322 /* SCPRProgramsListViewController.xib in Resources */,
 				52EFF79919C3688D0059A0E3 /* menu-microphone@2x.png in Resources */,
 				52EFF83819C368C00059A0E3 /* program_avatar_prairie-home-companion@2x.png in Resources */,
 			);
@@ -1445,13 +1451,14 @@
 				52EFF87519C375CA0059A0E3 /* SCPRPullDownMenu.m in Sources */,
 				52E68B8319B8F2D10028F8AE /* SCPRNavigationController.m in Sources */,
 				76349CF818D388C80027C3B8 /* main.m in Sources */,
+				52CC6D6319D100DE00C67322 /* SCPRProgramTableViewCell.m in Sources */,
 				76349CF918D388C80027C3B8 /* AudioManager.m in Sources */,
 				760E3C4D194FB61B00D86D91 /* Program.m in Sources */,
 				760E3C49194FB54600D86D91 /* DataModel.xcdatamodeld in Sources */,
+				52CC6D6719D110E300C67322 /* SCPRProgramsListViewController.m in Sources */,
 				52CC6D5F19D0DC7100C67322 /* Segment.m in Sources */,
 				76177298195B593400F69EFC /* SCPRHomeViewModel.m in Sources */,
 				760EA99319521E98009B504E /* AVPlayer+Additions.m in Sources */,
-				766FDD0F19C7AB9A006BF8E1 /* SCPRProgramsTableViewController.m in Sources */,
 				52E68B8919B919300028F8AE /* SCPRMenuButton.m in Sources */,
 				768C064919958FDA00F829EB /* SCPRMasterViewController.m in Sources */,
 				7695FD16195E299000F63DE9 /* SCPRNavigationBar.m in Sources */,
@@ -1482,13 +1489,14 @@
 				52EFF87419C375CA0059A0E3 /* SCPRPullDownMenu.m in Sources */,
 				52E68B8219B8F2D10028F8AE /* SCPRNavigationController.m in Sources */,
 				76A308D318C8FB940065D4B1 /* main.m in Sources */,
+				52CC6D6219D100DE00C67322 /* SCPRProgramTableViewCell.m in Sources */,
 				76A3090418C93C880065D4B1 /* AudioManager.m in Sources */,
 				760E3C4C194FB61B00D86D91 /* Program.m in Sources */,
 				760E3C48194FB54600D86D91 /* DataModel.xcdatamodeld in Sources */,
+				52CC6D6619D110E300C67322 /* SCPRProgramsListViewController.m in Sources */,
 				52CC6D5E19D0DC7100C67322 /* Segment.m in Sources */,
 				76177297195B593400F69EFC /* SCPRHomeViewModel.m in Sources */,
 				760EA99219521E98009B504E /* AVPlayer+Additions.m in Sources */,
-				766FDD0E19C7AB9A006BF8E1 /* SCPRProgramsTableViewController.m in Sources */,
 				52E68B8819B919300028F8AE /* SCPRMenuButton.m in Sources */,
 				768C064819958FDA00F829EB /* SCPRMasterViewController.m in Sources */,
 				7695FD15195E299000F63DE9 /* SCPRNavigationBar.m in Sources */,

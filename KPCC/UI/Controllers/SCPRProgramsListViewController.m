@@ -1,55 +1,51 @@
 //
-//  SCPRProgramsTableViewController.m
+//  SCPRProgramsListViewController.m
 //  KPCC
 //
-//  Created by John Meeker on 9/15/14.
+//  Created by John Meeker on 9/22/14.
 //  Copyright (c) 2014 SCPR. All rights reserved.
 //
 
-#import "SCPRProgramsTableViewController.h"
+#import "SCPRProgramsListViewController.h"
+#import "SCPRProgramTableViewCell.h"
 #import "SCPRProgramDetailViewController.h"
-#import "ContentManager.h"
 #import "DesignManager.h"
 
-@interface SCPRProgramsTableViewController ()
-@property Program *currentProgram;
-@property UIImageView *programBgImage;
+@interface SCPRProgramsListViewController ()
 @property NSArray *programsList;
+@property Program *currentProgram;
 @end
 
-@implementation SCPRProgramsTableViewController
+@implementation SCPRProgramsListViewController
 
-@synthesize currentProgram;
-
-- (id)init {
-    self = [super init];
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
+    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     return self;
 }
 
-- (id)initWithBackgroundProgram:(Program*)program {
-    self = [self init];
+- (id)initWithBackgroundProgram:(Program *)program {
+    self = [self initWithNibName:nil bundle:nil];
     self.currentProgram = program;
+    self.title = @"Programs";
     return self;
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    // Do any additional setup after loading the view.
 
-    self.view.backgroundColor = [UIColor clearColor];
-    self.programBgImage = [[UIImageView alloc] initWithFrame:self.view.frame];
-    
-    self.tableView.backgroundColor = [UIColor clearColor];
+    self.blurView.tintColor = [UIColor clearColor];
+    self.blurView.blurRadius = 20.f;
+    self.blurView.dynamic = NO;
 
-    [[DesignManager shared] loadProgramImage:currentProgram.program_slug
+    [[DesignManager shared] loadProgramImage:_currentProgram.program_slug
                                 andImageView:self.programBgImage
                                   completion:^(BOOL status) {
-                                      // Load image completed.
+                                      [self.blurView setNeedsDisplay];
                                   }];
 
     self.programsList = [Program fetchAllProgramsInContext:[[ContentManager shared] managedObjectContext]];
-    NSLog(@"programsList? %lu", (unsigned long)[self.programsList count]);
 }
-
 
 #pragma mark - Table view data source
 
@@ -65,14 +61,23 @@
 
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"programTableCell"];
-
+    
+    SCPRProgramTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"programTableCell"];
     if (cell == nil) {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"programTableCell"];
+        cell = [[SCPRProgramTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"programTableCell"];
     }
-
-    cell.textLabel.text = [NSString stringWithFormat:@"%@", [[self.programsList objectAtIndex:indexPath.row] title]];
+    
+    cell.backgroundColor = [UIColor clearColor];
+    cell.programLabel.text = [NSString stringWithFormat:@"%@", [[self.programsList objectAtIndex:indexPath.row] title]];
+    
+    NSString *iconNamed = [[self.programsList objectAtIndex:indexPath.row] program_slug];
+    if (iconNamed) {
+        UIImage *iconImg = [UIImage imageNamed:[NSString stringWithFormat:@"program_avatar_%@", iconNamed]];
+        [cell.iconImageView setImage:iconImg];
+        cell.iconImageView.frame = CGRectMake(cell.iconImageView.frame.origin.x, 31 - iconImg.size.height/2,
+                                              iconImg.size.width, iconImg.size.height);
+    }
+    
     return cell;
 }
 
@@ -81,11 +86,11 @@
 
 // In a xib-based application, navigation from a table can be handled in -tableView:didSelectRowAtIndexPath:
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
     
     SCPRProgramDetailViewController *programDetailViewController = [[SCPRProgramDetailViewController alloc]
                                                                     initWithProgram:[self.programsList objectAtIndex:indexPath.row]];
-    NSLog(@"curr program %@", [[self.programsList objectAtIndex:indexPath.row] program_slug]);
-    
+
     programDetailViewController.program = [self.programsList objectAtIndex:indexPath.row];
     [self.navigationController pushViewController:programDetailViewController animated:YES];
 }
@@ -95,7 +100,6 @@
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
-
 
 /*
 #pragma mark - Navigation

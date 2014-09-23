@@ -8,7 +8,7 @@
 
 #import "SCPRMasterViewController.h"
 #import "SCPRMenuButton.h"
-#import "SCPRProgramsTableViewController.h"
+#import "SCPRProgramsListViewController.h"
 #import "AFNetworking.h"
 #import "UIImageView+AFNetworking.h"
 
@@ -195,13 +195,14 @@
     [self setUIContents:animated];
 
     // Set positioning of UI elements.
-    if (animated) {
+    /*if (animated) {
         [UIView animateWithDuration:0.25 animations:^{
             [self setUIPositioning];
         }];
     } else {
         [self setUIPositioning];
-    }
+    }*/
+    [self setUIPositioning];
 
 }
 
@@ -273,6 +274,14 @@
         [self.horizDividerLine setAlpha:0.4];
         [self.liveRewindAltButton setAlpha:1.0];
         [self.backToLiveButton setAlpha:1.0];
+        
+        if (!_seekRequested) {
+            POPBasicAnimation *playButtonAnimation = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerPositionY];
+            playButtonAnimation.fromValue = @(self.playPauseButton.frame.origin.y);
+            playButtonAnimation.toValue = @(self.playPauseButton.frame.origin.y + 50);
+            [self.playPauseButton.layer pop_addAnimation:playButtonAnimation forKey:@"playButtonAnimation"];
+            
+        }
 
         /*if (!_seekRequested) {
             [self.playPauseButton setFrame:CGRectMake(_playPauseButton.frame.origin.x,
@@ -383,12 +392,8 @@
 # pragma mark - PulldownMenuDelegate
 
 - (void)menuItemSelected:(NSIndexPath *)indexPath {
-    NSLog(@"%ld",(long)indexPath.item);
-
-    // Push test vc.
-    SCPRProgramsTableViewController *vc = [[SCPRProgramsTableViewController alloc] initWithBackgroundProgram:self.currentProgram];
-    vc.view.backgroundColor = [UIColor clearColor];
-    //vc.view.alpha = 0.7;
+    
+    SCPRProgramsListViewController *vc = [[SCPRProgramsListViewController alloc] initWithBackgroundProgram:self.currentProgram];
     [self.navigationController pushViewController:vc animated:YES];
 }
 
