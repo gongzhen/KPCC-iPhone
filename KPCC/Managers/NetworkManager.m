@@ -118,7 +118,7 @@ static NetworkManager *singleton = nil;
 }
 
 - (void)fetchAllProgramInformation:(id<ContentProcessor>)display {
-    NSString *urlString = [NSString stringWithFormat:@"%@/programs?air_status=onair,online",kServerBase];
+    NSString *urlString = [NSString stringWithFormat:@"%@/programs?air_status=onair",kServerBase];
     [self requestFromSCPRWithEndpoint:urlString
                            andDisplay:display];
 }

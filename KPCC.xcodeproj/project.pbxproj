@@ -97,10 +97,10 @@
 		52EFF80B19C368C00059A0E3 /* program_avatar_fresh-air.png in Resources */ = {isa = PBXBuildFile; fileRef = 52EFF7B219C368C00059A0E3 /* program_avatar_fresh-air.png */; };
 		52EFF80C19C368C00059A0E3 /* program_avatar_fresh-air@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 52EFF7B319C368C00059A0E3 /* program_avatar_fresh-air@2x.png */; };
 		52EFF80D19C368C00059A0E3 /* program_avatar_fresh-air@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 52EFF7B319C368C00059A0E3 /* program_avatar_fresh-air@2x.png */; };
-		52EFF80E19C368C00059A0E3 /* program_avatar_latino-use.png in Resources */ = {isa = PBXBuildFile; fileRef = 52EFF7B419C368C00059A0E3 /* program_avatar_latino-use.png */; };
-		52EFF80F19C368C00059A0E3 /* program_avatar_latino-use.png in Resources */ = {isa = PBXBuildFile; fileRef = 52EFF7B419C368C00059A0E3 /* program_avatar_latino-use.png */; };
-		52EFF81019C368C00059A0E3 /* program_avatar_latino-use@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 52EFF7B519C368C00059A0E3 /* program_avatar_latino-use@2x.png */; };
-		52EFF81119C368C00059A0E3 /* program_avatar_latino-use@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 52EFF7B519C368C00059A0E3 /* program_avatar_latino-use@2x.png */; };
+		52EFF80E19C368C00059A0E3 /* program_avatar_latino-usa.png in Resources */ = {isa = PBXBuildFile; fileRef = 52EFF7B419C368C00059A0E3 /* program_avatar_latino-usa.png */; };
+		52EFF80F19C368C00059A0E3 /* program_avatar_latino-usa.png in Resources */ = {isa = PBXBuildFile; fileRef = 52EFF7B419C368C00059A0E3 /* program_avatar_latino-usa.png */; };
+		52EFF81019C368C00059A0E3 /* program_avatar_latino-usa@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 52EFF7B519C368C00059A0E3 /* program_avatar_latino-usa@2x.png */; };
+		52EFF81119C368C00059A0E3 /* program_avatar_latino-usa@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 52EFF7B519C368C00059A0E3 /* program_avatar_latino-usa@2x.png */; };
 		52EFF81219C368C00059A0E3 /* program_avatar_loh-down-on-science.png in Resources */ = {isa = PBXBuildFile; fileRef = 52EFF7B619C368C00059A0E3 /* program_avatar_loh-down-on-science.png */; };
 		52EFF81319C368C00059A0E3 /* program_avatar_loh-down-on-science.png in Resources */ = {isa = PBXBuildFile; fileRef = 52EFF7B619C368C00059A0E3 /* program_avatar_loh-down-on-science.png */; };
 		52EFF81419C368C00059A0E3 /* program_avatar_loh-down-on-science@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 52EFF7B719C368C00059A0E3 /* program_avatar_loh-down-on-science@2x.png */; };
@@ -109,10 +109,10 @@
 		52EFF81719C368C00059A0E3 /* program_avatar_loh-life.png in Resources */ = {isa = PBXBuildFile; fileRef = 52EFF7B819C368C00059A0E3 /* program_avatar_loh-life.png */; };
 		52EFF81819C368C00059A0E3 /* program_avatar_loh-life@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 52EFF7B919C368C00059A0E3 /* program_avatar_loh-life@2x.png */; };
 		52EFF81919C368C00059A0E3 /* program_avatar_loh-life@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 52EFF7B919C368C00059A0E3 /* program_avatar_loh-life@2x.png */; };
-		52EFF81A19C368C00059A0E3 /* program_avatar_marketplace-morning.png in Resources */ = {isa = PBXBuildFile; fileRef = 52EFF7BA19C368C00059A0E3 /* program_avatar_marketplace-morning.png */; };
-		52EFF81B19C368C00059A0E3 /* program_avatar_marketplace-morning.png in Resources */ = {isa = PBXBuildFile; fileRef = 52EFF7BA19C368C00059A0E3 /* program_avatar_marketplace-morning.png */; };
-		52EFF81C19C368C00059A0E3 /* program_avatar_marketplace-morning@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 52EFF7BB19C368C00059A0E3 /* program_avatar_marketplace-morning@2x.png */; };
-		52EFF81D19C368C00059A0E3 /* program_avatar_marketplace-morning@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 52EFF7BB19C368C00059A0E3 /* program_avatar_marketplace-morning@2x.png */; };
+		52EFF81A19C368C00059A0E3 /* program_avatar_marketplace-morning-report.png in Resources */ = {isa = PBXBuildFile; fileRef = 52EFF7BA19C368C00059A0E3 /* program_avatar_marketplace-morning-report.png */; };
+		52EFF81B19C368C00059A0E3 /* program_avatar_marketplace-morning-report.png in Resources */ = {isa = PBXBuildFile; fileRef = 52EFF7BA19C368C00059A0E3 /* program_avatar_marketplace-morning-report.png */; };
+		52EFF81C19C368C00059A0E3 /* program_avatar_marketplace-morning-report@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 52EFF7BB19C368C00059A0E3 /* program_avatar_marketplace-morning-report@2x.png */; };
+		52EFF81D19C368C00059A0E3 /* program_avatar_marketplace-morning-report@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 52EFF7BB19C368C00059A0E3 /* program_avatar_marketplace-morning-report@2x.png */; };
 		52EFF81E19C368C00059A0E3 /* program_avatar_marketplace.png in Resources */ = {isa = PBXBuildFile; fileRef = 52EFF7BC19C368C00059A0E3 /* program_avatar_marketplace.png */; };
 		52EFF81F19C368C00059A0E3 /* program_avatar_marketplace.png in Resources */ = {isa = PBXBuildFile; fileRef = 52EFF7BC19C368C00059A0E3 /* program_avatar_marketplace.png */; };
 		52EFF82019C368C00059A0E3 /* program_avatar_marketplace@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 52EFF7BD19C368C00059A0E3 /* program_avatar_marketplace@2x.png */; };
@@ -169,10 +169,10 @@
 		52EFF85319C368C00059A0E3 /* program_avatar_ted-radio-hour.png in Resources */ = {isa = PBXBuildFile; fileRef = 52EFF7D619C368C00059A0E3 /* program_avatar_ted-radio-hour.png */; };
 		52EFF85419C368C00059A0E3 /* program_avatar_ted-radio-hour@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 52EFF7D719C368C00059A0E3 /* program_avatar_ted-radio-hour@2x.png */; };
 		52EFF85519C368C00059A0E3 /* program_avatar_ted-radio-hour@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 52EFF7D719C368C00059A0E3 /* program_avatar_ted-radio-hour@2x.png */; };
-		52EFF85619C368C00059A0E3 /* program_avatar_the-world.png in Resources */ = {isa = PBXBuildFile; fileRef = 52EFF7D819C368C00059A0E3 /* program_avatar_the-world.png */; };
-		52EFF85719C368C00059A0E3 /* program_avatar_the-world.png in Resources */ = {isa = PBXBuildFile; fileRef = 52EFF7D819C368C00059A0E3 /* program_avatar_the-world.png */; };
-		52EFF85819C368C00059A0E3 /* program_avatar_the-world@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 52EFF7D919C368C00059A0E3 /* program_avatar_the-world@2x.png */; };
-		52EFF85919C368C00059A0E3 /* program_avatar_the-world@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 52EFF7D919C368C00059A0E3 /* program_avatar_the-world@2x.png */; };
+		52EFF85619C368C00059A0E3 /* program_avatar_world.png in Resources */ = {isa = PBXBuildFile; fileRef = 52EFF7D819C368C00059A0E3 /* program_avatar_world.png */; };
+		52EFF85719C368C00059A0E3 /* program_avatar_world.png in Resources */ = {isa = PBXBuildFile; fileRef = 52EFF7D819C368C00059A0E3 /* program_avatar_world.png */; };
+		52EFF85819C368C00059A0E3 /* program_avatar_world@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 52EFF7D919C368C00059A0E3 /* program_avatar_world@2x.png */; };
+		52EFF85919C368C00059A0E3 /* program_avatar_world@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 52EFF7D919C368C00059A0E3 /* program_avatar_world@2x.png */; };
 		52EFF85A19C368C00059A0E3 /* program_avatar_this-american-life.png in Resources */ = {isa = PBXBuildFile; fileRef = 52EFF7DA19C368C00059A0E3 /* program_avatar_this-american-life.png */; };
 		52EFF85B19C368C00059A0E3 /* program_avatar_this-american-life.png in Resources */ = {isa = PBXBuildFile; fileRef = 52EFF7DA19C368C00059A0E3 /* program_avatar_this-american-life.png */; };
 		52EFF85C19C368C00059A0E3 /* program_avatar_this-american-life@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 52EFF7DB19C368C00059A0E3 /* program_avatar_this-american-life@2x.png */; };
@@ -400,14 +400,14 @@
 		52EFF7B119C368C00059A0E3 /* program_avatar_filmweek@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "program_avatar_filmweek@2x.png"; sourceTree = "<group>"; };
 		52EFF7B219C368C00059A0E3 /* program_avatar_fresh-air.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "program_avatar_fresh-air.png"; sourceTree = "<group>"; };
 		52EFF7B319C368C00059A0E3 /* program_avatar_fresh-air@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "program_avatar_fresh-air@2x.png"; sourceTree = "<group>"; };
-		52EFF7B419C368C00059A0E3 /* program_avatar_latino-use.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "program_avatar_latino-use.png"; sourceTree = "<group>"; };
-		52EFF7B519C368C00059A0E3 /* program_avatar_latino-use@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "program_avatar_latino-use@2x.png"; sourceTree = "<group>"; };
+		52EFF7B419C368C00059A0E3 /* program_avatar_latino-usa.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "program_avatar_latino-usa.png"; sourceTree = "<group>"; };
+		52EFF7B519C368C00059A0E3 /* program_avatar_latino-usa@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "program_avatar_latino-usa@2x.png"; sourceTree = "<group>"; };
 		52EFF7B619C368C00059A0E3 /* program_avatar_loh-down-on-science.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "program_avatar_loh-down-on-science.png"; sourceTree = "<group>"; };
 		52EFF7B719C368C00059A0E3 /* program_avatar_loh-down-on-science@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "program_avatar_loh-down-on-science@2x.png"; sourceTree = "<group>"; };
 		52EFF7B819C368C00059A0E3 /* program_avatar_loh-life.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "program_avatar_loh-life.png"; sourceTree = "<group>"; };
 		52EFF7B919C368C00059A0E3 /* program_avatar_loh-life@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "program_avatar_loh-life@2x.png"; sourceTree = "<group>"; };
-		52EFF7BA19C368C00059A0E3 /* program_avatar_marketplace-morning.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "program_avatar_marketplace-morning.png"; sourceTree = "<group>"; };
-		52EFF7BB19C368C00059A0E3 /* program_avatar_marketplace-morning@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "program_avatar_marketplace-morning@2x.png"; sourceTree = "<group>"; };
+		52EFF7BA19C368C00059A0E3 /* program_avatar_marketplace-morning-report.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "program_avatar_marketplace-morning-report.png"; sourceTree = "<group>"; };
+		52EFF7BB19C368C00059A0E3 /* program_avatar_marketplace-morning-report@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "program_avatar_marketplace-morning-report@2x.png"; sourceTree = "<group>"; };
 		52EFF7BC19C368C00059A0E3 /* program_avatar_marketplace.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = program_avatar_marketplace.png; sourceTree = "<group>"; };
 		52EFF7BD19C368C00059A0E3 /* program_avatar_marketplace@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "program_avatar_marketplace@2x.png"; sourceTree = "<group>"; };
 		52EFF7BE19C368C00059A0E3 /* program_avatar_morning-edition.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "program_avatar_morning-edition.png"; sourceTree = "<group>"; };
@@ -436,8 +436,8 @@
 		52EFF7D519C368C00059A0E3 /* program_avatar_tavis-smiley-show@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "program_avatar_tavis-smiley-show@2x.png"; sourceTree = "<group>"; };
 		52EFF7D619C368C00059A0E3 /* program_avatar_ted-radio-hour.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "program_avatar_ted-radio-hour.png"; sourceTree = "<group>"; };
 		52EFF7D719C368C00059A0E3 /* program_avatar_ted-radio-hour@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "program_avatar_ted-radio-hour@2x.png"; sourceTree = "<group>"; };
-		52EFF7D819C368C00059A0E3 /* program_avatar_the-world.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "program_avatar_the-world.png"; sourceTree = "<group>"; };
-		52EFF7D919C368C00059A0E3 /* program_avatar_the-world@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "program_avatar_the-world@2x.png"; sourceTree = "<group>"; };
+		52EFF7D819C368C00059A0E3 /* program_avatar_world.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = program_avatar_world.png; sourceTree = "<group>"; };
+		52EFF7D919C368C00059A0E3 /* program_avatar_world@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "program_avatar_world@2x.png"; sourceTree = "<group>"; };
 		52EFF7DA19C368C00059A0E3 /* program_avatar_this-american-life.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "program_avatar_this-american-life.png"; sourceTree = "<group>"; };
 		52EFF7DB19C368C00059A0E3 /* program_avatar_this-american-life@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "program_avatar_this-american-life@2x.png"; sourceTree = "<group>"; };
 		52EFF7DC19C368C00059A0E3 /* program_avatar_wait-wait-dont-tell-me.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "program_avatar_wait-wait-dont-tell-me.png"; sourceTree = "<group>"; };
@@ -656,14 +656,14 @@
 				52EFF7B119C368C00059A0E3 /* program_avatar_filmweek@2x.png */,
 				52EFF7B219C368C00059A0E3 /* program_avatar_fresh-air.png */,
 				52EFF7B319C368C00059A0E3 /* program_avatar_fresh-air@2x.png */,
-				52EFF7B419C368C00059A0E3 /* program_avatar_latino-use.png */,
-				52EFF7B519C368C00059A0E3 /* program_avatar_latino-use@2x.png */,
+				52EFF7B419C368C00059A0E3 /* program_avatar_latino-usa.png */,
+				52EFF7B519C368C00059A0E3 /* program_avatar_latino-usa@2x.png */,
 				52EFF7B619C368C00059A0E3 /* program_avatar_loh-down-on-science.png */,
 				52EFF7B719C368C00059A0E3 /* program_avatar_loh-down-on-science@2x.png */,
 				52EFF7B819C368C00059A0E3 /* program_avatar_loh-life.png */,
 				52EFF7B919C368C00059A0E3 /* program_avatar_loh-life@2x.png */,
-				52EFF7BA19C368C00059A0E3 /* program_avatar_marketplace-morning.png */,
-				52EFF7BB19C368C00059A0E3 /* program_avatar_marketplace-morning@2x.png */,
+				52EFF7BA19C368C00059A0E3 /* program_avatar_marketplace-morning-report.png */,
+				52EFF7BB19C368C00059A0E3 /* program_avatar_marketplace-morning-report@2x.png */,
 				52EFF7BC19C368C00059A0E3 /* program_avatar_marketplace.png */,
 				52EFF7BD19C368C00059A0E3 /* program_avatar_marketplace@2x.png */,
 				52EFF7BE19C368C00059A0E3 /* program_avatar_morning-edition.png */,
@@ -692,8 +692,8 @@
 				52EFF7D519C368C00059A0E3 /* program_avatar_tavis-smiley-show@2x.png */,
 				52EFF7D619C368C00059A0E3 /* program_avatar_ted-radio-hour.png */,
 				52EFF7D719C368C00059A0E3 /* program_avatar_ted-radio-hour@2x.png */,
-				52EFF7D819C368C00059A0E3 /* program_avatar_the-world.png */,
-				52EFF7D919C368C00059A0E3 /* program_avatar_the-world@2x.png */,
+				52EFF7D819C368C00059A0E3 /* program_avatar_world.png */,
+				52EFF7D919C368C00059A0E3 /* program_avatar_world@2x.png */,
 				52EFF7DA19C368C00059A0E3 /* program_avatar_this-american-life.png */,
 				52EFF7DB19C368C00059A0E3 /* program_avatar_this-american-life@2x.png */,
 				52EFF7DC19C368C00059A0E3 /* program_avatar_wait-wait-dont-tell-me.png */,
@@ -1138,7 +1138,7 @@
 				52EFF78C19C3688D0059A0E3 /* menu-clock.png in Resources */,
 				52EFF83519C368C00059A0E3 /* program_avatar_on-the-media@2x.png in Resources */,
 				76D71D441905A56A00F4852F /* Glass_Crash.mp3 in Resources */,
-				52EFF81D19C368C00059A0E3 /* program_avatar_marketplace-morning@2x.png in Resources */,
+				52EFF81D19C368C00059A0E3 /* program_avatar_marketplace-morning-report@2x.png in Resources */,
 				52EFF88819C3BC020059A0E3 /* item-chevron-right.png in Resources */,
 				76D71D451905A56A00F4852F /* Wood_Crash.mp3 in Resources */,
 				52EFF7EF19C368C00059A0E3 /* program_avatar_ask-me-another.png in Resources */,
@@ -1164,7 +1164,7 @@
 				7685BD63194BBCB90075BB16 /* playButton@2x.png in Resources */,
 				769B907B19C0D5C300E812C7 /* Config.plist in Resources */,
 				52EFF80719C368C00059A0E3 /* program_avatar_filmweek.png in Resources */,
-				52EFF85719C368C00059A0E3 /* program_avatar_the-world.png in Resources */,
+				52EFF85719C368C00059A0E3 /* program_avatar_world.png in Resources */,
 				52EFF79019C3688D0059A0E3 /* menu-glasses.png in Resources */,
 				52EFF86519C368C00059A0E3 /* program_avatar_weekend-edition-saturday@2x.png in Resources */,
 				52EFF7E919C368C00059A0E3 /* program_avatar_airtalk@2x.png in Resources */,
@@ -1176,7 +1176,7 @@
 				52D91F3019A2537400B8A02F /* program_image_urls.json in Resources */,
 				7685BD61194BBCB90075BB16 /* playButton.png in Resources */,
 				768C06611995905D00F829EB /* chevron_down@2x.png in Resources */,
-				52EFF81119C368C00059A0E3 /* program_avatar_latino-use@2x.png in Resources */,
+				52EFF81119C368C00059A0E3 /* program_avatar_latino-usa@2x.png in Resources */,
 				52EFF7FB19C368C00059A0E3 /* program_avatar_bullseye.png in Resources */,
 				52EFF81319C368C00059A0E3 /* program_avatar_loh-down-on-science.png in Resources */,
 				768C067A199590CC00F829EB /* FreigSanProBookIt.otf in Resources */,
@@ -1188,14 +1188,14 @@
 				52EFF81519C368C00059A0E3 /* program_avatar_loh-down-on-science@2x.png in Resources */,
 				52EFF84319C368C00059A0E3 /* program_avatar_snap-judgment.png in Resources */,
 				52EFF79619C3688D0059A0E3 /* menu-heart-plus@2x.png in Resources */,
-				52EFF80F19C368C00059A0E3 /* program_avatar_latino-use.png in Resources */,
+				52EFF80F19C368C00059A0E3 /* program_avatar_latino-usa.png in Resources */,
 				52EFF84B19C368C00059A0E3 /* program_avatar_take-two.png in Resources */,
 				52EFF83F19C368C00059A0E3 /* program_avatar_science-friday.png in Resources */,
 				52EFF85B19C368C00059A0E3 /* program_avatar_this-american-life.png in Resources */,
 				52EFF79819C3688D0059A0E3 /* menu-microphone.png in Resources */,
 				52EFF7E719C368C00059A0E3 /* program_avatar_airtalk.png in Resources */,
 				52EFF79A19C3688D0059A0E3 /* menu-microphone@2x.png in Resources */,
-				52EFF85919C368C00059A0E3 /* program_avatar_the-world@2x.png in Resources */,
+				52EFF85919C368C00059A0E3 /* program_avatar_world@2x.png in Resources */,
 				768C0686199590CC00F829EB /* FreigSanProSemIt.otf in Resources */,
 				52EFF86119C368C00059A0E3 /* program_avatar_wait-wait-dont-tell-me@2x.png in Resources */,
 				52E68B8519B8F2D10028F8AE /* SCPRNavigationController.xib in Resources */,
@@ -1215,7 +1215,7 @@
 				52EFF88A19C3BC020059A0E3 /* item-chevron-right@2x.png in Resources */,
 				52EFF79219C3688D0059A0E3 /* menu-glasses@2x.png in Resources */,
 				52EFF79C19C3688D0059A0E3 /* menu-settings.png in Resources */,
-				52EFF81B19C368C00059A0E3 /* program_avatar_marketplace-morning.png in Resources */,
+				52EFF81B19C368C00059A0E3 /* program_avatar_marketplace-morning-report.png in Resources */,
 				768C0676199590CC00F829EB /* FreigSanProBoldIt.otf in Resources */,
 				52EFF78A19C3688D0059A0E3 /* menu-antenna@2x.png in Resources */,
 				52EFF81719C368C00059A0E3 /* program_avatar_loh-life.png in Resources */,
@@ -1256,7 +1256,7 @@
 				768C067D199590CC00F829EB /* FreigSanProLigIt.otf in Resources */,
 				52EFF81419C368C00059A0E3 /* program_avatar_loh-down-on-science@2x.png in Resources */,
 				52EFF78B19C3688D0059A0E3 /* menu-clock.png in Resources */,
-				52EFF81A19C368C00059A0E3 /* program_avatar_marketplace-morning.png in Resources */,
+				52EFF81A19C368C00059A0E3 /* program_avatar_marketplace-morning-report.png in Resources */,
 				52EFF86219C368C00059A0E3 /* program_avatar_weekend-edition-saturday.png in Resources */,
 				52EFF79119C3688D0059A0E3 /* menu-glasses@2x.png in Resources */,
 				768C0675199590CC00F829EB /* FreigSanProBoldIt.otf in Resources */,
@@ -1276,7 +1276,7 @@
 				52EFF83E19C368C00059A0E3 /* program_avatar_science-friday.png in Resources */,
 				52EFF82C19C368C00059A0E3 /* program_avatar_offramp@2x.png in Resources */,
 				52EFF85A19C368C00059A0E3 /* program_avatar_this-american-life.png in Resources */,
-				52EFF80E19C368C00059A0E3 /* program_avatar_latino-use.png in Resources */,
+				52EFF80E19C368C00059A0E3 /* program_avatar_latino-usa.png in Resources */,
 				768C068A1995911600F829EB /* program_tile_generic.jpg in Resources */,
 				52EFF84019C368C00059A0E3 /* program_avatar_science-friday@2x.png in Resources */,
 				768C0683199590CC00F829EB /* FreigSanProSem.otf in Resources */,
@@ -1299,7 +1299,7 @@
 				52EFF7F419C368C00059A0E3 /* program_avatar_bbc-newshour@2x.png in Resources */,
 				52EFF7EA19C368C00059A0E3 /* program_avatar_all-things-considered.png in Resources */,
 				52EFF82E19C368C00059A0E3 /* program_avatar_on-being.png in Resources */,
-				52EFF85619C368C00059A0E3 /* program_avatar_the-world.png in Resources */,
+				52EFF85619C368C00059A0E3 /* program_avatar_world.png in Resources */,
 				52EFF79319C3688D0059A0E3 /* menu-heart-plus.png in Resources */,
 				768C065A1995905D00F829EB /* btn_play_large.png in Resources */,
 				52EFF78D19C3688D0059A0E3 /* menu-clock@2x.png in Resources */,
@@ -1315,7 +1315,7 @@
 				52EFF85019C368C00059A0E3 /* program_avatar_tavis-smiley-show@2x.png in Resources */,
 				52EFF85C19C368C00059A0E3 /* program_avatar_this-american-life@2x.png in Resources */,
 				52EFF85419C368C00059A0E3 /* program_avatar_ted-radio-hour@2x.png in Resources */,
-				52EFF81019C368C00059A0E3 /* program_avatar_latino-use@2x.png in Resources */,
+				52EFF81019C368C00059A0E3 /* program_avatar_latino-usa@2x.png in Resources */,
 				52EFF82219C368C00059A0E3 /* program_avatar_morning-edition.png in Resources */,
 				768C0673199590CC00F829EB /* FreigSanProBold.otf in Resources */,
 				768C0677199590CC00F829EB /* FreigSanProBook.otf in Resources */,
@@ -1323,7 +1323,7 @@
 				52EFF80619C368C00059A0E3 /* program_avatar_filmweek.png in Resources */,
 				52EFF82019C368C00059A0E3 /* program_avatar_marketplace@2x.png in Resources */,
 				768C068C1995911600F829EB /* program_tile_generic@2x.jpg in Resources */,
-				52EFF81C19C368C00059A0E3 /* program_avatar_marketplace-morning@2x.png in Resources */,
+				52EFF81C19C368C00059A0E3 /* program_avatar_marketplace-morning-report@2x.png in Resources */,
 				52EFF80819C368C00059A0E3 /* program_avatar_filmweek@2x.png in Resources */,
 				52EFF78719C3688D0059A0E3 /* menu-antenna.png in Resources */,
 				52EFF79519C3688D0059A0E3 /* menu-heart-plus@2x.png in Resources */,
@@ -1349,7 +1349,7 @@
 				52EFF83419C368C00059A0E3 /* program_avatar_on-the-media@2x.png in Resources */,
 				52EFF78F19C3688D0059A0E3 /* menu-glasses.png in Resources */,
 				52E68B8419B8F2D10028F8AE /* SCPRNavigationController.xib in Resources */,
-				52EFF85819C368C00059A0E3 /* program_avatar_the-world@2x.png in Resources */,
+				52EFF85819C368C00059A0E3 /* program_avatar_world@2x.png in Resources */,
 				52EFF80019C368C00059A0E3 /* program_avatar_car-talk@2x.png in Resources */,
 				52EFF88919C3BC020059A0E3 /* item-chevron-right@2x.png in Resources */,
 				761CC5A4195A2878006A6C7C /* Testflight-Info.plist in Resources */,
