@@ -49,6 +49,9 @@
                                   }];
 
     self.programsList = [Program fetchAllProgramsInContext:[[ContentManager shared] managedObjectContext]];
+
+    UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 14)];
+    self.programsTable.tableHeaderView = headerView;
 }
 
 #pragma mark - Table view data source
