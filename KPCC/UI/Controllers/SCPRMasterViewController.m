@@ -51,7 +51,7 @@
 
     if (self.menuOpen) {
         //[pulldownMenu loadMenu];
-        [pulldownMenu openDropDown:NO];
+        //[pulldownMenu openDropDown:NO];
     }
 }
 
