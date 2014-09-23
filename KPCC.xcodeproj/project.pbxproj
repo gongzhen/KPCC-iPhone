@@ -27,6 +27,22 @@
 		52D0FC1D19D1F24F009AECEE /* SCPRProgramDetailHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D0FC1B19D1F24F009AECEE /* SCPRProgramDetailHeaderView.m */; };
 		52D0FC2019D1FC0C009AECEE /* SCPRProgramDetailTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D0FC1F19D1FC0C009AECEE /* SCPRProgramDetailTableViewCell.m */; };
 		52D0FC2119D1FC0C009AECEE /* SCPRProgramDetailTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D0FC1F19D1FC0C009AECEE /* SCPRProgramDetailTableViewCell.m */; };
+		52D0FC2A19D20D29009AECEE /* program_avatar_marketplace-tech-report.png in Resources */ = {isa = PBXBuildFile; fileRef = 52D0FC2219D20D29009AECEE /* program_avatar_marketplace-tech-report.png */; };
+		52D0FC2B19D20D29009AECEE /* program_avatar_marketplace-tech-report.png in Resources */ = {isa = PBXBuildFile; fileRef = 52D0FC2219D20D29009AECEE /* program_avatar_marketplace-tech-report.png */; };
+		52D0FC2C19D20D29009AECEE /* program_avatar_marketplace-tech-report@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 52D0FC2319D20D29009AECEE /* program_avatar_marketplace-tech-report@2x.png */; };
+		52D0FC2D19D20D29009AECEE /* program_avatar_marketplace-tech-report@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 52D0FC2319D20D29009AECEE /* program_avatar_marketplace-tech-report@2x.png */; };
+		52D0FC2E19D20D29009AECEE /* program_avatar_marketplace-weekend.png in Resources */ = {isa = PBXBuildFile; fileRef = 52D0FC2419D20D29009AECEE /* program_avatar_marketplace-weekend.png */; };
+		52D0FC2F19D20D29009AECEE /* program_avatar_marketplace-weekend.png in Resources */ = {isa = PBXBuildFile; fileRef = 52D0FC2419D20D29009AECEE /* program_avatar_marketplace-weekend.png */; };
+		52D0FC3019D20D29009AECEE /* program_avatar_marketplace-weekend@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 52D0FC2519D20D29009AECEE /* program_avatar_marketplace-weekend@2x.png */; };
+		52D0FC3119D20D29009AECEE /* program_avatar_marketplace-weekend@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 52D0FC2519D20D29009AECEE /* program_avatar_marketplace-weekend@2x.png */; };
+		52D0FC3219D20D29009AECEE /* program_avatar_q-with-jian-ghomeshi.png in Resources */ = {isa = PBXBuildFile; fileRef = 52D0FC2619D20D29009AECEE /* program_avatar_q-with-jian-ghomeshi.png */; };
+		52D0FC3319D20D29009AECEE /* program_avatar_q-with-jian-ghomeshi.png in Resources */ = {isa = PBXBuildFile; fileRef = 52D0FC2619D20D29009AECEE /* program_avatar_q-with-jian-ghomeshi.png */; };
+		52D0FC3419D20D29009AECEE /* program_avatar_q-with-jian-ghomeshi@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 52D0FC2719D20D29009AECEE /* program_avatar_q-with-jian-ghomeshi@2x.png */; };
+		52D0FC3519D20D29009AECEE /* program_avatar_q-with-jian-ghomeshi@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 52D0FC2719D20D29009AECEE /* program_avatar_q-with-jian-ghomeshi@2x.png */; };
+		52D0FC3619D20D29009AECEE /* program_avatar_the-frame.png in Resources */ = {isa = PBXBuildFile; fileRef = 52D0FC2819D20D29009AECEE /* program_avatar_the-frame.png */; };
+		52D0FC3719D20D29009AECEE /* program_avatar_the-frame.png in Resources */ = {isa = PBXBuildFile; fileRef = 52D0FC2819D20D29009AECEE /* program_avatar_the-frame.png */; };
+		52D0FC3819D20D29009AECEE /* program_avatar_the-frame@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 52D0FC2919D20D29009AECEE /* program_avatar_the-frame@2x.png */; };
+		52D0FC3919D20D29009AECEE /* program_avatar_the-frame@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 52D0FC2919D20D29009AECEE /* program_avatar_the-frame@2x.png */; };
 		52D91F2F19A2537400B8A02F /* program_image_urls.json in Resources */ = {isa = PBXBuildFile; fileRef = 52D91F2E19A2537400B8A02F /* program_image_urls.json */; };
 		52D91F3019A2537400B8A02F /* program_image_urls.json in Resources */ = {isa = PBXBuildFile; fileRef = 52D91F2E19A2537400B8A02F /* program_image_urls.json */; };
 		52E68B7D19B8EEA60028F8AE /* PulldownMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = 52E68B7C19B8EEA60028F8AE /* PulldownMenu.m */; };
@@ -367,6 +383,14 @@
 		52D0FC1B19D1F24F009AECEE /* SCPRProgramDetailHeaderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SCPRProgramDetailHeaderView.m; sourceTree = "<group>"; };
 		52D0FC1E19D1FC0C009AECEE /* SCPRProgramDetailTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCPRProgramDetailTableViewCell.h; sourceTree = "<group>"; };
 		52D0FC1F19D1FC0C009AECEE /* SCPRProgramDetailTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SCPRProgramDetailTableViewCell.m; sourceTree = "<group>"; };
+		52D0FC2219D20D29009AECEE /* program_avatar_marketplace-tech-report.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "program_avatar_marketplace-tech-report.png"; sourceTree = "<group>"; };
+		52D0FC2319D20D29009AECEE /* program_avatar_marketplace-tech-report@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "program_avatar_marketplace-tech-report@2x.png"; sourceTree = "<group>"; };
+		52D0FC2419D20D29009AECEE /* program_avatar_marketplace-weekend.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "program_avatar_marketplace-weekend.png"; sourceTree = "<group>"; };
+		52D0FC2519D20D29009AECEE /* program_avatar_marketplace-weekend@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "program_avatar_marketplace-weekend@2x.png"; sourceTree = "<group>"; };
+		52D0FC2619D20D29009AECEE /* program_avatar_q-with-jian-ghomeshi.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "program_avatar_q-with-jian-ghomeshi.png"; sourceTree = "<group>"; };
+		52D0FC2719D20D29009AECEE /* program_avatar_q-with-jian-ghomeshi@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "program_avatar_q-with-jian-ghomeshi@2x.png"; sourceTree = "<group>"; };
+		52D0FC2819D20D29009AECEE /* program_avatar_the-frame.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "program_avatar_the-frame.png"; sourceTree = "<group>"; };
+		52D0FC2919D20D29009AECEE /* program_avatar_the-frame@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "program_avatar_the-frame@2x.png"; sourceTree = "<group>"; };
 		52D91F2E19A2537400B8A02F /* program_image_urls.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = program_image_urls.json; sourceTree = "<group>"; };
 		52E68B7B19B8EEA60028F8AE /* PulldownMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PulldownMenu.h; sourceTree = "<group>"; };
 		52E68B7C19B8EEA60028F8AE /* PulldownMenu.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PulldownMenu.m; sourceTree = "<group>"; };
@@ -645,6 +669,14 @@
 			isa = PBXGroup;
 			children = (
 				52EFF7A019C368C00059A0E3 /* program_avatar_airtalk.png */,
+				52D0FC2219D20D29009AECEE /* program_avatar_marketplace-tech-report.png */,
+				52D0FC2319D20D29009AECEE /* program_avatar_marketplace-tech-report@2x.png */,
+				52D0FC2419D20D29009AECEE /* program_avatar_marketplace-weekend.png */,
+				52D0FC2519D20D29009AECEE /* program_avatar_marketplace-weekend@2x.png */,
+				52D0FC2619D20D29009AECEE /* program_avatar_q-with-jian-ghomeshi.png */,
+				52D0FC2719D20D29009AECEE /* program_avatar_q-with-jian-ghomeshi@2x.png */,
+				52D0FC2819D20D29009AECEE /* program_avatar_the-frame.png */,
+				52D0FC2919D20D29009AECEE /* program_avatar_the-frame@2x.png */,
 				52EFF7A119C368C00059A0E3 /* program_avatar_airtalk@2x.png */,
 				52EFF7A219C368C00059A0E3 /* program_avatar_all-things-considered.png */,
 				52EFF7A319C368C00059A0E3 /* program_avatar_all-things-considered@2x.png */,
@@ -1135,6 +1167,7 @@
 				52EFF85F19C368C00059A0E3 /* program_avatar_wait-wait-dont-tell-me.png in Resources */,
 				52EFF83B19C368C00059A0E3 /* program_avatar_radiolab.png in Resources */,
 				52EFF85119C368C00059A0E3 /* program_avatar_tavis-smiley-show@2x.png in Resources */,
+				52D0FC3319D20D29009AECEE /* program_avatar_q-with-jian-ghomeshi.png in Resources */,
 				52EFF85519C368C00059A0E3 /* program_avatar_ted-radio-hour@2x.png in Resources */,
 				768C0674199590CC00F829EB /* FreigSanProBold.otf in Resources */,
 				768C0678199590CC00F829EB /* FreigSanProBook.otf in Resources */,
@@ -1171,9 +1204,11 @@
 				52EFF83119C368C00059A0E3 /* program_avatar_on-being@2x.png in Resources */,
 				768C067C199590CC00F829EB /* FreigSanProLig.otf in Resources */,
 				768C065D1995905D00F829EB /* btn_play_large@2x.png in Resources */,
+				52D0FC2B19D20D29009AECEE /* program_avatar_marketplace-tech-report.png in Resources */,
 				52EFF82D19C368C00059A0E3 /* program_avatar_offramp@2x.png in Resources */,
 				52EFF80319C368C00059A0E3 /* program_avatar_dinner-party-download.png in Resources */,
 				7685BD63194BBCB90075BB16 /* playButton@2x.png in Resources */,
+				52D0FC2F19D20D29009AECEE /* program_avatar_marketplace-weekend.png in Resources */,
 				769B907B19C0D5C300E812C7 /* Config.plist in Resources */,
 				52EFF80719C368C00059A0E3 /* program_avatar_filmweek.png in Resources */,
 				52EFF85719C368C00059A0E3 /* program_avatar_world.png in Resources */,
@@ -1186,10 +1221,12 @@
 				52EFF83919C368C00059A0E3 /* program_avatar_prairie-home-companion@2x.png in Resources */,
 				52EFF78819C3688D0059A0E3 /* menu-antenna.png in Resources */,
 				52D91F3019A2537400B8A02F /* program_image_urls.json in Resources */,
+				52D0FC3719D20D29009AECEE /* program_avatar_the-frame.png in Resources */,
 				7685BD61194BBCB90075BB16 /* playButton.png in Resources */,
 				768C06611995905D00F829EB /* chevron_down@2x.png in Resources */,
 				52EFF81119C368C00059A0E3 /* program_avatar_latino-usa@2x.png in Resources */,
 				52EFF7FB19C368C00059A0E3 /* program_avatar_bullseye.png in Resources */,
+				52D0FC3919D20D29009AECEE /* program_avatar_the-frame@2x.png in Resources */,
 				52EFF81319C368C00059A0E3 /* program_avatar_loh-down-on-science.png in Resources */,
 				768C067A199590CC00F829EB /* FreigSanProBookIt.otf in Resources */,
 				523E86D319C8A292006FC366 /* SCPRProgramDetailViewController.xib in Resources */,
@@ -1243,8 +1280,11 @@
 				52EFF85D19C368C00059A0E3 /* program_avatar_this-american-life@2x.png in Resources */,
 				768C06531995905D00F829EB /* btn_live_rewind_small.png in Resources */,
 				768C067E199590CC00F829EB /* FreigSanProLigIt.otf in Resources */,
+				52D0FC3119D20D29009AECEE /* program_avatar_marketplace-weekend@2x.png in Resources */,
 				52EFF82F19C368C00059A0E3 /* program_avatar_on-being.png in Resources */,
+				52D0FC3519D20D29009AECEE /* program_avatar_q-with-jian-ghomeshi@2x.png in Resources */,
 				768C065F1995905D00F829EB /* chevron_down.png in Resources */,
+				52D0FC2D19D20D29009AECEE /* program_avatar_marketplace-tech-report@2x.png in Resources */,
 				76EF5E8B193E8D6B00568A9D /* Storyboard.storyboard in Resources */,
 				52EFF82719C368C00059A0E3 /* program_avatar_moth-radio-hour.png in Resources */,
 				76349D0E18D388C80027C3B8 /* InfoPlist.strings in Resources */,
@@ -1268,6 +1308,7 @@
 				768C067D199590CC00F829EB /* FreigSanProLigIt.otf in Resources */,
 				52EFF81419C368C00059A0E3 /* program_avatar_loh-down-on-science@2x.png in Resources */,
 				52EFF78B19C3688D0059A0E3 /* menu-clock.png in Resources */,
+				52D0FC2E19D20D29009AECEE /* program_avatar_marketplace-weekend.png in Resources */,
 				52EFF81A19C368C00059A0E3 /* program_avatar_marketplace-morning-report.png in Resources */,
 				52EFF86219C368C00059A0E3 /* program_avatar_weekend-edition-saturday.png in Resources */,
 				52EFF79119C3688D0059A0E3 /* menu-glasses@2x.png in Resources */,
@@ -1285,6 +1326,7 @@
 				52EFF84E19C368C00059A0E3 /* program_avatar_tavis-smiley-show.png in Resources */,
 				52EFF80219C368C00059A0E3 /* program_avatar_dinner-party-download.png in Resources */,
 				52EFF87019C368C00059A0E3 /* program_avatar_writers-almanac@2x.png in Resources */,
+				52D0FC3019D20D29009AECEE /* program_avatar_marketplace-weekend@2x.png in Resources */,
 				52EFF83E19C368C00059A0E3 /* program_avatar_science-friday.png in Resources */,
 				52EFF82C19C368C00059A0E3 /* program_avatar_offramp@2x.png in Resources */,
 				52EFF85A19C368C00059A0E3 /* program_avatar_this-american-life.png in Resources */,
@@ -1309,6 +1351,7 @@
 				768C06561995905D00F829EB /* btn_pause.png in Resources */,
 				52EFF80A19C368C00059A0E3 /* program_avatar_fresh-air.png in Resources */,
 				52EFF7F419C368C00059A0E3 /* program_avatar_bbc-newshour@2x.png in Resources */,
+				52D0FC3619D20D29009AECEE /* program_avatar_the-frame.png in Resources */,
 				52EFF7EA19C368C00059A0E3 /* program_avatar_all-things-considered.png in Resources */,
 				52EFF82E19C368C00059A0E3 /* program_avatar_on-being.png in Resources */,
 				52EFF85619C368C00059A0E3 /* program_avatar_world.png in Resources */,
@@ -1317,6 +1360,7 @@
 				52EFF78D19C3688D0059A0E3 /* menu-clock@2x.png in Resources */,
 				52EFF7FC19C368C00059A0E3 /* program_avatar_bullseye@2x.png in Resources */,
 				52EFF80419C368C00059A0E3 /* program_avatar_dinner-party-download@2x.png in Resources */,
+				52D0FC3219D20D29009AECEE /* program_avatar_q-with-jian-ghomeshi.png in Resources */,
 				52EFF84C19C368C00059A0E3 /* program_avatar_take-two@2x.png in Resources */,
 				52EFF82A19C368C00059A0E3 /* program_avatar_offramp.png in Resources */,
 				52EFF7E819C368C00059A0E3 /* program_avatar_airtalk@2x.png in Resources */,
@@ -1346,6 +1390,7 @@
 				52EFF86C19C368C00059A0E3 /* program_avatar_wits@2x.png in Resources */,
 				52EFF7EE19C368C00059A0E3 /* program_avatar_ask-me-another.png in Resources */,
 				768C06541995905D00F829EB /* btn_live_rewind_small@2x.png in Resources */,
+				52D0FC2A19D20D29009AECEE /* program_avatar_marketplace-tech-report.png in Resources */,
 				52EFF7FE19C368C00059A0E3 /* program_avatar_car-talk.png in Resources */,
 				52EFF7FA19C368C00059A0E3 /* program_avatar_bullseye.png in Resources */,
 				52EFF7F819C368C00059A0E3 /* program_avatar_bbc-world-service@2x.png in Resources */,
@@ -1354,9 +1399,11 @@
 				769B907A19C0D5C300E812C7 /* Config.plist in Resources */,
 				52EFF7E619C368C00059A0E3 /* program_avatar_airtalk.png in Resources */,
 				52EFF7F019C368C00059A0E3 /* program_avatar_ask-me-another@2x.png in Resources */,
+				52D0FC3419D20D29009AECEE /* program_avatar_q-with-jian-ghomeshi@2x.png in Resources */,
 				76B9A9C118F609FF007A6D8C /* Wood_Crash.mp3 in Resources */,
 				52EFF81819C368C00059A0E3 /* program_avatar_loh-life@2x.png in Resources */,
 				52EFF7F219C368C00059A0E3 /* program_avatar_bbc-newshour.png in Resources */,
+				52D0FC2C19D20D29009AECEE /* program_avatar_marketplace-tech-report@2x.png in Resources */,
 				52EFF81219C368C00059A0E3 /* program_avatar_loh-down-on-science.png in Resources */,
 				52EFF83419C368C00059A0E3 /* program_avatar_on-the-media@2x.png in Resources */,
 				52EFF78F19C3688D0059A0E3 /* menu-glasses.png in Resources */,
@@ -1373,6 +1420,7 @@
 				52EFF82419C368C00059A0E3 /* program_avatar_morning-edition@2x.png in Resources */,
 				768C06521995905D00F829EB /* btn_live_rewind_small.png in Resources */,
 				768C066F199590CC00F829EB /* FreigSanProBlk.otf in Resources */,
+				52D0FC3819D20D29009AECEE /* program_avatar_the-frame@2x.png in Resources */,
 				768C06601995905D00F829EB /* chevron_down@2x.png in Resources */,
 				768C0671199590CC00F829EB /* FreigSanProBlkIt.otf in Resources */,
 				52CC6D6919D112F400C67322 /* SCPRProgramsListViewController.xib in Resources */,
