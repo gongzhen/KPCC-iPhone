@@ -356,10 +356,13 @@
 
 }
 
-- (void)setOnDemandUI:(BOOL)animated {
+- (void)setOnDemandUI:(BOOL)animated withProgram:(Program *)program andEpisode:(NSObject *)episode {
     if (setForOnDemandUI) {
         return;
     }
+
+    // Update UILabels, content, etc.
+    [self setDataForOnDemand:program andEpisode:episode];
 
     if ([self.onDemandPlayerView isHidden]) {
         [self.onDemandPlayerView setHidden:NO];
@@ -371,6 +374,32 @@
     }
     
     setForOnDemandUI = YES;
+}
+
+- (void)setDataForOnDemand:(Program *)program andEpisode:(NSObject *)episode {
+    if (program != nil) {
+        self.onDemandProgram = program;
+
+        if (program.title) {
+            [self.programTitleOnDemand setText:program.title];
+        }
+    }
+
+    if (episode != nil) {
+        if ([episode isKindOfClass:[Episode class]]) {
+            Episode *ep = (Episode *) episode;
+
+            [self.episodeTitleOnDemand setText:ep.title];
+            [self.episodeTitleOnDemand sizeToFit];
+        } else {
+            Segment *seg = (Segment *) episode;
+
+            [self.episodeTitleOnDemand setText:seg.title];
+            [self.episodeTitleOnDemand sizeToFit];
+        }
+    }
+
+    // TODO: Set handler for end of episode playback. Fallback/start livestream?
 }
 
 
@@ -410,6 +439,7 @@
     [self.blurView.layer pop_addAnimation:blurFadeAnimation forKey:@"blurViewFadeAnimation"];
     [self.darkBgView.layer pop_addAnimation:darkBgFadeAnimation forKey:@"darkBgFadeAnimation"];
     [self.playerControlsView.layer pop_addAnimation:controlsFadeAnimation forKey:@"controlsViewFadeAnimation"];
+    [self.onDemandPlayerView.layer pop_addAnimation:controlsFadeAnimation forKey:@"onDemandViewFadeAnimation"];
     self.menuOpen = NO;
 }
 
@@ -437,6 +467,7 @@
     [self.blurView.layer pop_addAnimation:fadeAnimation forKey:@"blurViewFadeAnimation"];
     [self.darkBgView.layer pop_addAnimation:darkBgFadeAnimation forKey:@"darkBgFadeAnimation"];
     [self.playerControlsView.layer pop_addAnimation:controlsFadeAnimation forKey:@"controlsViewFadeAnimation"];
+    [self.onDemandPlayerView.layer pop_addAnimation:controlsFadeAnimation forKey:@"onDemandViewFadeAnimation"];
     self.menuOpen = YES;
 }
 

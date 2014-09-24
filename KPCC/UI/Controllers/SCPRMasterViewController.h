@@ -15,6 +15,8 @@
 #import "FXBlurView.h"
 #import <pop/POP.h>
 #import "SCPRPullDownMenu.h"
+#import "Episode.h"
+#import "Segment.h"
 
 @interface SCPRMasterViewController : UIViewController<PulldownMenuDelegate>
 
@@ -29,17 +31,31 @@
 @property IBOutlet FXBlurView *blurView;
 @property IBOutlet UIView *darkBgView;
 
+// Major holder views for different playback states.
 @property IBOutlet UIView *playerControlsView;
 @property IBOutlet UIView *onDemandPlayerView;
 
+
+// View for On-Demand playback;
+@property IBOutlet UILabel *programTitleOnDemand;
+@property IBOutlet UIView *dividerOnDemand;
+@property IBOutlet UILabel *episodeTitleOnDemand;
+@property IBOutlet UILabel *timeLabelOnDemand;
+@property IBOutlet UIButton *shareButton;
+
+
+// Important Attrs.
 @property (nonatomic,strong) Program *currentProgram;
+@property (nonatomic,strong) Program *onDemandProgram;
 @property (nonatomic,strong) SCPRPullDownMenu *pulldownMenu;
 @property Boolean seekRequested;
 
+
+// Instance methods.
 - (void)cloakForMenu:(BOOL)animated;
 - (void)decloakForMenu:(BOOL)animated;
 
-- (void)setOnDemandUI:(BOOL)animated;
+- (void)setOnDemandUI:(BOOL)animated withProgram:(Program *)program andEpisode:(NSObject *)episode;
 - (void)setLiveStreamingUI:(BOOL)animated;
 
 @end

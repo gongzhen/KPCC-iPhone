@@ -44,7 +44,7 @@
                                 <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.80000000000000004" colorSpace="custom" customColorSpace="sRGB"/>
                                 <color key="tintColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                             </view>
-                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="m78-b6-vle" userLabel="Player Controls View">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="m78-b6-vle" userLabel="Player Controls View">
                                 <rect key="frame" x="0.0" y="64" width="320" height="504"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="250" text="ON NOW" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="g8v-J1-2Ng" userLabel="LiveDescription">
@@ -150,7 +150,7 @@
                                     <constraint firstItem="ao2-yr-kyf" firstAttribute="leading" secondItem="m78-b6-vle" secondAttribute="leading" id="z2J-V3-Vsp"/>
                                 </constraints>
                             </view>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Syv-nA-vpR" userLabel="OnDemandView">
+                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Syv-nA-vpR" userLabel="OnDemandView">
                                 <rect key="frame" x="8" y="64" width="304" height="504"/>
                                 <subviews>
                                     <view alpha="0.29999999999999999" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="J5U-kb-6Je" userLabel="DividerOnDemand">
@@ -170,13 +170,13 @@
                                         <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Ishmael Butler, Allison Janney, Michel Gondry, Really Damn Long Title to See How Shrinking Works Here Please" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" minimumFontSize="22" translatesAutoresizingMaskIntoConstraints="NO" id="n04-am-s1L">
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Ishmael Butler, Allison Janney, Michel Gondry, Really Damn Long Title to See How Shrinking Works Here Please" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" minimumFontSize="22" translatesAutoresizingMaskIntoConstraints="NO" id="n04-am-s1L" userLabel="EpisodeTitleOnDemand">
                                         <rect key="frame" x="15" y="40" width="274" height="61"/>
                                         <fontDescription key="fontDescription" name="FreightSansProLight-Regular" family="FreightSans Pro" pointSize="27"/>
                                         <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0:01/46:30" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Q1h-II-U3Q">
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0:01/46:30" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Q1h-II-U3Q" userLabel="TimeLabelOnDemand">
                                         <rect key="frame" x="15" y="317" width="141" height="22"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="141" id="uz7-xa-xuA"/>
@@ -185,7 +185,7 @@
                                         <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Daw-6l-gOy">
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Daw-6l-gOy" userLabel="ShareButton">
                                         <rect key="frame" x="142" y="467" width="21" height="29"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="29" id="Pgg-cv-Grh"/>
@@ -245,6 +245,8 @@
                         <outlet property="backToLiveButton" destination="1zm-63-H3R" id="AGg-Pt-ffb"/>
                         <outlet property="blurView" destination="LAZ-J2-lj5" id="MOo-Zb-mB0"/>
                         <outlet property="darkBgView" destination="sYL-12-Hgi" id="tPF-W9-NAM"/>
+                        <outlet property="dividerOnDemand" destination="J5U-kb-6Je" id="5tr-af-9iL"/>
+                        <outlet property="episodeTitleOnDemand" destination="n04-am-s1L" id="9Gf-D5-eAB"/>
                         <outlet property="horizDividerLine" destination="np1-OZ-drV" id="L00-cG-v4j"/>
                         <outlet property="liveDescriptionLabel" destination="g8v-J1-2Ng" id="sUp-r5-wI2"/>
                         <outlet property="liveRewindAltButton" destination="TfG-Pl-Djp" id="cmL-9t-cLA"/>
@@ -253,7 +255,10 @@
                         <outlet property="playerControlsView" destination="m78-b6-vle" id="I5X-JA-tsY"/>
                         <outlet property="programImageView" destination="jYj-xG-3QJ" id="XVU-26-yf0"/>
                         <outlet property="programTitleLabel" destination="ao2-yr-kyf" id="BIo-g3-SA9"/>
+                        <outlet property="programTitleOnDemand" destination="mV9-FT-8sm" id="NhA-77-wox"/>
                         <outlet property="rewindToShowStartButton" destination="uVS-5U-Chc" id="2MJ-Vt-jm5"/>
+                        <outlet property="shareButton" destination="Daw-6l-gOy" id="6Vw-bg-NxE"/>
+                        <outlet property="timeLabelOnDemand" destination="Q1h-II-U3Q" id="19n-gX-I7H"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Tsp-6Z-muj" userLabel="First Responder" sceneMemberID="firstResponder"/>

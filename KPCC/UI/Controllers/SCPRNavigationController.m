@@ -67,6 +67,12 @@
     self.interactivePopGestureRecognizer.enabled = ([self respondsToSelector:@selector(interactivePopGestureRecognizer)] && [self.viewControllers count] > 1);
 }
 
+- (void)navigationController:(UINavigationController *)navigationController willShowViewController:(UIViewController *)viewController animated:(BOOL)animated {
+    if (viewController == [[Utils del] masterViewController]) {
+        //[menuButton animateToMenu];
+    }
+}
+
 
 # pragma mark - MenuButtonDelegate
 

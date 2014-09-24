@@ -112,7 +112,7 @@
     NSLog(@"Audio?.. %@", [[[self.episodesList objectAtIndex:indexPath.row] audio] url]);
     [[AudioManager shared] playAudioWithURL:[[[self.episodesList objectAtIndex:indexPath.row] audio] url]];
 
-    [[[Utils del] masterViewController] setOnDemandUI:YES];
+    [[[Utils del] masterViewController] setOnDemandUI:YES withProgram:self.program andEpisode:[self.episodesList objectAtIndex:indexPath.row]];
     [self.navigationController popToRootViewControllerAnimated:YES];
 }
 
