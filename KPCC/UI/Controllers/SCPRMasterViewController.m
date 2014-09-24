@@ -129,7 +129,7 @@
     [[UIApplication sharedApplication] beginReceivingRemoteControlEvents];
     [self becomeFirstResponder];
 
-    [self updateControlsAndUI:YES];
+    //[self updateControlsAndUI:YES fromRateChange:NO];
 }
 
 -(void)skipBackwardEvent: (MPSkipIntervalCommandEvent *)skipEvent {
@@ -192,18 +192,14 @@
     [[AudioManager shared] forwardSeekFifteenSeconds];
 }
 
-- (void)receivePlayerStateNotification {
-    [self updateControlsAndUI:YES];
-}
-
 - (void)updateDataForUI {
     [[NetworkManager shared] fetchProgramInformationFor:[NSDate date] display:self];
 }
 
-- (void)updateControlsAndUI:(BOOL)animated {
+- (void)updateControlsAndUI:(BOOL)animated fromRateChange:(BOOL)fromRateChange {
 
     // First set contents of background, live-status labels, and play button.
-    [self setUIContents:animated];
+    [self setUIContents:animated fromRateChange:fromRateChange];
 
     // Set positioning of UI elements.
     /*if (animated) {
@@ -217,7 +213,7 @@
 
 }
 
-- (void)setUIContents:(BOOL)animated {
+- (void)setUIContents:(BOOL)animated fromRateChange:(BOOL)fromRateChange {
 
     if (animated) {
         [UIView animateWithDuration:0.1 animations:^{
@@ -235,6 +231,7 @@
         } completion:^(BOOL finished) {
 
             POPSpringAnimation *scaleAnimation = [POPSpringAnimation animationWithPropertyNamed:kPOPLayerScaleXY];
+            [self.programImageView.layer pop_removeAllAnimations];
 
             if ([[AudioManager shared] isStreamPlaying] || [[AudioManager shared] isStreamBuffering]) {
                 [self.playPauseButton setImage:[UIImage imageNamed:@"btn_pause"] forState:UIControlStateNormal];
@@ -252,7 +249,7 @@
 
             scaleAnimation.springBounciness = 2.0f;
             scaleAnimation.springSpeed = 2.0f;
-            if (!_seekRequested) {
+            if (!_seekRequested && fromRateChange) {
                 [self.programImageView.layer pop_addAnimation:scaleAnimation forKey:@"scaleAnimation"];
             }
 
@@ -286,13 +283,13 @@
         [self.liveRewindAltButton setAlpha:1.0];
         [self.backToLiveButton setAlpha:1.0];
         
-        if (!_seekRequested) {
+        /*if (!_seekRequested) {
             POPBasicAnimation *playButtonAnimation = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerPositionY];
             playButtonAnimation.fromValue = @(self.playPauseButton.frame.origin.y);
             playButtonAnimation.toValue = @(self.playPauseButton.frame.origin.y + 50);
             [self.playPauseButton.layer pop_addAnimation:playButtonAnimation forKey:@"playButtonAnimation"];
             
-        }
+        }*/
 
         /*if (!_seekRequested) {
             [self.playPauseButton setFrame:CGRectMake(_playPauseButton.frame.origin.x,
@@ -337,7 +334,7 @@
 
 - (void)setLiveStreamingUI:(BOOL)animated {
     if (setForLiveStreamUI) {
-        return;
+        //return;
     }
 
     if ([self.playerControlsView isHidden]) {
@@ -358,7 +355,7 @@
 
 - (void)setOnDemandUI:(BOOL)animated withProgram:(Program *)program andEpisode:(NSObject *)episode {
     if (setForOnDemandUI) {
-        return;
+        //return;
     }
 
     // Update UILabels, content, etc.
@@ -380,9 +377,15 @@
     if (program != nil) {
         self.onDemandProgram = program;
 
-        if (program.title) {
-            [self.programTitleOnDemand setText:program.title];
-        }
+        [self updateNowPlayingInfoWithProgram:program];
+
+        [[DesignManager shared] loadProgramImage:program.program_slug
+                                    andImageView:self.programImageView
+                                      completion:^(BOOL status) {
+                                          [self.blurView setNeedsDisplay];
+                                      }];
+
+        [self.programTitleOnDemand setText:program.title];
     }
 
     if (episode != nil) {
@@ -478,7 +481,10 @@
     switch (indexPath.row) {
         case 0:{
             NSLog(@"KPCC Live Selected.");
+            [[AudioManager shared] stopAllAudio];
+            [self updateDataForUI];
             [self setLiveStreamingUI:YES];
+            [self decloakForMenu:YES];
             break;
         }
 
@@ -547,7 +553,7 @@
 #pragma mark - AudioManagerDelegate
 
 - (void)onRateChange {
-    [self updateControlsAndUI:YES];
+    [self updateControlsAndUI:YES fromRateChange:YES];
 }
 
 - (void)onTimeChange {
@@ -582,13 +588,13 @@
 
         Program *programObj = [Program insertProgramWithDictionary:programDict inManagedObjectContext:[[ContentManager shared] managedObjectContext]];
 
-        if (!_currentProgram || (![_currentProgram.program_slug isEqualToString:programObj.program_slug])){
+        //if (!_currentProgram || (![_currentProgram.program_slug isEqualToString:programObj.program_slug])){
             [[DesignManager shared] loadProgramImage:programObj.program_slug
                                         andImageView:self.programImageView
                                           completion:^(BOOL status) {
                                               [self.blurView setNeedsDisplay];
                                           }];
-        }
+        //}
 
         [self updateUIWithProgram:programObj];
         [self updateNowPlayingInfoWithProgram:programObj];
