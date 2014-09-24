@@ -103,15 +103,8 @@
         return;
     }
     
-    // Process each Program and insert into CoreData.
-    //for (NSDictionary *programDict in content) {
-    //    [Program insertProgramWithDictionary:programDict inManagedObjectContext:[[ContentManager shared] managedObjectContext]];
-    //}
+    // Process Programs and insert into CoreData.
     NSLog(@"SCPRv4 returned %ld programs", (unsigned long)[content count]);
-    /* for (NSDictionary *programDict in content) {
-        NSLog(@"printing each slug.. %@", [programDict objectForKey:@"slug"] );
-    }*/
-
     [Program insertProgramsWithArray:content inManagedObjectContext:[[ContentManager shared] managedObjectContext]];
 
     // Save all changes made.
