@@ -66,24 +66,23 @@
 }
 
 + (void)insertProgramsWithArray:(NSArray *)array inManagedObjectContext:(NSManagedObjectContext *)context {
+
     if (!array || [array count] == 0) {
         return;
     }
 
     NSArray *storedRecords = [self fetchAllProgramsInContext:context];
-    
+
     NSLog(@"Inserting/Updating %ld Programs into CoreData", (unsigned long)[array count]);
     NSLog(@"Already %ld Programs exist in CoreData", (unsigned long)[storedRecords count]);
-    
+
     if ([storedRecords count] != 0) {
 
         for (NSDictionary *program in array) {
             NSPredicate *predicate = [NSPredicate predicateWithFormat:@"program_slug LIKE %@", [program objectForKey:@"slug"]];
             NSArray *matchedArray = [storedRecords filteredArrayUsingPredicate:predicate];
-            //NSLog(@"Matched Array size %ld", (unsigned long)[matchedArray count]);
 
-            Program* programObj = nil;
-            //programObj = [self fetchProgramWithSlug:[program objectForKey:@"slug"] fromManagedObjectContext:context];
+            Program *programObj = nil;
 
             if ([matchedArray count] == 1) {
                 // Update existing Program
@@ -99,10 +98,31 @@
                 [self updateProgramObject:programObj withDictionary:program];
             }
         }
+
+        /***
+         ** Remove old/off-air programs from Core Data.
+         ** Handles issue of Program slug changing on our backend, or going offair.
+         **
+         ** Dev note: Seems like the best place to handle while we have
+         ** existing records in CoreData and latest from our API to compare.
+         ***/
+        for (Program *storedProgram in storedRecords) {
+            BOOL foundInApi = NO;
+            for (NSDictionary *apiProgram in array) {
+                if (![Utils pureNil:[apiProgram objectForKey:@"slug"]] && [[apiProgram objectForKey:@"slug"] isEqualToString:storedProgram.program_slug]) {
+                    foundInApi = YES;
+                    break;
+                }
+            }
+
+            if (foundInApi == NO) {
+                // NSLog(@"NOT FOUND! %@", storedProgram.program_slug);
+                [context deleteObject:storedProgram];
+            }
+        }
+
     } else {
         // Import initial Programs
-        NSLog(@"Importing initial");
-        
         for (NSDictionary *program in array) {
             Program *programObj = (Program *)[NSEntityDescription insertNewObjectForEntityForName:[self entityName] inManagedObjectContext:context];
             [self updateProgramObject:programObj withDictionary:program];
