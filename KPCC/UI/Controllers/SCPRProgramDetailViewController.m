@@ -9,6 +9,7 @@
 #import "SCPRProgramDetailViewController.h"
 #import "SCPRProgramDetailHeaderView.h"
 #import "SCPRProgramDetailTableViewCell.h"
+#import "SCPRMasterViewController.h"
 #import "FXBlurView.h"
 #import "DesignManager.h"
 #import "AudioManager.h"
@@ -111,8 +112,8 @@
     NSLog(@"Audio?.. %@", [[[self.episodesList objectAtIndex:indexPath.row] audio] url]);
     [[AudioManager shared] playAudioWithURL:[[[self.episodesList objectAtIndex:indexPath.row] audio] url]];
 
+    [[[Utils del] masterViewController] setOnDemandUI:YES];
     [self.navigationController popToRootViewControllerAnimated:YES];
-
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {

@@ -27,8 +27,10 @@
 @property IBOutlet UIView *horizDividerLine;
 @property IBOutlet UIButton *backToLiveButton;
 @property IBOutlet FXBlurView *blurView;
-@property IBOutlet UIView *playerControlsView;
 @property IBOutlet UIView *darkBgView;
+
+@property IBOutlet UIView *playerControlsView;
+@property IBOutlet UIView *onDemandPlayerView;
 
 @property (nonatomic,strong) Program *currentProgram;
 @property (nonatomic,strong) SCPRPullDownMenu *pulldownMenu;
@@ -36,5 +38,8 @@
 
 - (void)cloakForMenu:(BOOL)animated;
 - (void)decloakForMenu:(BOOL)animated;
+
+- (void)setOnDemandUI:(BOOL)animated;
+- (void)setLiveStreamingUI:(BOOL)animated;
 
 @end

@@ -16,11 +16,16 @@
 @property BOOL menuOpen;
 @property BOOL setPlaying;
 @property BOOL backgroundZoomed;
+
+@property BOOL setForLiveStreamUI;
+@property BOOL setForOnDemandUI;
 @end
 
 @implementation SCPRMasterViewController
 
-@synthesize pulldownMenu;
+@synthesize pulldownMenu,
+            setForLiveStreamUI,
+            setForOnDemandUI;
 
 #pragma mark - UIViewController
 
@@ -331,7 +336,20 @@
 }
 
 - (void)setLiveStreamingUI:(BOOL)animated {
-    
+    if (setForLiveStreamUI) {
+        return;
+    }
+
+    if ([self.playerControlsView isHidden]) {
+        [self.playerControlsView setHidden:NO];
+    }
+
+    if (![self.onDemandPlayerView isHidden]) {
+        [self.onDemandPlayerView setHidden:YES];
+        setForOnDemandUI = NO;
+    }
+
+    setForLiveStreamUI = YES;
 }
 
 - (void)setPausedUI:(BOOL)animated {
@@ -339,7 +357,20 @@
 }
 
 - (void)setOnDemandUI:(BOOL)animated {
+    if (setForOnDemandUI) {
+        return;
+    }
+
+    if ([self.onDemandPlayerView isHidden]) {
+        [self.onDemandPlayerView setHidden:NO];
+    }
+
+    if (![self.playerControlsView isHidden]) {
+        [self.playerControlsView setHidden:YES];
+        setForLiveStreamUI = NO;
+    }
     
+    setForOnDemandUI = YES;
 }
 
 
@@ -416,6 +447,7 @@
     switch (indexPath.row) {
         case 0:{
             NSLog(@"KPCC Live Selected.");
+            [self setLiveStreamingUI:YES];
             break;
         }
 
