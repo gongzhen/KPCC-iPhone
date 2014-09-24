@@ -11,10 +11,17 @@
 #import "SCPRProgramDetailViewController.h"
 #import "DesignManager.h"
 
+/**
+ * Programs with these slugs will be hidden from this table view.
+ */
+#define HIDDEN_PROGRAMS @[ @"take-two-evenings", @"filmweek-marquee" ]
+
+
 @interface SCPRProgramsListViewController ()
 @property NSArray *programsList;
 @property Program *currentProgram;
 @end
+
 
 @implementation SCPRProgramsListViewController
 
@@ -48,7 +55,19 @@
                                       [self.blurView setNeedsDisplay];
                                   }];
 
-    self.programsList = [Program fetchAllProgramsInContext:[[ContentManager shared] managedObjectContext]];
+    // Fetch all Programs from CoreData and filter, given HIDDEN_PROGRAMS.
+    NSArray *storedPrograms = [Program fetchAllProgramsInContext:[[ContentManager shared] managedObjectContext]];
+    NSMutableArray *filteredPrograms = [[NSMutableArray alloc] initWithArray:storedPrograms];
+    for (Program *program in storedPrograms) {
+        for (NSString *hiddenSlug in HIDDEN_PROGRAMS) {
+            if ([program.program_slug isEqualToString:hiddenSlug]) {
+                [filteredPrograms removeObject:program];
+                break;
+            }
+        }
+    }
+
+    self.programsList = filteredPrograms;
 
     UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 14)];
     self.programsTable.tableHeaderView = headerView;
