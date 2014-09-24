@@ -20,6 +20,8 @@
 
 @implementation SCPRMasterViewController
 
+@synthesize pulldownMenu;
+
 #pragma mark - UIViewController
 
 // Allows for interaction with system audio controls.
@@ -49,7 +51,13 @@
     // Set the current view to receive events from the AudioManagerDelegate.
     [AudioManager shared].delegate = self;
 
-    if (self.menuOpen) {
+    if (self.pulldownMenu.fullyOpen) {
+        //[pulldownMenu setFrame:CGRectMake(0, 70, pulldownMenu.frame.size.width, pulldownMenu.frame.size.height)];
+        //pulldownMenu.center = CGPointMake(self.view.frame.size.width / 2, ((self.view.frame.size.height / 2) + 50));
+        NSLog(@"pullDownmenu?!! %@", NSStringFromCGRect(pulldownMenu.frame));
+        //[pulldownMenu closeDropDown:NO];
+        [self decloakForMenu:NO];
+//        self.menuOpen = NO;
         //[pulldownMenu loadMenu];
         //[pulldownMenu openDropDown:NO];
     }
@@ -66,7 +74,7 @@
     
     SCPRMenuButton *menuButton = [SCPRMenuButton buttonWithOrigin:CGPointMake(10.f, 10.f)];
     menuButton.delegate = self;
-    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:menuButton];
+    //self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:menuButton];
 
     // Fetch program info and update audio control state.
     [self updateDataForUI];
@@ -337,17 +345,24 @@
 
 - (void)menuPressed {
     if (self.menuOpen) {
-        [pulldownMenu closeDropDown:YES];
+        //[pulldownMenu closeDropDown:YES];
         [self decloakForMenu:YES];
     } else {
         [self cloakForMenu:YES];
-        [pulldownMenu openDropDown:YES];
+        //[pulldownMenu openDropDown:YES];
     }
+    NSLog(@"pullDownmenu? %@", pulldownMenu);
     self.menuOpen = !self.menuOpen;
 }
 
 - (void)cloakForMenu:(BOOL)animated {
     [self.blurView setNeedsDisplay];
+
+    if (animated) {
+        [pulldownMenu openDropDown:YES];
+    } else {
+        [pulldownMenu openDropDown:NO];
+    }
 
     POPBasicAnimation *blurFadeAnimation = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
     blurFadeAnimation.toValue = @1;
@@ -364,10 +379,17 @@
     [self.blurView.layer pop_addAnimation:blurFadeAnimation forKey:@"blurViewFadeAnimation"];
     [self.darkBgView.layer pop_addAnimation:darkBgFadeAnimation forKey:@"darkBgFadeAnimation"];
     [self.playerControlsView.layer pop_addAnimation:controlsFadeAnimation forKey:@"controlsViewFadeAnimation"];
+    self.menuOpen = NO;
 }
 
 - (void)decloakForMenu:(BOOL)animated {
     [self.blurView setNeedsDisplay];
+
+    if (animated) {
+        [pulldownMenu closeDropDown:YES];
+    } else {
+        [pulldownMenu closeDropDown:NO];
+    }
 
     POPBasicAnimation *fadeAnimation = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
     fadeAnimation.toValue = @0;
@@ -384,15 +406,31 @@
     [self.blurView.layer pop_addAnimation:fadeAnimation forKey:@"blurViewFadeAnimation"];
     [self.darkBgView.layer pop_addAnimation:darkBgFadeAnimation forKey:@"darkBgFadeAnimation"];
     [self.playerControlsView.layer pop_addAnimation:controlsFadeAnimation forKey:@"controlsViewFadeAnimation"];
+    self.menuOpen = YES;
 }
 
 
 # pragma mark - PulldownMenuDelegate
 
 - (void)menuItemSelected:(NSIndexPath *)indexPath {
-    
-    SCPRProgramsListViewController *vc = [[SCPRProgramsListViewController alloc] initWithBackgroundProgram:self.currentProgram];
-    [self.navigationController pushViewController:vc animated:YES];
+    switch (indexPath.row) {
+        case 0:{
+            NSLog(@"KPCC Live Selected.");
+            break;
+        }
+
+        case 1: {
+            NSLog(@"programs Selected.");
+            SCPRProgramsListViewController *vc = [[SCPRProgramsListViewController alloc] initWithBackgroundProgram:self.currentProgram];
+            [self.navigationController pushViewController:vc animated:YES];
+            break;
+        }
+
+        default: {
+
+            break;
+        }
+    }
 }
 
 - (void)pullDownAnimated:(BOOL)open {

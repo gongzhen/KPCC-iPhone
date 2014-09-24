@@ -16,9 +16,7 @@
 #import <pop/POP.h>
 #import "SCPRPullDownMenu.h"
 
-@interface SCPRMasterViewController : UIViewController<PulldownMenuDelegate> {
-    SCPRPullDownMenu *pulldownMenu;
-}
+@interface SCPRMasterViewController : UIViewController<PulldownMenuDelegate>
 
 @property IBOutlet UILabel *programTitleLabel;
 @property IBOutlet UIImageView *programImageView;
@@ -33,6 +31,7 @@
 @property IBOutlet UIView *darkBgView;
 
 @property (nonatomic,strong) Program *currentProgram;
+@property (nonatomic,strong) SCPRPullDownMenu *pulldownMenu;
 @property Boolean seekRequested;
 
 - (void)cloakForMenu:(BOOL)animated;

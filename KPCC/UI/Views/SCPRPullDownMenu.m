@@ -31,10 +31,11 @@
 
     NSOrderedSet* orderedItems = [NSOrderedSet orderedSetWithObjects:   kMenuItemKPCCLive,
                                                                         kMenuItemPrograms,
-                                                                        kMenuItemShortList,
-                                                                        kMenuItemAlarm,
-                                                                        kMenuItemDonate,
-                                                                        kMenuItemSettings, nil];
+                                                                        //kMenuItemShortList,
+                                                                        //kMenuItemAlarm,
+                                                                        //kMenuItemDonate,
+                                                                        //kMenuItemSettings,
+                                                                        nil];
 
     menuItemsDictionary = @{kMenuItemKPCCLive   : kIconKPCCLive,
                             kMenuItemPrograms   : kIconPrograms,

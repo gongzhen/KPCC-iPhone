@@ -36,7 +36,7 @@
 
     for (UIViewController* viewController in self.viewControllers){
         NSLog(@"adding button to vc : %@", viewController.title);
-        //[self addButton:viewController.navigationItem];
+        [self addButton:viewController.navigationItem];
     }
 }
 
@@ -80,11 +80,9 @@
 
 - (void)menuPressed {
     if (self.menuOpen) {
-        [pulldownMenu closeDropDown:YES];
         [[[Utils del] masterViewController] decloakForMenu:YES];
     } else {
         [[[Utils del] masterViewController] cloakForMenu:YES];
-        [pulldownMenu openDropDown:YES];
     }
     self.menuOpen = !self.menuOpen;
 }
