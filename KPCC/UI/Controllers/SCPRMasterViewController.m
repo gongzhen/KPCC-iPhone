@@ -600,13 +600,14 @@
 
         Program *programObj = [Program insertProgramWithDictionary:programDict inManagedObjectContext:[[ContentManager shared] managedObjectContext]];
 
-        //if (!_currentProgram || (![_currentProgram.program_slug isEqualToString:programObj.program_slug])){
+        // Only update background image when we're not in On Demand mode.
+        if (!setForOnDemandUI){
             [[DesignManager shared] loadProgramImage:programObj.program_slug
                                         andImageView:self.programImageView
                                           completion:^(BOOL status) {
                                               [self.blurView setNeedsDisplay];
                                           }];
-        //}
+        }
 
         [self updateUIWithProgram:programObj];
         [self updateNowPlayingInfoWithProgram:programObj];
