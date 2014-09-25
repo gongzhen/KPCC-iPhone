@@ -83,21 +83,20 @@
     }
 
     cell.backgroundColor = [UIColor clearColor];
-    NSLog(@"episode kind? %@", [[self.episodesList objectAtIndex:indexPath.row] class]);
     [cell setEpisode:[self.episodesList objectAtIndex:indexPath.row]];
     return cell;
 }
 
 -(void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath{
-    
+
     if ([tableView respondsToSelector:@selector(setSeparatorInset:)]) {
         [tableView setSeparatorInset:UIEdgeInsetsMake(0, 8, 0, 8)];
     }
-    
+
     if ([tableView respondsToSelector:@selector(setLayoutMargins:)]) {
         [tableView setLayoutMargins:UIEdgeInsetsMake(0, 8, 0, 8)];
     }
-    
+
     if ([cell respondsToSelector:@selector(setLayoutMargins:)]) {
         [cell setLayoutMargins:UIEdgeInsetsMake(0, 8, 0, 8)];
     }
@@ -109,9 +108,9 @@
 // In a xib-based application, navigation from a table can be handled in -tableView:didSelectRowAtIndexPath:
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    NSLog(@"Audio?.. %@", [[[self.episodesList objectAtIndex:indexPath.row] audio] url]);
-    [[AudioManager shared] playAudioWithURL:[[[self.episodesList objectAtIndex:indexPath.row] audio] url]];
 
+    // Start audio playback, set OnDemand UI on master vc, and pop to it.
+    [[AudioManager shared] playAudioWithURL:[[[self.episodesList objectAtIndex:indexPath.row] audio] url]];
     [[[Utils del] masterViewController] setOnDemandUI:YES withProgram:self.program andEpisode:[self.episodesList objectAtIndex:indexPath.row]];
     [self.navigationController popToRootViewControllerAnimated:YES];
 }
