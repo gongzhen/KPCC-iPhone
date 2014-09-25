@@ -19,13 +19,11 @@ static const NSString *ItemStatusContext;
 @implementation AudioManager
 
 + (AudioManager*)shared {
-    if ( !singleton ) {
+    if (!singleton) {
         @synchronized(self) {
             singleton = [[AudioManager alloc] init];
-            [singleton buildStreamer:kHLSLiveStreamURL];
         }
     }
-    
     return singleton;
 }
 
@@ -87,25 +85,23 @@ static const NSString *ItemStatusContext;
 
 
 - (void)buildStreamer:(NSString*)urlString {
-    self.status = StreamStatusStopped;
-    
     NSURL *url;
     if (urlString == nil) {
         url = [NSURL URLWithString:kHLSLiveStreamURL];
     } else {
         url = [NSURL URLWithString:urlString];
     }
-    
-   self.playerItem = [AVPlayerItem playerItemWithURL:url];
+
+    self.playerItem = [AVPlayerItem playerItemWithURL:url];
     [self.playerItem addObserver:self forKeyPath:@"status" options:NSKeyValueObservingOptionOld|NSKeyValueObservingOptionNew context:nil];
     [self.playerItem addObserver:self forKeyPath:@"playbackBufferEmpty" options:NSKeyValueObservingOptionNew context:nil];
     [self.playerItem addObserver:self forKeyPath:@"playbackLikelyToKeepUp" options:NSKeyValueObservingOptionNew context:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playerItemFailedToPlayToEndTime:) name:AVPlayerItemFailedToPlayToEndTimeNotification object:self.playerItem];
-   
+
     self.audioPlayer = [AVPlayer playerWithPlayerItem:self.playerItem];
     [self.audioPlayer addObserver:self forKeyPath:@"status" options:NSKeyValueObservingOptionOld|NSKeyValueObservingOptionNew context:nil];
     [self.audioPlayer addObserver:self forKeyPath:@"rate" options:NSKeyValueObservingOptionOld|NSKeyValueObservingOptionNew context:nil];
-    
+
     [self startObservingTime];
 }
 
@@ -232,16 +228,13 @@ static const NSString *ItemStatusContext;
 - (NSString *)liveStreamURL {
 
     if (self.audioPlayer) {
-
-        NSLog(@"%@",[[NSString alloc] initWithData:[self.audioPlayer.currentItem.accessLog extendedLogData] encoding:[self.audioPlayer.currentItem.accessLog extendedLogDataStringEncoding]]);
-        
         if ([self.audioPlayer.currentItem.accessLog.events.lastObject URI]) {
             return [NSString stringWithFormat:@"%@",[self.audioPlayer.currentItem.accessLog.events.lastObject URI]];
         }
     }
-
     return kHLSLiveStreamURL;
 
+    // Old.. used for playing pre-roll after given threshold on playback start. May be useful in the future.
 /*
     long currentTimeSeconds = [[NSDate date] timeIntervalSince1970];
     SCPRDebugLog(@"currentTimeSeconds: %ld", currentTimeSeconds);
@@ -299,7 +292,7 @@ static const NSString *ItemStatusContext;
 
 - (void)takedownAudioPlayer {
     [self.audioPlayer pause];
-    
+
     if (self.timeObserver) {
         [self.audioPlayer removeTimeObserver:self.timeObserver];
         self.timeObserver = nil;
@@ -328,7 +321,7 @@ static const NSString *ItemStatusContext;
 }
 
 - (BOOL)isStreamBuffering {
-    //return [self.audioPlayer is]
+    // Old.. can most likely be removed.
     return NO;
 }
 
@@ -336,7 +329,7 @@ static const NSString *ItemStatusContext;
 #pragma mark - Error Logging
 
 - (void)analyzeStreamError:(NSString *)comments {
-    
+
     NSURL *liveURL = [NSURL URLWithString:kHLSLiveStreamURL];
     NetworkHealth netHealth = [[NetworkManager shared] checkNetworkHealth:[liveURL host]];
 
@@ -375,13 +368,13 @@ static const NSString *ItemStatusContext;
 }
 
 - (void)localAudioFallback:(NSString *)filePath {
-    
+
     if (!filePath) {
         return;
     }
-    
+
     [self stopStream];
-    
+
     // Init the local audio player, set to loop indefinitely, and play.
     self.localAudioPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:[NSURL fileURLWithPath:filePath] error:nil];
     self.localAudioPlayer.numberOfLoops = -1;
