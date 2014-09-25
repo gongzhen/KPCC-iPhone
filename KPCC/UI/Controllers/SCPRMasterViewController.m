@@ -337,8 +337,8 @@
         //return;
     }
 
-    if ([self.playerControlsView isHidden]) {
-        [self.playerControlsView setHidden:NO];
+    if ([self.liveStreamView isHidden]) {
+        [self.liveStreamView setHidden:NO];
     }
 
     if (![self.onDemandPlayerView isHidden]) {
@@ -365,8 +365,8 @@
         [self.onDemandPlayerView setHidden:NO];
     }
 
-    if (![self.playerControlsView isHidden]) {
-        [self.playerControlsView setHidden:YES];
+    if (![self.liveStreamView isHidden]) {
+        [self.liveStreamView setHidden:YES];
         setForLiveStreamUI = NO;
     }
     
@@ -406,7 +406,7 @@
 }
 
 
-- (void)menuPressed {
+/*- (void)menuPressed {
     if (self.menuOpen) {
         //[pulldownMenu closeDropDown:YES];
         [self decloakForMenu:YES];
@@ -416,7 +416,7 @@
     }
     NSLog(@"pullDownmenu? %@", pulldownMenu);
     self.menuOpen = !self.menuOpen;
-}
+}*/
 
 - (void)cloakForMenu:(BOOL)animated {
     [self.blurView setNeedsDisplay];
@@ -443,6 +443,7 @@
     [self.darkBgView.layer pop_addAnimation:darkBgFadeAnimation forKey:@"darkBgFadeAnimation"];
     [self.playerControlsView.layer pop_addAnimation:controlsFadeAnimation forKey:@"controlsViewFadeAnimation"];
     [self.onDemandPlayerView.layer pop_addAnimation:controlsFadeAnimation forKey:@"onDemandViewFadeAnimation"];
+    [self.liveStreamView.layer pop_addAnimation:controlsFadeAnimation forKey:@"liveStreamViewFadeAnimation"];
     self.menuOpen = NO;
 }
 
@@ -471,6 +472,7 @@
     [self.darkBgView.layer pop_addAnimation:darkBgFadeAnimation forKey:@"darkBgFadeAnimation"];
     [self.playerControlsView.layer pop_addAnimation:controlsFadeAnimation forKey:@"controlsViewFadeAnimation"];
     [self.onDemandPlayerView.layer pop_addAnimation:controlsFadeAnimation forKey:@"onDemandViewFadeAnimation"];
+    [self.liveStreamView.layer pop_addAnimation:controlsFadeAnimation forKey:@"liveStreamViewFadeAnimation"];
     self.menuOpen = YES;
 }
 

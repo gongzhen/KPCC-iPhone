@@ -32,8 +32,9 @@
 @property IBOutlet UIView *darkBgView;
 
 // Major holder views for different playback states.
-@property IBOutlet UIView *playerControlsView;
+@property IBOutlet UIView *liveStreamView;
 @property IBOutlet UIView *onDemandPlayerView;
+@property IBOutlet UIView *playerControlsView;
 
 
 // View for On-Demand playback;
