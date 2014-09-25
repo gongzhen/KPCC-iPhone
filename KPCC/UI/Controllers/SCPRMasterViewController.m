@@ -15,7 +15,7 @@
 @interface SCPRMasterViewController () <AudioManagerDelegate, ContentProcessor, MenuButtonDelegate>
 @property BOOL menuOpen;
 @property BOOL setPlaying;
-@property BOOL backgroundZoomed;
+@property BOOL busyZoomAnim;
 
 @property BOOL setForLiveStreamUI;
 @property BOOL setForOnDemandUI;
@@ -24,6 +24,7 @@
 @implementation SCPRMasterViewController
 
 @synthesize pulldownMenu,
+            busyZoomAnim,
             setForLiveStreamUI,
             setForOnDemandUI;
 
@@ -231,25 +232,31 @@
         } completion:^(BOOL finished) {
 
             POPSpringAnimation *scaleAnimation = [POPSpringAnimation animationWithPropertyNamed:kPOPLayerScaleXY];
-            [self.programImageView.layer pop_removeAllAnimations];
+            //[self.programImageView.layer pop_removeAllAnimations];
 
             if ([[AudioManager shared] isStreamPlaying] || [[AudioManager shared] isStreamBuffering]) {
                 [self.playPauseButton setImage:[UIImage imageNamed:@"btn_pause"] forState:UIControlStateNormal];
 
                 scaleAnimation.fromValue  = [NSValue valueWithCGSize:CGSizeMake(1.0f, 1.0f)];
                 scaleAnimation.toValue  = [NSValue valueWithCGSize:CGSizeMake(1.2f, 1.2f)];
-                self.backgroundZoomed = YES;
             } else {
                 [self.playPauseButton setImage:[UIImage imageNamed:@"btn_play_large"] forState:UIControlStateNormal];
 
                 scaleAnimation.fromValue  = [NSValue valueWithCGSize:CGSizeMake(1.2f, 1.2f)];
                 scaleAnimation.toValue  = [NSValue valueWithCGSize:CGSizeMake(1.0f, 1.0f)];
-                self.backgroundZoomed = NO;
             }
 
             scaleAnimation.springBounciness = 2.0f;
             scaleAnimation.springSpeed = 2.0f;
-            if (!_seekRequested && fromRateChange) {
+
+            // Used to ensure animation only gets started once.
+            // This method stems from onRateChange: firing, which sometimes gets called rapidly.
+            [scaleAnimation setCompletionBlock:^(POPAnimation *animation, BOOL done) {
+                busyZoomAnim = NO;
+            }];
+
+            if (!_seekRequested && fromRateChange && !busyZoomAnim) {
+                busyZoomAnim = YES;
                 [self.programImageView.layer pop_addAnimation:scaleAnimation forKey:@"scaleAnimation"];
             }
 
