@@ -101,7 +101,6 @@
     // Config dark background view. Will sit on top of blur view, between player controls view.
     [self.darkBgView setAlpha:0.0];
 
-    //[self.navigationController.navigationBar.topItem setTitle:@"KPCC Live"];
     MPRemoteCommandCenter *rcc = [MPRemoteCommandCenter sharedCommandCenter];
 
     MPSkipIntervalCommand *skipBackwardIntervalCommand = [rcc skipBackwardCommand];
@@ -425,6 +424,7 @@
 }*/
 
 - (void)cloakForMenu:(BOOL)animated {
+    self.navigationItem.title = @"Menu";
     [self.blurView setNeedsDisplay];
 
     if (animated) {
@@ -454,6 +454,7 @@
 }
 
 - (void)decloakForMenu:(BOOL)animated {
+    self.navigationItem.title = @"KPCC Live";    
     [self.blurView setNeedsDisplay];
 
     if (animated) {
