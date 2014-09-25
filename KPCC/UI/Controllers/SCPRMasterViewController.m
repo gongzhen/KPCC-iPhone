@@ -230,7 +230,7 @@
             }
 
         } completion:^(BOOL finished) {
-            /*
+            
             POPSpringAnimation *scaleAnimation = [POPSpringAnimation animationWithPropertyNamed:kPOPLayerScaleXY];
 
             if ([[AudioManager shared] isStreamPlaying] || [[AudioManager shared] isStreamBuffering]) {
@@ -254,7 +254,7 @@
                 busyZoomAnim = NO;
             }];
 
-            if (!_seekRequested && fromRateChange && !busyZoomAnim) {
+            /*if (!_seekRequested && fromRateChange && !busyZoomAnim) {
                 busyZoomAnim = YES;
                 [self.programImageView.layer pop_addAnimation:scaleAnimation forKey:@"scaleAnimation"];
             }*/
@@ -493,6 +493,7 @@
             [self updateDataForUI];
             [self setLiveStreamingUI:YES];
             [self decloakForMenu:YES];
+            [[AudioManager shared] startStream];
             break;
         }
 
