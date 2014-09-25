@@ -264,7 +264,15 @@
     if ([[AudioManager shared] isStreamPlaying] || [[AudioManager shared] isStreamBuffering]) {
         [self.horizDividerLine setAlpha:0.4];
         [self.liveRewindAltButton setAlpha:1.0];
-        
+
+        if (!_seekRequested) {
+            CGPoint location = CGPointMake(CGRectGetMidX(self.view.frame) , CGRectGetMaxY(self.view.frame) - 80);
+            POPBasicAnimation *anim = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerPosition];
+            anim.toValue = [NSValue valueWithCGPoint:location];
+            anim.duration = .3;
+            [self.playerControlsView.layer pop_addAnimation:anim forKey:@"animatePlayControlsDown"];
+        }
+
         /*if (!_seekRequested) {
             POPBasicAnimation *playButtonAnimation = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerPositionY];
             playButtonAnimation.fromValue = @(self.playPauseButton.frame.origin.y);
@@ -293,6 +301,14 @@
         if (!_setPlaying) {
             [self.rewindToShowStartButton setAlpha:1.0];
             [self.horizDividerLine setAlpha:0.0];
+        }
+
+        if (!_seekRequested) {
+            CGPoint location = CGPointMake(CGRectGetMidX(self.view.frame) , CGRectGetMidY(self.view.frame));
+            POPBasicAnimation *anim = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerPosition];
+            anim.toValue = [NSValue valueWithCGPoint:location];
+            anim.duration = .3;
+            [self.playerControlsView.layer pop_addAnimation:anim forKey:@"animatePlayControlsUp"];
         }
 
         /*if (!_seekRequested) {

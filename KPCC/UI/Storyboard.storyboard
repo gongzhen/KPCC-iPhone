@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6245" systemVersion="14A361c" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="tBl-Ag-e49">
     <dependencies>
+        <deployment defaultVersion="1792" identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6238"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
@@ -201,34 +202,22 @@
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Qkn-sg-4PL" userLabel="PlayerControlsView">
-                                <rect key="frame" x="0.0" y="175" width="320" height="200"/>
+                                <rect key="frame" x="90" y="175" width="140" height="125"/>
                                 <subviews>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="nD3-gi-dEs" userLabel="Holder">
-                                        <rect key="frame" x="0.0" y="0.0" width="320" height="244"/>
-                                        <subviews>
-                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pSM-s0-r5H" userLabel="PlayPauseButton">
-                                                <rect key="frame" x="99" y="60" width="122" height="122"/>
-                                                <state key="normal" image="btn_play_large.png">
-                                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                                </state>
-                                                <connections>
-                                                    <action selector="playOrPauseTapped:" destination="4pL-7p-2vt" eventType="touchUpInside" id="WHu-nV-XJd"/>
-                                                </connections>
-                                            </button>
-                                        </subviews>
-                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                        <constraints>
-                                            <constraint firstItem="pSM-s0-r5H" firstAttribute="top" secondItem="nD3-gi-dEs" secondAttribute="top" constant="60" id="i68-gU-SfA"/>
-                                            <constraint firstAttribute="centerY" secondItem="pSM-s0-r5H" secondAttribute="centerY" constant="1" id="sQ5-Rd-50X"/>
-                                            <constraint firstAttribute="centerX" secondItem="pSM-s0-r5H" secondAttribute="centerX" id="w6W-6s-iCD"/>
-                                        </constraints>
-                                    </view>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pSM-s0-r5H" userLabel="PlayPauseButton">
+                                        <rect key="frame" x="9" y="2" width="122" height="122"/>
+                                        <state key="normal" image="btn_play_large.png">
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="playOrPauseTapped:" destination="4pL-7p-2vt" eventType="touchUpInside" id="WHu-nV-XJd"/>
+                                        </connections>
+                                    </button>
                                 </subviews>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <constraints>
-                                    <constraint firstAttribute="trailing" secondItem="nD3-gi-dEs" secondAttribute="trailing" id="PLI-zH-yM6"/>
-                                    <constraint firstItem="nD3-gi-dEs" firstAttribute="leading" secondItem="Qkn-sg-4PL" secondAttribute="leading" id="Ua8-5C-kiQ"/>
-                                    <constraint firstItem="nD3-gi-dEs" firstAttribute="centerY" secondItem="Qkn-sg-4PL" secondAttribute="centerY" constant="22" id="VbK-b7-ZTk"/>
+                                    <constraint firstAttribute="centerY" secondItem="pSM-s0-r5H" secondAttribute="centerY" constant="-0.5" id="iMX-gs-n6o"/>
+                                    <constraint firstAttribute="centerX" secondItem="pSM-s0-r5H" secondAttribute="centerX" id="sV4-EZ-Dmv"/>
                                 </constraints>
                             </view>
                         </subviews>
@@ -244,10 +233,10 @@
                             <constraint firstItem="LAZ-J2-lj5" firstAttribute="leading" secondItem="m78-b6-vle" secondAttribute="leading" id="IM3-HF-N7E"/>
                             <constraint firstItem="LAZ-J2-lj5" firstAttribute="trailing" secondItem="sYL-12-Hgi" secondAttribute="trailing" id="JpH-ts-MDQ"/>
                             <constraint firstItem="Syv-nA-vpR" firstAttribute="width" secondItem="QEk-eP-ZIb" secondAttribute="width" id="MOB-G3-PEy"/>
-                            <constraint firstItem="Qkn-sg-4PL" firstAttribute="leading" secondItem="m78-b6-vle" secondAttribute="leading" id="PQs-aB-MFu"/>
-                            <constraint firstItem="Qkn-sg-4PL" firstAttribute="height" secondItem="QEk-eP-ZIb" secondAttribute="height" constant="-368" id="QMi-fY-B8f"/>
+                            <constraint firstItem="Qkn-sg-4PL" firstAttribute="leading" secondItem="m78-b6-vle" secondAttribute="leading" constant="90" id="PQs-aB-MFu"/>
                             <constraint firstItem="LAZ-J2-lj5" firstAttribute="bottom" secondItem="sYL-12-Hgi" secondAttribute="bottom" id="QTC-8B-xfj"/>
                             <constraint firstItem="Syv-nA-vpR" firstAttribute="leading" secondItem="Npf-rN-6R5" secondAttribute="leading" id="R6Q-zH-ZYg"/>
+                            <constraint firstItem="Npf-rN-6R5" firstAttribute="top" secondItem="Qkn-sg-4PL" secondAttribute="bottom" constant="268" id="SWV-t1-YPf"/>
                             <constraint firstItem="LAZ-J2-lj5" firstAttribute="top" secondItem="sYL-12-Hgi" secondAttribute="top" id="SZ2-gO-m7M"/>
                             <constraint firstItem="m78-b6-vle" firstAttribute="top" secondItem="f6n-R2-H79" secondAttribute="bottom" id="XjQ-q9-TTx"/>
                             <constraint firstItem="jYj-xG-3QJ" firstAttribute="trailing" secondItem="LAZ-J2-lj5" secondAttribute="trailing" id="g0k-FX-Mkn"/>
@@ -255,7 +244,7 @@
                             <constraint firstItem="jYj-xG-3QJ" firstAttribute="bottom" secondItem="Npf-rN-6R5" secondAttribute="top" id="nL6-Jc-dhE"/>
                             <constraint firstItem="Qkn-sg-4PL" firstAttribute="top" secondItem="LAZ-J2-lj5" secondAttribute="top" constant="175" id="p7w-HQ-1U7"/>
                             <constraint firstItem="Npf-rN-6R5" firstAttribute="top" secondItem="m78-b6-vle" secondAttribute="bottom" id="qqA-NQ-5yM"/>
-                            <constraint firstItem="Qkn-sg-4PL" firstAttribute="width" secondItem="QEk-eP-ZIb" secondAttribute="width" id="wM6-8K-W6k"/>
+                            <constraint firstItem="Qkn-sg-4PL" firstAttribute="width" secondItem="QEk-eP-ZIb" secondAttribute="width" constant="-180" id="wM6-8K-W6k"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="KPCC Live" id="pkk-9h-rMs"/>
