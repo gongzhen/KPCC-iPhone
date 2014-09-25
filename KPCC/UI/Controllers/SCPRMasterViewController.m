@@ -230,9 +230,8 @@
             }
 
         } completion:^(BOOL finished) {
-
+            /*
             POPSpringAnimation *scaleAnimation = [POPSpringAnimation animationWithPropertyNamed:kPOPLayerScaleXY];
-            //[self.programImageView.layer pop_removeAllAnimations];
 
             if ([[AudioManager shared] isStreamPlaying] || [[AudioManager shared] isStreamBuffering]) {
                 [self.playPauseButton setImage:[UIImage imageNamed:@"btn_pause"] forState:UIControlStateNormal];
@@ -258,7 +257,7 @@
             if (!_seekRequested && fromRateChange && !busyZoomAnim) {
                 busyZoomAnim = YES;
                 [self.programImageView.layer pop_addAnimation:scaleAnimation forKey:@"scaleAnimation"];
-            }
+            }*/
 
             [UIView animateWithDuration:0.1 animations:^{
                 [self.playPauseButton setAlpha:1.0];
