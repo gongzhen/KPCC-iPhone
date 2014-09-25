@@ -454,7 +454,7 @@
 }
 
 - (void)decloakForMenu:(BOOL)animated {
-    self.navigationItem.title = @"KPCC Live";    
+    self.navigationItem.title = @"KPCC Live";
     [self.blurView setNeedsDisplay];
 
     if (animated) {
@@ -499,8 +499,11 @@
         }
 
         case 1: {
-            NSLog(@"programs Selected.");
-            SCPRProgramsListViewController *vc = [[SCPRProgramsListViewController alloc] initWithBackgroundProgram:self.currentProgram];
+            Program *prog = self.currentProgram;
+            if (setForOnDemandUI && self.onDemandProgram != nil) {
+                prog = self.onDemandProgram;
+            }
+            SCPRProgramsListViewController *vc = [[SCPRProgramsListViewController alloc] initWithBackgroundProgram:prog];
             [self.navigationController pushViewController:vc animated:YES];
             break;
         }
