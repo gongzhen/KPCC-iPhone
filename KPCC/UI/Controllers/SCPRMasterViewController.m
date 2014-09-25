@@ -390,7 +390,7 @@
                                           [self.blurView setNeedsDisplay];
                                       }];
 
-        [self.programTitleOnDemand setText:program.title];
+        [self.programTitleOnDemand setText:[program.title uppercaseString]];
     }
 
     if (episode != nil) {
@@ -489,7 +489,6 @@
 - (void)menuItemSelected:(NSIndexPath *)indexPath {
     switch (indexPath.row) {
         case 0:{
-            NSLog(@"KPCC Live Selected.");
             [[AudioManager shared] stopAllAudio];
             [self updateDataForUI];
             [self setLiveStreamingUI:YES];
@@ -509,7 +508,7 @@
         }
 
         default: {
-
+            [self decloakForMenu:YES];
             break;
         }
     }
