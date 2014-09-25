@@ -225,38 +225,17 @@
             } else {
                 [self.liveDescriptionLabel setText:@"ON NOW"];
                 [self.liveRewindAltButton setAlpha:0.0];
-                [self.backToLiveButton setAlpha:0.0];
             }
 
         } completion:^(BOOL finished) {
-            
-            POPSpringAnimation *scaleAnimation = [POPSpringAnimation animationWithPropertyNamed:kPOPLayerScaleXY];
-
             if ([[AudioManager shared] isStreamPlaying] || [[AudioManager shared] isStreamBuffering]) {
                 [self.playPauseButton setImage:[UIImage imageNamed:@"btn_pause"] forState:UIControlStateNormal];
-
-                scaleAnimation.fromValue  = [NSValue valueWithCGSize:CGSizeMake(1.0f, 1.0f)];
-                scaleAnimation.toValue  = [NSValue valueWithCGSize:CGSizeMake(1.2f, 1.2f)];
             } else {
                 [self.playPauseButton setImage:[UIImage imageNamed:@"btn_play_large"] forState:UIControlStateNormal];
-
-                scaleAnimation.fromValue  = [NSValue valueWithCGSize:CGSizeMake(1.2f, 1.2f)];
-                scaleAnimation.toValue  = [NSValue valueWithCGSize:CGSizeMake(1.0f, 1.0f)];
             }
 
-            scaleAnimation.springBounciness = 2.0f;
-            scaleAnimation.springSpeed = 2.0f;
-
-            // Used to ensure animation only gets started once.
-            // This method stems from onRateChange: firing, which sometimes gets called rapidly.
-            [scaleAnimation setCompletionBlock:^(POPAnimation *animation, BOOL done) {
-                busyZoomAnim = NO;
-            }];
-
-            /*if (!_seekRequested && fromRateChange && !busyZoomAnim) {
-                busyZoomAnim = YES;
-                [self.programImageView.layer pop_addAnimation:scaleAnimation forKey:@"scaleAnimation"];
-            }*/
+            // Leave this out for now.
+            // [self scaleBackgroundImage];
 
             [UIView animateWithDuration:0.1 animations:^{
                 [self.playPauseButton setAlpha:1.0];
@@ -270,7 +249,6 @@
         } else {
             [self.liveDescriptionLabel setText:@"ON NOW"];
             [self.liveRewindAltButton setAlpha:0.0];
-            [self.backToLiveButton setAlpha:0.0];
         }
 
         if ([[AudioManager shared] isStreamPlaying] || [[AudioManager shared] isStreamBuffering]) {
@@ -286,7 +264,6 @@
     if ([[AudioManager shared] isStreamPlaying] || [[AudioManager shared] isStreamBuffering]) {
         [self.horizDividerLine setAlpha:0.4];
         [self.liveRewindAltButton setAlpha:1.0];
-        [self.backToLiveButton setAlpha:1.0];
         
         /*if (!_seekRequested) {
             POPBasicAnimation *playButtonAnimation = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerPositionY];
@@ -337,10 +314,36 @@
     }
 }
 
-- (void)setLiveStreamingUI:(BOOL)animated {
-    if (setForLiveStreamUI) {
-        //return;
+/**
+ * Dev note: Not being called for now.. zooms in background program image slightly
+ */
+- (void)scaleBackgroundImage {
+    POPSpringAnimation *scaleAnimation = [POPSpringAnimation animationWithPropertyNamed:kPOPLayerScaleXY];
+
+    if ([[AudioManager shared] isStreamPlaying] || [[AudioManager shared] isStreamBuffering]) {
+        scaleAnimation.fromValue  = [NSValue valueWithCGSize:CGSizeMake(1.0f, 1.0f)];
+        scaleAnimation.toValue  = [NSValue valueWithCGSize:CGSizeMake(1.2f, 1.2f)];
+    } else {
+        scaleAnimation.fromValue  = [NSValue valueWithCGSize:CGSizeMake(1.2f, 1.2f)];
+        scaleAnimation.toValue  = [NSValue valueWithCGSize:CGSizeMake(1.0f, 1.0f)];
     }
+
+    scaleAnimation.springBounciness = 2.0f;
+    scaleAnimation.springSpeed = 2.0f;
+
+    // Used to ensure animation only gets started once.
+    // This method stems from onRateChange: firing, which sometimes gets called rapidly.
+    [scaleAnimation setCompletionBlock:^(POPAnimation *animation, BOOL done) {
+        busyZoomAnim = NO;
+    }];
+
+    if (!_seekRequested && !busyZoomAnim) {
+        busyZoomAnim = YES;
+        [self.programImageView.layer pop_addAnimation:scaleAnimation forKey:@"scaleAnimation"];
+    }
+}
+
+- (void)setLiveStreamingUI:(BOOL)animated {
 
     if ([self.liveStreamView isHidden]) {
         [self.liveStreamView setHidden:NO];
@@ -359,9 +362,6 @@
 }
 
 - (void)setOnDemandUI:(BOOL)animated withProgram:(Program *)program andEpisode:(NSObject *)episode {
-    if (setForOnDemandUI) {
-        //return;
-    }
 
     // Update UILabels, content, etc.
     [self setDataForOnDemand:program andEpisode:episode];
@@ -374,7 +374,7 @@
         [self.liveStreamView setHidden:YES];
         setForLiveStreamUI = NO;
     }
-    
+
     setForOnDemandUI = YES;
 }
 
@@ -410,18 +410,6 @@
     // TODO: Set handler for end of episode playback. Fallback/start livestream?
 }
 
-
-/*- (void)menuPressed {
-    if (self.menuOpen) {
-        //[pulldownMenu closeDropDown:YES];
-        [self decloakForMenu:YES];
-    } else {
-        [self cloakForMenu:YES];
-        //[pulldownMenu openDropDown:YES];
-    }
-    NSLog(@"pullDownmenu? %@", pulldownMenu);
-    self.menuOpen = !self.menuOpen;
-}*/
 
 - (void)cloakForMenu:(BOOL)animated {
     self.navigationItem.title = @"Menu";
@@ -610,7 +598,10 @@
         }
 
         [self updateUIWithProgram:programObj];
-        [self updateNowPlayingInfoWithProgram:programObj];
+
+        if (!setForOnDemandUI) {
+            [self updateNowPlayingInfoWithProgram:programObj];
+        }
 
         self.currentProgram = programObj;
 
