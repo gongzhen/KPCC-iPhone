@@ -42,6 +42,11 @@
     self.navigationItem.title = @"Programs";
 }
 
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    [self.blurView setNeedsDisplay];
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
 
@@ -67,7 +72,15 @@
         }
     }
 
-    self.programsList = filteredPrograms;
+    // Sort Programs alphabetically.
+    NSArray *sortedPrograms;
+    sortedPrograms = [filteredPrograms sortedArrayUsingComparator:^NSComparisonResult(id a, id b) {
+        NSString *first = [(Program *)a title];
+        NSString *second = [(Program *)b title];
+        return [first compare:second];
+    }];
+
+    self.programsList = sortedPrograms;
 
     UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 14)];
     self.programsTable.tableHeaderView = headerView;
