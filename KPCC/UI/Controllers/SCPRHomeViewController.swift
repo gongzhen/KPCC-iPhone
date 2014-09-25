@@ -67,7 +67,7 @@ class SCPRHomeViewController: UIViewController, AudioManagerDelegate, ContentPro
         return true
     }
     
-    override func remoteControlReceivedWithEvent(event: UIEvent!)  {
+    override func remoteControlReceivedWithEvent(event: UIEvent)  {
         // Handle remote audio control events.
         if (event.type == UIEventType.RemoteControl) {
             if (event.subtype == UIEventSubtype.RemoteControlPlay ||
