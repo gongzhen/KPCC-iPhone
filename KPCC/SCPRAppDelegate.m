@@ -80,7 +80,7 @@
 # pragma mark - Stylesheet
 
 - (void)applyStylesheet {
-    [[UINavigationBar appearance] setBarTintColor:[UIColor colorWithRed:248.0f/255.0f green:126.0f/255.0f blue:33.0f/255.0f alpha:1.0f]];
+    [[UINavigationBar appearance] setBarTintColor:[UIColor colorWithRed:255.0f/255.0f green:126.0f/255.0f blue:20.0f/255.0f alpha:1.0f]];
     [[UINavigationBar appearance] setBarStyle:UIBarStyleBlackTranslucent];
 
     [[UINavigationBar appearance] setTitleTextAttributes:
