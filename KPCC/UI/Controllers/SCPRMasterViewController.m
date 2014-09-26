@@ -15,15 +15,20 @@
 @interface SCPRMasterViewController () <AudioManagerDelegate, ContentProcessor, MenuButtonDelegate>
 @property BOOL menuOpen;
 @property BOOL setPlaying;
+@property BOOL seekRequested;
 @property BOOL busyZoomAnim;
 
 @property BOOL setForLiveStreamUI;
 @property BOOL setForOnDemandUI;
+
+@property IBOutlet NSLayoutConstraint *playerControlsTopYConstraint;
+@property IBOutlet NSLayoutConstraint *playerControlsBottomYConstraint;
 @end
 
 @implementation SCPRMasterViewController
 
 @synthesize pulldownMenu,
+            seekRequested,
             busyZoomAnim,
             setForLiveStreamUI,
             setForOnDemandUI;
@@ -143,8 +148,8 @@
 }
 
 - (IBAction)playOrPauseTapped:(id)sender {
-    if (_seekRequested) {
-        _seekRequested = NO;
+    if (seekRequested) {
+        seekRequested = NO;
     }
 
     if (![[AudioManager shared] isStreamPlaying]) {
@@ -164,13 +169,13 @@
 
 - (IBAction)rewindToStartTapped:(id)sender {
     if (_currentProgram) {
-        _seekRequested = YES;
+        seekRequested = YES;
         [[AudioManager shared] seekToDate:_currentProgram.starts_at];
     }
 }
 
 - (IBAction)backToLiveTapped:(id)sender {
-    _seekRequested = YES;
+    seekRequested = YES;
     [[AudioManager shared] forwardSeekLive];
 }
 
@@ -183,12 +188,12 @@
 }
 
 - (void)rewindFifteen {
-    _seekRequested = YES;
+    seekRequested = YES;
     [[AudioManager shared] backwardSeekFifteenSeconds];
 }
 
 - (void)fastForwardFifteen {
-    _seekRequested = YES;
+    seekRequested = YES;
     [[AudioManager shared] forwardSeekFifteenSeconds];
 }
 
@@ -202,15 +207,7 @@
     [self setUIContents:animated fromRateChange:fromRateChange];
 
     // Set positioning of UI elements.
-    /*if (animated) {
-        [UIView animateWithDuration:0.25 animations:^{
-            [self setUIPositioning];
-        }];
-    } else {
-        [self setUIPositioning];
-    }*/
     [self setUIPositioning];
-
 }
 
 - (void)setUIContents:(BOOL)animated fromRateChange:(BOOL)fromRateChange {
@@ -225,6 +222,7 @@
             } else {
                 [self.liveDescriptionLabel setText:@"ON NOW"];
                 [self.liveRewindAltButton setAlpha:0.0];
+                [self.backToLiveButton setAlpha:0.0];
             }
 
         } completion:^(BOOL finished) {
@@ -249,6 +247,7 @@
         } else {
             [self.liveDescriptionLabel setText:@"ON NOW"];
             [self.liveRewindAltButton setAlpha:0.0];
+            [self.backToLiveButton setAlpha:0.0];
         }
 
         if ([[AudioManager shared] isStreamPlaying] || [[AudioManager shared] isStreamBuffering]) {
@@ -264,69 +263,36 @@
     if ([[AudioManager shared] isStreamPlaying] || [[AudioManager shared] isStreamBuffering]) {
         [self.horizDividerLine setAlpha:0.4];
         [self.liveRewindAltButton setAlpha:1.0];
+        [self.backToLiveButton setAlpha:1.0];
 
-        if (!_seekRequested) {
-            CGPoint location = CGPointMake(CGRectGetMidX(self.view.frame) , CGRectGetMaxY(self.view.frame) - 80);
-            POPBasicAnimation *anim = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerPosition];
-            anim.toValue = [NSValue valueWithCGPoint:location];
-            anim.duration = .3;
-            [self.playerControlsView.layer pop_addAnimation:anim forKey:@"animatePlayControlsDown"];
+        if (!seekRequested) {
+            POPBasicAnimation *bottomAnim = [POPBasicAnimation animationWithPropertyNamed:kPOPLayoutConstraintConstant];
+            bottomAnim.toValue = @(45);
+            bottomAnim.duration = .3;
+            [self.playerControlsBottomYConstraint pop_addAnimation:bottomAnim forKey:@"animatePlayControlsDown"];
+
+            POPBasicAnimation *topAnim = [POPBasicAnimation animationWithPropertyNamed:kPOPLayoutConstraintConstant];
+            topAnim.toValue = @(CGRectGetMaxY(self.view.frame) - 240);
+            topAnim.duration = .3;
+            [self.playerControlsTopYConstraint pop_addAnimation:topAnim forKey:@"animateTopPlayControlsDown"];
         }
-
-        /*if (!_seekRequested) {
-            POPBasicAnimation *playButtonAnimation = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerPositionY];
-            playButtonAnimation.fromValue = @(self.playPauseButton.frame.origin.y);
-            playButtonAnimation.toValue = @(self.playPauseButton.frame.origin.y + 50);
-            [self.playPauseButton.layer pop_addAnimation:playButtonAnimation forKey:@"playButtonAnimation"];
-            
-        }*/
-
-        /*if (!_seekRequested) {
-            [self.playPauseButton setFrame:CGRectMake(_playPauseButton.frame.origin.x,
-                                                      385.0,
-                                                      _playPauseButton.frame.size.width,
-                                                      _playPauseButton.frame.size.height)];
-
-            [self.liveDescriptionLabel setFrame:CGRectMake(_liveDescriptionLabel.frame.origin.x,
-                                                           286.0,
-                                                           _liveDescriptionLabel.frame.size.width,
-                                                           _liveDescriptionLabel.frame.size.height)];
-
-            [self.programTitleLabel setFrame:CGRectMake(_programTitleLabel.frame.origin.x,
-                                                        303.0,
-                                                        _programTitleLabel.frame.size.width,
-                                                        _programTitleLabel.frame.size.height)];
-        }*/
     } else {
         if (!_setPlaying) {
             [self.rewindToShowStartButton setAlpha:1.0];
             [self.horizDividerLine setAlpha:0.0];
         }
 
-        if (!_seekRequested) {
-            CGPoint location = CGPointMake(CGRectGetMidX(self.view.frame) , CGRectGetMidY(self.view.frame));
-            POPBasicAnimation *anim = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerPosition];
-            anim.toValue = [NSValue valueWithCGPoint:location];
-            anim.duration = .3;
-            [self.playerControlsView.layer pop_addAnimation:anim forKey:@"animatePlayControlsUp"];
-        }
+        if (!seekRequested) {
+            POPBasicAnimation *bottomAnim = [POPBasicAnimation animationWithPropertyNamed:kPOPLayoutConstraintConstant];
+            bottomAnim.toValue = @(220);
+            bottomAnim.duration = .3;
+            [self.playerControlsBottomYConstraint pop_addAnimation:bottomAnim forKey:@"animateBottomPlayControlsUp"];
 
-        /*if (!_seekRequested) {
-            [self.playPauseButton setFrame:CGRectMake(_playPauseButton.frame.origin.x,
-                                                      225.0,
-                                                      _playPauseButton.frame.size.width,
-                                                      _playPauseButton.frame.size.height)];
-            
-            [self.liveDescriptionLabel setFrame:CGRectMake(_liveDescriptionLabel.frame.origin.x,
-                                                           95.0,
-                                                           _liveDescriptionLabel.frame.size.width,
-                                                           _liveDescriptionLabel.frame.size.height)];
-            
-            [self.programTitleLabel setFrame:CGRectMake(_programTitleLabel.frame.origin.x,
-                                                        113.0,
-                                                        _programTitleLabel.frame.size.width,
-                                                        _programTitleLabel.frame.size.height)];
-        }*/
+            POPBasicAnimation *topAnim = [POPBasicAnimation animationWithPropertyNamed:kPOPLayoutConstraintConstant];
+            topAnim.toValue = @(146);
+            topAnim.duration = .3;
+            [self.playerControlsTopYConstraint pop_addAnimation:topAnim forKey:@"animateTopPlayControlsUp"];
+        }
     }
 }
 
@@ -353,7 +319,7 @@
         busyZoomAnim = NO;
     }];
 
-    if (!_seekRequested && !busyZoomAnim) {
+    if (!seekRequested && !busyZoomAnim) {
         busyZoomAnim = YES;
         [self.programImageView.layer pop_addAnimation:scaleAnimation forKey:@"scaleAnimation"];
     }

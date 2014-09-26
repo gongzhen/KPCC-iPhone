@@ -49,7 +49,6 @@
 @property (nonatomic,strong) Program *currentProgram;
 @property (nonatomic,strong) Program *onDemandProgram;
 @property (nonatomic,strong) SCPRPullDownMenu *pulldownMenu;
-@property Boolean seekRequested;
 
 
 // Instance methods.
