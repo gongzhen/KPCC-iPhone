@@ -134,7 +134,7 @@
     [[UIApplication sharedApplication] beginReceivingRemoteControlEvents];
     [self becomeFirstResponder];
 
-    //[self updateControlsAndUI:YES fromRateChange:NO];
+    //[self updateControlsAndUI:YES];
 }
 
 -(void)skipBackwardEvent: (MPSkipIntervalCommandEvent *)skipEvent {
@@ -201,16 +201,16 @@
     [[NetworkManager shared] fetchProgramInformationFor:[NSDate date] display:self];
 }
 
-- (void)updateControlsAndUI:(BOOL)animated fromRateChange:(BOOL)fromRateChange {
+- (void)updateControlsAndUI:(BOOL)animated {
 
     // First set contents of background, live-status labels, and play button.
-    [self setUIContents:animated fromRateChange:fromRateChange];
+    [self setUIContents:animated];
 
     // Set positioning of UI elements.
     [self setUIPositioning];
 }
 
-- (void)setUIContents:(BOOL)animated fromRateChange:(BOOL)fromRateChange {
+- (void)setUIContents:(BOOL)animated {
 
     if (animated) {
         [UIView animateWithDuration:0.1 animations:^{
@@ -261,9 +261,15 @@
 - (void)setUIPositioning {
 
     if ([[AudioManager shared] isStreamPlaying] || [[AudioManager shared] isStreamBuffering]) {
-        [self.horizDividerLine setAlpha:0.4];
-        [self.liveRewindAltButton setAlpha:1.0];
-        [self.backToLiveButton setAlpha:1.0];
+
+        POPBasicAnimation *dividerFadeAnim = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
+        dividerFadeAnim.toValue = @(0.4);
+        [self.horizDividerLine.layer pop_addAnimation:dividerFadeAnim forKey:@"dividerFadeInAnim"];
+
+        POPBasicAnimation *genericFadeInAnim = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
+        genericFadeInAnim.toValue = @(1);
+        [self.liveRewindAltButton.layer pop_addAnimation:genericFadeInAnim forKey:@"liveRewindFadeInAnim"];
+        [self.backToLiveButton.layer pop_addAnimation:genericFadeInAnim forKey:@"backToLiveFadeInAnim"];
 
         if (!seekRequested) {
             POPBasicAnimation *bottomAnim = [POPBasicAnimation animationWithPropertyNamed:kPOPLayoutConstraintConstant];
@@ -278,8 +284,13 @@
         }
     } else {
         if (!_setPlaying) {
-            [self.rewindToShowStartButton setAlpha:1.0];
-            [self.horizDividerLine setAlpha:0.0];
+            POPBasicAnimation *genericFadeInAnim = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
+            genericFadeInAnim.toValue = @(1);
+            [self.rewindToShowStartButton.layer pop_addAnimation:genericFadeInAnim forKey:@"rewindToStartFadeInAnim"];
+
+            POPBasicAnimation *dividerFadeAnim = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
+            dividerFadeAnim.toValue = @(0);
+            [self.horizDividerLine.layer pop_addAnimation:dividerFadeAnim forKey:@"dividerFadeOutAnim"];
         }
 
         if (!seekRequested) {
@@ -535,7 +546,7 @@
 #pragma mark - AudioManagerDelegate
 
 - (void)onRateChange {
-    [self updateControlsAndUI:YES fromRateChange:YES];
+    [self updateControlsAndUI:YES];
 }
 
 - (void)onTimeChange {
