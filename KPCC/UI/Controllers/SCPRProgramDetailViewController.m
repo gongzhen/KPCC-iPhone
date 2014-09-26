@@ -62,6 +62,11 @@
     self.episodesTable.tableHeaderView = headerView;
 }
 
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    [self.blurView setNeedsDisplay];
+}
+
 
 #pragma mark - Table view data source
 
