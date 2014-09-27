@@ -20,6 +20,7 @@
 + (NSString*)prettyStringFromRFCDate:(NSDate*)date;
 
 + (NSString*)episodeDateStringFromRFCDate:(NSDate *)date;
++ (NSString*)elapsedTimeStringWithPosition:(double)position andDuration:(double)duration;
 
 + (BOOL)pureNil:(id)object;
 + (BOOL)isRetina;

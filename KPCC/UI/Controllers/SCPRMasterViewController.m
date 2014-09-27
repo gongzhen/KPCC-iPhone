@@ -271,6 +271,10 @@
         [self.liveRewindAltButton.layer pop_addAnimation:genericFadeInAnim forKey:@"liveRewindFadeInAnim"];
         [self.backToLiveButton.layer pop_addAnimation:genericFadeInAnim forKey:@"backToLiveFadeInAnim"];
 
+        POPBasicAnimation *genericFadeOutAnim = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
+        genericFadeOutAnim.toValue = @(0);
+        [self.rewindToShowStartButton.layer pop_addAnimation:genericFadeOutAnim forKey:@"rewindToStartFadeInAnim"];
+
         if (!seekRequested) {
             POPBasicAnimation *bottomAnim = [POPBasicAnimation animationWithPropertyNamed:kPOPLayoutConstraintConstant];
             bottomAnim.toValue = @(45);
@@ -423,7 +427,7 @@
     darkBgFadeAnimation.duration = 0.3;
 
     POPBasicAnimation *controlsFadeAnimation = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
-    controlsFadeAnimation.toValue = @0;
+    controlsFadeAnimation.toValue = @(0);
     controlsFadeAnimation.duration = 0.3;
 
     [self.blurView.layer pop_addAnimation:blurFadeAnimation forKey:@"blurViewFadeAnimation"];
@@ -431,7 +435,13 @@
     [self.playerControlsView.layer pop_addAnimation:controlsFadeAnimation forKey:@"controlsViewFadeAnimation"];
     [self.onDemandPlayerView.layer pop_addAnimation:controlsFadeAnimation forKey:@"onDemandViewFadeAnimation"];
     [self.liveStreamView.layer pop_addAnimation:controlsFadeAnimation forKey:@"liveStreamViewFadeAnimation"];
-    self.menuOpen = NO;
+
+    POPBasicAnimation *dividerFadeAnim = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
+    dividerFadeAnim.toValue = @0;
+    dividerFadeAnim.duration = 0.3;
+    [self.horizDividerLine.layer pop_addAnimation:dividerFadeAnim forKey:@"horizDividerOutFadeAnimation"];
+
+    self.menuOpen = YES;
 }
 
 - (void)decloakForMenu:(BOOL)animated {
@@ -461,7 +471,15 @@
     [self.playerControlsView.layer pop_addAnimation:controlsFadeAnimation forKey:@"controlsViewFadeAnimation"];
     [self.onDemandPlayerView.layer pop_addAnimation:controlsFadeAnimation forKey:@"onDemandViewFadeAnimation"];
     [self.liveStreamView.layer pop_addAnimation:controlsFadeAnimation forKey:@"liveStreamViewFadeAnimation"];
-    self.menuOpen = YES;
+
+    if (_setPlaying) {
+        POPBasicAnimation *dividerFadeAnim = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
+        dividerFadeAnim.toValue = @0.4;
+        dividerFadeAnim.duration = 0.3;
+        [self.horizDividerLine.layer pop_addAnimation:dividerFadeAnim forKey:@"horizDividerFadeOutAnimation"];
+    }
+
+    self.menuOpen = NO;
 }
 
 
@@ -556,10 +574,17 @@
 
         [self.liveDescriptionLabel setText:[NSString stringWithFormat:@"%li MINUTES BEHIND LIVE", (long)mins]];
         [self.backToLiveButton setHidden:NO];
-
     } else {
         [self.liveDescriptionLabel setText:@"LIVE"];
         [self.backToLiveButton setHidden:YES];
+    }
+
+    if (setForOnDemandUI) {
+        NSLog(@"elapsed: %@",[Utils elapsedTimeStringWithPosition:CMTimeGetSeconds([[[AudioManager shared] playerItem] currentTime])
+                                                      andDuration:CMTimeGetSeconds([[[[AudioManager shared] playerItem] asset] duration])]);
+
+        // [self.timeLabelOnDemand setText:[Utils elapsedTimeStringWithPosition:CMTimeGetSeconds([[[AudioManager shared] playerItem] currentTime])
+        //                                                         andDuration:CMTimeGetSeconds([[[[AudioManager shared] playerItem] asset] duration])]];
     }
 }
 

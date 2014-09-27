@@ -53,6 +53,35 @@
     return [dateFormatter stringFromDate:date];
 }
 
++ (NSString*)elapsedTimeStringWithPosition:(double)position andDuration:(double)duration {
+    int positionSeconds = position,
+        positionMinutes = position/60,
+        positionHours   = position/3600;
+
+    int durationSeconds = duration,
+        durationMintues = duration/60,
+        durationHours   = duration/3600;
+
+    positionSeconds = positionSeconds - positionMinutes*60;
+    positionMinutes = positionMinutes - positionHours*60;
+
+    durationSeconds = durationSeconds - durationMintues*60;
+    durationMintues = durationMintues - durationHours*60;
+
+    NSString *positionHr, *positionMin, *positionSec, *durationHr, *durationMin , *durationSec;
+
+    positionHr  = positionHours > 9 ? [NSString stringWithFormat:@"%d",positionHours] : [NSString stringWithFormat:@"0%d",positionHours];
+    positionMin = positionMinutes > 9 ? [NSString stringWithFormat:@"%d",positionMinutes] : [NSString stringWithFormat:@"0%d",positionMinutes];
+    positionSec = positionSeconds > 9 ? [NSString stringWithFormat:@"%d",positionSeconds] : [NSString stringWithFormat:@"0%d",positionSeconds];
+
+    durationHr  = durationHours > 9 ? [NSString stringWithFormat:@"%d",durationHours] : [NSString stringWithFormat:@"0%d",durationHours];
+    durationMin = durationMintues > 9 ? [NSString stringWithFormat:@"%d",durationMintues] : [NSString stringWithFormat:@"0%d",durationMintues];
+    durationSec = durationSeconds > 9 ? [NSString stringWithFormat:@"%d",durationSeconds] : [NSString stringWithFormat:@"0%d",durationSeconds];
+
+    NSString *ret = [NSString stringWithFormat:@"%@:%@:%@/%@:%@:%@", positionHr,positionMin,positionSec,durationHr,durationMin,durationSec];
+    return ret;
+}
+
 + (BOOL)pureNil:(id)object {
     if (!object) {
         return YES;
