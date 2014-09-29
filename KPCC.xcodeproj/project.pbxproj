@@ -43,8 +43,6 @@
 		52D0FC3719D20D29009AECEE /* program_avatar_the-frame.png in Resources */ = {isa = PBXBuildFile; fileRef = 52D0FC2819D20D29009AECEE /* program_avatar_the-frame.png */; };
 		52D0FC3819D20D29009AECEE /* program_avatar_the-frame@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 52D0FC2919D20D29009AECEE /* program_avatar_the-frame@2x.png */; };
 		52D0FC3919D20D29009AECEE /* program_avatar_the-frame@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 52D0FC2919D20D29009AECEE /* program_avatar_the-frame@2x.png */; };
-		52D91F2F19A2537400B8A02F /* program_image_urls.json in Resources */ = {isa = PBXBuildFile; fileRef = 52D91F2E19A2537400B8A02F /* program_image_urls.json */; };
-		52D91F3019A2537400B8A02F /* program_image_urls.json in Resources */ = {isa = PBXBuildFile; fileRef = 52D91F2E19A2537400B8A02F /* program_image_urls.json */; };
 		52D9227819D366C90018AD4B /* content-share.png in Resources */ = {isa = PBXBuildFile; fileRef = 52D9227619D366C90018AD4B /* content-share.png */; };
 		52D9227919D366C90018AD4B /* content-share.png in Resources */ = {isa = PBXBuildFile; fileRef = 52D9227619D366C90018AD4B /* content-share.png */; };
 		52D9227A19D366C90018AD4B /* content-share@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 52D9227719D366C90018AD4B /* content-share@2x.png */; };
@@ -395,7 +393,6 @@
 		52D0FC2719D20D29009AECEE /* program_avatar_q-with-jian-ghomeshi@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "program_avatar_q-with-jian-ghomeshi@2x.png"; sourceTree = "<group>"; };
 		52D0FC2819D20D29009AECEE /* program_avatar_the-frame.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "program_avatar_the-frame.png"; sourceTree = "<group>"; };
 		52D0FC2919D20D29009AECEE /* program_avatar_the-frame@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "program_avatar_the-frame@2x.png"; sourceTree = "<group>"; };
-		52D91F2E19A2537400B8A02F /* program_image_urls.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = program_image_urls.json; sourceTree = "<group>"; };
 		52D9227619D366C90018AD4B /* content-share.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "content-share.png"; sourceTree = "<group>"; };
 		52D9227719D366C90018AD4B /* content-share@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "content-share@2x.png"; sourceTree = "<group>"; };
 		52E68B7B19B8EEA60028F8AE /* PulldownMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PulldownMenu.h; sourceTree = "<group>"; };
@@ -638,7 +635,6 @@
 		52D91F2D19A2535A00B8A02F /* json */ = {
 			isa = PBXGroup;
 			children = (
-				52D91F2E19A2537400B8A02F /* program_image_urls.json */,
 			);
 			path = json;
 			sourceTree = "<group>";
@@ -1229,7 +1225,6 @@
 				52CC6D6A19D112F400C67322 /* SCPRProgramsListViewController.xib in Resources */,
 				52EFF83919C368C00059A0E3 /* program_avatar_prairie-home-companion@2x.png in Resources */,
 				52EFF78819C3688D0059A0E3 /* menu-antenna.png in Resources */,
-				52D91F3019A2537400B8A02F /* program_image_urls.json in Resources */,
 				52D9227919D366C90018AD4B /* content-share.png in Resources */,
 				52D0FC3719D20D29009AECEE /* program_avatar_the-frame.png in Resources */,
 				7685BD61194BBCB90075BB16 /* playButton.png in Resources */,
@@ -1377,7 +1372,6 @@
 				52EFF7E819C368C00059A0E3 /* program_avatar_airtalk@2x.png in Resources */,
 				52EFF84A19C368C00059A0E3 /* program_avatar_take-two.png in Resources */,
 				52EFF83019C368C00059A0E3 /* program_avatar_on-being@2x.png in Resources */,
-				52D91F2F19A2537400B8A02F /* program_image_urls.json in Resources */,
 				768C0685199590CC00F829EB /* FreigSanProSemIt.otf in Resources */,
 				52EFF85019C368C00059A0E3 /* program_avatar_tavis-smiley-show@2x.png in Resources */,
 				52EFF85C19C368C00059A0E3 /* program_avatar_this-american-life@2x.png in Resources */,
@@ -1623,6 +1617,7 @@
 					"$(PROJECT_DIR)/KPCC/ThirdParty/Flurry",
 				);
 				PRODUCT_NAME = "KPCC Testflight";
+				PROVISIONING_PROFILE = "083cb13f-be21-44a0-8580-b657cea3f701";
 				SWIFT_OBJC_BRIDGING_HEADER = "KPCC/UI/Controllers/TestFlight-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				TARGETED_DEVICE_FAMILY = 1;
@@ -1650,6 +1645,7 @@
 					"$(PROJECT_DIR)/KPCC/ThirdParty/Flurry",
 				);
 				PRODUCT_NAME = "KPCC Testflight";
+				PROVISIONING_PROFILE = "083cb13f-be21-44a0-8580-b657cea3f701";
 				SWIFT_OBJC_BRIDGING_HEADER = "KPCC/UI/Controllers/TestFlight-Bridging-Header.h";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;

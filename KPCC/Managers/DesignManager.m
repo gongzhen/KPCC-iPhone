@@ -12,6 +12,8 @@
 #import "UIImageView+AFNetworking.h"
 #import <POP/POP.h>
 
+#define kMediaServerPath @"http://media.scpr.org/iphone/program-images/"
+
 static DesignManager *singleton = nil;
 
 @implementation DesignManager
@@ -26,41 +28,30 @@ static DesignManager *singleton = nil;
 }
 
 /**
- * User by SCPRMasterViewController to set program background image, given a program slug and image view.
+ * Async request to fetch image and set in image view with given program slug. Via AFNetworking.
  *
  */
 - (void)loadProgramImage:(NSString *)slug andImageView:(UIImageView *)imageView completion:(void (^)(BOOL status))completion {
-    
-    // Load JSON with program image urls.
-    NSError *fileError = nil;
-    NSString *filePath = [[NSBundle mainBundle] pathForResource:[@"program_image_urls" stringByDeletingPathExtension] ofType:@"json"];
-    NSData* data = [NSData dataWithContentsOfFile:filePath];
-    
-    NSDictionary *dict = (NSDictionary*)[NSJSONSerialization JSONObjectWithData:data
-                                                                        options:kNilOptions
-                                                                          error:&fileError];
-    
-    
-    // TODO: Account for @3x.
-    NSString *slugWithScale;
-    if ([Utils isRetina]) {
-        slugWithScale = [NSString stringWithFormat:@"%@-2x", slug];
-    } else {
-        slugWithScale = slug;
-    }
-    
-    // Async request to fetch image and set in background tile view. Via AFNetworking.
-    if ([dict objectForKey:slugWithScale]) {
-        NSURL *imageUrl = [NSURL URLWithString:[dict objectForKey:slugWithScale]];
+
+    if (![Utils pureNil:slug]) {
+
+        // TODO: Account for @3x.
+        NSString *slugWithScale;
+        if ([Utils isRetina]) {
+            slugWithScale = [NSString stringWithFormat:@"%@@2x", slug];
+        } else {
+            slugWithScale = slug;
+        }
+
+        NSURL *imageUrl = [NSURL URLWithString:[NSString stringWithFormat:@"%@program_tile_%@.jpg", kMediaServerPath, slugWithScale]];
         NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:imageUrl];
-        
-        [UIView animateWithDuration:0.3 animations:^{
+
+        [UIView animateWithDuration:0.15 animations:^{
             [imageView setAlpha:0.0];
         }];
-        
+
         UIImageView *iv = imageView;
         [iv setImageWithURLRequest:request placeholderImage:nil success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {
-            NSLog(@"Loaded successfully: %ld", (long)[response statusCode]);
             imageView.image = image;
             [UIView animateWithDuration:0.15 animations:^{
                 [imageView setAlpha:1.0];
@@ -68,7 +59,6 @@ static DesignManager *singleton = nil;
 
             completion(true);
         } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error) {
-            NSLog(@"Loading FAILED: %ld", (long)[response statusCode]);
             [imageView setImage:[UIImage imageNamed:@"program_tile_generic.jpg"]];
             [UIView animateWithDuration:0.15 animations:^{
                 [imageView setAlpha:1.0];
