@@ -29,6 +29,7 @@
 
 @synthesize pulldownMenu,
             seekRequested,
+            setPlaying,
             busyZoomAnim,
             setForLiveStreamUI,
             setForOnDemandUI;
@@ -287,7 +288,7 @@
             [self.playerControlsTopYConstraint pop_addAnimation:topAnim forKey:@"animateTopPlayControlsDown"];
         }
     } else {
-        if (!_setPlaying) {
+        if (!setPlaying) {
             POPBasicAnimation *genericFadeInAnim = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
             genericFadeInAnim.toValue = @(1);
             [self.rewindToShowStartButton.layer pop_addAnimation:genericFadeInAnim forKey:@"rewindToStartFadeInAnim"];
@@ -472,7 +473,7 @@
     [self.onDemandPlayerView.layer pop_addAnimation:controlsFadeAnimation forKey:@"onDemandViewFadeAnimation"];
     [self.liveStreamView.layer pop_addAnimation:controlsFadeAnimation forKey:@"liveStreamViewFadeAnimation"];
 
-    if (_setPlaying) {
+    if (setPlaying) {
         POPBasicAnimation *dividerFadeAnim = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
         dividerFadeAnim.toValue = @0.4;
         dividerFadeAnim.duration = 0.3;
@@ -589,7 +590,12 @@
 }
 
 - (void)onSeekCompleted {
-
+    // Make sure UI gets set to "Playing" state after a seek.
+    if (!setPlaying) {
+        seekRequested = NO;
+        [self setUIPositioning];
+        setPlaying = YES;
+    }
 }
 
 

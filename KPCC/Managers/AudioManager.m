@@ -149,19 +149,47 @@ static const NSString *ItemStatusContext;
 }
 
 - (void)seekToDate:(NSDate *)date {
-    [self.audioPlayer pause];
-    [self.audioPlayer.currentItem seekToDate:date completionHandler:^(BOOL finished) {
-        [self.audioPlayer play];
 
-        if ([self.delegate respondsToSelector:@selector(onSeekCompleted)]) {
-            [self.delegate onSeekCompleted];
-        }
-    }];
+    if (!self.audioPlayer) {
+        [self buildStreamer:kHLSLiveStreamURL];
+
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+            [self.audioPlayer.currentItem seekToDate:date completionHandler:^(BOOL finished) {
+                if(self.audioPlayer.status == AVPlayerStatusReadyToPlay &&
+                   self.audioPlayer.currentItem.status == AVPlayerItemStatusReadyToPlay) {
+                    [self.audioPlayer play];
+
+                    if ([self.delegate respondsToSelector:@selector(onSeekCompleted)]) {
+                        [self.delegate onSeekCompleted];
+                    }
+                }
+            }];
+        });
+
+    } else {
+        [self.audioPlayer pause];
+
+        [self.audioPlayer.currentItem seekToDate:date completionHandler:^(BOOL finished) {
+            if(self.audioPlayer.status == AVPlayerStatusReadyToPlay &&
+               self.audioPlayer.currentItem.status == AVPlayerItemStatusReadyToPlay) {
+                [self.audioPlayer play];
+
+                if ([self.delegate respondsToSelector:@selector(onSeekCompleted)]) {
+                    [self.delegate onSeekCompleted];
+                }
+            }
+        }];
+    }
 }
 
 - (void)forwardSeekLive {
+    if (!self.audioPlayer) {
+        [self buildStreamer:kHLSLiveStreamURL];
+    } else {
+        [self.audioPlayer pause];
+    }
+
     double time = MAXFLOAT;
-    [self.audioPlayer pause];
     [self.audioPlayer seekToTime: CMTimeMakeWithSeconds(time, NSEC_PER_SEC) completionHandler:^(BOOL finished) {
         [self.audioPlayer play];
 
