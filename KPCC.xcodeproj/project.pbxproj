@@ -47,8 +47,6 @@
 		52D9227919D366C90018AD4B /* content-share.png in Resources */ = {isa = PBXBuildFile; fileRef = 52D9227619D366C90018AD4B /* content-share.png */; };
 		52D9227A19D366C90018AD4B /* content-share@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 52D9227719D366C90018AD4B /* content-share@2x.png */; };
 		52D9227B19D366C90018AD4B /* content-share@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 52D9227719D366C90018AD4B /* content-share@2x.png */; };
-		52E68B7D19B8EEA60028F8AE /* PulldownMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = 52E68B7C19B8EEA60028F8AE /* PulldownMenu.m */; };
-		52E68B7E19B8EEA60028F8AE /* PulldownMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = 52E68B7C19B8EEA60028F8AE /* PulldownMenu.m */; };
 		52E68B8219B8F2D10028F8AE /* SCPRNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 52E68B8019B8F2D10028F8AE /* SCPRNavigationController.m */; };
 		52E68B8319B8F2D10028F8AE /* SCPRNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 52E68B8019B8F2D10028F8AE /* SCPRNavigationController.m */; };
 		52E68B8419B8F2D10028F8AE /* SCPRNavigationController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 52E68B8119B8F2D10028F8AE /* SCPRNavigationController.xib */; };
@@ -395,8 +393,6 @@
 		52D0FC2919D20D29009AECEE /* program_avatar_the-frame@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "program_avatar_the-frame@2x.png"; sourceTree = "<group>"; };
 		52D9227619D366C90018AD4B /* content-share.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "content-share.png"; sourceTree = "<group>"; };
 		52D9227719D366C90018AD4B /* content-share@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "content-share@2x.png"; sourceTree = "<group>"; };
-		52E68B7B19B8EEA60028F8AE /* PulldownMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PulldownMenu.h; sourceTree = "<group>"; };
-		52E68B7C19B8EEA60028F8AE /* PulldownMenu.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PulldownMenu.m; sourceTree = "<group>"; };
 		52E68B7F19B8F2D10028F8AE /* SCPRNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCPRNavigationController.h; sourceTree = "<group>"; };
 		52E68B8019B8F2D10028F8AE /* SCPRNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SCPRNavigationController.m; sourceTree = "<group>"; };
 		52E68B8119B8F2D10028F8AE /* SCPRNavigationController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SCPRNavigationController.xib; sourceTree = "<group>"; };
@@ -637,15 +633,6 @@
 			children = (
 			);
 			path = json;
-			sourceTree = "<group>";
-		};
-		52E68B7A19B8EEA60028F8AE /* iOSPullDownMenu */ = {
-			isa = PBXGroup;
-			children = (
-				52E68B7B19B8EEA60028F8AE /* PulldownMenu.h */,
-				52E68B7C19B8EEA60028F8AE /* PulldownMenu.m */,
-			);
-			path = iOSPullDownMenu;
 			sourceTree = "<group>";
 		};
 		52EFF77A19C3688D0059A0E3 /* menu */ = {
@@ -1049,7 +1036,6 @@
 		76E75F1C18CE4682008E3197 /* ThirdParty */ = {
 			isa = PBXGroup;
 			children = (
-				52E68B7A19B8EEA60028F8AE /* iOSPullDownMenu */,
 				76349D1418D3B53D0027C3B8 /* Flurry */,
 				76349CA118D372B30027C3B8 /* TestFlight */,
 			);
@@ -1509,7 +1495,6 @@
 				52E68B8919B919300028F8AE /* SCPRMenuButton.m in Sources */,
 				768C064919958FDA00F829EB /* SCPRMasterViewController.m in Sources */,
 				7695FD16195E299000F63DE9 /* SCPRNavigationBar.m in Sources */,
-				52E68B7E19B8EEA60028F8AE /* PulldownMenu.m in Sources */,
 				760EA9971953724E009B504E /* ContentManager.m in Sources */,
 				769B907F19C1186E00E812C7 /* DesignManager.m in Sources */,
 				76349D2218D8F8A30027C3B8 /* Reachability.m in Sources */,
@@ -1547,7 +1532,6 @@
 				52E68B8819B919300028F8AE /* SCPRMenuButton.m in Sources */,
 				768C064819958FDA00F829EB /* SCPRMasterViewController.m in Sources */,
 				7695FD15195E299000F63DE9 /* SCPRNavigationBar.m in Sources */,
-				52E68B7D19B8EEA60028F8AE /* PulldownMenu.m in Sources */,
 				760EA9961953724E009B504E /* ContentManager.m in Sources */,
 				769B907E19C1186E00E812C7 /* DesignManager.m in Sources */,
 				76349D2118D8F8A30027C3B8 /* Reachability.m in Sources */,
