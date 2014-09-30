@@ -34,6 +34,17 @@
     menuButton = [SCPRMenuButton buttonWithOrigin:CGPointMake(10.f, 10.f)];
     menuButton.delegate = self;
 
+    // Add observers for pull down menu open/close to update button state.
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(handleMenuOpened:)
+                                                 name:@"pull_down_menu_opened"
+                                               object:nil];
+
+     [[NSNotificationCenter defaultCenter] addObserver:self
+                                              selector:@selector(handleMenuClosed:)
+                                                  name:@"pull_down_menu_closed"
+                                                object:nil];
+
     for (UIViewController* viewController in self.viewControllers){
         NSLog(@"adding button to vc : %@", viewController.title);
         [self addButton:viewController.navigationItem];
@@ -65,15 +76,15 @@
 - (void)navigationController:(UINavigationController *)navigationController didShowViewController:(UIViewController *)viewController animated:(BOOL)animate {
     // Enable the gesture again once the new controller is shown
     self.interactivePopGestureRecognizer.enabled = ([self respondsToSelector:@selector(interactivePopGestureRecognizer)] && [self.viewControllers count] > 1);
-
-    if ([self.viewControllers count] == 1) {
-        [menuButton animateToMenu];
-    }
 }
 
 - (void)navigationController:(UINavigationController *)navigationController willShowViewController:(UIViewController *)viewController animated:(BOOL)animated {
     if (viewController == [[Utils del] masterViewController]) {
-        //[menuButton animateToMenu];
+        if ([[[Utils del] masterViewController] menuOpen]) {
+            [menuButton animateToClose];
+        } else {
+            [menuButton animateToMenu];
+        }
     }
 }
 
@@ -82,20 +93,35 @@
 
 - (void)backPressed {
     [self popViewControllerAnimated:YES];
-
-    if ([self.viewControllers count] == 1) {
-        [menuButton animateToMenu];
-    }
 }
 
 - (void)menuPressed {
-    if (self.menuOpen) {
+    if ([[[Utils del] masterViewController] menuOpen]) {
         [[[Utils del] masterViewController] decloakForMenu:YES];
+        [menuButton animateToMenu];
     } else {
         [[[Utils del] masterViewController] cloakForMenu:YES];
+        [menuButton animateToClose];
     }
-    self.menuOpen = !self.menuOpen;
 }
+
+
+# pragma mark - NSNotification
+
+- (void)handleMenuOpened:(NSNotification *)notification {
+
+}
+
+- (void)handleMenuClosed:(NSNotification *)notification {
+    // Handle when we close menu programatically, and update
+    // menu button to proper state.
+    if (![menuButton showBackArrow]) {
+        if (![menuButton showMenu]) {
+            [menuButton animateToMenu];
+        }
+    }
+}
+
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];

@@ -49,6 +49,7 @@
 @property (nonatomic,strong) Program *currentProgram;
 @property (nonatomic,strong) Program *onDemandProgram;
 @property (nonatomic,strong) SCPRPullDownMenu *pulldownMenu;
+@property (nonatomic) BOOL menuOpen;
 
 
 // Instance methods.

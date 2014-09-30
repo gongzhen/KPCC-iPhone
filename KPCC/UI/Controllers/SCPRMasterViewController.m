@@ -13,7 +13,7 @@
 #import "UIImageView+AFNetworking.h"
 
 @interface SCPRMasterViewController () <AudioManagerDelegate, ContentProcessor, MenuButtonDelegate>
-@property BOOL menuOpen;
+
 @property BOOL setPlaying;
 @property BOOL seekRequested;
 @property BOOL busyZoomAnim;
@@ -53,24 +53,6 @@
         } else if (event.subtype == UIEventSubtypeRemoteControlNextTrack) {
             [self fastForwardFifteen];
         }
-    }
-}
-
-- (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
-
-    // Set the current view to receive events from the AudioManagerDelegate.
-    [AudioManager shared].delegate = self;
-
-    if (self.pulldownMenu.fullyOpen) {
-        //[pulldownMenu setFrame:CGRectMake(0, 70, pulldownMenu.frame.size.width, pulldownMenu.frame.size.height)];
-        //pulldownMenu.center = CGPointMake(self.view.frame.size.width / 2, ((self.view.frame.size.height / 2) + 50));
-        NSLog(@"pullDownmenu?!! %@", NSStringFromCGRect(pulldownMenu.frame));
-        //[pulldownMenu closeDropDown:NO];
-        [self decloakForMenu:NO];
-//        self.menuOpen = NO;
-        //[pulldownMenu loadMenu];
-        //[pulldownMenu openDropDown:NO];
     }
 }
 
@@ -127,6 +109,15 @@
     [playCommand addTarget:self action:@selector(playOrPauseTapped:)];
 }
 
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+
+    // Set the current view to receive events from the AudioManagerDelegate.
+    [AudioManager shared].delegate = self;
+
+    NSLog(@"ViewWillAppear pulldown %@", NSStringFromCGRect(pulldownMenu.frame));
+}
+
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
 
@@ -135,6 +126,20 @@
     [self becomeFirstResponder];
 
     //[self updateControlsAndUI:YES];
+
+    NSLog(@"ViewDidAppear pulldown %@", NSStringFromCGRect(self.pulldownMenu.frame));
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+
+    NSLog(@"viewWillDisappear pulldown %@", NSStringFromCGRect(self.pulldownMenu.frame));
+}
+
+- (void)viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear:animated];
+
+    NSLog(@"ViewDidDISAppear pulldown %@", NSStringFromCGRect(self.pulldownMenu.frame));
 }
 
 -(void)skipBackwardEvent: (MPSkipIntervalCommandEvent *)skipEvent {
@@ -360,6 +365,10 @@
 }
 
 - (void)setOnDemandUI:(BOOL)animated withProgram:(Program *)program andEpisode:(NSObject *)episode {
+    if (self.menuOpen) {
+        [self decloakForMenu:NO];
+    }
+
     self.navigationItem.title = @"Programs";
 
     // Update UILabels, content, etc.
@@ -475,7 +484,7 @@
     [self.onDemandPlayerView.layer pop_addAnimation:controlsFadeAnimation forKey:@"onDemandViewFadeAnimation"];
     [self.liveStreamView.layer pop_addAnimation:controlsFadeAnimation forKey:@"liveStreamViewFadeAnimation"];
 
-    if (setPlaying) {
+    if ([[AudioManager shared] isStreamPlaying]) {
         POPBasicAnimation *dividerFadeAnim = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
         dividerFadeAnim.toValue = @0.4;
         dividerFadeAnim.duration = 0.3;
@@ -518,15 +527,13 @@
 
 - (void)pullDownAnimated:(BOOL)open {
     if (open) {
-        NSLog(@"Pull down menu open!");
+        NSLog(@"Pull down menu open %@", NSStringFromCGRect(pulldownMenu.menuList.frame));
         [[NSNotificationCenter defaultCenter] postNotificationName:@"pull_down_menu_opened"
                                                             object:nil];
-        //[menuButton animateToClose];
     } else {
-        NSLog(@"Pull down menu closed!");
+        NSLog(@"Pull down menu closed %@", NSStringFromCGRect(pulldownMenu.frame));
         [[NSNotificationCenter defaultCenter] postNotificationName:@"pull_down_menu_closed"
                                                             object:nil];
-        //[menuButton animateToMenu];
     }
 }
 
@@ -586,8 +593,8 @@
         NSLog(@"elapsed: %@",[Utils elapsedTimeStringWithPosition:CMTimeGetSeconds([[[AudioManager shared] playerItem] currentTime])
                                                       andDuration:CMTimeGetSeconds([[[[AudioManager shared] playerItem] asset] duration])]);
 
-        // [self.timeLabelOnDemand setText:[Utils elapsedTimeStringWithPosition:CMTimeGetSeconds([[[AudioManager shared] playerItem] currentTime])
-        //                                                         andDuration:CMTimeGetSeconds([[[[AudioManager shared] playerItem] asset] duration])]];
+//        [self.timeLabelOnDemand setText:[Utils elapsedTimeStringWithPosition:CMTimeGetSeconds([[[AudioManager shared] playerItem] currentTime])
+//                                                                 andDuration:CMTimeGetSeconds([[[[AudioManager shared] playerItem] asset] duration])]];
     }
 }
 
