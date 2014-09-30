@@ -32,9 +32,9 @@
     
     // Setting defaults
     cellHeight = 62.0f;
-    handleHeight = 10.0f;
+    handleHeight = 0.f;
     animationDuration = 0.3f;
-    topMarginPortrait = 50;
+    topMarginPortrait = 100;
     topMarginLandscape = 0;
     cellColor = [UIColor clearColor];
     cellSelectedColor = [UIColor lightGrayColor];
@@ -95,34 +95,36 @@
     
     [self updateValues];
     
-    [self setFrame:CGRectMake(0, 0, 0, masterView.frame.size.height)];
+    [self setFrame:CGRectMake(0, -tableHeight, 320, tableHeight)];
     
     fullyOpen = NO;
     
-    menuList = [[UITableView alloc] init];
+    menuList = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, self.frame.size.width, tableHeight + 20)];
     [menuList setRowHeight:cellHeight];
     [menuList setDataSource:self];
     [menuList setDelegate:self];
-//  [menuList setScrollEnabled:NO];
+//    [menuList setScrollEnabled:NO];
     [menuList setBackgroundColor:[UIColor clearColor]];
     [menuList setSeparatorColor:separatorColor];
+    
+    UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.frame.size.width, 20)];
+    [menuList setTableHeaderView:headerView];
     [self addSubview:menuList];
     
     handle = [[UIView alloc] init];
     [handle setBackgroundColor:[UIColor clearColor]];
-    
-    [self addSubview:handle];
+    //[self addSubview:handle];
     
     handleDragGestureRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(dragMenu:)];
     handleDragGestureRecognizer.minimumNumberOfTouches = 1;
     handleDragGestureRecognizer.maximumNumberOfTouches = 1;
     [handle addGestureRecognizer:handleDragGestureRecognizer];
     
-    [self setTranslatesAutoresizingMaskIntoConstraints:NO];
-    [handle setTranslatesAutoresizingMaskIntoConstraints:NO];
-    [menuList setTranslatesAutoresizingMaskIntoConstraints:NO];
-    
-    [self createConstraints];
+//    [self setTranslatesAutoresizingMaskIntoConstraints:NO];
+//    [handle setTranslatesAutoresizingMaskIntoConstraints:NO];
+//    [menuList setTranslatesAutoresizingMaskIntoConstraints:NO];
+
+//    [self createConstraints];
 }
 
 - (void)insertButton:(NSString *)title
@@ -229,6 +231,7 @@
 
 - (void)openDropDown:(BOOL)animated
 {
+    NSLog(@"before opening.. %@", NSStringFromCGRect(self.frame));
     if (animated)
     {
         [UIView animateWithDuration: animationDuration
@@ -237,7 +240,7 @@
                          animations:^{
                              if (!fullyOpen)
                              {
-                                 self.center = CGPointMake(self.frame.size.width / 2, ((self.frame.size.height / 2) + topMargin));
+                                 self.center = CGPointMake(self.frame.size.width / 2, (/*(self.frame.size.height / 2) +*/ topMargin));
                                  fullyOpen = YES;
                              }
                          }
@@ -249,7 +252,7 @@
     {
         if (!fullyOpen)
         {
-            self.center = CGPointMake(self.frame.size.width / 2, ((self.frame.size.height / 2) + topMargin));
+            self.center = CGPointMake(self.frame.size.width / 2, (/*(self.frame.size.height / 2) +*/ topMargin));
             fullyOpen = YES;
         }
     }
@@ -257,6 +260,7 @@
 
 - (void)closeDropDown:(BOOL)animated
 {
+    NSLog(@"before closing.. %@", NSStringFromCGRect(self.frame));
     if (animated)
     {
         [UIView animateWithDuration: animationDuration
@@ -295,7 +299,7 @@
                                                          toItem:masterView
                                                          attribute:NSLayoutAttributeTop
                                                          multiplier:1.0
-                                                         constant:-self.frame.size.height];
+                                                         constant:-100];
     
     NSLayoutConstraint *pullDownCenterXPositionConstraint = [NSLayoutConstraint
                                                              constraintWithItem:self
@@ -389,7 +393,7 @@
                                                     toItem:self
                                                     attribute:NSLayoutAttributeHeight
                                                     multiplier:1.0
-                                                    constant:-handleHeight];
+                                                    constant:0];
     
     NSLayoutConstraint *menuListWidthConstraint = [NSLayoutConstraint
                                                    constraintWithItem:menuList
@@ -412,28 +416,28 @@
     NSLayoutConstraint *menuListTopPositionConstraint = [NSLayoutConstraint
                                                          constraintWithItem:menuList
                                                          attribute:NSLayoutAttributeTop
-                                                         relatedBy:NSLayoutRelationEqual
+                                                         relatedBy:NSLayoutRelationLessThanOrEqual
                                                          toItem:self
                                                          attribute:NSLayoutAttributeTop
                                                          multiplier:1.0
                                                          constant:0];
     
-    [masterView addConstraint: pullDownTopPositionConstraint];
+    //[masterView addConstraint: pullDownTopPositionConstraint];
     [masterView addConstraint: pullDownCenterXPositionConstraint];
     [masterView addConstraint: pullDownWidthConstraint];
-    [masterView addConstraint: pullDownHeightConstraint];
+    //[masterView addConstraint: pullDownHeightConstraint];
     //[masterView addConstraint: pullDownHeightMaxConstraint];
     
-    [masterView addConstraint: pullHandleHeightConstraint];
-    [masterView addConstraint: pullHandleWidthConstraint];
-    [masterView addConstraint: pullHandleBottomPositionConstraint];
-    [masterView addConstraint: pullHandleCenterPositionConstraint];
+    //[masterView addConstraint: pullHandleHeightConstraint];
+    //[masterView addConstraint: pullHandleWidthConstraint];
+    //[masterView addConstraint: pullHandleBottomPositionConstraint];
+    //[masterView addConstraint: pullHandleCenterPositionConstraint];
     
-    [masterView addConstraint: menuListHeightMaxConstraint];
-    [masterView addConstraint: menuListHeightConstraint];
+    //[masterView addConstraint: menuListHeightMaxConstraint];
+    //[masterView addConstraint: menuListHeightConstraint];
     [masterView addConstraint: menuListWidthConstraint];
     [masterView addConstraint: menuListCenterXPositionConstraint];
-    [masterView addConstraint: menuListTopPositionConstraint];
+    //[masterView addConstraint: menuListTopPositionConstraint];
     
 }
 
@@ -482,7 +486,7 @@
     else
     {
         if (isStatusBarShowing) { topMargin = [UIApplication.sharedApplication statusBarFrame].size.height; }
-        topMargin += topMarginPortrait;
+        topMargin += (/*([menuItems count] * cellHeight) +*/ topMarginPortrait);
     }
     
     if (masterNavigationController != nil)

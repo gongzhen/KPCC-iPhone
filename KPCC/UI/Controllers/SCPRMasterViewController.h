@@ -18,7 +18,7 @@
 #import "Episode.h"
 #import "Segment.h"
 
-@interface SCPRMasterViewController : UIViewController<PulldownMenuDelegate>
+@interface SCPRMasterViewController : UIViewController<SCPRMenuDelegate>
 
 @property IBOutlet UILabel *programTitleLabel;
 @property IBOutlet UIImageView *programImageView;

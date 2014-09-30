@@ -9,10 +9,8 @@
 #import <UIKit/UIKit.h>
 #import "Utils.h"
 #import "SCPRMenuButton.h"
-#import "SCPRPullDownMenu.h"
 
-@interface SCPRNavigationController : UINavigationController<UIGestureRecognizerDelegate, UINavigationControllerDelegate, PulldownMenuDelegate,MenuButtonDelegate> {
-    SCPRPullDownMenu *pulldownMenu;
+@interface SCPRNavigationController : UINavigationController<UIGestureRecognizerDelegate, UINavigationControllerDelegate,MenuButtonDelegate> {
     SCPRMenuButton *menuButton;
 }
 
