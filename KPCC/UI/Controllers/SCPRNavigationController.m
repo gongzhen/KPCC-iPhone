@@ -46,7 +46,6 @@
                                                 object:nil];
 
     for (UIViewController* viewController in self.viewControllers){
-        NSLog(@"adding button to vc : %@", viewController.title);
         [self addButton:viewController.navigationItem];
     }
 }
@@ -57,10 +56,7 @@
     }
 
     [super pushViewController:viewController animated:animated];
-    if (viewController.navigationItem.leftBarButtonItem == nil){
-        viewController.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:menuButton];
-    }
-
+    [self addButton:viewController.navigationItem];
     [menuButton animateToBack];
 }
 
