@@ -15,8 +15,6 @@
 @property(nonatomic) CALayer *bottomLayer;
 @property(nonatomic) CALayer *backArrowTopLayer;
 @property(nonatomic) CALayer *backArrowBottomLayer;
-@property(nonatomic) BOOL showMenu;
-@property(nonatomic) BOOL showBackArrow;
 
 - (void)touchUpInsideHandler:(SCPRMenuButton *)sender;
 - (void)animateToMenu;
@@ -24,7 +22,6 @@
 - (void)animateToBack;
 - (void)setup;
 - (void)removeAllAnimations;
-- (void)pullMenuOpened:(NSNotification*)notification;
 @end
 
 @implementation SCPRMenuButton
@@ -111,6 +108,8 @@
     [self.middleLayer pop_addAnimation:fadeAnimation forKey:@"fadeAnimation"];
     [self.bottomLayer pop_addAnimation:positionBottomAnimation forKey:@"positionBottomAnimation"];
     [self.bottomLayer pop_addAnimation:transformBottomAnimation forKey:@"rotateBottomAnimation"];
+
+    self.showMenu = YES;
 }
 
 - (void)animateToClose {
@@ -160,6 +159,8 @@
     [self.middleLayer pop_addAnimation:fadeAnimation forKey:@"fadeAnimation"];
     [self.bottomLayer pop_addAnimation:positionBottomAnimation forKey:@"positionBottomAnimation"];
     [self.bottomLayer pop_addAnimation:transformBottomAnimation forKey:@"rotateBottomAnimation"];
+
+    self.showMenu = NO;
 }
 
 - (void)animateToBack {
@@ -215,12 +216,6 @@
         [delegate backPressed];
     } else {
         [delegate menuPressed];
-        if (self.showMenu) {
-            [self animateToMenu];
-        } else {
-            [self animateToClose];
-        }
-        self.showMenu = !self.showMenu;
     }
 }
 
@@ -252,17 +247,8 @@
     [self addTarget:self
              action:@selector(touchUpInsideHandler:)
    forControlEvents:UIControlEventTouchUpInside];
-    
-    // Add observers for pull down menu open/close to update button state.
-    /*[[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(animateToClose)
-                                                 name:@"pull_down_menu_opened"
-                                               object:nil];
 
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(animateToMenu)
-                                                 name:@"pull_down_menu_closed"
-                                               object:nil];*/
+    self.showMenu = YES;
 }
 
 - (void)removeAllAnimations {

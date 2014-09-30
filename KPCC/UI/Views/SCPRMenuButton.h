@@ -21,6 +21,9 @@
 + (instancetype)button;
 + (instancetype)buttonWithOrigin:(CGPoint)origin;
 
+@property(nonatomic) BOOL showMenu;
+@property(nonatomic) BOOL showBackArrow;
+
 - (void)animateToBack;
 - (void)animateToMenu;
 - (void)animateToClose;
