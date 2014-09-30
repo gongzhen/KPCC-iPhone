@@ -115,7 +115,9 @@
     // Set the current view to receive events from the AudioManagerDelegate.
     [AudioManager shared].delegate = self;
 
-    NSLog(@"ViewWillAppear pulldown %@", NSStringFromCGRect(pulldownMenu.frame));
+    if (self.menuOpen) {
+        self.navigationItem.title = @"Menu";
+    }
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -126,20 +128,6 @@
     [self becomeFirstResponder];
 
     //[self updateControlsAndUI:YES];
-
-    NSLog(@"ViewDidAppear pulldown %@", NSStringFromCGRect(self.pulldownMenu.frame));
-}
-
-- (void)viewWillDisappear:(BOOL)animated {
-    [super viewWillDisappear:animated];
-
-    NSLog(@"viewWillDisappear pulldown %@", NSStringFromCGRect(self.pulldownMenu.frame));
-}
-
-- (void)viewDidDisappear:(BOOL)animated {
-    [super viewDidDisappear:animated];
-
-    NSLog(@"ViewDidDISAppear pulldown %@", NSStringFromCGRect(self.pulldownMenu.frame));
 }
 
 -(void)skipBackwardEvent: (MPSkipIntervalCommandEvent *)skipEvent {
@@ -414,6 +402,7 @@
     // TODO: Set handler for end of episode playback. Fallback/start livestream?
 }
 
+#pragma mark - Config for show and hide menu
 
 - (void)cloakForMenu:(BOOL)animated {
     self.navigationItem.title = @"Menu";
@@ -537,8 +526,6 @@
     }
 }
 
-
-
 - (void)updateUIWithProgram:(Program*)program {
     if (!program) {
         return;
@@ -571,7 +558,7 @@
 }
 
 
-#pragma mark - AudioManagerDelegate
+# pragma mark - AudioManagerDelegate
 
 - (void)onRateChange {
     [self updateControlsAndUI:YES];
