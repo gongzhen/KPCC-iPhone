@@ -58,7 +58,6 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    self.navigationItem.title = @"KPCC Live";
 
     // Set the current view to receive events from the AudioManagerDelegate.
     [AudioManager shared].delegate = self;
@@ -342,6 +341,7 @@
 }
 
 - (void)setLiveStreamingUI:(BOOL)animated {
+    self.navigationItem.title = @"KPCC Live";
 
     if ([self.liveStreamView isHidden]) {
         [self.liveStreamView setHidden:NO];
@@ -360,6 +360,7 @@
 }
 
 - (void)setOnDemandUI:(BOOL)animated withProgram:(Program *)program andEpisode:(NSObject *)episode {
+    self.navigationItem.title = @"Programs";
 
     // Update UILabels, content, etc.
     [self setDataForOnDemand:program andEpisode:episode];
@@ -394,14 +395,10 @@
     if (episode != nil) {
         if ([episode isKindOfClass:[Episode class]]) {
             Episode *ep = (Episode *) episode;
-
             [self.episodeTitleOnDemand setText:ep.title];
-            [self.episodeTitleOnDemand sizeToFit];
         } else {
             Segment *seg = (Segment *) episode;
-
             [self.episodeTitleOnDemand setText:seg.title];
-            [self.episodeTitleOnDemand sizeToFit];
         }
     }
 
@@ -446,7 +443,12 @@
 }
 
 - (void)decloakForMenu:(BOOL)animated {
-    self.navigationItem.title = @"KPCC Live";
+    if (setForOnDemandUI) {
+        self.navigationItem.title = @"Programs";
+    } else {
+        self.navigationItem.title = @"KPCC Live";
+    }
+
     [self.blurView setNeedsDisplay];
 
     if (animated) {
