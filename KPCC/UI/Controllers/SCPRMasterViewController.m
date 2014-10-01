@@ -580,8 +580,14 @@
         NSLog(@"elapsed: %@",[Utils elapsedTimeStringWithPosition:CMTimeGetSeconds([[[AudioManager shared] playerItem] currentTime])
                                                       andDuration:CMTimeGetSeconds([[[[AudioManager shared] playerItem] asset] duration])]);
 
-//        [self.timeLabelOnDemand setText:[Utils elapsedTimeStringWithPosition:CMTimeGetSeconds([[[AudioManager shared] playerItem] currentTime])
-//                                                                 andDuration:CMTimeGetSeconds([[[[AudioManager shared] playerItem] asset] duration])]];
+        [self.timeLabelOnDemand setText:[Utils elapsedTimeStringWithPosition:CMTimeGetSeconds([[[AudioManager shared] playerItem] currentTime])
+                                                                 andDuration:CMTimeGetSeconds([[[[AudioManager shared] playerItem] asset] duration])]];
+
+        NSLog(@"width test: %f", CMTimeGetSeconds([[[AudioManager shared] playerItem] currentTime]) / CMTimeGetSeconds([[[[AudioManager shared] playerItem] asset] duration]) * (self.view.frame.size.width - 20));
+        [self.progressBarView setFrame:CGRectMake(self.progressBarView.frame.origin.x,
+                                                  self.progressBarView.frame.origin.y,
+                                                  CMTimeGetSeconds([[[AudioManager shared] playerItem] currentTime]) / CMTimeGetSeconds([[[[AudioManager shared] playerItem] asset] duration]) * (self.view.frame.size.width - 20),
+                                                  self.progressBarView.frame.size.height)];
     }
 }
 

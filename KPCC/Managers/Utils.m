@@ -78,7 +78,13 @@
     durationMin = durationMintues > 9 ? [NSString stringWithFormat:@"%d",durationMintues] : [NSString stringWithFormat:@"0%d",durationMintues];
     durationSec = durationSeconds > 9 ? [NSString stringWithFormat:@"%d",durationSeconds] : [NSString stringWithFormat:@"0%d",durationSeconds];
 
-    NSString *ret = [NSString stringWithFormat:@"%@:%@:%@/%@:%@:%@", positionHr,positionMin,positionSec,durationHr,durationMin,durationSec];
+    NSString *ret;
+    if (durationHours > 0) {
+        ret = [NSString stringWithFormat:@"%@:%@:%@ / %@:%@:%@", positionHr,positionMin,positionSec,durationHr,durationMin,durationSec];
+    } else {
+        ret = [NSString stringWithFormat:@"%@:%@ / %@:%@", positionMin,positionSec,durationMin,durationSec];
+    }
+
     return ret;
 }
 

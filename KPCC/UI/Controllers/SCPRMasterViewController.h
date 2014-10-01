@@ -37,12 +37,13 @@
 @property IBOutlet UIView *playerControlsView;
 
 
-// View for On-Demand playback;
+// Views for On-Demand playback;
 @property IBOutlet UILabel *programTitleOnDemand;
 @property IBOutlet UIView *dividerOnDemand;
 @property IBOutlet UILabel *episodeTitleOnDemand;
 @property IBOutlet UILabel *timeLabelOnDemand;
 @property IBOutlet UIButton *shareButton;
+@property IBOutlet UIView *progressBarView;
 
 
 // Important Attrs.
