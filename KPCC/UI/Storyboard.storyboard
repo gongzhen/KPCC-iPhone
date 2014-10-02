@@ -288,12 +288,12 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Tsp-6Z-muj" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="592" y="-45"/>
+            <point key="canvasLocation" x="576" y="129"/>
         </scene>
-        <!--Home View Controller-->
+        <!--Old Tester View-->
         <scene sceneID="uBf-aC-IbT">
             <objects>
-                <viewController storyboardIdentifier="homevc" useStoryboardIdentifierAsRestorationIdentifier="YES" id="rbX-u6-Qyr" customClass="SCPRHomeViewController" customModule="KPCC" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="homevc" useStoryboardIdentifierAsRestorationIdentifier="YES" id="rbX-u6-Qyr" userLabel="Old Tester View" customClass="SCPRHomeViewController" customModule="KPCC" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="FQs-PR-HRl"/>
                         <viewControllerLayoutGuide type="bottom" id="G40-ZO-rAq"/>
@@ -324,8 +324,8 @@
                                 <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="asdasdasd" textAlignment="right" lineBreakMode="middleTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XNO-8B-k56">
-                                <rect key="frame" x="112" y="79" width="187" height="21"/>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="asdasdasd" textAlignment="right" lineBreakMode="middleTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XNO-8B-k56">
+                                <rect key="frame" x="113" y="79" width="187" height="21"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="187" id="awX-Vc-nzu"/>
                                 </constraints>
@@ -485,8 +485,8 @@
                                     <action selector="buttonTapped:" destination="rbX-u6-Qyr" eventType="touchUpInside" id="hEc-Eb-4jh"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="right" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="wordWrap" translatesAutoresizingMaskIntoConstraints="NO" id="44d-Ew-JgE">
-                                <rect key="frame" x="228" y="128" width="71" height="30"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="right" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="wordWrap" translatesAutoresizingMaskIntoConstraints="NO" id="44d-Ew-JgE">
+                                <rect key="frame" x="229" y="128" width="71" height="30"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="71" id="PW7-5U-Avl"/>
                                 </constraints>
@@ -609,7 +609,7 @@
                     </connections>
                 </tapGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="592" y="706"/>
+            <point key="canvasLocation" x="576" y="965"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="CaL-kZ-Pdh">
