@@ -88,6 +88,9 @@
     // Config dark background view. Will sit on top of blur view, between player controls view.
     [self.darkBgView setAlpha:0.0];
 
+    // Initially flag as KPCC Live view
+    setForLiveStreamUI = YES;
+
     MPRemoteCommandCenter *rcc = [MPRemoteCommandCenter sharedCommandCenter];
 
     MPSkipIntervalCommand *skipBackwardIntervalCommand = [rcc skipBackwardCommand];
@@ -345,6 +348,14 @@
         setForOnDemandUI = NO;
     }
 
+    if (![self.timeLabelOnDemand isHidden]) {
+        [self.timeLabelOnDemand setHidden:YES];
+    }
+
+    if (![self.progressBarView isHidden]) {
+        [self.progressBarView setHidden:YES];
+    }
+
     setForLiveStreamUI = YES;
 }
 
@@ -369,6 +380,14 @@
     if (![self.liveStreamView isHidden]) {
         [self.liveStreamView setHidden:YES];
         setForLiveStreamUI = NO;
+    }
+
+    if ([self.timeLabelOnDemand isHidden]) {
+        [self.timeLabelOnDemand setHidden:NO];
+    }
+
+    if ([self.progressBarView isHidden]) {
+        [self.progressBarView setHidden:NO];
     }
 
     setForOnDemandUI = YES;
@@ -405,6 +424,7 @@
 #pragma mark - Config for show and hide menu
 
 - (void)cloakForMenu:(BOOL)animated {
+    [self removeAllAnimations];
     self.navigationItem.title = @"Menu";
     [self.blurView setNeedsDisplay];
 
@@ -412,6 +432,14 @@
         [pulldownMenu openDropDown:YES];
     } else {
         [pulldownMenu openDropDown:NO];
+    }
+
+    if (setForOnDemandUI){
+        POPBasicAnimation *onDemandElementsFade = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
+        onDemandElementsFade.toValue = @0;
+        onDemandElementsFade.duration = 0.3;
+        [self.timeLabelOnDemand.layer pop_addAnimation:onDemandElementsFade forKey:@"timeLabelFadeAnimation"];
+        [self.progressBarView.layer pop_addAnimation:onDemandElementsFade forKey:@"progressBarFadeAnimation"];
     }
 
     POPBasicAnimation *blurFadeAnimation = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
@@ -441,6 +469,8 @@
 }
 
 - (void)decloakForMenu:(BOOL)animated {
+    [self removeAllAnimations];
+
     if (setForOnDemandUI) {
         self.navigationItem.title = @"Programs";
     } else {
@@ -453,6 +483,14 @@
         [pulldownMenu closeDropDown:YES];
     } else {
         [pulldownMenu closeDropDown:NO];
+    }
+
+    if (setForOnDemandUI){
+        POPBasicAnimation *onDemandElementsFade = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
+        onDemandElementsFade.toValue = @1;
+        onDemandElementsFade.duration = 0.3;
+        [self.timeLabelOnDemand.layer pop_addAnimation:onDemandElementsFade forKey:@"timeLabelFadeAnimation"];
+        [self.progressBarView.layer pop_addAnimation:onDemandElementsFade forKey:@"progressBarFadeAnimation"];
     }
 
     POPBasicAnimation *fadeAnimation = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
@@ -483,6 +521,16 @@
     self.menuOpen = NO;
 }
 
+- (void)removeAllAnimations {
+    [self.blurView.layer pop_removeAllAnimations];
+    [self.darkBgView.layer pop_removeAllAnimations];
+    [self.playerControlsView.layer pop_removeAllAnimations];
+    [self.onDemandPlayerView.layer pop_removeAllAnimations];
+    [self.liveStreamView.layer pop_removeAllAnimations];
+    [self.horizDividerLine.layer pop_removeAllAnimations];
+    [self.timeLabelOnDemand.layer pop_removeAllAnimations];
+    [self.progressBarView.layer pop_removeAllAnimations];
+}
 
 # pragma mark - PulldownMenuDelegate
 
@@ -586,7 +634,7 @@
         NSLog(@"width test: %f", CMTimeGetSeconds([[[AudioManager shared] playerItem] currentTime]) / CMTimeGetSeconds([[[[AudioManager shared] playerItem] asset] duration]) * (self.view.frame.size.width - 20));
         [self.progressBarView setFrame:CGRectMake(self.progressBarView.frame.origin.x,
                                                   self.progressBarView.frame.origin.y,
-                                                  CMTimeGetSeconds([[[AudioManager shared] playerItem] currentTime]) / CMTimeGetSeconds([[[[AudioManager shared] playerItem] asset] duration]) * (self.view.frame.size.width - 20),
+                                                  (CMTimeGetSeconds([[[AudioManager shared] playerItem] currentTime]) / CMTimeGetSeconds([[[[AudioManager shared] playerItem] asset] duration]) * (self.view.frame.size.width - 20)),
                                                   self.progressBarView.frame.size.height)];
     }
 }
