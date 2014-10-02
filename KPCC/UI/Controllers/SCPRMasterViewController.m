@@ -424,6 +424,7 @@
 #pragma mark - Config for show and hide menu
 
 - (void)cloakForMenu:(BOOL)animated {
+    NSLog(@"divider %@", NSStringFromCGRect(self.horizDividerLine.frame));
     [self removeAllAnimations];
     self.navigationItem.title = @"Menu";
     [self.blurView setNeedsDisplay];
@@ -625,17 +626,15 @@
     }
 
     if (setForOnDemandUI) {
-        NSLog(@"elapsed: %@",[Utils elapsedTimeStringWithPosition:CMTimeGetSeconds([[[AudioManager shared] playerItem] currentTime])
-                                                      andDuration:CMTimeGetSeconds([[[[AudioManager shared] playerItem] asset] duration])]);
+        if (CMTimeGetSeconds([[[[AudioManager shared] playerItem] asset] duration]) > 0) {
+            [self.timeLabelOnDemand setText:[Utils elapsedTimeStringWithPosition:CMTimeGetSeconds([[[AudioManager shared] playerItem] currentTime])
+                                                                     andDuration:CMTimeGetSeconds([[[[AudioManager shared] playerItem] asset] duration])]];
 
-        [self.timeLabelOnDemand setText:[Utils elapsedTimeStringWithPosition:CMTimeGetSeconds([[[AudioManager shared] playerItem] currentTime])
-                                                                 andDuration:CMTimeGetSeconds([[[[AudioManager shared] playerItem] asset] duration])]];
-
-        NSLog(@"width test: %f", CMTimeGetSeconds([[[AudioManager shared] playerItem] currentTime]) / CMTimeGetSeconds([[[[AudioManager shared] playerItem] asset] duration]) * (self.view.frame.size.width - 20));
-        [self.progressBarView setFrame:CGRectMake(self.progressBarView.frame.origin.x,
-                                                  self.progressBarView.frame.origin.y,
-                                                  (CMTimeGetSeconds([[[AudioManager shared] playerItem] currentTime]) / CMTimeGetSeconds([[[[AudioManager shared] playerItem] asset] duration]) * (self.view.frame.size.width - 20)),
-                                                  self.progressBarView.frame.size.height)];
+            [self.progressBarView setFrame:CGRectMake(self.progressBarView.frame.origin.x,
+                                                      self.progressBarView.frame.origin.y,
+                                                      (CMTimeGetSeconds([[[AudioManager shared] playerItem] currentTime]) / CMTimeGetSeconds([[[[AudioManager shared] playerItem] asset] duration]) * (self.view.frame.size.width - 20)),
+                                                      self.progressBarView.frame.size.height)];
+        }
     }
 }
 
