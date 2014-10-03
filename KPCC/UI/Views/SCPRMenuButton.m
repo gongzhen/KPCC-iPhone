@@ -35,8 +35,8 @@
 + (instancetype)buttonWithOrigin:(CGPoint)origin {
     return [[self alloc] initWithFrame:CGRectMake(origin.x,
                                                   origin.y,
-                                                  24,
-                                                  17)];
+                                                  40,
+                                                  26)];
 }
 
 - (id)initWithFrame:(CGRect)frame {
@@ -69,13 +69,13 @@
 
     POPBasicAnimation *positionTopAnimation = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerPosition];
     positionTopAnimation.duration = 0.3;
-    positionTopAnimation.toValue = [NSValue valueWithCGPoint:CGPointMake(CGRectGetMidX(self.bounds),
-                                                                         roundf(CGRectGetMinY(self.bounds)+(height/2)))];
+    positionTopAnimation.toValue = [NSValue valueWithCGPoint:CGPointMake(12,
+                                                                         roundf(4+(height/2)))];
 
     POPBasicAnimation *positionBottomAnimation = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerPosition];
     positionTopAnimation.duration = 0.3;
-    positionBottomAnimation.toValue = [NSValue valueWithCGPoint:CGPointMake(CGRectGetMidX(self.bounds),
-                                                                            roundf(CGRectGetMaxY(self.bounds)-(height/2)))];
+    positionBottomAnimation.toValue = [NSValue valueWithCGPoint:CGPointMake(12,
+                                                                            roundf(22-(height/2)))];
 
     POPSpringAnimation *transformTopAnimation = [POPSpringAnimation animationWithPropertyNamed:kPOPLayerRotation];
     transformTopAnimation.toValue = @(0);
@@ -92,11 +92,11 @@
     if (self.showBackArrow) {
         POPSpringAnimation *scaleTopAnimation = [POPSpringAnimation animation];
         scaleTopAnimation.property = [POPAnimatableProperty propertyWithName:kPOPLayerBounds];
-        scaleTopAnimation.toValue = [NSValue valueWithCGRect:CGRectMake(0, 0, CGRectGetWidth(self.bounds), 1)];
+        scaleTopAnimation.toValue = [NSValue valueWithCGRect:CGRectMake(0, 0, 24, 1)];
 
         POPSpringAnimation *scaleBottomAnimation = [POPSpringAnimation animation];
         scaleBottomAnimation.property = [POPAnimatableProperty propertyWithName:kPOPLayerBounds];
-        scaleBottomAnimation.toValue = [NSValue valueWithCGRect:CGRectMake(0, 0, CGRectGetWidth(self.bounds), 1)];
+        scaleBottomAnimation.toValue = [NSValue valueWithCGRect:CGRectMake(0, 0, 24, 1)];
 
         [self.topLayer pop_addAnimation:scaleTopAnimation forKey:@"scaleTopAnimation"];
         [self.bottomLayer pop_addAnimation:scaleBottomAnimation forKey:@"scaleBottomAnimation"];
@@ -114,7 +114,7 @@
 
 - (void)animateToClose {
     [self removeAllAnimations];
-    CGPoint center = CGPointMake(CGRectGetMidX(self.bounds), CGRectGetMidY(self.bounds));
+    CGPoint center = CGPointMake(12, CGRectGetMidY(self.bounds));
 
     POPBasicAnimation *fadeAnimation = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
     fadeAnimation.toValue = @0;
@@ -143,11 +143,11 @@
     if (self.showBackArrow) {
         POPSpringAnimation *scaleTopAnimation = [POPSpringAnimation animation];
         scaleTopAnimation.property = [POPAnimatableProperty propertyWithName:kPOPLayerBounds];
-        scaleTopAnimation.toValue = [NSValue valueWithCGRect:CGRectMake(0, 0, CGRectGetWidth(self.bounds), 1)];
+        scaleTopAnimation.toValue = [NSValue valueWithCGRect:CGRectMake(0, 0, 24, 1)];
 
         POPSpringAnimation *scaleBottomAnimation = [POPSpringAnimation animation];
         scaleBottomAnimation.property = [POPAnimatableProperty propertyWithName:kPOPLayerBounds];
-        scaleBottomAnimation.toValue = [NSValue valueWithCGRect:CGRectMake(0, 0, CGRectGetWidth(self.bounds), 1)];
+        scaleBottomAnimation.toValue = [NSValue valueWithCGRect:CGRectMake(0, 0, 24, 1)];
 
         [self.topLayer pop_addAnimation:scaleTopAnimation forKey:@"scaleTopAnimation"];
         [self.bottomLayer pop_addAnimation:scaleBottomAnimation forKey:@"scaleBottomAnimation"];
@@ -178,7 +178,7 @@
 
     POPSpringAnimation *scaleTopAnimation = [POPSpringAnimation animation];
     scaleTopAnimation.property = [POPAnimatableProperty propertyWithName:kPOPLayerBounds];
-    scaleTopAnimation.toValue = [NSValue valueWithCGRect:CGRectMake(0, 0, CGRectGetWidth(self.bounds)/2, 1)];
+    scaleTopAnimation.toValue = [NSValue valueWithCGRect:CGRectMake(0, 0, 12, 1)];
 
     POPBasicAnimation *positionBottomAnimation = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerPosition];
     positionBottomAnimation.toValue = [NSValue valueWithCGPoint:bottomLeft];
@@ -186,7 +186,7 @@
 
     POPSpringAnimation *scaleBottomAnimation = [POPSpringAnimation animation];
     scaleBottomAnimation.property = [POPAnimatableProperty propertyWithName:kPOPLayerBounds];
-    scaleBottomAnimation.toValue = [NSValue valueWithCGRect:CGRectMake(0, 0, CGRectGetWidth(self.bounds)/2, 1)];
+    scaleBottomAnimation.toValue = [NSValue valueWithCGRect:CGRectMake(0, 0, 12, 1)];
 
     POPSpringAnimation *transformTopAnimation = [POPSpringAnimation animationWithPropertyNamed:kPOPLayerRotation];
     transformTopAnimation.toValue = @(-M_PI_4);
@@ -212,6 +212,7 @@
 }
 
 - (void)touchUpInsideHandler:(SCPRMenuButton *)sender {
+    NSLog(@"TOUCH!");
     if (self.showBackArrow) {
         [delegate backPressed];
     } else {
@@ -221,12 +222,12 @@
 
 - (void)setup {
     CGFloat height = 1.f;
-    CGFloat width = CGRectGetWidth(self.bounds);
+    CGFloat width = 24.f;
     CGFloat cornerRadius =  1.f;
     CGColorRef color = [self.tintColor CGColor];
 
     self.topLayer = [CALayer layer];
-    self.topLayer.frame = CGRectMake(0, CGRectGetMinY(self.bounds), width, height);
+    self.topLayer.frame = CGRectMake(0, CGRectGetMinY(self.bounds) + 4, width, height);
     self.topLayer.cornerRadius = cornerRadius;
     self.topLayer.backgroundColor = color;
 
@@ -236,7 +237,7 @@
     self.middleLayer.backgroundColor = color;
 
     self.bottomLayer = [CALayer layer];
-    self.bottomLayer.frame = CGRectMake(0, CGRectGetMaxY(self.bounds)-height, width, height);
+    self.bottomLayer.frame = CGRectMake(0, CGRectGetMaxY(self.bounds)-height - 4, width, height);
     self.bottomLayer.cornerRadius = cornerRadius;
     self.bottomLayer.backgroundColor = color;
 
