@@ -258,6 +258,15 @@
 
     if ([[AudioManager shared] isStreamPlaying] || [[AudioManager shared] isStreamBuffering]) {
 
+        // Reset frame and alpha for progress bar.
+        if (setForOnDemandUI) {
+            [self.timeLabelOnDemand setHidden:NO];
+
+            POPBasicAnimation *progressBarFade = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
+            progressBarFade.toValue = @(1);
+            [self.progressBarView.layer pop_addAnimation:progressBarFade forKey:@"progressBarFadeInAnim"];
+        }
+
         POPBasicAnimation *dividerFadeAnim = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
         dividerFadeAnim.toValue = @(0.4);
         [self.horizDividerLine.layer pop_addAnimation:dividerFadeAnim forKey:@"dividerFadeInAnim"];
@@ -287,6 +296,15 @@
             POPBasicAnimation *genericFadeInAnim = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
             genericFadeInAnim.toValue = @(1);
             [self.rewindToShowStartButton.layer pop_addAnimation:genericFadeInAnim forKey:@"rewindToStartFadeInAnim"];
+
+            // Reset frame and alpha for progress bar.
+            if (setForOnDemandUI) {
+                [self.timeLabelOnDemand setHidden:YES];
+
+                POPBasicAnimation *progressBarFadeAnim = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
+                progressBarFadeAnim.toValue = @(0);
+                [self.progressBarView.layer pop_addAnimation:progressBarFadeAnim forKey:@"progressBarFadeOutAnim"];
+            }
 
             POPBasicAnimation *dividerFadeAnim = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
             dividerFadeAnim.toValue = @(0);
@@ -424,7 +442,6 @@
 #pragma mark - Config for show and hide menu
 
 - (void)cloakForMenu:(BOOL)animated {
-    NSLog(@"divider %@", NSStringFromCGRect(self.horizDividerLine.frame));
     [self removeAllAnimations];
     self.navigationItem.title = @"Menu";
     [self.blurView setNeedsDisplay];
@@ -627,13 +644,18 @@
 
     if (setForOnDemandUI) {
         if (CMTimeGetSeconds([[[[AudioManager shared] playerItem] asset] duration]) > 0) {
-            [self.timeLabelOnDemand setText:[Utils elapsedTimeStringWithPosition:CMTimeGetSeconds([[[AudioManager shared] playerItem] currentTime])
-                                                                     andDuration:CMTimeGetSeconds([[[[AudioManager shared] playerItem] asset] duration])]];
+            double currentTime = CMTimeGetSeconds([[[AudioManager shared] playerItem] currentTime]);
+            double duration = CMTimeGetSeconds([[[[AudioManager shared] playerItem] asset] duration]);
 
-            [self.progressBarView setFrame:CGRectMake(self.progressBarView.frame.origin.x,
-                                                      self.progressBarView.frame.origin.y,
-                                                      (CMTimeGetSeconds([[[AudioManager shared] playerItem] currentTime]) / CMTimeGetSeconds([[[[AudioManager shared] playerItem] asset] duration]) * (self.view.frame.size.width - 20)),
-                                                      self.progressBarView.frame.size.height)];
+            [self.timeLabelOnDemand setText:[Utils elapsedTimeStringWithPosition:currentTime
+                                                                     andDuration:duration]];
+
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self.progressBarView setFrame:CGRectMake(self.progressBarView.frame.origin.x,
+                                                          self.progressBarView.frame.origin.y,
+                                                          (  currentTime / duration * (self.view.frame.size.width - 20)),
+                                                          self.progressBarView.frame.size.height)];
+            });
         }
     }
 }
