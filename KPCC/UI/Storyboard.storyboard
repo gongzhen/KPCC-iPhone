@@ -216,7 +216,7 @@
                                     <constraint firstAttribute="width" relation="lessThanOrEqual" priority="250" constant="300" id="CQ7-mh-lWi"/>
                                 </constraints>
                             </view>
-                            <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="00:00" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Q1h-II-U3Q" userLabel="TimeLabelOnDemand">
+                            <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Q1h-II-U3Q" userLabel="TimeLabelOnDemand">
                                 <rect key="frame" x="15" y="352" width="141" height="22"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="22" id="57G-jO-Q51"/>
