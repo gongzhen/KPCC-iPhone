@@ -99,8 +99,9 @@
                                         <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <button opaque="NO" alpha="0.0" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="TfG-Pl-Djp" userLabel="AltRewindButton">
-                                        <rect key="frame" x="287" y="471" width="21" height="23"/>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="TfG-Pl-Djp" userLabel="AltRewindButton">
+                                        <rect key="frame" x="273" y="456" width="47" height="48"/>
+                                        <inset key="contentEdgeInsets" minX="10" minY="10" maxX="10" maxY="10"/>
                                         <state key="normal" image="btn_live_rewind_small.png"/>
                                         <connections>
                                             <action selector="rewindToStartTapped:" destination="4pL-7p-2vt" eventType="touchUpInside" id="cL1-mu-0qd"/>
@@ -112,16 +113,16 @@
                                     <constraint firstItem="np1-OZ-drV" firstAttribute="top" secondItem="1zm-63-H3R" secondAttribute="bottom" constant="4" id="4M9-Vm-mac"/>
                                     <constraint firstItem="np1-OZ-drV" firstAttribute="centerX" secondItem="1zm-63-H3R" secondAttribute="centerX" id="Bcx-k5-jYa"/>
                                     <constraint firstItem="ao2-yr-kyf" firstAttribute="centerX" secondItem="g8v-J1-2Ng" secondAttribute="centerX" id="KKh-bp-coD"/>
-                                    <constraint firstItem="TfG-Pl-Djp" firstAttribute="trailing" secondItem="np1-OZ-drV" secondAttribute="trailing" constant="-2" id="M6q-K6-hhP"/>
                                     <constraint firstAttribute="centerX" secondItem="1zm-63-H3R" secondAttribute="centerX" id="PNu-2K-bpX"/>
                                     <constraint firstAttribute="bottom" secondItem="np1-OZ-drV" secondAttribute="bottom" constant="183" id="Tpe-Dz-FhC"/>
                                     <constraint firstItem="g8v-J1-2Ng" firstAttribute="top" secondItem="m78-b6-vle" secondAttribute="top" constant="20" id="XwU-eh-bD4"/>
                                     <constraint firstAttribute="bottom" secondItem="uVS-5U-Chc" secondAttribute="bottom" constant="119" id="a0F-95-Wql"/>
                                     <constraint firstItem="g8v-J1-2Ng" firstAttribute="leading" secondItem="m78-b6-vle" secondAttribute="leading" constant="37" id="b9R-xz-x8F"/>
+                                    <constraint firstAttribute="trailing" secondItem="TfG-Pl-Djp" secondAttribute="trailing" id="cjR-1H-4S1"/>
                                     <constraint firstAttribute="bottom" secondItem="1zm-63-H3R" secondAttribute="bottom" constant="188" id="dFo-tl-RDi"/>
                                     <constraint firstItem="ao2-yr-kyf" firstAttribute="top" secondItem="m78-b6-vle" secondAttribute="top" constant="35" id="e38-SV-tq1"/>
                                     <constraint firstAttribute="centerX" secondItem="uVS-5U-Chc" secondAttribute="centerX" id="iAi-KB-8P8"/>
-                                    <constraint firstItem="TfG-Pl-Djp" firstAttribute="bottom" secondItem="m78-b6-vle" secondAttribute="bottom" constant="-10" id="jOp-Zl-Udu"/>
+                                    <constraint firstItem="TfG-Pl-Djp" firstAttribute="bottom" secondItem="m78-b6-vle" secondAttribute="bottom" id="jOp-Zl-Udu"/>
                                     <constraint firstItem="g8v-J1-2Ng" firstAttribute="centerX" secondItem="m78-b6-vle" secondAttribute="centerX" id="kIc-40-kUO"/>
                                     <constraint firstItem="np1-OZ-drV" firstAttribute="leading" secondItem="m78-b6-vle" secondAttribute="leading" constant="10" id="leW-ZI-PaX"/>
                                     <constraint firstItem="ao2-yr-kyf" firstAttribute="leading" secondItem="m78-b6-vle" secondAttribute="leading" id="z2J-V3-Vsp"/>
