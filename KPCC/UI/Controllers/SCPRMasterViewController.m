@@ -12,7 +12,7 @@
 #import "AFNetworking.h"
 #import "UIImageView+AFNetworking.h"
 
-@interface SCPRMasterViewController () <AudioManagerDelegate, ContentProcessor, MenuButtonDelegate>
+@interface SCPRMasterViewController () <AudioManagerDelegate, ContentProcessor>
 
 @property BOOL setPlaying;
 @property BOOL seekRequested;
@@ -64,10 +64,6 @@
 
     pulldownMenu.delegate = self;
     [pulldownMenu loadMenu];
-    
-    SCPRMenuButton *menuButton = [SCPRMenuButton buttonWithOrigin:CGPointMake(10.f, 10.f)];
-    menuButton.delegate = self;
-    //self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:menuButton];
 
     // Fetch program info and update audio control state.
     [self updateDataForUI];
@@ -387,6 +383,8 @@
     }
 
     self.navigationItem.title = @"Programs";
+    [self.timeLabelOnDemand setText:@""];
+    [self.progressBarView setFrame:CGRectMake(self.progressBarView.frame.origin.x, self.progressBarView.frame.origin.y, 0, self.progressBarView.frame.size.height)];
 
     // Update UILabels, content, etc.
     [self setDataForOnDemand:program andEpisode:episode];
@@ -643,6 +641,8 @@
     }
 
     if (setForOnDemandUI) {
+        [self.progressBarView pop_removeAllAnimations];
+
         if (CMTimeGetSeconds([[[[AudioManager shared] playerItem] asset] duration]) > 0) {
             double currentTime = CMTimeGetSeconds([[[AudioManager shared] playerItem] currentTime]);
             double duration = CMTimeGetSeconds([[[[AudioManager shared] playerItem] asset] duration]);
