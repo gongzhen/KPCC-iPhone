@@ -85,6 +85,7 @@ typedef enum {
 - (double)observedMaxBitrate;
 - (double)observedMinBitrate;
 - (NSString *)currentDateTimeString;
+- (void)updateNowPlayingInfoWithAudio:(id)audio;
 
 - (void)seekToPercent:(CGFloat)percent;
 - (void)seekToDate:(NSDate *)date;

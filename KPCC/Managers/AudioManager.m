@@ -10,6 +10,9 @@
 #import "NetworkManager.h"
 #import "AnalyticsManager.h"
 #import "AVPlayer+Additions.h"
+#import "Program.h"
+#import "Episode.h"
+#import "Segment.h"
 
 static AudioManager *singleton = nil;
 
@@ -110,6 +113,34 @@ static const NSString *ItemStatusContext;
     [self takedownAudioPlayer];
     [self buildStreamer:url];
     [self startStream];
+}
+
+
+- (void)updateNowPlayingInfoWithAudio:(id)audio {
+    if (!audio) {
+        return;
+    }
+
+    NSDictionary *audioMetaData;
+    if ([audio isKindOfClass:[Episode class]]) {
+        Episode *episode = (Episode*)audio;
+        audioMetaData = @{ MPMediaItemPropertyArtist : episode.programName,
+                           MPMediaItemPropertyTitle : episode.title,
+                           MPMediaItemPropertyPlaybackDuration : episode.audio.duration };
+    } else if ([audio isKindOfClass:[Segment class]]) {
+        Segment *segment = (Segment*)audio;
+        audioMetaData = @{ MPMediaItemPropertyArtist : segment.programName,
+                           MPMediaItemPropertyTitle : segment.title,
+                           MPMediaItemPropertyPlaybackDuration : segment.audio.duration};
+    } else if ([audio isKindOfClass:[Program class]]) {
+        Program *program = (Program*)audio;
+        audioMetaData = @{ MPMediaItemPropertyArtist : @"89.3 KPCC",
+                           MPMediaItemPropertyTitle : program.title };
+    } else {
+        audioMetaData = @{ MPMediaItemPropertyArtist : @"89.3 KPCC"};
+    }
+
+    [[MPNowPlayingInfoCenter defaultCenter] setNowPlayingInfo:audioMetaData];
 }
 
 

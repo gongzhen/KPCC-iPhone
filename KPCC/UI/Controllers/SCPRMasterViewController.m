@@ -420,11 +420,11 @@
     setForOnDemandUI = YES;
 }
 
-- (void)setDataForOnDemand:(Program *)program andEpisode:(NSObject *)episode {
+- (void)setDataForOnDemand:(Program *)program andEpisode:(id)episode {
     if (program != nil) {
         self.onDemandProgram = program;
 
-        [self updateNowPlayingInfoWithProgram:program];
+        [[AudioManager shared] updateNowPlayingInfoWithAudio:episode];
 
         [[DesignManager shared] loadProgramImage:program.program_slug
                                     andImageView:self.programImageView
@@ -437,11 +437,11 @@
 
     if (episode != nil) {
         if ([episode isKindOfClass:[Episode class]]) {
-            Episode *ep = (Episode *) episode;
+            Episode *ep = (Episode *)episode;
             self.onDemandEpUrl = ep.publicUrl;
             [self.episodeTitleOnDemand setText:ep.title];
         } else {
-            Segment *seg = (Segment *) episode;
+            Segment *seg = (Segment *)episode;
             self.onDemandEpUrl = seg.publicUrl;
             [self.episodeTitleOnDemand setText:seg.title];
         }
@@ -592,12 +592,11 @@
 }
 
 - (void)pullDownAnimated:(BOOL)open {
+    // Notifications used in SCPRNavigationController.
     if (open) {
-        NSLog(@"Pull down menu open %@", NSStringFromCGRect(pulldownMenu.menuList.frame));
         [[NSNotificationCenter defaultCenter] postNotificationName:@"pull_down_menu_opened"
                                                             object:nil];
     } else {
-        NSLog(@"Pull down menu closed %@", NSStringFromCGRect(pulldownMenu.frame));
         [[NSNotificationCenter defaultCenter] postNotificationName:@"pull_down_menu_closed"
                                                             object:nil];
     }
@@ -619,21 +618,6 @@
         [self.programTitleLabel setText:[program title]];
     }
 }
-
-- (void)updateNowPlayingInfoWithProgram:(Program*)program {
-    if (!program) {
-        return;
-    }
-
-    NSDictionary *audioMetaData = @{ MPMediaItemPropertyArtist : @"89.3 KPCC",
-                                     MPMediaItemPropertyTitle : program.title//,
-                                     /*MPNowPlayingInfoPropertyPlaybackRate : [[NSNumber alloc] initWithFloat:10],
-                                     MPMediaItemPropertyAlbumTitle : @"LIVE",
-                                     MPNowPlayingInfoPropertyElapsedPlaybackTime: [[NSNumber alloc] initWithDouble:40]*/ };
-
-    [[MPNowPlayingInfoCenter defaultCenter] setNowPlayingInfo:audioMetaData];
-}
-
 
 # pragma mark - AudioManagerDelegate
 
@@ -708,7 +692,7 @@
         [self updateUIWithProgram:programObj];
 
         if (!setForOnDemandUI) {
-            [self updateNowPlayingInfoWithProgram:programObj];
+            [[AudioManager shared] updateNowPlayingInfoWithAudio:programObj];
         }
 
         self.currentProgram = programObj;

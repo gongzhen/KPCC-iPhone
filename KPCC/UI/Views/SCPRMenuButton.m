@@ -212,7 +212,6 @@
 }
 
 - (void)touchUpInsideHandler:(SCPRMenuButton *)sender {
-    NSLog(@"TOUCH!");
     if (self.showBackArrow) {
         [delegate backPressed];
     } else {

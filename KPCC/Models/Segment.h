@@ -22,5 +22,6 @@
 @property(nonatomic,strong) NSString        *permalink;
 @property(nonatomic,strong) NSString        *publicUrl;
 @property(nonatomic,strong) EpisodeAudio    *audio;
+@property(nonatomic,strong) NSString        *programName;
 
 @end
