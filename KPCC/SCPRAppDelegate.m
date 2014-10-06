@@ -11,6 +11,7 @@
 #import "SCPRNavigationController.h"
 #import <AVFoundation/AVFoundation.h>
 #import "Flurry.h"
+#import "STPTransitions.h"
 
 #ifdef ENABLE_TESTFLIGHT
 #import "TestFlight.h"
@@ -44,6 +45,7 @@
     
     // Launch our root view controller
     SCPRNavigationController *navigationController = [[UIStoryboard storyboardWithName:@"Storyboard" bundle:nil] instantiateInitialViewController];
+    navigationController.delegate = STPTransitionCenter.sharedInstance;    
     self.masterViewController = navigationController.viewControllers.firstObject;
     self.window.rootViewController = navigationController;
 
