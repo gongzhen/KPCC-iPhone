@@ -139,6 +139,9 @@
     [self fastForwardFifteen];
 }
 
+
+# pragma mark - Actions
+
 - (IBAction)playOrPauseTapped:(id)sender {
     if (seekRequested) {
         seekRequested = NO;
@@ -169,6 +172,14 @@
 - (IBAction)backToLiveTapped:(id)sender {
     seekRequested = YES;
     [[AudioManager shared] forwardSeekLive];
+}
+
+- (IBAction)shareButtonTapped:(id)sender {
+    if (self.onDemandProgram && self.onDemandEpUrl) {
+        UIActivityViewController *controller = [[UIActivityViewController alloc] initWithActivityItems:@[self.onDemandEpUrl] applicationActivities:nil];
+        controller.excludedActivityTypes = @[UIActivityTypeAirDrop];
+        [self presentViewController:controller animated:YES completion:nil];
+    }
 }
 
 - (void)playStream {
@@ -427,9 +438,11 @@
     if (episode != nil) {
         if ([episode isKindOfClass:[Episode class]]) {
             Episode *ep = (Episode *) episode;
+            self.onDemandEpUrl = ep.publicUrl;
             [self.episodeTitleOnDemand setText:ep.title];
         } else {
             Segment *seg = (Segment *) episode;
+            self.onDemandEpUrl = seg.publicUrl;
             [self.episodeTitleOnDemand setText:seg.title];
         }
     }

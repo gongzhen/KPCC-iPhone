@@ -19,6 +19,7 @@
         self.byline         = dict[@"byline"];
         self.teaser         = dict[@"teaser"];
         self.permalink      = dict[@"permalink"];
+        self.publicUrl      = dict[@"public_url"];
 
         if (dict[@"audio"] && [dict[@"audio"] count] > 0 ) {
             self.audio = [[EpisodeAudio alloc] initWithDict:[dict[@"audio"] objectAtIndex:0]];

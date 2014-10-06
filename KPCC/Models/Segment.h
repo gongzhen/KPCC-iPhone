@@ -20,6 +20,7 @@
 @property(nonatomic,strong) NSString        *byline;
 @property(nonatomic,strong) NSString        *teaser;
 @property(nonatomic,strong) NSString        *permalink;
+@property(nonatomic,strong) NSString        *publicUrl;
 @property(nonatomic,strong) EpisodeAudio    *audio;
 
 @end

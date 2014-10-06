@@ -49,6 +49,7 @@
 // Important Attrs.
 @property (nonatomic,strong) Program *currentProgram;
 @property (nonatomic,strong) Program *onDemandProgram;
+@property (nonatomic,strong) NSString *onDemandEpUrl;
 @property (nonatomic,strong) SCPRPullDownMenu *pulldownMenu;
 @property (nonatomic) BOOL menuOpen;
 
