@@ -17,6 +17,7 @@
 #import "SCPRPullDownMenu.h"
 #import "Episode.h"
 #import "Segment.h"
+#import "SCPRProgramsListViewController.h"
 
 @interface SCPRMasterViewController : UIViewController<SCPRMenuDelegate>
 
@@ -51,6 +52,7 @@
 @property (nonatomic,strong) Program *onDemandProgram;
 @property (nonatomic,strong) NSString *onDemandEpUrl;
 @property (nonatomic,strong) SCPRPullDownMenu *pulldownMenu;
+@property (nonatomic,strong) SCPRProgramsListViewController *programsListViewController;
 @property (nonatomic) BOOL menuOpen;
 
 

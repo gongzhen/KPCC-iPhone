@@ -65,6 +65,10 @@
 
     pulldownMenu.delegate = self;
     [pulldownMenu loadMenu];
+    
+    self.programsListViewController = [SCPRProgramsListViewController new];
+    [[self.programsListViewController view] setFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
+    [self addChildViewController:self.programsListViewController];
 
     // Fetch program info and update audio control state.
     [self updateDataForUI];
@@ -581,11 +585,16 @@
                 prog = self.onDemandProgram;
             }
 
-            SCPRSlideInTransition *transition = [SCPRSlideInTransition new];
+
             SCPRProgramsListViewController *vc = [[SCPRProgramsListViewController alloc] initWithBackgroundProgram:prog];
-
-//            [self.navigationController pushViewController:vc usingTransition:transition];
-
+            //id <UIViewControllerTransitioningDelegate> delegate = [SCPRSlideInTransition new];
+            //vc.transitioningDelegate = delegate;
+            //[self.navigationController pushViewController:vc animated:YES];
+            [self transitionFromViewController:self toViewController:self.programsListViewController duration:1.f options:UIViewAnimationOptionCurveEaseInOut animations:^{
+                
+            } completion:^(BOOL finished) {
+                
+            }];
 
             break;
         }

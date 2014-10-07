@@ -10,42 +10,61 @@
 
 @implementation SCPRSlideInTransition
 
-- (NSTimeInterval)transitionDuration {
-    return 0.5f;
+- (NSTimeInterval)transitionDuration:(id <UIViewControllerContextTransitioning>)transitionContext
+{
+    return 0.25;
 }
 
-- (void)animateFromView:(UIView *)fromView
-                 toView:(UIView *)toView
-        inContainerView:(UIView *)containerView
-    executeOnCompletion:(void (^)(BOOL))onCompletion {
-    toView.alpha = 0.0f;
+- (void)animateTransition:(id<UIViewControllerContextTransitioning>)transitionContext
+{
+    UIViewController* toViewController = [transitionContext viewControllerForKey:UITransitionContextToViewControllerKey];
+    UIViewController* fromViewController = [transitionContext viewControllerForKey:UITransitionContextFromViewControllerKey];
+    [[transitionContext containerView] addSubview:toViewController.view];
+    toViewController.view.alpha = 0;
     
-    CGFloat offsetX = CGRectGetWidth(containerView.bounds) / 2.5f;
-  
-//    toView.layer.transform = !self.isReversed ? [self rotatedRightToX:offsetX] : [self rotatedLeftToX:offsetX];
+    [UIView animateWithDuration:[self transitionDuration:transitionContext] animations:^{
+        fromViewController.view.transform = CGAffineTransformMakeScale(0.1, 0.1);
+        toViewController.view.alpha = 1;
+    } completion:^(BOOL finished) {
+        fromViewController.view.transform = CGAffineTransformIdentity;
+        [transitionContext completeTransition:![transitionContext transitionWasCancelled]];
+        
+    }];
     
-    [containerView addSubview:toView];
-    
-    [UIView animateWithDuration:self.transitionDuration
-                     animations:
-     ^{
-         fromView.alpha = 0.0f;
-         toView.alpha = 1.0f;
-         
-//         fromView.layer.transform = !self.isReversed ? [self rotatedLeftToX:offsetX] : [self rotatedRightToX:offsetX];
-         toView.layer.transform = CATransform3DIdentity;
-     }
-                     completion:
-     ^(BOOL finished) {
-         onCompletion(finished);
-         
-         fromView.alpha = 1.0f;
-         toView.alpha = 1.0f;
-         
-         fromView.layer.transform = CATransform3DIdentity;
-         toView.layer.transform = CATransform3DIdentity;
-     }];
 }
+
+//- (void)animateFromView:(UIView *)fromView
+//                 toView:(UIView *)toView
+//        inContainerView:(UIView *)containerView
+//    executeOnCompletion:(void (^)(BOOL))onCompletion {
+//    toView.alpha = 0.0f;
+//    
+//    CGFloat offsetX = CGRectGetWidth(containerView.bounds) / 2.5f;
+//  
+////    toView.layer.transform = !self.isReversed ? [self rotatedRightToX:offsetX] : [self rotatedLeftToX:offsetX];
+//    
+//    [containerView addSubview:toView];
+//    
+//    [UIView animateWithDuration:self.transitionDuration
+//                     animations:
+//     ^{
+//         fromView.alpha = 0.0f;
+//         toView.alpha = 1.0f;
+//         
+////         fromView.layer.transform = !self.isReversed ? [self rotatedLeftToX:offsetX] : [self rotatedRightToX:offsetX];
+//         toView.layer.transform = CATransform3DIdentity;
+//     }
+//                     completion:
+//     ^(BOOL finished) {
+//         onCompletion(finished);
+//         
+//         fromView.alpha = 1.0f;
+//         toView.alpha = 1.0f;
+//         
+//         fromView.layer.transform = CATransform3DIdentity;
+//         toView.layer.transform = CATransform3DIdentity;
+//     }];
+//}
 
 - (CATransform3D)rotatedLeftToX:(CGFloat)offsetX {
     CATransform3D rotateNegatively = CATransform3DMakeRotation(-M_PI_2, 0, 1, 0);
