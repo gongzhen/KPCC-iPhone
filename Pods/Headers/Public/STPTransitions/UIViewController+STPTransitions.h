@@ -1,1 +1,0 @@
-../../../STPTransitions/Core/UIViewController+STPTransitions.h

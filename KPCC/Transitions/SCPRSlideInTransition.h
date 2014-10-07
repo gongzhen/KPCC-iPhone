@@ -6,8 +6,6 @@
 //  Copyright (c) 2014 SCPR. All rights reserved.
 //
 
-#import "STPTransition.h"
-
-@interface SCPRSlideInTransition : STPTransition
+@interface SCPRSlideInTransition : NSObject <UIViewControllerAnimatedTransitioning>
 
 @end

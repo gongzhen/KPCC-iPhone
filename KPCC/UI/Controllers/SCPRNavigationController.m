@@ -10,7 +10,6 @@
 #import "SCPRMasterViewController.h"
 #import "SCPRMenuButton.h"
 #import <POP/POP.h>
-#import "STPTransitions.h"
 
 @interface SCPRNavigationController ()
 @property(nonatomic) BOOL menuOpen;
@@ -59,18 +58,6 @@
     [super pushViewController:viewController animated:animated];
     [self addButton:viewController.navigationItem];
     [menuButton animateToBack];
-}
-
-- (void)pushViewController:(UIViewController *)viewController
-           usingTransitionz:(STPTransition *)transition {
-    if (![self.delegate isKindOfClass:STPTransitionCenter.class]) {
-        @throw [NSException exceptionWithName:NSInternalInconsistencyException
-                                       reason:@"The navigation controller's delegate has to be a instance of STPTransitionCenter."
-                                     userInfo:nil];
-    }
-    STPTransitionCenter *center = self.delegate;
-    [center setNextPushOrPresentTransition:transition fromViewController:self.topViewController];
-    [self pushViewController:viewController animated:YES];
 }
 
 - (void)addButton:(UINavigationItem *)item{

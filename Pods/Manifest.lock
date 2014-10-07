@@ -23,20 +23,17 @@ PODS:
   - FXBlurView (1.6.2)
   - JDStatusBarNotification (1.4.8)
   - pop (1.0.6)
-  - STPTransitions (0.0.2)
 
 DEPENDENCIES:
   - AFNetworking (~> 2.0)
   - FXBlurView (~> 1.6)
   - JDStatusBarNotification
   - pop (~> 1.0)
-  - STPTransitions
 
 SPEC CHECKSUMS:
   AFNetworking: 0aabc6fae66d6e5d039eeb21c315843c7aae51ab
   FXBlurView: 47496afc9160097fa34af35fc4b310bd85d65dca
   JDStatusBarNotification: c68611370dedc0ef865fb0fc1768dfbaf8fd961f
   pop: e518794da38942c05255eb64b36d894e70cb4f00
-  STPTransitions: 794f3469d4a935f879af2af8f1d81ce58da73170
 
 COCOAPODS: 0.34.1

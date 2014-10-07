@@ -1,1 +1,0 @@
-../../../STPTransitions/Core/UINavigationController+STPTransitions.h

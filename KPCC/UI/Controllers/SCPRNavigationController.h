@@ -12,10 +12,9 @@
 
 @class STPTransition;
 
-@interface SCPRNavigationController : UINavigationController<UIGestureRecognizerDelegate,UINavigationControllerDelegate,MenuButtonDelegate> {
+@interface SCPRNavigationController : UINavigationController<UIGestureRecognizerDelegate,UINavigationControllerDelegate,MenuButtonDelegate,
+UIViewControllerTransitioningDelegate> {
     SCPRMenuButton *menuButton;
 }
-
-- (void)pushViewController:(UIViewController *)viewController usingTransitionz:(STPTransition *)transition;
 
 @end

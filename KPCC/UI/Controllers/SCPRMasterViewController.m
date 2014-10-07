@@ -11,7 +11,6 @@
 #import "SCPRProgramsListViewController.h"
 #import "AFNetworking.h"
 #import "UIImageView+AFNetworking.h"
-#import "STPTransitions.h"
 #import "SCPRSlideInTransition.h"
 
 @interface SCPRMasterViewController () <AudioManagerDelegate, ContentProcessor>
@@ -583,13 +582,10 @@
             }
 
             SCPRSlideInTransition *transition = [SCPRSlideInTransition new];
-            transition.reverseTransition = [SCPRSlideInTransition new];
             SCPRProgramsListViewController *vc = [[SCPRProgramsListViewController alloc] initWithBackgroundProgram:prog];
-            
-            //STPTransitionCenter *center = (STPTransitionCenter*)self.navigationController.delegate;
-            //[[STPTransitionCenter sharedInstance] setNextPushOrPresentTransition:transition fromViewController:self.navigationController.topViewController];
-            //[self.navigationController pushViewController:vc animated:YES];
-            [self.navigationController pushViewController:vc usingTransition:transition];
+
+//            [self.navigationController pushViewController:vc usingTransition:transition];
+
 
             break;
         }

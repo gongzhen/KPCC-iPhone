@@ -21,8 +21,8 @@
     toView.alpha = 0.0f;
     
     CGFloat offsetX = CGRectGetWidth(containerView.bounds) / 2.5f;
-    
-    toView.layer.transform = !self.isReversed ? [self rotatedRightToX:offsetX] : [self rotatedLeftToX:offsetX];
+  
+//    toView.layer.transform = !self.isReversed ? [self rotatedRightToX:offsetX] : [self rotatedLeftToX:offsetX];
     
     [containerView addSubview:toView];
     
@@ -32,7 +32,7 @@
          fromView.alpha = 0.0f;
          toView.alpha = 1.0f;
          
-         fromView.layer.transform = !self.isReversed ? [self rotatedLeftToX:offsetX] : [self rotatedRightToX:offsetX];
+//         fromView.layer.transform = !self.isReversed ? [self rotatedLeftToX:offsetX] : [self rotatedRightToX:offsetX];
          toView.layer.transform = CATransform3DIdentity;
      }
                      completion:
