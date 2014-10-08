@@ -12,6 +12,7 @@
 #import "AFNetworking.h"
 #import "UIImageView+AFNetworking.h"
 #import "SCPRSlideInTransition.h"
+#import "SCPRMenuPageViewController.h"
 
 @interface SCPRMasterViewController () <AudioManagerDelegate, ContentProcessor>
 
@@ -65,10 +66,10 @@
 
     pulldownMenu.delegate = self;
     [pulldownMenu loadMenu];
-    
-    self.programsListViewController = [SCPRProgramsListViewController new];
-    [[self.programsListViewController view] setFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
-    [self addChildViewController:self.programsListViewController];
+
+//    [self.programImageView removeFromSuperview];
+//    [self.view.superview.window insertSubview:self.programImageView belowSubview:self.view];
+
 
     // Fetch program info and update audio control state.
     [self updateDataForUI];
@@ -587,15 +588,30 @@
 
 
             SCPRProgramsListViewController *vc = [[SCPRProgramsListViewController alloc] initWithBackgroundProgram:prog];
-            //id <UIViewControllerTransitioningDelegate> delegate = [SCPRSlideInTransition new];
-            //vc.transitioningDelegate = delegate;
-            //[self.navigationController pushViewController:vc animated:YES];
-            [self transitionFromViewController:self toViewController:self.programsListViewController duration:1.f options:UIViewAnimationOptionCurveEaseInOut animations:^{
-                
-            } completion:^(BOOL finished) {
-                
-            }];
-
+            vc.view.backgroundColor = [UIColor clearColor];
+            [vc.view setFrame:CGRectMake(self.view.frame.size.width, 0, self.view.frame.size.width, self.view.frame.size.height)];
+            [self.view addSubview:vc.view];
+            
+            //CGPoint location = [recognizer locationInView:self.view];
+            
+            POPSpringAnimation *anim = [POPSpringAnimation animationWithPropertyNamed:kPOPLayerPosition];
+            anim.toValue = [NSValue valueWithCGPoint:CGPointMake(0, 0)];
+            anim.springBounciness = 20;
+            anim.springSpeed = 1;
+            
+            //[vc.view.layer pop_addAnimation:anim forKey:@"move"];
+            
+            [UIView animateWithDuration:2.f delay:0.
+                                options:UIViewAnimationOptionCurveEaseInOut animations:^{
+                                    
+                                    self.pulldownMenu.center = CGPointMake(-160, self.pulldownMenu.center.y);
+                                    vc.view.center = CGPointMake(self.view.frame.size.width/2, self.view.frame.size.height/2);
+                                    
+                                } completion:nil];
+//            [self.navigationController pushViewController:vc animated:YES];
+            
+            //self.modalPresentationStyle = UIModalPresentationCurrentContext;
+            //[self presentViewController:vc animated:NO completion:nil];
             break;
         }
 
