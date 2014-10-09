@@ -18,6 +18,9 @@
 #import "Episode.h"
 #import "Segment.h"
 #import "SCPRProgramsListViewController.h"
+#import "SCPRMenuContainerController.h"
+
+//@class SCPRMenuContainerController;
 
 @interface SCPRMasterViewController : UIViewController<SCPRMenuDelegate>
 
@@ -53,6 +56,7 @@
 @property (nonatomic,strong) NSString *onDemandEpUrl;
 @property (nonatomic,strong) SCPRPullDownMenu *pulldownMenu;
 @property (nonatomic,strong) SCPRProgramsListViewController *programsListViewController;
+@property (nonatomic,strong) SCPRMenuContainerController *menuContainerController;
 @property (nonatomic) BOOL menuOpen;
 
 

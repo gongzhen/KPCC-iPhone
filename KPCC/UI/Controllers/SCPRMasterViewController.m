@@ -12,7 +12,6 @@
 #import "AFNetworking.h"
 #import "UIImageView+AFNetworking.h"
 #import "SCPRSlideInTransition.h"
-#import "SCPRMenuPageViewController.h"
 
 @interface SCPRMasterViewController () <AudioManagerDelegate, ContentProcessor>
 
@@ -66,10 +65,10 @@
 
     pulldownMenu.delegate = self;
     [pulldownMenu loadMenu];
-
-//    [self.programImageView removeFromSuperview];
-//    [self.view.superview.window insertSubview:self.programImageView belowSubview:self.view];
-
+    
+    [self addProgramsListTableView];
+    
+    [self addMenuContainerController];
 
     // Fetch program info and update audio control state.
     [self updateDataForUI];
@@ -188,6 +187,9 @@
     }
 }
 
+
+# pragma mark - Audio commands
+
 - (void)playStream {
     [[AudioManager shared] startStream];
 }
@@ -209,6 +211,9 @@
 - (void)updateDataForUI {
     [[NetworkManager shared] fetchProgramInformationFor:[NSDate date] display:self];
 }
+
+
+# pragma mark - UI control
 
 - (void)updateControlsAndUI:(BOOL)animated {
 
@@ -456,7 +461,7 @@
     // TODO: Set handler for end of episode playback. Fallback/start livestream?
 }
 
-#pragma mark - Config for show and hide menu
+#pragma mark - Menu control
 
 - (void)cloakForMenu:(BOOL)animated {
     [self removeAllAnimations];
@@ -567,6 +572,36 @@
     [self.progressBarView.layer pop_removeAllAnimations];
 }
 
+- (void)addProgramsListTableView {
+    self.programsListViewController = [[SCPRProgramsListViewController alloc] initWithBackgroundProgram:self.currentProgram];
+    self.programsListViewController.view.backgroundColor = [UIColor clearColor];
+    
+    
+//    details.delegate = self;
+    
+    [self addChildViewController:self.programsListViewController];
+    CGRect frame = self.view.bounds;
+    frame.origin.x = self.view.bounds.size.width;
+    self.programsListViewController.view.frame = frame;
+    [self.view addSubview:self.programsListViewController.view];
+    [self.programsListViewController didMoveToParentViewController:self];
+}
+
+- (void)addMenuContainerController {
+    self.menuContainerController = [[SCPRMenuContainerController alloc] initWithNibName:nil bundle:nil];
+    self.menuContainerController.view.backgroundColor = [UIColor clearColor];
+    
+    
+    //    details.delegate = self;
+    
+    [self addChildViewController:self.menuContainerController];
+    CGRect frame = self.view.bounds;
+    frame.origin.x = self.view.bounds.size.width;
+    self.menuContainerController.view.frame = frame;
+    [self.view addSubview:self.menuContainerController.view];
+    [self.menuContainerController didMoveToParentViewController:self];
+}
+
 # pragma mark - PulldownMenuDelegate
 
 - (void)menuItemSelected:(NSIndexPath *)indexPath {
@@ -585,33 +620,19 @@
             if (setForOnDemandUI && self.onDemandProgram != nil) {
                 prog = self.onDemandProgram;
             }
-
-
-            SCPRProgramsListViewController *vc = [[SCPRProgramsListViewController alloc] initWithBackgroundProgram:prog];
-            vc.view.backgroundColor = [UIColor clearColor];
-            [vc.view setFrame:CGRectMake(self.view.frame.size.width, 0, self.view.frame.size.width, self.view.frame.size.height)];
-            [self.view addSubview:vc.view];
-            
-            //CGPoint location = [recognizer locationInView:self.view];
             
             POPSpringAnimation *anim = [POPSpringAnimation animationWithPropertyNamed:kPOPLayerPosition];
             anim.toValue = [NSValue valueWithCGPoint:CGPointMake(0, 0)];
             anim.springBounciness = 20;
             anim.springSpeed = 1;
             
-            //[vc.view.layer pop_addAnimation:anim forKey:@"move"];
-            
-            [UIView animateWithDuration:2.f delay:0.
+            [UIView animateWithDuration:0.5f delay:0.
                                 options:UIViewAnimationOptionCurveEaseInOut animations:^{
                                     
                                     self.pulldownMenu.center = CGPointMake(-160, self.pulldownMenu.center.y);
-                                    vc.view.center = CGPointMake(self.view.frame.size.width/2, self.view.frame.size.height/2);
+                                    self.programsListViewController.view.center = CGPointMake(self.view.frame.size.width/2, self.view.frame.size.height/2);
                                     
                                 } completion:nil];
-//            [self.navigationController pushViewController:vc animated:YES];
-            
-            //self.modalPresentationStyle = UIModalPresentationCurrentContext;
-            //[self presentViewController:vc animated:NO completion:nil];
             break;
         }
 
