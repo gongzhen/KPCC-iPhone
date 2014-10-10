@@ -8,4 +8,7 @@
 
 @interface SCPRSlideInTransition : NSObject <UIViewControllerAnimatedTransitioning>
 
+@property NSString *direction;
+
+
 @end

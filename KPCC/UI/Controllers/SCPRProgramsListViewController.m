@@ -50,15 +50,15 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 
-    //self.blurView.tintColor = [UIColor clearColor];
-    //self.blurView.blurRadius = 20.f;
-    //self.blurView.dynamic = NO;
+    self.blurView.tintColor = [UIColor clearColor];
+    self.blurView.blurRadius = 20.f;
+    self.blurView.dynamic = NO;
 
-//    [[DesignManager shared] loadProgramImage:_currentProgram.program_slug
-//                                andImageView:self.programBgImage
-//                                  completion:^(BOOL status) {
-//                                      [self.blurView setNeedsDisplay];
-//                                  }];
+    [[DesignManager shared] loadProgramImage:_currentProgram.program_slug
+                                andImageView:self.programBgImage
+                                  completion:^(BOOL status) {
+                                      [self.blurView setNeedsDisplay];
+                                  }];
     self.view.backgroundColor = [UIColor clearColor];
 
     // Fetch all Programs from CoreData and filter, given HIDDEN_PROGRAMS.

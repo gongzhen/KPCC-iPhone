@@ -12,70 +12,107 @@
 
 - (NSTimeInterval)transitionDuration:(id <UIViewControllerContextTransitioning>)transitionContext
 {
-    return 0.25;
+    return 1.0;
 }
 
 - (void)animateTransition:(id<UIViewControllerContextTransitioning>)transitionContext
 {
+    NSTimeInterval duration = [self transitionDuration:transitionContext];
+    UIView* inView = [transitionContext containerView];
+    
     UIViewController* toViewController = [transitionContext viewControllerForKey:UITransitionContextToViewControllerKey];
     UIViewController* fromViewController = [transitionContext viewControllerForKey:UITransitionContextFromViewControllerKey];
-    [[transitionContext containerView] addSubview:toViewController.view];
-    toViewController.view.alpha = 0;
+    //fromViewController.extendedLayoutIncludesOpaqueBars=YES;
+    //toViewController.extendedLayoutIncludesOpaqueBars=YES;
     
-    [UIView animateWithDuration:[self transitionDuration:transitionContext] animations:^{
-        fromViewController.view.transform = CGAffineTransformMakeScale(0.1, 0.1);
-        toViewController.view.alpha = 1;
-    } completion:^(BOOL finished) {
-        fromViewController.view.transform = CGAffineTransformIdentity;
-        [transitionContext completeTransition:![transitionContext transitionWasCancelled]];
+    CGPoint centerOffScreen;
+    CGRect frameOffScreen;
+    CGRect frameInScreen;
+    CGRect destinationOffScreen;
+
+    // Grab reference to Menu
+    UIView *menuView;
+    if ([inView viewWithTag:893] != nil) {
+        menuView = [inView viewWithTag:893];
+    }
+
+    // Get a UIImage screenshot with the Menu hidden
+    menuView.hidden = YES;
+    UIGraphicsBeginImageContextWithOptions(fromViewController.view.bounds.size, fromViewController.view.opaque, 0.0);
+    [fromViewController.view.layer renderInContext:UIGraphicsGetCurrentContext()];
+    UIImage *viewImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    menuView.hidden = NO;
+
+    // Place the UIImage in a UIImageView
+    UIImageView *newView = [[UIImageView alloc] initWithFrame:toViewController.view.bounds];
+    newView.image = viewImage;
+    
+    UIImageView *reverseNewView = [[UIImageView alloc] initWithImage:viewImage];
+//    UIView *reverseNewView = [[UIView alloc] initWithFrame:toViewController.view.bounds];
+//    reverseNewView.backgroundColor = [UIColor greenColor];
+
+    // Add the image to the background of the Programs view controller.
+    [toViewController.view addSubview:newView];
+    [toViewController.view sendSubviewToBack:newView];
+    
+
+//    [fromViewController.view addSubview:reverseNewView];
+    
+    
+    if( [self.direction isEqualToString:@"leftToRight"] ){
+        [inView insertSubview:toViewController.view aboveSubview:fromViewController.view];
         
-    }];
+        centerOffScreen = inView.center;
+        centerOffScreen.x = (-1)*inView.frame.size.width;
+        
+        frameOffScreen = inView.frame;
+        frameOffScreen.origin.x = inView.frame.size.width;
+        
+        frameInScreen = inView.frame;
+        
+        destinationOffScreen = inView.frame;
+        destinationOffScreen.origin.x = (-1)*inView.frame.size.width;
+        
+    } else {
+        [inView insertSubview:toViewController.view belowSubview:fromViewController.view];
+        [inView insertSubview:reverseNewView belowSubview:fromViewController.view];
+
+        
+        //centerOffScreen = inView.center;
+        //centerOffScreen.x = inView.frame.size.width;
+        
+        frameOffScreen = inView.frame;
+        frameOffScreen.origin.x = (-1)*inView.frame.size.width;
+        
+        frameInScreen = inView.frame;
+
+        reverseNewView.frame = CGRectMake( (-1)*inView.frame.size.width, reverseNewView.frame.origin.y, reverseNewView.frame.size.width, reverseNewView.frame.size.height);
+        
+        destinationOffScreen = inView.frame;
+        destinationOffScreen.origin.x = inView.frame.size.width;
+        destinationOffScreen.size.height += 20;
+    }
     
-}
+    toViewController.view.frame = destinationOffScreen;
+    
+    [UIView animateKeyframesWithDuration:duration delay:0.0f options:UIViewKeyframeAnimationOptionCalculationModePaced animations:^{
+        
+        fromViewController.view.frame = frameOffScreen;
+        toViewController.view.frame = frameInScreen;
+        reverseNewView.frame = frameInScreen;
+        
+        
+    } completion:^(BOOL finished) {
+        if ([transitionContext transitionWasCancelled]) {
+            fromViewController.view.frame = inView.frame;
+            [transitionContext completeTransition:NO];
+            return;
+        }
+        reverseNewView.hidden = YES;
 
-//- (void)animateFromView:(UIView *)fromView
-//                 toView:(UIView *)toView
-//        inContainerView:(UIView *)containerView
-//    executeOnCompletion:(void (^)(BOOL))onCompletion {
-//    toView.alpha = 0.0f;
-//    
-//    CGFloat offsetX = CGRectGetWidth(containerView.bounds) / 2.5f;
-//  
-////    toView.layer.transform = !self.isReversed ? [self rotatedRightToX:offsetX] : [self rotatedLeftToX:offsetX];
-//    
-//    [containerView addSubview:toView];
-//    
-//    [UIView animateWithDuration:self.transitionDuration
-//                     animations:
-//     ^{
-//         fromView.alpha = 0.0f;
-//         toView.alpha = 1.0f;
-//         
-////         fromView.layer.transform = !self.isReversed ? [self rotatedLeftToX:offsetX] : [self rotatedRightToX:offsetX];
-//         toView.layer.transform = CATransform3DIdentity;
-//     }
-//                     completion:
-//     ^(BOOL finished) {
-//         onCompletion(finished);
-//         
-//         fromView.alpha = 1.0f;
-//         toView.alpha = 1.0f;
-//         
-//         fromView.layer.transform = CATransform3DIdentity;
-//         toView.layer.transform = CATransform3DIdentity;
-//     }];
-//}
-
-- (CATransform3D)rotatedLeftToX:(CGFloat)offsetX {
-    CATransform3D rotateNegatively = CATransform3DMakeRotation(-M_PI_2, 0, 1, 0);
-    CATransform3D moveLeft = CATransform3DMakeTranslation(-offsetX, 0, 0);
-    return CATransform3DConcat(rotateNegatively, moveLeft);
-}
-
-- (CATransform3D)rotatedRightToX:(CGFloat)offsetX {
-    CATransform3D rotatePositively = CATransform3DMakeRotation(M_PI_2, 0, 1, 0);
-    CATransform3D moveRight = CATransform3DMakeTranslation(offsetX, 0, 0);
-    return CATransform3DConcat(rotatePositively, moveRight);
+        [transitionContext completeTransition:YES];
+    }];
 }
 
 @end

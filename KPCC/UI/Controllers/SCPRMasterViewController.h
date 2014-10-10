@@ -19,6 +19,7 @@
 #import "Segment.h"
 #import "SCPRProgramsListViewController.h"
 #import "SCPRMenuContainerController.h"
+#import "SCPRSlideInTransition.h"
 
 //@class SCPRMenuContainerController;
 
@@ -58,6 +59,7 @@
 @property (nonatomic,strong) SCPRProgramsListViewController *programsListViewController;
 @property (nonatomic,strong) SCPRMenuContainerController *menuContainerController;
 @property (nonatomic) BOOL menuOpen;
+@property (nonatomic,strong) SCPRSlideInTransition *slideInTransition;
 
 
 // Instance methods.

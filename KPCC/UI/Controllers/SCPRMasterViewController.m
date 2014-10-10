@@ -13,7 +13,7 @@
 #import "UIImageView+AFNetworking.h"
 #import "SCPRSlideInTransition.h"
 
-@interface SCPRMasterViewController () <AudioManagerDelegate, ContentProcessor>
+@interface SCPRMasterViewController () <AudioManagerDelegate, ContentProcessor, UINavigationControllerDelegate, UIViewControllerTransitioningDelegate>
 
 @property BOOL setPlaying;
 @property BOOL seekRequested;
@@ -130,6 +130,8 @@
     // Once the view has appeared we can register to begin receiving system audio controls.
     [[UIApplication sharedApplication] beginReceivingRemoteControlEvents];
     [self becomeFirstResponder];
+    
+    self.navigationController.delegate = self;
 
     //[self updateControlsAndUI:YES];
 }
@@ -575,10 +577,7 @@
 - (void)addProgramsListTableView {
     self.programsListViewController = [[SCPRProgramsListViewController alloc] initWithBackgroundProgram:self.currentProgram];
     self.programsListViewController.view.backgroundColor = [UIColor clearColor];
-    
-    
-//    details.delegate = self;
-    
+
     [self addChildViewController:self.programsListViewController];
     CGRect frame = self.view.bounds;
     frame.origin.x = self.view.bounds.size.width;
@@ -621,7 +620,7 @@
                 prog = self.onDemandProgram;
             }
             
-            POPSpringAnimation *anim = [POPSpringAnimation animationWithPropertyNamed:kPOPLayerPosition];
+            /*POPSpringAnimation *anim = [POPSpringAnimation animationWithPropertyNamed:kPOPLayerPosition];
             anim.toValue = [NSValue valueWithCGPoint:CGPointMake(0, 0)];
             anim.springBounciness = 20;
             anim.springSpeed = 1;
@@ -632,7 +631,10 @@
                                     self.pulldownMenu.center = CGPointMake(-160, self.pulldownMenu.center.y);
                                     self.programsListViewController.view.center = CGPointMake(self.view.frame.size.width/2, self.view.frame.size.height/2);
                                     
-                                } completion:nil];
+                                } completion:nil];*/
+
+            SCPRProgramsListViewController *vc = [[SCPRProgramsListViewController alloc] initWithBackgroundProgram:prog];
+            [self.navigationController pushViewController:vc animated:YES];
             break;
         }
 
@@ -670,6 +672,26 @@
         [self.programTitleLabel setText:[program title]];
     }
 }
+
+
+#pragma mark - Navigation Animation Delegate
+
+- (id<UIViewControllerAnimatedTransitioning>)navigationController:(UINavigationController *)navigationController
+                                  animationControllerForOperation:(UINavigationControllerOperation)operation
+                                               fromViewController:(UIViewController *)fromVC
+                                                 toViewController:(UIViewController *)toVC
+{
+
+    
+    if ([toVC class] == [SCPRProgramsListViewController class] && [fromVC class] == [SCPRMasterViewController class]) {
+        self.slideInTransition = [SCPRSlideInTransition new];
+        self.slideInTransition.direction = @"rightToLeft";
+        return self.slideInTransition;
+    }
+    
+    return nil;
+}
+
 
 # pragma mark - AudioManagerDelegate
 

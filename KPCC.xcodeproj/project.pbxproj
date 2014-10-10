@@ -14,7 +14,6 @@
 		523E86D919CB694B006FC366 /* Episode.m in Sources */ = {isa = PBXBuildFile; fileRef = 523E86D819CB694B006FC366 /* Episode.m */; };
 		5248858E19CBA180005F59CC /* EpisodeAudio.m in Sources */ = {isa = PBXBuildFile; fileRef = 5248858D19CBA180005F59CC /* EpisodeAudio.m */; };
 		5257E9CC19E34A550055733F /* SCPRSlideInTransition.m in Sources */ = {isa = PBXBuildFile; fileRef = 5257E9CB19E34A550055733F /* SCPRSlideInTransition.m */; };
-		5257E9CF19E47A6A0055733F /* SCPRTransitioningDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 5257E9CE19E47A6A0055733F /* SCPRTransitioningDelegate.m */; };
 		52CC6D5E19D0DC7100C67322 /* Segment.m in Sources */ = {isa = PBXBuildFile; fileRef = 52CC6D5D19D0DC7100C67322 /* Segment.m */; };
 		52CC6D6219D100DE00C67322 /* SCPRProgramTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 52CC6D6119D100DE00C67322 /* SCPRProgramTableViewCell.m */; };
 		52CC6D6619D110E300C67322 /* SCPRProgramsListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 52CC6D6519D110E300C67322 /* SCPRProgramsListViewController.m */; };
@@ -212,8 +211,6 @@
 		5248858D19CBA180005F59CC /* EpisodeAudio.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EpisodeAudio.m; sourceTree = "<group>"; };
 		5257E9CA19E34A550055733F /* SCPRSlideInTransition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCPRSlideInTransition.h; path = Transitions/SCPRSlideInTransition.h; sourceTree = "<group>"; };
 		5257E9CB19E34A550055733F /* SCPRSlideInTransition.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SCPRSlideInTransition.m; path = Transitions/SCPRSlideInTransition.m; sourceTree = "<group>"; };
-		5257E9CD19E47A6A0055733F /* SCPRTransitioningDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCPRTransitioningDelegate.h; path = Transitions/SCPRTransitioningDelegate.h; sourceTree = "<group>"; };
-		5257E9CE19E47A6A0055733F /* SCPRTransitioningDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SCPRTransitioningDelegate.m; path = Transitions/SCPRTransitioningDelegate.m; sourceTree = "<group>"; };
 		52CC6D5C19D0DC7100C67322 /* Segment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Segment.h; sourceTree = "<group>"; };
 		52CC6D5D19D0DC7100C67322 /* Segment.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Segment.m; sourceTree = "<group>"; };
 		52CC6D6019D100DE00C67322 /* SCPRProgramTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCPRProgramTableViewCell.h; sourceTree = "<group>"; };
@@ -472,8 +469,6 @@
 			children = (
 				5257E9CA19E34A550055733F /* SCPRSlideInTransition.h */,
 				5257E9CB19E34A550055733F /* SCPRSlideInTransition.m */,
-				5257E9CD19E47A6A0055733F /* SCPRTransitioningDelegate.h */,
-				5257E9CE19E47A6A0055733F /* SCPRTransitioningDelegate.m */,
 			);
 			name = Transitions;
 			path = ..;
@@ -1189,7 +1184,6 @@
 				52CC6D6219D100DE00C67322 /* SCPRProgramTableViewCell.m in Sources */,
 				76A3090418C93C880065D4B1 /* AudioManager.m in Sources */,
 				52D0FC2019D1FC0C009AECEE /* SCPRProgramDetailTableViewCell.m in Sources */,
-				5257E9CF19E47A6A0055733F /* SCPRTransitioningDelegate.m in Sources */,
 				760E3C4C194FB61B00D86D91 /* Program.m in Sources */,
 				760E3C48194FB54600D86D91 /* DataModel.xcdatamodeld in Sources */,
 				52CC6D6619D110E300C67322 /* SCPRProgramsListViewController.m in Sources */,
