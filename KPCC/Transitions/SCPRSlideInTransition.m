@@ -12,7 +12,7 @@
 
 - (NSTimeInterval)transitionDuration:(id <UIViewControllerContextTransitioning>)transitionContext
 {
-    return 1.0;
+    return 0.25;
 }
 
 - (void)animateTransition:(id<UIViewControllerContextTransitioning>)transitionContext
@@ -22,14 +22,13 @@
     
     UIViewController* toViewController = [transitionContext viewControllerForKey:UITransitionContextToViewControllerKey];
     UIViewController* fromViewController = [transitionContext viewControllerForKey:UITransitionContextFromViewControllerKey];
-    //fromViewController.extendedLayoutIncludesOpaqueBars=YES;
-    //toViewController.extendedLayoutIncludesOpaqueBars=YES;
-    
+
     CGPoint centerOffScreen;
     CGRect frameOffScreen;
     CGRect frameInScreen;
     CGRect destinationOffScreen;
     CGRect menuFrameOffScreen;
+    CGRect menuFrameInScreen;
 
     // Grab reference to Menu
     UIView *menuView;
@@ -58,7 +57,6 @@
     //[toViewController.view sendSubviewToBack:newView];
     
 
-//    [fromViewController.view addSubview:reverseNewView];
     
     
     if( [self.direction isEqualToString:@"leftToRight"] ){
@@ -77,13 +75,14 @@
         
     } else {
         [inView insertSubview:toViewController.view aboveSubview:fromViewController.view];
-//        [inView insertSubview:reverseNewView belowSubview:fromViewController.view];
-        [inView insertSubview:menuView aboveSubview:fromViewController.view];
+        [inView insertSubview:reverseNewView belowSubview:fromViewController.view];
+        //[inView insertSubview:menuView aboveSubview:fromViewController.view];
 
         
-        //centerOffScreen = inView.center;
-        //centerOffScreen.x = inView.frame.size.width;
-        
+        centerOffScreen = inView.center;
+        centerOffScreen.x = inView.frame.size.width;
+
+        menuFrameInScreen = menuView.frame;
         menuFrameOffScreen = menuView.frame;
         menuFrameOffScreen.origin.x = (-1)*menuView.frame.size.width;
 
@@ -104,7 +103,7 @@
     
     [UIView animateKeyframesWithDuration:duration delay:0.0f options:UIViewKeyframeAnimationOptionCalculationModePaced animations:^{
         
-//        fromViewController.view.frame = frameOffScreen;
+        //fromViewController.view.frame = frameOffScreen;
         menuView.frame = menuFrameOffScreen;
         toViewController.view.frame = frameInScreen;
         reverseNewView.frame = frameInScreen;
@@ -116,7 +115,8 @@
             [transitionContext completeTransition:NO];
             return;
         }
-        reverseNewView.hidden = YES;
+        //reverseNewView.hidden = YES;
+        menuView.frame = menuFrameInScreen;
 
         [transitionContext completeTransition:YES];
     }];
