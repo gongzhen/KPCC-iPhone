@@ -78,7 +78,6 @@
         [inView insertSubview:reverseNewView belowSubview:fromViewController.view];
         //[inView insertSubview:menuView aboveSubview:fromViewController.view];
 
-        
         centerOffScreen = inView.center;
         centerOffScreen.x = inView.frame.size.width;
 
@@ -91,7 +90,6 @@
         
         frameInScreen = inView.frame;
 
-//        reverseNewView.frame = CGRectMake( (-1)*inView.frame.size.width, reverseNewView.frame.origin.y, reverseNewView.frame.size.width, reverseNewView.frame.size.height);
         reverseNewView.frame = frameInScreen;
         
         destinationOffScreen = inView.frame;
@@ -107,15 +105,12 @@
         menuView.frame = menuFrameOffScreen;
         toViewController.view.frame = frameInScreen;
         reverseNewView.frame = frameInScreen;
-        
-        
     } completion:^(BOOL finished) {
         if ([transitionContext transitionWasCancelled]) {
             fromViewController.view.frame = inView.frame;
             [transitionContext completeTransition:NO];
             return;
         }
-        //reverseNewView.hidden = YES;
         menuView.frame = menuFrameInScreen;
 
         [transitionContext completeTransition:YES];

@@ -61,14 +61,9 @@
     [super viewDidLoad];
 
     pulldownMenu = [[SCPRPullDownMenu alloc] initWithView:self.view];
-    [self.view addSubview:pulldownMenu];
-
     pulldownMenu.delegate = self;
+    [self.view addSubview:pulldownMenu];
     [pulldownMenu loadMenu];
-    
-    [self addProgramsListTableView];
-    
-    [self addMenuContainerController];
 
     // Fetch program info and update audio control state.
     [self updateDataForUI];
@@ -130,20 +125,6 @@
     // Once the view has appeared we can register to begin receiving system audio controls.
     [[UIApplication sharedApplication] beginReceivingRemoteControlEvents];
     [self becomeFirstResponder];
-    
-    self.navigationController.delegate = self;
-
-    //[self updateControlsAndUI:YES];
-}
-
--(void)skipBackwardEvent: (MPSkipIntervalCommandEvent *)skipEvent {
-    NSLog(@"Skip backward by %f", skipEvent.interval);
-    [self rewindFifteen];
-}
-
--(void)skipForwardEvent: (MPSkipIntervalCommandEvent *)skipEvent {
-    NSLog(@"Skip forward by %f", skipEvent.interval);
-    [self fastForwardFifteen];
 }
 
 
@@ -174,6 +155,14 @@
         seekRequested = YES;
         [[AudioManager shared] seekToDate:_currentProgram.starts_at];
     }
+}
+
+-(void)skipBackwardEvent: (MPSkipIntervalCommandEvent *)skipEvent {
+    [self rewindFifteen];
+}
+
+-(void)skipForwardEvent: (MPSkipIntervalCommandEvent *)skipEvent {
+    [self fastForwardFifteen];
 }
 
 - (IBAction)backToLiveTapped:(id)sender {
@@ -345,6 +334,7 @@
     }
 }
 
+
 /**
  * Dev note: Not being called for now.. zooms in background program image slightly
  */
@@ -463,6 +453,24 @@
     // TODO: Set handler for end of episode playback. Fallback/start livestream?
 }
 
+- (void)updateUIWithProgram:(Program*)program {
+    if (!program) {
+        return;
+    }
+
+    if ([program title]) {
+        if ([program title].length <= 14) {
+            [self.programTitleLabel setFont:[self.programTitleLabel.font fontWithSize:46.0]];
+        } else if ([program title].length > 14 && [program title].length <= 18) {
+            [self.programTitleLabel setFont:[self.programTitleLabel.font fontWithSize:35.0]];
+        } else {
+            [self.programTitleLabel setFont:[self.programTitleLabel.font fontWithSize:30.0]];
+        }
+        [self.programTitleLabel setText:[program title]];
+    }
+}
+
+
 #pragma mark - Menu control
 
 - (void)cloakForMenu:(BOOL)animated {
@@ -574,32 +582,6 @@
     [self.progressBarView.layer pop_removeAllAnimations];
 }
 
-- (void)addProgramsListTableView {
-    self.programsListViewController = [[SCPRProgramsListViewController alloc] initWithBackgroundProgram:self.currentProgram];
-    self.programsListViewController.view.backgroundColor = [UIColor clearColor];
-
-    [self addChildViewController:self.programsListViewController];
-    CGRect frame = self.view.bounds;
-    frame.origin.x = self.view.bounds.size.width;
-    self.programsListViewController.view.frame = frame;
-    [self.view addSubview:self.programsListViewController.view];
-    [self.programsListViewController didMoveToParentViewController:self];
-}
-
-- (void)addMenuContainerController {
-    self.menuContainerController = [[SCPRMenuContainerController alloc] initWithNibName:nil bundle:nil];
-    self.menuContainerController.view.backgroundColor = [UIColor clearColor];
-    
-    
-    //    details.delegate = self;
-    
-    [self addChildViewController:self.menuContainerController];
-    CGRect frame = self.view.bounds;
-    frame.origin.x = self.view.bounds.size.width;
-    self.menuContainerController.view.frame = frame;
-    [self.view addSubview:self.menuContainerController.view];
-    [self.menuContainerController didMoveToParentViewController:self];
-}
 
 # pragma mark - PulldownMenuDelegate
 
@@ -619,21 +601,9 @@
             if (setForOnDemandUI && self.onDemandProgram != nil) {
                 prog = self.onDemandProgram;
             }
-            
-            /*POPSpringAnimation *anim = [POPSpringAnimation animationWithPropertyNamed:kPOPLayerPosition];
-            anim.toValue = [NSValue valueWithCGPoint:CGPointMake(0, 0)];
-            anim.springBounciness = 20;
-            anim.springSpeed = 1;
-            
-            [UIView animateWithDuration:0.5f delay:0.
-                                options:UIViewAnimationOptionCurveEaseInOut animations:^{
-                                    
-                                    self.pulldownMenu.center = CGPointMake(-160, self.pulldownMenu.center.y);
-                                    self.programsListViewController.view.center = CGPointMake(self.view.frame.size.width/2, self.view.frame.size.height/2);
-                                    
-                                } completion:nil];*/
 
             SCPRProgramsListViewController *vc = [[SCPRProgramsListViewController alloc] initWithBackgroundProgram:prog];
+//            SCPRProgramsListViewController *vc = [[SCPRProgramsListViewController alloc] initWithNibName:nil bundle:nil];
             [self.navigationController pushViewController:vc animated:YES];
             break;
         }
@@ -654,42 +624,6 @@
         [[NSNotificationCenter defaultCenter] postNotificationName:@"pull_down_menu_closed"
                                                             object:nil];
     }
-}
-
-- (void)updateUIWithProgram:(Program*)program {
-    if (!program) {
-        return;
-    }
-
-    if ([program title]) {
-        if ([program title].length <= 14) {
-            [self.programTitleLabel setFont:[self.programTitleLabel.font fontWithSize:46.0]];
-        } else if ([program title].length > 14 && [program title].length <= 18) {
-            [self.programTitleLabel setFont:[self.programTitleLabel.font fontWithSize:35.0]];
-        } else {
-            [self.programTitleLabel setFont:[self.programTitleLabel.font fontWithSize:30.0]];
-        }
-        [self.programTitleLabel setText:[program title]];
-    }
-}
-
-
-#pragma mark - Navigation Animation Delegate
-
-- (id<UIViewControllerAnimatedTransitioning>)navigationController:(UINavigationController *)navigationController
-                                  animationControllerForOperation:(UINavigationControllerOperation)operation
-                                               fromViewController:(UIViewController *)fromVC
-                                                 toViewController:(UIViewController *)toVC
-{
-
-    
-    if ([toVC class] == [SCPRProgramsListViewController class] && [fromVC class] == [SCPRMasterViewController class]) {
-        self.slideInTransition = [SCPRSlideInTransition new];
-        self.slideInTransition.direction = @"rightToLeft";
-        return self.slideInTransition;
-    }
-    
-    return nil;
 }
 
 

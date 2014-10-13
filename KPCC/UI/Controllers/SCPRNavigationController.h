@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "Utils.h"
 #import "SCPRMenuButton.h"
+#import "SCPRSlideInTransition.h"
 
 @class STPTransition;
 
