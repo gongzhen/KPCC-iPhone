@@ -18,6 +18,7 @@
 #import "Episode.h"
 #import "Segment.h"
 
+
 @interface SCPRMasterViewController : UIViewController<SCPRMenuDelegate>
 
 @property IBOutlet UILabel *programTitleLabel;

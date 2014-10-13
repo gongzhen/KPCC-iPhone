@@ -9,11 +9,11 @@
 #import <UIKit/UIKit.h>
 #import "Utils.h"
 #import "SCPRMenuButton.h"
+#import "SCPRSlideInTransition.h"
 
-@interface SCPRNavigationController : UINavigationController<UIGestureRecognizerDelegate, UINavigationControllerDelegate,MenuButtonDelegate> {
+@interface SCPRNavigationController : UINavigationController<UIGestureRecognizerDelegate,UINavigationControllerDelegate,MenuButtonDelegate,
+UIViewControllerTransitioningDelegate> {
     SCPRMenuButton *menuButton;
 }
-
-//@property (nonatomic, retain) PulldownMenu *_pulldownMenu;
 
 @end

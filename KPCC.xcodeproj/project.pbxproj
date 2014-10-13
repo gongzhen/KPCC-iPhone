@@ -11,6 +11,7 @@
 		523E86D219C8A292006FC366 /* SCPRProgramDetailViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 523E86CF19C8A292006FC366 /* SCPRProgramDetailViewController.xib */; };
 		523E86D919CB694B006FC366 /* Episode.m in Sources */ = {isa = PBXBuildFile; fileRef = 523E86D819CB694B006FC366 /* Episode.m */; };
 		5248858E19CBA180005F59CC /* EpisodeAudio.m in Sources */ = {isa = PBXBuildFile; fileRef = 5248858D19CBA180005F59CC /* EpisodeAudio.m */; };
+		5257E9CC19E34A550055733F /* SCPRSlideInTransition.m in Sources */ = {isa = PBXBuildFile; fileRef = 5257E9CB19E34A550055733F /* SCPRSlideInTransition.m */; };
 		52CC6D5E19D0DC7100C67322 /* Segment.m in Sources */ = {isa = PBXBuildFile; fileRef = 52CC6D5D19D0DC7100C67322 /* Segment.m */; };
 		52CC6D6219D100DE00C67322 /* SCPRProgramTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 52CC6D6119D100DE00C67322 /* SCPRProgramTableViewCell.m */; };
 		52CC6D6619D110E300C67322 /* SCPRProgramsListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 52CC6D6519D110E300C67322 /* SCPRProgramsListViewController.m */; };
@@ -195,7 +196,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		3D27774292D34CDA90CFAEC3 /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = "<group>"; };
+		45A107003D6C750C5E0ECAC3 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		523E86CD19C8A292006FC366 /* SCPRProgramDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCPRProgramDetailViewController.h; sourceTree = "<group>"; };
 		523E86CE19C8A292006FC366 /* SCPRProgramDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SCPRProgramDetailViewController.m; sourceTree = "<group>"; };
 		523E86CF19C8A292006FC366 /* SCPRProgramDetailViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SCPRProgramDetailViewController.xib; sourceTree = "<group>"; };
@@ -203,6 +204,8 @@
 		523E86D819CB694B006FC366 /* Episode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Episode.m; sourceTree = "<group>"; };
 		5248858C19CBA180005F59CC /* EpisodeAudio.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EpisodeAudio.h; sourceTree = "<group>"; };
 		5248858D19CBA180005F59CC /* EpisodeAudio.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EpisodeAudio.m; sourceTree = "<group>"; };
+		5257E9CA19E34A550055733F /* SCPRSlideInTransition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCPRSlideInTransition.h; path = Transitions/SCPRSlideInTransition.h; sourceTree = "<group>"; };
+		5257E9CB19E34A550055733F /* SCPRSlideInTransition.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SCPRSlideInTransition.m; path = Transitions/SCPRSlideInTransition.m; sourceTree = "<group>"; };
 		52CC6D5C19D0DC7100C67322 /* Segment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Segment.h; sourceTree = "<group>"; };
 		52CC6D5D19D0DC7100C67322 /* Segment.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Segment.m; sourceTree = "<group>"; };
 		52CC6D6019D100DE00C67322 /* SCPRProgramTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCPRProgramTableViewCell.h; sourceTree = "<group>"; };
@@ -410,6 +413,7 @@
 		76EF5E86193E8BED00568A9D /* SCPRHomeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SCPRHomeViewController.swift; sourceTree = "<group>"; };
 		76EF5E89193E8D6B00568A9D /* Storyboard.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Storyboard.storyboard; sourceTree = "<group>"; };
 		C4832A831DF6416997B73FBF /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		F9D194612962C66D8F109726 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -442,6 +446,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		5257E9C919E349F70055733F /* Transitions */ = {
+			isa = PBXGroup;
+			children = (
+				5257E9CA19E34A550055733F /* SCPRSlideInTransition.h */,
+				5257E9CB19E34A550055733F /* SCPRSlideInTransition.m */,
+			);
+			name = Transitions;
+			path = ..;
+			sourceTree = "<group>";
+		};
 		52D91F2D19A2535A00B8A02F /* json */ = {
 			isa = PBXGroup;
 			children = (
@@ -605,6 +619,7 @@
 		76658ABB18E0ADDF00026176 /* UI */ = {
 			isa = PBXGroup;
 			children = (
+				5257E9C919E349F70055733F /* Transitions */,
 				76658ABC18E0AF8500026176 /* View Controllers */,
 				76658ABD18E0AF8500026176 /* Views */,
 				76EF5E89193E8D6B00568A9D /* Storyboard.storyboard */,
@@ -742,7 +757,7 @@
 				76A308F118C8FB950065D4B1 /* KPCCTests */,
 				76A308C518C8FB940065D4B1 /* Frameworks */,
 				76A308C418C8FB940065D4B1 /* Products */,
-				3D27774292D34CDA90CFAEC3 /* Pods.xcconfig */,
+				8AEA5210BC60B77C600B7E48 /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -853,6 +868,15 @@
 				76349CA118D372B30027C3B8 /* TestFlight */,
 			);
 			path = ThirdParty;
+			sourceTree = "<group>";
+		};
+		8AEA5210BC60B77C600B7E48 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				F9D194612962C66D8F109726 /* Pods.debug.xcconfig */,
+				45A107003D6C750C5E0ECAC3 /* Pods.release.xcconfig */,
+			);
+			name = Pods;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -1114,7 +1138,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Pods-resources.sh\"\n";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods/Pods-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -1145,6 +1169,7 @@
 				760E3C4C194FB61B00D86D91 /* Program.m in Sources */,
 				760E3C48194FB54600D86D91 /* DataModel.xcdatamodeld in Sources */,
 				52CC6D6619D110E300C67322 /* SCPRProgramsListViewController.m in Sources */,
+				5257E9CC19E34A550055733F /* SCPRSlideInTransition.m in Sources */,
 				52CC6D5E19D0DC7100C67322 /* Segment.m in Sources */,
 				760EA99219521E98009B504E /* AVPlayer+Additions.m in Sources */,
 				52E68B8819B919300028F8AE /* SCPRMenuButton.m in Sources */,
@@ -1271,7 +1296,7 @@
 		};
 		76A308FC18C8FB950065D4B1 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 3D27774292D34CDA90CFAEC3 /* Pods.xcconfig */;
+			baseConfigurationReference = F9D194612962C66D8F109726 /* Pods.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
@@ -1304,7 +1329,7 @@
 		};
 		76A308FD18C8FB950065D4B1 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 3D27774292D34CDA90CFAEC3 /* Pods.xcconfig */;
+			baseConfigurationReference = 45A107003D6C750C5E0ECAC3 /* Pods.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;

@@ -44,7 +44,7 @@
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-    [self.blurView setNeedsDisplay];
+//    [self.blurView setNeedsDisplay];
 }
 
 - (void)viewDidLoad {
@@ -59,6 +59,7 @@
                                   completion:^(BOOL status) {
                                       [self.blurView setNeedsDisplay];
                                   }];
+    self.view.backgroundColor = [UIColor clearColor];
 
     // Fetch all Programs from CoreData and filter, given HIDDEN_PROGRAMS.
     NSArray *storedPrograms = [Program fetchAllProgramsInContext:[[ContentManager shared] managedObjectContext]];

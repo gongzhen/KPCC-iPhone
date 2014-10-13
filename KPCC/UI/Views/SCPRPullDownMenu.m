@@ -101,6 +101,7 @@
     [self updateValues];
 
     [self setFrame:CGRectMake(0, -tableHeight, 320, tableHeight)];
+    [self setTag:893];
 
     fullyOpen = NO;
 

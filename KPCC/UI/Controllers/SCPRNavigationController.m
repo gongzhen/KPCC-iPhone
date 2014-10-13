@@ -8,6 +8,7 @@
 
 #import "SCPRNavigationController.h"
 #import "SCPRMasterViewController.h"
+#import "SCPRProgramsListViewController.h"
 #import "SCPRMenuButton.h"
 #import <POP/POP.h>
 
@@ -82,6 +83,24 @@
             [menuButton animateToMenu];
         }
     }
+}
+
+
+#pragma mark - Navigation Animation Delegate
+
+- (id<UIViewControllerAnimatedTransitioning>)navigationController:(UINavigationController *)navigationController
+                                  animationControllerForOperation:(UINavigationControllerOperation)operation
+                                               fromViewController:(UIViewController *)fromVC
+                                                 toViewController:(UIViewController *)toVC
+{
+
+    if ([toVC class] == [SCPRProgramsListViewController class] && [fromVC class] == [SCPRMasterViewController class]) {
+        SCPRSlideInTransition *slideInTransition = [SCPRSlideInTransition new];
+        slideInTransition.direction = @"rightToLeft";
+        return slideInTransition;
+    }
+
+    return nil;
 }
 
 

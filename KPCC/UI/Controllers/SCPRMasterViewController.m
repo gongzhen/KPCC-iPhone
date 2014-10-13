@@ -11,8 +11,9 @@
 #import "SCPRProgramsListViewController.h"
 #import "AFNetworking.h"
 #import "UIImageView+AFNetworking.h"
+#import "SCPRSlideInTransition.h"
 
-@interface SCPRMasterViewController () <AudioManagerDelegate, ContentProcessor>
+@interface SCPRMasterViewController () <AudioManagerDelegate, ContentProcessor, UINavigationControllerDelegate, UIViewControllerTransitioningDelegate>
 
 @property BOOL setPlaying;
 @property BOOL seekRequested;
@@ -60,9 +61,8 @@
     [super viewDidLoad];
 
     pulldownMenu = [[SCPRPullDownMenu alloc] initWithView:self.view];
-    [self.view addSubview:pulldownMenu];
-
     pulldownMenu.delegate = self;
+    [self.view addSubview:pulldownMenu];
     [pulldownMenu loadMenu];
 
     // Fetch program info and update audio control state.
@@ -125,18 +125,6 @@
     // Once the view has appeared we can register to begin receiving system audio controls.
     [[UIApplication sharedApplication] beginReceivingRemoteControlEvents];
     [self becomeFirstResponder];
-
-    //[self updateControlsAndUI:YES];
-}
-
--(void)skipBackwardEvent: (MPSkipIntervalCommandEvent *)skipEvent {
-    NSLog(@"Skip backward by %f", skipEvent.interval);
-    [self rewindFifteen];
-}
-
--(void)skipForwardEvent: (MPSkipIntervalCommandEvent *)skipEvent {
-    NSLog(@"Skip forward by %f", skipEvent.interval);
-    [self fastForwardFifteen];
 }
 
 
@@ -169,6 +157,14 @@
     }
 }
 
+-(void)skipBackwardEvent: (MPSkipIntervalCommandEvent *)skipEvent {
+    [self rewindFifteen];
+}
+
+-(void)skipForwardEvent: (MPSkipIntervalCommandEvent *)skipEvent {
+    [self fastForwardFifteen];
+}
+
 - (IBAction)backToLiveTapped:(id)sender {
     seekRequested = YES;
     [[AudioManager shared] forwardSeekLive];
@@ -181,6 +177,9 @@
         [self presentViewController:controller animated:YES completion:nil];
     }
 }
+
+
+# pragma mark - Audio commands
 
 - (void)playStream {
     [[AudioManager shared] startStream];
@@ -203,6 +202,9 @@
 - (void)updateDataForUI {
     [[NetworkManager shared] fetchProgramInformationFor:[NSDate date] display:self];
 }
+
+
+# pragma mark - UI control
 
 - (void)updateControlsAndUI:(BOOL)animated {
 
@@ -332,6 +334,7 @@
     }
 }
 
+
 /**
  * Dev note: Not being called for now.. zooms in background program image slightly
  */
@@ -450,7 +453,25 @@
     // TODO: Set handler for end of episode playback. Fallback/start livestream?
 }
 
-#pragma mark - Config for show and hide menu
+- (void)updateUIWithProgram:(Program*)program {
+    if (!program) {
+        return;
+    }
+
+    if ([program title]) {
+        if ([program title].length <= 14) {
+            [self.programTitleLabel setFont:[self.programTitleLabel.font fontWithSize:46.0]];
+        } else if ([program title].length > 14 && [program title].length <= 18) {
+            [self.programTitleLabel setFont:[self.programTitleLabel.font fontWithSize:35.0]];
+        } else {
+            [self.programTitleLabel setFont:[self.programTitleLabel.font fontWithSize:30.0]];
+        }
+        [self.programTitleLabel setText:[program title]];
+    }
+}
+
+
+#pragma mark - Menu control
 
 - (void)cloakForMenu:(BOOL)animated {
     [self removeAllAnimations];
@@ -561,6 +582,7 @@
     [self.progressBarView.layer pop_removeAllAnimations];
 }
 
+
 # pragma mark - PulldownMenuDelegate
 
 - (void)menuItemSelected:(NSIndexPath *)indexPath {
@@ -579,7 +601,9 @@
             if (setForOnDemandUI && self.onDemandProgram != nil) {
                 prog = self.onDemandProgram;
             }
+
             SCPRProgramsListViewController *vc = [[SCPRProgramsListViewController alloc] initWithBackgroundProgram:prog];
+//            SCPRProgramsListViewController *vc = [[SCPRProgramsListViewController alloc] initWithNibName:nil bundle:nil];
             [self.navigationController pushViewController:vc animated:YES];
             break;
         }
@@ -602,22 +626,6 @@
     }
 }
 
-- (void)updateUIWithProgram:(Program*)program {
-    if (!program) {
-        return;
-    }
-
-    if ([program title]) {
-        if ([program title].length <= 14) {
-            [self.programTitleLabel setFont:[self.programTitleLabel.font fontWithSize:46.0]];
-        } else if ([program title].length > 14 && [program title].length <= 18) {
-            [self.programTitleLabel setFont:[self.programTitleLabel.font fontWithSize:35.0]];
-        } else {
-            [self.programTitleLabel setFont:[self.programTitleLabel.font fontWithSize:30.0]];
-        }
-        [self.programTitleLabel setText:[program title]];
-    }
-}
 
 # pragma mark - AudioManagerDelegate
 
