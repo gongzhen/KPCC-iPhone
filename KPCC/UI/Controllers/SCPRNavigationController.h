@@ -11,8 +11,6 @@
 #import "SCPRMenuButton.h"
 #import "SCPRSlideInTransition.h"
 
-@class STPTransition;
-
 @interface SCPRNavigationController : UINavigationController<UIGestureRecognizerDelegate,UINavigationControllerDelegate,MenuButtonDelegate,
 UIViewControllerTransitioningDelegate> {
     SCPRMenuButton *menuButton;
