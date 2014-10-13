@@ -7,8 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		5203D8EE19E710A40036F5FC /* SCPRMenuContainerController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5203D8EC19E710A40036F5FC /* SCPRMenuContainerController.m */; };
-		5203D8EF19E710A40036F5FC /* SCPRMenuContainerController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5203D8ED19E710A40036F5FC /* SCPRMenuContainerController.xib */; };
 		523E86D019C8A292006FC366 /* SCPRProgramDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 523E86CE19C8A292006FC366 /* SCPRProgramDetailViewController.m */; };
 		523E86D219C8A292006FC366 /* SCPRProgramDetailViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 523E86CF19C8A292006FC366 /* SCPRProgramDetailViewController.xib */; };
 		523E86D919CB694B006FC366 /* Episode.m in Sources */ = {isa = PBXBuildFile; fileRef = 523E86D819CB694B006FC366 /* Episode.m */; };
@@ -199,9 +197,6 @@
 
 /* Begin PBXFileReference section */
 		45A107003D6C750C5E0ECAC3 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
-		5203D8EB19E710A40036F5FC /* SCPRMenuContainerController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCPRMenuContainerController.h; sourceTree = "<group>"; };
-		5203D8EC19E710A40036F5FC /* SCPRMenuContainerController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SCPRMenuContainerController.m; sourceTree = "<group>"; };
-		5203D8ED19E710A40036F5FC /* SCPRMenuContainerController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SCPRMenuContainerController.xib; sourceTree = "<group>"; };
 		523E86CD19C8A292006FC366 /* SCPRProgramDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCPRProgramDetailViewController.h; sourceTree = "<group>"; };
 		523E86CE19C8A292006FC366 /* SCPRProgramDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SCPRProgramDetailViewController.m; sourceTree = "<group>"; };
 		523E86CF19C8A292006FC366 /* SCPRProgramDetailViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SCPRProgramDetailViewController.xib; sourceTree = "<group>"; };
@@ -451,19 +446,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		5203D8F019E710A90036F5FC /* Menu */ = {
-			isa = PBXGroup;
-			children = (
-				52CC6D6419D110E300C67322 /* SCPRProgramsListViewController.h */,
-				52CC6D6519D110E300C67322 /* SCPRProgramsListViewController.m */,
-				52CC6D6819D112F400C67322 /* SCPRProgramsListViewController.xib */,
-				5203D8EB19E710A40036F5FC /* SCPRMenuContainerController.h */,
-				5203D8EC19E710A40036F5FC /* SCPRMenuContainerController.m */,
-				5203D8ED19E710A40036F5FC /* SCPRMenuContainerController.xib */,
-			);
-			name = Menu;
-			sourceTree = "<group>";
-		};
 		5257E9C919E349F70055733F /* Transitions */ = {
 			isa = PBXGroup;
 			children = (
@@ -648,7 +630,6 @@
 		76658ABC18E0AF8500026176 /* View Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				5203D8F019E710A90036F5FC /* Menu */,
 				76B9A9A918EF59FD007A6D8C /* SCPRUserReportViewController.h */,
 				76B9A9AA18EF59FD007A6D8C /* SCPRUserReportViewController.m */,
 				76B9A9AB18EF59FD007A6D8C /* SCPRUserReportViewController.xib */,
@@ -661,6 +642,9 @@
 				523E86CD19C8A292006FC366 /* SCPRProgramDetailViewController.h */,
 				523E86CE19C8A292006FC366 /* SCPRProgramDetailViewController.m */,
 				523E86CF19C8A292006FC366 /* SCPRProgramDetailViewController.xib */,
+				52CC6D6419D110E300C67322 /* SCPRProgramsListViewController.h */,
+				52CC6D6519D110E300C67322 /* SCPRProgramsListViewController.m */,
+				52CC6D6819D112F400C67322 /* SCPRProgramsListViewController.xib */,
 			);
 			name = "View Controllers";
 			path = Controllers;
@@ -1111,7 +1095,6 @@
 				768C06601995905D00F829EB /* chevron_down@2x.png in Resources */,
 				768C0671199590CC00F829EB /* FreigSanProBlkIt.otf in Resources */,
 				52CC6D6919D112F400C67322 /* SCPRProgramsListViewController.xib in Resources */,
-				5203D8EF19E710A40036F5FC /* SCPRMenuContainerController.xib in Resources */,
 				52EFF79919C3688D0059A0E3 /* menu-microphone@2x.png in Resources */,
 				52EFF83819C368C00059A0E3 /* program_avatar_prairie-home-companion@2x.png in Resources */,
 			);
@@ -1179,7 +1162,6 @@
 				76A308D718C8FB940065D4B1 /* SCPRAppDelegate.m in Sources */,
 				52EFF87419C375CA0059A0E3 /* SCPRPullDownMenu.m in Sources */,
 				52E68B8219B8F2D10028F8AE /* SCPRNavigationController.m in Sources */,
-				5203D8EE19E710A40036F5FC /* SCPRMenuContainerController.m in Sources */,
 				76A308D318C8FB940065D4B1 /* main.m in Sources */,
 				52CC6D6219D100DE00C67322 /* SCPRProgramTableViewCell.m in Sources */,
 				76A3090418C93C880065D4B1 /* AudioManager.m in Sources */,

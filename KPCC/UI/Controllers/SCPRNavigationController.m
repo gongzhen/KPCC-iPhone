@@ -8,6 +8,7 @@
 
 #import "SCPRNavigationController.h"
 #import "SCPRMasterViewController.h"
+#import "SCPRProgramsListViewController.h"
 #import "SCPRMenuButton.h"
 #import <POP/POP.h>
 
