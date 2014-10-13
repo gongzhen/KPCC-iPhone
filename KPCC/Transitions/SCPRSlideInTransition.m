@@ -29,6 +29,7 @@
     CGRect frameOffScreen;
     CGRect frameInScreen;
     CGRect destinationOffScreen;
+    CGRect menuFrameOffScreen;
 
     // Grab reference to Menu
     UIView *menuView;
@@ -47,14 +48,14 @@
     // Place the UIImage in a UIImageView
     UIImageView *newView = [[UIImageView alloc] initWithFrame:toViewController.view.bounds];
     newView.image = viewImage;
-    
+
     UIImageView *reverseNewView = [[UIImageView alloc] initWithImage:viewImage];
 //    UIView *reverseNewView = [[UIView alloc] initWithFrame:toViewController.view.bounds];
 //    reverseNewView.backgroundColor = [UIColor greenColor];
 
     // Add the image to the background of the Programs view controller.
-    [toViewController.view addSubview:newView];
-    [toViewController.view sendSubviewToBack:newView];
+    //[toViewController.view addSubview:newView];
+    //[toViewController.view sendSubviewToBack:newView];
     
 
 //    [fromViewController.view addSubview:reverseNewView];
@@ -75,19 +76,24 @@
         destinationOffScreen.origin.x = (-1)*inView.frame.size.width;
         
     } else {
-        [inView insertSubview:toViewController.view belowSubview:fromViewController.view];
-        [inView insertSubview:reverseNewView belowSubview:fromViewController.view];
+        [inView insertSubview:toViewController.view aboveSubview:fromViewController.view];
+//        [inView insertSubview:reverseNewView belowSubview:fromViewController.view];
+        [inView insertSubview:menuView aboveSubview:fromViewController.view];
 
         
         //centerOffScreen = inView.center;
         //centerOffScreen.x = inView.frame.size.width;
         
+        menuFrameOffScreen = menuView.frame;
+        menuFrameOffScreen.origin.x = (-1)*menuView.frame.size.width;
+
         frameOffScreen = inView.frame;
         frameOffScreen.origin.x = (-1)*inView.frame.size.width;
         
         frameInScreen = inView.frame;
 
-        reverseNewView.frame = CGRectMake( (-1)*inView.frame.size.width, reverseNewView.frame.origin.y, reverseNewView.frame.size.width, reverseNewView.frame.size.height);
+//        reverseNewView.frame = CGRectMake( (-1)*inView.frame.size.width, reverseNewView.frame.origin.y, reverseNewView.frame.size.width, reverseNewView.frame.size.height);
+        reverseNewView.frame = frameInScreen;
         
         destinationOffScreen = inView.frame;
         destinationOffScreen.origin.x = inView.frame.size.width;
@@ -98,7 +104,8 @@
     
     [UIView animateKeyframesWithDuration:duration delay:0.0f options:UIViewKeyframeAnimationOptionCalculationModePaced animations:^{
         
-        fromViewController.view.frame = frameOffScreen;
+//        fromViewController.view.frame = frameOffScreen;
+        menuView.frame = menuFrameOffScreen;
         toViewController.view.frame = frameInScreen;
         reverseNewView.frame = frameInScreen;
         
