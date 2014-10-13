@@ -100,6 +100,13 @@
         return slideInTransition;
     }
 
+    // TODO: The back transition needs some work
+//    if ([toVC class] == [SCPRMasterViewController class] && [fromVC class] == [SCPRProgramsListViewController class]) {
+//        SCPRSlideInTransition *slideInTransition = [SCPRSlideInTransition new];
+//        slideInTransition.direction = @"leftToRight";
+//        return slideInTransition;
+//    }
+
     return nil;
 }
 
