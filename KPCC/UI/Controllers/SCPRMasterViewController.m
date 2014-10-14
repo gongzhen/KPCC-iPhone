@@ -65,6 +65,9 @@
     [self.view addSubview:pulldownMenu];
     [pulldownMenu loadMenu];
 
+    // Set up pre-roll child view controller.
+    [self addPreRollController];
+
     // Fetch program info and update audio control state.
     [self updateDataForUI];
 
@@ -127,6 +130,19 @@
     [self becomeFirstResponder];
 }
 
+- (void)addPreRollController {
+    self.preRollViewController = [[SCPRPreRollViewController alloc] initWithNibName:nil bundle:nil];
+
+    [self addChildViewController:self.preRollViewController];
+
+    CGRect frame = self.view.bounds;
+    frame.origin.y = (-1)*self.view.bounds.size.height;
+    self.preRollViewController.view.frame = frame;
+
+    [self.view addSubview:self.preRollViewController.view];
+    [self.preRollViewController didMoveToParentViewController:self];
+}
+
 
 # pragma mark - Actions
 
@@ -178,6 +194,9 @@
     }
 }
 
+- (IBAction)showPreRollTapped:(id)sender {
+    [self.preRollViewController showPreRollWithAnimation:YES];
+}
 
 # pragma mark - Audio commands
 

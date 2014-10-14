@@ -17,7 +17,7 @@
 #import "SCPRPullDownMenu.h"
 #import "Episode.h"
 #import "Segment.h"
-
+#import "SCPRPreRollViewController.h"
 
 @interface SCPRMasterViewController : UIViewController<SCPRMenuDelegate>
 
@@ -53,6 +53,10 @@
 @property (nonatomic,strong) NSString *onDemandEpUrl;
 @property (nonatomic,strong) SCPRPullDownMenu *pulldownMenu;
 @property (nonatomic) BOOL menuOpen;
+
+
+// Pre-Roll
+@property (nonatomic,strong) SCPRPreRollViewController *preRollViewController;
 
 
 // Instance methods.
