@@ -8,7 +8,15 @@
 
 #import <UIKit/UIKit.h>
 
+@protocol SCPRPreRollControllerDelegate <NSObject>
+
+- (void)preRollCompleted;
+
+@end
+
 @interface SCPRPreRollViewController : UIViewController
+
+@property (nonatomic,weak) id<SCPRPreRollControllerDelegate> delegate;
 
 - (void)showPreRollWithAnimation:(BOOL)animated;
 

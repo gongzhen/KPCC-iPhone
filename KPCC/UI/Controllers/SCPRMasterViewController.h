@@ -53,6 +53,7 @@
 @property (nonatomic,strong) NSString *onDemandEpUrl;
 @property (nonatomic,strong) SCPRPullDownMenu *pulldownMenu;
 @property (nonatomic) BOOL menuOpen;
+@property (nonatomic) BOOL preRollOpen;
 
 
 // Pre-Roll

@@ -9,7 +9,17 @@
 #import "SCPRPreRollViewController.h"
 #import <POP/POP.h>
 
+#define kDefaultAdPresentationTime 10.0
+
 @interface SCPRPreRollViewController ()
+{
+    float currentPresentedDuration;
+}
+
+@property IBOutlet UIProgressView *adProgressView;
+
+@property (nonatomic) NSTimer *timer;
+
 
 @end
 
@@ -18,6 +28,8 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
+    
+    
 }
 
 
@@ -30,7 +42,16 @@
             self.view.frame = frame;
             
         } completion:^(BOOL finished) {
-            
+
+            if (self.timer == nil) {
+                currentPresentedDuration = 0;
+                [self.adProgressView setProgress:0 animated:YES];
+                self.timer = [NSTimer scheduledTimerWithTimeInterval:0.01
+                                                              target:self
+                                                            selector:@selector(setAdProgress)
+                                                            userInfo:nil
+                                                             repeats:YES];
+            }
         }];
         
         
@@ -43,6 +64,10 @@
 # pragma mark - Actions
 
 - (IBAction)dismissTapped:(id)sender {
+    if ([self.delegate respondsToSelector:@selector(preRollCompleted)]) {
+        [self.delegate preRollCompleted];
+    }
+
     [UIView animateWithDuration:0.3f animations:^{
         CGRect frame = CGRectMake(self.view.frame.origin.x,
                                   -self.view.frame.size.height,
@@ -52,9 +77,27 @@
 
     } completion:^(BOOL finished) {
 
+        if (self.timer != nil && [self.timer isValid]) {
+            [self.timer invalidate];
+            self.timer = nil;
+        }
+
+        [self.adProgressView setProgress:0.0];
     }];
 }
 
+- (void)setAdProgress {
+
+    currentPresentedDuration = currentPresentedDuration + 0.01;
+
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.adProgressView setProgress:(currentPresentedDuration/kDefaultAdPresentationTime) animated:YES];
+    });
+
+    if (currentPresentedDuration >= kDefaultAdPresentationTime) {
+        [self dismissTapped:nil];
+    }
+}
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];

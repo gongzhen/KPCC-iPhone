@@ -13,7 +13,7 @@
 #import "UIImageView+AFNetworking.h"
 #import "SCPRSlideInTransition.h"
 
-@interface SCPRMasterViewController () <AudioManagerDelegate, ContentProcessor, UINavigationControllerDelegate, UIViewControllerTransitioningDelegate>
+@interface SCPRMasterViewController () <AudioManagerDelegate, ContentProcessor, UINavigationControllerDelegate, UIViewControllerTransitioningDelegate, SCPRPreRollControllerDelegate>
 
 @property BOOL setPlaying;
 @property BOOL seekRequested;
@@ -132,6 +132,7 @@
 
 - (void)addPreRollController {
     self.preRollViewController = [[SCPRPreRollViewController alloc] initWithNibName:nil bundle:nil];
+    self.preRollViewController.delegate = self;
 
     [self addChildViewController:self.preRollViewController];
 
@@ -195,6 +196,7 @@
 }
 
 - (IBAction)showPreRollTapped:(id)sender {
+    [self cloakForPreRoll:YES];
     [self.preRollViewController showPreRollWithAnimation:YES];
 }
 
@@ -599,6 +601,96 @@
     [self.horizDividerLine.layer pop_removeAllAnimations];
     [self.timeLabelOnDemand.layer pop_removeAllAnimations];
     [self.progressBarView.layer pop_removeAllAnimations];
+}
+
+
+# pragma mark - PreRoll Control
+
+- (void)cloakForPreRoll:(BOOL)animated {
+    [self removeAllAnimations];
+    [self.blurView setNeedsDisplay];
+
+    if (setForOnDemandUI){
+        POPBasicAnimation *onDemandElementsFade = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
+        onDemandElementsFade.toValue = @0;
+        onDemandElementsFade.duration = 0.3;
+        [self.timeLabelOnDemand.layer pop_addAnimation:onDemandElementsFade forKey:@"timeLabelFadeAnimation"];
+        [self.progressBarView.layer pop_addAnimation:onDemandElementsFade forKey:@"progressBarFadeAnimation"];
+    }
+
+    POPBasicAnimation *blurFadeAnimation = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
+    blurFadeAnimation.toValue = @1;
+    blurFadeAnimation.duration = 0.3;
+
+    POPBasicAnimation *darkBgFadeAnimation = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
+    darkBgFadeAnimation.toValue = @0.35;
+    darkBgFadeAnimation.duration = 0.3;
+
+    POPBasicAnimation *controlsFadeAnimation = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
+    controlsFadeAnimation.toValue = @(0);
+    controlsFadeAnimation.duration = 0.3;
+
+    [self.blurView.layer pop_addAnimation:blurFadeAnimation forKey:@"blurViewFadeAnimation"];
+    [self.darkBgView.layer pop_addAnimation:darkBgFadeAnimation forKey:@"darkBgFadeAnimation"];
+    [self.playerControlsView.layer pop_addAnimation:controlsFadeAnimation forKey:@"controlsViewFadeAnimation"];
+    [self.onDemandPlayerView.layer pop_addAnimation:controlsFadeAnimation forKey:@"onDemandViewFadeAnimation"];
+    [self.liveStreamView.layer pop_addAnimation:controlsFadeAnimation forKey:@"liveStreamViewFadeAnimation"];
+
+    POPBasicAnimation *dividerFadeAnim = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
+    dividerFadeAnim.toValue = @0;
+    dividerFadeAnim.duration = 0.3;
+    [self.horizDividerLine.layer pop_addAnimation:dividerFadeAnim forKey:@"horizDividerOutFadeAnimation"];
+
+    self.preRollOpen = YES;
+}
+
+- (void)decloakForPreRoll:(BOOL)animated {
+    [self removeAllAnimations];
+
+    [self.blurView setNeedsDisplay];
+
+    if (setForOnDemandUI){
+        POPBasicAnimation *onDemandElementsFade = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
+        onDemandElementsFade.toValue = @1;
+        onDemandElementsFade.duration = 0.3;
+        [self.timeLabelOnDemand.layer pop_addAnimation:onDemandElementsFade forKey:@"timeLabelFadeAnimation"];
+        [self.progressBarView.layer pop_addAnimation:onDemandElementsFade forKey:@"progressBarFadeAnimation"];
+    }
+
+    POPBasicAnimation *fadeAnimation = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
+    fadeAnimation.toValue = @0;
+    fadeAnimation.duration = 0.3;
+
+    POPBasicAnimation *darkBgFadeAnimation = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
+    darkBgFadeAnimation.toValue = @0;
+    darkBgFadeAnimation.duration = 0.3;
+
+    POPBasicAnimation *controlsFadeAnimation = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
+    controlsFadeAnimation.toValue = @1;
+    controlsFadeAnimation.duration = 0.3;
+
+    [self.blurView.layer pop_addAnimation:fadeAnimation forKey:@"blurViewFadeAnimation"];
+    [self.darkBgView.layer pop_addAnimation:darkBgFadeAnimation forKey:@"darkBgFadeAnimation"];
+    [self.playerControlsView.layer pop_addAnimation:controlsFadeAnimation forKey:@"controlsViewFadeAnimation"];
+    [self.onDemandPlayerView.layer pop_addAnimation:controlsFadeAnimation forKey:@"onDemandViewFadeAnimation"];
+    [self.liveStreamView.layer pop_addAnimation:controlsFadeAnimation forKey:@"liveStreamViewFadeAnimation"];
+
+    if ([[AudioManager shared] isStreamPlaying]) {
+        POPBasicAnimation *dividerFadeAnim = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
+        dividerFadeAnim.toValue = @0.4;
+        dividerFadeAnim.duration = 0.3;
+        [self.horizDividerLine.layer pop_addAnimation:dividerFadeAnim forKey:@"horizDividerFadeOutAnimation"];
+    }
+
+    self.preRollOpen = NO;
+}
+
+# pragma mark - SCPRPreRollControllerDelegate
+
+- (void)preRollCompleted {
+    //if (self.preRollOpen) {
+        [self decloakForPreRoll:YES];
+    //}
 }
 
 
