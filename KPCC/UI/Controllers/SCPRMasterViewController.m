@@ -24,6 +24,9 @@
 
 @property IBOutlet NSLayoutConstraint *playerControlsTopYConstraint;
 @property IBOutlet NSLayoutConstraint *playerControlsBottomYConstraint;
+
+@property IBOutlet UIButton *preRollButton;
+
 @end
 
 @implementation SCPRMasterViewController
@@ -641,6 +644,9 @@
     dividerFadeAnim.duration = 0.3;
     [self.horizDividerLine.layer pop_addAnimation:dividerFadeAnim forKey:@"horizDividerOutFadeAnimation"];
 
+    // TODO: Take out button
+    [self.preRollButton setHidden:YES];
+
     self.preRollOpen = YES;
 }
 
@@ -682,15 +688,18 @@
         [self.horizDividerLine.layer pop_addAnimation:dividerFadeAnim forKey:@"horizDividerFadeOutAnimation"];
     }
 
+    // TODO: Take out button
+    [self.preRollButton setHidden:NO];
+
     self.preRollOpen = NO;
 }
 
 # pragma mark - SCPRPreRollControllerDelegate
 
 - (void)preRollCompleted {
-    //if (self.preRollOpen) {
+    if (self.preRollOpen) {
         [self decloakForPreRoll:YES];
-    //}
+    }
 }
 
 

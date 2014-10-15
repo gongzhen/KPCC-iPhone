@@ -290,6 +290,7 @@
                         <outlet property="playerControlsBottomYConstraint" destination="SWV-t1-YPf" id="H3o-rj-vjI"/>
                         <outlet property="playerControlsTopYConstraint" destination="Ucl-Cx-Se6" id="3O4-L7-YUZ"/>
                         <outlet property="playerControlsView" destination="Qkn-sg-4PL" id="WVU-af-QdV"/>
+                        <outlet property="preRollButton" destination="ykZ-QL-jw4" id="zIV-gP-YZk"/>
                         <outlet property="programImageView" destination="jYj-xG-3QJ" id="XVU-26-yf0"/>
                         <outlet property="programTitleLabel" destination="ao2-yr-kyf" id="BIo-g3-SA9"/>
                         <outlet property="programTitleOnDemand" destination="mV9-FT-8sm" id="NhA-77-wox"/>
