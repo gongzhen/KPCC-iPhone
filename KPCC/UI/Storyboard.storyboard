@@ -38,7 +38,7 @@
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             </view>
-                            <view alpha="0.0" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="sYL-12-Hgi" userLabel="Dark Bg View">
+                            <view alpha="0.0" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="sYL-12-Hgi" userLabel="Dark Bg View">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                                 <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.80000000000000004" colorSpace="custom" customColorSpace="sRGB"/>
                                 <color key="tintColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
@@ -186,10 +186,10 @@
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Qkn-sg-4PL" userLabel="PlayerControlsView">
-                                <rect key="frame" x="90" y="214" width="140" height="122"/>
+                                <rect key="frame" x="90" y="400" width="140" height="168"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pSM-s0-r5H" userLabel="PlayPauseButton">
-                                        <rect key="frame" x="9" y="0.0" width="122" height="122"/>
+                                        <rect key="frame" x="9" y="23" width="122" height="122"/>
                                         <state key="normal" image="btn_play_large.png">
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
@@ -202,6 +202,25 @@
                                 <constraints>
                                     <constraint firstAttribute="centerY" secondItem="pSM-s0-r5H" secondAttribute="centerY" id="iMX-gs-n6o"/>
                                     <constraint firstAttribute="centerX" secondItem="pSM-s0-r5H" secondAttribute="centerX" id="sV4-EZ-Dmv"/>
+                                </constraints>
+                            </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3WP-os-1RZ" userLabel="InitialControlView">
+                                <rect key="frame" x="90" y="223" width="140" height="122"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="G5B-oE-ab2" userLabel="InitialPlayButton">
+                                        <rect key="frame" x="9" y="0.0" width="122" height="122"/>
+                                        <state key="normal" image="btn_play_large.png">
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="initialPlayTapped:" destination="4pL-7p-2vt" eventType="touchUpInside" id="rCa-Vm-5SA"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="centerX" secondItem="G5B-oE-ab2" secondAttribute="centerX" id="O2e-If-5u0"/>
+                                    <constraint firstAttribute="centerY" secondItem="G5B-oE-ab2" secondAttribute="centerY" id="fOy-xX-SL2"/>
                                 </constraints>
                             </view>
                             <view alpha="0.0" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Duc-cQ-dAe" userLabel="DividerView">
@@ -229,7 +248,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ykZ-QL-jw4">
-                                <rect key="frame" x="132" y="480" width="58" height="30"/>
+                                <rect key="frame" x="132" y="500" width="58" height="30"/>
                                 <state key="normal" title="PreRoll">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
@@ -243,22 +262,27 @@
                             <constraint firstAttribute="centerX" secondItem="jYj-xG-3QJ" secondAttribute="centerX" id="1Qw-P2-Xzc"/>
                             <constraint firstItem="LAZ-J2-lj5" firstAttribute="top" secondItem="QEk-eP-ZIb" secondAttribute="top" id="2rD-Gk-vaW"/>
                             <constraint firstAttribute="trailing" secondItem="Duc-cQ-dAe" secondAttribute="trailing" constant="10" id="7Pg-Sc-hjW"/>
+                            <constraint firstItem="sYL-12-Hgi" firstAttribute="width" secondItem="QEk-eP-ZIb" secondAttribute="width" id="7Xl-Lo-p81"/>
                             <constraint firstItem="LAZ-J2-lj5" firstAttribute="bottom" secondItem="Npf-rN-6R5" secondAttribute="top" id="8aw-hr-XxT"/>
+                            <constraint firstItem="3WP-os-1RZ" firstAttribute="leading" secondItem="Qkn-sg-4PL" secondAttribute="leading" id="9ME-dp-4j9"/>
                             <constraint firstItem="LAZ-J2-lj5" firstAttribute="leading" secondItem="Npf-rN-6R5" secondAttribute="leading" id="AKC-22-ydA"/>
                             <constraint firstItem="LAZ-J2-lj5" firstAttribute="leading" secondItem="QEk-eP-ZIb" secondAttribute="leading" id="DQd-Nh-ZRJ"/>
                             <constraint firstItem="jYj-xG-3QJ" firstAttribute="top" secondItem="QEk-eP-ZIb" secondAttribute="top" constant="64" id="E3i-Tu-txH"/>
                             <constraint firstItem="LAZ-J2-lj5" firstAttribute="leading" secondItem="QEk-eP-ZIb" secondAttribute="leading" id="EHj-Dc-t3Z"/>
                             <constraint firstItem="Q1h-II-U3Q" firstAttribute="leading" secondItem="QEk-eP-ZIb" secondAttribute="leading" constant="15" id="Eop-k1-SEc"/>
+                            <constraint firstItem="3WP-os-1RZ" firstAttribute="centerY" secondItem="LAZ-J2-lj5" secondAttribute="centerY" id="FMM-DK-0gY"/>
                             <constraint firstItem="Duc-cQ-dAe" firstAttribute="bottom" secondItem="8NV-lk-gMa" secondAttribute="bottom" constant="1" id="Frb-gk-KJv"/>
                             <constraint firstAttribute="width" secondItem="jYj-xG-3QJ" secondAttribute="width" id="IkI-zD-ilX"/>
+                            <constraint firstItem="3WP-os-1RZ" firstAttribute="trailing" secondItem="Qkn-sg-4PL" secondAttribute="trailing" id="LrR-zz-UkH"/>
                             <constraint firstItem="Syv-nA-vpR" firstAttribute="width" secondItem="QEk-eP-ZIb" secondAttribute="width" id="MOB-G3-PEy"/>
                             <constraint firstItem="Qkn-sg-4PL" firstAttribute="leading" secondItem="m78-b6-vle" secondAttribute="leading" constant="90" id="PQs-aB-MFu"/>
                             <constraint firstAttribute="width" secondItem="LAZ-J2-lj5" secondAttribute="width" id="QPU-i3-Uto"/>
                             <constraint firstItem="Syv-nA-vpR" firstAttribute="leading" secondItem="Npf-rN-6R5" secondAttribute="leading" id="R6Q-zH-ZYg"/>
-                            <constraint firstItem="Npf-rN-6R5" firstAttribute="top" secondItem="Qkn-sg-4PL" secondAttribute="bottom" constant="232" id="SWV-t1-YPf"/>
-                            <constraint firstItem="Qkn-sg-4PL" firstAttribute="top" secondItem="f6n-R2-H79" secondAttribute="bottom" constant="150" id="Ucl-Cx-Se6"/>
+                            <constraint firstItem="Npf-rN-6R5" firstAttribute="bottom" secondItem="Qkn-sg-4PL" secondAttribute="bottom" id="SWV-t1-YPf"/>
+                            <constraint firstItem="Qkn-sg-4PL" firstAttribute="top" secondItem="f6n-R2-H79" secondAttribute="bottom" constant="336" id="Ucl-Cx-Se6"/>
                             <constraint firstItem="m78-b6-vle" firstAttribute="top" secondItem="f6n-R2-H79" secondAttribute="bottom" id="XjQ-q9-TTx"/>
                             <constraint firstItem="m78-b6-vle" firstAttribute="leading" secondItem="QEk-eP-ZIb" secondAttribute="leading" id="YXA-9Q-iXJ"/>
+                            <constraint firstItem="sYL-12-Hgi" firstAttribute="height" secondItem="QEk-eP-ZIb" secondAttribute="height" id="Zdh-QH-ghl"/>
                             <constraint firstItem="Syv-nA-vpR" firstAttribute="top" secondItem="f6n-R2-H79" secondAttribute="bottom" id="asI-dR-Qyi"/>
                             <constraint firstItem="Duc-cQ-dAe" firstAttribute="leading" secondItem="QEk-eP-ZIb" secondAttribute="leading" constant="10" id="eie-Ai-gCk"/>
                             <constraint firstItem="Npf-rN-6R5" firstAttribute="top" secondItem="Duc-cQ-dAe" secondAttribute="bottom" constant="183" id="kAK-pi-Z6e"/>
@@ -266,8 +290,11 @@
                             <constraint firstItem="Npf-rN-6R5" firstAttribute="top" secondItem="m78-b6-vle" secondAttribute="bottom" id="qqA-NQ-5yM"/>
                             <constraint firstAttribute="trailing" secondItem="8NV-lk-gMa" secondAttribute="trailing" constant="310" id="s50-zb-WIB"/>
                             <constraint firstItem="8NV-lk-gMa" firstAttribute="leading" secondItem="QEk-eP-ZIb" secondAttribute="leading" constant="10" id="sDP-lA-qxW"/>
+                            <constraint firstItem="3WP-os-1RZ" firstAttribute="centerX" secondItem="sYL-12-Hgi" secondAttribute="centerX" id="tWf-LP-TMA"/>
+                            <constraint firstItem="3WP-os-1RZ" firstAttribute="centerY" secondItem="sYL-12-Hgi" secondAttribute="centerY" id="tWk-2A-tdj"/>
                             <constraint firstItem="Duc-cQ-dAe" firstAttribute="top" secondItem="Q1h-II-U3Q" secondAttribute="bottom" constant="10" id="w8S-Nj-rFW"/>
                             <constraint firstItem="Qkn-sg-4PL" firstAttribute="width" secondItem="QEk-eP-ZIb" secondAttribute="width" constant="-180" id="wM6-8K-W6k"/>
+                            <constraint firstItem="Q1h-II-U3Q" firstAttribute="top" secondItem="3WP-os-1RZ" secondAttribute="bottom" constant="7" id="zti-2f-6Up"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="KPCC Live" id="pkk-9h-rMs"/>
@@ -282,6 +309,7 @@
                         <outlet property="dividerOnDemand" destination="J5U-kb-6Je" id="5tr-af-9iL"/>
                         <outlet property="episodeTitleOnDemand" destination="n04-am-s1L" id="9Gf-D5-eAB"/>
                         <outlet property="horizDividerLine" destination="Duc-cQ-dAe" id="3ce-uV-F9v"/>
+                        <outlet property="initialPlayButton" destination="G5B-oE-ab2" id="8sf-rd-Zr7"/>
                         <outlet property="liveDescriptionLabel" destination="g8v-J1-2Ng" id="sUp-r5-wI2"/>
                         <outlet property="liveRewindAltButton" destination="TfG-Pl-Djp" id="cmL-9t-cLA"/>
                         <outlet property="liveStreamView" destination="m78-b6-vle" id="Nzq-R7-aId"/>

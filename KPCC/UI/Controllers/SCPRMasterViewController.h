@@ -24,6 +24,7 @@
 @property IBOutlet UILabel *programTitleLabel;
 @property IBOutlet UIImageView *programImageView;
 @property IBOutlet UIButton *playPauseButton;
+@property IBOutlet UIButton *initialPlayButton;
 @property IBOutlet UIButton *rewindToShowStartButton;
 @property IBOutlet UIButton *liveRewindAltButton;
 @property IBOutlet UILabel *liveDescriptionLabel;

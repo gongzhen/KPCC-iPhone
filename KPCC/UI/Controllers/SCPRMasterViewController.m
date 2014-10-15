@@ -15,6 +15,7 @@
 
 @interface SCPRMasterViewController () <AudioManagerDelegate, ContentProcessor, UINavigationControllerDelegate, UIViewControllerTransitioningDelegate, SCPRPreRollControllerDelegate>
 
+@property BOOL initialPlay;
 @property BOOL setPlaying;
 @property BOOL seekRequested;
 @property BOOL busyZoomAnim;
@@ -33,6 +34,7 @@
 
 @synthesize pulldownMenu,
             seekRequested,
+            initialPlay,
             setPlaying,
             busyZoomAnim,
             setForLiveStreamUI,
@@ -112,6 +114,10 @@
     MPRemoteCommand *playCommand = [rcc playCommand];
     [playCommand setEnabled:YES];
     [playCommand addTarget:self action:@selector(playOrPauseTapped:)];
+
+    if (!initialPlay) {
+        [self.playPauseButton setHidden:YES];
+    }
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -149,6 +155,14 @@
 
 
 # pragma mark - Actions
+
+- (IBAction)initialPlayTapped:(id)sender {
+    [self cloakForPreRoll:YES];
+    [self.preRollViewController showPreRollWithAnimation:YES];
+    [self.playPauseButton setHidden:NO];
+    [self.initialPlayButton setHidden:YES];
+    initialPlay = YES;
+}
 
 - (IBAction)playOrPauseTapped:(id)sender {
     if (seekRequested) {
@@ -317,12 +331,12 @@
             POPBasicAnimation *bottomAnim = [POPBasicAnimation animationWithPropertyNamed:kPOPLayoutConstraintConstant];
             bottomAnim.toValue = @(45);
             bottomAnim.duration = .3;
-            [self.playerControlsBottomYConstraint pop_addAnimation:bottomAnim forKey:@"animatePlayControlsDown"];
+            //[self.playerControlsBottomYConstraint pop_addAnimation:bottomAnim forKey:@"animatePlayControlsDown"];
 
             POPBasicAnimation *topAnim = [POPBasicAnimation animationWithPropertyNamed:kPOPLayoutConstraintConstant];
             topAnim.toValue = @(CGRectGetMaxY(self.view.frame) - 240);
             topAnim.duration = .3;
-            [self.playerControlsTopYConstraint pop_addAnimation:topAnim forKey:@"animateTopPlayControlsDown"];
+            //[self.playerControlsTopYConstraint pop_addAnimation:topAnim forKey:@"animateTopPlayControlsDown"];
         }
     } else {
         if (!setPlaying) {
@@ -348,12 +362,12 @@
             POPBasicAnimation *bottomAnim = [POPBasicAnimation animationWithPropertyNamed:kPOPLayoutConstraintConstant];
             bottomAnim.toValue = @(220);
             bottomAnim.duration = .3;
-            [self.playerControlsBottomYConstraint pop_addAnimation:bottomAnim forKey:@"animateBottomPlayControlsUp"];
+            //[self.playerControlsBottomYConstraint pop_addAnimation:bottomAnim forKey:@"animateBottomPlayControlsUp"];
 
             POPBasicAnimation *topAnim = [POPBasicAnimation animationWithPropertyNamed:kPOPLayoutConstraintConstant];
             topAnim.toValue = @(146);
             topAnim.duration = .3;
-            [self.playerControlsTopYConstraint pop_addAnimation:topAnim forKey:@"animateTopPlayControlsUp"];
+            //[self.playerControlsTopYConstraint pop_addAnimation:topAnim forKey:@"animateTopPlayControlsUp"];
         }
     }
 }
