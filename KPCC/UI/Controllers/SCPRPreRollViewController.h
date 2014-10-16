@@ -18,6 +18,6 @@
 
 @property (nonatomic,weak) id<SCPRPreRollControllerDelegate> delegate;
 
-- (void)showPreRollWithAnimation:(BOOL)animated;
+- (void)showPreRollWithAnimation:(BOOL)animated completion:(void (^)(BOOL done))completion;
 
 @end

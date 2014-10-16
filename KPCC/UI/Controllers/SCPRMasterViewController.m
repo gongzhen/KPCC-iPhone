@@ -158,10 +158,11 @@
 
 - (IBAction)initialPlayTapped:(id)sender {
     [self cloakForPreRoll:YES];
-    [self.preRollViewController showPreRollWithAnimation:YES];
-    [self.playPauseButton setHidden:NO];
-    [self.initialPlayButton setHidden:YES];
-    initialPlay = YES;
+    [self.preRollViewController showPreRollWithAnimation:YES completion:^(BOOL done) {
+        [self.playPauseButton setHidden:NO];
+        [self.initialPlayButton setHidden:YES];
+        initialPlay = YES;
+    }];
 }
 
 - (IBAction)playOrPauseTapped:(id)sender {
@@ -214,7 +215,9 @@
 
 - (IBAction)showPreRollTapped:(id)sender {
     [self cloakForPreRoll:YES];
-    [self.preRollViewController showPreRollWithAnimation:YES];
+    [self.preRollViewController showPreRollWithAnimation:YES completion:^(BOOL done) {
+
+    }];
 }
 
 # pragma mark - Audio commands
@@ -340,9 +343,6 @@
         }
     } else {
         if (!setPlaying) {
-            POPBasicAnimation *genericFadeInAnim = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
-            genericFadeInAnim.toValue = @(1);
-            [self.rewindToShowStartButton.layer pop_addAnimation:genericFadeInAnim forKey:@"rewindToStartFadeInAnim"];
 
             // Reset frame and alpha for progress bar.
             if (setForOnDemandUI) {
@@ -353,9 +353,15 @@
                 [self.progressBarView.layer pop_addAnimation:progressBarFadeAnim forKey:@"progressBarFadeOutAnim"];
             }
 
-            POPBasicAnimation *dividerFadeAnim = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
-            dividerFadeAnim.toValue = @(0);
-            [self.horizDividerLine.layer pop_addAnimation:dividerFadeAnim forKey:@"dividerFadeOutAnim"];
+            if (!initialPlay) {
+                POPBasicAnimation *genericFadeInAnim = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
+                genericFadeInAnim.toValue = @(1);
+                [self.rewindToShowStartButton.layer pop_addAnimation:genericFadeInAnim forKey:@"rewindToStartFadeInAnim"];
+
+                POPBasicAnimation *dividerFadeAnim = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
+                dividerFadeAnim.toValue = @(0);
+                [self.horizDividerLine.layer pop_addAnimation:dividerFadeAnim forKey:@"dividerFadeOutAnim"];
+            }
         }
 
         if (!seekRequested) {
@@ -714,6 +720,7 @@
     if (self.preRollOpen) {
         [self decloakForPreRoll:YES];
     }
+    [[AudioManager shared] startStream];
 }
 
 

@@ -34,7 +34,7 @@
 
 # pragma mark - Presentations
 
-- (void)showPreRollWithAnimation:(BOOL)animated {
+- (void)showPreRollWithAnimation:(BOOL)animated completion:(void (^)(BOOL done))completion {
     if (animated) {
         [UIView animateWithDuration:0.3f animations:^{
             CGRect frame = CGRectMake(self.view.frame.origin.x, 0, self.view.frame.size.width, self.view.frame.size.height);
@@ -51,11 +51,12 @@
                                                             userInfo:nil
                                                              repeats:YES];
             }
+            completion(YES);
         }];
         
         
     } else {
-        
+        completion(YES);
     }
 }
 
