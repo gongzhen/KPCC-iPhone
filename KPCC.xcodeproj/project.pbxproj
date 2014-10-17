@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		255943EA19F1A7620007294D /* SCPRRewindWheelViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 255943E919F1A7620007294D /* SCPRRewindWheelViewController.m */; };
 		523E86D019C8A292006FC366 /* SCPRProgramDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 523E86CE19C8A292006FC366 /* SCPRProgramDetailViewController.m */; };
 		523E86D219C8A292006FC366 /* SCPRProgramDetailViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 523E86CF19C8A292006FC366 /* SCPRProgramDetailViewController.xib */; };
 		523E86D919CB694B006FC366 /* Episode.m in Sources */ = {isa = PBXBuildFile; fileRef = 523E86D819CB694B006FC366 /* Episode.m */; };
@@ -196,6 +197,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		255943E819F1A7620007294D /* SCPRRewindWheelViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCPRRewindWheelViewController.h; sourceTree = "<group>"; };
+		255943E919F1A7620007294D /* SCPRRewindWheelViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SCPRRewindWheelViewController.m; sourceTree = "<group>"; };
 		45A107003D6C750C5E0ECAC3 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		523E86CD19C8A292006FC366 /* SCPRProgramDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCPRProgramDetailViewController.h; sourceTree = "<group>"; };
 		523E86CE19C8A292006FC366 /* SCPRProgramDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SCPRProgramDetailViewController.m; sourceTree = "<group>"; };
@@ -630,6 +633,8 @@
 		76658ABC18E0AF8500026176 /* View Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				255943E819F1A7620007294D /* SCPRRewindWheelViewController.h */,
+				255943E919F1A7620007294D /* SCPRRewindWheelViewController.m */,
 				76B9A9A918EF59FD007A6D8C /* SCPRUserReportViewController.h */,
 				76B9A9AA18EF59FD007A6D8C /* SCPRUserReportViewController.m */,
 				76B9A9AB18EF59FD007A6D8C /* SCPRUserReportViewController.xib */,
@@ -1163,6 +1168,7 @@
 				52EFF87419C375CA0059A0E3 /* SCPRPullDownMenu.m in Sources */,
 				52E68B8219B8F2D10028F8AE /* SCPRNavigationController.m in Sources */,
 				76A308D318C8FB940065D4B1 /* main.m in Sources */,
+				255943EA19F1A7620007294D /* SCPRRewindWheelViewController.m in Sources */,
 				52CC6D6219D100DE00C67322 /* SCPRProgramTableViewCell.m in Sources */,
 				76A3090418C93C880065D4B1 /* AudioManager.m in Sources */,
 				52D0FC2019D1FC0C009AECEE /* SCPRProgramDetailTableViewCell.m in Sources */,
