@@ -48,7 +48,7 @@
                                 <rect key="frame" x="0.0" y="64" width="320" height="504"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="250" text="ON NOW" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="g8v-J1-2Ng" userLabel="LiveDescription">
-                                        <rect key="frame" x="37" y="89" width="247" height="17"/>
+                                        <rect key="frame" x="37" y="81" width="247" height="17"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="247" id="HxF-SS-sMj"/>
                                             <constraint firstAttribute="height" constant="17" id="Zwf-JK-ks0"/>
@@ -58,7 +58,7 @@
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="1000" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ao2-yr-kyf" userLabel="ProgramTitle">
-                                        <rect key="frame" x="0.0" y="96" width="320" height="64"/>
+                                        <rect key="frame" x="0.0" y="92" width="320" height="64"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="64" id="byU-7T-Isv"/>
                                         </constraints>
@@ -112,12 +112,12 @@
                                 <constraints>
                                     <constraint firstItem="np1-OZ-drV" firstAttribute="top" secondItem="1zm-63-H3R" secondAttribute="bottom" constant="4" id="4M9-Vm-mac"/>
                                     <constraint firstItem="np1-OZ-drV" firstAttribute="centerX" secondItem="1zm-63-H3R" secondAttribute="centerX" id="Bcx-k5-jYa"/>
-                                    <constraint firstItem="g8v-J1-2Ng" firstAttribute="bottom" secondItem="ao2-yr-kyf" secondAttribute="top" constant="10" id="ETV-lP-7YY"/>
+                                    <constraint firstItem="g8v-J1-2Ng" firstAttribute="bottom" secondItem="ao2-yr-kyf" secondAttribute="top" constant="6" id="ETV-lP-7YY"/>
                                     <constraint firstItem="ao2-yr-kyf" firstAttribute="centerX" secondItem="g8v-J1-2Ng" secondAttribute="centerX" id="KKh-bp-coD"/>
                                     <constraint firstAttribute="centerX" secondItem="1zm-63-H3R" secondAttribute="centerX" id="PNu-2K-bpX"/>
                                     <constraint firstAttribute="bottom" secondItem="np1-OZ-drV" secondAttribute="bottom" constant="183" id="Tpe-Dz-FhC"/>
                                     <constraint firstAttribute="bottom" secondItem="uVS-5U-Chc" secondAttribute="bottom" constant="119" id="a0F-95-Wql"/>
-                                    <constraint firstItem="1zm-63-H3R" firstAttribute="bottom" secondItem="ao2-yr-kyf" secondAttribute="top" constant="220" id="b79-rz-Wy7"/>
+                                    <constraint firstItem="1zm-63-H3R" firstAttribute="bottom" secondItem="ao2-yr-kyf" secondAttribute="bottom" constant="160" id="b79-rz-Wy7" userLabel="Vertical Space - (220) - Back to Live - ProgramTitle"/>
                                     <constraint firstItem="g8v-J1-2Ng" firstAttribute="leading" secondItem="m78-b6-vle" secondAttribute="leading" constant="37" id="b9R-xz-x8F"/>
                                     <constraint firstAttribute="trailing" secondItem="TfG-Pl-Djp" secondAttribute="trailing" id="cjR-1H-4S1"/>
                                     <constraint firstAttribute="bottom" secondItem="1zm-63-H3R" secondAttribute="bottom" constant="188" id="dFo-tl-RDi"/>
@@ -231,13 +231,11 @@
                                     <constraint firstAttribute="height" constant="1" id="Bvk-aF-0pU"/>
                                 </constraints>
                             </view>
-                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8NV-lk-gMa" userLabel="ProgressBarView">
-                                <color key="backgroundColor" red="0.97254901960784312" green="0.49411764705882355" blue="0.12941176470588237" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="3" id="5N8-Bg-qnA"/>
-                                    <constraint firstAttribute="width" relation="lessThanOrEqual" priority="250" constant="300" id="CQ7-mh-lWi"/>
-                                </constraints>
-                            </view>
+                            <progressView hidden="YES" opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="PxA-Ic-P9n">
+                                <rect key="frame" x="10" y="383" width="300" height="2"/>
+                                <color key="progressTintColor" red="0.97254901959999995" green="0.4941176471" blue="0.12941176469999999" alpha="1" colorSpace="calibratedRGB"/>
+                                <color key="trackTintColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                            </progressView>
                             <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Q1h-II-U3Q" userLabel="TimeLabelOnDemand">
                                 <rect key="frame" x="15" y="352" width="141" height="22"/>
                                 <constraints>
@@ -271,9 +269,10 @@
                             <constraint firstItem="jYj-xG-3QJ" firstAttribute="top" secondItem="QEk-eP-ZIb" secondAttribute="top" constant="64" id="E3i-Tu-txH"/>
                             <constraint firstItem="LAZ-J2-lj5" firstAttribute="leading" secondItem="QEk-eP-ZIb" secondAttribute="leading" id="EHj-Dc-t3Z"/>
                             <constraint firstItem="Q1h-II-U3Q" firstAttribute="leading" secondItem="QEk-eP-ZIb" secondAttribute="leading" constant="15" id="Eop-k1-SEc"/>
+                            <constraint firstItem="Duc-cQ-dAe" firstAttribute="bottom" secondItem="PxA-Ic-P9n" secondAttribute="bottom" id="ExM-X4-m8a"/>
                             <constraint firstItem="3WP-os-1RZ" firstAttribute="centerY" secondItem="LAZ-J2-lj5" secondAttribute="centerY" constant="22" id="FMM-DK-0gY"/>
-                            <constraint firstItem="Duc-cQ-dAe" firstAttribute="bottom" secondItem="8NV-lk-gMa" secondAttribute="bottom" constant="1" id="Frb-gk-KJv"/>
                             <constraint firstAttribute="width" secondItem="jYj-xG-3QJ" secondAttribute="width" id="IkI-zD-ilX"/>
+                            <constraint firstAttribute="trailing" secondItem="PxA-Ic-P9n" secondAttribute="trailing" constant="10" id="Jeq-V7-hnS"/>
                             <constraint firstItem="3WP-os-1RZ" firstAttribute="trailing" secondItem="Qkn-sg-4PL" secondAttribute="trailing" id="LrR-zz-UkH"/>
                             <constraint firstItem="Syv-nA-vpR" firstAttribute="width" secondItem="QEk-eP-ZIb" secondAttribute="width" id="MOB-G3-PEy"/>
                             <constraint firstItem="Qkn-sg-4PL" firstAttribute="leading" secondItem="m78-b6-vle" secondAttribute="leading" constant="90" id="PQs-aB-MFu"/>
@@ -289,8 +288,7 @@
                             <constraint firstItem="Npf-rN-6R5" firstAttribute="top" secondItem="Duc-cQ-dAe" secondAttribute="bottom" constant="183" id="kAK-pi-Z6e"/>
                             <constraint firstItem="jYj-xG-3QJ" firstAttribute="bottom" secondItem="Npf-rN-6R5" secondAttribute="top" id="nL6-Jc-dhE"/>
                             <constraint firstItem="Npf-rN-6R5" firstAttribute="top" secondItem="m78-b6-vle" secondAttribute="bottom" id="qqA-NQ-5yM"/>
-                            <constraint firstAttribute="trailing" secondItem="8NV-lk-gMa" secondAttribute="trailing" constant="310" id="s50-zb-WIB"/>
-                            <constraint firstItem="8NV-lk-gMa" firstAttribute="leading" secondItem="QEk-eP-ZIb" secondAttribute="leading" constant="10" id="sDP-lA-qxW"/>
+                            <constraint firstItem="PxA-Ic-P9n" firstAttribute="leading" secondItem="QEk-eP-ZIb" secondAttribute="leading" constant="10" id="sJk-nM-KO1"/>
                             <constraint firstItem="3WP-os-1RZ" firstAttribute="centerX" secondItem="sYL-12-Hgi" secondAttribute="centerX" id="tWf-LP-TMA"/>
                             <constraint firstItem="3WP-os-1RZ" firstAttribute="centerY" secondItem="sYL-12-Hgi" secondAttribute="centerY" constant="22" id="tWk-2A-tdj"/>
                             <constraint firstItem="Duc-cQ-dAe" firstAttribute="top" secondItem="Q1h-II-U3Q" secondAttribute="bottom" constant="10" id="w8S-Nj-rFW"/>
@@ -310,6 +308,7 @@
                         <outlet property="dividerOnDemand" destination="J5U-kb-6Je" id="5tr-af-9iL"/>
                         <outlet property="episodeTitleOnDemand" destination="n04-am-s1L" id="9Gf-D5-eAB"/>
                         <outlet property="horizDividerLine" destination="Duc-cQ-dAe" id="3ce-uV-F9v"/>
+                        <outlet property="initialControlsView" destination="3WP-os-1RZ" id="UZk-6c-p4n"/>
                         <outlet property="initialPlayButton" destination="G5B-oE-ab2" id="8sf-rd-Zr7"/>
                         <outlet property="liveDescriptionLabel" destination="g8v-J1-2Ng" id="sUp-r5-wI2"/>
                         <outlet property="liveRewindAltButton" destination="TfG-Pl-Djp" id="cmL-9t-cLA"/>
@@ -323,7 +322,8 @@
                         <outlet property="programImageView" destination="jYj-xG-3QJ" id="XVU-26-yf0"/>
                         <outlet property="programTitleLabel" destination="ao2-yr-kyf" id="BIo-g3-SA9"/>
                         <outlet property="programTitleOnDemand" destination="mV9-FT-8sm" id="NhA-77-wox"/>
-                        <outlet property="progressBarView" destination="8NV-lk-gMa" id="xzJ-9m-Eys"/>
+                        <outlet property="programTitleYConstraint" destination="b79-rz-Wy7" id="Hzr-N3-vsG"/>
+                        <outlet property="progressView" destination="PxA-Ic-P9n" id="LeY-8C-SeD"/>
                         <outlet property="rewindToShowStartButton" destination="uVS-5U-Chc" id="2MJ-Vt-jm5"/>
                         <outlet property="shareButton" destination="Daw-6l-gOy" id="6Vw-bg-NxE"/>
                         <outlet property="timeLabelOnDemand" destination="Q1h-II-U3Q" id="19n-gX-I7H"/>
@@ -697,6 +697,23 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="xDa-2u-zhZ" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1176" y="129"/>
+        </scene>
+        <!--View Controller-->
+        <scene sceneID="hww-vV-zSv">
+            <objects>
+                <viewController id="KHy-OS-OaY" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="Vow-nQ-HSL"/>
+                        <viewControllerLayoutGuide type="bottom" id="x89-Dr-hry"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="q7y-Ia-PiI">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="xWc-l2-JLl" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
         </scene>
     </scenes>
     <resources>
