@@ -160,7 +160,7 @@
 - (IBAction)initialPlayTapped:(id)sender {
     [self cloakForPreRoll:YES];
     [self.preRollViewController showPreRollWithAnimation:YES completion:^(BOOL done) {
-        [self.programTitleYConstraint setConstant:10];
+        [self.programTitleYConstraint setConstant:14];
         [self.initialControlsView setHidden:YES];
         initialPlay = YES;
     }];
