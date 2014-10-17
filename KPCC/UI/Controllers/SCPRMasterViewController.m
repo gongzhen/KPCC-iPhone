@@ -116,7 +116,7 @@
     [playCommand addTarget:self action:@selector(playOrPauseTapped:)];
 
     if (!initialPlay) {
-        [self.playPauseButton setHidden:YES];
+//        [self.playPauseButton setHidden:YES];
     }
 }
 
@@ -159,7 +159,7 @@
 - (IBAction)initialPlayTapped:(id)sender {
     [self cloakForPreRoll:YES];
     [self.preRollViewController showPreRollWithAnimation:YES completion:^(BOOL done) {
-        [self.playPauseButton setHidden:NO];
+        //[self.playPauseButton setHidden:NO];
         [self.initialPlayButton setHidden:YES];
         initialPlay = YES;
     }];
@@ -641,6 +641,23 @@
         [self.progressBarView.layer pop_addAnimation:onDemandElementsFade forKey:@"progressBarFadeAnimation"];
     }
 
+    if (!initialPlay) {
+        POPBasicAnimation *initialControlsFade = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
+        initialControlsFade.toValue = @(0);
+        initialControlsFade.duration = 0.3;
+        [self.initialPlayButton.layer pop_addAnimation:initialControlsFade forKey:@"initialControlsFadeAnimation"];
+
+        POPBasicAnimation *bottomAnim = [POPBasicAnimation animationWithPropertyNamed:kPOPLayoutConstraintConstant];
+        bottomAnim.toValue = @(50);
+        bottomAnim.duration = .3;
+        [self.playerControlsBottomYConstraint pop_addAnimation:bottomAnim forKey:@"animatePlayControlsDown"];
+
+        POPBasicAnimation *topAnim = [POPBasicAnimation animationWithPropertyNamed:kPOPLayoutConstraintConstant];
+        topAnim.toValue = @(CGRectGetMaxY(self.view.frame) - 245);
+        topAnim.duration = .3;
+        [self.playerControlsTopYConstraint pop_addAnimation:topAnim forKey:@"animateTopPlayControlsDown"];
+    }
+
     POPBasicAnimation *blurFadeAnimation = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
     blurFadeAnimation.toValue = @1;
     blurFadeAnimation.duration = 0.3;
@@ -655,14 +672,14 @@
 
     [self.blurView.layer pop_addAnimation:blurFadeAnimation forKey:@"blurViewFadeAnimation"];
     [self.darkBgView.layer pop_addAnimation:darkBgFadeAnimation forKey:@"darkBgFadeAnimation"];
-    [self.playerControlsView.layer pop_addAnimation:controlsFadeAnimation forKey:@"controlsViewFadeAnimation"];
+    //[self.playerControlsView.layer pop_addAnimation:controlsFadeAnimation forKey:@"controlsViewFadeAnimation"];
     [self.onDemandPlayerView.layer pop_addAnimation:controlsFadeAnimation forKey:@"onDemandViewFadeAnimation"];
     [self.liveStreamView.layer pop_addAnimation:controlsFadeAnimation forKey:@"liveStreamViewFadeAnimation"];
 
     POPBasicAnimation *dividerFadeAnim = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
     dividerFadeAnim.toValue = @0;
     dividerFadeAnim.duration = 0.3;
-    [self.horizDividerLine.layer pop_addAnimation:dividerFadeAnim forKey:@"horizDividerOutFadeAnimation"];
+    //[self.horizDividerLine.layer pop_addAnimation:dividerFadeAnim forKey:@"horizDividerOutFadeAnimation"];
 
     // TODO: Take out button
     [self.preRollButton setHidden:YES];
