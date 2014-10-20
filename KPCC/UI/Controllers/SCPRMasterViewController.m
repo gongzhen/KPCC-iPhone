@@ -18,12 +18,17 @@
 @property BOOL setPlaying;
 @property BOOL seekRequested;
 @property BOOL busyZoomAnim;
-
+@property BOOL rewinding;
+@property BOOL queueRewind;
 @property BOOL setForLiveStreamUI;
 @property BOOL setForOnDemandUI;
 
 @property IBOutlet NSLayoutConstraint *playerControlsTopYConstraint;
 @property IBOutlet NSLayoutConstraint *playerControlsBottomYConstraint;
+
+@property IBOutlet NSLayoutConstraint *rewindWidthConstraint;
+@property IBOutlet NSLayoutConstraint *rewindHeightContraint;
+
 @end
 
 @implementation SCPRMasterViewController
@@ -106,6 +111,12 @@
     MPRemoteCommand *playCommand = [rcc playCommand];
     [playCommand setEnabled:YES];
     [playCommand addTarget:self action:@selector(playOrPauseTapped:)];
+    
+    self.rewindWheel = [[SCPRRewindWheelViewController alloc] init];
+    self.rewindWheel.view = self.rewindView;
+    self.rewindWheel.view.alpha = 0.0;
+    [self.rewindWheel prepare];
+    
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -151,10 +162,63 @@
 }
 
 - (IBAction)rewindToStartTapped:(id)sender {
-    if (_currentProgram) {
-        seekRequested = YES;
-        [[AudioManager shared] seekToDate:_currentProgram.starts_at];
+    if ( setPlaying ) {
+        [self activateRewind];
+    } else {
+        if (_currentProgram) {
+            self.queueRewind = YES;
+            seekRequested = YES;
+            [[AudioManager shared] seekToDate:_currentProgram.starts_at];
+        }
     }
+}
+
+- (void)activateRewind {
+    
+    
+    UIImage *pause = self.playPauseButton.imageView.image;
+    CGFloat ht = pause.size.height; CGFloat wd = pause.size.width;
+    [self.rewindHeightContraint setConstant:ht];
+    [self.rewindWidthConstraint setConstant:wd];
+    [self.playerControlsView layoutIfNeeded];
+    
+    [self.rewindWheel animateWithSpeed:0.6
+                               tension:0.75
+                                 color:[UIColor whiteColor]
+                           strokeWidth:2.0
+                            completion:^{
+                                
+                                self.rewinding = NO;
+                                [self updateControlsAndUI:YES];
+                                if ( !setPlaying ) {
+                                    seekRequested = NO;
+                                    setPlaying = YES;
+                                }
+                                
+                                [[AudioManager shared] adjustAudioWithValue:0.1 completion:^{
+                                    
+                                }];
+                                
+                                
+                            }];
+    
+    [UIView animateWithDuration:0.33 animations:^{
+        [self.playPauseButton setAlpha:0.0];
+        [self.rewindWheel.view setAlpha:1.0];
+    } completion:^(BOOL finished) {
+        
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            
+            self.rewinding = YES;
+            if (_currentProgram) {
+                seekRequested = YES;
+                [[AudioManager shared] seekToDate:_currentProgram.starts_at];
+            }
+            
+        });
+
+        
+    }];
 }
 
 -(void)skipBackwardEvent: (MPSkipIntervalCommandEvent *)skipEvent {
@@ -240,9 +304,12 @@
             // Leave this out for now.
             // [self scaleBackgroundImage];
 
-            [UIView animateWithDuration:0.1 animations:^{
-                [self.playPauseButton setAlpha:1.0];
-            }];
+            if ( !self.rewinding ) {
+                [UIView animateWithDuration:0.1 animations:^{
+                    [self.playPauseButton setAlpha:1.0];
+                    [self.rewindWheel.view setAlpha:0.0];
+                }];
+            }
         }];
 
     } else {
@@ -667,10 +734,15 @@
 
 - (void)onSeekCompleted {
     // Make sure UI gets set to "Playing" state after a seek.
-    if (!setPlaying) {
-        seekRequested = NO;
-        [self setUIPositioning];
-        setPlaying = YES;
+    
+    if ( self.rewinding ) {
+        [self.rewindWheel endAnimations];
+    } else {
+        if (!setPlaying) {
+            seekRequested = NO;
+            [self setUIPositioning];
+            setPlaying = YES;
+        }
     }
 }
 

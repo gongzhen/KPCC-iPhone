@@ -25,6 +25,7 @@ static const NSString *ItemStatusContext;
     if (!singleton) {
         @synchronized(self) {
             singleton = [[AudioManager alloc] init];
+            singleton.fadeQueue = [[NSOperationQueue alloc] init];
         }
     }
     return singleton;
@@ -200,6 +201,7 @@ static const NSString *ItemStatusContext;
     } else {
         [self.audioPlayer pause];
 
+        
         [self.audioPlayer.currentItem seekToDate:date completionHandler:^(BOOL finished) {
             if(self.audioPlayer.status == AVPlayerStatusReadyToPlay &&
                self.audioPlayer.currentItem.status == AVPlayerItemStatusReadyToPlay) {
@@ -348,6 +350,44 @@ static const NSString *ItemStatusContext;
         [self.localAudioPlayer stop];
     }
 }
+
+- (void)adjustAudioWithValue:(CGFloat)increment completion:(void (^)(void))completion {
+    if ( increment < 0.0 ) {
+        self.savedVolume = self.audioPlayer.volume;
+    }
+    [self threadedAdjustWithValue:increment completion:completion];
+}
+
+- (void)threadedAdjustWithValue:(CGFloat)increment completion:(void (^)(void))completion {
+    BOOL basecase = NO;
+    BOOL increasing = NO;
+    if ( increment < 0.0 ) {
+        basecase = self.audioPlayer.volume <= 0.0;
+    } else {
+        basecase = self.audioPlayer.volume >= self.savedVolume;
+        increasing = YES;
+    }
+
+    //NSLog(@"Player Volume : %1.1f",self.audioPlayer.volume);
+    
+    if ( basecase ) {
+        if ( increasing ) {
+            self.audioPlayer.volume = self.savedVolume;
+        }
+        if ( completion ) {
+            dispatch_async(dispatch_get_main_queue(), completion);
+        }
+    } else {
+        NSBlockOperation *block = [NSBlockOperation blockOperationWithBlock:^{
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.05 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                [self.audioPlayer setVolume:self.audioPlayer.volume+increment];
+                [self threadedAdjustWithValue:increment completion:completion];
+            });
+        }];
+        [self.fadeQueue addOperation:block];
+    }
+}
+
 
 - (void)takedownAudioPlayer {
     [self.audioPlayer pause];

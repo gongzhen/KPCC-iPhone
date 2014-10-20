@@ -71,6 +71,8 @@ typedef enum {
 @property NSDate *maxSeekableDate;
 
 @property (strong,nonatomic) NSDateFormatter *dateFormatter;
+@property (nonatomic,strong) NSOperationQueue *fadeQueue;
+@property CGFloat savedVolume;
 
 - (void)playAudioWithURL:(NSString *)url;
 
@@ -96,8 +98,7 @@ typedef enum {
 - (void)backwardSeekFifteenSeconds;
 
 - (void)analyzeStreamError:(NSString*)comments;
-
-
-
+- (void)adjustAudioWithValue:(CGFloat)increment completion:(void (^)(void))completion;
+- (void)threadedAdjustWithValue:(CGFloat)increment completion:(void (^)(void))completion;
 
 @end

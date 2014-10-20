@@ -7,8 +7,26 @@
 //
 
 #import "SCPRRewindWheelViewController.h"
+#import <AVFoundation/AVFoundation.h>
+#import "AudioManager.h"
 
 @interface SCPRRewindWheelViewController ()
+
+@property (nonatomic,strong) UIColor *strokeColor;
+@property (nonatomic,strong) CAShapeLayer *circleLayer;
+@property (nonatomic,strong) CAShapeLayer *antiCircleLayer;
+@property (nonatomic,strong) CAShapeLayer *palimpsestLayer;
+@property (nonatomic,strong) UIBezierPath *circlePath;
+@property (nonatomic) double progress;
+@property BOOL soundPlayedBit;
+@property (nonatomic) CGFloat tension;
+@property (nonatomic) CGFloat strokeWidth;
+@property (atomic) BOOL completionBit;
+@property (nonatomic,strong) AVAudioPlayer *rewindTriggerPlayer;
+
+- (void)completeWithCallback:(void (^)(void))completion;
+- (CAShapeLayer*)generateCircleLayer;
+- (void)snapFrame;
 
 @end
 
@@ -16,7 +34,19 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+
     // Do any additional setup after loading the view.
+}
+
+- (void)prepare {
+    NSString *path = [[NSBundle mainBundle] pathForResource:@"rewind_beat"
+                                                     ofType:@"mp3"];
+    NSURL *fileUrl = [NSURL fileURLWithPath:path];
+    NSError *fileError = nil;
+    self.rewindTriggerPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:fileUrl
+                                                                      error:&fileError];
+    [self.rewindTriggerPlayer prepareToPlay];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -24,23 +54,7 @@
     // Dispose of any resources that can be recreated.
 }
 
-- (void)setupWithColor:(UIColor*)color andStrokeWidth:(CGFloat)strokeWidth {
-    self.strokeWidth = strokeWidth;
-    self.strokeColor = color;
-
-    CGPoint arcCenter = CGPointMake(CGRectGetMidX(self.view.bounds), CGRectGetMidY(self.view.bounds));
-    CGFloat radius = CGRectGetMidX(self.view.bounds);
-    
-    self.circlePath = [UIBezierPath bezierPathWithArcCenter:arcCenter
-                                                     radius:radius
-                                                 startAngle:2*M_PI*1-M_PI_2/*M_PI*/
-                                                   endAngle:2*M_PI*0-M_PI_2/*-M_PI*/
-                                                  clockwise:NO];
-    self.view.backgroundColor = [UIColor clearColor];
-    
-    self.circleLayer = [self generateCircleLayer];
-    
-    [self.view.layer addSublayer:self.circleLayer];
+- (void)snapFrame {
     
 }
 
@@ -53,32 +67,78 @@
     circle.lineWidth = self.strokeWidth;
     circle.opacity = 0.0;
     circle.strokeStart = 0.0;
-    circle.strokeEnd = 1.0;
+    circle.strokeEnd = 0.0;
     return circle;
 }
 
 
-- (void)animateWithSpeed:(CGFloat)duration tension:(CGFloat)tension completion:(void (^)(void))completion {
+- (void)animateWithSpeed:(CGFloat)duration
+                 tension:(CGFloat)tension
+                   color:(UIColor *)color
+             strokeWidth:(CGFloat)strokeWidth
+              completion:(void (^)(void))completion {
+    
+
+    if ( !self.soundPlayedBit ) {
+        self.soundPlayedBit = YES;
+        if ( [[AudioManager shared] isStreamPlaying] ) {
+            [[AudioManager shared] adjustAudioWithValue:-0.1 completion:^{
+                [self.rewindTriggerPlayer play];
+                [self animateWithSpeed:duration
+                               tension:tension
+                                 color:color
+                           strokeWidth:strokeWidth
+                            completion:completion];
+            }];
+            
+            return;
+        } else {
+            [self.rewindTriggerPlayer play];
+        }
+    }
+    
+    if ( !self.circleLayer ) {
+    
+        CGPoint arcCenter = CGPointMake(CGRectGetMidX(self.view.bounds), CGRectGetMidY(self.view.bounds));
+        CGFloat radius = CGRectGetMidX(self.view.bounds);
+        
+        self.circlePath = [UIBezierPath bezierPathWithArcCenter:arcCenter
+                                                     radius:radius
+                                                 startAngle:2*M_PI*1-M_PI_2/*M_PI*/
+                                                   endAngle:2*M_PI*0-M_PI_2/*-M_PI*/
+                                                  clockwise:NO];
+        self.strokeWidth = strokeWidth;
+        self.strokeColor = color;
+    
+    
+        self.view.backgroundColor = [UIColor clearColor];
+    
+        self.circleLayer = [self generateCircleLayer];
+    
+        [self.view.layer addSublayer:self.circleLayer];
+        self.circleLayer.opacity = 1.0;
+        
+    }
+    
+    self.tension = tension;
     
     [CATransaction begin]; {
         [CATransaction setCompletionBlock:^{
             if ( self.completionBit ) {
                 [self completeWithCallback:completion];
             } else {
-                self.pingpong = !self.pingpong;
                 [self animateWithSpeed:duration
                                tension:tension
+                                 color:color
+                           strokeWidth:strokeWidth
                             completion:completion];
             }
         }];
         
-        
-        self.circleLayer.opacity = 1.0;
-        
-        
         CABasicAnimation *animation = [CABasicAnimation animationWithKeyPath:@"strokeEnd"];
-        animation.duration = duration / 2.0;
-        animation.removedOnCompletion = YES;
+        CGFloat halfSpeed = duration / 2.0;
+        animation.duration = halfSpeed;
+        animation.removedOnCompletion = NO;
         
         self.circleLayer.strokeColor = self.strokeColor.CGColor;
         NSNumber *from = @(0.0);
@@ -107,6 +167,7 @@
 }
 
 - (void)completeWithCallback:(void (^)(void))completion {
+#ifdef USE_REWIND_UNCOILING
     [CATransaction begin]; {
         [CATransaction setCompletionBlock:^{
             self.circleLayer.strokeEnd = 1.0;
@@ -117,7 +178,7 @@
         
         CABasicAnimation *animation = [CABasicAnimation animationWithKeyPath:@"strokeEnd"];
         animation.duration = 0.5;
-        animation.removedOnCompletion = YES;
+        animation.removedOnCompletion = NO;
         
         self.circleLayer.strokeColor = self.strokeColor.CGColor;
         NSNumber *from = @(0.0);
@@ -131,8 +192,20 @@
         
     }
     [CATransaction commit];
+#else
+    if ( completion ) {
+        self.completionBit = NO;
+        self.soundPlayedBit = NO;
+        [self.circleLayer removeFromSuperlayer];
+        self.circleLayer = nil;
+        dispatch_async(dispatch_get_main_queue(), completion);
+    }
+#endif
 }
 
+- (void)endAnimations {
+    [self setCompletionBit:YES];
+}
 
 /*
 #pragma mark - Navigation

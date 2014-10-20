@@ -10,21 +10,12 @@
 
 @interface SCPRRewindWheelViewController : UIViewController
 
-@property (nonatomic,strong) UIColor *strokeColor;
-@property (nonatomic,strong) CAShapeLayer *circleLayer;
-@property (nonatomic,strong) CAShapeLayer *antiCircleLayer;
-@property (nonatomic,strong) CAShapeLayer *palimpsestLayer;
-@property (nonatomic,strong) UIBezierPath *circlePath;
-@property (nonatomic) double progress;
-@property (nonatomic) CGFloat strokeWidth;
-@property (atomic) BOOL completionBit;
-@property BOOL pingpong;
-
-- (void)setupWithColor:(UIColor*)color andStrokeWidth:(CGFloat)strokeWidth;
-- (void)animateWithSpeed:(CGFloat)duration tension:(CGFloat)tension completion:(void (^)(void))completion;
-- (void)completeWithCallback:(void (^)(void))completion;
-
-
-- (CAShapeLayer*)generateCircleLayer;
+- (void)prepare;
+- (void)animateWithSpeed:(CGFloat)duration
+                 tension:(CGFloat)tension
+                   color:(UIColor*)color
+             strokeWidth:(CGFloat)strokeWidth
+              completion:(void (^)(void))completion;
+- (void)endAnimations;
 
 @end

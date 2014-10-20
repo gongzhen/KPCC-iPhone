@@ -17,7 +17,7 @@
 #import "SCPRPullDownMenu.h"
 #import "Episode.h"
 #import "Segment.h"
-
+#import "SCPRRewindWheelViewController.h"
 
 @interface SCPRMasterViewController : UIViewController<SCPRMenuDelegate>
 
@@ -54,6 +54,10 @@
 @property (nonatomic,strong) SCPRPullDownMenu *pulldownMenu;
 @property (nonatomic) BOOL menuOpen;
 
+// Rewinding UI
+@property (nonatomic,strong) SCPRRewindWheelViewController *rewindWheel;
+@property (nonatomic,strong) IBOutlet UIView *rewindView;
+- (void)activateRewind;
 
 // Instance methods.
 - (void)cloakForMenu:(BOOL)animated;
