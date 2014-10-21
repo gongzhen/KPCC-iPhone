@@ -151,4 +151,21 @@ static NetworkManager *singleton = nil;
     }
 }
 
+- (void)fetchTritonAd:(NSString *)params completion:(void (^)(TritonAd* tritonAd))completion {
+    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+    manager.responseSerializer = [AFXMLParserResponseSerializer serializer];
+    NSString *tritonEndpoint = @"http://cmod.live.streamtheworld.com/ondemand/ars?type=preroll&stid=83153";
+
+    [manager GET:tritonEndpoint parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
+
+        NSXMLParser *XMLParser = (NSXMLParser *)responseObject;
+        [XMLParser setShouldProcessNamespaces:YES];
+
+        NSLog(@"response? %@", XMLParser);
+
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        NSLog(@"failure? %@", error);
+    }];
+}
+
 @end
