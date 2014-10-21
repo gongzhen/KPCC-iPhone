@@ -149,23 +149,27 @@ static const NSString *ItemStatusContext;
     AVPlayer *audioPlayer = self.audioPlayer;
     __unsafe_unretained typeof(self) weakSelf = self;
 
-    self.timeObserver = [self.audioPlayer addPeriodicTimeObserverForInterval:CMTimeMake(1, 10)  queue:nil usingBlock:^(CMTime time) {
-        weakSelf.currentDate = audioPlayer.currentItem.currentDate;
+    if ( !self.timeObserver ) {
+        self.timeObserver = [self.audioPlayer addPeriodicTimeObserverForInterval:CMTimeMake(1, 10)  queue:nil usingBlock:^(CMTime time) {
+            weakSelf.currentDate = audioPlayer.currentItem.currentDate;
 
-        NSArray *seekRange = audioPlayer.currentItem.seekableTimeRanges;
-        if (seekRange && [seekRange count] > 0) {
-            CMTimeRange range = [[seekRange objectAtIndex:0] CMTimeRangeValue];
+            NSArray *seekRange = audioPlayer.currentItem.seekableTimeRanges;
+            if (seekRange && [seekRange count] > 0) {
+                CMTimeRange range = [[seekRange objectAtIndex:0] CMTimeRangeValue];
 
-            weakSelf.minSeekableDate = [NSDate dateWithTimeInterval:( -1 * (CMTimeGetSeconds(time) - CMTimeGetSeconds(range.start))) sinceDate:weakSelf.currentDate];
-            weakSelf.maxSeekableDate = [NSDate dateWithTimeInterval:(CMTimeGetSeconds(CMTimeRangeGetEnd(range)) - CMTimeGetSeconds(time)) sinceDate:weakSelf.currentDate];
-
-            if ([weakSelf.delegate respondsToSelector:@selector(onTimeChange)]) {
-                [weakSelf.delegate onTimeChange];
+                weakSelf.minSeekableDate = [NSDate dateWithTimeInterval:( -1 * (CMTimeGetSeconds(time) - CMTimeGetSeconds(range.start))) sinceDate:weakSelf.currentDate];
+                weakSelf.maxSeekableDate = [NSDate dateWithTimeInterval:(CMTimeGetSeconds(CMTimeRangeGetEnd(range)) - CMTimeGetSeconds(time)) sinceDate:weakSelf.currentDate];
+                weakSelf.latencyCorrection = [[NSDate date] timeIntervalSince1970] - [weakSelf.maxSeekableDate timeIntervalSince1970];
+                //NSLog(@"Latency : %ld",(long)weakSelf.latencyCorrection);
+                
+                if ([weakSelf.delegate respondsToSelector:@selector(onTimeChange)]) {
+                    [weakSelf.delegate onTimeChange];
+                }
+            } else {
+                NSLog(@"no seekable time range for current item");
             }
-        } else {
-            NSLog(@"no seekable time range for current item");
-        }
-    }];
+        }];
+    }
 }
 
 - (void)seekToPercent:(CGFloat)percent {

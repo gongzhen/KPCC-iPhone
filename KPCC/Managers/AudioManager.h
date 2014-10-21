@@ -70,6 +70,8 @@ typedef enum {
 @property NSDate *minSeekableDate;
 @property NSDate *maxSeekableDate;
 
+@property long latencyCorrection;
+
 @property (strong,nonatomic) NSDateFormatter *dateFormatter;
 @property (nonatomic,strong) NSOperationQueue *fadeQueue;
 @property CGFloat savedVolume;
