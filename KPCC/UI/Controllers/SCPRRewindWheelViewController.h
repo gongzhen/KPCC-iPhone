@@ -15,6 +15,7 @@
                  tension:(CGFloat)tension
                    color:(UIColor*)color
              strokeWidth:(CGFloat)strokeWidth
+            hideableView:(UIView*)viewToHide
               completion:(void (^)(void))completion;
 - (void)endAnimations;
 

@@ -19,8 +19,10 @@
 @property (nonatomic,strong) UIBezierPath *circlePath;
 @property (nonatomic) double progress;
 @property BOOL soundPlayedBit;
+@property BOOL firstHalfBit;
 @property (nonatomic) CGFloat tension;
 @property (nonatomic) CGFloat strokeWidth;
+@property (nonatomic) CGRect prehiddenFrame;
 @property (atomic) BOOL completionBit;
 @property (nonatomic,strong) AVAudioPlayer *rewindTriggerPlayer;
 
@@ -76,6 +78,7 @@
                  tension:(CGFloat)tension
                    color:(UIColor *)color
              strokeWidth:(CGFloat)strokeWidth
+            hideableView:(UIView*)viewToHide
               completion:(void (^)(void))completion {
     
 
@@ -88,6 +91,7 @@
                                tension:tension
                                  color:color
                            strokeWidth:strokeWidth
+                          hideableView:viewToHide
                             completion:completion];
             }];
             
@@ -103,36 +107,76 @@
         CGFloat radius = CGRectGetMidX(self.view.bounds);
         
         self.circlePath = [UIBezierPath bezierPathWithArcCenter:arcCenter
-                                                     radius:radius
+                                                     radius:radius-1.0
                                                  startAngle:2*M_PI*1-M_PI_2/*M_PI*/
                                                    endAngle:2*M_PI*0-M_PI_2/*-M_PI*/
                                                   clockwise:NO];
         self.strokeWidth = strokeWidth;
         self.strokeColor = color;
-    
-    
         self.view.backgroundColor = [UIColor clearColor];
     
         self.circleLayer = [self generateCircleLayer];
-    
         [self.view.layer addSublayer:self.circleLayer];
         self.circleLayer.opacity = 1.0;
         
+        [UIView animateWithDuration:0.15 animations:^{
+            self.prehiddenFrame = viewToHide.frame;
+            CGAffineTransform tForm = CGAffineTransformMakeScale(0.1, 0.1);
+            viewToHide.transform = tForm;
+            viewToHide.alpha = 0.0;
+        }];
     }
     
     self.tension = tension;
     
     [CATransaction begin]; {
         [CATransaction setCompletionBlock:^{
-            if ( self.completionBit ) {
-                [self completeWithCallback:completion];
-            } else {
-                [self animateWithSpeed:duration
-                               tension:tension
-                                 color:color
-                           strokeWidth:strokeWidth
-                            completion:completion];
+            [CATransaction begin]; {
+                [CATransaction setCompletionBlock:^{
+                    if ( self.completionBit ) {
+                        [UIView animateWithDuration:0.15 animations:^{
+                            CGAffineTransform tForm = CGAffineTransformMakeScale(1.0, 1.0);
+                            viewToHide.transform = tForm;
+                        } completion:^(BOOL finished) {
+                            [self completeWithCallback:completion];
+                        }];
+                    } else {
+                        [self animateWithSpeed:duration
+                                       tension:tension
+                                         color:color
+                                   strokeWidth:strokeWidth
+                                  hideableView:viewToHide
+                                    completion:completion];
+                    }
+                }];
+
+                CABasicAnimation* rotationAnimation;
+                rotationAnimation = [CABasicAnimation animationWithKeyPath:@"transform.rotation.z"];
+                rotationAnimation.toValue = [NSNumber numberWithFloat: -M_PI * 4.0];
+                rotationAnimation.duration = duration / 2.0;
+                rotationAnimation.cumulative = YES;
+                rotationAnimation.repeatCount = 1.0;
+                rotationAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseIn];
+                rotationAnimation.removedOnCompletion = NO;
+                [self.view.layer addAnimation:rotationAnimation
+                                       forKey:@"transform.rotation.z"];
+                
+                CABasicAnimation *animation = [CABasicAnimation animationWithKeyPath:@"strokeEnd"];
+                CGFloat halfSpeed = duration / 2.0;
+                animation.duration = halfSpeed;
+                animation.removedOnCompletion = NO;
+                
+                self.circleLayer.strokeColor = self.strokeColor.CGColor;
+                NSNumber *from = @(tension);
+                NSNumber *to = @(0.25);
+                animation.fromValue = from;
+                animation.toValue = to;
+                animation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
+                
+                [self.circleLayer addAnimation:animation
+                                        forKey:@"animateCircle"];
             }
+            [CATransaction commit];
         }];
         
         CABasicAnimation *animation = [CABasicAnimation animationWithKeyPath:@"strokeEnd"];
@@ -145,21 +189,10 @@
         NSNumber *to = @(tension);
         animation.fromValue = from;
         animation.toValue = to;
-        animation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear];
-        animation.autoreverses = YES;
+        animation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
         
-        [self.circleLayer addAnimation:animation forKey:@"animateCircle"];
-        
-        CABasicAnimation* rotationAnimation;
-        rotationAnimation = [CABasicAnimation animationWithKeyPath:@"transform.rotation.z"];
-        rotationAnimation.toValue = [NSNumber numberWithFloat: -M_PI * 2.0];
-        rotationAnimation.duration = duration;
-        rotationAnimation.cumulative = YES;
-        rotationAnimation.repeatCount = 1.0;
-        rotationAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseIn];
-        rotationAnimation.removedOnCompletion = NO;
-        [self.view.layer addAnimation:rotationAnimation
-                          forKey:@"transform.rotation.z"];
+        [self.circleLayer addAnimation:animation
+                                forKey:@"animateCircle"];
         
     }
     [CATransaction commit];

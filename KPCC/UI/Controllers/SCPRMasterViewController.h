@@ -65,6 +65,8 @@
 // Rewinding UI
 @property (nonatomic,strong) SCPRRewindWheelViewController *rewindWheel;
 @property (nonatomic,strong) IBOutlet UIView *rewindView;
+@property BOOL lockUI;
+
 - (void)activateRewind;
 
 // Instance methods.
