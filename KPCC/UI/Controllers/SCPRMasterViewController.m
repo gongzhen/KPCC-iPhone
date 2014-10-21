@@ -13,8 +13,9 @@
 #import "UIImageView+AFNetworking.h"
 #import "SCPRSlideInTransition.h"
 
-@interface SCPRMasterViewController () <AudioManagerDelegate, ContentProcessor, UINavigationControllerDelegate, UIViewControllerTransitioningDelegate>
+@interface SCPRMasterViewController () <AudioManagerDelegate, ContentProcessor, UINavigationControllerDelegate, UIViewControllerTransitioningDelegate, SCPRPreRollControllerDelegate>
 
+@property BOOL initialPlay;
 @property BOOL setPlaying;
 @property BOOL seekRequested;
 @property BOOL busyZoomAnim;
@@ -25,9 +26,12 @@
 
 @property IBOutlet NSLayoutConstraint *playerControlsTopYConstraint;
 @property IBOutlet NSLayoutConstraint *playerControlsBottomYConstraint;
-
 @property IBOutlet NSLayoutConstraint *rewindWidthConstraint;
 @property IBOutlet NSLayoutConstraint *rewindHeightContraint;
+
+@property IBOutlet NSLayoutConstraint *programTitleYConstraint;
+
+@property IBOutlet UIButton *preRollButton;
 
 @end
 
@@ -35,6 +39,7 @@
 
 @synthesize pulldownMenu,
             seekRequested,
+            initialPlay,
             setPlaying,
             busyZoomAnim,
             setForLiveStreamUI,
@@ -69,6 +74,9 @@
     pulldownMenu.delegate = self;
     [self.view addSubview:pulldownMenu];
     [pulldownMenu loadMenu];
+
+    // Set up pre-roll child view controller.
+    [self addPreRollController];
 
     // Fetch program info and update audio control state.
     [self updateDataForUI];
@@ -111,12 +119,16 @@
     MPRemoteCommand *playCommand = [rcc playCommand];
     [playCommand setEnabled:YES];
     [playCommand addTarget:self action:@selector(playOrPauseTapped:)];
-    
+
     self.rewindWheel = [[SCPRRewindWheelViewController alloc] init];
     self.rewindWheel.view = self.rewindView;
     self.rewindWheel.view.alpha = 0.0;
     [self.rewindWheel prepare];
     
+    if (!initialPlay) {
+        [self.preRollButton setHidden:YES];
+    }
+
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -138,8 +150,31 @@
     [self becomeFirstResponder];
 }
 
+- (void)addPreRollController {
+    self.preRollViewController = [[SCPRPreRollViewController alloc] initWithNibName:nil bundle:nil];
+    self.preRollViewController.delegate = self;
+
+    [self addChildViewController:self.preRollViewController];
+
+    CGRect frame = self.view.bounds;
+    frame.origin.y = (-1)*self.view.bounds.size.height;
+    self.preRollViewController.view.frame = frame;
+
+    [self.view addSubview:self.preRollViewController.view];
+    [self.preRollViewController didMoveToParentViewController:self];
+}
+
 
 # pragma mark - Actions
+
+- (IBAction)initialPlayTapped:(id)sender {
+    [self cloakForPreRoll:YES];
+    [self.preRollViewController showPreRollWithAnimation:YES completion:^(BOOL done) {
+        [self.programTitleYConstraint setConstant:14];
+        [self.initialControlsView setHidden:YES];
+        initialPlay = YES;
+    }];
+}
 
 - (IBAction)playOrPauseTapped:(id)sender {
     if (seekRequested) {
@@ -242,6 +277,12 @@
     }
 }
 
+- (IBAction)showPreRollTapped:(id)sender {
+    [self cloakForPreRoll:YES];
+    [self.preRollViewController showPreRollWithAnimation:YES completion:^(BOOL done) {
+
+    }];
+}
 
 # pragma mark - Audio commands
 
@@ -334,15 +375,6 @@
 
     if ([[AudioManager shared] isStreamPlaying] || [[AudioManager shared] isStreamBuffering]) {
 
-        // Reset frame and alpha for progress bar.
-        if (setForOnDemandUI) {
-            [self.timeLabelOnDemand setHidden:NO];
-
-            POPBasicAnimation *progressBarFade = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
-            progressBarFade.toValue = @(1);
-            [self.progressBarView.layer pop_addAnimation:progressBarFade forKey:@"progressBarFadeInAnim"];
-        }
-
         POPBasicAnimation *dividerFadeAnim = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
         dividerFadeAnim.toValue = @(0.4);
         [self.horizDividerLine.layer pop_addAnimation:dividerFadeAnim forKey:@"dividerFadeInAnim"];
@@ -355,48 +387,18 @@
         POPBasicAnimation *genericFadeOutAnim = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
         genericFadeOutAnim.toValue = @(0);
         [self.rewindToShowStartButton.layer pop_addAnimation:genericFadeOutAnim forKey:@"rewindToStartFadeInAnim"];
-
-        if (!seekRequested) {
-            POPBasicAnimation *bottomAnim = [POPBasicAnimation animationWithPropertyNamed:kPOPLayoutConstraintConstant];
-            bottomAnim.toValue = @(45);
-            bottomAnim.duration = .3;
-            [self.playerControlsBottomYConstraint pop_addAnimation:bottomAnim forKey:@"animatePlayControlsDown"];
-
-            POPBasicAnimation *topAnim = [POPBasicAnimation animationWithPropertyNamed:kPOPLayoutConstraintConstant];
-            topAnim.toValue = @(CGRectGetMaxY(self.view.frame) - 240);
-            topAnim.duration = .3;
-            [self.playerControlsTopYConstraint pop_addAnimation:topAnim forKey:@"animateTopPlayControlsDown"];
-        }
     } else {
         if (!setPlaying) {
-            POPBasicAnimation *genericFadeInAnim = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
-            genericFadeInAnim.toValue = @(1);
-            [self.rewindToShowStartButton.layer pop_addAnimation:genericFadeInAnim forKey:@"rewindToStartFadeInAnim"];
 
-            // Reset frame and alpha for progress bar.
-            if (setForOnDemandUI) {
-                [self.timeLabelOnDemand setHidden:YES];
+            if (!initialPlay) {
+                POPBasicAnimation *genericFadeInAnim = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
+                genericFadeInAnim.toValue = @(1);
+                [self.rewindToShowStartButton.layer pop_addAnimation:genericFadeInAnim forKey:@"rewindToStartFadeInAnim"];
 
-                POPBasicAnimation *progressBarFadeAnim = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
-                progressBarFadeAnim.toValue = @(0);
-                [self.progressBarView.layer pop_addAnimation:progressBarFadeAnim forKey:@"progressBarFadeOutAnim"];
+                POPBasicAnimation *dividerFadeAnim = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
+                dividerFadeAnim.toValue = @(0);
+                [self.horizDividerLine.layer pop_addAnimation:dividerFadeAnim forKey:@"dividerFadeOutAnim"];
             }
-
-            POPBasicAnimation *dividerFadeAnim = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
-            dividerFadeAnim.toValue = @(0);
-            [self.horizDividerLine.layer pop_addAnimation:dividerFadeAnim forKey:@"dividerFadeOutAnim"];
-        }
-
-        if (!seekRequested) {
-            POPBasicAnimation *bottomAnim = [POPBasicAnimation animationWithPropertyNamed:kPOPLayoutConstraintConstant];
-            bottomAnim.toValue = @(220);
-            bottomAnim.duration = .3;
-            [self.playerControlsBottomYConstraint pop_addAnimation:bottomAnim forKey:@"animateBottomPlayControlsUp"];
-
-            POPBasicAnimation *topAnim = [POPBasicAnimation animationWithPropertyNamed:kPOPLayoutConstraintConstant];
-            topAnim.toValue = @(146);
-            topAnim.duration = .3;
-            [self.playerControlsTopYConstraint pop_addAnimation:topAnim forKey:@"animateTopPlayControlsUp"];
         }
     }
 }
@@ -447,8 +449,8 @@
         [self.timeLabelOnDemand setHidden:YES];
     }
 
-    if (![self.progressBarView isHidden]) {
-        [self.progressBarView setHidden:YES];
+    if (![self.progressView isHidden]) {
+        [self.progressView setHidden:YES];
     }
 
     setForLiveStreamUI = YES;
@@ -465,7 +467,7 @@
 
     self.navigationItem.title = @"Programs";
     [self.timeLabelOnDemand setText:@""];
-    [self.progressBarView setFrame:CGRectMake(self.progressBarView.frame.origin.x, self.progressBarView.frame.origin.y, 0, self.progressBarView.frame.size.height)];
+    [self.progressView setProgress:0.0 animated:YES];
 
     // Update UILabels, content, etc.
     [self setDataForOnDemand:program andEpisode:episode];
@@ -483,8 +485,8 @@
         [self.timeLabelOnDemand setHidden:NO];
     }
 
-    if ([self.progressBarView isHidden]) {
-        [self.progressBarView setHidden:NO];
+    if ([self.progressView isHidden]) {
+        [self.progressView setHidden:NO];
     }
 
     setForOnDemandUI = YES;
@@ -556,7 +558,7 @@
         onDemandElementsFade.toValue = @0;
         onDemandElementsFade.duration = 0.3;
         [self.timeLabelOnDemand.layer pop_addAnimation:onDemandElementsFade forKey:@"timeLabelFadeAnimation"];
-        [self.progressBarView.layer pop_addAnimation:onDemandElementsFade forKey:@"progressBarFadeAnimation"];
+        [self.progressView.layer pop_addAnimation:onDemandElementsFade forKey:@"progressBarFadeAnimation"];
     }
 
     POPBasicAnimation *blurFadeAnimation = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
@@ -576,6 +578,9 @@
     [self.playerControlsView.layer pop_addAnimation:controlsFadeAnimation forKey:@"controlsViewFadeAnimation"];
     [self.onDemandPlayerView.layer pop_addAnimation:controlsFadeAnimation forKey:@"onDemandViewFadeAnimation"];
     [self.liveStreamView.layer pop_addAnimation:controlsFadeAnimation forKey:@"liveStreamViewFadeAnimation"];
+    if (!initialPlay) {
+        [self.initialControlsView.layer pop_addAnimation:controlsFadeAnimation forKey:@"initialControlsViewFade"];
+    }
 
     POPBasicAnimation *dividerFadeAnim = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
     dividerFadeAnim.toValue = @0;
@@ -607,7 +612,125 @@
         onDemandElementsFade.toValue = @1;
         onDemandElementsFade.duration = 0.3;
         [self.timeLabelOnDemand.layer pop_addAnimation:onDemandElementsFade forKey:@"timeLabelFadeAnimation"];
-        [self.progressBarView.layer pop_addAnimation:onDemandElementsFade forKey:@"progressBarFadeAnimation"];
+        [self.progressView.layer pop_addAnimation:onDemandElementsFade forKey:@"progressBarFadeAnimation"];
+    }
+
+    POPBasicAnimation *fadeAnimation = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
+    fadeAnimation.toValue = @0;
+    fadeAnimation.duration = 0.3;
+
+    POPBasicAnimation *darkBgFadeAnimation = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
+    darkBgFadeAnimation.toValue = @0;
+    darkBgFadeAnimation.duration = 0.3;
+
+    POPBasicAnimation *controlsFadeAnimation = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
+    controlsFadeAnimation.toValue = @1;
+    controlsFadeAnimation.duration = 0.3;
+
+    [self.blurView.layer pop_addAnimation:fadeAnimation forKey:@"blurViewFadeAnimation"];
+    [self.darkBgView.layer pop_addAnimation:darkBgFadeAnimation forKey:@"darkBgFadeAnimation"];
+    [self.playerControlsView.layer pop_addAnimation:controlsFadeAnimation forKey:@"controlsViewFadeAnimation"];
+    [self.onDemandPlayerView.layer pop_addAnimation:controlsFadeAnimation forKey:@"onDemandViewFadeAnimation"];
+    [self.liveStreamView.layer pop_addAnimation:controlsFadeAnimation forKey:@"liveStreamViewFadeAnimation"];
+    if (!initialPlay) {
+        [self.initialControlsView.layer pop_addAnimation:controlsFadeAnimation forKey:@"initialControlsViewFade"];
+    }
+
+    if ([[AudioManager shared] isStreamPlaying]) {
+        POPBasicAnimation *dividerFadeAnim = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
+        dividerFadeAnim.toValue = @0.4;
+        dividerFadeAnim.duration = 0.3;
+        [self.horizDividerLine.layer pop_addAnimation:dividerFadeAnim forKey:@"horizDividerFadeOutAnimation"];
+    }
+
+    self.menuOpen = NO;
+}
+
+- (void)removeAllAnimations {
+    [self.blurView.layer pop_removeAllAnimations];
+    [self.darkBgView.layer pop_removeAllAnimations];
+    [self.playerControlsView.layer pop_removeAllAnimations];
+    [self.onDemandPlayerView.layer pop_removeAllAnimations];
+    [self.liveStreamView.layer pop_removeAllAnimations];
+    [self.horizDividerLine.layer pop_removeAllAnimations];
+    [self.timeLabelOnDemand.layer pop_removeAllAnimations];
+    [self.progressView.layer pop_removeAllAnimations];
+}
+
+
+# pragma mark - PreRoll Control
+
+- (void)cloakForPreRoll:(BOOL)animated {
+    [self removeAllAnimations];
+    [self.blurView setNeedsDisplay];
+
+    if (setForOnDemandUI){
+        POPBasicAnimation *onDemandElementsFade = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
+        onDemandElementsFade.toValue = @0;
+        onDemandElementsFade.duration = 0.3;
+        [self.timeLabelOnDemand.layer pop_addAnimation:onDemandElementsFade forKey:@"timeLabelFadeAnimation"];
+        [self.progressView.layer pop_addAnimation:onDemandElementsFade forKey:@"progressBarFadeAnimation"];
+    }
+
+    if (!initialPlay) {
+        POPBasicAnimation *initialControlsFade = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
+        initialControlsFade.toValue = @(0);
+        initialControlsFade.duration = 0.3;
+        [self.initialPlayButton.layer pop_addAnimation:initialControlsFade forKey:@"initialControlsFadeAnimation"];
+
+        POPBasicAnimation *bottomAnim = [POPBasicAnimation animationWithPropertyNamed:kPOPLayoutConstraintConstant];
+        bottomAnim.toValue = @(50);
+        bottomAnim.duration = .3;
+        [self.playerControlsBottomYConstraint pop_addAnimation:bottomAnim forKey:@"animatePlayControlsDown"];
+
+        POPBasicAnimation *topAnim = [POPBasicAnimation animationWithPropertyNamed:kPOPLayoutConstraintConstant];
+        topAnim.toValue = @(CGRectGetMaxY(self.view.frame) - 245);
+        topAnim.duration = .3;
+        [self.playerControlsTopYConstraint pop_addAnimation:topAnim forKey:@"animateTopPlayControlsDown"];
+
+        self.horizDividerLine.alpha = 0.4;
+        POPBasicAnimation *scaleAnimation = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerScaleXY];
+        scaleAnimation.fromValue  = [NSValue valueWithCGSize:CGSizeMake(0.0f, 0.0f)];
+        scaleAnimation.toValue  = [NSValue valueWithCGSize:CGSizeMake(1.0f, 1.0f)];
+        scaleAnimation.duration = 1.0;
+        [self.horizDividerLine.layer pop_addAnimation:scaleAnimation forKey:@"scaleAnimation"];
+    }
+
+    POPBasicAnimation *blurFadeAnimation = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
+    blurFadeAnimation.toValue = @1;
+    blurFadeAnimation.duration = 0.3;
+
+    POPBasicAnimation *darkBgFadeAnimation = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
+    darkBgFadeAnimation.toValue = @0.35;
+    darkBgFadeAnimation.duration = 0.3;
+
+    POPBasicAnimation *controlsFadeAnimation = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
+    controlsFadeAnimation.toValue = @(0);
+    controlsFadeAnimation.duration = 0.3;
+
+    [self.blurView.layer pop_addAnimation:blurFadeAnimation forKey:@"blurViewFadeAnimation"];
+    [self.darkBgView.layer pop_addAnimation:darkBgFadeAnimation forKey:@"darkBgFadeAnimation"];
+    //[self.playerControlsView.layer pop_addAnimation:controlsFadeAnimation forKey:@"controlsViewFadeAnimation"];
+    [self.onDemandPlayerView.layer pop_addAnimation:controlsFadeAnimation forKey:@"onDemandViewFadeAnimation"];
+    [self.liveStreamView.layer pop_addAnimation:controlsFadeAnimation forKey:@"liveStreamViewFadeAnimation"];
+
+    // TODO: Take out button
+    [self.preRollButton setHidden:YES];
+
+    self.preRollOpen = YES;
+}
+
+- (void)decloakForPreRoll:(BOOL)animated {
+    [self removeAllAnimations];
+
+    [self.blurView setNeedsDisplay];
+
+    if (setForOnDemandUI){
+        POPBasicAnimation *onDemandElementsFade = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
+        onDemandElementsFade.toValue = @1;
+        onDemandElementsFade.duration = 0.3;
+        [self.timeLabelOnDemand.layer pop_addAnimation:onDemandElementsFade forKey:@"timeLabelFadeAnimation"];
+        [self.progressView.layer pop_addAnimation:onDemandElementsFade forKey:@"progressBarFadeAnimation"];
     }
 
     POPBasicAnimation *fadeAnimation = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
@@ -635,18 +758,19 @@
         [self.horizDividerLine.layer pop_addAnimation:dividerFadeAnim forKey:@"horizDividerFadeOutAnimation"];
     }
 
-    self.menuOpen = NO;
+    // TODO: Take out button
+    [self.preRollButton setHidden:NO];
+
+    self.preRollOpen = NO;
 }
 
-- (void)removeAllAnimations {
-    [self.blurView.layer pop_removeAllAnimations];
-    [self.darkBgView.layer pop_removeAllAnimations];
-    [self.playerControlsView.layer pop_removeAllAnimations];
-    [self.onDemandPlayerView.layer pop_removeAllAnimations];
-    [self.liveStreamView.layer pop_removeAllAnimations];
-    [self.horizDividerLine.layer pop_removeAllAnimations];
-    [self.timeLabelOnDemand.layer pop_removeAllAnimations];
-    [self.progressBarView.layer pop_removeAllAnimations];
+# pragma mark - SCPRPreRollControllerDelegate
+
+- (void)preRollCompleted {
+    if (self.preRollOpen) {
+        [self decloakForPreRoll:YES];
+    }
+    [[AudioManager shared] startStream];
 }
 
 
@@ -715,7 +839,7 @@
     }
 
     if (setForOnDemandUI) {
-        [self.progressBarView pop_removeAllAnimations];
+        [self.progressView pop_removeAllAnimations];
 
         if (CMTimeGetSeconds([[[[AudioManager shared] playerItem] asset] duration]) > 0) {
             double currentTime = CMTimeGetSeconds([[[AudioManager shared] playerItem] currentTime]);
@@ -725,10 +849,7 @@
                                                                      andDuration:duration]];
 
             dispatch_async(dispatch_get_main_queue(), ^{
-                [self.progressBarView setFrame:CGRectMake(self.progressBarView.frame.origin.x,
-                                                          self.progressBarView.frame.origin.y,
-                                                          (  currentTime / duration * (self.view.frame.size.width - 20)),
-                                                          self.progressBarView.frame.size.height)];
+                [self.progressView setProgress:(currentTime / duration) animated:YES];
             });
         }
     }
