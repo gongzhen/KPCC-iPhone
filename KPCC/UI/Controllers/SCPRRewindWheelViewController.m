@@ -107,7 +107,7 @@
         CGFloat radius = CGRectGetMidX(self.view.bounds);
         
         self.circlePath = [UIBezierPath bezierPathWithArcCenter:arcCenter
-                                                     radius:radius-1.0
+                                                     radius:radius-strokeWidth
                                                  startAngle:2*M_PI*1-M_PI_2/*M_PI*/
                                                    endAngle:2*M_PI*0-M_PI_2/*-M_PI*/
                                                   clockwise:NO];
@@ -135,6 +135,8 @@
                 [CATransaction setCompletionBlock:^{
                     if ( self.completionBit ) {
                         [UIView animateWithDuration:0.15 animations:^{
+                            // TODO: Really this should also reset the alpha to 1, but it doesn't exactly fit the timing
+                            // of the overall animation
                             CGAffineTransform tForm = CGAffineTransformMakeScale(1.0, 1.0);
                             viewToHide.transform = tForm;
                         } completion:^(BOOL finished) {

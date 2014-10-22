@@ -8,6 +8,12 @@
 
 #import <UIKit/UIKit.h>
 
+typedef NS_ENUM(NSUInteger, RewindDistance) {
+    RewindDistanceBeginning = 0,
+    RewindDistanceFifteen,
+    RewindDistanceThirty
+};
+
 @interface SCPRRewindWheelViewController : UIViewController
 
 - (void)prepare;

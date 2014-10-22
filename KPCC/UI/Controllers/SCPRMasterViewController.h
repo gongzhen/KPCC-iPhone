@@ -67,7 +67,7 @@
 @property (nonatomic,strong) IBOutlet UIView *rewindView;
 @property BOOL lockUI;
 
-- (void)activateRewind;
+- (void)activateRewind:(RewindDistance)distance;
 
 // Instance methods.
 - (void)cloakForMenu:(BOOL)animated;

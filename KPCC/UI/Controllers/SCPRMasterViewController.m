@@ -198,15 +198,19 @@
 
 - (IBAction)rewindToStartTapped:(id)sender {
 
-    [self activateRewind];
+    [self activateRewind:RewindDistanceBeginning];
     
 }
 
-- (void)activateRewind {
+- (void)activateRewind:(RewindDistance)distance {
     
     
     UIImage *pause = self.playPauseButton.imageView.image;
     CGFloat ht = pause.size.height; CGFloat wd = pause.size.width;
+    
+    [self.liveDescriptionLabel setText:@"REWINDING..."];
+    self.rewinding = YES;
+    
     [self.rewindHeightContraint setConstant:ht];
     [self.rewindWidthConstraint setConstant:wd];
     [self.playerControlsView layoutIfNeeded];
@@ -235,11 +239,21 @@
     
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         
-        self.rewinding = YES;
-        if (_currentProgram) {
-            seekRequested = YES;
-            [[AudioManager shared] seekToDate:_currentProgram.starts_at];
+        seekRequested = YES;
+        switch (distance) {
+            case RewindDistanceBeginning:
+                if (_currentProgram) {
+                    [[AudioManager shared] seekToDate:_currentProgram.starts_at];
+                }
+                break;
+            case RewindDistanceFifteen:
+                [self rewindFifteen];
+                break;
+            case RewindDistanceThirty:
+            default:
+                break;
         }
+
         
     });
 
@@ -313,6 +327,8 @@
 
 - (void)setUIContents:(BOOL)animated {
 
+    if ( self.rewinding ) return;
+    
     if (animated) {
         [UIView animateWithDuration:0.1 animations:^{
             [self.playPauseButton setAlpha:0.0];
@@ -321,11 +337,10 @@
                 [self.liveDescriptionLabel setText:@"LIVE"];
                 [self.rewindToShowStartButton setAlpha:0.0];
             } else {
-                if ( !self.rewinding ) {
-                    [self.liveDescriptionLabel setText:@"ON NOW"];
-                    [self.liveRewindAltButton setAlpha:0.0];
-                    [self.backToLiveButton setAlpha:0.0];
-                }
+                [self.liveDescriptionLabel setText:@"ON NOW"];
+                [self.liveRewindAltButton setAlpha:0.0];
+                [self.backToLiveButton setAlpha:0.0];
+                
             }
 
         } completion:^(BOOL finished) {
@@ -337,13 +352,12 @@
 
             // Leave this out for now.
             // [self scaleBackgroundImage];
-
-            if ( !self.rewinding ) {
-                [UIView animateWithDuration:0.1 animations:^{
-                    [self.playPauseButton setAlpha:1.0];
-                    [self.rewindWheel.view setAlpha:0.0];
-                }];
-            }
+        
+            [UIView animateWithDuration:0.1 animations:^{
+                [self.playPauseButton setAlpha:1.0];
+                [self.rewindWheel.view setAlpha:0.0];
+            }];
+            
         }];
 
     } else {
@@ -819,7 +833,7 @@
 
 - (void)onTimeChange {
     
-    if ( self.lockUI ) return;
+    if ( self.rewinding ) return;
     
     if ([[[AudioManager shared] maxSeekableDate] timeIntervalSinceDate:[[AudioManager shared] currentDate]] > 60 ) {
         

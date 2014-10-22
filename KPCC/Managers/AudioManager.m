@@ -328,6 +328,7 @@ static const NSString *ItemStatusContext;
     if (!self.audioPlayer) {
         [self buildStreamer:kHLSLiveStreamURL];
     }
+    
     [self.audioPlayer play];
     self.status = StreamStatusPlaying;
 }
