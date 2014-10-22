@@ -122,9 +122,9 @@ class SCPRHomeViewController: UIViewController, AudioManagerDelegate, ContentPro
     
     // For beta to update UI
     func tick() -> Void {
-        streamIndicatedBitrateLabel.text = NSString.stringWithString("\(AudioManager.shared().indicatedBitrate())")
-        maxObservedBitrateLabel.text = NSString.stringWithString("\(AudioManager.shared().observedMaxBitrate())")
-        minObservedBitrateLabel.text = NSString.stringWithString("\(AudioManager.shared().observedMinBitrate())")
+        streamIndicatedBitrateLabel.text = NSString(UTF8String: "\(AudioManager.shared().indicatedBitrate())")
+        maxObservedBitrateLabel.text = NSString(UTF8String: "\(AudioManager.shared().observedMaxBitrate())")
+        minObservedBitrateLabel.text = NSString(UTF8String: "\(AudioManager.shared().observedMinBitrate())")
     }
     
     func userReportTapped() -> Void {
@@ -137,7 +137,7 @@ class SCPRHomeViewController: UIViewController, AudioManagerDelegate, ContentPro
     }
     
     func updateDataForUI() -> Void {
-        NetworkManager.shared().fetchProgramInformationFor(NSDate.date(), display: self)
+        NetworkManager.shared().fetchProgramInformationFor(NSDate(), display: self)
         updateControlsAndUI()
     }
     
@@ -153,9 +153,9 @@ class SCPRHomeViewController: UIViewController, AudioManagerDelegate, ContentPro
         }
         
         streamerUrlLabel.text = AudioManager.shared().liveStreamURL()
-        streamIndicatedBitrateLabel.text = NSString.stringWithString("\(AudioManager.shared().indicatedBitrate())")
-        maxObservedBitrateLabel.text = NSString.stringWithString("\(AudioManager.shared().observedMaxBitrate())")
-        minObservedBitrateLabel.text = NSString.stringWithString("\(AudioManager.shared().observedMinBitrate())")
+        streamIndicatedBitrateLabel.text = NSString(UTF8String: "\(AudioManager.shared().indicatedBitrate())")
+        maxObservedBitrateLabel.text = NSString(UTF8String: "\(AudioManager.shared().observedMaxBitrate())")
+        minObservedBitrateLabel.text = NSString(UTF8String: "\(AudioManager.shared().observedMinBitrate())")
     }
     
     // Time shifting
@@ -323,7 +323,7 @@ class SCPRHomeViewController: UIViewController, AudioManagerDelegate, ContentPro
     // Date helper functions
     func dateFromRFCString(dateString: NSString) -> NSDate {
         if (dateString == NSNull()) {
-            return NSDate.date();
+            return NSDate();
         }
         
         var rfc3339DateFormatter = NSDateFormatter()
