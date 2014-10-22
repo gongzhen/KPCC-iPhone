@@ -129,6 +129,8 @@
         [self.preRollButton setHidden:YES];
     }
 
+    // Testing...
+    [[NetworkManager shared] fetchTritonAd:nil completion:nil];
 }
 
 - (void)viewWillAppear:(BOOL)animated {

@@ -16,10 +16,12 @@
 		523E86D919CB694B006FC366 /* Episode.m in Sources */ = {isa = PBXBuildFile; fileRef = 523E86D819CB694B006FC366 /* Episode.m */; };
 		5248858E19CBA180005F59CC /* EpisodeAudio.m in Sources */ = {isa = PBXBuildFile; fileRef = 5248858D19CBA180005F59CC /* EpisodeAudio.m */; };
 		5257E9CC19E34A550055733F /* SCPRSlideInTransition.m in Sources */ = {isa = PBXBuildFile; fileRef = 5257E9CB19E34A550055733F /* SCPRSlideInTransition.m */; };
+		525C6CA419F701FA0076C13B /* TritonAd.m in Sources */ = {isa = PBXBuildFile; fileRef = 525C6CA319F701FA0076C13B /* TritonAd.m */; };
 		52CC6D5E19D0DC7100C67322 /* Segment.m in Sources */ = {isa = PBXBuildFile; fileRef = 52CC6D5D19D0DC7100C67322 /* Segment.m */; };
 		52CC6D6219D100DE00C67322 /* SCPRProgramTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 52CC6D6119D100DE00C67322 /* SCPRProgramTableViewCell.m */; };
 		52CC6D6619D110E300C67322 /* SCPRProgramsListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 52CC6D6519D110E300C67322 /* SCPRProgramsListViewController.m */; };
 		52CC6D6919D112F400C67322 /* SCPRProgramsListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 52CC6D6819D112F400C67322 /* SCPRProgramsListViewController.xib */; };
+		52CF916419F82FAF007BCFA8 /* SCPRTritonXMLParserDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 52CF916319F82FAF007BCFA8 /* SCPRTritonXMLParserDelegate.m */; };
 		52D0FC1C19D1F24F009AECEE /* SCPRProgramDetailHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D0FC1B19D1F24F009AECEE /* SCPRProgramDetailHeaderView.m */; };
 		52D0FC2019D1FC0C009AECEE /* SCPRProgramDetailTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D0FC1F19D1FC0C009AECEE /* SCPRProgramDetailTableViewCell.m */; };
 		52D0FC2A19D20D29009AECEE /* program_avatar_marketplace-tech-report.png in Resources */ = {isa = PBXBuildFile; fileRef = 52D0FC2219D20D29009AECEE /* program_avatar_marketplace-tech-report.png */; };
@@ -215,6 +217,8 @@
 		5248858D19CBA180005F59CC /* EpisodeAudio.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EpisodeAudio.m; sourceTree = "<group>"; };
 		5257E9CA19E34A550055733F /* SCPRSlideInTransition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCPRSlideInTransition.h; path = Transitions/SCPRSlideInTransition.h; sourceTree = "<group>"; };
 		5257E9CB19E34A550055733F /* SCPRSlideInTransition.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SCPRSlideInTransition.m; path = Transitions/SCPRSlideInTransition.m; sourceTree = "<group>"; };
+		525C6CA219F701FA0076C13B /* TritonAd.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TritonAd.h; sourceTree = "<group>"; };
+		525C6CA319F701FA0076C13B /* TritonAd.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TritonAd.m; sourceTree = "<group>"; };
 		52CC6D5C19D0DC7100C67322 /* Segment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Segment.h; sourceTree = "<group>"; };
 		52CC6D5D19D0DC7100C67322 /* Segment.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Segment.m; sourceTree = "<group>"; };
 		52CC6D6019D100DE00C67322 /* SCPRProgramTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCPRProgramTableViewCell.h; sourceTree = "<group>"; };
@@ -222,6 +226,8 @@
 		52CC6D6419D110E300C67322 /* SCPRProgramsListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCPRProgramsListViewController.h; sourceTree = "<group>"; };
 		52CC6D6519D110E300C67322 /* SCPRProgramsListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SCPRProgramsListViewController.m; sourceTree = "<group>"; };
 		52CC6D6819D112F400C67322 /* SCPRProgramsListViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SCPRProgramsListViewController.xib; sourceTree = "<group>"; };
+		52CF916219F82FAF007BCFA8 /* SCPRTritonXMLParserDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCPRTritonXMLParserDelegate.h; path = Parsers/SCPRTritonXMLParserDelegate.h; sourceTree = "<group>"; };
+		52CF916319F82FAF007BCFA8 /* SCPRTritonXMLParserDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SCPRTritonXMLParserDelegate.m; path = Parsers/SCPRTritonXMLParserDelegate.m; sourceTree = "<group>"; };
 		52D0FC1A19D1F24F009AECEE /* SCPRProgramDetailHeaderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCPRProgramDetailHeaderView.h; sourceTree = "<group>"; };
 		52D0FC1B19D1F24F009AECEE /* SCPRProgramDetailHeaderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SCPRProgramDetailHeaderView.m; sourceTree = "<group>"; };
 		52D0FC1E19D1FC0C009AECEE /* SCPRProgramDetailTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCPRProgramDetailTableViewCell.h; sourceTree = "<group>"; };
@@ -464,6 +470,15 @@
 			path = ..;
 			sourceTree = "<group>";
 		};
+		52CF916119F82F7C007BCFA8 /* Parsers */ = {
+			isa = PBXGroup;
+			children = (
+				52CF916219F82FAF007BCFA8 /* SCPRTritonXMLParserDelegate.h */,
+				52CF916319F82FAF007BCFA8 /* SCPRTritonXMLParserDelegate.m */,
+			);
+			name = Parsers;
+			sourceTree = "<group>";
+		};
 		52D91F2D19A2535A00B8A02F /* json */ = {
 			isa = PBXGroup;
 			children = (
@@ -587,6 +602,8 @@
 				5248858D19CBA180005F59CC /* EpisodeAudio.m */,
 				52CC6D5C19D0DC7100C67322 /* Segment.h */,
 				52CC6D5D19D0DC7100C67322 /* Segment.m */,
+				525C6CA219F701FA0076C13B /* TritonAd.h */,
+				525C6CA319F701FA0076C13B /* TritonAd.m */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -742,6 +759,7 @@
 		769FD69918EB682E00AAF1F4 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				52CF916119F82F7C007BCFA8 /* Parsers */,
 				760E3C45194FB4F700D86D91 /* Models */,
 				769FD69A18EB685F00AAF1F4 /* Application */,
 				76A3090118C93C3A0065D4B1 /* Managers */,
@@ -1166,6 +1184,7 @@
 			files = (
 				76658AB518DCB0DC00026176 /* AnalyticsManager.m in Sources */,
 				523E86D919CB694B006FC366 /* Episode.m in Sources */,
+				52CF916419F82FAF007BCFA8 /* SCPRTritonXMLParserDelegate.m in Sources */,
 				76349D1B18D8C74F0027C3B8 /* NetworkManager.m in Sources */,
 				52D0FC1C19D1F24F009AECEE /* SCPRProgramDetailHeaderView.m in Sources */,
 				52EFF87819C37D350059A0E3 /* SCPRMenuCell.m in Sources */,
@@ -1181,6 +1200,7 @@
 				76A308D318C8FB940065D4B1 /* main.m in Sources */,
 				255943EA19F1A7620007294D /* SCPRRewindWheelViewController.m in Sources */,
 				52CC6D6219D100DE00C67322 /* SCPRProgramTableViewCell.m in Sources */,
+				525C6CA419F701FA0076C13B /* TritonAd.m in Sources */,
 				76A3090418C93C880065D4B1 /* AudioManager.m in Sources */,
 				52D0FC2019D1FC0C009AECEE /* SCPRProgramDetailTableViewCell.m in Sources */,
 				760E3C4C194FB61B00D86D91 /* Program.m in Sources */,
