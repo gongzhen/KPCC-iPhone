@@ -7,6 +7,7 @@
 //
 
 #import "NetworkManager.h"
+#import "SCPRTritonXMLParserDelegate.h"
 
 static NetworkManager *singleton = nil;
 
@@ -160,6 +161,16 @@ static NetworkManager *singleton = nil;
 
         NSXMLParser *XMLParser = (NSXMLParser *)responseObject;
         [XMLParser setShouldProcessNamespaces:YES];
+
+        SCPRTritonXMLParserDelegate *tritonXMLParserDelegate = [[SCPRTritonXMLParserDelegate alloc] init];
+        [XMLParser setDelegate:tritonXMLParserDelegate];
+
+        NSError *error = nil;
+        [XMLParser parse];
+        error = [XMLParser parserError];
+        if(error) {
+            NSLog(@"Error %@", error);
+        }
 
         NSLog(@"response? %@", XMLParser);
 
