@@ -22,7 +22,6 @@
 		52CC6D6219D100DE00C67322 /* SCPRProgramTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 52CC6D6119D100DE00C67322 /* SCPRProgramTableViewCell.m */; };
 		52CC6D6619D110E300C67322 /* SCPRProgramsListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 52CC6D6519D110E300C67322 /* SCPRProgramsListViewController.m */; };
 		52CC6D6919D112F400C67322 /* SCPRProgramsListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 52CC6D6819D112F400C67322 /* SCPRProgramsListViewController.xib */; };
-		52CF916419F82FAF007BCFA8 /* SCPRTritonXMLParserDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 52CF916319F82FAF007BCFA8 /* SCPRTritonXMLParserDelegate.m */; };
 		52D0FC1C19D1F24F009AECEE /* SCPRProgramDetailHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D0FC1B19D1F24F009AECEE /* SCPRProgramDetailHeaderView.m */; };
 		52D0FC2019D1FC0C009AECEE /* SCPRProgramDetailTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D0FC1F19D1FC0C009AECEE /* SCPRProgramDetailTableViewCell.m */; };
 		52D0FC2A19D20D29009AECEE /* program_avatar_marketplace-tech-report.png in Resources */ = {isa = PBXBuildFile; fileRef = 52D0FC2219D20D29009AECEE /* program_avatar_marketplace-tech-report.png */; };
@@ -229,8 +228,6 @@
 		52CC6D6419D110E300C67322 /* SCPRProgramsListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCPRProgramsListViewController.h; sourceTree = "<group>"; };
 		52CC6D6519D110E300C67322 /* SCPRProgramsListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SCPRProgramsListViewController.m; sourceTree = "<group>"; };
 		52CC6D6819D112F400C67322 /* SCPRProgramsListViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SCPRProgramsListViewController.xib; sourceTree = "<group>"; };
-		52CF916219F82FAF007BCFA8 /* SCPRTritonXMLParserDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCPRTritonXMLParserDelegate.h; path = Parsers/SCPRTritonXMLParserDelegate.h; sourceTree = "<group>"; };
-		52CF916319F82FAF007BCFA8 /* SCPRTritonXMLParserDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SCPRTritonXMLParserDelegate.m; path = Parsers/SCPRTritonXMLParserDelegate.m; sourceTree = "<group>"; };
 		52D0FC1A19D1F24F009AECEE /* SCPRProgramDetailHeaderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCPRProgramDetailHeaderView.h; sourceTree = "<group>"; };
 		52D0FC1B19D1F24F009AECEE /* SCPRProgramDetailHeaderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SCPRProgramDetailHeaderView.m; sourceTree = "<group>"; };
 		52D0FC1E19D1FC0C009AECEE /* SCPRProgramDetailTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCPRProgramDetailTableViewCell.h; sourceTree = "<group>"; };
@@ -471,15 +468,6 @@
 			);
 			name = Transitions;
 			path = ..;
-			sourceTree = "<group>";
-		};
-		52CF916119F82F7C007BCFA8 /* Parsers */ = {
-			isa = PBXGroup;
-			children = (
-				52CF916219F82FAF007BCFA8 /* SCPRTritonXMLParserDelegate.h */,
-				52CF916319F82FAF007BCFA8 /* SCPRTritonXMLParserDelegate.m */,
-			);
-			name = Parsers;
 			sourceTree = "<group>";
 		};
 		52D91F2D19A2535A00B8A02F /* json */ = {
@@ -764,7 +752,6 @@
 		769FD69918EB682E00AAF1F4 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
-				52CF916119F82F7C007BCFA8 /* Parsers */,
 				760E3C45194FB4F700D86D91 /* Models */,
 				769FD69A18EB685F00AAF1F4 /* Application */,
 				76A3090118C93C3A0065D4B1 /* Managers */,
@@ -1189,7 +1176,6 @@
 			files = (
 				76658AB518DCB0DC00026176 /* AnalyticsManager.m in Sources */,
 				523E86D919CB694B006FC366 /* Episode.m in Sources */,
-				52CF916419F82FAF007BCFA8 /* SCPRTritonXMLParserDelegate.m in Sources */,
 				76349D1B18D8C74F0027C3B8 /* NetworkManager.m in Sources */,
 				52D0FC1C19D1F24F009AECEE /* SCPRProgramDetailHeaderView.m in Sources */,
 				254E177019F863960022BF6B /* UILabel+Additions.m in Sources */,
