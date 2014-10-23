@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "SCPRAppDelegate.h"
+#import "UILabel+Additions.h"
 
 //@class SCPRMasterViewController;
 

@@ -210,14 +210,15 @@
     UIImage *pause = self.playPauseButton.imageView.image;
     CGFloat ht = pause.size.height; CGFloat wd = pause.size.width;
     
-    [self.liveDescriptionLabel setText:@"REWINDING..."];
+    [self.liveDescriptionLabel fadeText:@"REWINDING..."];
+    
     self.rewinding = YES;
     
     [self.rewindHeightContraint setConstant:ht];
     [self.rewindWidthConstraint setConstant:wd];
     [self.playerControlsView layoutIfNeeded];
     [self.rewindWheel.view setAlpha:1.0];
-    [self.rewindWheel animateWithSpeed:0.96
+    [self.rewindWheel animateWithSpeed:1.0
                                tension:0.75
                                  color:[UIColor whiteColor]
                            strokeWidth:2.0
@@ -258,7 +259,7 @@
 
         
     });
-
+     
         
     
 }
@@ -272,6 +273,7 @@
 }
 
 - (IBAction)backToLiveTapped:(id)sender {
+    self.lockUI = YES;
     seekRequested = YES;
     [[AudioManager shared] forwardSeekLive];
 }
@@ -329,17 +331,20 @@
 
 - (void)setUIContents:(BOOL)animated {
 
-    if ( self.rewinding ) return;
+    if ( self.rewinding || self.lockUI ) {
+        //self.lockUI = NO;
+        return;
+    }
     
     if (animated) {
         [UIView animateWithDuration:0.1 animations:^{
             [self.playPauseButton setAlpha:0.0];
 
             if ([[AudioManager shared] isStreamPlaying] || [[AudioManager shared] isStreamBuffering]) {
-                [self.liveDescriptionLabel setText:@"LIVE"];
+                [self.liveDescriptionLabel fadeText:@"LIVE"];
                 [self.rewindToShowStartButton setAlpha:0.0];
             } else {
-                [self.liveDescriptionLabel setText:@"ON NOW"];
+                [self.liveDescriptionLabel fadeText:@"ON NOW"];
                 [self.liveRewindAltButton setAlpha:0.0];
                 [self.backToLiveButton setAlpha:0.0];
                 
@@ -364,10 +369,10 @@
 
     } else {
         if ([[AudioManager shared] isStreamPlaying] || [[AudioManager shared] isStreamBuffering]) {
-            [self.liveDescriptionLabel setText:@"LIVE"];
+            [self.liveDescriptionLabel fadeText:@"LIVE"];
             [self.rewindToShowStartButton setAlpha:0.0];
         } else {
-            [self.liveDescriptionLabel setText:@"ON NOW"];
+            [self.liveDescriptionLabel fadeText:@"ON NOW"];
             [self.liveRewindAltButton setAlpha:0.0];
             [self.backToLiveButton setAlpha:0.0];
         }
@@ -835,30 +840,23 @@
 
 - (void)onTimeChange {
     
-    if ( self.rewinding ) return;
+    if ( self.rewinding || self.lockUI ) {
+        //self.lockUI = NO;
+        return;
+    }
     
     if ([[[AudioManager shared] maxSeekableDate] timeIntervalSinceDate:[[AudioManager shared] currentDate]] > 60 ) {
-        
-        @synchronized(self) {
-            self.lockUI = YES;
-        }
         
         NSTimeInterval ti = [[[AudioManager shared] maxSeekableDate] timeIntervalSinceDate:[[AudioManager shared] currentDate]];
         ti += [[AudioManager shared] latencyCorrection];
         
         NSInteger mins = (ti/60);
 
-        [self.liveDescriptionLabel setText:[NSString stringWithFormat:@"%li MINUTES BEHIND LIVE", (long)mins]];
+        [self.liveDescriptionLabel fadeText:[NSString stringWithFormat:@"%li MINUTES BEHIND LIVE", (long)mins]];
         [self.backToLiveButton setHidden:NO];
         
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            @synchronized(self) {
-                self.lockUI = NO;
-            }
-        });
-        
     } else {
-        [self.liveDescriptionLabel setText:@"LIVE"];
+        [self.liveDescriptionLabel fadeText:@"LIVE"];
         [self.backToLiveButton setHidden:YES];
     }
 
@@ -882,15 +880,17 @@
 - (void)onSeekCompleted {
     // Make sure UI gets set to "Playing" state after a seek.
     
+    self.lockUI = NO;
     if ( self.rewinding ) {
         [self.rewindWheel endAnimations];
     } else {
         if (!setPlaying) {
-            seekRequested = NO;
+            seekRequested = NO;            
             [self setUIPositioning];
             setPlaying = YES;
         }
     }
+    
 }
 
 

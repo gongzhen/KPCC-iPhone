@@ -101,6 +101,9 @@
         }
     }
     
+    self.tension = tension;
+
+    
     if ( !self.circleLayer ) {
     
         CGPoint arcCenter = CGPointMake(CGRectGetMidX(self.view.bounds), CGRectGetMidY(self.view.bounds));
@@ -127,58 +130,27 @@
         }];
     }
     
-    self.tension = tension;
+    
     
     [CATransaction begin]; {
         [CATransaction setCompletionBlock:^{
-            [CATransaction begin]; {
-                [CATransaction setCompletionBlock:^{
-                    if ( self.completionBit ) {
-                        [UIView animateWithDuration:0.15 animations:^{
-                            // TODO: Really this should also reset the alpha to 1, but it doesn't exactly fit the timing
-                            // of the overall animation
-                            CGAffineTransform tForm = CGAffineTransformMakeScale(1.0, 1.0);
-                            viewToHide.transform = tForm;
-                        } completion:^(BOOL finished) {
-                            [self completeWithCallback:completion];
-                        }];
-                    } else {
-                        [self animateWithSpeed:duration
-                                       tension:tension
-                                         color:color
-                                   strokeWidth:strokeWidth
-                                  hideableView:viewToHide
-                                    completion:completion];
-                    }
+            if ( self.completionBit ) {
+                [UIView animateWithDuration:0.15 animations:^{
+                    // TODO: Really this should also reset the alpha to 1, but it doesn't exactly fit the timing
+                    // of the overall animation
+                    CGAffineTransform tForm = CGAffineTransformMakeScale(1.0, 1.0);
+                    viewToHide.transform = tForm;
+                } completion:^(BOOL finished) {
+                    [self completeWithCallback:completion];
                 }];
-
-                CABasicAnimation* rotationAnimation;
-                rotationAnimation = [CABasicAnimation animationWithKeyPath:@"transform.rotation.z"];
-                rotationAnimation.toValue = [NSNumber numberWithFloat: -M_PI * 4.0];
-                rotationAnimation.duration = duration / 2.0;
-                rotationAnimation.cumulative = YES;
-                rotationAnimation.repeatCount = 1.0;
-                rotationAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseIn];
-                rotationAnimation.removedOnCompletion = NO;
-                [self.view.layer addAnimation:rotationAnimation
-                                       forKey:@"transform.rotation.z"];
-                
-                CABasicAnimation *animation = [CABasicAnimation animationWithKeyPath:@"strokeEnd"];
-                CGFloat halfSpeed = duration / 2.0;
-                animation.duration = halfSpeed;
-                animation.removedOnCompletion = NO;
-                
-                self.circleLayer.strokeColor = self.strokeColor.CGColor;
-                NSNumber *from = @(tension);
-                NSNumber *to = @(0.25);
-                animation.fromValue = from;
-                animation.toValue = to;
-                animation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
-                
-                [self.circleLayer addAnimation:animation
-                                        forKey:@"animateCircle"];
+            } else {
+                [self animateWithSpeed:duration
+                               tension:tension
+                                 color:color
+                           strokeWidth:strokeWidth
+                          hideableView:viewToHide
+                            completion:completion];
             }
-            [CATransaction commit];
         }];
         
         CABasicAnimation *animation = [CABasicAnimation animationWithKeyPath:@"strokeEnd"];
@@ -189,15 +161,29 @@
         self.circleLayer.strokeColor = self.strokeColor.CGColor;
         NSNumber *from = @(0.0);
         NSNumber *to = @(tension);
+        animation.cumulative = YES;
         animation.fromValue = from;
         animation.toValue = to;
         animation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
-        
+        animation.autoreverses = YES;
         [self.circleLayer addAnimation:animation
                                 forKey:@"animateCircle"];
         
+        CABasicAnimation* rotationAnimation;
+        rotationAnimation = [CABasicAnimation animationWithKeyPath:@"transform.rotation.z"];
+        rotationAnimation.toValue = [NSNumber numberWithFloat: -M_PI * 6.0];
+        rotationAnimation.duration = duration;
+        rotationAnimation.cumulative = YES;
+        rotationAnimation.repeatCount = 1.0;
+        rotationAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseIn];
+        rotationAnimation.removedOnCompletion = YES;
+        [self.view.layer addAnimation:rotationAnimation
+         forKey:@"transform.rotation.z"];
+        
+        
     }
     [CATransaction commit];
+    
     
 }
 

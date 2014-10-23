@@ -241,7 +241,7 @@
                                     <constraint firstAttribute="height" constant="1" id="Bvk-aF-0pU"/>
                                 </constraints>
                             </view>
-                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8NV-lk-gMa" userLabel="ProgressBarView">
+                            <view hidden="YES" contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="8NV-lk-gMa" userLabel="ProgressBarView">
                                 <color key="backgroundColor" red="0.97254901960784312" green="0.49411764705882355" blue="0.12941176470588237" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="3" id="5N8-Bg-qnA"/>

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		254E177019F863960022BF6B /* UILabel+Additions.m in Sources */ = {isa = PBXBuildFile; fileRef = 254E176F19F863960022BF6B /* UILabel+Additions.m */; };
 		255943EA19F1A7620007294D /* SCPRRewindWheelViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 255943E919F1A7620007294D /* SCPRRewindWheelViewController.m */; };
 		255943EC19F5C8B80007294D /* rewind_beat.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 255943EB19F5C8B80007294D /* rewind_beat.mp3 */; };
 		523126A719EDB78C008A47A7 /* SCPRPreRollViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 523126A519EDB78C008A47A7 /* SCPRPreRollViewController.m */; };
@@ -201,6 +202,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		254E176E19F863960022BF6B /* UILabel+Additions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UILabel+Additions.h"; sourceTree = "<group>"; };
+		254E176F19F863960022BF6B /* UILabel+Additions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UILabel+Additions.m"; sourceTree = "<group>"; };
 		255943E819F1A7620007294D /* SCPRRewindWheelViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCPRRewindWheelViewController.h; sourceTree = "<group>"; };
 		255943E919F1A7620007294D /* SCPRRewindWheelViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SCPRRewindWheelViewController.m; sourceTree = "<group>"; };
 		255943EB19F5C8B80007294D /* rewind_beat.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = rewind_beat.mp3; sourceTree = "<group>"; };
@@ -637,6 +640,8 @@
 				76349D2018D8F8A30027C3B8 /* Reachability.m */,
 				760EA99019521E98009B504E /* AVPlayer+Additions.h */,
 				760EA99119521E98009B504E /* AVPlayer+Additions.m */,
+				254E176E19F863960022BF6B /* UILabel+Additions.h */,
+				254E176F19F863960022BF6B /* UILabel+Additions.m */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -1187,6 +1192,7 @@
 				52CF916419F82FAF007BCFA8 /* SCPRTritonXMLParserDelegate.m in Sources */,
 				76349D1B18D8C74F0027C3B8 /* NetworkManager.m in Sources */,
 				52D0FC1C19D1F24F009AECEE /* SCPRProgramDetailHeaderView.m in Sources */,
+				254E177019F863960022BF6B /* UILabel+Additions.m in Sources */,
 				52EFF87819C37D350059A0E3 /* SCPRMenuCell.m in Sources */,
 				5248858E19CBA180005F59CC /* EpisodeAudio.m in Sources */,
 				523E86D019C8A292006FC366 /* SCPRProgramDetailViewController.m in Sources */,
