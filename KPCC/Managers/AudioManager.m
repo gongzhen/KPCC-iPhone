@@ -122,21 +122,27 @@ static const NSString *ItemStatusContext;
         return;
     }
 
-    NSDictionary *audioMetaData;
+    NSDictionary *audioMetaData = @{};
     if ([audio isKindOfClass:[Episode class]]) {
         Episode *episode = (Episode*)audio;
-        audioMetaData = @{ MPMediaItemPropertyArtist : episode.programName,
-                           MPMediaItemPropertyTitle : episode.title,
-                           MPMediaItemPropertyPlaybackDuration : episode.audio.duration };
+        if ( episode.programName && episode.title && episode.audio ) {
+            audioMetaData = @{ MPMediaItemPropertyArtist : episode.programName,
+                               MPMediaItemPropertyTitle : episode.title,
+                               MPMediaItemPropertyPlaybackDuration : episode.audio.duration };
+        }
     } else if ([audio isKindOfClass:[Segment class]]) {
         Segment *segment = (Segment*)audio;
-        audioMetaData = @{ MPMediaItemPropertyArtist : segment.programName,
-                           MPMediaItemPropertyTitle : segment.title,
-                           MPMediaItemPropertyPlaybackDuration : segment.audio.duration};
+        if ( segment.programName && segment.title && segment.audio ) {
+            audioMetaData = @{ MPMediaItemPropertyArtist : segment.programName,
+                               MPMediaItemPropertyTitle : segment.title,
+                               MPMediaItemPropertyPlaybackDuration : segment.audio.duration};
+        }
     } else if ([audio isKindOfClass:[Program class]]) {
         Program *program = (Program*)audio;
-        audioMetaData = @{ MPMediaItemPropertyArtist : @"89.3 KPCC",
+        if ( program.title ) {
+            audioMetaData = @{ MPMediaItemPropertyArtist : @"89.3 KPCC",
                            MPMediaItemPropertyTitle : program.title };
+        }
     } else {
         audioMetaData = @{ MPMediaItemPropertyArtist : @"89.3 KPCC"};
     }

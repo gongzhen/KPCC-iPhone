@@ -48,7 +48,17 @@
     NSError *fileError = nil;
     self.rewindTriggerPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:fileUrl
                                                                       error:&fileError];
-    [self.rewindTriggerPlayer prepareToPlay];
+    
+    @try {
+        [self.rewindTriggerPlayer prepareToPlay];
+    }
+    @catch (NSException *exception) {
+        NSLog(@"Throws an exception for hopefully this reason : %@",[exception description]);
+    }
+    @finally {
+        
+    }
+    
 }
 
 - (void)didReceiveMemoryWarning {
@@ -136,7 +146,7 @@
         [CATransaction setCompletionBlock:^{
             if ( self.completionBit ) {
                 [UIView animateWithDuration:0.15 animations:^{
-                    // TODO: Really this should also reset the alpha to 1, but it doesn't exactly fit the timing
+                    // FIXME: Really this should also reset the alpha to 1, but it doesn't exactly fit the timing
                     // of the overall animation
                     CGAffineTransform tForm = CGAffineTransformMakeScale(1.0, 1.0);
                     viewToHide.transform = tForm;
