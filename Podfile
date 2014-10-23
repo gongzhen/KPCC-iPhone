@@ -4,4 +4,5 @@ pod 'AFNetworking', '~> 2.0'
 pod 'JDStatusBarNotification'
 pod 'pop', '~> 1.0'
 pod 'FXBlurView', '~> 1.6'
+pod 'XMLDictionary', '~> 1.4'
 link_with ['KPCC', 'KPCC-TestFlight']

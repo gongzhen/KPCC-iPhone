@@ -122,7 +122,9 @@
 
 
     // Testing...
-    [[NetworkManager shared] fetchTritonAd:nil completion:nil];
+    [[NetworkManager shared] fetchTritonAd:nil completion:^(TritonAd *tritonAd) {
+        NSLog(@"ad? %@", tritonAd);
+    }];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
