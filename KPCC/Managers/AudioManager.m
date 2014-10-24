@@ -227,7 +227,7 @@ static const NSString *ItemStatusContext;
         [self.audioPlayer pause];
     }
 
-    double time = MAXFLOAT;
+    //double time = MAXFLOAT;
     //[self.audioPlayer seekToTime: CMTimeMakeWithSeconds(time, NSEC_PER_SEC) completionHandler:^(BOOL finished) {
     [self.audioPlayer seekToDate:[self maxSeekableDate] completionHandler:^(BOOL finished) {
         [self.audioPlayer play];

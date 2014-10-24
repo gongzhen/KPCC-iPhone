@@ -138,6 +138,7 @@
             viewToHide.transform = tForm;
             viewToHide.alpha = 0.0;
         }];
+        
     }
     
     

@@ -13,6 +13,8 @@
 #import "UIImageView+AFNetworking.h"
 #import "SCPRSlideInTransition.h"
 
+static NSString *kRewindingText = @"REWINDING...";
+
 @interface SCPRMasterViewController () <AudioManagerDelegate, ContentProcessor, UINavigationControllerDelegate, UIViewControllerTransitioningDelegate, SCPRPreRollControllerDelegate>
 
 @property BOOL initialPlay;
@@ -212,7 +214,8 @@
     UIImage *pause = self.playPauseButton.imageView.image;
     CGFloat ht = pause.size.height; CGFloat wd = pause.size.width;
     
-    [self.liveDescriptionLabel fadeText:@"REWINDING..."];
+    //[self.liveDescriptionLabel fadeText:kRewindingText];
+    [self.liveDescriptionLabel pulsate:kRewindingText color:nil];
     
     self.rewinding = YES;
     
@@ -227,6 +230,7 @@
                           hideableView:self.playPauseButton
                             completion:^{
                                 
+                                [self.liveDescriptionLabel stopPulsating];
                                 self.rewinding = NO;
                                 [self updateControlsAndUI:YES];
                                 if ( !setPlaying ) {
@@ -241,13 +245,21 @@
                                 
                             }];
     
-    
+
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         
         seekRequested = YES;
         switch (distance) {
             case RewindDistanceBeginning:
                 if (_currentProgram) {
+#ifdef USE_LATENCY
+                    NSDate *raw = _currentProgram.starts_at;
+                    NSTimeInterval rawTI = [raw timeIntervalSince1970];
+                    rawTI += [[AudioManager shared] latencyCorrection];
+                    NSDate *cooked = [NSDate dateWithTimeIntervalSince1970:rawTI];
+                    [[AudioManager shared] seekToDate:cooked];
+#endif
+                    
                     [[AudioManager shared] seekToDate:_currentProgram.starts_at];
                 }
                 break;
@@ -261,7 +273,7 @@
 
         
     });
-     
+   
         
     
 }
@@ -334,7 +346,6 @@
 - (void)setUIContents:(BOOL)animated {
 
     if ( self.rewinding || self.lockUI ) {
-        //self.lockUI = NO;
         return;
     }
     
@@ -343,10 +354,14 @@
             [self.playPauseButton setAlpha:0.0];
 
             if ([[AudioManager shared] isStreamPlaying] || [[AudioManager shared] isStreamBuffering]) {
-                [self.liveDescriptionLabel fadeText:@"LIVE"];
+                if ( ![self.liveDescriptionLabel.text isEqualToString:kRewindingText] ) {
+                    [self.liveDescriptionLabel fadeText:@"LIVE"];
+                }
                 [self.rewindToShowStartButton setAlpha:0.0];
             } else {
-                [self.liveDescriptionLabel fadeText:@"ON NOW"];
+                if ( ![self.liveDescriptionLabel.text isEqualToString:@"LIVE"] ) {
+                    [self.liveDescriptionLabel fadeText:@"ON NOW"];
+                }
                 [self.liveRewindAltButton setAlpha:0.0];
                 [self.backToLiveButton setAlpha:0.0];
                 
@@ -371,12 +386,17 @@
 
     } else {
         if ([[AudioManager shared] isStreamPlaying] || [[AudioManager shared] isStreamBuffering]) {
-            [self.liveDescriptionLabel fadeText:@"LIVE"];
+            if ( ![self.liveDescriptionLabel.text isEqualToString:kRewindingText] ) {
+                [self.liveDescriptionLabel fadeText:@"LIVE"];
+            }
             [self.rewindToShowStartButton setAlpha:0.0];
         } else {
-            [self.liveDescriptionLabel fadeText:@"ON NOW"];
+            if ( ![self.liveDescriptionLabel.text isEqualToString:@"LIVE"] ) {
+                [self.liveDescriptionLabel fadeText:@"ON NOW"];
+            }
             [self.liveRewindAltButton setAlpha:0.0];
             [self.backToLiveButton setAlpha:0.0];
+            
         }
 
         if ([[AudioManager shared] isStreamPlaying] || [[AudioManager shared] isStreamBuffering]) {
