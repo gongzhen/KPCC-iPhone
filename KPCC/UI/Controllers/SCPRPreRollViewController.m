@@ -8,12 +8,16 @@
 
 #import "SCPRPreRollViewController.h"
 #import <POP/POP.h>
+#import "UIImageView+AFNetworking.h"
+#import "AudioManager.h"
+#import "NetworkManager.h"
 
 #define kDefaultAdPresentationTime 10.0
 
 @interface SCPRPreRollViewController ()
 {
     float currentPresentedDuration;
+    BOOL impressionSent;
 }
 
 @property IBOutlet UIProgressView *adProgressView;
@@ -35,6 +39,24 @@
 # pragma mark - Presentations
 
 - (void)showPreRollWithAnimation:(BOOL)animated completion:(void (^)(BOOL done))completion {
+    if (self.tritonAd) {
+
+        // Set image for ad
+        NSURL *imageUrl = [NSURL URLWithString:self.tritonAd.imageCreativeUrl];
+        NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:imageUrl];
+        UIImageView *iv = self.adImageView;
+        [iv setImageWithURLRequest:request placeholderImage:nil success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {
+            self.adImageView.image = image;
+        } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error) {
+            completion(false);
+        }];
+        
+        // Play audio for ad
+        [[AudioManager shared] playAudioWithURL:self.tritonAd.audioCreativeUrl];
+        
+        impressionSent = NO;
+    }
+    
     if (animated) {
         [UIView animateWithDuration:0.3f animations:^{
             CGRect frame = CGRectMake(self.view.frame.origin.x, 0, self.view.frame.size.width, self.view.frame.size.height);
@@ -64,6 +86,13 @@
 # pragma mark - Actions
 
 - (IBAction)dismissTapped:(id)sender {
+    if (self.tritonAd && !impressionSent) {
+        impressionSent = YES;
+        [[NetworkManager shared] sendImpressionToTriton:self.tritonAd.impressionUrl completion:^(BOOL success) {
+            if (success) NSLog(@"impression sent successfully");
+        }];
+    }
+    
     if ([self.delegate respondsToSelector:@selector(preRollCompleted)]) {
         [self.delegate preRollCompleted];
     }
@@ -87,15 +116,16 @@
 }
 
 - (void)setAdProgress {
-
-    currentPresentedDuration = currentPresentedDuration + 0.01;
-
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [self.adProgressView setProgress:(currentPresentedDuration/kDefaultAdPresentationTime) animated:YES];
-    });
-
-    if (currentPresentedDuration >= kDefaultAdPresentationTime) {
-        [self dismissTapped:nil];
+    if (self.tritonAd && [[AudioManager shared] isStreamPlaying]) {
+        currentPresentedDuration = currentPresentedDuration + 0.01;
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.adProgressView setProgress:(currentPresentedDuration/[self.tritonAd.audioCreativeDuration floatValue]) animated:YES];
+        });
+        
+        if (currentPresentedDuration >= [self.tritonAd.audioCreativeDuration floatValue]) {
+            [self dismissTapped:nil];
+        }
     }
 }
 

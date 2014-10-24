@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "TritonAd.h"
 
 @protocol SCPRPreRollControllerDelegate <NSObject>
 
@@ -16,8 +17,12 @@
 
 @interface SCPRPreRollViewController : UIViewController
 
-@property (nonatomic,weak) id<SCPRPreRollControllerDelegate> delegate;
-
 - (void)showPreRollWithAnimation:(BOOL)animated completion:(void (^)(BOOL done))completion;
+
+@property (nonatomic,weak) id<SCPRPreRollControllerDelegate> delegate;
+@property (nonatomic,strong) TritonAd *tritonAd;
+@property BOOL hasAdBeenShown;
+
+@property (nonatomic,strong) IBOutlet UIImageView *adImageView;
 
 @end
