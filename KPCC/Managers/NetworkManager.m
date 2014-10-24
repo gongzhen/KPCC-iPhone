@@ -173,4 +173,15 @@ static NetworkManager *singleton = nil;
     }];
 }
 
+- (void)sendImpressionToTriton:(NSString*)impressionURL completion:(void (^)(BOOL success))completion {
+    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+    manager.responseSerializer = [AFHTTPResponseSerializer serializer];
+    [manager GET:impressionURL parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        completion(YES);
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        NSLog(@"send impression failure? %@", error);
+        completion(NO);
+    }];
+}
+
 @end

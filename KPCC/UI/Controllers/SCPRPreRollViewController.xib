@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6245" systemVersion="14A388a" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6250" systemVersion="14A388a" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6238"/>
-        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6244"/>
     </dependencies>
     <customFonts key="customFonts">
         <mutableArray key="FreigSanProBook.otf">
@@ -12,6 +12,7 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="SCPRPreRollViewController">
             <connections>
+                <outlet property="adImageView" destination="Rqc-3l-APX" id="Be1-pK-3NY"/>
                 <outlet property="adProgressView" destination="fPN-Ht-bdS" id="ac7-HV-x0q"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
@@ -27,20 +28,20 @@
                         <constraint firstAttribute="height" constant="280" id="Mxn-rM-MyR">
                             <variation key="heightClass=regular-widthClass=compact" constant="250"/>
                         </constraint>
-                        <constraint firstAttribute="width" secondItem="Rqc-3l-APX" secondAttribute="height" multiplier="15:14" id="myD-nI-2lm">
-                            <variation key="heightClass=regular-widthClass=compact" constant="32.142857142857167"/>
+                        <constraint firstAttribute="width" constant="300" id="uAp-sy-AVi">
+                            <variation key="heightClass=regular-widthClass=compact" constant="300"/>
                         </constraint>
                     </constraints>
                     <variation key="default">
                         <mask key="constraints">
                             <exclude reference="Mxn-rM-MyR"/>
-                            <exclude reference="myD-nI-2lm"/>
+                            <exclude reference="uAp-sy-AVi"/>
                         </mask>
                     </variation>
                     <variation key="heightClass=regular-widthClass=compact">
                         <mask key="constraints">
                             <include reference="Mxn-rM-MyR"/>
-                            <include reference="myD-nI-2lm"/>
+                            <include reference="uAp-sy-AVi"/>
                         </mask>
                     </variation>
                 </imageView>
@@ -135,14 +136,14 @@
                     <exclude reference="ueV-HP-VWa"/>
                 </mask>
                 <mask key="constraints">
-                    <exclude reference="7re-ao-ty0"/>
-                    <exclude reference="TMW-6n-Sde"/>
                     <exclude reference="ExO-pK-K2a"/>
                     <exclude reference="NHf-ae-UeK"/>
                     <exclude reference="0I5-Hq-Ur1"/>
                     <exclude reference="orE-z6-7Ad"/>
                     <exclude reference="5Yx-mc-oAd"/>
                     <exclude reference="wOd-5s-7Eo"/>
+                    <exclude reference="7re-ao-ty0"/>
+                    <exclude reference="TMW-6n-Sde"/>
                 </mask>
             </variation>
             <variation key="heightClass=regular-widthClass=compact">
@@ -153,14 +154,14 @@
                     <include reference="ueV-HP-VWa"/>
                 </mask>
                 <mask key="constraints">
-                    <include reference="7re-ao-ty0"/>
-                    <include reference="TMW-6n-Sde"/>
                     <include reference="ExO-pK-K2a"/>
                     <include reference="NHf-ae-UeK"/>
                     <include reference="0I5-Hq-Ur1"/>
                     <include reference="orE-z6-7Ad"/>
                     <include reference="5Yx-mc-oAd"/>
                     <include reference="wOd-5s-7Eo"/>
+                    <include reference="7re-ao-ty0"/>
+                    <include reference="TMW-6n-Sde"/>
                 </mask>
             </variation>
         </view>

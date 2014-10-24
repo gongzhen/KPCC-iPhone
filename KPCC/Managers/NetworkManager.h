@@ -54,6 +54,7 @@ typedef enum {
 - (void)requestFromSCPRWithEndpoint:(NSString *)endpoint andDisplay:(id<ContentProcessor>)display flags:(NSDictionary*)flags;
 
 - (void)fetchTritonAd:(NSString *)params completion:(void (^)(TritonAd* tritonAd))completion;
+- (void)sendImpressionToTriton:(NSString*)impressionURL completion:(void (^)(BOOL success))completion;
 
 
 @end

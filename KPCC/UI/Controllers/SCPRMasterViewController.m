@@ -119,12 +119,6 @@
     if (!initialPlay) {
         [self.preRollButton setHidden:YES];
     }
-
-
-    // Testing...
-    [[NetworkManager shared] fetchTritonAd:nil completion:^(TritonAd *tritonAd) {
-        NSLog(@"ad? %@", tritonAd);
-    }];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -149,6 +143,13 @@
 - (void)addPreRollController {
     self.preRollViewController = [[SCPRPreRollViewController alloc] initWithNibName:nil bundle:nil];
     self.preRollViewController.delegate = self;
+
+    // Testing...
+    [[NetworkManager shared] fetchTritonAd:nil completion:^(TritonAd *tritonAd) {
+        NSLog(@"ad? %@", tritonAd);
+        self.preRollViewController.tritonAd = tritonAd;
+        self.preRollViewController.hasAdBeenShown = NO;
+    }];
 
     [self addChildViewController:self.preRollViewController];
 
