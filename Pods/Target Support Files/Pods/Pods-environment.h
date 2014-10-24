@@ -60,6 +60,12 @@
 #define COCOAPODS_VERSION_MINOR_JDStatusBarNotification 4
 #define COCOAPODS_VERSION_PATCH_JDStatusBarNotification 8
 
+// XMLDictionary
+#define COCOAPODS_POD_AVAILABLE_XMLDictionary
+#define COCOAPODS_VERSION_MAJOR_XMLDictionary 1
+#define COCOAPODS_VERSION_MINOR_XMLDictionary 4
+#define COCOAPODS_VERSION_PATCH_XMLDictionary 0
+
 // pop
 #define COCOAPODS_POD_AVAILABLE_pop
 #define COCOAPODS_VERSION_MAJOR_pop 1

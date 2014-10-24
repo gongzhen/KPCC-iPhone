@@ -17,13 +17,15 @@
 #import "SCPRPullDownMenu.h"
 #import "Episode.h"
 #import "Segment.h"
-
+#import "SCPRJogShuttleViewController.h"
+#import "SCPRPreRollViewController.h"
 
 @interface SCPRMasterViewController : UIViewController<SCPRMenuDelegate>
 
 @property IBOutlet UILabel *programTitleLabel;
 @property IBOutlet UIImageView *programImageView;
 @property IBOutlet UIButton *playPauseButton;
+@property IBOutlet UIButton *initialPlayButton;
 @property IBOutlet UIButton *rewindToShowStartButton;
 @property IBOutlet UIButton *liveRewindAltButton;
 @property IBOutlet UILabel *liveDescriptionLabel;
@@ -36,6 +38,7 @@
 @property IBOutlet UIView *liveStreamView;
 @property IBOutlet UIView *onDemandPlayerView;
 @property IBOutlet UIView *playerControlsView;
+@property IBOutlet UIView *initialControlsView;
 
 
 // Views for On-Demand playback;
@@ -44,7 +47,7 @@
 @property IBOutlet UILabel *episodeTitleOnDemand;
 @property IBOutlet UILabel *timeLabelOnDemand;
 @property IBOutlet UIButton *shareButton;
-@property IBOutlet UIView *progressBarView;
+@property IBOutlet UIProgressView *progressView;
 
 
 // Important Attrs.
@@ -53,7 +56,21 @@
 @property (nonatomic,strong) NSString *onDemandEpUrl;
 @property (nonatomic,strong) SCPRPullDownMenu *pulldownMenu;
 @property (nonatomic) BOOL menuOpen;
+@property (nonatomic) BOOL preRollOpen;
 
+
+// Pre-Roll
+@property (nonatomic,strong) SCPRPreRollViewController *preRollViewController;
+
+// Rewinding UI
+@property (nonatomic,strong) SCPRJogShuttleViewController *jogShuttle;
+@property (nonatomic,strong) IBOutlet UIView *rewindView;
+@property BOOL lockUI;
+
+- (void)activateRewind:(RewindDistance)distance;
+- (void)activateFastForward;
+- (void)snapJogWheel;
+- (BOOL)uiIsJogging;
 
 // Instance methods.
 - (void)cloakForMenu:(BOOL)animated;

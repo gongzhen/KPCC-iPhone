@@ -7,6 +7,7 @@
 //
 
 #import "NetworkManager.h"
+#import <XMLDictionary/XMLDictionary.h>
 
 static NetworkManager *singleton = nil;
 
@@ -149,6 +150,38 @@ static NetworkManager *singleton = nil;
     } else {
         [display handleProcessedContent:data flags:flags];
     }
+}
+
+- (void)fetchTritonAd:(NSString *)params completion:(void (^)(TritonAd* tritonAd))completion {
+    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+    manager.responseSerializer = [AFHTTPResponseSerializer serializer];
+    NSString *tritonEndpoint = @"http://cmod.live.streamtheworld.com/ondemand/ars?type=preroll&stid=83153";
+
+    [manager GET:tritonEndpoint parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        NSDictionary *convertedData = [NSDictionary dictionaryWithXMLData:responseObject];
+        NSLog(@"convertedData %@", convertedData);
+
+        TritonAd *tritonAd = nil;
+        if (convertedData != nil && [convertedData objectForKey:@"Ad"]) {
+            tritonAd = [[TritonAd alloc] initWithDict:[convertedData objectForKey:@"Ad"]];
+        }
+
+        completion(tritonAd);
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        NSLog(@"failure? %@", error);
+        completion(nil);
+    }];
+}
+
+- (void)sendImpressionToTriton:(NSString*)impressionURL completion:(void (^)(BOOL success))completion {
+    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+    manager.responseSerializer = [AFHTTPResponseSerializer serializer];
+    [manager GET:impressionURL parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        completion(YES);
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        NSLog(@"send impression failure? %@", error);
+        completion(NO);
+    }];
 }
 
 @end

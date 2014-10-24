@@ -11,6 +11,7 @@
 #import <CoreTelephony/CTTelephonyNetworkInfo.h>
 #import <CoreTelephony/CTCarrier.h>
 #import "AFNetworking.h"
+#import "TritonAd.h"
 
 #define kServerBase @"http://www.scpr.org/api/v3"
 #define kFailoverThreshold 4
@@ -51,5 +52,9 @@ typedef enum {
 - (void)processResponseData:(NSDictionary*)content;
 - (void)requestFromSCPRWithEndpoint:(NSString*)endpoint andDisplay:(id<ContentProcessor>)display;
 - (void)requestFromSCPRWithEndpoint:(NSString *)endpoint andDisplay:(id<ContentProcessor>)display flags:(NSDictionary*)flags;
+
+- (void)fetchTritonAd:(NSString *)params completion:(void (^)(TritonAd* tritonAd))completion;
+- (void)sendImpressionToTriton:(NSString*)impressionURL completion:(void (^)(BOOL success))completion;
+
 
 @end

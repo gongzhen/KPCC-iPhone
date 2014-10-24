@@ -25,6 +25,7 @@ static const NSString *ItemStatusContext;
     if (!singleton) {
         @synchronized(self) {
             singleton = [[AudioManager alloc] init];
+            singleton.fadeQueue = [[NSOperationQueue alloc] init];
         }
     }
     return singleton;
@@ -112,6 +113,10 @@ static const NSString *ItemStatusContext;
 - (void)playAudioWithURL:(NSString *)url {
     [self takedownAudioPlayer];
     [self buildStreamer:url];
+
+    // Subscribe to the AVPlayerItem's DidPlayToEndTime notification.
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playerItemDidFinishPlaying:) name:AVPlayerItemDidPlayToEndTimeNotification object:self.playerItem];
+
     [self startStream];
 }
 
@@ -121,21 +126,27 @@ static const NSString *ItemStatusContext;
         return;
     }
 
-    NSDictionary *audioMetaData;
+    NSDictionary *audioMetaData = @{};
     if ([audio isKindOfClass:[Episode class]]) {
         Episode *episode = (Episode*)audio;
-        audioMetaData = @{ MPMediaItemPropertyArtist : episode.programName,
-                           MPMediaItemPropertyTitle : episode.title,
-                           MPMediaItemPropertyPlaybackDuration : episode.audio.duration };
+        if ( episode.programName && episode.title && episode.audio ) {
+            audioMetaData = @{ MPMediaItemPropertyArtist : episode.programName,
+                               MPMediaItemPropertyTitle : episode.title,
+                               MPMediaItemPropertyPlaybackDuration : episode.audio.duration };
+        }
     } else if ([audio isKindOfClass:[Segment class]]) {
         Segment *segment = (Segment*)audio;
-        audioMetaData = @{ MPMediaItemPropertyArtist : segment.programName,
-                           MPMediaItemPropertyTitle : segment.title,
-                           MPMediaItemPropertyPlaybackDuration : segment.audio.duration};
+        if ( segment.programName && segment.title && segment.audio ) {
+            audioMetaData = @{ MPMediaItemPropertyArtist : segment.programName,
+                               MPMediaItemPropertyTitle : segment.title,
+                               MPMediaItemPropertyPlaybackDuration : segment.audio.duration};
+        }
     } else if ([audio isKindOfClass:[Program class]]) {
         Program *program = (Program*)audio;
-        audioMetaData = @{ MPMediaItemPropertyArtist : @"89.3 KPCC",
+        if ( program.title ) {
+            audioMetaData = @{ MPMediaItemPropertyArtist : @"89.3 KPCC",
                            MPMediaItemPropertyTitle : program.title };
+        }
     } else {
         audioMetaData = @{ MPMediaItemPropertyArtist : @"89.3 KPCC"};
     }
@@ -157,7 +168,9 @@ static const NSString *ItemStatusContext;
 
             weakSelf.minSeekableDate = [NSDate dateWithTimeInterval:( -1 * (CMTimeGetSeconds(time) - CMTimeGetSeconds(range.start))) sinceDate:weakSelf.currentDate];
             weakSelf.maxSeekableDate = [NSDate dateWithTimeInterval:(CMTimeGetSeconds(CMTimeRangeGetEnd(range)) - CMTimeGetSeconds(time)) sinceDate:weakSelf.currentDate];
-
+            weakSelf.latencyCorrection = [[NSDate date] timeIntervalSince1970] - [weakSelf.maxSeekableDate timeIntervalSince1970];
+            //NSLog(@"Latency : %ld",(long)weakSelf.latencyCorrection);
+            
             if ([weakSelf.delegate respondsToSelector:@selector(onTimeChange)]) {
                 [weakSelf.delegate onTimeChange];
             }
@@ -165,6 +178,7 @@ static const NSString *ItemStatusContext;
             NSLog(@"no seekable time range for current item");
         }
     }];
+    
 }
 
 - (void)seekToPercent:(CGFloat)percent {
@@ -180,10 +194,8 @@ static const NSString *ItemStatusContext;
 }
 
 - (void)seekToDate:(NSDate *)date {
-
     if (!self.audioPlayer) {
         [self buildStreamer:kHLSLiveStreamURL];
-
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
             [self.audioPlayer.currentItem seekToDate:date completionHandler:^(BOOL finished) {
                 if(self.audioPlayer.status == AVPlayerStatusReadyToPlay &&
@@ -199,7 +211,6 @@ static const NSString *ItemStatusContext;
 
     } else {
         [self.audioPlayer pause];
-
         [self.audioPlayer.currentItem seekToDate:date completionHandler:^(BOOL finished) {
             if(self.audioPlayer.status == AVPlayerStatusReadyToPlay &&
                self.audioPlayer.currentItem.status == AVPlayerItemStatusReadyToPlay) {
@@ -220,8 +231,9 @@ static const NSString *ItemStatusContext;
         [self.audioPlayer pause];
     }
 
-    double time = MAXFLOAT;
-    [self.audioPlayer seekToTime: CMTimeMakeWithSeconds(time, NSEC_PER_SEC) completionHandler:^(BOOL finished) {
+    //double time = MAXFLOAT;
+    //[self.audioPlayer seekToTime: CMTimeMakeWithSeconds(time, NSEC_PER_SEC) completionHandler:^(BOOL finished) {
+    [self.audioPlayer seekToDate:[self maxSeekableDate] completionHandler:^(BOOL finished) {
         [self.audioPlayer play];
 
         if ([self.delegate respondsToSelector:@selector(onSeekCompleted)]) {
@@ -284,6 +296,15 @@ static const NSString *ItemStatusContext;
     NSLog(@"playerItemFailedToPlayToEndTime! --- %@", error);
 }
 
+- (void)playerItemDidFinishPlaying:(NSNotification *)notification {
+    NSError *error = notification.userInfo[AVPlayerItemDidPlayToEndTimeNotification];
+    NSLog(@"playerItemDidFinishPlaying! --- %@", error);
+
+    [self takedownAudioPlayer];
+    [self buildStreamer:kHLSLiveStreamURL];
+    [self startStream];
+}
+
 - (NSString *)liveStreamURL {
 
     if (self.audioPlayer) {
@@ -327,6 +348,7 @@ static const NSString *ItemStatusContext;
     if (!self.audioPlayer) {
         [self buildStreamer:kHLSLiveStreamURL];
     }
+    
     [self.audioPlayer play];
     self.status = StreamStatusPlaying;
 }
@@ -349,6 +371,44 @@ static const NSString *ItemStatusContext;
     }
 }
 
+- (void)adjustAudioWithValue:(CGFloat)increment completion:(void (^)(void))completion {
+    if ( increment < 0.0 ) {
+        self.savedVolume = self.audioPlayer.volume;
+    }
+    [self threadedAdjustWithValue:increment completion:completion];
+}
+
+- (void)threadedAdjustWithValue:(CGFloat)increment completion:(void (^)(void))completion {
+    BOOL basecase = NO;
+    BOOL increasing = NO;
+    if ( increment < 0.0 ) {
+        basecase = self.audioPlayer.volume <= 0.0;
+    } else {
+        basecase = self.audioPlayer.volume >= self.savedVolume;
+        increasing = YES;
+    }
+
+    //NSLog(@"Player Volume : %1.1f",self.audioPlayer.volume);
+    
+    if ( basecase ) {
+        if ( increasing ) {
+            self.audioPlayer.volume = self.savedVolume;
+        }
+        if ( completion ) {
+            dispatch_async(dispatch_get_main_queue(), completion);
+        }
+    } else {
+        NSBlockOperation *block = [NSBlockOperation blockOperationWithBlock:^{
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.05 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                [self.audioPlayer setVolume:self.audioPlayer.volume+increment];
+                [self threadedAdjustWithValue:increment completion:completion];
+            });
+        }];
+        [self.fadeQueue addOperation:block];
+    }
+}
+
+
 - (void)takedownAudioPlayer {
     [self.audioPlayer pause];
 
@@ -363,6 +423,8 @@ static const NSString *ItemStatusContext;
         [self.playerItem removeObserver:self forKeyPath:@"status"];
         [self.playerItem removeObserver:self forKeyPath:@"playbackBufferEmpty"];
         [self.playerItem removeObserver:self forKeyPath:@"playbackLikelyToKeepUp"];
+        [self.playerItem removeObserver:self forKeyPath:AVPlayerItemDidPlayToEndTimeNotification];
+        [self.playerItem removeObserver:self forKeyPath:AVPlayerItemFailedToPlayToEndTimeNotification];
     } @catch (NSException *e) {
         // Wasn't necessary
     }
