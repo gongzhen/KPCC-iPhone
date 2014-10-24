@@ -17,7 +17,7 @@
 #import "SCPRPullDownMenu.h"
 #import "Episode.h"
 #import "Segment.h"
-#import "SCPRRewindWheelViewController.h"
+#import "SCPRJogShuttleViewController.h"
 #import "SCPRPreRollViewController.h"
 
 @interface SCPRMasterViewController : UIViewController<SCPRMenuDelegate>
@@ -63,11 +63,14 @@
 @property (nonatomic,strong) SCPRPreRollViewController *preRollViewController;
 
 // Rewinding UI
-@property (nonatomic,strong) SCPRRewindWheelViewController *rewindWheel;
+@property (nonatomic,strong) SCPRJogShuttleViewController *jogShuttle;
 @property (nonatomic,strong) IBOutlet UIView *rewindView;
 @property BOOL lockUI;
 
 - (void)activateRewind:(RewindDistance)distance;
+- (void)activateFastForward;
+- (void)snapJogWheel;
+- (BOOL)uiIsJogging;
 
 // Instance methods.
 - (void)cloakForMenu:(BOOL)animated;

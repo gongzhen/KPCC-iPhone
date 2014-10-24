@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		254E177019F863960022BF6B /* UILabel+Additions.m in Sources */ = {isa = PBXBuildFile; fileRef = 254E176F19F863960022BF6B /* UILabel+Additions.m */; };
-		255943EA19F1A7620007294D /* SCPRRewindWheelViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 255943E919F1A7620007294D /* SCPRRewindWheelViewController.m */; };
+		255943EA19F1A7620007294D /* SCPRJogShuttleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 255943E919F1A7620007294D /* SCPRJogShuttleViewController.m */; };
 		255943EC19F5C8B80007294D /* rewind_beat.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 255943EB19F5C8B80007294D /* rewind_beat.mp3 */; };
 		523126A719EDB78C008A47A7 /* SCPRPreRollViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 523126A519EDB78C008A47A7 /* SCPRPreRollViewController.m */; };
 		523126A819EDB78C008A47A7 /* SCPRPreRollViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 523126A619EDB78C008A47A7 /* SCPRPreRollViewController.xib */; };
@@ -203,8 +203,8 @@
 /* Begin PBXFileReference section */
 		254E176E19F863960022BF6B /* UILabel+Additions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UILabel+Additions.h"; sourceTree = "<group>"; };
 		254E176F19F863960022BF6B /* UILabel+Additions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UILabel+Additions.m"; sourceTree = "<group>"; };
-		255943E819F1A7620007294D /* SCPRRewindWheelViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCPRRewindWheelViewController.h; sourceTree = "<group>"; };
-		255943E919F1A7620007294D /* SCPRRewindWheelViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SCPRRewindWheelViewController.m; sourceTree = "<group>"; };
+		255943E819F1A7620007294D /* SCPRJogShuttleViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCPRJogShuttleViewController.h; sourceTree = "<group>"; };
+		255943E919F1A7620007294D /* SCPRJogShuttleViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SCPRJogShuttleViewController.m; sourceTree = "<group>"; };
 		255943EB19F5C8B80007294D /* rewind_beat.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = rewind_beat.mp3; sourceTree = "<group>"; };
 		45A107003D6C750C5E0ECAC3 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		523126A419EDB78C008A47A7 /* SCPRPreRollViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCPRPreRollViewController.h; sourceTree = "<group>"; };
@@ -648,8 +648,8 @@
 		76658ABC18E0AF8500026176 /* View Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				255943E819F1A7620007294D /* SCPRRewindWheelViewController.h */,
-				255943E919F1A7620007294D /* SCPRRewindWheelViewController.m */,
+				255943E819F1A7620007294D /* SCPRJogShuttleViewController.h */,
+				255943E919F1A7620007294D /* SCPRJogShuttleViewController.m */,
 				76B9A9A918EF59FD007A6D8C /* SCPRUserReportViewController.h */,
 				76B9A9AA18EF59FD007A6D8C /* SCPRUserReportViewController.m */,
 				76B9A9AB18EF59FD007A6D8C /* SCPRUserReportViewController.xib */,
@@ -1190,7 +1190,7 @@
 				523126A719EDB78C008A47A7 /* SCPRPreRollViewController.m in Sources */,
 				52E68B8219B8F2D10028F8AE /* SCPRNavigationController.m in Sources */,
 				76A308D318C8FB940065D4B1 /* main.m in Sources */,
-				255943EA19F1A7620007294D /* SCPRRewindWheelViewController.m in Sources */,
+				255943EA19F1A7620007294D /* SCPRJogShuttleViewController.m in Sources */,
 				52CC6D6219D100DE00C67322 /* SCPRProgramTableViewCell.m in Sources */,
 				525C6CA419F701FA0076C13B /* TritonAd.m in Sources */,
 				76A3090418C93C880065D4B1 /* AudioManager.m in Sources */,
@@ -1348,7 +1348,7 @@
 					"$(PROJECT_DIR)/KPCC/ThirdParty/Flurry",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "b8d21f5f-03c3-4f96-aa08-53339a863498";
+				PROVISIONING_PROFILE = "92b9c3f6-4039-4005-93a0-90471d88e766";
 				SWIFT_OBJC_BRIDGING_HEADER = "KPCC/UI/Controllers/KPCC-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				TARGETED_DEVICE_FAMILY = 1;
@@ -1363,8 +1363,8 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Southern California Public Radio";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Southern California Public Radio";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "KPCC/KPCC-Prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -1381,7 +1381,7 @@
 					"$(PROJECT_DIR)/KPCC/ThirdParty/Flurry",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "b8d21f5f-03c3-4f96-aa08-53339a863498";
+				PROVISIONING_PROFILE = "92b9c3f6-4039-4005-93a0-90471d88e766";
 				SWIFT_OBJC_BRIDGING_HEADER = "KPCC/UI/Controllers/KPCC-Bridging-Header.h";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;

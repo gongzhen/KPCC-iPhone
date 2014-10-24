@@ -1,5 +1,5 @@
 //
-//  SCPRRewindWheelViewController.h
+//  SCPRJogShuttleViewController.h
 //  Experiments
 //
 //  Created by Ben Hochberg on 10/17/14.
@@ -14,7 +14,13 @@ typedef NS_ENUM(NSUInteger, RewindDistance) {
     RewindDistanceThirty
 };
 
-@interface SCPRRewindWheelViewController : UIViewController
+typedef NS_ENUM(NSUInteger, SpinDirection) {
+    SpinDirectionBackward = 0,
+    SpinDirectionForward,
+    SpinDirectionUnknown
+};
+
+@interface SCPRJogShuttleViewController : UIViewController
 
 - (void)prepare;
 - (void)animateWithSpeed:(CGFloat)duration
@@ -23,6 +29,13 @@ typedef NS_ENUM(NSUInteger, RewindDistance) {
              strokeWidth:(CGFloat)strokeWidth
             hideableView:(UIView*)viewToHide
               completion:(void (^)(void))completion;
+
+- (void)animateWithSpeed:(CGFloat)duration
+            hideableView:(UIView*)viewToHide
+               direction:(SpinDirection)direction
+               withSound:(BOOL)withSound
+              completion:(void (^)(void))completion;
+
 - (void)endAnimations;
 
 @end

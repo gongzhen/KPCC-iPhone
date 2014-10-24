@@ -7,13 +7,14 @@
 //
 
 #import "UILabel+Additions.h"
+#import "DesignManager.h"
 
 @implementation UILabel (Additions)
 
 - (void)fadeText:(NSString *)text {
     [self stopPulsating];
     [self fadeText:text
-          duration:0.33f];
+          duration:0.5f];
 }
 
 - (void)fadeText:(NSString *)text duration:(CGFloat)duration {
@@ -38,45 +39,14 @@
                 }];
                 UIColor *pulseTo = color;
                 if ( !color ) {
-                    const CGFloat *cdata = CGColorGetComponents(self.textColor.CGColor);
-                    CGFloat max = 0.0;
-                    NSInteger index = 0;
-                    for ( unsigned i = 0; i < 3; i++ ) {
-                        CGFloat val = cdata[i];
-                        if ( val > max ) {
-                            max = val;
-                            index = i;
-                        }
-                    }
                     
-                    CGFloat brighterValue = fminf(max + (max * 0.33),
-                                                  1.0);
-                    
-                    CGFloat *newValues = (CGFloat*)malloc(4*sizeof(CGFloat));
-                    for ( unsigned i = 0; i < 4; i++ ) {
-                        if ( i == index ) {
-                            newValues[i] = brighterValue;
-                            continue;
-                        }
-                        
-                        if ( i == 3 ) {
-                            newValues[i] = 1.0;
-                        }
-                        
-                        newValues[i] = cdata[i]*0.55;
-                    }
-                    
-                    pulseTo = [UIColor colorWithRed:newValues[0]
-                                              green:newValues[1]
-                                               blue:newValues[2]
-                                              alpha:1.0];
-                    free(newValues);
+                    pulseTo = [[DesignManager shared] intensifyColor:original];
                     
                 }
                 
                 self.textColor = pulseTo;
                 CATransition *pulse = [CATransition animation];
-                pulse.duration = 0.33f;
+                pulse.duration = 0.66f;
                 pulse.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear];
                 pulse.autoreverses = YES;
                 pulse.type = kCATransitionFade;

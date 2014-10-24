@@ -14,6 +14,7 @@
 #import "SCPRSlideInTransition.h"
 
 static NSString *kRewindingText = @"REWINDING...";
+static NSString *kForwardingText = @"GOING LIVE...";
 
 @interface SCPRMasterViewController () <AudioManagerDelegate, ContentProcessor, UINavigationControllerDelegate, UIViewControllerTransitioningDelegate, SCPRPreRollControllerDelegate>
 
@@ -21,8 +22,7 @@ static NSString *kRewindingText = @"REWINDING...";
 @property BOOL setPlaying;
 @property BOOL seekRequested;
 @property BOOL busyZoomAnim;
-@property BOOL rewinding;
-@property BOOL queueRewind;
+@property BOOL jogging;
 @property BOOL setForLiveStreamUI;
 @property BOOL setForOnDemandUI;
 
@@ -122,10 +122,10 @@ static NSString *kRewindingText = @"REWINDING...";
     [playCommand setEnabled:YES];
     [playCommand addTarget:self action:@selector(playOrPauseTapped:)];
 
-    self.rewindWheel = [[SCPRRewindWheelViewController alloc] init];
-    self.rewindWheel.view = self.rewindView;
-    self.rewindWheel.view.alpha = 0.0;
-    [self.rewindWheel prepare];
+    self.jogShuttle = [[SCPRJogShuttleViewController alloc] init];
+    self.jogShuttle.view = self.rewindView;
+    self.jogShuttle.view.alpha = 0.0;
+    [self.jogShuttle prepare];
     
     if (!initialPlay) {
         [self.preRollButton setHidden:YES];
@@ -214,32 +214,32 @@ static NSString *kRewindingText = @"REWINDING...";
 
     [self activateRewind:RewindDistanceBeginning];
     
+    
 }
 
-- (void)activateRewind:(RewindDistance)distance {
-    
-    
+- (void)snapJogWheel {
     UIImage *pause = self.playPauseButton.imageView.image;
     CGFloat ht = pause.size.height; CGFloat wd = pause.size.width;
-    
-    //[self.liveDescriptionLabel fadeText:kRewindingText];
-    [self.liveDescriptionLabel pulsate:kRewindingText color:nil];
-    
-    self.rewinding = YES;
-    
     [self.rewindHeightContraint setConstant:ht];
     [self.rewindWidthConstraint setConstant:wd];
     [self.playerControlsView layoutIfNeeded];
-    [self.rewindWheel.view setAlpha:1.0];
-    [self.rewindWheel animateWithSpeed:1.0
-                               tension:0.75
-                                 color:[UIColor whiteColor]
-                           strokeWidth:2.0
-                          hideableView:self.playPauseButton
-                            completion:^{
-                                
+}
+
+- (void)activateRewind:(RewindDistance)distance {
+    [self snapJogWheel];
+    [self.liveDescriptionLabel pulsate:kRewindingText color:nil];
+    self.jogging = YES;
+    
+    [self.rewindToShowStartButton setAlpha:0.0];
+    [self.jogShuttle.view setAlpha:1.0];
+    [self.jogShuttle animateWithSpeed:1.0
+                               hideableView:self.playPauseButton
+                            direction:SpinDirectionBackward
+                            withSound:YES
+                           completion:^{
+
                                 [self.liveDescriptionLabel stopPulsating];
-                                self.rewinding = NO;
+                                self.jogging = NO;
                                 [self updateControlsAndUI:YES];
                                 if ( !setPlaying ) {
                                     seekRequested = NO;
@@ -247,13 +247,12 @@ static NSString *kRewindingText = @"REWINDING...";
                                 }
                                 
                                 [[AudioManager shared] adjustAudioWithValue:0.1 completion:^{
-
+                                    [self.rewindToShowStartButton setAlpha:1.0];
                                 }];
                                 
                                 
                             }];
     
-
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         
         seekRequested = YES;
@@ -267,7 +266,6 @@ static NSString *kRewindingText = @"REWINDING...";
                     NSDate *cooked = [NSDate dateWithTimeIntervalSince1970:rawTI];
                     [[AudioManager shared] seekToDate:cooked];
 #endif
-                    
                     [[AudioManager shared] seekToDate:_currentProgram.starts_at];
                 }
                 break;
@@ -278,12 +276,49 @@ static NSString *kRewindingText = @"REWINDING...";
             default:
                 break;
         }
-
+        
         
     });
-   
-        
     
+}
+
+- (void)activateFastForward {
+    [self snapJogWheel];
+    
+    self.jogging = YES;
+    [self.liveDescriptionLabel pulsate:kForwardingText color:nil];
+    [self.jogShuttle.view setAlpha:1.0];
+    [self.jogShuttle animateWithSpeed:0.66
+                         hideableView:self.playPauseButton
+                            direction:SpinDirectionForward
+                            withSound:NO
+                           completion:^{
+                               
+                               [self.liveDescriptionLabel stopPulsating];
+                               self.jogging = NO;
+                               [self updateControlsAndUI:YES];
+                               if ( !setPlaying ) {
+                                   seekRequested = NO;
+                                   setPlaying = YES;
+                               }
+                               
+                               [[AudioManager shared] adjustAudioWithValue:0.1 completion:^{
+                                   
+                               }];
+                           }];
+    
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.66 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        
+        seekRequested = YES;
+        [[AudioManager shared] forwardSeekLive];
+        
+    });
+}
+
+- (BOOL)uiIsJogging {
+    if ( [self.liveDescriptionLabel.text isEqualToString:kRewindingText] ) return YES;
+    if ( [self.liveDescriptionLabel.text isEqualToString:kForwardingText] ) return YES;
+    return NO;
 }
 
 -(void)skipBackwardEvent: (MPSkipIntervalCommandEvent *)skipEvent {
@@ -295,9 +330,9 @@ static NSString *kRewindingText = @"REWINDING...";
 }
 
 - (IBAction)backToLiveTapped:(id)sender {
-    self.lockUI = YES;
-    seekRequested = YES;
-    [[AudioManager shared] forwardSeekLive];
+    
+    [self activateFastForward];
+    
 }
 
 - (IBAction)shareButtonTapped:(id)sender {
@@ -353,7 +388,7 @@ static NSString *kRewindingText = @"REWINDING...";
 
 - (void)setUIContents:(BOOL)animated {
 
-    if ( self.rewinding || self.lockUI ) {
+    if ( self.jogging || self.lockUI ) {
         return;
     }
     
@@ -362,7 +397,7 @@ static NSString *kRewindingText = @"REWINDING...";
             [self.playPauseButton setAlpha:0.0];
 
             if ([[AudioManager shared] isStreamPlaying] || [[AudioManager shared] isStreamBuffering]) {
-                if ( ![self.liveDescriptionLabel.text isEqualToString:kRewindingText] ) {
+                if ( ![self uiIsJogging] ) {
                     [self.liveDescriptionLabel fadeText:@"LIVE"];
                 }
                 [self.rewindToShowStartButton setAlpha:0.0];
@@ -387,14 +422,14 @@ static NSString *kRewindingText = @"REWINDING...";
         
             [UIView animateWithDuration:0.1 animations:^{
                 [self.playPauseButton setAlpha:1.0];
-                [self.rewindWheel.view setAlpha:0.0];
+                [self.jogShuttle.view setAlpha:0.0];
             }];
             
         }];
 
     } else {
         if ([[AudioManager shared] isStreamPlaying] || [[AudioManager shared] isStreamBuffering]) {
-            if ( ![self.liveDescriptionLabel.text isEqualToString:kRewindingText] ) {
+            if ( ![self uiIsJogging] ) {
                 [self.liveDescriptionLabel fadeText:@"LIVE"];
             }
             [self.rewindToShowStartButton setAlpha:0.0];
@@ -870,10 +905,11 @@ static NSString *kRewindingText = @"REWINDING...";
 
 - (void)onTimeChange {
     
-    if ( self.rewinding || self.lockUI ) {
-        //self.lockUI = NO;
+    if ( self.jogging || self.lockUI ) {
         return;
     }
+    
+    NSAssert([NSThread isMainThread],@"This is not the main thread...");
     
     if ([[[AudioManager shared] maxSeekableDate] timeIntervalSinceDate:[[AudioManager shared] currentDate]] > 60 ) {
         
@@ -911,8 +947,8 @@ static NSString *kRewindingText = @"REWINDING...";
     // Make sure UI gets set to "Playing" state after a seek.
     
     self.lockUI = NO;
-    if ( self.rewinding ) {
-        [self.rewindWheel endAnimations];
+    if ( self.jogging ) {
+        [self.jogShuttle endAnimations];
     } else {
         if (!setPlaying) {
             seekRequested = NO;            
