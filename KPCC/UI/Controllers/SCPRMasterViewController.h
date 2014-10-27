@@ -65,12 +65,13 @@
 // Rewinding UI
 @property (nonatomic,strong) SCPRJogShuttleViewController *jogShuttle;
 @property (nonatomic,strong) IBOutlet UIView *rewindView;
-@property BOOL lockUI;
+@property BOOL rewindGate;
 
 - (void)activateRewind:(RewindDistance)distance;
 - (void)activateFastForward;
 - (void)snapJogWheel;
 - (BOOL)uiIsJogging;
+- (NSTimeInterval)rewindAgainstStreamDelta;
 
 // Instance methods.
 - (void)cloakForMenu:(BOOL)animated;

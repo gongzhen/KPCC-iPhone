@@ -76,6 +76,7 @@ typedef enum {
 @property (nonatomic,strong) NSOperationQueue *fadeQueue;
 @property CGFloat savedVolume;
 
+
 - (void)playAudioWithURL:(NSString *)url;
 
 - (NSString *)liveStreamURL;
@@ -93,6 +94,8 @@ typedef enum {
 
 - (void)seekToPercent:(CGFloat)percent;
 - (void)seekToDate:(NSDate *)date;
+- (void)specialSeekToDate:(NSDate*)date;
+
 - (void)forwardSeekLive;
 - (void)forwardSeekThirtySeconds;
 - (void)backwardSeekThirtySeconds;

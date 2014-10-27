@@ -15,6 +15,8 @@
 
 static NSString *kRewindingText = @"REWINDING...";
 static NSString *kForwardingText = @"GOING LIVE...";
+static CGFloat kRewindGateThreshold = 8.0;
+static CGFloat kDisabledAlpha = 0.15;
 
 @interface SCPRMasterViewController () <AudioManagerDelegate, ContentProcessor, UINavigationControllerDelegate, UIViewControllerTransitioningDelegate, SCPRPreRollControllerDelegate>
 
@@ -25,12 +27,12 @@ static NSString *kForwardingText = @"GOING LIVE...";
 @property BOOL jogging;
 @property BOOL setForLiveStreamUI;
 @property BOOL setForOnDemandUI;
+@property BOOL dirtyFromRewind;
 
 @property IBOutlet NSLayoutConstraint *playerControlsTopYConstraint;
 @property IBOutlet NSLayoutConstraint *playerControlsBottomYConstraint;
 @property IBOutlet NSLayoutConstraint *rewindWidthConstraint;
 @property IBOutlet NSLayoutConstraint *rewindHeightContraint;
-
 @property IBOutlet NSLayoutConstraint *programTitleYConstraint;
 
 @property IBOutlet UIButton *preRollButton;
@@ -212,6 +214,8 @@ static NSString *kForwardingText = @"GOING LIVE...";
 
 - (IBAction)rewindToStartTapped:(id)sender {
 
+    if ( self.jogging ) return;
+    
     [self activateRewind:RewindDistanceBeginning];
     
     
@@ -226,11 +230,19 @@ static NSString *kForwardingText = @"GOING LIVE...";
 }
 
 - (void)activateRewind:(RewindDistance)distance {
+    
+    
     [self snapJogWheel];
     [self.liveDescriptionLabel pulsate:kRewindingText color:nil];
     self.jogging = YES;
     
-    [self.rewindToShowStartButton setAlpha:0.0];
+    self.rewindGate = YES;
+    
+    // Disable this until the stream separates from the beginning
+    // of the program a litle bit
+    self.liveRewindAltButton.userInteractionEnabled = NO;
+    [self.liveRewindAltButton setAlpha:kDisabledAlpha];
+    
     [self.jogShuttle.view setAlpha:1.0];
     [self.jogShuttle animateWithSpeed:1.0
                                hideableView:self.playPauseButton
@@ -238,17 +250,19 @@ static NSString *kForwardingText = @"GOING LIVE...";
                             withSound:YES
                            completion:^{
 
-                                [self.liveDescriptionLabel stopPulsating];
-                                self.jogging = NO;
-                                [self updateControlsAndUI:YES];
-                                if ( !setPlaying ) {
-                                    seekRequested = NO;
-                                    setPlaying = YES;
-                                }
-                                
-                                [[AudioManager shared] adjustAudioWithValue:0.1 completion:^{
-                                    [self.rewindToShowStartButton setAlpha:1.0];
-                                }];
+                               [[AudioManager shared].audioPlayer.currentItem cancelPendingSeeks];
+                               [self.liveDescriptionLabel stopPulsating];
+                               self.jogging = NO;
+                               self.dirtyFromRewind = YES;
+                               [self updateControlsAndUI:YES];
+                               seekRequested = NO;
+                               setPlaying = YES;
+                               
+                               [[AudioManager shared] adjustAudioWithValue:0.1 completion:^{
+                                   dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                                        self.rewindGate = NO;
+                                   });
+                               }];
                                 
                                 
                             }];
@@ -266,7 +280,11 @@ static NSString *kForwardingText = @"GOING LIVE...";
                     NSDate *cooked = [NSDate dateWithTimeIntervalSince1970:rawTI];
                     [[AudioManager shared] seekToDate:cooked];
 #endif
-                    [[AudioManager shared] seekToDate:_currentProgram.starts_at];
+                    if ( self.dirtyFromRewind ) {
+                        [[AudioManager shared] specialSeekToDate:_currentProgram.starts_at];
+                    } else {
+                        [[AudioManager shared] seekToDate:_currentProgram.starts_at];
+                    }
                 }
                 break;
             case RewindDistanceFifteen:
@@ -296,6 +314,7 @@ static NSString *kForwardingText = @"GOING LIVE...";
                                
                                [self.liveDescriptionLabel stopPulsating];
                                self.jogging = NO;
+                               self.dirtyFromRewind = NO;
                                [self updateControlsAndUI:YES];
                                if ( !setPlaying ) {
                                    seekRequested = NO;
@@ -313,6 +332,19 @@ static NSString *kForwardingText = @"GOING LIVE...";
         [[AudioManager shared] forwardSeekLive];
         
     });
+}
+
+- (NSTimeInterval)rewindAgainstStreamDelta {
+    AVPlayerItem *item = [[AudioManager shared].audioPlayer currentItem];
+    NSTimeInterval current = [item.currentDate timeIntervalSince1970];
+    
+    if ( self.currentProgram ) {
+        NSTimeInterval startOfProgram = [self.currentProgram.starts_at timeIntervalSince1970];
+        return current - startOfProgram;
+    }
+    
+    return (NSTimeInterval)0;
+
 }
 
 - (BOOL)uiIsJogging {
@@ -388,7 +420,7 @@ static NSString *kForwardingText = @"GOING LIVE...";
 
 - (void)setUIContents:(BOOL)animated {
 
-    if ( self.jogging || self.lockUI ) {
+    if ( self.jogging ) {
         return;
     }
     
@@ -460,7 +492,10 @@ static NSString *kForwardingText = @"GOING LIVE...";
 
         POPBasicAnimation *genericFadeInAnim = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
         genericFadeInAnim.toValue = @(1);
-        [self.liveRewindAltButton.layer pop_addAnimation:genericFadeInAnim forKey:@"liveRewindFadeInAnim"];
+        
+        if ( !self.rewindGate )
+            [self.liveRewindAltButton.layer pop_addAnimation:genericFadeInAnim forKey:@"liveRewindFadeInAnim"];
+        
         [self.backToLiveButton.layer pop_addAnimation:genericFadeInAnim forKey:@"backToLiveFadeInAnim"];
 
         POPBasicAnimation *genericFadeOutAnim = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
@@ -905,7 +940,7 @@ static NSString *kForwardingText = @"GOING LIVE...";
 
 - (void)onTimeChange {
     
-    if ( self.jogging || self.lockUI ) {
+    if ( self.jogging ) {
         return;
     }
     
@@ -921,9 +956,27 @@ static NSString *kForwardingText = @"GOING LIVE...";
         [self.liveDescriptionLabel fadeText:[NSString stringWithFormat:@"%li MINUTES BEHIND LIVE", (long)mins]];
         [self.backToLiveButton setHidden:NO];
         
+        
+        if ( !self.rewindGate ) {
+            if ( [self rewindAgainstStreamDelta] > kRewindGateThreshold ) {
+                self.liveRewindAltButton.userInteractionEnabled = YES;
+                [UIView animateWithDuration:0.33 animations:^{
+                    [self.liveRewindAltButton setAlpha:1.0];
+                }];
+            } else {
+                self.liveRewindAltButton.userInteractionEnabled = NO;
+                [self.liveRewindAltButton setAlpha:kDisabledAlpha];
+            }
+        }
+        
     } else {
         [self.liveDescriptionLabel fadeText:@"LIVE"];
         [self.backToLiveButton setHidden:YES];
+        self.liveRewindAltButton.userInteractionEnabled = YES;
+        self.dirtyFromRewind = NO;
+        [UIView animateWithDuration:0.33 animations:^{
+            [self.liveRewindAltButton setAlpha:1.0];
+        }];
     }
 
     if (setForOnDemandUI) {
@@ -945,8 +998,6 @@ static NSString *kForwardingText = @"GOING LIVE...";
 
 - (void)onSeekCompleted {
     // Make sure UI gets set to "Playing" state after a seek.
-    
-    self.lockUI = NO;
     if ( self.jogging ) {
         [self.jogShuttle endAnimations];
     } else {
@@ -956,11 +1007,10 @@ static NSString *kForwardingText = @"GOING LIVE...";
             setPlaying = YES;
         }
     }
-    
 }
 
 
-#pragma mark - ContentProcessor 
+#pragma mark - ContentProcessor
 
 - (void)handleProcessedContent:(NSArray *)content flags:(NSDictionary *)flags {
     if ([content count] == 0) {
