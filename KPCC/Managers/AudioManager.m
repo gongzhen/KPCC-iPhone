@@ -36,6 +36,15 @@ static const NSString *ItemStatusContext;
     
     // Monitoring AVPlayer->currentItem status.
     if (object == self.audioPlayer.currentItem && [keyPath isEqualToString:@"status"]) {
+        
+        NSNumber *old = (NSNumber*)change[@"old"];
+        NSNumber *new = (NSNumber*)change[@"new"];
+#ifdef DEBUG
+        if ( [old intValue] == [new intValue] ) {
+            int x = 1;
+            x++;
+        }
+#endif
         if ([self.audioPlayer.currentItem status] == AVPlayerItemStatusFailed) {
             NSError *error = [self.audioPlayer.currentItem error];
             NSLog(@"AVPlayerItemStatus ERROR! --- %@", error);
@@ -53,7 +62,10 @@ static const NSString *ItemStatusContext;
     }
     
     if (object == self.audioPlayer.currentItem && [keyPath isEqualToString:@"playbackLikelyToKeepUp"]) {
-        [self analyzeStreamError:nil];
+        if ( [change[@"new"] intValue] == 0 ) {
+            NSLog(@"Stream not likely to keep up...");
+            [self analyzeStreamError:nil];
+        }
     }
     
     // Monitoring AVPlayer status.
@@ -95,7 +107,7 @@ static const NSString *ItemStatusContext;
     } else {
         url = [NSURL URLWithString:urlString];
     }
-
+    
     self.playerItem = [AVPlayerItem playerItemWithURL:url];
     [self.playerItem addObserver:self forKeyPath:@"status" options:NSKeyValueObservingOptionOld|NSKeyValueObservingOptionNew context:nil];
     [self.playerItem addObserver:self forKeyPath:@"playbackBufferEmpty" options:NSKeyValueObservingOptionNew context:nil];
@@ -159,6 +171,10 @@ static const NSString *ItemStatusContext;
     AVPlayer *audioPlayer = self.audioPlayer;
     __unsafe_unretained typeof(self) weakSelf = self;
 
+    if ( self.timeObserver ) {
+        [self.audioPlayer removeTimeObserver:self.timeObserver];
+    }
+    
     self.timeObserver = [self.audioPlayer addPeriodicTimeObserverForInterval:CMTimeMake(1, 10)  queue:nil usingBlock:^(CMTime time) {
         weakSelf.currentDate = audioPlayer.currentItem.currentDate;
 
@@ -210,11 +226,16 @@ static const NSString *ItemStatusContext;
         });
 
     } else {
-        [self.audioPlayer pause];
+        //[self.audioPlayer pause];
         [self.audioPlayer.currentItem seekToDate:date completionHandler:^(BOOL finished) {
+            if ( !finished ) {
+                NSLog(@" **************** AUDIOPLAYER NOT FINISHED BUFFERING ****************** ");
+            }
             if(self.audioPlayer.status == AVPlayerStatusReadyToPlay &&
                self.audioPlayer.currentItem.status == AVPlayerItemStatusReadyToPlay) {
-                [self.audioPlayer play];
+                if ( [self.audioPlayer rate] == 0.0 ) {
+                    [self.audioPlayer play];
+                }
 
                 if ([self.delegate respondsToSelector:@selector(onSeekCompleted)]) {
                     [self.delegate onSeekCompleted];
@@ -222,6 +243,17 @@ static const NSString *ItemStatusContext;
             }
         }];
     }
+}
+
+- (void)specialSeekToDate:(NSDate *)date {
+    [self.audioPlayer pause];
+    [self.audioPlayer.currentItem seekToDate:[self maxSeekableDate] completionHandler:^(BOOL finished) {
+
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            [self seekToDate:date];
+        });
+        
+    }];
 }
 
 - (void)forwardSeekLive {
