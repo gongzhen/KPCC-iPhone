@@ -35,8 +35,6 @@ static CGFloat kDisabledAlpha = 0.15;
 @property IBOutlet NSLayoutConstraint *rewindHeightContraint;
 @property IBOutlet NSLayoutConstraint *programTitleYConstraint;
 
-@property IBOutlet UIButton *preRollButton;
-
 @end
 
 @implementation SCPRMasterViewController
@@ -128,10 +126,6 @@ static CGFloat kDisabledAlpha = 0.15;
     self.jogShuttle.view = self.rewindView;
     self.jogShuttle.view.alpha = 0.0;
     [self.jogShuttle prepare];
-    
-    if (!initialPlay) {
-        [self.preRollButton setHidden:YES];
-    }
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -157,11 +151,8 @@ static CGFloat kDisabledAlpha = 0.15;
     self.preRollViewController = [[SCPRPreRollViewController alloc] initWithNibName:nil bundle:nil];
     self.preRollViewController.delegate = self;
 
-    // Testing...
     [[NetworkManager shared] fetchTritonAd:nil completion:^(TritonAd *tritonAd) {
-        NSLog(@"ad? %@", tritonAd);
         self.preRollViewController.tritonAd = tritonAd;
-        self.preRollViewController.hasAdBeenShown = NO;
     }];
 
     [self addChildViewController:self.preRollViewController];
@@ -576,10 +567,6 @@ static CGFloat kDisabledAlpha = 0.15;
     setForLiveStreamUI = YES;
 }
 
-- (void)setPausedUI:(BOOL)animated {
-
-}
-
 - (void)setOnDemandUI:(BOOL)animated withProgram:(Program *)program andEpisode:(NSObject *)episode {
     if (self.menuOpen) {
         [self decloakForMenu:NO];
@@ -638,8 +625,6 @@ static CGFloat kDisabledAlpha = 0.15;
             [self.episodeTitleOnDemand setText:seg.title];
         }
     }
-
-    // TODO: Set handler for end of episode playback. Fallback/start livestream?
 }
 
 - (void)updateUIWithProgram:(Program*)program {
@@ -838,9 +823,6 @@ static CGFloat kDisabledAlpha = 0.15;
     [self.onDemandPlayerView.layer pop_addAnimation:controlsFadeAnimation forKey:@"onDemandViewFadeAnimation"];
     [self.liveStreamView.layer pop_addAnimation:controlsFadeAnimation forKey:@"liveStreamViewFadeAnimation"];
 
-    // TODO: Take out button
-    [self.preRollButton setHidden:YES];
-
     self.preRollOpen = YES;
 }
 
@@ -882,9 +864,6 @@ static CGFloat kDisabledAlpha = 0.15;
         [self.horizDividerLine.layer pop_addAnimation:dividerFadeAnim forKey:@"horizDividerFadeOutAnimation"];
     }
 
-    // TODO: Take out button
-    [self.preRollButton setHidden:NO];
-
     self.preRollOpen = NO;
 }
 
@@ -918,7 +897,6 @@ static CGFloat kDisabledAlpha = 0.15;
             }
 
             SCPRProgramsListViewController *vc = [[SCPRProgramsListViewController alloc] initWithBackgroundProgram:prog];
-//            SCPRProgramsListViewController *vc = [[SCPRProgramsListViewController alloc] initWithNibName:nil bundle:nil];
             [self.navigationController pushViewController:vc animated:YES];
             break;
         }
