@@ -21,7 +21,6 @@
 
 @property (nonatomic,weak) id<SCPRPreRollControllerDelegate> delegate;
 @property (nonatomic,strong) TritonAd *tritonAd;
-@property BOOL hasAdBeenShown;
 
 @property (nonatomic,strong) IBOutlet UIImageView *adImageView;
 

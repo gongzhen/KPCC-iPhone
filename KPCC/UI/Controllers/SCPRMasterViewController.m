@@ -35,8 +35,6 @@ static CGFloat kDisabledAlpha = 0.15;
 @property IBOutlet NSLayoutConstraint *rewindHeightContraint;
 @property IBOutlet NSLayoutConstraint *programTitleYConstraint;
 
-@property IBOutlet UIButton *preRollButton;
-
 @end
 
 @implementation SCPRMasterViewController
@@ -128,16 +126,6 @@ static CGFloat kDisabledAlpha = 0.15;
     self.jogShuttle.view = self.rewindView;
     self.jogShuttle.view.alpha = 0.0;
     [self.jogShuttle prepare];
-    
-    if (!initialPlay) {
-        [self.preRollButton setHidden:YES];
-    }
-    
-    // Testing...
-    [[NetworkManager shared] fetchTritonAd:nil completion:^(TritonAd *tritonAd) {
-        NSLog(@"ad? %@", tritonAd);
-    }];
-
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -163,11 +151,8 @@ static CGFloat kDisabledAlpha = 0.15;
     self.preRollViewController = [[SCPRPreRollViewController alloc] initWithNibName:nil bundle:nil];
     self.preRollViewController.delegate = self;
 
-    // Testing...
     [[NetworkManager shared] fetchTritonAd:nil completion:^(TritonAd *tritonAd) {
-        NSLog(@"ad? %@", tritonAd);
         self.preRollViewController.tritonAd = tritonAd;
-        self.preRollViewController.hasAdBeenShown = NO;
     }];
 
     [self addChildViewController:self.preRollViewController];
@@ -184,12 +169,24 @@ static CGFloat kDisabledAlpha = 0.15;
 # pragma mark - Actions
 
 - (IBAction)initialPlayTapped:(id)sender {
-    [self cloakForPreRoll:YES];
-    [self.preRollViewController showPreRollWithAnimation:YES completion:^(BOOL done) {
-        [self.programTitleYConstraint setConstant:14];
-        [self.initialControlsView setHidden:YES];
+    if (self.preRollViewController.tritonAd) {
+        [self cloakForPreRoll:YES];
+        [self.preRollViewController showPreRollWithAnimation:YES completion:^(BOOL done) {
+            [self.programTitleYConstraint setConstant:14];
+            [self.initialControlsView setHidden:YES];
+            initialPlay = YES;
+        }];
+    } else {
+        [self primePlaybackUI];
+
+        POPBasicAnimation *programTitleAnim = [POPBasicAnimation animationWithPropertyNamed:kPOPLayoutConstraintConstant];
+        programTitleAnim.toValue = @(14);
+        programTitleAnim.duration = .3;
+        [self.programTitleYConstraint pop_addAnimation:programTitleAnim forKey:@"animateProgramTitleDown"];
+        [self playStream];
+
         initialPlay = YES;
-    }];
+    }
 }
 
 - (IBAction)playOrPauseTapped:(id)sender {
@@ -446,7 +443,7 @@ static CGFloat kDisabledAlpha = 0.15;
             if ([[AudioManager shared] isStreamPlaying] || [[AudioManager shared] isStreamBuffering]) {
                 [self.playPauseButton setImage:[UIImage imageNamed:@"btn_pause"] forState:UIControlStateNormal];
             } else {
-                [self.playPauseButton setImage:[UIImage imageNamed:@"btn_play_large"] forState:UIControlStateNormal];
+                [self.playPauseButton setImage:[UIImage imageNamed:@"btn_play"] forState:UIControlStateNormal];
             }
 
             // Leave this out for now.
@@ -570,10 +567,6 @@ static CGFloat kDisabledAlpha = 0.15;
     setForLiveStreamUI = YES;
 }
 
-- (void)setPausedUI:(BOOL)animated {
-
-}
-
 - (void)setOnDemandUI:(BOOL)animated withProgram:(Program *)program andEpisode:(NSObject *)episode {
     if (self.menuOpen) {
         [self decloakForMenu:NO];
@@ -632,8 +625,6 @@ static CGFloat kDisabledAlpha = 0.15;
             [self.episodeTitleOnDemand setText:seg.title];
         }
     }
-
-    // TODO: Set handler for end of episode playback. Fallback/start livestream?
 }
 
 - (void)updateUIWithProgram:(Program*)program {
@@ -651,6 +642,30 @@ static CGFloat kDisabledAlpha = 0.15;
         }
         [self.programTitleLabel setText:[program title]];
     }
+}
+
+- (void)primePlaybackUI {
+    POPBasicAnimation *initialControlsFade = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
+    initialControlsFade.toValue = @(0);
+    initialControlsFade.duration = 0.3;
+    [self.initialPlayButton.layer pop_addAnimation:initialControlsFade forKey:@"initialControlsFadeAnimation"];
+
+    POPBasicAnimation *bottomAnim = [POPBasicAnimation animationWithPropertyNamed:kPOPLayoutConstraintConstant];
+    bottomAnim.toValue = @(50);
+    bottomAnim.duration = .3;
+    [self.playerControlsBottomYConstraint pop_addAnimation:bottomAnim forKey:@"animatePlayControlsDown"];
+
+    POPBasicAnimation *topAnim = [POPBasicAnimation animationWithPropertyNamed:kPOPLayoutConstraintConstant];
+    topAnim.toValue = @(CGRectGetMaxY(self.view.frame) - 245);
+    topAnim.duration = .3;
+    [self.playerControlsTopYConstraint pop_addAnimation:topAnim forKey:@"animateTopPlayControlsDown"];
+
+    self.horizDividerLine.alpha = 0.4;
+    POPBasicAnimation *scaleAnimation = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerScaleXY];
+    scaleAnimation.fromValue  = [NSValue valueWithCGSize:CGSizeMake(0.0f, 0.0f)];
+    scaleAnimation.toValue  = [NSValue valueWithCGSize:CGSizeMake(1.0f, 1.0f)];
+    scaleAnimation.duration = 1.0;
+    [self.horizDividerLine.layer pop_addAnimation:scaleAnimation forKey:@"scaleAnimation"];
 }
 
 
@@ -787,27 +802,7 @@ static CGFloat kDisabledAlpha = 0.15;
     }
 
     if (!initialPlay) {
-        POPBasicAnimation *initialControlsFade = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
-        initialControlsFade.toValue = @(0);
-        initialControlsFade.duration = 0.3;
-        [self.initialPlayButton.layer pop_addAnimation:initialControlsFade forKey:@"initialControlsFadeAnimation"];
-
-        POPBasicAnimation *bottomAnim = [POPBasicAnimation animationWithPropertyNamed:kPOPLayoutConstraintConstant];
-        bottomAnim.toValue = @(50);
-        bottomAnim.duration = .3;
-        [self.playerControlsBottomYConstraint pop_addAnimation:bottomAnim forKey:@"animatePlayControlsDown"];
-
-        POPBasicAnimation *topAnim = [POPBasicAnimation animationWithPropertyNamed:kPOPLayoutConstraintConstant];
-        topAnim.toValue = @(CGRectGetMaxY(self.view.frame) - 245);
-        topAnim.duration = .3;
-        [self.playerControlsTopYConstraint pop_addAnimation:topAnim forKey:@"animateTopPlayControlsDown"];
-
-        self.horizDividerLine.alpha = 0.4;
-        POPBasicAnimation *scaleAnimation = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerScaleXY];
-        scaleAnimation.fromValue  = [NSValue valueWithCGSize:CGSizeMake(0.0f, 0.0f)];
-        scaleAnimation.toValue  = [NSValue valueWithCGSize:CGSizeMake(1.0f, 1.0f)];
-        scaleAnimation.duration = 1.0;
-        [self.horizDividerLine.layer pop_addAnimation:scaleAnimation forKey:@"scaleAnimation"];
+        [self primePlaybackUI];
     }
 
     POPBasicAnimation *blurFadeAnimation = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
@@ -827,9 +822,6 @@ static CGFloat kDisabledAlpha = 0.15;
     //[self.playerControlsView.layer pop_addAnimation:controlsFadeAnimation forKey:@"controlsViewFadeAnimation"];
     [self.onDemandPlayerView.layer pop_addAnimation:controlsFadeAnimation forKey:@"onDemandViewFadeAnimation"];
     [self.liveStreamView.layer pop_addAnimation:controlsFadeAnimation forKey:@"liveStreamViewFadeAnimation"];
-
-    // TODO: Take out button
-    [self.preRollButton setHidden:YES];
 
     self.preRollOpen = YES;
 }
@@ -872,9 +864,6 @@ static CGFloat kDisabledAlpha = 0.15;
         [self.horizDividerLine.layer pop_addAnimation:dividerFadeAnim forKey:@"horizDividerFadeOutAnimation"];
     }
 
-    // TODO: Take out button
-    [self.preRollButton setHidden:NO];
-
     self.preRollOpen = NO;
 }
 
@@ -908,7 +897,6 @@ static CGFloat kDisabledAlpha = 0.15;
             }
 
             SCPRProgramsListViewController *vc = [[SCPRProgramsListViewController alloc] initWithBackgroundProgram:prog];
-//            SCPRProgramsListViewController *vc = [[SCPRProgramsListViewController alloc] initWithNibName:nil bundle:nil];
             [self.navigationController pushViewController:vc animated:YES];
             break;
         }
