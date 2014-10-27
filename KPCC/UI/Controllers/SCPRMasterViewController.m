@@ -130,12 +130,6 @@ static NSString *kForwardingText = @"GOING LIVE...";
     if (!initialPlay) {
         [self.preRollButton setHidden:YES];
     }
-    
-    // Testing...
-    [[NetworkManager shared] fetchTritonAd:nil completion:^(TritonAd *tritonAd) {
-        NSLog(@"ad? %@", tritonAd);
-    }];
-
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -182,12 +176,24 @@ static NSString *kForwardingText = @"GOING LIVE...";
 # pragma mark - Actions
 
 - (IBAction)initialPlayTapped:(id)sender {
-    [self cloakForPreRoll:YES];
-    [self.preRollViewController showPreRollWithAnimation:YES completion:^(BOOL done) {
-        [self.programTitleYConstraint setConstant:14];
-        [self.initialControlsView setHidden:YES];
+    if (self.preRollViewController.tritonAd) {
+        [self cloakForPreRoll:YES];
+        [self.preRollViewController showPreRollWithAnimation:YES completion:^(BOOL done) {
+            [self.programTitleYConstraint setConstant:14];
+            [self.initialControlsView setHidden:YES];
+            initialPlay = YES;
+        }];
+    } else {
+        [self primePlaybackUI];
+
+        POPBasicAnimation *programTitleAnim = [POPBasicAnimation animationWithPropertyNamed:kPOPLayoutConstraintConstant];
+        programTitleAnim.toValue = @(14);
+        programTitleAnim.duration = .3;
+        [self.programTitleYConstraint pop_addAnimation:programTitleAnim forKey:@"animateProgramTitleDown"];
+        [self playStream];
+
         initialPlay = YES;
-    }];
+    }
 }
 
 - (IBAction)playOrPauseTapped:(id)sender {
@@ -414,7 +420,7 @@ static NSString *kForwardingText = @"GOING LIVE...";
             if ([[AudioManager shared] isStreamPlaying] || [[AudioManager shared] isStreamBuffering]) {
                 [self.playPauseButton setImage:[UIImage imageNamed:@"btn_pause"] forState:UIControlStateNormal];
             } else {
-                [self.playPauseButton setImage:[UIImage imageNamed:@"btn_play_large"] forState:UIControlStateNormal];
+                [self.playPauseButton setImage:[UIImage imageNamed:@"btn_play"] forState:UIControlStateNormal];
             }
 
             // Leave this out for now.
@@ -618,6 +624,30 @@ static NSString *kForwardingText = @"GOING LIVE...";
     }
 }
 
+- (void)primePlaybackUI {
+    POPBasicAnimation *initialControlsFade = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
+    initialControlsFade.toValue = @(0);
+    initialControlsFade.duration = 0.3;
+    [self.initialPlayButton.layer pop_addAnimation:initialControlsFade forKey:@"initialControlsFadeAnimation"];
+
+    POPBasicAnimation *bottomAnim = [POPBasicAnimation animationWithPropertyNamed:kPOPLayoutConstraintConstant];
+    bottomAnim.toValue = @(50);
+    bottomAnim.duration = .3;
+    [self.playerControlsBottomYConstraint pop_addAnimation:bottomAnim forKey:@"animatePlayControlsDown"];
+
+    POPBasicAnimation *topAnim = [POPBasicAnimation animationWithPropertyNamed:kPOPLayoutConstraintConstant];
+    topAnim.toValue = @(CGRectGetMaxY(self.view.frame) - 245);
+    topAnim.duration = .3;
+    [self.playerControlsTopYConstraint pop_addAnimation:topAnim forKey:@"animateTopPlayControlsDown"];
+
+    self.horizDividerLine.alpha = 0.4;
+    POPBasicAnimation *scaleAnimation = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerScaleXY];
+    scaleAnimation.fromValue  = [NSValue valueWithCGSize:CGSizeMake(0.0f, 0.0f)];
+    scaleAnimation.toValue  = [NSValue valueWithCGSize:CGSizeMake(1.0f, 1.0f)];
+    scaleAnimation.duration = 1.0;
+    [self.horizDividerLine.layer pop_addAnimation:scaleAnimation forKey:@"scaleAnimation"];
+}
+
 
 #pragma mark - Menu control
 
@@ -752,27 +782,7 @@ static NSString *kForwardingText = @"GOING LIVE...";
     }
 
     if (!initialPlay) {
-        POPBasicAnimation *initialControlsFade = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
-        initialControlsFade.toValue = @(0);
-        initialControlsFade.duration = 0.3;
-        [self.initialPlayButton.layer pop_addAnimation:initialControlsFade forKey:@"initialControlsFadeAnimation"];
-
-        POPBasicAnimation *bottomAnim = [POPBasicAnimation animationWithPropertyNamed:kPOPLayoutConstraintConstant];
-        bottomAnim.toValue = @(50);
-        bottomAnim.duration = .3;
-        [self.playerControlsBottomYConstraint pop_addAnimation:bottomAnim forKey:@"animatePlayControlsDown"];
-
-        POPBasicAnimation *topAnim = [POPBasicAnimation animationWithPropertyNamed:kPOPLayoutConstraintConstant];
-        topAnim.toValue = @(CGRectGetMaxY(self.view.frame) - 245);
-        topAnim.duration = .3;
-        [self.playerControlsTopYConstraint pop_addAnimation:topAnim forKey:@"animateTopPlayControlsDown"];
-
-        self.horizDividerLine.alpha = 0.4;
-        POPBasicAnimation *scaleAnimation = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerScaleXY];
-        scaleAnimation.fromValue  = [NSValue valueWithCGSize:CGSizeMake(0.0f, 0.0f)];
-        scaleAnimation.toValue  = [NSValue valueWithCGSize:CGSizeMake(1.0f, 1.0f)];
-        scaleAnimation.duration = 1.0;
-        [self.horizDividerLine.layer pop_addAnimation:scaleAnimation forKey:@"scaleAnimation"];
+        [self primePlaybackUI];
     }
 
     POPBasicAnimation *blurFadeAnimation = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
