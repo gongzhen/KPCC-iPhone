@@ -264,12 +264,10 @@
 - (void)touchUpInsideHandler:(SCPRMenuButton *)sender {
     if (self.showBackArrow) {
         [delegate backPressed];
-    } else if ( self.showPopArrow ) {
-        if ( self.proxyDelegate ) {
-            [self.proxyDelegate popPressed];
-        } else {
-            [delegate popPressed];
-        }
+    } else if ( self.showPopArrow && self.proxyDelegate ) {
+        [self.proxyDelegate popPressed];
+        self.showPopArrow = NO;
+        self.proxyDelegate = nil;
     } else {
         [delegate menuPressed];
     }

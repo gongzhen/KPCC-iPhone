@@ -222,7 +222,7 @@
                          animations:^{
                              if (!fullyOpen)
                              {
-                                 self.center = CGPointMake(self.frame.size.width / 2, (/*(self.frame.size.height / 2) +*/ topMargin));
+                                 self.center = CGPointMake(self.frame.size.width / 2, (/*(self.frame.size.height / 2) +*/ topMargin + 20.0));
                                  fullyOpen = YES;
                              }
                          }
@@ -250,7 +250,7 @@
                          animations:^{
                              if (fullyOpen)
                              {
-                                 self.center = CGPointMake(self.frame.size.width / 2, -((self.frame.size.height / 2) + topMargin));
+                                 self.center = CGPointMake(self.frame.size.width / 2, -((self.frame.size.height / 2) + topMargin - 20.0));
                                  fullyOpen = NO;
                              }
                          }

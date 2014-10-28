@@ -18,6 +18,8 @@
 
 @end
 
+static NSString *kShortListMenuURL = @"http://www.scpr.org/short-list/latest";
+
 @implementation SCPRShortListViewController
 
 - (void)viewDidLoad {
@@ -41,7 +43,7 @@
     [self.mainScrollView addSubview:self.detailWebView];
     self.mainScrollView.scrollEnabled = NO;
     
-    NSURLRequest *rq = [[NSURLRequest alloc] initWithURL:[NSURL URLWithString:@"http://www.scpr.org/short-list/latest"]];
+    NSURLRequest *rq = [[NSURLRequest alloc] initWithURL:[NSURL URLWithString:kShortListMenuURL]];
     self.slWebView.transform = CGAffineTransformMakeScale(0.1, 0.1);
     self.slWebView.layer.opacity = 0.0;
     
@@ -56,6 +58,8 @@
                                                                                            action:@selector(share)];
     [self.slWebView loadRequest:rq];
     
+    self.currentObjectURL = kShortListMenuURL;
+    
     NSLog(@"Width: %1.1f, Height: %1.1f",self.view.frame.size.width,self.view.frame.size.height);
     
     // Do any additional setup after loading the view from its nib.
@@ -63,10 +67,19 @@
 
 - (void)willMoveToParentViewController:(UIViewController *)parent {
     self.navigationItem.title = self.cachedParentTitle;
+    self.slWebView.delegate = nil;
+    [self.slWebView loadHTMLString:@"" baseURL:nil];
 }
 
 - (void)share {
     
+    if ( self.currentObjectURL ) {
+        UIActivityViewController *activities = [[UIActivityViewController alloc] initWithActivityItems:@[ self.currentObjectURL ]
+                                                                                 applicationActivities:nil];
+        [self presentViewController:activities
+                           animated:YES
+                         completion:nil];
+    }
 }
 
 #pragma mark - UIWebView
@@ -127,27 +140,11 @@
     
 }
 
-- (void)popPressed {
-    self.popping = YES;
-    [UIView animateWithDuration:0.25 delay:0.0 options:UIViewAnimationOptionCurveEaseOut animations:^{
-        [self.mainScrollView setContentOffset:CGPointMake(0.0,
-                                                          self.mainScrollView.contentOffset.y)];
-    } completion:^(BOOL finished) {
-        
-        SCPRAppDelegate *del = (SCPRAppDelegate*)[UIApplication sharedApplication].delegate;
-        SCPRNavigationController *navigation = [del masterNavigationController];
-        [navigation restoreLeftBarItem:self];
-
-        [self.detailWebView loadHTMLString:@"" baseURL:nil];
-        self.navigationItem.title = self.cachedTitle;
-        
-    }];
-}
-
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType {
     
+    NSString *str = [[request URL] absoluteString];
     if ( webView == self.slWebView ) {
-        NSString *str = [[request URL] absoluteString];
+        
         NSLog(@"Loading %@ ... ",str);
         
         if ( self.initialLoad ) {
@@ -158,6 +155,7 @@
                 return YES;
             }
             if ( [str rangeOfString:@"http"].location != NSNotFound ) {
+                self.currentObjectURL = str;
                 [self.detailWebView loadRequest:request];
                 
                 
@@ -169,10 +167,48 @@
         
     }
     if ( webView == self.detailWebView ) {
-
+        if ( [str rangeOfString:@"share?obj_key"].location != NSNotFound ||
+            [str rangeOfString:@"tweet?url"].location != NSNotFound ||
+            [str rangeOfString:@"/sharer.php?"].location != NSNotFound ) {
+            [[[UIAlertView alloc] initWithTitle:@"Share from the App!"
+                                        message:@"If you'd like to share this item, use the share button in the upper right corner"
+                                       delegate:nil
+                              cancelButtonTitle:@"Will Do!"
+                              otherButtonTitles:nil] show];
+            return NO;
+        }
     }
     return YES;
 }
+
+#pragma mark - MenuButtonDelegate
+- (void)popPressed {
+    self.popping = YES;
+    [UIView animateWithDuration:0.25 delay:0.0 options:UIViewAnimationOptionCurveEaseOut animations:^{
+        [self.mainScrollView setContentOffset:CGPointMake(0.0,
+                                                          self.mainScrollView.contentOffset.y)];
+    } completion:^(BOOL finished) {
+        
+        SCPRAppDelegate *del = (SCPRAppDelegate*)[UIApplication sharedApplication].delegate;
+        SCPRNavigationController *navigation = [del masterNavigationController];
+        [navigation restoreLeftBarItem:self];
+        self.currentObjectURL = kShortListMenuURL;
+        [self.detailWebView loadHTMLString:@"" baseURL:nil];
+        self.navigationItem.title = self.cachedTitle;
+        
+    }];
+}
+
+- (void)backPressed {
+    // Should not be called
+}
+
+- (void)menuPressed {
+    // Should not be called
+}
+
+
+
 
 #pragma mark - Utilities
 - (void)extractTitleFromString:(NSString *)fullHTML completed:(CompletionBlockWithValue)completed {

@@ -17,11 +17,12 @@
 @property (nonatomic,strong) UIScrollView *mainScrollView;
 @property (nonatomic,copy) NSString *cachedTitle;
 @property (nonatomic,copy) NSString *cachedParentTitle;
+@property (nonatomic,copy) NSString *currentObjectURL;
 
 @property BOOL initialLoad;
 @property BOOL detailInitialLoad;
 @property BOOL popping;
-
+@property BOOL finishing;
 
 
 @end
