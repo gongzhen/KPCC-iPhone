@@ -12,6 +12,9 @@
 
 //@class SCPRMasterViewController;
 
+typedef void (^CompletionBlock)(void);
+typedef void (^CompletionBlockWithValue)(id returnedObject);
+
 @interface Utils : NSObject
 
 + (SCPRAppDelegate*)del;

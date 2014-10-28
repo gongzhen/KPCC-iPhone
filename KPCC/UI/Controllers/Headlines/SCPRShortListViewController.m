@@ -14,6 +14,8 @@
 
 @interface SCPRShortListViewController ()
 
+- (void)extractTitleFromString:(NSString*)fullHTML completed:(CompletionBlockWithValue)completed;
+
 @end
 
 @implementation SCPRShortListViewController
@@ -41,10 +43,13 @@
     
     NSURLRequest *rq = [[NSURLRequest alloc] initWithURL:[NSURL URLWithString:@"http://www.scpr.org/short-list/latest"]];
     self.slWebView.transform = CGAffineTransformMakeScale(0.1, 0.1);
+    self.slWebView.layer.opacity = 0.0;
+    
     //self.detailWebView.transform = CGAffineTransformMakeScale(0.1, 0.1);
     
     self.slWebView.delegate = self;
     self.detailWebView.delegate = self;
+    self.cachedParentTitle = self.navigationItem.title;
     self.navigationItem.title = @"Headlines";
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction
                                                                                            target:self
@@ -54,6 +59,10 @@
     NSLog(@"Width: %1.1f, Height: %1.1f",self.view.frame.size.width,self.view.frame.size.height);
     
     // Do any additional setup after loading the view from its nib.
+}
+
+- (void)willMoveToParentViewController:(UIViewController *)parent {
+    self.navigationItem.title = self.cachedParentTitle;
 }
 
 - (void)share {
@@ -70,10 +79,22 @@
            
             scaleAnimation.fromValue  = [NSValue valueWithCGSize:CGSizeMake(0.0f, 0.0f)];
             scaleAnimation.toValue  = [NSValue valueWithCGSize:CGSizeMake(1.0f, 1.0f)];
+            
+            POPBasicAnimation *genericFadeInAnim = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
+            genericFadeInAnim.toValue = @(1);
+            
             [self.slWebView.layer pop_addAnimation:scaleAnimation forKey:@"springToLife"];
+            [self.slWebView.layer pop_addAnimation:genericFadeInAnim forKey:@"springToOpaque"];
         }
     }
     if ( webView == self.detailWebView ) {
+        
+        if ( self.popping ) {
+            self.popping = NO;
+            self.detailInitialLoad = NO;
+            return;
+        }
+        
         if ( !self.detailInitialLoad ) {
             self.detailInitialLoad = YES;
             [UIView animateWithDuration:0.25 delay:0.0 options:UIViewAnimationOptionCurveEaseOut animations:^{
@@ -81,23 +102,33 @@
                                                                   self.mainScrollView.contentOffset.y)];
             } completion:^(BOOL finished) {
                 
+
+                
                 SCPRAppDelegate *del = (SCPRAppDelegate*)[UIApplication sharedApplication].delegate;
                 SCPRNavigationController *navigation = [del masterNavigationController];
                 [navigation applyCustomLeftBarItem:CustomLeftBarItemPop
                                      proxyDelegate:self];
                 
+                NSString *jsonString = [self.detailWebView stringByEvaluatingJavaScriptFromString:
+                                        @"document.body.innerHTML"];
+                
+                [self extractTitleFromString:jsonString completed:^(id returnedObject) {
+                    
+                    NSLog(@"Title : %@",(NSString*)returnedObject);
+                    self.cachedTitle = self.navigationItem.title;
+                    self.navigationItem.title = (NSString*)returnedObject;
+                    
+                }];
+                
             }];
-            /*POPSpringAnimation *scaleAnimation = [POPSpringAnimation animationWithPropertyNamed:kPOPLayerScaleXY];
-            
-            scaleAnimation.fromValue  = [NSValue valueWithCGSize:CGSizeMake(0.0f, 0.0f)];
-            scaleAnimation.toValue  = [NSValue valueWithCGSize:CGSizeMake(1.0f, 1.0f)];
-            [self.detailWebView.layer pop_addAnimation:scaleAnimation forKey:@"springToLife"];*/
+
         }
     }
     
 }
 
 - (void)popPressed {
+    self.popping = YES;
     [UIView animateWithDuration:0.25 delay:0.0 options:UIViewAnimationOptionCurveEaseOut animations:^{
         [self.mainScrollView setContentOffset:CGPointMake(0.0,
                                                           self.mainScrollView.contentOffset.y)];
@@ -106,7 +137,9 @@
         SCPRAppDelegate *del = (SCPRAppDelegate*)[UIApplication sharedApplication].delegate;
         SCPRNavigationController *navigation = [del masterNavigationController];
         [navigation restoreLeftBarItem:self];
-        self.detailInitialLoad = NO;
+
+        [self.detailWebView loadHTMLString:@"" baseURL:nil];
+        self.navigationItem.title = self.cachedTitle;
         
     }];
 }
@@ -118,6 +151,12 @@
         NSLog(@"Loading %@ ... ",str);
         
         if ( self.initialLoad ) {
+            if ( [str rangeOfString:@"googleads"].location != NSNotFound ) {
+                return YES;
+            }
+            if ( [str rangeOfString:@"googlesyndication"].location != NSNotFound ) {
+                return YES;
+            }
             if ( [str rangeOfString:@"http"].location != NSNotFound ) {
                 [self.detailWebView loadRequest:request];
                 
@@ -130,9 +169,37 @@
         
     }
     if ( webView == self.detailWebView ) {
-        
+
     }
     return YES;
+}
+
+#pragma mark - Utilities
+- (void)extractTitleFromString:(NSString *)fullHTML completed:(CompletionBlockWithValue)completed {
+    
+    
+    NSError *error = nil;
+    
+    NSRegularExpression *regex = [NSRegularExpression
+                                  regularExpressionWithPattern:@"<h1 class=\"title.*?\"><span>.*<"
+                                  options:NSRegularExpressionCaseInsensitive|NSRegularExpressionDotMatchesLineSeparators
+                                  error:&error];
+    
+    __block NSString *title = @"";
+    [regex enumerateMatchesInString:fullHTML options:0 range:NSMakeRange(0, [fullHTML length]) usingBlock:^(NSTextCheckingResult *match, NSMatchingFlags flags, BOOL *stop) {
+        
+        title = [fullHTML substringWithRange:[match rangeAtIndex:0]];
+        title = [title substringToIndex:[title rangeOfString:@"</span>"].location];
+        title = [title substringFromIndex:[title rangeOfString:@"<span>"].location + [@"<span>" length]];
+        
+        if ( completed ) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                completed(title);
+            });
+        }
+        
+    }];
+    
 }
 
 - (void)didReceiveMemoryWarning {

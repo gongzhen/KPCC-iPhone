@@ -909,7 +909,6 @@ static CGFloat kDisabledAlpha = 0.15;
             }
 
             SCPRProgramsListViewController *vc = [[SCPRProgramsListViewController alloc] initWithBackgroundProgram:prog];
-//            SCPRProgramsListViewController *vc = [[SCPRProgramsListViewController alloc] initWithNibName:nil bundle:nil];
             [self.navigationController pushViewController:vc animated:YES];
             break;
         }
@@ -919,6 +918,7 @@ static CGFloat kDisabledAlpha = 0.15;
             SCPRShortListViewController *slVC = [[SCPRShortListViewController alloc] initWithNibName:@"SCPRShortListViewController"
                                                                                               bundle:nil];
             [self.navigationController pushViewController:slVC animated:YES];
+            break;
             
         }
         default: {
