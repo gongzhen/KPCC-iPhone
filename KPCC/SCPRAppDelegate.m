@@ -45,6 +45,7 @@
     // Launch our root view controller
     SCPRNavigationController *navigationController = [[UIStoryboard storyboardWithName:@"Storyboard" bundle:nil] instantiateInitialViewController];
 
+    self.masterNavigationController = navigationController;
     self.masterViewController = navigationController.viewControllers.firstObject;
     self.window.rootViewController = navigationController;
 

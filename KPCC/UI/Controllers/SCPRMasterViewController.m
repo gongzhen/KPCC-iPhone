@@ -12,6 +12,7 @@
 #import "AFNetworking.h"
 #import "UIImageView+AFNetworking.h"
 #import "SCPRSlideInTransition.h"
+#import "SCPRShortListViewController.h"
 
 static NSString *kRewindingText = @"REWINDING...";
 static NSString *kForwardingText = @"GOING LIVE...";
@@ -912,7 +913,14 @@ static CGFloat kDisabledAlpha = 0.15;
             [self.navigationController pushViewController:vc animated:YES];
             break;
         }
-
+            
+        case 2: {
+            
+            SCPRShortListViewController *slVC = [[SCPRShortListViewController alloc] initWithNibName:@"SCPRShortListViewController"
+                                                                                              bundle:nil];
+            [self.navigationController pushViewController:slVC animated:YES];
+            
+        }
         default: {
             [self decloakForMenu:YES];
             break;

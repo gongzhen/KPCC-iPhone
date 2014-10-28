@@ -11,6 +11,7 @@
 #import "AFNetworking.h"
 #import "UIImageView+AFNetworking.h"
 #import <POP/POP.h>
+#import "SCPRAppDelegate.h"
 
 #define kMediaServerPath @"http://media.scpr.org/iphone/program-images/"
 
@@ -102,6 +103,13 @@ static DesignManager *singleton = nil;
                               alpha:1.0];
     free(newValues);
     return moreIntense;
+}
+
+- (CGRect)screenFrame {
+    SCPRAppDelegate *del = (SCPRAppDelegate*)[[UIApplication sharedApplication] delegate];
+    UIWindow *window = [del window];
+    return CGRectMake(0.0, 0.0, window.bounds.size.width,
+                      window.bounds.size.height);
 }
 
 @end

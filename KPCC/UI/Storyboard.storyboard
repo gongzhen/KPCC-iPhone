@@ -355,7 +355,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Tsp-6Z-muj" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="383" y="129"/>
+            <point key="canvasLocation" x="748" y="136"/>
         </scene>
         <!--Old Tester View-->
         <scene sceneID="uBf-aC-IbT">
@@ -697,7 +697,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="bWD-33-KYP" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-60" y="129"/>
+            <point key="canvasLocation" x="-60" y="136"/>
         </scene>
         <!--Programs List View Controller-->
         <scene sceneID="NCy-fs-f6d">
@@ -738,6 +738,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="xWc-l2-JLl" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
+            <point key="canvasLocation" x="339" y="136"/>
         </scene>
     </scenes>
     <resources>

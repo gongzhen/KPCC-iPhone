@@ -14,10 +14,12 @@
 #define TOCK   NSLog(@"Execution Time: %f  -- [ %s ]=[ Line %d ]", -[startTime timeIntervalSinceNow], __PRETTY_FUNCTION__, __LINE__)
 
 @class SCPRMasterViewController;
+@class SCPRNavigationController;
 
 @interface SCPRAppDelegate : UIResponder <UIApplicationDelegate, ContentProcessor>
 
 @property (strong, nonatomic) UIWindow *window;
 @property (strong, nonatomic) SCPRMasterViewController *masterViewController;
+@property (strong, nonatomic) SCPRNavigationController *masterNavigationController;
 
 @end
