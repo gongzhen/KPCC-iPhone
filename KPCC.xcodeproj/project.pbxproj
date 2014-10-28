@@ -24,6 +24,8 @@
 		52CC6D6919D112F400C67322 /* SCPRProgramsListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 52CC6D6819D112F400C67322 /* SCPRProgramsListViewController.xib */; };
 		52CF917619FEF306007BCFA8 /* btn_play.png in Resources */ = {isa = PBXBuildFile; fileRef = 52CF917419FEF306007BCFA8 /* btn_play.png */; };
 		52CF917719FEF306007BCFA8 /* btn_play@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 52CF917519FEF306007BCFA8 /* btn_play@2x.png */; };
+		52CF917A1A0032C7007BCFA8 /* QueueManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 52CF91791A0032C7007BCFA8 /* QueueManager.m */; };
+		52CF917D1A0036CA007BCFA8 /* AudioChunk.m in Sources */ = {isa = PBXBuildFile; fileRef = 52CF917C1A0036CA007BCFA8 /* AudioChunk.m */; };
 		52D0FC1C19D1F24F009AECEE /* SCPRProgramDetailHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D0FC1B19D1F24F009AECEE /* SCPRProgramDetailHeaderView.m */; };
 		52D0FC2019D1FC0C009AECEE /* SCPRProgramDetailTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D0FC1F19D1FC0C009AECEE /* SCPRProgramDetailTableViewCell.m */; };
 		52D0FC2A19D20D29009AECEE /* program_avatar_marketplace-tech-report.png in Resources */ = {isa = PBXBuildFile; fileRef = 52D0FC2219D20D29009AECEE /* program_avatar_marketplace-tech-report.png */; };
@@ -232,6 +234,10 @@
 		52CC6D6819D112F400C67322 /* SCPRProgramsListViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SCPRProgramsListViewController.xib; sourceTree = "<group>"; };
 		52CF917419FEF306007BCFA8 /* btn_play.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = btn_play.png; sourceTree = "<group>"; };
 		52CF917519FEF306007BCFA8 /* btn_play@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "btn_play@2x.png"; sourceTree = "<group>"; };
+		52CF91781A0032C7007BCFA8 /* QueueManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QueueManager.h; path = Managers/QueueManager.h; sourceTree = "<group>"; };
+		52CF91791A0032C7007BCFA8 /* QueueManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = QueueManager.m; path = Managers/QueueManager.m; sourceTree = "<group>"; };
+		52CF917B1A0036CA007BCFA8 /* AudioChunk.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioChunk.h; sourceTree = "<group>"; };
+		52CF917C1A0036CA007BCFA8 /* AudioChunk.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AudioChunk.m; sourceTree = "<group>"; };
 		52D0FC1A19D1F24F009AECEE /* SCPRProgramDetailHeaderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCPRProgramDetailHeaderView.h; sourceTree = "<group>"; };
 		52D0FC1B19D1F24F009AECEE /* SCPRProgramDetailHeaderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SCPRProgramDetailHeaderView.m; sourceTree = "<group>"; };
 		52D0FC1E19D1FC0C009AECEE /* SCPRProgramDetailTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCPRProgramDetailTableViewCell.h; sourceTree = "<group>"; };
@@ -599,6 +605,8 @@
 				52CC6D5D19D0DC7100C67322 /* Segment.m */,
 				525C6CA219F701FA0076C13B /* TritonAd.h */,
 				525C6CA319F701FA0076C13B /* TritonAd.m */,
+				52CF917B1A0036CA007BCFA8 /* AudioChunk.h */,
+				52CF917C1A0036CA007BCFA8 /* AudioChunk.m */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -873,6 +881,8 @@
 				7617729A195B646300F69EFC /* Utils.m */,
 				769B907C19C1186E00E812C7 /* DesignManager.h */,
 				769B907D19C1186E00E812C7 /* DesignManager.m */,
+				52CF91781A0032C7007BCFA8 /* QueueManager.h */,
+				52CF91791A0032C7007BCFA8 /* QueueManager.m */,
 			);
 			name = Managers;
 			sourceTree = "<group>";
@@ -1184,12 +1194,14 @@
 			files = (
 				76658AB518DCB0DC00026176 /* AnalyticsManager.m in Sources */,
 				523E86D919CB694B006FC366 /* Episode.m in Sources */,
+				52CF917D1A0036CA007BCFA8 /* AudioChunk.m in Sources */,
 				76349D1B18D8C74F0027C3B8 /* NetworkManager.m in Sources */,
 				52D0FC1C19D1F24F009AECEE /* SCPRProgramDetailHeaderView.m in Sources */,
 				254E177019F863960022BF6B /* UILabel+Additions.m in Sources */,
 				52EFF87819C37D350059A0E3 /* SCPRMenuCell.m in Sources */,
 				5248858E19CBA180005F59CC /* EpisodeAudio.m in Sources */,
 				523E86D019C8A292006FC366 /* SCPRProgramDetailViewController.m in Sources */,
+				52CF917A1A0032C7007BCFA8 /* QueueManager.m in Sources */,
 				76B9A9AC18EF59FD007A6D8C /* SCPRUserReportViewController.m in Sources */,
 				76658AB918DCB51000026176 /* NSDate+Helper.m in Sources */,
 				76B9A9B618EF79F6007A6D8C /* SCPRFooterView.m in Sources */,
