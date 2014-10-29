@@ -11,6 +11,7 @@
 #import "DesignManager.h"
 #import "SCPRNavigationController.h"
 #import "SCPRAppDelegate.h"
+#import "SCPRSpinnerViewController.h"
 
 @interface SCPRShortListViewController ()
 
@@ -56,13 +57,12 @@ static NSString *kShortListMenuURL = @"http://www.scpr.org/short-list/latest";
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction
                                                                                            target:self
                                                                                            action:@selector(share)];
-    [self.slWebView loadRequest:rq];
-    
     self.currentObjectURL = kShortListMenuURL;
     
-    NSLog(@"Width: %1.1f, Height: %1.1f",self.view.frame.size.width,self.view.frame.size.height);
+    [SCPRSpinnerViewController spinInCenterOfViewController:self appeared:^{
+        [self.slWebView loadRequest:rq];
+    }];
     
-    // Do any additional setup after loading the view from its nib.
 }
 
 - (void)willMoveToParentViewController:(UIViewController *)parent {
@@ -92,6 +92,9 @@ static NSString *kShortListMenuURL = @"http://www.scpr.org/short-list/latest";
            
             scaleAnimation.fromValue  = [NSValue valueWithCGSize:CGSizeMake(0.0f, 0.0f)];
             scaleAnimation.toValue  = [NSValue valueWithCGSize:CGSizeMake(1.0f, 1.0f)];
+            [scaleAnimation setCompletionBlock:^(POPAnimation *p, BOOL c) {
+                [SCPRSpinnerViewController finishSpinning];
+            }];
             
             POPBasicAnimation *genericFadeInAnim = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
             genericFadeInAnim.toValue = @(1);
@@ -238,11 +241,15 @@ static NSString *kShortListMenuURL = @"http://www.scpr.org/short-list/latest";
                                   error:&error];
     
     __block NSString *title = @"";
+    __block BOOL matched = NO;
     [regex enumerateMatchesInString:fullHTML options:0 range:NSMakeRange(0, [fullHTML length]) usingBlock:^(NSTextCheckingResult *match, NSMatchingFlags flags, BOOL *stop) {
         
         title = [fullHTML substringWithRange:[match rangeAtIndex:0]];
         title = [title substringToIndex:[title rangeOfString:@"</span>"].location];
         title = [title substringFromIndex:[title rangeOfString:@"<span>"].location + [@"<span>" length]];
+        
+        *stop = YES;
+        matched = YES;
         
         if ( completed ) {
             dispatch_async(dispatch_get_main_queue(), ^{
@@ -251,6 +258,31 @@ static NSString *kShortListMenuURL = @"http://www.scpr.org/short-list/latest";
         }
         
     }];
+    
+    if ( !matched ) {
+        NSRegularExpression *regex = [NSRegularExpression
+                                      regularExpressionWithPattern:@"<h1 class=\"story-headline\">.*?</a>"
+                                      options:NSRegularExpressionCaseInsensitive|NSRegularExpressionDotMatchesLineSeparators
+                                      error:&error];
+        
+        [regex enumerateMatchesInString:fullHTML options:0 range:NSMakeRange(0, [fullHTML length]) usingBlock:^(NSTextCheckingResult *match, NSMatchingFlags flags, BOOL *stop) {
+            
+            title = [fullHTML substringWithRange:[match rangeAtIndex:0]];
+            title = [title substringToIndex:[title rangeOfString:@"</a>"].location];
+            title = [title substringFromIndex:[title rangeOfString:@"<a href"].location + [@"<a href" length]];
+            title = [title substringFromIndex:[title rangeOfString:@">"].location+1];
+            
+            *stop = YES;
+            matched = YES;
+            
+            if ( completed ) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    completed(title);
+                });
+            }
+            
+        }];
+    }
     
 }
 

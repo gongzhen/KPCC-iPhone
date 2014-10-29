@@ -13,7 +13,6 @@
 + (DesignManager*)shared;
 
 - (void)loadProgramImage:(NSString *)slug andImageView:(UIImageView *)imageView completion:(void (^)(BOOL status))completion;
-- (UIColor*)intensifyColor:(UIColor*)color;
 - (CGRect)screenFrame;
 
 @end

@@ -10,7 +10,7 @@
 #import "Reachability.h"
 #import <CoreTelephony/CTTelephonyNetworkInfo.h>
 #import <CoreTelephony/CTCarrier.h>
-#import "AFNetworking.h"
+#import <AFNetworking.h>
 #import "TritonAd.h"
 
 #define kServerBase @"http://www.scpr.org/api/v3"

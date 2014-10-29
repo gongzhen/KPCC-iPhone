@@ -73,37 +73,7 @@ static DesignManager *singleton = nil;
     }
 }
 
-- (UIColor*)intensifyColor:(UIColor *)color {
-    const CGFloat *cdata = CGColorGetComponents(color.CGColor);
-    CGFloat max = 0.0;
-    NSInteger index = 0;
-    for ( unsigned i = 0; i < 3; i++ ) {
-        CGFloat val = cdata[i];
-        if ( val > max ) {
-            max = val;
-            index = i;
-        }
-    }
-    
-    CGFloat brighterValue = fminf(max + (max * 0.33),
-                                  1.0);
-    
-    CGFloat *newValues = (CGFloat*)malloc(3*sizeof(CGFloat));
-    for ( unsigned i = 0; i < 3; i++ ) {
-        if ( i == index ) {
-            newValues[i] = brighterValue;
-            continue;
-        }
-        newValues[i] = cdata[i]*0.65;
-    }
-    
-    UIColor *moreIntense = [UIColor colorWithRed:newValues[0]
-                              green:newValues[1]
-                               blue:newValues[2]
-                              alpha:1.0];
-    free(newValues);
-    return moreIntense;
-}
+
 
 - (CGRect)screenFrame {
     SCPRAppDelegate *del = (SCPRAppDelegate*)[[UIApplication sharedApplication] delegate];
