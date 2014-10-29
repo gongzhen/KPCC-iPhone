@@ -110,33 +110,41 @@ static NSString *kShortListMenuURL = @"http://www.scpr.org/short-list/latest";
         
         if ( !self.detailInitialLoad ) {
             self.detailInitialLoad = YES;
-            [UIView animateWithDuration:0.25 delay:0.0 options:UIViewAnimationOptionCurveEaseOut animations:^{
-                [self.mainScrollView setContentOffset:CGPointMake(self.view.frame.size.width,
-                                                                  self.mainScrollView.contentOffset.y)];
-            } completion:^(BOOL finished) {
+  
+            SCPRAppDelegate *del = (SCPRAppDelegate*)[UIApplication sharedApplication].delegate;
+            SCPRNavigationController *navigation = [del masterNavigationController];
+            [navigation applyCustomLeftBarItem:CustomLeftBarItemPop
+                                 proxyDelegate:self];
+            
+            NSString *jsonString = [self.detailWebView stringByEvaluatingJavaScriptFromString:
+                                    @"document.body.innerHTML"];
+            
+            [self extractTitleFromString:jsonString completed:^(id returnedObject) {
                 
-
-                
-                SCPRAppDelegate *del = (SCPRAppDelegate*)[UIApplication sharedApplication].delegate;
-                SCPRNavigationController *navigation = [del masterNavigationController];
-                [navigation applyCustomLeftBarItem:CustomLeftBarItemPop
-                                     proxyDelegate:self];
-                
-                NSString *jsonString = [self.detailWebView stringByEvaluatingJavaScriptFromString:
-                                        @"document.body.innerHTML"];
-                
-                [self extractTitleFromString:jsonString completed:^(id returnedObject) {
-                    
-                    NSLog(@"Title : %@",(NSString*)returnedObject);
-                    self.cachedTitle = self.navigationItem.title;
-                    self.navigationItem.title = (NSString*)returnedObject;
-                    
-                }];
+                NSLog(@"Title : %@",(NSString*)returnedObject);
+                self.cachedTitle = self.navigationItem.title;
+                self.navigationItem.title = (NSString*)returnedObject;
                 
             }];
+            
+            POPSpringAnimation *shiftAnimation = [POPSpringAnimation animationWithPropertyNamed:kPOPScrollViewContentOffset];
+            shiftAnimation.fromValue = [NSValue valueWithCGPoint:CGPointMake(0.0, self.mainScrollView.contentOffset.y)];
+            shiftAnimation.toValue = [NSValue valueWithCGPoint:CGPointMake(self.mainScrollView.frame.size.width, self.mainScrollView.contentOffset.y)];
+            [shiftAnimation setSpringBounciness:10.0];
+            [shiftAnimation setCompletionBlock:^(POPAnimation *anim, BOOL finished) {
 
+                
+
+            }];
+            
+            [self.mainScrollView pop_addAnimation:shiftAnimation
+                                           forKey:@"fauxPush"];
+                
         }
     }
+
+    
+    
     
 }
 
@@ -184,19 +192,21 @@ static NSString *kShortListMenuURL = @"http://www.scpr.org/short-list/latest";
 #pragma mark - MenuButtonDelegate
 - (void)popPressed {
     self.popping = YES;
-    [UIView animateWithDuration:0.25 delay:0.0 options:UIViewAnimationOptionCurveEaseOut animations:^{
-        [self.mainScrollView setContentOffset:CGPointMake(0.0,
-                                                          self.mainScrollView.contentOffset.y)];
-    } completion:^(BOOL finished) {
-        
-        SCPRAppDelegate *del = (SCPRAppDelegate*)[UIApplication sharedApplication].delegate;
-        SCPRNavigationController *navigation = [del masterNavigationController];
-        [navigation restoreLeftBarItem:self];
+    SCPRAppDelegate *del = (SCPRAppDelegate*)[UIApplication sharedApplication].delegate;
+    SCPRNavigationController *navigation = [del masterNavigationController];
+    [navigation restoreLeftBarItem:self];
+    self.navigationItem.title = self.cachedTitle;
+    
+    POPSpringAnimation *shiftAnimation = [POPSpringAnimation animationWithPropertyNamed:kPOPScrollViewContentOffset];
+    shiftAnimation.toValue = [NSValue valueWithCGPoint:CGPointMake(0.0, self.mainScrollView.contentOffset.y)];
+    shiftAnimation.fromValue = [NSValue valueWithCGPoint:CGPointMake(self.mainScrollView.frame.size.width, self.mainScrollView.contentOffset.y)];
+    [shiftAnimation setSpringBounciness:10.0];
+    [shiftAnimation setCompletionBlock:^(POPAnimation *anim, BOOL finished) {
         self.currentObjectURL = kShortListMenuURL;
         [self.detailWebView loadHTMLString:@"" baseURL:nil];
-        self.navigationItem.title = self.cachedTitle;
-        
     }];
+    [self.mainScrollView pop_addAnimation:shiftAnimation
+                                   forKey:@"fauxPop"];
 }
 
 - (void)backPressed {
