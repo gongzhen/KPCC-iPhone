@@ -36,10 +36,10 @@ static const NSString *ItemStatusContext;
     
     // Monitoring AVPlayer->currentItem status.
     if (object == self.audioPlayer.currentItem && [keyPath isEqualToString:@"status"]) {
-        
+#ifdef DEBUG
         NSNumber *old = (NSNumber*)change[@"old"];
         NSNumber *new = (NSNumber*)change[@"new"];
-#ifdef DEBUG
+
         if ( [old intValue] == [new intValue] ) {
             int x = 1;
             x++;

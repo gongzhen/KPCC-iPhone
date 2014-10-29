@@ -162,12 +162,18 @@ static NSString *kShortListMenuURL = @"http://www.scpr.org/short-list/latest";
             if ( [str rangeOfString:@"googlesyndication"].location != NSNotFound ) {
                 return YES;
             }
+            if ( [str rangeOfString:@"google.com/pagead"].location != NSNotFound ) {
+                return YES;
+            }
             if ( [str rangeOfString:@"http"].location != NSNotFound ) {
                 self.currentObjectURL = str;
                 [self.detailWebView loadRequest:request];
                 
                 
                 return NO;
+            }
+            if ( [str rangeOfString:@"about:blank"].location != NSNotFound ) {
+                return YES;
             }
             
             return YES;
