@@ -11,6 +11,7 @@
 #import "AudioManager.h"
 #import "NetworkManager.h"
 #import "DesignManager.h"
+#import "QueueManager.h"
 #import "Program.h"
 #import "FXBlurView.h"
 #import <pop/POP.h>
@@ -33,6 +34,10 @@
 @property IBOutlet UIButton *backToLiveButton;
 @property IBOutlet FXBlurView *blurView;
 @property IBOutlet UIView *darkBgView;
+
+// For testing audio queue
+@property IBOutlet UIButton *nextEpisodeButton;
+@property IBOutlet UIButton *prevEpisodeButton;
 
 // Major holder views for different playback states.
 @property IBOutlet UIView *liveStreamView;
@@ -77,7 +82,7 @@
 - (void)cloakForMenu:(BOOL)animated;
 - (void)decloakForMenu:(BOOL)animated;
 
-- (void)setOnDemandUI:(BOOL)animated withProgram:(Program *)program andEpisode:(NSObject *)episode;
+- (void)setOnDemandUI:(BOOL)animated withProgram:(Program*)program andAudioChunk:(AudioChunk*)audioChunk;
 - (void)setLiveStreamingUI:(BOOL)animated;
 
 @end

@@ -54,7 +54,6 @@ typedef enum {
 
 + (AudioManager*)shared;
 
-/// Gets and sets the delegate used for receiving events from the AudioManager
 @property (readwrite, unsafe_unretained) id<AudioManagerDelegate> delegate;
 
 @property (nonatomic,strong) id timeObserver;
@@ -78,6 +77,7 @@ typedef enum {
 
 
 - (void)playAudioWithURL:(NSString *)url;
+- (void)playQueueItemWithUrl:(NSString *)url;
 
 - (NSString *)liveStreamURL;
 - (void)startStream;

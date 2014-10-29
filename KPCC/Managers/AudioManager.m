@@ -9,6 +9,7 @@
 #import "AudioManager.h"
 #import "NetworkManager.h"
 #import "AnalyticsManager.h"
+#import "QueueManager.h"
 #import "AVPlayer+Additions.h"
 #import "Program.h"
 #import "Episode.h"
@@ -126,10 +127,15 @@ static const NSString *ItemStatusContext;
     [self takedownAudioPlayer];
     [self buildStreamer:url];
 
-    // Subscribe to the AVPlayerItem's DidPlayToEndTime notification.
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playerItemDidFinishPlaying:) name:AVPlayerItemDidPlayToEndTimeNotification object:self.playerItem];
+// Subscribe to the AVPlayerItem's DidPlayToEndTime notification.
+//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playerItemDidFinishPlaying:) name:AVPlayerItemDidPlayToEndTimeNotification object:self.playerItem];
 
     [self startStream];
+}
+
+- (void)playQueueItemWithUrl:(NSString *)url {
+    [self playAudioWithURL:url];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playerItemDidFinishPlaying:) name:AVPlayerItemDidPlayToEndTimeNotification object:self.playerItem];
 }
 
 
@@ -332,9 +338,14 @@ static const NSString *ItemStatusContext;
     NSError *error = notification.userInfo[AVPlayerItemDidPlayToEndTimeNotification];
     NSLog(@"playerItemDidFinishPlaying! --- %@", error);
 
-    [self takedownAudioPlayer];
-    [self buildStreamer:kHLSLiveStreamURL];
-    [self startStream];
+//    [self takedownAudioPlayer];
+//    [self buildStreamer:kHLSLiveStreamURL];
+//    [self startStream];
+    [[NSNotificationCenter defaultCenter] removeObserver:self.playerItem forKeyPath:AVPlayerItemDidPlayToEndTimeNotification];
+
+    if ( ![[QueueManager shared]isQueueEmpty] ) {
+        [[QueueManager shared] dequeueForPlayback];
+    }
 }
 
 - (NSString *)liveStreamURL {
