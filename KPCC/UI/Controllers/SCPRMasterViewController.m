@@ -212,10 +212,15 @@ static CGFloat kDisabledAlpha = 0.15;
 - (IBAction)rewindToStartTapped:(id)sender {
 
     if ( self.jogging ) return;
-    
+
     [self activateRewind:RewindDistanceBeginning];
-    
-    
+}
+
+- (IBAction)prevEpisodeTapped:(id)sender {
+    [[QueueManager shared] playPrev];
+}
+- (IBAction)nextEpisodeTapped:(id)sender {
+    [[QueueManager shared] playNext];
 }
 
 - (void)snapJogWheel {
@@ -564,10 +569,14 @@ static CGFloat kDisabledAlpha = 0.15;
         [self.progressView setHidden:YES];
     }
 
+    // For testing audio queue...
+    [self.prevEpisodeButton setHidden:YES];
+    [self.nextEpisodeButton setHidden:YES];
+
     setForLiveStreamUI = YES;
 }
 
-- (void)setOnDemandUI:(BOOL)animated withProgram:(Program *)program andEpisode:(NSObject *)episode {
+- (void)setOnDemandUI:(BOOL)animated withProgram:(Program*)program andAudioChunk:(AudioChunk*)audioChunk {
     if (self.menuOpen) {
         [self decloakForMenu:NO];
     }
@@ -577,7 +586,7 @@ static CGFloat kDisabledAlpha = 0.15;
     [self.progressView setProgress:0.0 animated:YES];
 
     // Update UILabels, content, etc.
-    [self setDataForOnDemand:program andEpisode:episode];
+    [self setDataForOnDemand:program andAudioChunk:audioChunk];
 
     if ([self.onDemandPlayerView isHidden]) {
         [self.onDemandPlayerView setHidden:NO];
@@ -596,14 +605,18 @@ static CGFloat kDisabledAlpha = 0.15;
         [self.progressView setHidden:NO];
     }
 
+    // For testing audio queue...
+    [self.prevEpisodeButton setHidden:NO];
+    [self.nextEpisodeButton setHidden:NO];
+
     setForOnDemandUI = YES;
 }
 
-- (void)setDataForOnDemand:(Program *)program andEpisode:(id)episode {
+- (void)setDataForOnDemand:(Program *)program andAudioChunk:(AudioChunk*)audioChunk {
     if (program != nil) {
         self.onDemandProgram = program;
 
-        [[AudioManager shared] updateNowPlayingInfoWithAudio:episode];
+        [[AudioManager shared] updateNowPlayingInfoWithAudio:audioChunk];
 
         [[DesignManager shared] loadProgramImage:program.program_slug
                                     andImageView:self.programImageView
@@ -614,16 +627,9 @@ static CGFloat kDisabledAlpha = 0.15;
         [self.programTitleOnDemand setText:[program.title uppercaseString]];
     }
 
-    if (episode != nil) {
-        if ([episode isKindOfClass:[Episode class]]) {
-            Episode *ep = (Episode *)episode;
-            self.onDemandEpUrl = ep.publicUrl;
-            [self.episodeTitleOnDemand setText:ep.title];
-        } else {
-            Segment *seg = (Segment *)episode;
-            self.onDemandEpUrl = seg.publicUrl;
-            [self.episodeTitleOnDemand setText:seg.title];
-        }
+    if (audioChunk) {
+        self.onDemandEpUrl = audioChunk.contentShareUrl;
+        [self.episodeTitleOnDemand setText:audioChunk.audioTitle];
     }
 }
 
@@ -688,6 +694,10 @@ static CGFloat kDisabledAlpha = 0.15;
         onDemandElementsFade.duration = 0.3;
         [self.timeLabelOnDemand.layer pop_addAnimation:onDemandElementsFade forKey:@"timeLabelFadeAnimation"];
         [self.progressView.layer pop_addAnimation:onDemandElementsFade forKey:@"progressBarFadeAnimation"];
+
+        // For testing audio queue...
+        [self.prevEpisodeButton setHidden:YES];
+        [self.nextEpisodeButton setHidden:YES];
     }
 
     POPBasicAnimation *blurFadeAnimation = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
@@ -742,6 +752,10 @@ static CGFloat kDisabledAlpha = 0.15;
         onDemandElementsFade.duration = 0.3;
         [self.timeLabelOnDemand.layer pop_addAnimation:onDemandElementsFade forKey:@"timeLabelFadeAnimation"];
         [self.progressView.layer pop_addAnimation:onDemandElementsFade forKey:@"progressBarFadeAnimation"];
+
+        // For testing audio queue...
+        [self.prevEpisodeButton setHidden:NO];
+        [self.nextEpisodeButton setHidden:NO];
     }
 
     POPBasicAnimation *fadeAnimation = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];

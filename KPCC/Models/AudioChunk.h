@@ -23,6 +23,7 @@ typedef NS_ENUM(NSUInteger, AudioType) {
 @property (nonatomic,strong) NSNumber *audioDuration;
 @property (nonatomic,strong) NSString *audioTitle;
 @property (nonatomic,strong) NSString *programTitle;
+@property (nonatomic,strong) NSString *contentShareUrl;
 
 @property AudioType type;
 

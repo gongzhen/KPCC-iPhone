@@ -17,6 +17,7 @@
             self.audioDuration = episode.audio.duration;
             self.audioTitle = episode.title;
             self.programTitle = episode.programName;
+            self.contentShareUrl = episode.publicUrl;
             self.type = AudioTypeEpisode;
         }
     }
@@ -30,6 +31,7 @@
             self.audioDuration = segment.audio.duration;
             self.audioTitle = segment.title;
             self.programTitle = segment.programName;
+            self.contentShareUrl = segment.publicUrl;
             self.type = AudioTypeSegment;
         }
     }

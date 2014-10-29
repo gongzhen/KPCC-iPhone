@@ -7,6 +7,8 @@
 //
 
 #import "QueueManager.h"
+#import "Utils.h"
+#import "SCPRMasterViewController.h"
 
 static QueueManager *singleton = nil;
 
@@ -37,6 +39,46 @@ static QueueManager *singleton = nil;
                 AudioChunk *chunk = [[AudioChunk alloc] initWithSegment:segment];
                 [self enqueue:chunk];
             }
+        }
+    }
+}
+
+- (AudioChunk*)enqueueEpisodes:(NSArray *)episodes withCurrentIndex:(NSInteger)index {
+    [self clearQueue];
+
+    AudioChunk *toReturn;
+    for (int i = 0; i < [episodes count]; i++) {
+        if ([[episodes objectAtIndex:i] audio]) {
+            AudioChunk *chunk = [[AudioChunk alloc] initWithEpisode:[episodes objectAtIndex:i]];
+            if (i == index) {
+                [[AudioManager shared] playAudioWithURL:chunk.audioUrl];
+                self.currentlyPlayingIndex = index;
+                toReturn = chunk;
+            }
+            [self enqueue:chunk];
+        }
+    }
+    return toReturn;
+}
+
+- (void)playNext {
+    if (![self isQueueEmpty]) {
+        if (self.currentlyPlayingIndex + 1 < [self.queue count]) {
+            AudioChunk *chunk = [self.queue objectAtIndex:self.currentlyPlayingIndex + 1];
+            [[AudioManager shared] playAudioWithURL:chunk.audioUrl];
+            self.currentlyPlayingIndex += 1;
+            [[[Utils del] masterViewController] setOnDemandUI:YES withProgram:nil andAudioChunk:chunk];
+        }
+    }
+}
+
+- (void)playPrev {
+    if (![self isQueueEmpty]) {
+        if (self.currentlyPlayingIndex > 0) {
+            AudioChunk *chunk = [self.queue objectAtIndex:self.currentlyPlayingIndex - 1];
+            [[AudioManager shared] playAudioWithURL:chunk.audioUrl];
+            self.currentlyPlayingIndex -= 1;
+            [[[Utils del] masterViewController] setOnDemandUI:YES withProgram:nil andAudioChunk:chunk];
         }
     }
 }
@@ -88,6 +130,10 @@ static QueueManager *singleton = nil;
 
 - (BOOL)isQueueEmpty {
     return ([self.queue lastObject] == nil);
+}
+
+- (void)clearQueue {
+    [self.queue removeAllObjects];
 }
 
 @end

@@ -20,10 +20,15 @@
 
 @property (nonatomic,weak) id<QueueManagerDelegate> delegate;
 @property (nonatomic,strong) NSMutableArray *queue;
+@property (nonatomic) NSInteger currentlyPlayingIndex;
 
 // Playback actions
 - (void)enqueueEpisode:(Episode *)episode;
+- (AudioChunk*)enqueueEpisodes:(NSArray *)episodes withCurrentIndex:(NSInteger)index;
+- (void)playNext;
+- (void)playPrev;
 - (void)dequeueForPlayback;
+
 
 
 // Internal queue
@@ -33,5 +38,6 @@
 - (AudioChunk*)peekHead;
 - (AudioChunk*)peekTail;
 - (BOOL)isQueueEmpty;
+- (void)clearQueue;
 
 @end
