@@ -39,6 +39,8 @@
 @property IBOutlet UIButton *nextEpisodeButton;
 @property IBOutlet UIButton *prevEpisodeButton;
 
+@property (nonatomic,strong)UIScrollView *queueScrollView;
+
 // Major holder views for different playback states.
 @property IBOutlet UIView *liveStreamView;
 @property IBOutlet UIView *onDemandPlayerView;

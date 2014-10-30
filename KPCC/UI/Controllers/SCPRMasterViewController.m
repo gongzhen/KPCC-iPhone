@@ -18,7 +18,7 @@ static NSString *kForwardingText = @"GOING LIVE...";
 static CGFloat kRewindGateThreshold = 8.0;
 static CGFloat kDisabledAlpha = 0.15;
 
-@interface SCPRMasterViewController () <AudioManagerDelegate, ContentProcessor, UINavigationControllerDelegate, UIViewControllerTransitioningDelegate, SCPRPreRollControllerDelegate>
+@interface SCPRMasterViewController () <AudioManagerDelegate, ContentProcessor, UINavigationControllerDelegate, UIViewControllerTransitioningDelegate, SCPRPreRollControllerDelegate, UIScrollViewDelegate>
 
 @property BOOL initialPlay;
 @property BOOL setPlaying;
@@ -126,6 +126,29 @@ static CGFloat kDisabledAlpha = 0.15;
     self.jogShuttle.view = self.rewindView;
     self.jogShuttle.view.alpha = 0.0;
     [self.jogShuttle prepare];
+
+    // Scroll view for audio queue
+    self.queueScrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 64, self.view.frame.size.width, self.progressView.frame.origin.y - 64)];
+    self.queueScrollView.backgroundColor = [UIColor greenColor];
+    self.queueScrollView.alpha = 0.5f;
+    self.queueScrollView.pagingEnabled = YES;
+    self.queueScrollView.delegate = self;
+
+    // Testing ...
+    NSArray *colors = [NSArray arrayWithObjects:[UIColor redColor], [UIColor purpleColor], [UIColor blueColor], nil];
+    for (int i = 0; i < [colors count]; i++) {
+        CGRect frame;
+        frame.origin.x = self.queueScrollView.frame.size.width * i;
+        frame.origin.y = 0;
+        frame.size = self.queueScrollView.frame.size;
+
+        UIView *view = [[UIView alloc]initWithFrame:frame];
+        view.backgroundColor = [colors objectAtIndex:i];
+        view.alpha = 0.9f;
+        [self.queueScrollView addSubview:view];
+    }
+    self.queueScrollView.contentSize = CGSizeMake(self.queueScrollView.frame.size.width * 3, self.queueScrollView.frame.size.height);
+    [self.view insertSubview:self.queueScrollView belowSubview:self.playerControlsView];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -888,6 +911,15 @@ static CGFloat kDisabledAlpha = 0.15;
         [self decloakForPreRoll:YES];
     }
     [[AudioManager shared] startStream];
+}
+
+
+#pragma mark - UIScrollViewDelegate
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
+    NSLog(@"didEndDecel");
+}
+-(void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    NSLog(@"didScroll");
 }
 
 

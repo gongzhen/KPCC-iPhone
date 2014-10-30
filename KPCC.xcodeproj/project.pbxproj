@@ -36,6 +36,7 @@
 		52D0FC3419D20D29009AECEE /* program_avatar_q-with-jian-ghomeshi@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 52D0FC2719D20D29009AECEE /* program_avatar_q-with-jian-ghomeshi@2x.png */; };
 		52D0FC3619D20D29009AECEE /* program_avatar_the-frame.png in Resources */ = {isa = PBXBuildFile; fileRef = 52D0FC2819D20D29009AECEE /* program_avatar_the-frame.png */; };
 		52D0FC3819D20D29009AECEE /* program_avatar_the-frame@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 52D0FC2919D20D29009AECEE /* program_avatar_the-frame@2x.png */; };
+		52D6B2001A02EEB90068B19A /* SCPRQueueScrollableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D6B1FF1A02EEB90068B19A /* SCPRQueueScrollableView.m */; };
 		52D9227819D366C90018AD4B /* content-share.png in Resources */ = {isa = PBXBuildFile; fileRef = 52D9227619D366C90018AD4B /* content-share.png */; };
 		52D9227A19D366C90018AD4B /* content-share@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 52D9227719D366C90018AD4B /* content-share@2x.png */; };
 		52E68B8219B8F2D10028F8AE /* SCPRNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 52E68B8019B8F2D10028F8AE /* SCPRNavigationController.m */; };
@@ -250,6 +251,8 @@
 		52D0FC2719D20D29009AECEE /* program_avatar_q-with-jian-ghomeshi@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "program_avatar_q-with-jian-ghomeshi@2x.png"; sourceTree = "<group>"; };
 		52D0FC2819D20D29009AECEE /* program_avatar_the-frame.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "program_avatar_the-frame.png"; sourceTree = "<group>"; };
 		52D0FC2919D20D29009AECEE /* program_avatar_the-frame@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "program_avatar_the-frame@2x.png"; sourceTree = "<group>"; };
+		52D6B1FE1A02EEB90068B19A /* SCPRQueueScrollableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCPRQueueScrollableView.h; sourceTree = "<group>"; };
+		52D6B1FF1A02EEB90068B19A /* SCPRQueueScrollableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SCPRQueueScrollableView.m; sourceTree = "<group>"; };
 		52D9227619D366C90018AD4B /* content-share.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "content-share.png"; sourceTree = "<group>"; };
 		52D9227719D366C90018AD4B /* content-share@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "content-share@2x.png"; sourceTree = "<group>"; };
 		52E68B7F19B8F2D10028F8AE /* SCPRNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCPRNavigationController.h; sourceTree = "<group>"; };
@@ -703,6 +706,8 @@
 				52D0FC1B19D1F24F009AECEE /* SCPRProgramDetailHeaderView.m */,
 				52D0FC1E19D1FC0C009AECEE /* SCPRProgramDetailTableViewCell.h */,
 				52D0FC1F19D1FC0C009AECEE /* SCPRProgramDetailTableViewCell.m */,
+				52D6B1FE1A02EEB90068B19A /* SCPRQueueScrollableView.h */,
+				52D6B1FF1A02EEB90068B19A /* SCPRQueueScrollableView.m */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -1212,6 +1217,7 @@
 				76A308D318C8FB940065D4B1 /* main.m in Sources */,
 				255943EA19F1A7620007294D /* SCPRJogShuttleViewController.m in Sources */,
 				52CC6D6219D100DE00C67322 /* SCPRProgramTableViewCell.m in Sources */,
+				52D6B2001A02EEB90068B19A /* SCPRQueueScrollableView.m in Sources */,
 				525C6CA419F701FA0076C13B /* TritonAd.m in Sources */,
 				76A3090418C93C880065D4B1 /* AudioManager.m in Sources */,
 				52D0FC2019D1FC0C009AECEE /* SCPRProgramDetailTableViewCell.m in Sources */,
