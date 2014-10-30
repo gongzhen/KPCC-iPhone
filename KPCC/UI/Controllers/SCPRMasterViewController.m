@@ -36,6 +36,9 @@ static CGFloat kDisabledAlpha = 0.15;
 @property IBOutlet NSLayoutConstraint *rewindHeightContraint;
 @property IBOutlet NSLayoutConstraint *programTitleYConstraint;
 
+
+- (NSDate*)cookDateForActualSchedule:(NSDate*)date;
+
 @end
 
 @implementation SCPRMasterViewController
@@ -284,9 +287,10 @@ static CGFloat kDisabledAlpha = 0.15;
                     [[AudioManager shared] seekToDate:cooked];
 #endif
                     if ( self.dirtyFromRewind ) {
-                        [[AudioManager shared] specialSeekToDate:_currentProgram.starts_at];
+                        [[AudioManager shared] specialSeekToDate:[self cookDateForActualSchedule:_currentProgram.starts_at]];
                     } else {
-                        [[AudioManager shared] seekToDate:_currentProgram.starts_at];
+
+                        [[AudioManager shared] seekToDate:[self cookDateForActualSchedule:_currentProgram.starts_at]];
                     }
                 }
                 break;
@@ -673,6 +677,18 @@ static CGFloat kDisabledAlpha = 0.15;
     scaleAnimation.toValue  = [NSValue valueWithCGSize:CGSizeMake(1.0f, 1.0f)];
     scaleAnimation.duration = 1.0;
     [self.horizDividerLine.layer pop_addAnimation:scaleAnimation forKey:@"scaleAnimation"];
+}
+
+#pragma mark - Util
+- (NSDate*)cookDateForActualSchedule:(NSDate *)date {
+    NSTimeInterval supposed = [date timeIntervalSince1970];
+    NSLog(@"Latency : %ld",(long)[[AudioManager shared] latencyCorrection]);
+    
+    long correction = [[AudioManager shared] latencyCorrection] > 0 ? [[AudioManager shared] latencyCorrection] : 0;
+    NSTimeInterval actual = supposed + ((60 * 6) - correction);
+    NSDate *actualDate = [NSDate dateWithTimeIntervalSince1970:actual];
+    
+    return actualDate;
 }
 
 

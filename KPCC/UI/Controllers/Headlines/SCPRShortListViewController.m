@@ -113,22 +113,13 @@ static NSString *kShortListMenuURL = @"http://www.scpr.org/short-list/latest";
         
         if ( !self.detailInitialLoad ) {
             self.detailInitialLoad = YES;
-  
-            SCPRAppDelegate *del = (SCPRAppDelegate*)[UIApplication sharedApplication].delegate;
-            SCPRNavigationController *navigation = [del masterNavigationController];
-            [navigation applyCustomLeftBarItem:CustomLeftBarItemPop
-                                 proxyDelegate:self];
+            
+
             
             NSString *jsonString = [self.detailWebView stringByEvaluatingJavaScriptFromString:
                                     @"document.body.innerHTML"];
             
-            [self extractTitleFromString:jsonString completed:^(id returnedObject) {
-                
-                NSLog(@"Title : %@",(NSString*)returnedObject);
-                self.cachedTitle = self.navigationItem.title;
-                self.navigationItem.title = (NSString*)returnedObject;
-                
-            }];
+
             
             POPSpringAnimation *shiftAnimation = [POPSpringAnimation animationWithPropertyNamed:kPOPScrollViewContentOffset];
             shiftAnimation.fromValue = [NSValue valueWithCGPoint:CGPointMake(0.0, self.mainScrollView.contentOffset.y)];
@@ -136,7 +127,21 @@ static NSString *kShortListMenuURL = @"http://www.scpr.org/short-list/latest";
             [shiftAnimation setSpringBounciness:10.0];
             [shiftAnimation setCompletionBlock:^(POPAnimation *anim, BOOL finished) {
 
-                
+                [self extractTitleFromString:jsonString completed:^(id returnedObject) {
+                    
+                    NSLog(@"Title : %@",(NSString*)returnedObject);
+                    self.cachedTitle = self.navigationItem.title;
+                    self.navigationItem.title = (NSString*)returnedObject;
+                    
+                    SCPRAppDelegate *del = (SCPRAppDelegate*)[UIApplication sharedApplication].delegate;
+                    SCPRNavigationController *navigation = [del masterNavigationController];
+                    
+                    [navigation applyCustomLeftBarItem:CustomLeftBarItemPop
+                                         proxyDelegate:self];
+                    self.navigationItem.leftBarButtonItem.enabled = YES;
+                    self.pushing = NO;
+                    
+                }];
 
             }];
             
@@ -168,11 +173,16 @@ static NSString *kShortListMenuURL = @"http://www.scpr.org/short-list/latest";
             if ( [str rangeOfString:@"google.com/pagead"].location != NSNotFound ) {
                 return YES;
             }
+            if ( [str rangeOfString:@"pageview?url"].location != NSNotFound ) {
+                return YES;
+            }
             if ( [str rangeOfString:@"http"].location != NSNotFound ) {
-                self.currentObjectURL = str;
-                [self.detailWebView loadRequest:request];
-                
-                
+                if ( !self.pushing ) {
+                    self.currentObjectURL = str;
+                    self.pushing = YES;
+                    self.navigationItem.leftBarButtonItem.enabled = NO;
+                    [self.detailWebView loadRequest:request];
+                }
                 return NO;
             }
             if ( [str rangeOfString:@"about:blank"].location != NSNotFound ) {
@@ -200,6 +210,9 @@ static NSString *kShortListMenuURL = @"http://www.scpr.org/short-list/latest";
 
 #pragma mark - MenuButtonDelegate
 - (void)popPressed {
+    
+    if ( self.pushing ) return;
+    
     self.popping = YES;
     SCPRAppDelegate *del = (SCPRAppDelegate*)[UIApplication sharedApplication].delegate;
     SCPRNavigationController *navigation = [del masterNavigationController];
@@ -213,6 +226,7 @@ static NSString *kShortListMenuURL = @"http://www.scpr.org/short-list/latest";
     [shiftAnimation setCompletionBlock:^(POPAnimation *anim, BOOL finished) {
         self.currentObjectURL = kShortListMenuURL;
         [self.detailWebView loadHTMLString:@"" baseURL:nil];
+        self.navigationItem.leftBarButtonItem.enabled = YES;
     }];
     [self.mainScrollView pop_addAnimation:shiftAnimation
                                    forKey:@"fauxPop"];

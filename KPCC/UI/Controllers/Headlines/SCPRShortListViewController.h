@@ -23,6 +23,6 @@
 @property BOOL detailInitialLoad;
 @property BOOL popping;
 @property BOOL finishing;
-
+@property BOOL pushing;
 
 @end

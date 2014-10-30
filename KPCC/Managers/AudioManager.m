@@ -191,7 +191,8 @@ static const NSString *ItemStatusContext;
             weakSelf.minSeekableDate = [NSDate dateWithTimeInterval:( -1 * (CMTimeGetSeconds(time) - CMTimeGetSeconds(range.start))) sinceDate:weakSelf.currentDate];
             weakSelf.maxSeekableDate = [NSDate dateWithTimeInterval:(CMTimeGetSeconds(CMTimeRangeGetEnd(range)) - CMTimeGetSeconds(time)) sinceDate:weakSelf.currentDate];
             weakSelf.latencyCorrection = [[NSDate date] timeIntervalSince1970] - [weakSelf.maxSeekableDate timeIntervalSince1970];
-            //NSLog(@"Latency : %ld",(long)weakSelf.latencyCorrection);
+            
+            //NSLog(@"Latency : %ld",(long)[[AudioManager shared] latencyCorrection]);
             
             if ([weakSelf.delegate respondsToSelector:@selector(onTimeChange)]) {
                 [weakSelf.delegate onTimeChange];
