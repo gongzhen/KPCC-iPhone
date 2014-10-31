@@ -118,9 +118,9 @@
     // Start audio playback, set OnDemand UI on master vc, and pop to it.
     //[[AudioManager shared] playAudioWithURL:[[[self.episodesList objectAtIndex:indexPath.row] audio] url]];
 
-    AudioChunk *currentSelected = [[QueueManager shared] enqueueEpisodes:self.episodesList withCurrentIndex:indexPath.row];
+    NSArray *audioChunks = [[QueueManager shared] enqueueEpisodes:self.episodesList withCurrentIndex:indexPath.row];
 
-    [[[Utils del] masterViewController] setOnDemandUI:YES withProgram:self.program andAudioChunk:currentSelected];
+    [[[Utils del] masterViewController] setOnDemandUI:YES forProgram:self.program withAudio:audioChunks atCurrentIndex:indexPath.row];
     [self.navigationController popToRootViewControllerAnimated:YES];
 }
 
