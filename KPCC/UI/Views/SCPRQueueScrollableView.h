@@ -10,4 +10,6 @@
 
 @interface SCPRQueueScrollableView : UIView
 
+@property (nonatomic,strong) UILabel *audioTitleLabel;
+
 @end

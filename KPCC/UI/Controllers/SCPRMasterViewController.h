@@ -84,7 +84,7 @@
 - (void)cloakForMenu:(BOOL)animated;
 - (void)decloakForMenu:(BOOL)animated;
 
-- (void)setOnDemandUI:(BOOL)animated withProgram:(Program*)program andAudioChunk:(AudioChunk*)audioChunk;
+- (void)setOnDemandUI:(BOOL)animated forProgram:(Program*)program withAudio:(NSArray*)array atCurrentIndex:(int)index;
 - (void)setLiveStreamingUI:(BOOL)animated;
 
 @end

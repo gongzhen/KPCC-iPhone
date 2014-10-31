@@ -24,7 +24,7 @@
 
 // Playback actions
 - (void)enqueueEpisode:(Episode *)episode;
-- (AudioChunk*)enqueueEpisodes:(NSArray *)episodes withCurrentIndex:(NSInteger)index;
+- (NSArray*)enqueueEpisodes:(NSArray *)episodes withCurrentIndex:(NSInteger)index;
 - (void)playNext;
 - (void)playPrev;
 - (void)dequeueForPlayback;

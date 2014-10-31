@@ -12,6 +12,7 @@
 #import "AFNetworking.h"
 #import "UIImageView+AFNetworking.h"
 #import "SCPRSlideInTransition.h"
+#import "SCPRQueueScrollableView.h"
 
 static NSString *kRewindingText = @"REWINDING...";
 static NSString *kForwardingText = @"GOING LIVE...";
@@ -133,21 +134,6 @@ static CGFloat kDisabledAlpha = 0.15;
     self.queueScrollView.alpha = 0.5f;
     self.queueScrollView.pagingEnabled = YES;
     self.queueScrollView.delegate = self;
-
-    // Testing ...
-    NSArray *colors = [NSArray arrayWithObjects:[UIColor redColor], [UIColor purpleColor], [UIColor blueColor], nil];
-    for (int i = 0; i < [colors count]; i++) {
-        CGRect frame;
-        frame.origin.x = self.queueScrollView.frame.size.width * i;
-        frame.origin.y = 0;
-        frame.size = self.queueScrollView.frame.size;
-
-        UIView *view = [[UIView alloc]initWithFrame:frame];
-        view.backgroundColor = [colors objectAtIndex:i];
-        view.alpha = 0.9f;
-        [self.queueScrollView addSubview:view];
-    }
-    self.queueScrollView.contentSize = CGSizeMake(self.queueScrollView.frame.size.width * 3, self.queueScrollView.frame.size.height);
     [self.view insertSubview:self.queueScrollView belowSubview:self.playerControlsView];
 }
 
@@ -599,7 +585,7 @@ static CGFloat kDisabledAlpha = 0.15;
     setForLiveStreamUI = YES;
 }
 
-- (void)setOnDemandUI:(BOOL)animated withProgram:(Program*)program andAudioChunk:(AudioChunk*)audioChunk {
+- (void)setOnDemandUI:(BOOL)animated forProgram:(Program*)program withAudio:(NSArray*)array atCurrentIndex:(int)index {
     if (self.menuOpen) {
         [self decloakForMenu:NO];
     }
@@ -608,8 +594,30 @@ static CGFloat kDisabledAlpha = 0.15;
     [self.timeLabelOnDemand setText:@""];
     [self.progressView setProgress:0.0 animated:YES];
 
+    
+    NSArray *colors = [NSArray arrayWithObjects:[UIColor redColor], [UIColor purpleColor], [UIColor blueColor], nil];
+
+    for (int i = 0; i < [array count]; i++) {
+        CGRect frame;
+        frame.origin.x = self.queueScrollView.frame.size.width * i;
+        frame.origin.y = 0;
+        frame.size = self.queueScrollView.frame.size;
+
+        SCPRQueueScrollableView *queueSubView = [[SCPRQueueScrollableView alloc] initWithFrame:frame];
+        queueSubView.backgroundColor = [colors objectAtIndex:i%3];
+        queueSubView.alpha = 0.9f;
+
+        queueSubView.audioTitleLabel = [[UILabel alloc]initWithFrame:CGRectMake(12, 60, 300, 100)];
+        queueSubView.audioTitleLabel.text = [[array objectAtIndex:i] audioTitle];
+        [queueSubView addSubview:queueSubView.audioTitleLabel];
+
+        [self.queueScrollView addSubview:queueSubView];
+    }
+    self.queueScrollView.contentSize = CGSizeMake(self.queueScrollView.frame.size.width * [array count], self.queueScrollView.frame.size.height);
+    self.queueScrollView.contentOffset = CGPointMake(self.queueScrollView.frame.size.width * index, 0);
+    
     // Update UILabels, content, etc.
-    [self setDataForOnDemand:program andAudioChunk:audioChunk];
+    [self setDataForOnDemand:program andAudioChunk:[array objectAtIndex:index]];
 
     if ([self.onDemandPlayerView isHidden]) {
         [self.onDemandPlayerView setHidden:NO];
