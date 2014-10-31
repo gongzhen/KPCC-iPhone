@@ -706,7 +706,6 @@ static CGFloat kDisabledAlpha = 0.15;
 - (NSDate*)cookDateForActualSchedule:(NSDate *)date {
     NSTimeInterval supposed = [date timeIntervalSince1970];
     NSLog(@"Latency : %ld",(long)[[AudioManager shared] latencyCorrection]);
-    
     long correction = [[AudioManager shared] latencyCorrection] > 0 ? [[AudioManager shared] latencyCorrection] : 0;
     NSTimeInterval actual = supposed + ((60 * 6) - correction);
     NSDate *actualDate = [NSDate dateWithTimeIntervalSince1970:actual];

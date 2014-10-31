@@ -41,7 +41,6 @@
     }
     
     spinner.strokeColor = [UIColor kpccOrangeColor];
-  
     spinner.view.frame = CGRectMake(0.0,
                                     0.0,
                                     26.0,
@@ -58,11 +57,7 @@
     [UIView animateWithDuration:0.33 animations:^{
         [spinner.view setAlpha:1.0];
     } completion:^(BOOL finished) {
-        
-        //dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
-            [spinner spin];
-        //});
-        
+        [spinner spin];
         if ( appeared ) {
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                 appeared();
@@ -138,6 +133,7 @@
     rotationAnimation.removedOnCompletion = YES;
     [self.view.layer addAnimation:rotationAnimation
                            forKey:@"transform.rotation.z"];
+    
 }
 
 - (void)viewDidLoad {

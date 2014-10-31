@@ -19,7 +19,7 @@
 
 @end
 
-static NSString *kShortListMenuURL = @"http://www.scpr.org/short-list/latest";
+static NSString *kShortListMenuURL = @"http://www.scpr.org/short-list/latest#no-prelims";
 
 @implementation SCPRShortListViewController
 
