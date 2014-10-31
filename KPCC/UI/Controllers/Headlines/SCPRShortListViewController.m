@@ -114,12 +114,8 @@ static NSString *kShortListMenuURL = @"http://www.scpr.org/short-list/latest#no-
         if ( !self.detailInitialLoad ) {
             self.detailInitialLoad = YES;
             
-
-            
             NSString *jsonString = [self.detailWebView stringByEvaluatingJavaScriptFromString:
                                     @"document.body.innerHTML"];
-            
-
             
             POPSpringAnimation *shiftAnimation = [POPSpringAnimation animationWithPropertyNamed:kPOPScrollViewContentOffset];
             shiftAnimation.fromValue = [NSValue valueWithCGPoint:CGPointMake(0.0, self.mainScrollView.contentOffset.y)];

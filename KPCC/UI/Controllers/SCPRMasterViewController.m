@@ -469,7 +469,6 @@ static CGFloat kDisabledAlpha = 0.15;
                 }
                 [self.liveRewindAltButton setAlpha:0.0];
                 [self.backToLiveButton setAlpha:0.0];
-                
             }
 
         } completion:^(BOOL finished) {
@@ -719,6 +718,7 @@ static CGFloat kDisabledAlpha = 0.15;
 - (void)cloakForMenu:(BOOL)animated {
     [self removeAllAnimations];
     self.navigationItem.title = @"Menu";
+    
     [self.blurView setNeedsDisplay];
 
     if (animated) {
