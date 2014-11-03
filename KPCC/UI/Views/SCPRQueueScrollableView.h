@@ -7,9 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "AudioChunk.h"
 
 @interface SCPRQueueScrollableView : UIView
 
-@property (nonatomic,strong) UILabel *audioTitleLabel;
+- (void)setAudioChunk:(AudioChunk *)audioChunk;
+- (void)setAudioTitle:(NSString *)audioTitle;
 
 @end

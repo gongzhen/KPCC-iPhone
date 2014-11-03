@@ -27,8 +27,8 @@
 - (NSArray*)enqueueEpisodes:(NSArray *)episodes withCurrentIndex:(NSInteger)index;
 - (void)playNext;
 - (void)playPrev;
+- (void)playItemAtPosition:(int)index;
 - (void)dequeueForPlayback;
-
 
 
 // Internal queue
