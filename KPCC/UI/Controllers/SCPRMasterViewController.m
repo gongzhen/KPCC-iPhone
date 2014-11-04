@@ -629,8 +629,7 @@ static CGFloat kDisabledAlpha = 0.15;
         [self.queueScrollView addSubview:queueSubView];
     }
     self.queueScrollView.contentSize = CGSizeMake(self.queueScrollView.frame.size.width * [array count], self.queueScrollView.frame.size.height);
-    self.queueScrollView.contentOffset = CGPointMake(self.queueScrollView.frame.size.width * index, 0);
-    self.queueCurrentPage = index;
+    [self setPositionForQueue:index];
 
     // Update UILabels, content, etc.
     [self setDataForOnDemand:program andAudioChunk:[array objectAtIndex:index]];
@@ -671,6 +670,14 @@ static CGFloat kDisabledAlpha = 0.15;
 
     if (audioChunk) {
         self.onDemandEpUrl = audioChunk.contentShareUrl;
+    }
+}
+
+// TODO: Need to make this prettier - used by QueueManager playNext when an episode completes.
+- (void)setPositionForQueue:(int)index {
+    if (index >= 0 && index < [self.queueScrollView.subviews count]) {
+        self.queueScrollView.contentOffset = CGPointMake(self.queueScrollView.frame.size.width * index, 0);
+        self.queueCurrentPage = index;
     }
 }
 
