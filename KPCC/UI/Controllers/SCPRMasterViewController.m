@@ -138,16 +138,13 @@ static CGFloat kDisabledAlpha = 0.15;
     self.queueScrollView.backgroundColor = [UIColor clearColor];
     self.queueScrollView.pagingEnabled = YES;
     self.queueScrollView.delegate = self;
-<<<<<<< HEAD
-    [self.view insertSubview:self.queueScrollView belowSubview:self.playerControlsView];
-    
+
 
     [self.view bringSubviewToFront:self.playerControlsView];
     
-=======
     self.queueScrollView.hidden = YES;
     [self.view insertSubview:self.queueScrollView belowSubview:self.initialControlsView];
->>>>>>> ad0eb3a520092899552264266678dd6de2c63ba8
+
 }
 
 - (void)viewWillAppear:(BOOL)animated {
