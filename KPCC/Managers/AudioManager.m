@@ -335,10 +335,12 @@ static const NSString *ItemStatusContext;
 }
 
 - (void)playerItemDidFinishPlaying:(NSNotification *)notification {
-    NSError *error = notification.userInfo[AVPlayerItemDidPlayToEndTimeNotification];
-    NSLog(@"playerItemDidFinishPlaying! --- %@", error);
-
-    [[NSNotificationCenter defaultCenter] removeObserver:self.playerItem forKeyPath:AVPlayerItemDidPlayToEndTimeNotification];
+    @try {
+        [[NSNotificationCenter defaultCenter] removeObserver:self.playerItem forKeyPath:AVPlayerItemDidPlayToEndTimeNotification];
+    } @catch (NSException *exception) {
+        // Wasn't necessary
+        NSLog(@"Exception - failed to remove AVPlayerItemDidPlayToEndTimeNotification");
+    }
 
     if ( ![[QueueManager shared]isQueueEmpty] ) {
         [[QueueManager shared] playNext];
