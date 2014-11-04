@@ -18,6 +18,7 @@
             self.audioTitle = episode.title;
             self.programTitle = episode.programName;
             self.contentShareUrl = episode.publicUrl;
+            self.audioTimeStamp = episode.airDate;
             self.type = AudioTypeEpisode;
         }
     }
@@ -32,6 +33,7 @@
             self.audioTitle = segment.title;
             self.programTitle = segment.programName;
             self.contentShareUrl = segment.publicUrl;
+            self.audioTimeStamp = segment.publishedAt;
             self.type = AudioTypeSegment;
         }
     }

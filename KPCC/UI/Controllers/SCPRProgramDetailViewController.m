@@ -120,7 +120,7 @@
 
     NSArray *audioChunks = [[QueueManager shared] enqueueEpisodes:self.episodesList withCurrentIndex:indexPath.row];
 
-    [[[Utils del] masterViewController] setOnDemandUI:YES forProgram:self.program withAudio:audioChunks atCurrentIndex:indexPath.row];
+    [[[Utils del] masterViewController] setOnDemandUI:YES forProgram:self.program withAudio:audioChunks atCurrentIndex:(int)indexPath.row];
     [self.navigationController popToRootViewControllerAnimated:YES];
 }
 

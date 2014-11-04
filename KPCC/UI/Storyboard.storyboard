@@ -149,7 +149,7 @@
                                         <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Ishmael Butler, Allison Janney, Michel Gondry, Really Damn Long Title to See How Shrinking Works Here Please" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" minimumFontSize="22" translatesAutoresizingMaskIntoConstraints="NO" id="n04-am-s1L" userLabel="EpisodeTitleOnDemand">
+                                    <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Ishmael Butler, Allison Janney, Michel Gondry, Really Damn Long Title to See How Shrinking Works Here Please" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" minimumFontSize="22" translatesAutoresizingMaskIntoConstraints="NO" id="n04-am-s1L" userLabel="EpisodeTitleOnDemand">
                                         <rect key="frame" x="15" y="40" width="290" height="61"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="61" id="5IM-tt-niZ"/>
@@ -256,39 +256,12 @@
                                 <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="wordWrap" translatesAutoresizingMaskIntoConstraints="NO" id="pG4-q2-eRk">
-                                <rect key="frame" x="12" y="270" width="77" height="37"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="37" id="6mY-1Z-CRe"/>
-                                    <constraint firstAttribute="width" constant="77" id="ZKM-n5-lMP"/>
-                                </constraints>
-                                <state key="normal" title="Previous Episode">
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <action selector="prevEpisodeTapped:" destination="4pL-7p-2vt" eventType="touchUpInside" id="4b7-cN-4lZ"/>
-                                </connections>
-                            </button>
-                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="wordWrap" translatesAutoresizingMaskIntoConstraints="NO" id="Unq-WR-Zqc">
-                                <rect key="frame" x="241" y="270" width="77" height="37"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="37" id="877-VN-Yk9"/>
-                                    <constraint firstAttribute="width" constant="77" id="b0k-Ga-WIv"/>
-                                </constraints>
-                                <state key="normal" title="Next Episode">
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <action selector="nextEpisodeTapped:" destination="4pL-7p-2vt" eventType="touchUpInside" id="UQB-HH-GDg"/>
-                                </connections>
-                            </button>
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstAttribute="centerX" secondItem="jYj-xG-3QJ" secondAttribute="centerX" id="1Qw-P2-Xzc"/>
                             <constraint firstItem="LAZ-J2-lj5" firstAttribute="top" secondItem="QEk-eP-ZIb" secondAttribute="top" id="2rD-Gk-vaW"/>
                             <constraint firstAttribute="height" secondItem="Syv-nA-vpR" secondAttribute="height" constant="64" id="4XW-Mk-hAP"/>
-                            <constraint firstItem="pG4-q2-eRk" firstAttribute="leading" secondItem="QEk-eP-ZIb" secondAttribute="leading" constant="12" id="4Zz-dq-8nP"/>
                             <constraint firstAttribute="trailing" secondItem="Duc-cQ-dAe" secondAttribute="trailing" constant="10" id="7Pg-Sc-hjW"/>
                             <constraint firstItem="sYL-12-Hgi" firstAttribute="width" secondItem="QEk-eP-ZIb" secondAttribute="width" id="7Xl-Lo-p81"/>
                             <constraint firstItem="LAZ-J2-lj5" firstAttribute="bottom" secondItem="Npf-rN-6R5" secondAttribute="top" id="8aw-hr-XxT"/>
@@ -300,7 +273,6 @@
                             <constraint firstItem="Q1h-II-U3Q" firstAttribute="leading" secondItem="QEk-eP-ZIb" secondAttribute="leading" constant="15" id="Eop-k1-SEc"/>
                             <constraint firstItem="Duc-cQ-dAe" firstAttribute="bottom" secondItem="PxA-Ic-P9n" secondAttribute="bottom" id="ExM-X4-m8a"/>
                             <constraint firstItem="3WP-os-1RZ" firstAttribute="centerY" secondItem="LAZ-J2-lj5" secondAttribute="centerY" constant="22" id="FMM-DK-0gY"/>
-                            <constraint firstAttribute="centerY" secondItem="pG4-q2-eRk" secondAttribute="centerY" constant="-4.5" id="FeR-KI-csl"/>
                             <constraint firstAttribute="width" secondItem="jYj-xG-3QJ" secondAttribute="width" id="IkI-zD-ilX"/>
                             <constraint firstAttribute="trailing" secondItem="PxA-Ic-P9n" secondAttribute="trailing" constant="10" id="Jeq-V7-hnS"/>
                             <constraint firstItem="3WP-os-1RZ" firstAttribute="trailing" secondItem="Qkn-sg-4PL" secondAttribute="trailing" id="LrR-zz-UkH"/>
@@ -315,12 +287,9 @@
                             <constraint firstItem="sYL-12-Hgi" firstAttribute="height" secondItem="QEk-eP-ZIb" secondAttribute="height" id="Zdh-QH-ghl"/>
                             <constraint firstItem="Syv-nA-vpR" firstAttribute="top" secondItem="f6n-R2-H79" secondAttribute="bottom" id="asI-dR-Qyi"/>
                             <constraint firstItem="Duc-cQ-dAe" firstAttribute="leading" secondItem="QEk-eP-ZIb" secondAttribute="leading" constant="10" id="eie-Ai-gCk"/>
-                            <constraint firstAttribute="centerY" secondItem="Unq-WR-Zqc" secondAttribute="centerY" constant="-4.5" id="fGV-5g-YWe"/>
                             <constraint firstItem="Npf-rN-6R5" firstAttribute="top" secondItem="Duc-cQ-dAe" secondAttribute="bottom" constant="183" id="kAK-pi-Z6e"/>
-                            <constraint firstAttribute="trailing" secondItem="Unq-WR-Zqc" secondAttribute="trailing" constant="2" id="kEZ-Jj-TSg"/>
                             <constraint firstItem="jYj-xG-3QJ" firstAttribute="bottom" secondItem="Npf-rN-6R5" secondAttribute="top" id="nL6-Jc-dhE"/>
                             <constraint firstItem="Npf-rN-6R5" firstAttribute="top" secondItem="m78-b6-vle" secondAttribute="bottom" id="qqA-NQ-5yM"/>
-                            <constraint firstItem="3WP-os-1RZ" firstAttribute="leading" secondItem="pG4-q2-eRk" secondAttribute="trailing" constant="1" id="rwY-Nu-nQA"/>
                             <constraint firstItem="PxA-Ic-P9n" firstAttribute="leading" secondItem="QEk-eP-ZIb" secondAttribute="leading" constant="10" id="sJk-nM-KO1"/>
                             <constraint firstItem="3WP-os-1RZ" firstAttribute="centerX" secondItem="sYL-12-Hgi" secondAttribute="centerX" id="tWf-LP-TMA"/>
                             <constraint firstItem="3WP-os-1RZ" firstAttribute="centerY" secondItem="sYL-12-Hgi" secondAttribute="centerY" constant="22" id="tWk-2A-tdj"/>
@@ -346,13 +315,11 @@
                         <outlet property="liveDescriptionLabel" destination="g8v-J1-2Ng" id="sUp-r5-wI2"/>
                         <outlet property="liveRewindAltButton" destination="TfG-Pl-Djp" id="cmL-9t-cLA"/>
                         <outlet property="liveStreamView" destination="m78-b6-vle" id="Nzq-R7-aId"/>
-                        <outlet property="nextEpisodeButton" destination="Unq-WR-Zqc" id="PSo-oW-qwu"/>
                         <outlet property="onDemandPlayerView" destination="Syv-nA-vpR" id="ggY-CP-sW5"/>
                         <outlet property="playPauseButton" destination="pSM-s0-r5H" id="ZeI-Th-4ug"/>
                         <outlet property="playerControlsBottomYConstraint" destination="SWV-t1-YPf" id="H3o-rj-vjI"/>
                         <outlet property="playerControlsTopYConstraint" destination="Ucl-Cx-Se6" id="3O4-L7-YUZ"/>
                         <outlet property="playerControlsView" destination="Qkn-sg-4PL" id="WVU-af-QdV"/>
-                        <outlet property="prevEpisodeButton" destination="pG4-q2-eRk" id="DpM-CU-p50"/>
                         <outlet property="programImageView" destination="jYj-xG-3QJ" id="XVU-26-yf0"/>
                         <outlet property="programTitleLabel" destination="ao2-yr-kyf" id="BIo-g3-SA9"/>
                         <outlet property="programTitleOnDemand" destination="mV9-FT-8sm" id="NhA-77-wox"/>

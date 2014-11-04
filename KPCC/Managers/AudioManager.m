@@ -395,13 +395,14 @@ static const NSString *ItemStatusContext;
     NSError *error = notification.userInfo[AVPlayerItemDidPlayToEndTimeNotification];
     NSLog(@"playerItemDidFinishPlaying! --- %@", [error localizedDescription]);
 
-//    [self takedownAudioPlayer];
-//    [self buildStreamer:kHLSLiveStreamURL];
-//    [self startStream];
     [[NSNotificationCenter defaultCenter] removeObserver:self.playerItem forKeyPath:AVPlayerItemDidPlayToEndTimeNotification];
 
     if ( ![[QueueManager shared]isQueueEmpty] ) {
-        [[QueueManager shared] dequeueForPlayback];
+        [[QueueManager shared] playNext];
+    } else {
+        [self takedownAudioPlayer];
+        [self buildStreamer:kHLSLiveStreamURL];
+        [self startStream];
     }
 }
 

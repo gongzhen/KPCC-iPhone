@@ -46,18 +46,22 @@ static QueueManager *singleton = nil;
 - (NSArray*)enqueueEpisodes:(NSArray *)episodes withCurrentIndex:(NSInteger)index {
     [self clearQueue];
 
-    NSArray *audioChunks;
     for (int i = 0; i < [episodes count]; i++) {
-        if ([[episodes objectAtIndex:i] audio]) {
-            AudioChunk *chunk = [[AudioChunk alloc] initWithEpisode:[episodes objectAtIndex:i]];
-            if (i == index) {
-                [[AudioManager shared] playAudioWithURL:chunk.audioUrl];
-                self.currentlyPlayingIndex = index;
-            }
-            [self enqueue:chunk];
+        AudioChunk *chunk;
+        if ([[episodes objectAtIndex:i] class] == [Episode class]) {
+            chunk = [[AudioChunk alloc] initWithEpisode:[episodes objectAtIndex:i]];
+        } else if ([[episodes objectAtIndex:i] class] == [Segment class]) {
+            chunk = [[AudioChunk alloc] initWithSegment:[episodes objectAtIndex:i]];
+        }
+        [self enqueue:chunk];
+
+        if (i == index && chunk != nil) {
+            [[AudioManager shared] playAudioWithURL:chunk.audioUrl];
+            self.currentlyPlayingIndex = index;
         }
     }
-    audioChunks = self.queue;
+
+    NSArray *audioChunks = self.queue;
     return audioChunks;
 }
 
@@ -65,7 +69,7 @@ static QueueManager *singleton = nil;
     if (![self isQueueEmpty]) {
         if (self.currentlyPlayingIndex + 1 < [self.queue count]) {
             AudioChunk *chunk = [self.queue objectAtIndex:self.currentlyPlayingIndex + 1];
-            [[AudioManager shared] playAudioWithURL:chunk.audioUrl];
+            [[AudioManager shared] playQueueItemWithUrl:chunk.audioUrl];
             self.currentlyPlayingIndex += 1;
             //[[[Utils del] masterViewController] setOnDemandUI:YES withProgram:nil andAudioChunk:chunk];
         }
@@ -76,9 +80,19 @@ static QueueManager *singleton = nil;
     if (![self isQueueEmpty]) {
         if (self.currentlyPlayingIndex > 0) {
             AudioChunk *chunk = [self.queue objectAtIndex:self.currentlyPlayingIndex - 1];
-            [[AudioManager shared] playAudioWithURL:chunk.audioUrl];
+            [[AudioManager shared] playQueueItemWithUrl:chunk.audioUrl];
             self.currentlyPlayingIndex -= 1;
             //[[[Utils del] masterViewController] setOnDemandUI:YES withProgram:nil andAudioChunk:chunk];
+        }
+    }
+}
+
+- (void)playItemAtPosition:(int)index {
+    if (![self isQueueEmpty]) {
+        if (index >= 0 && index < [self.queue count]) {
+            AudioChunk *chunk = [self.queue objectAtIndex:index];
+            [[AudioManager shared] playQueueItemWithUrl:chunk.audioUrl];
+            self.currentlyPlayingIndex = index;
         }
     }
 }

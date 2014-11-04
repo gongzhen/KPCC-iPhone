@@ -134,16 +134,20 @@ static CGFloat kDisabledAlpha = 0.15;
     [self.jogShuttle prepare];
 
     // Scroll view for audio queue
-    self.queueScrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 64, self.view.frame.size.width, self.progressView.frame.origin.y - 64)];
-    self.queueScrollView.backgroundColor = [UIColor greenColor];
-    self.queueScrollView.alpha = 0.5f;
+    self.queueScrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 64, self.view.frame.size.width, self.timeLabelOnDemand.frame.origin.y - 64)];
+    self.queueScrollView.backgroundColor = [UIColor clearColor];
     self.queueScrollView.pagingEnabled = YES;
     self.queueScrollView.delegate = self;
+<<<<<<< HEAD
     [self.view insertSubview:self.queueScrollView belowSubview:self.playerControlsView];
     
 
     [self.view bringSubviewToFront:self.playerControlsView];
     
+=======
+    self.queueScrollView.hidden = YES;
+    [self.view insertSubview:self.queueScrollView belowSubview:self.initialControlsView];
+>>>>>>> ad0eb3a520092899552264266678dd6de2c63ba8
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -588,10 +592,10 @@ static CGFloat kDisabledAlpha = 0.15;
     if (![self.progressView isHidden]) {
         [self.progressView setHidden:YES];
     }
-
-    // For testing audio queue...
-    [self.prevEpisodeButton setHidden:YES];
-    [self.nextEpisodeButton setHidden:YES];
+    
+    if (![self.queueScrollView isHidden]) {
+        [self.queueScrollView setHidden:YES];
+    }
 
     setForLiveStreamUI = YES;
 }
@@ -605,9 +609,10 @@ static CGFloat kDisabledAlpha = 0.15;
     [self.timeLabelOnDemand setText:@""];
     [self.progressView setProgress:0.0 animated:YES];
 
-    
-    NSArray *colors = [NSArray arrayWithObjects:[UIColor redColor], [UIColor purpleColor], [UIColor blueColor], nil];
-
+    for (UIView *v in [self.queueScrollView subviews]) {
+        [v removeFromSuperview];
+    }
+    [self.queueScrollView setHidden:NO];
     for (int i = 0; i < [array count]; i++) {
         CGRect frame;
         frame.origin.x = self.queueScrollView.frame.size.width * i;
@@ -615,18 +620,15 @@ static CGFloat kDisabledAlpha = 0.15;
         frame.size = self.queueScrollView.frame.size;
 
         SCPRQueueScrollableView *queueSubView = [[SCPRQueueScrollableView alloc] initWithFrame:frame];
-        queueSubView.backgroundColor = [colors objectAtIndex:i%3];
-        queueSubView.alpha = 0.9f;
 
-        queueSubView.audioTitleLabel = [[UILabel alloc]initWithFrame:CGRectMake(12, 60, 300, 100)];
-        queueSubView.audioTitleLabel.text = [[array objectAtIndex:i] audioTitle];
-        [queueSubView addSubview:queueSubView.audioTitleLabel];
+        [queueSubView setAudioChunk:[array objectAtIndex:i]];
 
         [self.queueScrollView addSubview:queueSubView];
     }
     self.queueScrollView.contentSize = CGSizeMake(self.queueScrollView.frame.size.width * [array count], self.queueScrollView.frame.size.height);
     self.queueScrollView.contentOffset = CGPointMake(self.queueScrollView.frame.size.width * index, 0);
-    
+    self.queueCurrentPage = index;
+
     // Update UILabels, content, etc.
     [self setDataForOnDemand:program andAudioChunk:[array objectAtIndex:index]];
 
@@ -646,10 +648,6 @@ static CGFloat kDisabledAlpha = 0.15;
     if ([self.progressView isHidden]) {
         [self.progressView setHidden:NO];
     }
-
-    // For testing audio queue...
-    [self.prevEpisodeButton setHidden:NO];
-    [self.nextEpisodeButton setHidden:NO];
 
     setForOnDemandUI = YES;
 }
@@ -696,6 +694,7 @@ static CGFloat kDisabledAlpha = 0.15;
     initialControlsFade.toValue = @(0);
     initialControlsFade.duration = 0.3;
     [self.initialPlayButton.layer pop_addAnimation:initialControlsFade forKey:@"initialControlsFadeAnimation"];
+    [self.initialControlsView setHidden:YES];
 
     POPBasicAnimation *bottomAnim = [POPBasicAnimation animationWithPropertyNamed:kPOPLayoutConstraintConstant];
     bottomAnim.toValue = @(50);
@@ -739,10 +738,7 @@ static CGFloat kDisabledAlpha = 0.15;
         onDemandElementsFade.duration = 0.3;
         [self.timeLabelOnDemand.layer pop_addAnimation:onDemandElementsFade forKey:@"timeLabelFadeAnimation"];
         [self.progressView.layer pop_addAnimation:onDemandElementsFade forKey:@"progressBarFadeAnimation"];
-
-        // For testing audio queue...
-        [self.prevEpisodeButton setHidden:YES];
-        [self.nextEpisodeButton setHidden:YES];
+        [self.queueScrollView.layer pop_addAnimation:onDemandElementsFade forKey:@"queueScrollViewFadeAnimation"];
     }
 
     POPBasicAnimation *blurFadeAnimation = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
@@ -797,10 +793,7 @@ static CGFloat kDisabledAlpha = 0.15;
         onDemandElementsFade.duration = 0.3;
         [self.timeLabelOnDemand.layer pop_addAnimation:onDemandElementsFade forKey:@"timeLabelFadeAnimation"];
         [self.progressView.layer pop_addAnimation:onDemandElementsFade forKey:@"progressBarFadeAnimation"];
-
-        // For testing audio queue...
-        [self.prevEpisodeButton setHidden:NO];
-        [self.nextEpisodeButton setHidden:NO];
+        [self.queueScrollView.layer pop_addAnimation:onDemandElementsFade forKey:@"queueScrollViewFadeInAnimation"];
     }
 
     POPBasicAnimation *fadeAnimation = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
@@ -843,6 +836,7 @@ static CGFloat kDisabledAlpha = 0.15;
     [self.horizDividerLine.layer pop_removeAllAnimations];
     [self.timeLabelOnDemand.layer pop_removeAllAnimations];
     [self.progressView.layer pop_removeAllAnimations];
+    [self.queueScrollView.layer pop_removeAllAnimations];
 }
 
 
@@ -940,7 +934,13 @@ static CGFloat kDisabledAlpha = 0.15;
 
 #pragma mark - UIScrollViewDelegate
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
-    NSLog(@"didEndDecel");
+    NSLog(@"didEndDecel, currentPage: %f", scrollView.contentOffset.x / scrollView.frame.size.width);
+
+    int newPage = scrollView.contentOffset.x / scrollView.frame.size.width;
+    if (self.queueCurrentPage != newPage) {
+        [[QueueManager shared] playItemAtPosition:newPage];
+        self.queueCurrentPage = newPage;
+    }
 }
 -(void)scrollViewDidScroll:(UIScrollView *)scrollView {
     NSLog(@"didScroll");

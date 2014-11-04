@@ -24,6 +24,7 @@ typedef NS_ENUM(NSUInteger, AudioType) {
 @property (nonatomic,strong) NSString *audioTitle;
 @property (nonatomic,strong) NSString *programTitle;
 @property (nonatomic,strong) NSString *contentShareUrl;
+@property (nonatomic,strong) NSDate *audioTimeStamp;
 
 @property AudioType type;
 
