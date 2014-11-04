@@ -31,6 +31,7 @@ static CGFloat kDisabledAlpha = 0.15;
 @property BOOL setForLiveStreamUI;
 @property BOOL setForOnDemandUI;
 @property BOOL dirtyFromRewind;
+@property BOOL queueBlurShown;
 
 @property IBOutlet NSLayoutConstraint *playerControlsTopYConstraint;
 @property IBOutlet NSLayoutConstraint *playerControlsBottomYConstraint;
@@ -133,7 +134,7 @@ static CGFloat kDisabledAlpha = 0.15;
     self.jogShuttle.view.alpha = 0.0;
     [self.jogShuttle prepare];
 
-    // Scroll view for audio queue
+    // Views for audio queue
     self.queueScrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 64, self.view.frame.size.width, self.timeLabelOnDemand.frame.origin.y - 64)];
     self.queueScrollView.backgroundColor = [UIColor clearColor];
     self.queueScrollView.pagingEnabled = YES;
@@ -145,6 +146,12 @@ static CGFloat kDisabledAlpha = 0.15;
     self.queueScrollView.hidden = YES;
     [self.view insertSubview:self.queueScrollView belowSubview:self.initialControlsView];
 
+    [self.queueBlurView setAlpha:0.0];
+    [self.queueBlurView setTintColor:[UIColor clearColor]];
+    [self.queueBlurView setBlurRadius:20.0f];
+    [self.queueBlurView setDynamic:NO];
+
+    [self.queueDarkBgView setAlpha:0.0];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -617,7 +624,6 @@ static CGFloat kDisabledAlpha = 0.15;
         frame.size = self.queueScrollView.frame.size;
 
         SCPRQueueScrollableView *queueSubView = [[SCPRQueueScrollableView alloc] initWithFrame:frame];
-
         [queueSubView setAudioChunk:[array objectAtIndex:i]];
 
         [self.queueScrollView addSubview:queueSubView];
@@ -665,7 +671,6 @@ static CGFloat kDisabledAlpha = 0.15;
 
     if (audioChunk) {
         self.onDemandEpUrl = audioChunk.contentShareUrl;
-        [self.episodeTitleOnDemand setText:audioChunk.audioTitle];
     }
 }
 
@@ -937,10 +942,32 @@ static CGFloat kDisabledAlpha = 0.15;
     if (self.queueCurrentPage != newPage) {
         [[QueueManager shared] playItemAtPosition:newPage];
         self.queueCurrentPage = newPage;
+
+        if (self.queueBlurShown) {
+            NSLog(@"blurring for queue");
+            [self.queueBlurView setNeedsDisplay];
+            [UIView animateWithDuration:0.3 delay:0. options:UIViewAnimationOptionCurveEaseInOut animations:^{
+                self.queueBlurView.alpha = 0.0;
+                self.queueDarkBgView.alpha = 0.0;
+            } completion:^(BOOL finished) {
+                self.queueBlurShown = NO;
+            }];
+        }
     }
 }
--(void)scrollViewDidScroll:(UIScrollView *)scrollView {
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     NSLog(@"didScroll");
+    if (!self.queueBlurShown) {
+        NSLog(@"blurring for queue");
+        [self.queueBlurView setNeedsDisplay];
+        [UIView animateWithDuration:0.3 delay:0. options:UIViewAnimationOptionCurveEaseInOut animations:^{
+            self.queueBlurView.alpha = 1.0;
+            self.queueDarkBgView.alpha = 0.35;
+        } completion:^(BOOL finished) {
+            self.queueBlurShown = YES;
+        }];
+    }
 }
 
 
@@ -1092,6 +1119,7 @@ static CGFloat kDisabledAlpha = 0.15;
                                         andImageView:self.programImageView
                                           completion:^(BOOL status) {
                                               [self.blurView setNeedsDisplay];
+                                              [self.queueBlurView setNeedsDisplay];
                                           }];
         }
 
