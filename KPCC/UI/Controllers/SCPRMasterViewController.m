@@ -14,6 +14,7 @@
 #import "SCPRSlideInTransition.h"
 #import "SCPRShortListViewController.h"
 #import "SCPRQueueScrollableView.h"
+#import "NSDate+Helper.h"
 
 static NSString *kRewindingText = @"REWINDING...";
 static NSString *kForwardingText = @"GOING LIVE...";
@@ -38,7 +39,7 @@ static CGFloat kDisabledAlpha = 0.15;
 @property IBOutlet NSLayoutConstraint *programTitleYConstraint;
 
 
-- (NSDate*)cookDateForActualSchedule:(NSDate*)date;
+
 
 @end
 
@@ -139,6 +140,10 @@ static CGFloat kDisabledAlpha = 0.15;
     self.queueScrollView.pagingEnabled = YES;
     self.queueScrollView.delegate = self;
     [self.view insertSubview:self.queueScrollView belowSubview:self.playerControlsView];
+    
+
+    [self.view bringSubviewToFront:self.playerControlsView];
+    
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -276,6 +281,9 @@ static CGFloat kDisabledAlpha = 0.15;
                                [[AudioManager shared] adjustAudioWithValue:0.1 completion:^{
                                    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                                         self.rewindGate = NO;
+                                       [self.liveStreamView bringSubviewToFront:self.backToLiveButton];
+                                       [self.view bringSubviewToFront:self.liveStreamView];
+                                       
                                    });
                                }];
                                 
@@ -296,10 +304,9 @@ static CGFloat kDisabledAlpha = 0.15;
                     [[AudioManager shared] seekToDate:cooked];
 #endif
                     if ( self.dirtyFromRewind ) {
-                        [[AudioManager shared] specialSeekToDate:[self cookDateForActualSchedule:_currentProgram.starts_at]];
+                        [[AudioManager shared] specialSeekToDate:[[AudioManager shared] cookDateForActualSchedule:_currentProgram.starts_at]];
                     } else {
-
-                        [[AudioManager shared] seekToDate:[self cookDateForActualSchedule:_currentProgram.starts_at]];
+                        [[AudioManager shared] seekToDate:[[AudioManager shared] cookDateForActualSchedule:_currentProgram.starts_at]];
                     }
                 }
                 break;
@@ -338,7 +345,7 @@ static CGFloat kDisabledAlpha = 0.15;
                                }
                                
                                [[AudioManager shared] adjustAudioWithValue:0.1 completion:^{
-                                   
+                                   [self.view bringSubviewToFront:self.playerControlsView];
                                }];
                            }];
     
@@ -459,9 +466,9 @@ static CGFloat kDisabledAlpha = 0.15;
 
         } completion:^(BOOL finished) {
             if ([[AudioManager shared] isStreamPlaying] || [[AudioManager shared] isStreamBuffering]) {
-                [self.playPauseButton setImage:[UIImage imageNamed:@"btn_pause"] forState:UIControlStateNormal];
+                [self.playPauseButton setImage:[UIImage imageNamed:@"btn_pause.png"] forState:UIControlStateNormal];
             } else {
-                [self.playPauseButton setImage:[UIImage imageNamed:@"btn_play"] forState:UIControlStateNormal];
+                [self.playPauseButton setImage:[UIImage imageNamed:@"btn_play.png"] forState:UIControlStateNormal];
             }
 
             // Leave this out for now.
@@ -490,9 +497,9 @@ static CGFloat kDisabledAlpha = 0.15;
         }
 
         if ([[AudioManager shared] isStreamPlaying] || [[AudioManager shared] isStreamBuffering]) {
-            [self.playPauseButton setImage:[UIImage imageNamed:@"btn_pause"] forState:UIControlStateNormal];
+            [self.playPauseButton setImage:[UIImage imageNamed:@"btn_pause.png"] forState:UIControlStateNormal];
         } else {
-            [self.playPauseButton setImage:[UIImage imageNamed:@"btn_play_large"] forState:UIControlStateNormal];
+            [self.playPauseButton setImage:[UIImage imageNamed:@"btn_play.png"] forState:UIControlStateNormal];
         }
     }
 }
@@ -652,7 +659,6 @@ static CGFloat kDisabledAlpha = 0.15;
         self.onDemandProgram = program;
 
         [[AudioManager shared] updateNowPlayingInfoWithAudio:audioChunk];
-
         [[DesignManager shared] loadProgramImage:program.program_slug
                                     andImageView:self.programImageView
                                       completion:^(BOOL status) {
@@ -710,15 +716,7 @@ static CGFloat kDisabledAlpha = 0.15;
 }
 
 #pragma mark - Util
-- (NSDate*)cookDateForActualSchedule:(NSDate *)date {
-    NSTimeInterval supposed = [date timeIntervalSince1970];
-    NSLog(@"Latency : %ld",(long)[[AudioManager shared] latencyCorrection]);
-    long correction = [[AudioManager shared] latencyCorrection] > 0 ? [[AudioManager shared] latencyCorrection] : 0;
-    NSTimeInterval actual = supposed + ((60 * 6) - correction);
-    NSDate *actualDate = [NSDate dateWithTimeIntervalSince1970:actual];
-    
-    return actualDate;
-}
+
 
 
 #pragma mark - Menu control
@@ -934,6 +932,8 @@ static CGFloat kDisabledAlpha = 0.15;
     if (self.preRollOpen) {
         [self decloakForPreRoll:YES];
     }
+    
+    [[AudioManager shared] takedownAudioPlayer];
     [[AudioManager shared] startStream];
 }
 
@@ -1012,14 +1012,11 @@ static CGFloat kDisabledAlpha = 0.15;
     
     NSAssert([NSThread isMainThread],@"This is not the main thread...");
     
-    if ([[[AudioManager shared] maxSeekableDate] timeIntervalSinceDate:[[AudioManager shared] currentDate]] > 60 ) {
+    NSTimeInterval drift = [[[AudioManager shared] maxSeekableDate] timeIntervalSinceDate:[[AudioManager shared] currentDate]];
+    if ( drift > 60 && ![[AudioManager shared] isStreamBuffering] ) {
         
         NSTimeInterval ti = [[[AudioManager shared] maxSeekableDate] timeIntervalSinceDate:[[AudioManager shared] currentDate]];
-        ti += [[AudioManager shared] latencyCorrection];
-        
-        NSInteger mins = (ti/60);
-
-        [self.liveDescriptionLabel fadeText:[NSString stringWithFormat:@"%li MINUTES BEHIND LIVE", (long)mins]];
+        [self.liveDescriptionLabel fadeText:[NSString stringWithFormat:@"%@ BEHIND LIVE", [NSDate prettyTextFromSeconds:ti]]];
         [self.backToLiveButton setHidden:NO];
         
         
@@ -1040,9 +1037,12 @@ static CGFloat kDisabledAlpha = 0.15;
         [self.backToLiveButton setHidden:YES];
         self.liveRewindAltButton.userInteractionEnabled = YES;
         self.dirtyFromRewind = NO;
-        [UIView animateWithDuration:0.33 animations:^{
-            [self.liveRewindAltButton setAlpha:1.0];
-        }];
+        
+        if ( ![[AudioManager shared] isStreamBuffering] ) {
+            [UIView animateWithDuration:0.33 animations:^{
+                [self.liveRewindAltButton setAlpha:1.0];
+            }];
+        }
     }
 
     if (setForOnDemandUI) {

@@ -38,5 +38,7 @@
 - (BOOL)isExpired;
 - (BOOL)isOlderThanInSeconds:(NSInteger)secondsAgo;
 - (NSInteger)secondsUntil;
++ (NSString*)prettyTextFromSeconds:(NSInteger)seconds;
+- (NSString*)prettyTimeString;
 
 @end

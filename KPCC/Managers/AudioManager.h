@@ -68,13 +68,16 @@ typedef enum {
 @property NSDate *currentDate;
 @property NSDate *minSeekableDate;
 @property NSDate *maxSeekableDate;
+@property NSDate *requestedSeekDate;
 
 @property long latencyCorrection;
 
 @property (strong,nonatomic) NSDateFormatter *dateFormatter;
 @property (nonatomic,strong) NSOperationQueue *fadeQueue;
-@property CGFloat savedVolume;
+@property long bufferObservationCount;
 
+@property CGFloat savedVolume;
+@property BOOL bufferMutex;
 
 - (void)playAudioWithURL:(NSString *)url;
 - (void)playQueueItemWithUrl:(NSString *)url;
@@ -105,5 +108,15 @@ typedef enum {
 - (void)analyzeStreamError:(NSString*)comments;
 - (void)adjustAudioWithValue:(CGFloat)increment completion:(void (^)(void))completion;
 - (void)threadedAdjustWithValue:(CGFloat)increment completion:(void (^)(void))completion;
+- (void)takedownAudioPlayer;
+
+- (NSDate*)cookDateForActualSchedule:(NSDate*)date;
+
+#ifdef DEBUG
+@property long frame;
+@property (nonatomic,strong) NSDate *previousCD;
+- (void)dump:(BOOL)superVerbose;
+- (void)streamFrame;
+#endif
 
 @end

@@ -1394,6 +1394,7 @@
 					"DEBUG=1",
 					"$(inherited)",
 					ENABLE_TESTFLIGHT,
+					"VERBOSE_STREAM_LOGGING=1",
 				);
 				INFOPLIST_FILE = "KPCC/KPCC-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
