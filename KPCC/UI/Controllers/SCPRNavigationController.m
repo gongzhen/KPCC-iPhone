@@ -14,6 +14,7 @@
 
 @interface SCPRNavigationController ()
 @property(nonatomic) BOOL menuOpen;
+@property (nonatomic, weak) id<MenuButtonDelegate> proxyDelegate;
 @end
 
 @implementation SCPRNavigationController
@@ -48,6 +49,21 @@
 
     for (UIViewController* viewController in self.viewControllers){
         [self addButton:viewController.navigationItem];
+    }
+}
+
+- (void)applyCustomLeftBarItem:(CustomLeftBarItem)leftBarItemType proxyDelegate:(id<MenuButtonDelegate>)proxyDelegate {
+    self.proxyDelegate = proxyDelegate;
+    if ( leftBarItemType == CustomLeftBarItemPop ) {
+        [menuButton animateToPop:proxyDelegate];
+    }
+}
+
+- (void)restoreLeftBarItem:(id<MenuButtonDelegate>)proxyDelegate {
+    if ( proxyDelegate == self.proxyDelegate ) {
+        [menuButton animateToBack];
+        [menuButton setProxyDelegate:nil];
+        self.proxyDelegate = nil;
     }
 }
 

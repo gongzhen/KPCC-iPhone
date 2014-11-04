@@ -8,6 +8,7 @@
 
 #import "UILabel+Additions.h"
 #import "DesignManager.h"
+#import "UIColor+UICustom.h"
 
 @implementation UILabel (Additions)
 
@@ -40,7 +41,7 @@
                 UIColor *pulseTo = color;
                 if ( !color ) {
                     
-                    pulseTo = [[DesignManager shared] intensifyColor:original];
+                    pulseTo = [original intensify];
                     
                 }
                 

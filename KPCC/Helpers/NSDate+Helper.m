@@ -146,6 +146,47 @@
   
 }
 
++ (NSString*)prettyTextFromSeconds:(NSInteger)seconds {
+    
+    if ( seconds < 60 ) return @"LIVE";
+    
+    NSInteger minutes = ceil(seconds/60);
+    NSInteger hours = 0;
+    if ( minutes > 59 ) {
+        hours = ceil(minutes/60);
+        minutes = minutes % 60;
+    }
+    
+    NSString *minuteNoun = nil;
+    NSString *hourStatement = @"";
+    NSString *minStatement = @"";
+    if ( hours > 0 ) {
+        if ( hours == 1 ) {
+            hourStatement = [NSString stringWithFormat:@"%ld HR ",(long)hours];
+        } else {
+            hourStatement = [NSString stringWithFormat:@"%ld HRS ",(long)hours];
+        }
+        minuteNoun = @"MIN";
+    } else {
+        minuteNoun = @"MINUTE";
+    }
+    
+    if ( minutes > 0 ) {
+        if ( minutes > 1 ) {
+            minuteNoun = [minuteNoun stringByAppendingString:@"S"];
+        }
+        minStatement = [NSString stringWithFormat:@"%ld %@",(long)minutes,minuteNoun];
+    }
+    
+    return [NSString stringWithFormat:@"%@%@",hourStatement,minStatement];
+    
+}
+
+- (NSString*)prettyTimeString {
+    return [NSDate stringFromDate:self
+                       withFormat:[NSDate dbFormatString]];
+}
+
 - (BOOL)isYesterday {
   
   if ( [self daysAgoAgainstMidnight] > 1 ) {

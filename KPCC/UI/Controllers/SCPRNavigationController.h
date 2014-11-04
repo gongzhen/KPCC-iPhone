@@ -11,9 +11,16 @@
 #import "SCPRMenuButton.h"
 #import "SCPRSlideInTransition.h"
 
+typedef NS_ENUM(NSUInteger, CustomLeftBarItem) {
+    CustomLeftBarItemPop = 0
+};
+                
 @interface SCPRNavigationController : UINavigationController<UIGestureRecognizerDelegate,UINavigationControllerDelegate,MenuButtonDelegate,
 UIViewControllerTransitioningDelegate> {
     SCPRMenuButton *menuButton;
 }
+
+- (void)applyCustomLeftBarItem:(CustomLeftBarItem)leftBarItemType proxyDelegate:(id<MenuButtonDelegate>)proxyDelegate;
+- (void)restoreLeftBarItem:(id<MenuButtonDelegate>)proxyDelegate;
 
 @end

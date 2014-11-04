@@ -13,6 +13,7 @@
 #import "FXBlurView.h"
 #import "DesignManager.h"
 #import "AudioManager.h"
+#import "QueueManager.h"
 #import "Program.h"
 #import "Episode.h"
 #import "Segment.h"
@@ -115,8 +116,11 @@
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
 
     // Start audio playback, set OnDemand UI on master vc, and pop to it.
-    [[AudioManager shared] playAudioWithURL:[[[self.episodesList objectAtIndex:indexPath.row] audio] url]];
-    [[[Utils del] masterViewController] setOnDemandUI:YES withProgram:self.program andEpisode:[self.episodesList objectAtIndex:indexPath.row]];
+    //[[AudioManager shared] playAudioWithURL:[[[self.episodesList objectAtIndex:indexPath.row] audio] url]];
+
+    NSArray *audioChunks = [[QueueManager shared] enqueueEpisodes:self.episodesList withCurrentIndex:indexPath.row];
+
+    [[[Utils del] masterViewController] setOnDemandUI:YES forProgram:self.program withAudio:audioChunks atCurrentIndex:(int)indexPath.row];
     [self.navigationController popToRootViewControllerAnimated:YES];
 }
 

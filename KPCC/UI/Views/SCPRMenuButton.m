@@ -211,9 +211,63 @@
     self.showBackArrow = YES;
 }
 
+- (void)animateToPop:(id<MenuButtonDelegate>)proxyDelegate {
+    [self removeAllAnimations];
+    CGPoint topLeft = CGPointMake(CGRectGetMinX(self.bounds)+4, CGRectGetMidY(self.bounds)-4);
+    CGPoint bottomLeft = CGPointMake(CGRectGetMinX(self.bounds)+4, CGRectGetMidY(self.bounds)+4);
+    
+    POPBasicAnimation *fadeAnimation = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
+    fadeAnimation.toValue = @0;
+    fadeAnimation.duration = 0.3;
+    
+    POPBasicAnimation *positionTopAnimation = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerPosition];
+    positionTopAnimation.toValue = [NSValue valueWithCGPoint:topLeft];
+    positionTopAnimation.duration = 0.3;
+    
+    POPSpringAnimation *scaleTopAnimation = [POPSpringAnimation animation];
+    scaleTopAnimation.property = [POPAnimatableProperty propertyWithName:kPOPLayerBounds];
+    scaleTopAnimation.toValue = [NSValue valueWithCGRect:CGRectMake(0, 0, 12, 1)];
+    
+    POPBasicAnimation *positionBottomAnimation = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerPosition];
+    positionBottomAnimation.toValue = [NSValue valueWithCGPoint:bottomLeft];
+    positionTopAnimation.duration = 0.3;
+    
+    POPSpringAnimation *scaleBottomAnimation = [POPSpringAnimation animation];
+    scaleBottomAnimation.property = [POPAnimatableProperty propertyWithName:kPOPLayerBounds];
+    scaleBottomAnimation.toValue = [NSValue valueWithCGRect:CGRectMake(0, 0, 12, 1)];
+    
+    POPSpringAnimation *transformTopAnimation = [POPSpringAnimation animationWithPropertyNamed:kPOPLayerRotation];
+    transformTopAnimation.toValue = @(-M_PI_4);
+    transformTopAnimation.springBounciness = 20.f;
+    transformTopAnimation.springSpeed = 20;
+    transformTopAnimation.dynamicsTension = 1000;
+    
+    POPSpringAnimation *transformBottomAnimation = [POPSpringAnimation animationWithPropertyNamed:kPOPLayerRotation];
+    transformBottomAnimation.toValue = @(M_PI_4);
+    transformBottomAnimation.springBounciness = 20.0f;
+    transformBottomAnimation.springSpeed = 20;
+    transformBottomAnimation.dynamicsTension = 1000;
+    
+    [self.topLayer pop_addAnimation:positionTopAnimation forKey:@"positionTopAnimation"];
+    [self.topLayer pop_addAnimation:transformTopAnimation forKey:@"rotateTopAnimation"];
+    [self.topLayer pop_addAnimation:scaleTopAnimation forKey:@"scaleTopAnimation"];
+    [self.middleLayer pop_addAnimation:fadeAnimation forKey:@"fadeAnimation"];
+    [self.bottomLayer pop_addAnimation:positionBottomAnimation forKey:@"positionBottomAnimation"];
+    [self.bottomLayer pop_addAnimation:transformBottomAnimation forKey:@"rotateBottomAnimation"];
+    [self.bottomLayer pop_addAnimation:scaleBottomAnimation forKey:@"scaleBottomAnimation"];
+    
+    self.showBackArrow = NO;
+    self.showPopArrow = YES;
+    self.proxyDelegate = proxyDelegate;
+}
+
 - (void)touchUpInsideHandler:(SCPRMenuButton *)sender {
     if (self.showBackArrow) {
         [delegate backPressed];
+    } else if ( self.showPopArrow && self.proxyDelegate ) {
+        [self.proxyDelegate popPressed];
+        self.showPopArrow = NO;
+        self.proxyDelegate = nil;
     } else {
         [delegate menuPressed];
     }
