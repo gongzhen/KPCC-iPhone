@@ -385,9 +385,9 @@ static const NSString *ItemStatusContext;
 
 - (void)playerItemFailedToPlayToEndTime:(NSNotification *)notification {
     NSError *error = notification.userInfo[AVPlayerItemFailedToPlayToEndTimeErrorKey];
-    
+#ifdef DEBUG
     [self dump:YES];
-    
+#endif
     NSLog(@"playerItemFailedToPlayToEndTime! --- %@ ", [error localizedDescription]);
 }
 
