@@ -16,6 +16,7 @@
 #define kMediaServerPath @"http://media.scpr.org/iphone/program-images/"
 
 static DesignManager *singleton = nil;
+static CGFloat kFadeDuration = 3.0;
 
 @implementation DesignManager
 
@@ -53,22 +54,45 @@ static DesignManager *singleton = nil;
 
         UIImageView *iv = imageView;
         [iv setImageWithURLRequest:request placeholderImage:nil success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {
-            imageView.image = image;
-            [UIView animateWithDuration:0.15 animations:^{
-                [imageView setAlpha:1.0];
-            }];
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                imageView.image = image;
+                imageView.alpha = 1.0;
+                CATransition *transition = [CATransition animation];
+                transition.duration = kFadeDuration;
+                transition.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
+                transition.type = kCATransitionFade;
+                
+                [imageView.layer addAnimation:transition
+                                  forKey:nil];
+            });
+            
+            
 
             completion(true);
         } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error) {
             [imageView setImage:[UIImage imageNamed:@"program_tile_generic.jpg"]];
-            [UIView animateWithDuration:0.15 animations:^{
-                [imageView setAlpha:1.0];
-            }];
-
+            imageView.alpha = 1.0;
+            CATransition *transition = [CATransition animation];
+            transition.duration = kFadeDuration;
+            transition.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
+            transition.type = kCATransitionFade;
+            
+            [imageView.layer addAnimation:transition
+                                   forKey:nil];
             completion(true);
         }];
     } else {
         [imageView setImage:[UIImage imageNamed:@"program_tile_generic.jpg"]];
+        imageView.alpha = 1.0;
+        CATransition *transition = [CATransition animation];
+        transition.duration = kFadeDuration;
+        transition.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
+        transition.type = kCATransitionFade;
+        
+        [imageView.layer addAnimation:transition
+                               forKey:nil];
+        
         completion(true);
     }
 }

@@ -30,6 +30,7 @@ static const NSString *ItemStatusContext;
         @synchronized(self) {
             singleton = [[AudioManager alloc] init];
             singleton.fadeQueue = [[NSOperationQueue alloc] init];
+            singleton.status = StreamStatusStopped;
         }
     }
     return singleton;
@@ -451,6 +452,7 @@ static const NSString *ItemStatusContext;
     }
     
     [self.audioPlayer play];
+    
     self.status = StreamStatusPlaying;
 }
 
@@ -550,10 +552,14 @@ static const NSString *ItemStatusContext;
 
 #pragma mark - General Utils
 - (NSDate*)cookDateForActualSchedule:(NSDate *)date {
+#ifdef USE_TEST_STREAM
+    return [self minSeekableDate];
+#else
     NSTimeInterval supposed = [date timeIntervalSince1970];
     NSTimeInterval actual = supposed + 60 * 6;
     NSDate *actualDate = [NSDate dateWithTimeIntervalSince1970:actual];
     return actualDate;
+#endif
 }
 
 

@@ -10,11 +10,15 @@
 #import "SCPRAppDelegate.h"
 #import "UILabel+Additions.h"
 #import "UIColor+UICustom.h"
+#import "NSDate+Helper.h"
 
 //@class SCPRMasterViewController;
 
 typedef void (^CompletionBlock)(void);
 typedef void (^CompletionBlockWithValue)(id returnedObject);
+
+#define kUpdateProgramKey @":UPDATE-PROGRAM:"
+#define SEQ(a,b) [a isEqualToString:b]
 
 @interface Utils : NSObject
 

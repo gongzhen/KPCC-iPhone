@@ -15,6 +15,8 @@
 #import "SCPRShortListViewController.h"
 #import "SCPRQueueScrollableView.h"
 #import "NSDate+Helper.h"
+#import "SessionManager.h"
+#import "SCPRCloakViewController.h"
 
 static NSString *kRewindingText = @"REWINDING...";
 static NSString *kForwardingText = @"GOING LIVE...";
@@ -77,6 +79,8 @@ static CGFloat kDisabledAlpha = 0.15;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    self.view.backgroundColor = [UIColor blackColor];
 
     pulldownMenu = [[SCPRPullDownMenu alloc] initWithView:self.view];
     pulldownMenu.delegate = self;
@@ -87,7 +91,7 @@ static CGFloat kDisabledAlpha = 0.15;
     [self addPreRollController];
 
     // Fetch program info and update audio control state.
-    [self updateDataForUI];
+    //[self updateDataForUI];
 
     // Observe when the application becomes active again, and update UI if need-be.
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateDataForUI) name:UIApplicationWillEnterForegroundNotification object:nil];
@@ -144,7 +148,16 @@ static CGFloat kDisabledAlpha = 0.15;
     
     self.queueScrollView.hidden = YES;
     [self.view insertSubview:self.queueScrollView belowSubview:self.initialControlsView];
-
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(treatUIforProgram)
+                                                 name:@"program_has_changed"
+                                               object:nil];
+    
+    self.view.alpha = 0.0;
+    [SCPRCloakViewController cloakWithCustomCenteredView:nil cloakAppeared:^{
+        [self updateDataForUI];
+    }];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -294,9 +307,11 @@ static CGFloat kDisabledAlpha = 0.15;
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         
         seekRequested = YES;
+        Program *cProgram = [[SessionManager shared] currentProgram];
+        
         switch (distance) {
             case RewindDistanceBeginning:
-                if (_currentProgram) {
+                if (cProgram) {
 #ifdef USE_LATENCY
                     NSDate *raw = _currentProgram.starts_at;
                     NSTimeInterval rawTI = [raw timeIntervalSince1970];
@@ -305,9 +320,9 @@ static CGFloat kDisabledAlpha = 0.15;
                     [[AudioManager shared] seekToDate:cooked];
 #endif
                     if ( self.dirtyFromRewind ) {
-                        [[AudioManager shared] specialSeekToDate:[[AudioManager shared] cookDateForActualSchedule:_currentProgram.starts_at]];
+                        [[AudioManager shared] specialSeekToDate:[[AudioManager shared] cookDateForActualSchedule:cProgram.starts_at]];
                     } else {
-                        [[AudioManager shared] seekToDate:[[AudioManager shared] cookDateForActualSchedule:_currentProgram.starts_at]];
+                        [[AudioManager shared] seekToDate:[[AudioManager shared] cookDateForActualSchedule:cProgram.starts_at]];
                     }
                 }
                 break;
@@ -362,8 +377,8 @@ static CGFloat kDisabledAlpha = 0.15;
     AVPlayerItem *item = [[AudioManager shared].audioPlayer currentItem];
     NSTimeInterval current = [item.currentDate timeIntervalSince1970];
     
-    if ( self.currentProgram ) {
-        NSTimeInterval startOfProgram = [self.currentProgram.starts_at timeIntervalSince1970];
+    if ( [[SessionManager shared] currentProgram] ) {
+        NSTimeInterval startOfProgram = [[[[SessionManager shared] currentProgram] starts_at] timeIntervalSince1970];
         return current - startOfProgram;
     }
     
@@ -427,7 +442,10 @@ static CGFloat kDisabledAlpha = 0.15;
 }
 
 - (void)updateDataForUI {
-    [[NetworkManager shared] fetchProgramInformationFor:[NSDate date] display:self];
+    //[[NetworkManager shared] fetchProgramInformationFor:[NSDate date] display:self];
+    [[SessionManager shared] fetchCurrentProgram:^(id returnedObject) {
+        
+    }];
 }
 
 
@@ -494,7 +512,6 @@ static CGFloat kDisabledAlpha = 0.15;
             }
             [self.liveRewindAltButton setAlpha:0.0];
             [self.backToLiveButton setAlpha:0.0];
-            
         }
 
         if ([[AudioManager shared] isStreamPlaying] || [[AudioManager shared] isStreamBuffering]) {
@@ -595,6 +612,9 @@ static CGFloat kDisabledAlpha = 0.15;
     }
 
     setForLiveStreamUI = YES;
+    
+    [[AudioManager shared] setCurrentAudioMode:AudioModeLive];
+    
 }
 
 - (void)setOnDemandUI:(BOOL)animated forProgram:(Program*)program withAudio:(NSArray*)array atCurrentIndex:(int)index {
@@ -647,6 +667,8 @@ static CGFloat kDisabledAlpha = 0.15;
     }
 
     setForOnDemandUI = YES;
+    
+    [[AudioManager shared] setCurrentAudioMode:AudioModeOnDemand];
 }
 
 - (void)setDataForOnDemand:(Program *)program andAudioChunk:(AudioChunk*)audioChunk {
@@ -667,6 +689,34 @@ static CGFloat kDisabledAlpha = 0.15;
         self.onDemandEpUrl = audioChunk.contentShareUrl;
         [self.episodeTitleOnDemand setText:audioChunk.audioTitle];
     }
+}
+
+- (void)treatUIforProgram {
+    Program *programObj = [[SessionManager shared] currentProgram];
+    // Only update background image when we're not in On Demand mode.
+    if (!setForOnDemandUI){
+        [[DesignManager shared] loadProgramImage:programObj.program_slug
+                                    andImageView:self.programImageView
+                                      completion:^(BOOL status) {
+                                          
+                                          [self.blurView setNeedsDisplay];
+                                          dispatch_async(dispatch_get_main_queue(), ^{
+                                              [self updateUIWithProgram:programObj];
+                                              [[AudioManager shared] updateNowPlayingInfoWithAudio:programObj];
+                                              self.view.alpha = 1.0;
+                                              if ( [SCPRCloakViewController cloakInUse] ) {
+                                                  [SCPRCloakViewController uncloak];
+                                              }
+                                          });
+                                          
+                                      }];
+    } else {
+    
+        [self updateUIWithProgram:programObj];
+        self.view.alpha = 1.0;
+        
+    }
+    
 }
 
 - (void)updateUIWithProgram:(Program*)program {
@@ -958,7 +1008,7 @@ static CGFloat kDisabledAlpha = 0.15;
         }
 
         case 1: {
-            Program *prog = self.currentProgram;
+            Program *prog = [[SessionManager shared] currentProgram];
             if (setForOnDemandUI && self.onDemandProgram != nil) {
                 prog = self.onDemandProgram;
             }
@@ -1076,7 +1126,7 @@ static CGFloat kDisabledAlpha = 0.15;
 #pragma mark - ContentProcessor
 
 - (void)handleProcessedContent:(NSArray *)content flags:(NSDictionary *)flags {
-    if ([content count] == 0) {
+/*    if ([content count] == 0) {
         return;
     }
 
@@ -1106,6 +1156,7 @@ static CGFloat kDisabledAlpha = 0.15;
         // Save any programObj changes to CoreData.
         [[ContentManager shared] saveContext];
     }
+ */
 }
 
 - (void)dealloc {

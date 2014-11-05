@@ -32,7 +32,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="program_tile_generic.jpg" translatesAutoresizingMaskIntoConstraints="NO" id="jYj-xG-3QJ" userLabel="Program Image">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="jYj-xG-3QJ" userLabel="Program Image">
                                 <rect key="frame" x="0.0" y="64" width="320" height="504"/>
                             </imageView>
                             <view alpha="0.0" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="LAZ-J2-lj5" customClass="FXBlurView">
@@ -744,7 +744,6 @@
         <image name="btn_play_large.png" width="122" height="122"/>
         <image name="content-share.png" width="21" height="29"/>
         <image name="playButton.png" width="19" height="22"/>
-        <image name="program_tile_generic.jpg" width="320" height="508"/>
     </resources>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>

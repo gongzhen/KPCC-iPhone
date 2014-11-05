@@ -11,6 +11,7 @@
 #import "SCPRNavigationController.h"
 #import <AVFoundation/AVFoundation.h>
 #import "Flurry.h"
+#import "SessionManager.h"
 
 #ifdef ENABLE_TESTFLIGHT
 #import "TestFlight.h"
@@ -41,6 +42,7 @@
     
     // Initialize the window
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+    self.window.backgroundColor = [UIColor blackColor];
     
     // Launch our root view controller
     SCPRNavigationController *navigationController = [[UIStoryboard storyboardWithName:@"Storyboard" bundle:nil] instantiateInitialViewController];
@@ -50,13 +52,28 @@
     self.window.rootViewController = navigationController;
 
     // Fetch initial list of Programs from SCPRV4 and store in CoreData for later usage.
-    [[NetworkManager shared] fetchAllProgramInformation:self];
+    //[[NetworkManager shared] fetchAllProgramInformation:self];
+    if ( [[UIApplication sharedApplication] respondsToSelector:@selector(registerUserNotificationSettings:)] ) {
+        [[UIApplication sharedApplication] registerUserNotificationSettings:[UIUserNotificationSettings settingsForTypes:UIUserNotificationTypeAlert
+                                                                                                              categories:nil]];
+    }
     
     // Override point for customization after application launch.
     return YES;
 }
+
+- (void)application:(UIApplication *)application didRegisterUserNotificationSettings:(UIUserNotificationSettings *)notificationSettings {
+    UIUserNotificationType types = notificationSettings.types;
+    [[SessionManager shared] setUseLocalNotifications:( types & UIUserNotificationTypeAlert )];
+}
 							
 - (void)applicationWillResignActive:(UIApplication *)application {
+    
+    [[SessionManager shared] disarmProgramUpdater];
+    [[SessionManager shared] setSessionLeftDate:[NSDate date]];
+    if ( [[AudioManager shared] status] == StreamStatusPaused ) {
+        [[SessionManager shared] setSessionEndedWhilePaused:YES];
+    }
     // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
     // Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.
 }
@@ -71,6 +88,9 @@
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application {
+    
+    [[SessionManager shared] setSessionReturnedDate:[NSDate date]];
+    
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
 }
 
@@ -97,6 +117,11 @@
      forState:UIControlStateNormal];*/
 }
 
+- (void)application:(UIApplication *)application didReceiveLocalNotification:(UILocalNotification *)notification {
+    if ( [[UIApplication sharedApplication] applicationState] == UIApplicationStateActive ) {
+        [[SessionManager shared] processNotification:notification];
+    }
+}
 
 #pragma mark - ContentProcessor
 

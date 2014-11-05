@@ -10,6 +10,8 @@
 		254E177019F863960022BF6B /* UILabel+Additions.m in Sources */ = {isa = PBXBuildFile; fileRef = 254E176F19F863960022BF6B /* UILabel+Additions.m */; };
 		255943EA19F1A7620007294D /* SCPRJogShuttleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 255943E919F1A7620007294D /* SCPRJogShuttleViewController.m */; };
 		255943EC19F5C8B80007294D /* rewind_beat.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 255943EB19F5C8B80007294D /* rewind_beat.mp3 */; };
+		258CA0FD1A09636900A3C8DB /* SessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 258CA0FC1A09636900A3C8DB /* SessionManager.m */; };
+		258CA1001A0982ED00A3C8DB /* SCPRCloakViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 258CA0FF1A0982ED00A3C8DB /* SCPRCloakViewController.m */; };
 		258FC47B1A018F3D00282D59 /* SCPRSpinnerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 258FC47A1A018F3D00282D59 /* SCPRSpinnerViewController.m */; };
 		258FC47E1A01915E00282D59 /* UIColor+UICustom.m in Sources */ = {isa = PBXBuildFile; fileRef = 258FC47D1A01915E00282D59 /* UIColor+UICustom.m */; };
 		25B59A5619FEF93700D4885C /* SCPRShortListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 25B59A5419FEF93700D4885C /* SCPRShortListViewController.m */; };
@@ -215,6 +217,10 @@
 		255943E819F1A7620007294D /* SCPRJogShuttleViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCPRJogShuttleViewController.h; sourceTree = "<group>"; };
 		255943E919F1A7620007294D /* SCPRJogShuttleViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SCPRJogShuttleViewController.m; sourceTree = "<group>"; };
 		255943EB19F5C8B80007294D /* rewind_beat.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = rewind_beat.mp3; sourceTree = "<group>"; };
+		258CA0FB1A09636900A3C8DB /* SessionManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SessionManager.h; path = Managers/SessionManager.h; sourceTree = "<group>"; };
+		258CA0FC1A09636900A3C8DB /* SessionManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SessionManager.m; path = Managers/SessionManager.m; sourceTree = "<group>"; };
+		258CA0FE1A0982ED00A3C8DB /* SCPRCloakViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCPRCloakViewController.h; sourceTree = "<group>"; };
+		258CA0FF1A0982ED00A3C8DB /* SCPRCloakViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SCPRCloakViewController.m; sourceTree = "<group>"; };
 		258FC4791A018F3D00282D59 /* SCPRSpinnerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCPRSpinnerViewController.h; sourceTree = "<group>"; };
 		258FC47A1A018F3D00282D59 /* SCPRSpinnerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SCPRSpinnerViewController.m; sourceTree = "<group>"; };
 		258FC47C1A01915E00282D59 /* UIColor+UICustom.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+UICustom.h"; sourceTree = "<group>"; };
@@ -670,6 +676,8 @@
 				254E176F19F863960022BF6B /* UILabel+Additions.m */,
 				258FC4791A018F3D00282D59 /* SCPRSpinnerViewController.h */,
 				258FC47A1A018F3D00282D59 /* SCPRSpinnerViewController.m */,
+				258CA0FE1A0982ED00A3C8DB /* SCPRCloakViewController.h */,
+				258CA0FF1A0982ED00A3C8DB /* SCPRCloakViewController.m */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -914,6 +922,8 @@
 				769B907D19C1186E00E812C7 /* DesignManager.m */,
 				52CF91781A0032C7007BCFA8 /* QueueManager.h */,
 				52CF91791A0032C7007BCFA8 /* QueueManager.m */,
+				258CA0FB1A09636900A3C8DB /* SessionManager.h */,
+				258CA0FC1A09636900A3C8DB /* SessionManager.m */,
 			);
 			name = Managers;
 			sourceTree = "<group>";
@@ -1229,6 +1239,7 @@
 				52CF917D1A0036CA007BCFA8 /* AudioChunk.m in Sources */,
 				76349D1B18D8C74F0027C3B8 /* NetworkManager.m in Sources */,
 				52D0FC1C19D1F24F009AECEE /* SCPRProgramDetailHeaderView.m in Sources */,
+				258CA1001A0982ED00A3C8DB /* SCPRCloakViewController.m in Sources */,
 				254E177019F863960022BF6B /* UILabel+Additions.m in Sources */,
 				52EFF87819C37D350059A0E3 /* SCPRMenuCell.m in Sources */,
 				5248858E19CBA180005F59CC /* EpisodeAudio.m in Sources */,
@@ -1253,6 +1264,7 @@
 				760E3C4C194FB61B00D86D91 /* Program.m in Sources */,
 				760E3C48194FB54600D86D91 /* DataModel.xcdatamodeld in Sources */,
 				25B59A5619FEF93700D4885C /* SCPRShortListViewController.m in Sources */,
+				258CA0FD1A09636900A3C8DB /* SessionManager.m in Sources */,
 				52CC6D6619D110E300C67322 /* SCPRProgramsListViewController.m in Sources */,
 				5257E9CC19E34A550055733F /* SCPRSlideInTransition.m in Sources */,
 				52CC6D5E19D0DC7100C67322 /* Segment.m in Sources */,
@@ -1395,6 +1407,7 @@
 					"$(inherited)",
 					ENABLE_TESTFLIGHT,
 					"VERBOSE_STREAM_LOGGING=1",
+					"USE_TEST_STREAM=1",
 				);
 				INFOPLIST_FILE = "KPCC/KPCC-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;

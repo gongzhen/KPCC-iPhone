@@ -11,6 +11,7 @@
 - (UIColor*)translucify:(CGFloat)alpha;
 + (UIColor*)colorWithHex:(UInt32)hex;
 + (UIColor*)kpccOrangeColor;
++ (UIColor*)virtualBlackColor;
 - (UIColor*)intensify;
 
 @end
