@@ -32,6 +32,7 @@ static CGFloat kDisabledAlpha = 0.15;
 @property BOOL setForOnDemandUI;
 @property BOOL dirtyFromRewind;
 @property BOOL queueBlurShown;
+@property BOOL queueLoading;
 
 @property IBOutlet NSLayoutConstraint *playerControlsTopYConstraint;
 @property IBOutlet NSLayoutConstraint *playerControlsBottomYConstraint;
@@ -152,6 +153,7 @@ static CGFloat kDisabledAlpha = 0.15;
     [self.queueBlurView setDynamic:NO];
 
     [self.queueDarkBgView setAlpha:0.0];
+
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -941,7 +943,7 @@ static CGFloat kDisabledAlpha = 0.15;
 }
 
 
-#pragma mark - UIScrollViewDelegate
+#pragma mark - UIScrollViewDelegate for audio queue
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
     NSLog(@"didEndDecel, currentPage: %f", scrollView.contentOffset.x / scrollView.frame.size.width);
 
@@ -956,11 +958,30 @@ static CGFloat kDisabledAlpha = 0.15;
         self.queueScrollTimer = nil;
     }
 
-    self.queueScrollTimer = [NSTimer scheduledTimerWithTimeInterval:1.0
+    self.queueScrollTimer = [NSTimer scheduledTimerWithTimeInterval:0.5
                                      target:self
                                    selector:@selector(queueScrollEnded)
                                    userInfo:nil
                                     repeats:NO];
+}
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationOptionCurveLinear animations:^{
+        self.timeLabelOnDemand.alpha = 0.0;
+        self.progressView.alpha = 0.0;
+    } completion:^(BOOL finished){
+
+    }];
+
+    if (!self.queueBlurShown) {
+        [self.queueBlurView setNeedsDisplay];
+        [UIView animateWithDuration:0.3 delay:0. options:UIViewAnimationOptionCurveLinear animations:^{
+            self.queueBlurView.alpha = 1.0;
+            self.queueDarkBgView.alpha = 0.35;
+        } completion:^(BOOL finished) {
+            self.queueBlurShown = YES;
+        }];
+    }
 }
 
 - (void)queueScrollEnded {
@@ -970,48 +991,14 @@ static CGFloat kDisabledAlpha = 0.15;
         self.timeLabelOnDemand.alpha = 1.0;
     } completion:nil];
 
-
     int newPage = self.queueScrollView.contentOffset.x / self.queueScrollView.frame.size.width;
     if (self.queueCurrentPage != newPage) {
         [[AudioManager shared] stopStream];
         self.timeLabelOnDemand.text = @"Loading...";
+        self.queueLoading = YES;
 
         [[QueueManager shared] playItemAtPosition:newPage];
         self.queueCurrentPage = newPage;
-    }
-
-    if (self.queueBlurShown) {
-        [self.queueBlurView setNeedsDisplay];
-        [UIView animateWithDuration:0.3 delay:0. options:UIViewAnimationOptionCurveLinear animations:^{
-            self.queueBlurView.alpha = 0.0;
-            self.queueDarkBgView.alpha = 0.0;
-            self.progressView.alpha = 1.0;
-        } completion:^(BOOL finished) {
-            self.queueBlurShown = NO;
-        }];
-    }
-}
-
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-    NSLog(@"didScroll");
-
-    [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationOptionCurveLinear animations:^{
-        self.timeLabelOnDemand.alpha = 0.0;
-        self.progressView.alpha = 0.0;
-    } completion:^(BOOL finished){
-        //[self.progressView setProgress:0.0 animated:NO];
-    }];
-
-
-    if (!self.queueBlurShown) {
-        NSLog(@"blurring for queue");
-        [self.queueBlurView setNeedsDisplay];
-        [UIView animateWithDuration:0.3 delay:0. options:UIViewAnimationOptionCurveLinear animations:^{
-            self.queueBlurView.alpha = 1.0;
-            self.queueDarkBgView.alpha = 0.35;
-        } completion:^(BOOL finished) {
-            self.queueBlurShown = YES;
-        }];
     }
 }
 
@@ -1128,6 +1115,21 @@ static CGFloat kDisabledAlpha = 0.15;
                 [self.progressView setProgress:(currentTime / duration) animated:YES];
             });
         }
+    }
+
+    // NOTE: basically used instead of observing player rate change to know when actual playback starts
+    // .. for decloaking queue blur
+    if (self.queueBlurShown && self.queueLoading) {
+        [self.queueBlurView setNeedsDisplay];
+        [self.progressView setProgress:0.0 animated:NO];
+        [UIView animateWithDuration:0.3 delay:0. options:UIViewAnimationOptionCurveLinear animations:^{
+            self.queueBlurView.alpha = 0.0;
+            self.queueDarkBgView.alpha = 0.0;
+            self.progressView.alpha = 1.0;
+        } completion:^(BOOL finished) {
+            self.queueBlurShown = NO;
+            self.queueLoading = NO;
+        }];
     }
 }
 
