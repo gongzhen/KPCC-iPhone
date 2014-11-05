@@ -999,6 +999,17 @@ static CGFloat kDisabledAlpha = 0.15;
 
         [[QueueManager shared] playItemAtPosition:newPage];
         self.queueCurrentPage = newPage;
+    } else {
+        if (self.queueBlurShown) {
+            [self.queueBlurView setNeedsDisplay];
+            [UIView animateWithDuration:0.3 delay:0. options:UIViewAnimationOptionCurveLinear animations:^{
+                self.queueBlurView.alpha = 0.0;
+                self.queueDarkBgView.alpha = 0.0;
+                self.progressView.alpha = 1.0;
+            } completion:^(BOOL finished) {
+                self.queueBlurShown = NO;
+            }];
+        }
     }
 }
 
