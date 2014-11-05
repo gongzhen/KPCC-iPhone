@@ -23,7 +23,7 @@ static NSString *kForwardingText = @"GOING LIVE...";
 static CGFloat kRewindGateThreshold = 8.0;
 static CGFloat kDisabledAlpha = 0.15;
 
-@interface SCPRMasterViewController () <AudioManagerDelegate, ContentProcessor, UINavigationControllerDelegate, UIViewControllerTransitioningDelegate, SCPRPreRollControllerDelegate, UIScrollViewDelegate>
+@interface SCPRMasterViewController () <AudioManagerDelegate, UINavigationControllerDelegate, UIViewControllerTransitioningDelegate, SCPRPreRollControllerDelegate, UIScrollViewDelegate>
 
 @property BOOL initialPlay;
 @property BOOL setPlaying;
@@ -442,7 +442,6 @@ static CGFloat kDisabledAlpha = 0.15;
 }
 
 - (void)updateDataForUI {
-    //[[NetworkManager shared] fetchProgramInformationFor:[NSDate date] display:self];
     [[SessionManager shared] fetchCurrentProgram:^(id returnedObject) {
         
     }];

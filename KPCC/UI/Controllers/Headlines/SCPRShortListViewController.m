@@ -12,6 +12,7 @@
 #import "SCPRNavigationController.h"
 #import "SCPRAppDelegate.h"
 #import "SCPRSpinnerViewController.h"
+#import "NetworkManager.h"
 
 @interface SCPRShortListViewController ()
 
@@ -60,6 +61,18 @@ static NSString *kShortListMenuURL = @"http://www.scpr.org/short-list/latest#no-
     self.currentObjectURL = kShortListMenuURL;
     
     [SCPRSpinnerViewController spinInCenterOfViewController:self appeared:^{
+#ifdef USE_API
+        [[NetworkManager shared] fetchEditions:^(id returnedObject) {
+            
+            NSAssert([returnedObject isKindOfClass:[NSArray class]],@"Expecting an array here");
+            NSArray *editions = (NSArray*)returnedObject;
+            if ( [editions count] > 0 ) {
+                NSDictionary *lead = editions[0];
+                self.abstracts = lead[@"abstracts"];
+            }
+            
+        }];
+#endif
         [self.slWebView loadRequest:rq];
     }];
     
@@ -113,17 +126,30 @@ static NSString *kShortListMenuURL = @"http://www.scpr.org/short-list/latest#no-
         
         if ( !self.detailInitialLoad ) {
             self.detailInitialLoad = YES;
+            [SCPRSpinnerViewController finishSpinning];
             
-            NSString *jsonString = [self.detailWebView stringByEvaluatingJavaScriptFromString:
-                                    @"document.body.innerHTML"];
+
             
             POPSpringAnimation *shiftAnimation = [POPSpringAnimation animationWithPropertyNamed:kPOPScrollViewContentOffset];
             shiftAnimation.fromValue = [NSValue valueWithCGPoint:CGPointMake(0.0, self.mainScrollView.contentOffset.y)];
             shiftAnimation.toValue = [NSValue valueWithCGPoint:CGPointMake(self.mainScrollView.frame.size.width, self.mainScrollView.contentOffset.y)];
             [shiftAnimation setSpringBounciness:10.0];
             [shiftAnimation setCompletionBlock:^(POPAnimation *anim, BOOL finished) {
-
+#ifdef USE_API
+                SCPRAppDelegate *del = (SCPRAppDelegate*)[UIApplication sharedApplication].delegate;
+                SCPRNavigationController *navigation = [del masterNavigationController];
+                
+                [navigation applyCustomLeftBarItem:CustomLeftBarItemPop
+                                     proxyDelegate:self];
+                self.navigationItem.leftBarButtonItem.enabled = YES;
+                self.pushing = NO;
+#else
+                NSString *jsonString = [self.detailWebView stringByEvaluatingJavaScriptFromString:
+                                        @"document.getElementsByTagName('head')[0].innerHTML;"];
+                
                 [self extractTitleFromString:jsonString completed:^(id returnedObject) {
+                    
+                    [SCPRSpinnerViewController finishSpinning];
                     
                     NSLog(@"Title : %@",(NSString*)returnedObject);
                     self.cachedTitle = self.navigationItem.title;
@@ -138,6 +164,7 @@ static NSString *kShortListMenuURL = @"http://www.scpr.org/short-list/latest#no-
                     self.pushing = NO;
                     
                 }];
+#endif
 
             }];
             
@@ -174,10 +201,28 @@ static NSString *kShortListMenuURL = @"http://www.scpr.org/short-list/latest#no-
             }
             if ( [str rangeOfString:@"http"].location != NSNotFound ) {
                 if ( !self.pushing ) {
-                    self.currentObjectURL = str;
-                    self.pushing = YES;
-                    self.navigationItem.leftBarButtonItem.enabled = NO;
-                    [self.detailWebView loadRequest:request];
+                    
+                    [SCPRSpinnerViewController spinInCenterOfViewController:self appeared:^{
+#ifdef USE_API
+                        [self findConcreteObjecrBasedOnUrl:str completion:^(id returnedObject) {
+                            
+                            
+                            self.cachedTitle = self.navigationItem.title;
+                            self.navigationItem.title = (NSString*)returnedObject;
+                            
+                            self.currentObjectURL = str;
+                            self.pushing = YES;
+                            self.navigationItem.leftBarButtonItem.enabled = NO;
+                            [self.detailWebView loadRequest:request];
+                        }];
+#else
+                        self.currentObjectURL = str;
+                        self.pushing = YES;
+                        self.navigationItem.leftBarButtonItem.enabled = NO;
+                        [self.detailWebView loadRequest:request];
+#endif
+                    }];
+
                 }
                 return NO;
             }
@@ -242,11 +287,10 @@ static NSString *kShortListMenuURL = @"http://www.scpr.org/short-list/latest#no-
 #pragma mark - Utilities
 - (void)extractTitleFromString:(NSString *)fullHTML completed:(CompletionBlockWithValue)completed {
     
-    
     NSError *error = nil;
     
     NSRegularExpression *regex = [NSRegularExpression
-                                  regularExpressionWithPattern:@"<h1 class=\"title.*?\"><span>.*<"
+                                  regularExpressionWithPattern:@"<title>.*</title>"
                                   options:NSRegularExpressionCaseInsensitive|NSRegularExpressionDotMatchesLineSeparators
                                   error:&error];
     
@@ -255,8 +299,8 @@ static NSString *kShortListMenuURL = @"http://www.scpr.org/short-list/latest#no-
     [regex enumerateMatchesInString:fullHTML options:0 range:NSMakeRange(0, [fullHTML length]) usingBlock:^(NSTextCheckingResult *match, NSMatchingFlags flags, BOOL *stop) {
         
         title = [fullHTML substringWithRange:[match rangeAtIndex:0]];
-        title = [title substringToIndex:[title rangeOfString:@"</span>"].location];
-        title = [title substringFromIndex:[title rangeOfString:@"<span>"].location + [@"<span>" length]];
+        title = [title substringToIndex:[title rangeOfString:@"</title>"].location];
+        title = [title substringFromIndex:[title rangeOfString:@"<title>"].location + [@"<title>" length]];
         
         *stop = YES;
         matched = YES;
@@ -293,7 +337,18 @@ static NSString *kShortListMenuURL = @"http://www.scpr.org/short-list/latest#no-
             
         }];
     }
+
+
     
+}
+
+- (void)findConcreteObjecrBasedOnUrl:(NSString *)url completion:(CompletionBlockWithValue)completion {
+    
+    NSString *title = @"";
+    for ( NSDictionary *abstract in self.abstracts ) {
+        int x =1;
+        x++;
+    }
 }
 
 - (void)didReceiveMemoryWarning {

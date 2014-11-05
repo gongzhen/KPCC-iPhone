@@ -8,6 +8,7 @@
 
 #import "SessionManager.h"
 #import "AudioManager.h"
+#import "NetworkManager.h"
 
 static long kStreamBufferLimit = 4*60*60;
 
@@ -24,88 +25,47 @@ static long kStreamBufferLimit = 4*60*60;
 
 #pragma mark - Program
 - (void)fetchProgramAtDate:(NSDate *)date completed:(CompletionBlockWithValue)completed {
-    
-    self.lastProgramUpdate = date;
     NSString *urlString = [NSString stringWithFormat:@"%@/schedule/at?time=%d",kServerBase,(int)[date timeIntervalSince1970]];
-    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
-    manager.responseSerializer = [AFJSONResponseSerializer serializerWithReadingOptions: NSJSONReadingMutableContainers];
-    [manager GET:urlString parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
-        
-        if ([responseObject objectForKey:@"meta"] && [[[[responseObject objectForKey:@"meta"] objectForKey:@"status"] objectForKey:@"code"] intValue] == 200) {
-            
-            NSArray *keys = [responseObject allKeys];
-            NSString *responseKey = nil;
-            for (NSString *key in keys) {
-                if (![key isEqualToString:@"meta"]) {
-                    responseKey = key;
-                    break;
-                }
-            }
-            
-            if ( responseKey ) {
+    [[NetworkManager shared] requestFromSCPRWithEndpoint:urlString completion:^(id returnedObject) {
+        // Create Program and insert into managed object context
+        if ( returnedObject ) {
+            Program *programObj = [Program insertProgramWithDictionary:returnedObject inManagedObjectContext:[[ContentManager shared] managedObjectContext]];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [[ContentManager shared] saveContext];
                 
-                NSDictionary *response = (NSDictionary*)responseObject;
-                NSDictionary *programDict = (NSDictionary*)response[responseKey];
-                if (!programDict) {
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        completed(nil);
-                    });
-                    return;
+                BOOL touch = NO;
+                if ( self.currentProgram ) {
+                    if ( !SEQ(self.currentProgram.program_slug,
+                              programObj.program_slug) ) {
+                        touch = YES;
+                    }
+                } else if ( programObj ) {
+                    touch = YES;
                 }
-                
-                // Create Program and insert into managed object context
-                if (programDict) {
-                    Program *programObj = [Program insertProgramWithDictionary:programDict inManagedObjectContext:[[ContentManager shared] managedObjectContext]];
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        [[ContentManager shared] saveContext];
-                        
-                        BOOL touch = NO;
-                        if ( self.currentProgram ) {
-                            if ( !SEQ(self.currentProgram.program_slug,
-                                      programObj.program_slug) ) {
-                                touch = YES;
-                            }
-                        } else if ( programObj ) {
-                            touch = YES;
-                        }
-                        self.currentProgram = programObj;
-                        if ( touch ) {
-                            [[NSNotificationCenter defaultCenter] postNotificationName:@"program_has_changed"
-                                                                                object:nil
-                                                                              userInfo:nil];
-                        }
-                        completed(programObj);
-                        
-                        [self armProgramUpdater];
-                        
-                    });
-                } else {
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        completed(nil);
-                        [self armProgramUpdater];
-                    });
+                self.currentProgram = programObj;
+                if ( touch ) {
+                    [[NSNotificationCenter defaultCenter] postNotificationName:@"program_has_changed"
+                                                                        object:nil
+                                                                      userInfo:nil];
                 }
+                completed(programObj);
                 
-            }
+                [self armProgramUpdater];
+                
+            });
         } else {
             dispatch_async(dispatch_get_main_queue(), ^{
                 completed(nil);
                 [self armProgramUpdater];
             });
         }
-        
-    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        NSLog(@"Error: %@", error);
-        completed(nil);
-        [self armProgramUpdater];
     }];
+    
 }
 
 - (void)fetchCurrentProgram:(CompletionBlockWithValue)completed {
     [self fetchProgramAtDate:[NSDate date] completed:completed];
 }
-
-
 
 - (void)armProgramUpdater {
     [self disarmProgramUpdater];

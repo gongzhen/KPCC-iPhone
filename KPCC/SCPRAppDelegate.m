@@ -12,6 +12,7 @@
 #import <AVFoundation/AVFoundation.h>
 #import "Flurry.h"
 #import "SessionManager.h"
+#import "NetworkManager.h"
 
 #ifdef ENABLE_TESTFLIGHT
 #import "TestFlight.h"
@@ -52,7 +53,22 @@
     self.window.rootViewController = navigationController;
 
     // Fetch initial list of Programs from SCPRV4 and store in CoreData for later usage.
-    //[[NetworkManager shared] fetchAllProgramInformation:self];
+    [[NetworkManager shared] fetchAllProgramInformation:^(id returnedObject) {
+        
+        NSAssert([returnedObject isKindOfClass:[NSArray class]],@"Expecting an Array Here...");
+        NSArray *content = (NSArray*)returnedObject;
+        if ([content count] == 0) {
+            return;
+        }
+        
+        // Process Programs and insert into CoreData.
+        NSLog(@"SCPRv4 returned %ld programs", (unsigned long)[content count]);
+        [Program insertProgramsWithArray:content inManagedObjectContext:[[ContentManager shared] managedObjectContext]];
+        
+        // Save all changes made.
+        [[ContentManager shared] saveContext];
+    }];
+    
     if ( [[UIApplication sharedApplication] respondsToSelector:@selector(registerUserNotificationSettings:)] ) {
         [[UIApplication sharedApplication] registerUserNotificationSettings:[UIUserNotificationSettings settingsForTypes:UIUserNotificationTypeAlert
                                                                                                               categories:nil]];
@@ -124,16 +140,7 @@
 #pragma mark - ContentProcessor
 
 - (void)handleProcessedContent:(NSArray *)content flags:(NSDictionary *)flags {
-    if ([content count] == 0) {
-        return;
-    }
-    
-    // Process Programs and insert into CoreData.
-    NSLog(@"SCPRv4 returned %ld programs", (unsigned long)[content count]);
-    [Program insertProgramsWithArray:content inManagedObjectContext:[[ContentManager shared] managedObjectContext]];
 
-    // Save all changes made.
-    [[ContentManager shared] saveContext];
 }
 
 @end

@@ -53,7 +53,36 @@
                                       [self.blurView setNeedsDisplay];
                                   }];
 
-    [[NetworkManager shared] fetchEpisodesForProgram:_program.program_slug dispay:self];
+    [[NetworkManager shared] fetchEpisodesForProgram:_program.program_slug
+                                          completion:^(id returnedObject) {
+                                              
+                                              NSAssert([returnedObject isKindOfClass:[NSArray class]],@"Expecting an Array here");
+                                              NSArray *content = (NSArray*)returnedObject;
+                                              if ([content count] == 0) {
+                                                  return;
+                                              }
+                                              
+                                              NSMutableArray *episodesArray = [@[] mutableCopy];
+                                              for (NSMutableDictionary *episodeDict in content) {
+                                                  Episode *episode = [[Episode alloc] initWithDict:episodeDict];
+                                                  if (episode.audio != nil) {
+                                                      [episodesArray addObject:episode];
+                                                  } else {
+                                                      if (episode.segments != nil && [episode.segments count] > 0) {
+                                                          for (Segment *segment in episode.segments) {
+                                                              [episodesArray addObject:segment];
+                                                          }
+                                                      }
+                                                  }
+                                              }
+                                              
+                                              self.episodesList = episodesArray;
+                                              
+                                              [self.episodesTable reloadData];
+                                              
+                                          }];
+    
+    //[[NetworkManager shared] fetchEpisodesForProgram:_program.program_slug dispay:self];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -132,27 +161,7 @@
 # pragma mark - ContentProcessor delegate
 
 - (void)handleProcessedContent:(NSArray *)content flags:(NSDictionary *)flags {
-    if ([content count] == 0) {
-        return;
-    }
 
-    NSMutableArray *episodesArray = [@[] mutableCopy];
-    for (NSMutableDictionary *episodeDict in content) {
-        Episode *episode = [[Episode alloc] initWithDict:episodeDict];
-        if (episode.audio != nil) {
-            [episodesArray addObject:episode];
-        } else {
-            if (episode.segments != nil && [episode.segments count] > 0) {
-                for (Segment *segment in episode.segments) {
-                    [episodesArray addObject:segment];
-                }
-            }
-        }
-    }
-
-    self.episodesList = episodesArray;
-
-    [self.episodesTable reloadData];
 }
 
 - (void)didReceiveMemoryWarning {

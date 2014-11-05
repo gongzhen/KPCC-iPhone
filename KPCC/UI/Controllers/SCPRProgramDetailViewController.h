@@ -10,7 +10,7 @@
 #import "Program.h"
 #import "NetworkManager.h"
 
-@interface SCPRProgramDetailViewController : UIViewController<ContentProcessor, UITableViewDataSource, UITableViewDelegate>
+@interface SCPRProgramDetailViewController : UIViewController<UITableViewDataSource, UITableViewDelegate>
 
 - (id)initWithProgram:(Program *)program;
 

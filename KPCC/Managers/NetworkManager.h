@@ -12,15 +12,11 @@
 #import <CoreTelephony/CTCarrier.h>
 #import <AFNetworking.h>
 #import "TritonAd.h"
+#import "Utils.h"
 
 #define kServerBase @"http://www.scpr.org/api/v3"
 #define kFailoverThreshold 4
 
-
-@protocol ContentProcessor <NSObject>
-@optional
-- (void)handleProcessedContent:(NSArray*)content flags:(NSDictionary*)flags;
-@end
 
 
 typedef enum {
@@ -46,12 +42,15 @@ typedef enum {
 - (NetworkHealth)checkNetworkHealth:(NSString*)server;
 - (NSString *)networkInformation;
 
-- (void)fetchProgramInformationFor:(NSDate*)thisTime display:(id<ContentProcessor>)display;
-- (void)fetchAllProgramInformation:(id<ContentProcessor>)display;
-- (void)fetchEpisodesForProgram:(NSString *)slug dispay:(id<ContentProcessor>)display;
+
+- (void)fetchAllProgramInformation:(CompletionBlockWithValue)completion;
+- (void)fetchEpisodesForProgram:(NSString*)slug completion:(CompletionBlockWithValue)completion;
+- (void)fetchEditions:(CompletionBlockWithValue)completion;
+
 - (void)processResponseData:(NSDictionary*)content;
-- (void)requestFromSCPRWithEndpoint:(NSString*)endpoint andDisplay:(id<ContentProcessor>)display;
-- (void)requestFromSCPRWithEndpoint:(NSString *)endpoint andDisplay:(id<ContentProcessor>)display flags:(NSDictionary*)flags;
+
+
+- (void)requestFromSCPRWithEndpoint:(NSString *)endpoint completion:(CompletionBlockWithValue)completion;
 
 - (void)fetchTritonAd:(NSString *)params completion:(void (^)(TritonAd* tritonAd))completion;
 - (void)sendImpressionToTriton:(NSString*)impressionURL completion:(void (^)(BOOL success))completion;

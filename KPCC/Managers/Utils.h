@@ -14,8 +14,7 @@
 
 //@class SCPRMasterViewController;
 
-typedef void (^CompletionBlock)(void);
-typedef void (^CompletionBlockWithValue)(id returnedObject);
+
 
 #define kUpdateProgramKey @":UPDATE-PROGRAM:"
 #define SEQ(a,b) [a isEqualToString:b]
