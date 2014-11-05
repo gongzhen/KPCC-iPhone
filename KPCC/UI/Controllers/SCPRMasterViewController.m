@@ -159,7 +159,6 @@ static CGFloat kDisabledAlpha = 0.15;
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
 
-    // Set the current view to receive events from the AudioManagerDelegate.
     [AudioManager shared].delegate = self;
 
     if (self.menuOpen) {
@@ -170,9 +169,18 @@ static CGFloat kDisabledAlpha = 0.15;
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
 
+    [self.blurView setNeedsDisplay];
+    [self.queueBlurView setNeedsDisplay];
+
     // Once the view has appeared we can register to begin receiving system audio controls.
     [[UIApplication sharedApplication] beginReceivingRemoteControlEvents];
     [self becomeFirstResponder];
+}
+
+- (void)viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear:animated];
+    self.queueBlurView.alpha = 0.0;
+    self.queueDarkBgView.alpha = 0.0;
 }
 
 - (void)addPreRollController {
@@ -665,6 +673,7 @@ static CGFloat kDisabledAlpha = 0.15;
                                     andImageView:self.programImageView
                                       completion:^(BOOL status) {
                                           [self.blurView setNeedsDisplay];
+                                          [self.queueBlurView setNeedsDisplay];
                                       }];
 
         [self.programTitleOnDemand setText:[program.title uppercaseString]];
@@ -946,12 +955,6 @@ static CGFloat kDisabledAlpha = 0.15;
 #pragma mark - UIScrollViewDelegate for audio queue
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
     NSLog(@"didEndDecel, currentPage: %f", scrollView.contentOffset.x / scrollView.frame.size.width);
-
-    int newPage = scrollView.contentOffset.x / scrollView.frame.size.width;
-    if (self.queueCurrentPage != newPage) {
-//        [[AudioManager shared] stopStream];
-//        self.timeLabelOnDemand.text = @"Loading...";
-    }
 
     if (self.queueScrollTimer != nil && [self.queueScrollTimer isValid]) {
         [self.queueScrollTimer invalidate];
