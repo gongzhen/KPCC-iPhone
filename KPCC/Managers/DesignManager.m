@@ -47,14 +47,23 @@ static CGFloat kFadeDuration = 3.0;
 
         NSURL *imageUrl = [NSURL URLWithString:[NSString stringWithFormat:@"%@program_tile_%@.jpg", kMediaServerPath, slugWithScale]];
         NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:imageUrl];
-
-        [UIView animateWithDuration:0.15 animations:^{
-            [imageView setAlpha:0.0];
-        }];
-
+#ifdef TEST_PROGRAM_IMAGE
+        if ( self.currentSlug ) {
+            if ( SEQ(self.currentSlug,slug) ) {
+                if ( !self.displayingStockPhoto ) {
+                    [self loadStockPhotoToImageView:imageView];
+                    return;
+                }
+            }
+        } else {
+            self.currentSlug = slug;
+        }
+#endif
+        
         UIImageView *iv = imageView;
         [iv setImageWithURLRequest:request placeholderImage:nil success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {
             
+            self.displayingStockPhoto = NO;
             dispatch_async(dispatch_get_main_queue(), ^{
                 imageView.image = image;
                 imageView.alpha = 1.0;
@@ -71,32 +80,29 @@ static CGFloat kFadeDuration = 3.0;
 
             completion(true);
         } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error) {
-            [imageView setImage:[UIImage imageNamed:@"program_tile_generic.jpg"]];
-            imageView.alpha = 1.0;
-            CATransition *transition = [CATransition animation];
-            transition.duration = kFadeDuration;
-            transition.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
-            transition.type = kCATransitionFade;
-            
-            [imageView.layer addAnimation:transition
-                                   forKey:nil];
+            [self loadStockPhotoToImageView:imageView];
             completion(true);
         }];
     } else {
-        [imageView setImage:[UIImage imageNamed:@"program_tile_generic.jpg"]];
-        imageView.alpha = 1.0;
-        CATransition *transition = [CATransition animation];
-        transition.duration = kFadeDuration;
-        transition.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
-        transition.type = kCATransitionFade;
-        
-        [imageView.layer addAnimation:transition
-                               forKey:nil];
-        
+        [self loadStockPhotoToImageView:imageView];
         completion(true);
     }
 }
 
+- (void)loadStockPhotoToImageView:(UIImageView *)imageView {
+    
+    self.displayingStockPhoto = YES;
+    [imageView setImage:[UIImage imageNamed:@"program_tile_generic.jpg"]];
+    imageView.alpha = 1.0;
+    CATransition *transition = [CATransition animation];
+    transition.duration = kFadeDuration;
+    transition.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
+    transition.type = kCATransitionFade;
+    
+    [imageView.layer addAnimation:transition
+                           forKey:nil];
+    
+}
 
 
 - (CGRect)screenFrame {

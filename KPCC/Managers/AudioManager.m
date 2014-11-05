@@ -555,10 +555,14 @@ static const NSString *ItemStatusContext;
 #ifdef USE_TEST_STREAM
     return [self minSeekableDate];
 #else
+#ifndef NO_PROGRAM_OFFSET_CORRECTION
     NSTimeInterval supposed = [date timeIntervalSince1970];
     NSTimeInterval actual = supposed + 60 * 6;
     NSDate *actualDate = [NSDate dateWithTimeIntervalSince1970:actual];
     return actualDate;
+#else
+    return date;
+#endif
 #endif
 }
 
