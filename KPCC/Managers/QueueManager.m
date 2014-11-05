@@ -71,7 +71,7 @@ static QueueManager *singleton = nil;
             AudioChunk *chunk = [self.queue objectAtIndex:self.currentlyPlayingIndex + 1];
             [[AudioManager shared] playQueueItemWithUrl:chunk.audioUrl];
             self.currentlyPlayingIndex += 1;
-            //[[[Utils del] masterViewController] setOnDemandUI:YES withProgram:nil andAudioChunk:chunk];
+            [[[Utils del] masterViewController] setPositionForQueue:(int)self.currentlyPlayingIndex];
         }
     }
 }
@@ -82,7 +82,7 @@ static QueueManager *singleton = nil;
             AudioChunk *chunk = [self.queue objectAtIndex:self.currentlyPlayingIndex - 1];
             [[AudioManager shared] playQueueItemWithUrl:chunk.audioUrl];
             self.currentlyPlayingIndex -= 1;
-            //[[[Utils del] masterViewController] setOnDemandUI:YES withProgram:nil andAudioChunk:chunk];
+            [[[Utils del] masterViewController] setPositionForQueue:(int)self.currentlyPlayingIndex];
         }
     }
 }

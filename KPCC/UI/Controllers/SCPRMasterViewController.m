@@ -33,6 +33,8 @@ static CGFloat kDisabledAlpha = 0.15;
 @property BOOL setForLiveStreamUI;
 @property BOOL setForOnDemandUI;
 @property BOOL dirtyFromRewind;
+@property BOOL queueBlurShown;
+@property BOOL queueLoading;
 
 @property IBOutlet NSLayoutConstraint *playerControlsTopYConstraint;
 @property IBOutlet NSLayoutConstraint *playerControlsBottomYConstraint;
@@ -137,7 +139,7 @@ static CGFloat kDisabledAlpha = 0.15;
     self.jogShuttle.view.alpha = 0.0;
     [self.jogShuttle prepare];
 
-    // Scroll view for audio queue
+    // Views for audio queue
     self.queueScrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 64, self.view.frame.size.width, self.timeLabelOnDemand.frame.origin.y - 64)];
     self.queueScrollView.backgroundColor = [UIColor clearColor];
     self.queueScrollView.pagingEnabled = YES;
@@ -154,16 +156,24 @@ static CGFloat kDisabledAlpha = 0.15;
                                                  name:@"program_has_changed"
                                                object:nil];
     
+
+
+    [self.queueBlurView setAlpha:0.0];
+    [self.queueBlurView setTintColor:[UIColor clearColor]];
+    [self.queueBlurView setBlurRadius:20.0f];
+    [self.queueBlurView setDynamic:NO];
+    [self.queueDarkBgView setAlpha:0.0];
+    
     self.view.alpha = 0.0;
     [SCPRCloakViewController cloakWithCustomCenteredView:nil cloakAppeared:^{
         [self updateDataForUI];
     }];
+
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
 
-    // Set the current view to receive events from the AudioManagerDelegate.
     [AudioManager shared].delegate = self;
 
     if (self.menuOpen) {
@@ -174,9 +184,18 @@ static CGFloat kDisabledAlpha = 0.15;
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
 
+    [self.blurView setNeedsDisplay];
+    [self.queueBlurView setNeedsDisplay];
+
     // Once the view has appeared we can register to begin receiving system audio controls.
     [[UIApplication sharedApplication] beginReceivingRemoteControlEvents];
     [self becomeFirstResponder];
+}
+
+- (void)viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear:animated];
+    self.queueBlurView.alpha = 0.0;
+    self.queueDarkBgView.alpha = 0.0;
 }
 
 - (void)addPreRollController {
@@ -636,14 +655,12 @@ static CGFloat kDisabledAlpha = 0.15;
         frame.size = self.queueScrollView.frame.size;
 
         SCPRQueueScrollableView *queueSubView = [[SCPRQueueScrollableView alloc] initWithFrame:frame];
-
         [queueSubView setAudioChunk:[array objectAtIndex:i]];
 
         [self.queueScrollView addSubview:queueSubView];
     }
     self.queueScrollView.contentSize = CGSizeMake(self.queueScrollView.frame.size.width * [array count], self.queueScrollView.frame.size.height);
-    self.queueScrollView.contentOffset = CGPointMake(self.queueScrollView.frame.size.width * index, 0);
-    self.queueCurrentPage = index;
+    [self setPositionForQueue:index];
 
     // Update UILabels, content, etc.
     [self setDataForOnDemand:program andAudioChunk:[array objectAtIndex:index]];
@@ -679,6 +696,7 @@ static CGFloat kDisabledAlpha = 0.15;
                                     andImageView:self.programImageView
                                       completion:^(BOOL status) {
                                           [self.blurView setNeedsDisplay];
+                                          [self.queueBlurView setNeedsDisplay];
                                       }];
 
         [self.programTitleOnDemand setText:[program.title uppercaseString]];
@@ -686,7 +704,14 @@ static CGFloat kDisabledAlpha = 0.15;
 
     if (audioChunk) {
         self.onDemandEpUrl = audioChunk.contentShareUrl;
-        [self.episodeTitleOnDemand setText:audioChunk.audioTitle];
+    }
+}
+
+// TODO: Need to make this prettier - used by QueueManager playNext when an episode completes.
+- (void)setPositionForQueue:(int)index {
+    if (index >= 0 && index < [self.queueScrollView.subviews count]) {
+        self.queueScrollView.contentOffset = CGPointMake(self.queueScrollView.frame.size.width * index, 0);
+        self.queueCurrentPage = index;
     }
 }
 
@@ -978,18 +1003,68 @@ static CGFloat kDisabledAlpha = 0.15;
 }
 
 
-#pragma mark - UIScrollViewDelegate
+#pragma mark - UIScrollViewDelegate for audio queue
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
     NSLog(@"didEndDecel, currentPage: %f", scrollView.contentOffset.x / scrollView.frame.size.width);
 
-    int newPage = scrollView.contentOffset.x / scrollView.frame.size.width;
-    if (self.queueCurrentPage != newPage) {
-        [[QueueManager shared] playItemAtPosition:newPage];
-        self.queueCurrentPage = newPage;
+    if (self.queueScrollTimer != nil && [self.queueScrollTimer isValid]) {
+        [self.queueScrollTimer invalidate];
+        self.queueScrollTimer = nil;
+    }
+
+    self.queueScrollTimer = [NSTimer scheduledTimerWithTimeInterval:0.5
+                                     target:self
+                                   selector:@selector(queueScrollEnded)
+                                   userInfo:nil
+                                    repeats:NO];
+}
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationOptionCurveLinear animations:^{
+        self.timeLabelOnDemand.alpha = 0.0;
+        self.progressView.alpha = 0.0;
+    } completion:^(BOOL finished){
+
+    }];
+
+    if (!self.queueBlurShown) {
+        [self.queueBlurView setNeedsDisplay];
+        [UIView animateWithDuration:0.3 delay:0. options:UIViewAnimationOptionCurveLinear animations:^{
+            self.queueBlurView.alpha = 1.0;
+            self.queueDarkBgView.alpha = 0.35;
+        } completion:^(BOOL finished) {
+            self.queueBlurShown = YES;
+        }];
     }
 }
--(void)scrollViewDidScroll:(UIScrollView *)scrollView {
-    NSLog(@"didScroll");
+
+- (void)queueScrollEnded {
+    NSLog(@"queueScrollEnded");
+
+    [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationOptionCurveLinear animations:^{
+        self.timeLabelOnDemand.alpha = 1.0;
+    } completion:nil];
+
+    int newPage = self.queueScrollView.contentOffset.x / self.queueScrollView.frame.size.width;
+    if (self.queueCurrentPage != newPage) {
+        [[AudioManager shared] stopStream];
+        self.timeLabelOnDemand.text = @"Loading...";
+        self.queueLoading = YES;
+
+        [[QueueManager shared] playItemAtPosition:newPage];
+        self.queueCurrentPage = newPage;
+    } else {
+        if (self.queueBlurShown) {
+            [self.queueBlurView setNeedsDisplay];
+            [UIView animateWithDuration:0.3 delay:0. options:UIViewAnimationOptionCurveLinear animations:^{
+                self.queueBlurView.alpha = 0.0;
+                self.queueDarkBgView.alpha = 0.0;
+                self.progressView.alpha = 1.0;
+            } completion:^(BOOL finished) {
+                self.queueBlurShown = NO;
+            }];
+        }
+    }
 }
 
 
@@ -1106,6 +1181,21 @@ static CGFloat kDisabledAlpha = 0.15;
             });
         }
     }
+
+    // NOTE: basically used instead of observing player rate change to know when actual playback starts
+    // .. for decloaking queue blur
+    if (self.queueBlurShown && self.queueLoading) {
+        [self.queueBlurView setNeedsDisplay];
+        [self.progressView setProgress:0.0 animated:NO];
+        [UIView animateWithDuration:0.3 delay:0. options:UIViewAnimationOptionCurveLinear animations:^{
+            self.queueBlurView.alpha = 0.0;
+            self.queueDarkBgView.alpha = 0.0;
+            self.progressView.alpha = 1.0;
+        } completion:^(BOOL finished) {
+            self.queueBlurShown = NO;
+            self.queueLoading = NO;
+        }];
+    }
 }
 
 - (void)onSeekCompleted {
@@ -1141,6 +1231,7 @@ static CGFloat kDisabledAlpha = 0.15;
                                         andImageView:self.programImageView
                                           completion:^(BOOL status) {
                                               [self.blurView setNeedsDisplay];
+                                              [self.queueBlurView setNeedsDisplay];
                                           }];
         }
 

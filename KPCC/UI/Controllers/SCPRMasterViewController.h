@@ -35,12 +35,13 @@
 @property IBOutlet FXBlurView *blurView;
 @property IBOutlet UIView *darkBgView;
 
-// For testing audio queue
-@property IBOutlet UIButton *nextEpisodeButton;
-@property IBOutlet UIButton *prevEpisodeButton;
 
+// For audio queue
 @property (nonatomic,strong) UIScrollView *queueScrollView;
 @property (nonatomic) int queueCurrentPage;
+@property IBOutlet FXBlurView *queueBlurView;
+@property IBOutlet UIView *queueDarkBgView;
+@property (nonatomic,strong) NSTimer *queueScrollTimer;
 
 // Major holder views for different playback states.
 @property IBOutlet UIView *liveStreamView;
@@ -52,7 +53,6 @@
 // Views for On-Demand playback;
 @property IBOutlet UILabel *programTitleOnDemand;
 @property IBOutlet UIView *dividerOnDemand;
-@property IBOutlet UILabel *episodeTitleOnDemand;
 @property IBOutlet UILabel *timeLabelOnDemand;
 @property IBOutlet UIButton *shareButton;
 @property IBOutlet UIProgressView *progressView;
@@ -87,6 +87,7 @@
 
 - (void)setOnDemandUI:(BOOL)animated forProgram:(Program*)program withAudio:(NSArray*)array atCurrentIndex:(int)index;
 - (void)setLiveStreamingUI:(BOOL)animated;
+- (void)setPositionForQueue:(int)index;
 
 - (void)treatUIforProgram;
 

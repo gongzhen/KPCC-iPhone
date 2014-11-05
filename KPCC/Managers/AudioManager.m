@@ -386,17 +386,19 @@ static const NSString *ItemStatusContext;
 
 - (void)playerItemFailedToPlayToEndTime:(NSNotification *)notification {
     NSError *error = notification.userInfo[AVPlayerItemFailedToPlayToEndTimeErrorKey];
-    
+#ifdef DEBUG
     [self dump:YES];
-    
+#endif
     NSLog(@"playerItemFailedToPlayToEndTime! --- %@ ", [error localizedDescription]);
 }
 
 - (void)playerItemDidFinishPlaying:(NSNotification *)notification {
-    NSError *error = notification.userInfo[AVPlayerItemDidPlayToEndTimeNotification];
-    NSLog(@"playerItemDidFinishPlaying! --- %@", [error localizedDescription]);
-
-    [[NSNotificationCenter defaultCenter] removeObserver:self.playerItem forKeyPath:AVPlayerItemDidPlayToEndTimeNotification];
+    @try {
+        [[NSNotificationCenter defaultCenter] removeObserver:self.playerItem forKeyPath:AVPlayerItemDidPlayToEndTimeNotification];
+    } @catch (NSException *exception) {
+        // Wasn't necessary
+        NSLog(@"Exception - failed to remove AVPlayerItemDidPlayToEndTimeNotification");
+    }
 
     if ( ![[QueueManager shared]isQueueEmpty] ) {
         [[QueueManager shared] playNext];
