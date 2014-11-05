@@ -10,6 +10,7 @@
 #import "Utils.h"
 #import "Program.h"
 
+
 @interface SessionManager : NSObject
 
 + (SessionManager*)shared;
@@ -25,12 +26,13 @@
 
 - (void)fetchCurrentProgram:(CompletionBlockWithValue)completed;
 - (void)fetchProgramAtDate:(NSDate*)date completed:(CompletionBlockWithValue)completed;
-- (void)finishFetchWithCompletion:(CompletionBlockWithValue)completion;
 
 - (void)armProgramUpdater;
 - (void)disarmProgramUpdater;
 
 - (void)processNotification:(UILocalNotification*)programUpdate;
 - (BOOL)ignoreProgramUpdating;
+
+- (void)handleSessionReactivation;
 
 @end

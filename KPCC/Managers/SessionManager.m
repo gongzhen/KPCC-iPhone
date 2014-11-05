@@ -9,6 +9,8 @@
 #import "SessionManager.h"
 #import "AudioManager.h"
 
+static long kStreamBufferLimit = 4*60*60;
+
 @implementation SessionManager
 
 + (SessionManager*)shared {
@@ -20,6 +22,7 @@
     return mgr;
 }
 
+#pragma mark - Program
 - (void)fetchProgramAtDate:(NSDate *)date completed:(CompletionBlockWithValue)completed {
     
     self.lastProgramUpdate = date;
@@ -102,9 +105,7 @@
     [self fetchProgramAtDate:[NSDate date] completed:completed];
 }
 
-- (void)finishFetchWithCompletion:(CompletionBlockWithValue)completion {
-    
-}
+
 
 - (void)armProgramUpdater {
     [self disarmProgramUpdater];
@@ -173,6 +174,29 @@
     }
 }
 
+- (BOOL)ignoreProgramUpdating {
+    return (
+            [[AudioManager shared] status] == StreamStatusPaused  ||
+            [[AudioManager shared] currentAudioMode] == AudioModeOnDemand
+            );
+}
+
+#pragma mark - State handling
+- (void)setSessionLeftDate:(NSDate *)sessionLeftDate {
+    _sessionLeftDate = sessionLeftDate;
+    if ( [[AudioManager shared] status] == StreamStatusPaused ) {
+        [self setSessionEndedWhilePaused:YES];
+    } else {
+        [self setSessionEndedWhilePaused:NO];
+    }
+}
+
+- (void)setSessionReturnedDate:(NSDate *)sessionReturnedDate {
+    _sessionReturnedDate = sessionReturnedDate;
+    [self setSessionEndedWhilePaused:NO];
+    [self handleSessionReactivation];
+}
+
 - (void)processNotification:(UILocalNotification*)programUpdate {
     
     if ( [self ignoreProgramUpdating] ) return;
@@ -193,11 +217,23 @@
     }];
 }
 
-- (BOOL)ignoreProgramUpdating {
-    return (
-            [[AudioManager shared] status] == StreamStatusPaused  ||
-            [[AudioManager shared] currentAudioMode] == AudioModeLive
-            );
+- (void)handleSessionReactivation {
+    if ( !self.sessionLeftDate || !self.sessionReturnedDate ) return;
+    long tiBetween = [[self sessionReturnedDate] timeIntervalSince1970] - [[self sessionLeftDate] timeIntervalSince1970];
+    if ( tiBetween > kStreamBufferLimit ) {
+        [[AudioManager shared] stopStream];
+        [self fetchCurrentProgram:^(id returnedObject) {
+                
+        }];
+    } else {
+        if ( ![self sessionEndedWhilePaused] ) {
+            [self fetchCurrentProgram:^(id returnedObject) {
+                
+            }];
+        }
+    }
 }
+
+
 
 @end
