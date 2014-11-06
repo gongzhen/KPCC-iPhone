@@ -87,6 +87,6 @@
 
 - (void)setOnDemandUI:(BOOL)animated forProgram:(Program*)program withAudio:(NSArray*)array atCurrentIndex:(int)index;
 - (void)setLiveStreamingUI:(BOOL)animated;
-- (void)setPositionForQueue:(int)index;
+- (void)setPositionForQueue:(int)index animated:(BOOL)animated;
 
 @end

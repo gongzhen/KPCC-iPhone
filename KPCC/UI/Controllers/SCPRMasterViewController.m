@@ -643,7 +643,7 @@ static CGFloat kDisabledAlpha = 0.15;
         [self.queueScrollView addSubview:queueSubView];
     }
     self.queueScrollView.contentSize = CGSizeMake(self.queueScrollView.frame.size.width * [array count], self.queueScrollView.frame.size.height);
-    [self setPositionForQueue:index];
+    [self setPositionForQueue:index animated:NO];
 
     // Update UILabels, content, etc.
     [self setDataForOnDemand:program andAudioChunk:[array objectAtIndex:index]];
@@ -688,11 +688,18 @@ static CGFloat kDisabledAlpha = 0.15;
     }
 }
 
-// TODO: Need to make this prettier - used by QueueManager playNext when an episode completes.
-- (void)setPositionForQueue:(int)index {
+- (void)setPositionForQueue:(int)index animated:(BOOL)animated {
     if (index >= 0 && index < [self.queueScrollView.subviews count]) {
-        self.queueScrollView.contentOffset = CGPointMake(self.queueScrollView.frame.size.width * index, 0);
-        self.queueCurrentPage = index;
+        if (animated) {
+            [UIView animateWithDuration:0.4 delay:0.0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
+                self.queueScrollView.contentOffset = CGPointMake(self.queueScrollView.frame.size.width * index, 0);
+            } completion:^(BOOL finished) {
+                [self queueScrollEnded];
+            }];
+        } else {
+            self.queueScrollView.contentOffset = CGPointMake(self.queueScrollView.frame.size.width * index, 0);
+            [self queueScrollEnded];
+        }
     }
 }
 
