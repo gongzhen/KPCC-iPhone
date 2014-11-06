@@ -974,6 +974,7 @@ static CGFloat kDisabledAlpha = 0.15;
     [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationOptionCurveLinear animations:^{
         self.timeLabelOnDemand.alpha = 0.0;
         self.progressView.alpha = 0.0;
+        self.shareButton.alpha = 0.0;
     } completion:^(BOOL finished){
 
     }];
@@ -1011,6 +1012,7 @@ static CGFloat kDisabledAlpha = 0.15;
                 self.queueBlurView.alpha = 0.0;
                 self.queueDarkBgView.alpha = 0.0;
                 self.progressView.alpha = 1.0;
+                self.shareButton.alpha = 1.0;
             } completion:^(BOOL finished) {
                 self.queueBlurShown = NO;
             }];
@@ -1142,6 +1144,7 @@ static CGFloat kDisabledAlpha = 0.15;
             self.queueBlurView.alpha = 0.0;
             self.queueDarkBgView.alpha = 0.0;
             self.progressView.alpha = 1.0;
+            self.shareButton.alpha = 1.0;
         } completion:^(BOOL finished) {
             self.queueBlurShown = NO;
             self.queueLoading = NO;
