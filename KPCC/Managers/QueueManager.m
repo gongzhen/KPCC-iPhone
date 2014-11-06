@@ -66,6 +66,9 @@ static QueueManager *singleton = nil;
 }
 
 - (void)playNext {
+#ifdef DEBUG
+    NSLog(@"playNext fired");
+#endif
     if (![self isQueueEmpty]) {
         if (self.currentlyPlayingIndex + 1 < [self.queue count]) {
             AudioChunk *chunk = [self.queue objectAtIndex:self.currentlyPlayingIndex + 1];

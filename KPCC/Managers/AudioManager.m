@@ -138,6 +138,9 @@ static const NSString *ItemStatusContext;
 }
 
 - (void)playQueueItemWithUrl:(NSString *)url {
+#ifdef DEBUG
+    NSLog(@"playing queue item with url: %@", url);
+#endif
     [self playAudioWithURL:url];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playerItemDidFinishPlaying:) name:AVPlayerItemDidPlayToEndTimeNotification object:self.playerItem];
 }
