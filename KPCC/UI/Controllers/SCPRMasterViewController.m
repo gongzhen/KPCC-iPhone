@@ -828,25 +828,23 @@ static CGFloat kDisabledAlpha = 0.15;
     darkBgFadeAnimation.toValue = @0;
     darkBgFadeAnimation.duration = 0.3;
 
-    POPBasicAnimation *controlsFadeAnimation = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
-    controlsFadeAnimation.toValue = @1;
-    controlsFadeAnimation.duration = 0.3;
+    POPBasicAnimation *controlsFadeIn = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
+    controlsFadeIn.toValue = @1;
+    controlsFadeIn.duration = 0.3;
 
     [self.blurView.layer pop_addAnimation:fadeAnimation forKey:@"blurViewFadeAnimation"];
     [self.darkBgView.layer pop_addAnimation:darkBgFadeAnimation forKey:@"darkBgFadeAnimation"];
-    [self.playerControlsView.layer pop_addAnimation:controlsFadeAnimation forKey:@"controlsViewFadeAnimation"];
-    [self.onDemandPlayerView.layer pop_addAnimation:controlsFadeAnimation forKey:@"onDemandViewFadeAnimation"];
-    [self.liveStreamView.layer pop_addAnimation:controlsFadeAnimation forKey:@"liveStreamViewFadeAnimation"];
+    [self.playerControlsView.layer pop_addAnimation:controlsFadeIn forKey:@"controlsViewFadeAnimation"];
+    [self.onDemandPlayerView.layer pop_addAnimation:controlsFadeIn forKey:@"onDemandViewFadeAnimation"];
+    [self.liveStreamView.layer pop_addAnimation:controlsFadeIn forKey:@"liveStreamViewFadeAnimation"];
     if (!initialPlay) {
-        [self.initialControlsView.layer pop_addAnimation:controlsFadeAnimation forKey:@"initialControlsViewFade"];
+        [self.initialControlsView.layer pop_addAnimation:controlsFadeIn forKey:@"initialControlsViewFade"];
     }
 
-    if ([[AudioManager shared] isStreamPlaying]) {
-        POPBasicAnimation *dividerFadeAnim = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
-        dividerFadeAnim.toValue = @0.4;
-        dividerFadeAnim.duration = 0.3;
-        [self.horizDividerLine.layer pop_addAnimation:dividerFadeAnim forKey:@"horizDividerFadeOutAnimation"];
-    }
+    POPBasicAnimation *dividerFadeAnim = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
+    dividerFadeAnim.toValue = @0.4;
+    dividerFadeAnim.duration = 0.3;
+    [self.horizDividerLine.layer pop_addAnimation:dividerFadeAnim forKey:@"horizDividerFadeOutAnimation"];
 
     self.menuOpen = NO;
 }
