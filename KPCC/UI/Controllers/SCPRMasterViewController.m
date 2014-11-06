@@ -235,9 +235,9 @@ static CGFloat kDisabledAlpha = 0.15;
 
         if ([[AudioManager shared] isStreamBuffering]) {
             [[AudioManager shared] stopAllAudio];
-        } else {
-            [self playStream];
         }
+
+        [self playStream];
     } else {
         self.setPlaying = NO;
 
@@ -461,7 +461,7 @@ static CGFloat kDisabledAlpha = 0.15;
 
 - (void)setUIContents:(BOOL)animated {
 
-    if ( self.jogging ) {
+    if ( self.jogging || self.queueBlurShown ) {
         return;
     }
     
@@ -483,7 +483,7 @@ static CGFloat kDisabledAlpha = 0.15;
             }
 
         } completion:^(BOOL finished) {
-            if ([[AudioManager shared] isStreamPlaying] || [[AudioManager shared] isStreamBuffering]) {
+            if ([[AudioManager shared] isStreamPlaying]) {
                 [self.playPauseButton setImage:[UIImage imageNamed:@"btn_pause.png"] forState:UIControlStateNormal];
             } else {
                 [self.playPauseButton setImage:[UIImage imageNamed:@"btn_play.png"] forState:UIControlStateNormal];
@@ -622,6 +622,10 @@ static CGFloat kDisabledAlpha = 0.15;
     self.navigationItem.title = @"Programs";
     [self.timeLabelOnDemand setText:@""];
     [self.progressView setProgress:0.0 animated:YES];
+
+    // Make sure the larger play button is hidden ...
+    [self primePlaybackUI];
+    initialPlay = YES;
 
     for (UIView *v in [self.queueScrollView subviews]) {
         [v removeFromSuperview];
