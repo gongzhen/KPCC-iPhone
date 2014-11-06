@@ -958,6 +958,19 @@ static CGFloat kDisabledAlpha = 0.15;
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
     NSLog(@"didEndDecel, currentPage: %f", scrollView.contentOffset.x / scrollView.frame.size.width);
 
+    int newPage = scrollView.contentOffset.x / scrollView.frame.size.width;
+    if (self.queueCurrentPage == newPage) {
+        [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationOptionCurveLinear animations:^{
+            self.timeLabelOnDemand.alpha = 1.0;
+            self.progressView.alpha = 1.0;
+            self.queueBlurView.alpha = 0.0;
+            self.queueDarkBgView.alpha = 0.0;
+            self.shareButton.alpha = 1.0;
+        } completion:^(BOOL finished) {
+            self.queueBlurShown = NO;
+        }];
+    }
+
     if (self.queueScrollTimer != nil && [self.queueScrollTimer isValid]) {
         [self.queueScrollTimer invalidate];
         self.queueScrollTimer = nil;
