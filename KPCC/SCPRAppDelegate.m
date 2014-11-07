@@ -55,7 +55,7 @@
     // Fetch initial list of Programs from SCPRV4 and store in CoreData for later usage.
     [[NetworkManager shared] fetchAllProgramInformation:^(id returnedObject) {
         
-        NSAssert([returnedObject isKindOfClass:[NSArray class]],@"Expecting an Array Here...");
+        //NSAssert([returnedObject isKindOfClass:[NSArray class]],@"Expecting an Array Here...");
         NSArray *content = (NSArray*)returnedObject;
         if ([content count] == 0) {
             return;

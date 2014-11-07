@@ -20,6 +20,7 @@
 #import "Segment.h"
 #import "SCPRJogShuttleViewController.h"
 #import "SCPRPreRollViewController.h"
+#import "SCPRProgressViewController.h"
 
 @interface SCPRMasterViewController : UIViewController<SCPRMenuDelegate>
 
@@ -35,6 +36,7 @@
 @property IBOutlet FXBlurView *blurView;
 @property IBOutlet UIView *darkBgView;
 
+@property NSInteger tickCounter;
 
 // For audio queue
 @property (nonatomic,strong) UIScrollView *queueScrollView;

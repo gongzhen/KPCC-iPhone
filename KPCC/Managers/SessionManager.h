@@ -17,10 +17,10 @@
 
 @property (nonatomic, copy) NSDate *sessionLeftDate;
 @property (nonatomic, copy) NSDate *sessionReturnedDate;
+@property (nonatomic, copy) NSDate *sessionPausedDate;
 @property (nonatomic, copy) NSDate *lastProgramUpdate;
 @property (nonatomic, strong) NSTimer *programUpdateTimer;
 @property BOOL useLocalNotifications;
-@property BOOL sessionEndedWhilePaused;
 
 @property (nonatomic, strong) Program *currentProgram;
 
@@ -32,7 +32,9 @@
 
 - (void)processNotification:(UILocalNotification*)programUpdate;
 - (BOOL)ignoreProgramUpdating;
+- (BOOL)sessionIsExpired;
 
 - (void)handleSessionReactivation;
+- (void)tick;
 
 @end

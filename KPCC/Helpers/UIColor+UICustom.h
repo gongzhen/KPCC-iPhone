@@ -12,6 +12,7 @@
 + (UIColor*)colorWithHex:(UInt32)hex;
 + (UIColor*)kpccOrangeColor;
 + (UIColor*)virtualBlackColor;
++ (UIColor*)cloudColor;
 - (UIColor*)intensify;
 
 @end

@@ -16,7 +16,7 @@
 #define kMediaServerPath @"http://media.scpr.org/iphone/program-images/"
 
 static DesignManager *singleton = nil;
-static CGFloat kFadeDuration = 3.0;
+
 
 @implementation DesignManager
 

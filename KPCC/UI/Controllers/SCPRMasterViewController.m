@@ -164,6 +164,7 @@ static CGFloat kDisabledAlpha = 0.15;
     [self.queueBlurView setDynamic:NO];
     [self.queueDarkBgView setAlpha:0.0];
     
+    
     self.view.alpha = 0.0;
     [SCPRCloakViewController cloakWithCustomCenteredView:nil cloakAppeared:^{
         [self updateDataForUI];
@@ -246,13 +247,27 @@ static CGFloat kDisabledAlpha = 0.15;
     }
 
     if (![[AudioManager shared] isStreamPlaying]) {
-        self.setPlaying = YES;
-
-        if ([[AudioManager shared] isStreamBuffering]) {
-            [[AudioManager shared] stopAllAudio];
+        
+        if ( [[SessionManager shared] sessionIsExpired] ) {
+            [[SessionManager shared] fetchCurrentProgram:^(id returnedObject) {
+                self.setPlaying = YES;
+                
+                if ([[AudioManager shared] isStreamBuffering]) {
+                    [[AudioManager shared] stopAllAudio];
+                } else {
+                    [self playStream];
+                }
+            }];
         } else {
-            [self playStream];
+            self.setPlaying = YES;
+            
+            if ([[AudioManager shared] isStreamBuffering]) {
+                [[AudioManager shared] stopAllAudio];
+            } else {
+                [self playStream];
+            }
         }
+
     } else {
         self.setPlaying = NO;
 
@@ -296,7 +311,10 @@ static CGFloat kDisabledAlpha = 0.15;
     self.liveRewindAltButton.userInteractionEnabled = NO;
     [self.liveRewindAltButton setAlpha:kDisabledAlpha];
     
+    Program *cProgram = [[SessionManager shared] currentProgram];
     [self.jogShuttle.view setAlpha:1.0];
+    [SCPRProgressViewController rewind];
+    
     [self.jogShuttle animateWithSpeed:1.0
                                hideableView:self.playPauseButton
                             direction:SpinDirectionBackward
@@ -314,9 +332,6 @@ static CGFloat kDisabledAlpha = 0.15;
                                [[AudioManager shared] adjustAudioWithValue:0.1 completion:^{
                                    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                                         self.rewindGate = NO;
-                                       [self.liveStreamView bringSubviewToFront:self.backToLiveButton];
-                                       [self.view bringSubviewToFront:self.liveStreamView];
-                                       
                                    });
                                }];
                                 
@@ -326,7 +341,7 @@ static CGFloat kDisabledAlpha = 0.15;
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         
         seekRequested = YES;
-        Program *cProgram = [[SessionManager shared] currentProgram];
+
         
         switch (distance) {
             case RewindDistanceBeginning:
@@ -462,7 +477,9 @@ static CGFloat kDisabledAlpha = 0.15;
 
 - (void)updateDataForUI {
     [[SessionManager shared] fetchCurrentProgram:^(id returnedObject) {
-        
+        [SCPRProgressViewController displayWithProgram:(Program*)returnedObject
+                                                onView:self
+                                    aboveSiblingView:self.horizDividerLine];
     }];
 }
 
@@ -486,7 +503,7 @@ static CGFloat kDisabledAlpha = 0.15;
     
     if (animated) {
         [UIView animateWithDuration:0.1 animations:^{
-            [self.playPauseButton setAlpha:0.0];
+            //[self.playPauseButton setAlpha:0.0];
 
             if ([[AudioManager shared] isStreamPlaying] || [[AudioManager shared] isStreamBuffering]) {
                 if ( ![self uiIsJogging] ) {
@@ -497,15 +514,15 @@ static CGFloat kDisabledAlpha = 0.15;
                 if ( ![self.liveDescriptionLabel.text isEqualToString:@"LIVE"] ) {
                     [self.liveDescriptionLabel fadeText:@"ON NOW"];
                 }
-                [self.liveRewindAltButton setAlpha:0.0];
+
                 [self.backToLiveButton setAlpha:0.0];
             }
 
         } completion:^(BOOL finished) {
             if ([[AudioManager shared] isStreamPlaying] || [[AudioManager shared] isStreamBuffering]) {
-                [self.playPauseButton setImage:[UIImage imageNamed:@"btn_pause.png"] forState:UIControlStateNormal];
+                [self.playPauseButton fadeImage:[UIImage imageNamed:@"btn_pause.png"] duration:0.2];
             } else {
-                [self.playPauseButton setImage:[UIImage imageNamed:@"btn_play.png"] forState:UIControlStateNormal];
+                [self.playPauseButton fadeImage:[UIImage imageNamed:@"btn_play.png"] duration:0.2];
             }
 
             // Leave this out for now.
@@ -528,14 +545,14 @@ static CGFloat kDisabledAlpha = 0.15;
             if ( ![self.liveDescriptionLabel.text isEqualToString:@"LIVE"] ) {
                 [self.liveDescriptionLabel fadeText:@"ON NOW"];
             }
-            [self.liveRewindAltButton setAlpha:0.0];
+
             [self.backToLiveButton setAlpha:0.0];
         }
 
         if ([[AudioManager shared] isStreamPlaying] || [[AudioManager shared] isStreamBuffering]) {
-            [self.playPauseButton setImage:[UIImage imageNamed:@"btn_pause.png"] forState:UIControlStateNormal];
+            [self.playPauseButton fadeImage:[UIImage imageNamed:@"btn_pause.png"] duration:0.2];
         } else {
-            [self.playPauseButton setImage:[UIImage imageNamed:@"btn_play.png"] forState:UIControlStateNormal];
+            [self.playPauseButton fadeImage:[UIImage imageNamed:@"btn_pause.png"] duration:0.2];
         }
     }
 }
@@ -640,6 +657,8 @@ static CGFloat kDisabledAlpha = 0.15;
         [self decloakForMenu:NO];
     }
 
+    [[SessionManager shared] setCurrentProgram:nil];
+    
     self.navigationItem.title = @"Programs";
     [self.timeLabelOnDemand setText:@""];
     [self.progressView setProgress:0.0 animated:YES];
@@ -1073,11 +1092,15 @@ static CGFloat kDisabledAlpha = 0.15;
 - (void)menuItemSelected:(NSIndexPath *)indexPath {
     switch (indexPath.row) {
         case 0:{
+            
+       
             [[AudioManager shared] stopAllAudio];
             [self updateDataForUI];
             [self setLiveStreamingUI:YES];
             [self decloakForMenu:YES];
             [[AudioManager shared] startStream];
+            
+            
             break;
         }
 
@@ -1132,13 +1155,20 @@ static CGFloat kDisabledAlpha = 0.15;
     }
     
     NSAssert([NSThread isMainThread],@"This is not the main thread...");
+    NSTimeInterval ti = [[[AudioManager shared] maxSeekableDate] timeIntervalSinceDate:[[AudioManager shared] currentDate]];
     
-    NSTimeInterval drift = [[[AudioManager shared] maxSeekableDate] timeIntervalSinceDate:[[AudioManager shared] currentDate]];
-    if ( drift > 60 && ![[AudioManager shared] isStreamBuffering] ) {
+    self.tickCounter++;
+    //if ( self.tickCounter % 10 == 0 ) {
+        [SCPRProgressViewController tick];
+        self.tickCounter = 0;
+    //}
+    
+    if ( ti > 60 && ![[AudioManager shared] isStreamBuffering] ) {
         
-        NSTimeInterval ti = [[[AudioManager shared] maxSeekableDate] timeIntervalSinceDate:[[AudioManager shared] currentDate]];
+        
         [self.liveDescriptionLabel fadeText:[NSString stringWithFormat:@"%@ BEHIND LIVE", [NSDate prettyTextFromSeconds:ti]]];
         [self.backToLiveButton setHidden:NO];
+        
         
         
         if ( !self.rewindGate ) {

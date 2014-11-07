@@ -29,8 +29,9 @@ static long kStreamBufferLimit = 4*60*60;
     [[NetworkManager shared] requestFromSCPRWithEndpoint:urlString completion:^(id returnedObject) {
         // Create Program and insert into managed object context
         if ( returnedObject ) {
-            Program *programObj = [Program insertProgramWithDictionary:returnedObject inManagedObjectContext:[[ContentManager shared] managedObjectContext]];
             dispatch_async(dispatch_get_main_queue(), ^{
+                Program *programObj = [Program insertProgramWithDictionary:returnedObject inManagedObjectContext:[[ContentManager shared] managedObjectContext]];
+            
                 [[ContentManager shared] saveContext];
                 
                 BOOL touch = NO;
@@ -148,25 +149,43 @@ static long kStreamBufferLimit = 4*60*60;
 }
 
 - (BOOL)ignoreProgramUpdating {
-    return (
+    
+    if ( [self sessionIsExpired] ) return NO;
+    if (
             [[AudioManager shared] status] == StreamStatusPaused  ||
             [[AudioManager shared] currentAudioMode] == AudioModeOnDemand
-            );
+        
+        )
+    {
+        return YES;
+    }
+   
+    return NO;
+    
 }
 
 #pragma mark - State handling
+
+- (BOOL)sessionIsExpired {
+    
+    if ( [[AudioManager shared] currentAudioMode] == AudioModeOnDemand ) return NO;
+    
+    if ( [self sessionPausedDate] ) {
+        NSDate *spd = [[SessionManager shared] sessionPausedDate];
+        if ( [[NSDate date] timeIntervalSinceDate:spd] > kStreamBufferLimit ) {
+            return YES;
+        }
+    }
+    
+    return NO;
+}
+
 - (void)setSessionLeftDate:(NSDate *)sessionLeftDate {
     _sessionLeftDate = sessionLeftDate;
-    if ( [[AudioManager shared] status] == StreamStatusPaused ) {
-        [self setSessionEndedWhilePaused:YES];
-    } else {
-        [self setSessionEndedWhilePaused:NO];
-    }
 }
 
 - (void)setSessionReturnedDate:(NSDate *)sessionReturnedDate {
     _sessionReturnedDate = sessionReturnedDate;
-    [self setSessionEndedWhilePaused:NO];
     [self handleSessionReactivation];
 }
 
@@ -199,7 +218,7 @@ static long kStreamBufferLimit = 4*60*60;
                 
         }];
     } else {
-        if ( ![self sessionEndedWhilePaused] ) {
+        if ( [[AudioManager shared] status] != StreamStatusPaused ) {
             [self fetchCurrentProgram:^(id returnedObject) {
                 
             }];

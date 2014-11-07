@@ -15,10 +15,11 @@
 #import "Episode.h"
 #import "Segment.h"
 #import "NSDate+Helper.h"
+#import "SessionManager.h"
 
 static AudioManager *singleton = nil;
-static NSInteger kBufferObservationThreshold = 25;
-static NSInteger kAllowableDriftThreshold = 45;
+static NSInteger kBufferObservationThreshold = 10;
+static NSInteger kAllowableDriftThreshold = 80;
 
 // Define this constant for the key-value observation context.
 static const NSString *ItemStatusContext;
@@ -186,14 +187,18 @@ static const NSString *ItemStatusContext;
         [self.audioPlayer removeTimeObserver:self.timeObserver];
     }
     
+#ifdef USE_LEGACY_STREAM_ANALYSIS
     @synchronized(self) {
         self.bufferMutex = YES;
         self.bufferObservationCount = 0;
     }
+#else
+    self.bufferMutex = NO;
+#endif
     
-    self.timeObserver = [self.audioPlayer addPeriodicTimeObserverForInterval:CMTimeMake(1, 10)  queue:nil usingBlock:^(CMTime time) {
+    self.timeObserver = [self.audioPlayer addPeriodicTimeObserverForInterval:CMTimeMake(1, 1)  queue:nil usingBlock:^(CMTime time) {
         weakSelf.currentDate = audioPlayer.currentItem.currentDate;
-        
+#ifdef USE_LEGACY_STREAM_ANALYSIS
         NSDate *d2u = weakSelf.requestedSeekDate ? weakSelf.requestedSeekDate : [NSDate date];
         NSTimeInterval drift = [d2u timeIntervalSinceDate:[weakSelf currentDate]];
         if ( weakSelf.bufferMutex ) {
@@ -217,6 +222,7 @@ static const NSString *ItemStatusContext;
 #endif
             }
         }
+#endif
         
 #ifdef DEBUG
         [weakSelf streamFrame];
@@ -283,9 +289,11 @@ static const NSString *ItemStatusContext;
                 } else {
                     self.requestedSeekDate = nil;
                 }
-                
+  
+#ifdef USE_LEGACY_STREAM_ANALYSIS
                 self.bufferMutex = YES;
                 self.bufferObservationCount = 0;
+#endif
                 
                 if ( [self.audioPlayer rate] == 0.0 ) {
                     [self.audioPlayer play];
@@ -455,11 +463,18 @@ static const NSString *ItemStatusContext;
     
     [self.audioPlayer play];
     
+    [[SessionManager shared] setSessionPausedDate:nil];
+    
     self.status = StreamStatusPlaying;
 }
 
 - (void)pauseStream {
     [self.audioPlayer pause];
+    
+    if ( self.currentAudioMode == AudioModeLive ) {
+        [[SessionManager shared] setSessionPausedDate:[NSDate date]];
+    }
+    
     self.status = StreamStatusPaused;
 }
 

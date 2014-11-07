@@ -11,6 +11,7 @@
 #import "UILabel+Additions.h"
 #import "UIColor+UICustom.h"
 #import "NSDate+Helper.h"
+#import "UIButton+Additions.h"
 
 //@class SCPRMasterViewController;
 
@@ -18,6 +19,7 @@
 
 #define kUpdateProgramKey @":UPDATE-PROGRAM:"
 #define SEQ(a,b) [a isEqualToString:b]
+#define kFadeDuration 1.0
 
 @interface Utils : NSObject
 

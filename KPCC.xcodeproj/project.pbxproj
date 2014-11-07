@@ -10,6 +10,9 @@
 		254E177019F863960022BF6B /* UILabel+Additions.m in Sources */ = {isa = PBXBuildFile; fileRef = 254E176F19F863960022BF6B /* UILabel+Additions.m */; };
 		255943EA19F1A7620007294D /* SCPRJogShuttleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 255943E919F1A7620007294D /* SCPRJogShuttleViewController.m */; };
 		255943EC19F5C8B80007294D /* rewind_beat.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 255943EB19F5C8B80007294D /* rewind_beat.mp3 */; };
+		258BD3AE1A0BF65200E7560F /* UIButton+Additions.m in Sources */ = {isa = PBXBuildFile; fileRef = 258BD3AD1A0BF65200E7560F /* UIButton+Additions.m */; };
+		258BD3B11A0C0FFF00E7560F /* SCPRProgressViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 258BD3B01A0C0FFF00E7560F /* SCPRProgressViewController.m */; };
+		258BD3B31A0C14EE00E7560F /* SCPRProgressViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 258BD3B21A0C14EE00E7560F /* SCPRProgressViewController.xib */; };
 		258CA0FD1A09636900A3C8DB /* SessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 258CA0FC1A09636900A3C8DB /* SessionManager.m */; };
 		258CA1001A0982ED00A3C8DB /* SCPRCloakViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 258CA0FF1A0982ED00A3C8DB /* SCPRCloakViewController.m */; };
 		258FC47B1A018F3D00282D59 /* SCPRSpinnerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 258FC47A1A018F3D00282D59 /* SCPRSpinnerViewController.m */; };
@@ -217,6 +220,11 @@
 		255943E819F1A7620007294D /* SCPRJogShuttleViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCPRJogShuttleViewController.h; sourceTree = "<group>"; };
 		255943E919F1A7620007294D /* SCPRJogShuttleViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SCPRJogShuttleViewController.m; sourceTree = "<group>"; };
 		255943EB19F5C8B80007294D /* rewind_beat.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = rewind_beat.mp3; sourceTree = "<group>"; };
+		258BD3AC1A0BF65200E7560F /* UIButton+Additions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIButton+Additions.h"; sourceTree = "<group>"; };
+		258BD3AD1A0BF65200E7560F /* UIButton+Additions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIButton+Additions.m"; sourceTree = "<group>"; };
+		258BD3AF1A0C0FFF00E7560F /* SCPRProgressViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCPRProgressViewController.h; sourceTree = "<group>"; };
+		258BD3B01A0C0FFF00E7560F /* SCPRProgressViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SCPRProgressViewController.m; sourceTree = "<group>"; };
+		258BD3B21A0C14EE00E7560F /* SCPRProgressViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SCPRProgressViewController.xib; sourceTree = "<group>"; };
 		258CA0FB1A09636900A3C8DB /* SessionManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SessionManager.h; path = Managers/SessionManager.h; sourceTree = "<group>"; };
 		258CA0FC1A09636900A3C8DB /* SessionManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SessionManager.m; path = Managers/SessionManager.m; sourceTree = "<group>"; };
 		258CA0FE1A0982ED00A3C8DB /* SCPRCloakViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCPRCloakViewController.h; sourceTree = "<group>"; };
@@ -678,6 +686,8 @@
 				258FC47A1A018F3D00282D59 /* SCPRSpinnerViewController.m */,
 				258CA0FE1A0982ED00A3C8DB /* SCPRCloakViewController.h */,
 				258CA0FF1A0982ED00A3C8DB /* SCPRCloakViewController.m */,
+				258BD3AC1A0BF65200E7560F /* UIButton+Additions.h */,
+				258BD3AD1A0BF65200E7560F /* UIButton+Additions.m */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -716,6 +726,9 @@
 				523126A419EDB78C008A47A7 /* SCPRPreRollViewController.h */,
 				523126A519EDB78C008A47A7 /* SCPRPreRollViewController.m */,
 				523126A619EDB78C008A47A7 /* SCPRPreRollViewController.xib */,
+				258BD3AF1A0C0FFF00E7560F /* SCPRProgressViewController.h */,
+				258BD3B01A0C0FFF00E7560F /* SCPRProgressViewController.m */,
+				258BD3B21A0C14EE00E7560F /* SCPRProgressViewController.xib */,
 			);
 			name = "View Controllers";
 			path = Controllers;
@@ -1010,7 +1023,7 @@
 				ORGANIZATIONNAME = SCPR;
 				TargetAttributes = {
 					76A308C218C8FB940065D4B1 = {
-						DevelopmentTeam = SXALEDSVFU;
+						DevelopmentTeam = 6N8RT3FVF6;
 						SystemCapabilities = {
 							com.apple.BackgroundModes = {
 								enabled = 1;
@@ -1061,6 +1074,7 @@
 				52EFF78B19C3688D0059A0E3 /* menu-clock.png in Resources */,
 				52D0FC2E19D20D29009AECEE /* program_avatar_marketplace-weekend.png in Resources */,
 				523126A819EDB78C008A47A7 /* SCPRPreRollViewController.xib in Resources */,
+				258BD3B31A0C14EE00E7560F /* SCPRProgressViewController.xib in Resources */,
 				52EFF81A19C368C00059A0E3 /* program_avatar_marketplace-morning-report.png in Resources */,
 				52EFF86219C368C00059A0E3 /* program_avatar_weekend-edition-saturday.png in Resources */,
 				52EFF79119C3688D0059A0E3 /* menu-glasses@2x.png in Resources */,
@@ -1245,11 +1259,13 @@
 				5248858E19CBA180005F59CC /* EpisodeAudio.m in Sources */,
 				523E86D019C8A292006FC366 /* SCPRProgramDetailViewController.m in Sources */,
 				258FC47E1A01915E00282D59 /* UIColor+UICustom.m in Sources */,
+				258BD3B11A0C0FFF00E7560F /* SCPRProgressViewController.m in Sources */,
 				52CF917A1A0032C7007BCFA8 /* QueueManager.m in Sources */,
 				76B9A9AC18EF59FD007A6D8C /* SCPRUserReportViewController.m in Sources */,
 				76658AB918DCB51000026176 /* NSDate+Helper.m in Sources */,
 				76B9A9B618EF79F6007A6D8C /* SCPRFooterView.m in Sources */,
 				76A308D718C8FB940065D4B1 /* SCPRAppDelegate.m in Sources */,
+				258BD3AE1A0BF65200E7560F /* UIButton+Additions.m in Sources */,
 				52EFF87419C375CA0059A0E3 /* SCPRPullDownMenu.m in Sources */,
 				523126A719EDB78C008A47A7 /* SCPRPreRollViewController.m in Sources */,
 				52E68B8219B8F2D10028F8AE /* SCPRNavigationController.m in Sources */,
@@ -1398,8 +1414,8 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Ben Hochberg (DV3XGN3P68)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Ben Hochberg (DV3XGN3P68)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "KPCC/KPCC-Prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -1417,7 +1433,7 @@
 					"$(PROJECT_DIR)/KPCC/ThirdParty/Flurry",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "b8d21f5f-03c3-4f96-aa08-53339a863498";
 				SWIFT_OBJC_BRIDGING_HEADER = "KPCC/UI/Controllers/KPCC-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				TARGETED_DEVICE_FAMILY = 1;

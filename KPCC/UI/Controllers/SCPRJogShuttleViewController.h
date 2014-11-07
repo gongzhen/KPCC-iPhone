@@ -24,13 +24,6 @@ typedef NS_ENUM(NSUInteger, SpinDirection) {
 
 - (void)prepare;
 - (void)animateWithSpeed:(CGFloat)duration
-                 tension:(CGFloat)tension
-                   color:(UIColor*)color
-             strokeWidth:(CGFloat)strokeWidth
-            hideableView:(UIView*)viewToHide
-              completion:(void (^)(void))completion;
-
-- (void)animateWithSpeed:(CGFloat)duration
             hideableView:(UIView*)viewToHide
                direction:(SpinDirection)direction
                withSound:(BOOL)withSound
