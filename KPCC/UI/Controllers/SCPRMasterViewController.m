@@ -121,7 +121,6 @@ static CGFloat kDisabledAlpha = 0.15;
     self.queueScrollView.backgroundColor = [UIColor clearColor];
     self.queueScrollView.pagingEnabled = YES;
     self.queueScrollView.delegate = self;
-    [self.view bringSubviewToFront:self.playerControlsView];
     self.queueScrollView.hidden = YES;
     [self.view insertSubview:self.queueScrollView belowSubview:self.initialControlsView];
 
@@ -620,6 +619,9 @@ static CGFloat kDisabledAlpha = 0.15;
     self.navigationItem.title = @"Programs";
     [self.timeLabelOnDemand setText:@""];
     [self.progressView setProgress:0.0 animated:YES];
+    self.progressView.alpha = 1.0;
+    self.queueScrollView.alpha = 1.0;
+
     [self primeRemoteCommandCenter:NO];
 
     // Make sure the larger play button is hidden ...
@@ -629,7 +631,6 @@ static CGFloat kDisabledAlpha = 0.15;
     for (UIView *v in [self.queueScrollView subviews]) {
         [v removeFromSuperview];
     }
-    [self.queueScrollView setHidden:NO];
     self.queueContents = array;
     for (int i = 0; i < [array count]; i++) {
         CGRect frame;
@@ -644,8 +645,8 @@ static CGFloat kDisabledAlpha = 0.15;
     }
     self.queueScrollView.contentSize = CGSizeMake(self.queueScrollView.frame.size.width * [array count], self.queueScrollView.frame.size.height);
     [self setPositionForQueue:index animated:NO];
+    [self.queueScrollView setHidden:NO];
 
-    // Update UILabels, content, etc.
     [self setDataForOnDemand:program andAudioChunk:[array objectAtIndex:index]];
 
     if ([self.onDemandPlayerView isHidden]) {
@@ -699,6 +700,7 @@ static CGFloat kDisabledAlpha = 0.15;
             self.queueCurrentPage = index;
         }
     }
+    [self.queueScrollView layoutIfNeeded];
 }
 
 - (void)updateUIWithProgram:(Program*)program {
