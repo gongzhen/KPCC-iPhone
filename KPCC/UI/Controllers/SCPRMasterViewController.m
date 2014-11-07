@@ -718,30 +718,37 @@ static CGFloat kDisabledAlpha = 0.15;
     }
 }
 
-- (void)primePlaybackUI:(BOOL)dividerScaleIn {
-    POPBasicAnimation *initialControlsFade = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
-    initialControlsFade.toValue = @(0);
-    initialControlsFade.duration = 0.3;
-    [self.initialPlayButton.layer pop_addAnimation:initialControlsFade forKey:@"initialControlsFadeAnimation"];
-    [self.initialControlsView setHidden:YES];
-
-    POPBasicAnimation *bottomAnim = [POPBasicAnimation animationWithPropertyNamed:kPOPLayoutConstraintConstant];
-    bottomAnim.toValue = @(50);
-    bottomAnim.duration = .3;
-    [self.playerControlsBottomYConstraint pop_addAnimation:bottomAnim forKey:@"animatePlayControlsDown"];
-
-    POPBasicAnimation *topAnim = [POPBasicAnimation animationWithPropertyNamed:kPOPLayoutConstraintConstant];
-    topAnim.toValue = @(CGRectGetMaxY(self.view.frame) - 245);
-    topAnim.duration = .3;
-    [self.playerControlsTopYConstraint pop_addAnimation:topAnim forKey:@"animateTopPlayControlsDown"];
+- (void)primePlaybackUI:(BOOL)animated {
 
     self.horizDividerLine.alpha = 0.4;
-    if (dividerScaleIn) {
+    if (animated) {
+        POPBasicAnimation *initialControlsFade = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
+        initialControlsFade.toValue = @(0);
+        initialControlsFade.duration = 0.3;
+        [self.initialPlayButton.layer pop_addAnimation:initialControlsFade forKey:@"initialControlsFadeAnimation"];
+        [self.initialControlsView setHidden:YES];
+
+        POPBasicAnimation *bottomAnim = [POPBasicAnimation animationWithPropertyNamed:kPOPLayoutConstraintConstant];
+        bottomAnim.toValue = @(50);
+        bottomAnim.duration = .3;
+        [self.playerControlsBottomYConstraint pop_addAnimation:bottomAnim forKey:@"animatePlayControlsDown"];
+
+        POPBasicAnimation *topAnim = [POPBasicAnimation animationWithPropertyNamed:kPOPLayoutConstraintConstant];
+        topAnim.toValue = @(CGRectGetMaxY(self.view.frame) - 245);
+        topAnim.duration = .3;
+        [self.playerControlsTopYConstraint pop_addAnimation:topAnim forKey:@"animateTopPlayControlsDown"];
+
         POPBasicAnimation *scaleAnimation = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerScaleXY];
         scaleAnimation.fromValue  = [NSValue valueWithCGSize:CGSizeMake(0.0f, 0.0f)];
         scaleAnimation.toValue  = [NSValue valueWithCGSize:CGSizeMake(1.0f, 1.0f)];
         scaleAnimation.duration = 1.0;
         [self.horizDividerLine.layer pop_addAnimation:scaleAnimation forKey:@"scaleAnimation"];
+    } else {
+        self.initialPlayButton.alpha = 0.0;
+        self.initialControlsView.hidden = YES;
+
+        [self.playerControlsBottomYConstraint setConstant:50];
+        [self.playerControlsTopYConstraint setConstant:CGRectGetMaxY(self.view.frame) - 245];
     }
 }
 
