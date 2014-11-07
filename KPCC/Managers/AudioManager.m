@@ -170,7 +170,14 @@ static const NSString *ItemStatusContext;
         Program *program = (Program*)audio;
         if ( program.title ) {
             audioMetaData = @{ MPMediaItemPropertyArtist : @"89.3 KPCC",
-                           MPMediaItemPropertyTitle : program.title };
+                               MPMediaItemPropertyTitle : program.title };
+        }
+    } else if ([audio isKindOfClass:[AudioChunk class]]) {
+        AudioChunk *chunk = (AudioChunk*)audio;
+        if (chunk.programTitle && chunk.audioTitle && chunk.audioDuration) {
+            audioMetaData = @{ MPMediaItemPropertyArtist : chunk.programTitle,
+                               MPMediaItemPropertyTitle : chunk.audioTitle,
+                               MPMediaItemPropertyPlaybackDuration : chunk.audioDuration};
         }
     } else {
         audioMetaData = @{ MPMediaItemPropertyArtist : @"89.3 KPCC"};

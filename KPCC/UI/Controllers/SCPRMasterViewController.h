@@ -42,6 +42,7 @@
 @property IBOutlet FXBlurView *queueBlurView;
 @property IBOutlet UIView *queueDarkBgView;
 @property (nonatomic,strong) NSTimer *queueScrollTimer;
+@property (nonatomic,strong) NSArray *queueContents;
 
 // Major holder views for different playback states.
 @property IBOutlet UIView *liveStreamView;

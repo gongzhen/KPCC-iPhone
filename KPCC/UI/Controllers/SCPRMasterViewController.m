@@ -237,6 +237,25 @@ static CGFloat kDisabledAlpha = 0.15;
     [[QueueManager shared] playNext];
 }
 
+/**
+ * For MPRemoteCommandCenter - see [self primeRemoteCommandCenter]
+ */
+- (void)pauseTapped:(id)sender {
+    if ([[AudioManager shared] isStreamPlaying]) {
+        self.setPlaying = NO;
+        [self pauseStream];
+    }
+}
+- (void)playTapped:(id)sender {
+    if (![[AudioManager shared] isStreamPlaying]) {
+        self.setPlaying = YES;
+        if ([[AudioManager shared] isStreamBuffering]) {
+            [[AudioManager shared] stopAllAudio];
+        }
+        [self playStream];
+    }
+}
+
 - (void)snapJogWheel {
     UIImage *pause = self.playPauseButton.imageView.image;
     CGFloat ht = pause.size.height; CGFloat wd = pause.size.width;
@@ -611,6 +630,7 @@ static CGFloat kDisabledAlpha = 0.15;
         [v removeFromSuperview];
     }
     [self.queueScrollView setHidden:NO];
+    self.queueContents = array;
     for (int i = 0; i < [array count]; i++) {
         CGRect frame;
         frame.origin.x = self.queueScrollView.frame.size.width * i;
@@ -661,10 +681,6 @@ static CGFloat kDisabledAlpha = 0.15;
                                       }];
 
         [self.programTitleOnDemand setText:[program.title uppercaseString]];
-    }
-
-    if (audioChunk) {
-        self.onDemandEpUrl = audioChunk.contentShareUrl;
     }
 }
 
@@ -832,10 +848,12 @@ static CGFloat kDisabledAlpha = 0.15;
         [self.initialControlsView.layer pop_addAnimation:controlsFadeIn forKey:@"initialControlsViewFade"];
     }
 
-    POPBasicAnimation *dividerFadeAnim = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
-    dividerFadeAnim.toValue = @0.4;
-    dividerFadeAnim.duration = 0.3;
-    [self.horizDividerLine.layer pop_addAnimation:dividerFadeAnim forKey:@"horizDividerFadeOutAnimation"];
+    if (initialPlay) {
+        POPBasicAnimation *dividerFadeAnim = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
+        dividerFadeAnim.toValue = @0.4;
+        dividerFadeAnim.duration = 0.3;
+        [self.horizDividerLine.layer pop_addAnimation:dividerFadeAnim forKey:@"horizDividerFadeOutAnimation"];
+    }
 
     self.menuOpen = NO;
 }
@@ -1002,6 +1020,12 @@ static CGFloat kDisabledAlpha = 0.15;
     } completion:nil];
 
     int newPage = self.queueScrollView.contentOffset.x / self.queueScrollView.frame.size.width;
+    if ([self.queueContents objectAtIndex:newPage]) {
+        AudioChunk *chunk = [self.queueContents objectAtIndex:newPage];
+        self.onDemandEpUrl = chunk.contentShareUrl;
+        [[AudioManager shared] updateNowPlayingInfoWithAudio:chunk];
+    }
+
     if (self.queueCurrentPage != newPage) {
         [[AudioManager shared] stopStream];
         self.timeLabelOnDemand.text = @"Loading...";
@@ -1246,11 +1270,11 @@ static CGFloat kDisabledAlpha = 0.15;
 
     MPRemoteCommand *pauseCommand = [rcc pauseCommand];
     [pauseCommand setEnabled:YES];
-    [pauseCommand addTarget:self action:@selector(playOrPauseTapped:)];
+    [pauseCommand addTarget:self action:@selector(pauseTapped:)];
 
     MPRemoteCommand *playCommand = [rcc playCommand];
     [playCommand setEnabled:YES];
-    [playCommand addTarget:self action:@selector(playOrPauseTapped:)];
+    [playCommand addTarget:self action:@selector(playTapped:)];
 }
 
 /*
