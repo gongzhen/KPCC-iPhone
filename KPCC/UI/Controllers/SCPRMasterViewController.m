@@ -621,6 +621,7 @@ static CGFloat kDisabledAlpha = 0.15;
     [self.progressView setProgress:0.0 animated:YES];
     self.progressView.alpha = 1.0;
     self.queueScrollView.alpha = 1.0;
+    self.onDemandPlayerView.alpha = 1.0;
 
     [self primeRemoteCommandCenter:NO];
 

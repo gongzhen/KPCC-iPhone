@@ -34,9 +34,6 @@
 // Internal queue
 - (void)enqueue:(AudioChunk*)audio;
 - (AudioChunk*)dequeue;
-- (AudioChunk*)peek:(int)index;
-- (AudioChunk*)peekHead;
-- (AudioChunk*)peekTail;
 - (BOOL)isQueueEmpty;
 - (void)clearQueue;
 

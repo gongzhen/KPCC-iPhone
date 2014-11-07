@@ -108,7 +108,7 @@ static QueueManager *singleton = nil;
 }
 
 
-#pragma mark - Queue mechanism
+#pragma mark - Queue internal
 
 - (void)enqueue:(AudioChunk *)audio {
     [self.queue addObject:audio];
@@ -123,26 +123,6 @@ static QueueManager *singleton = nil;
     }
 
     return toDequeue;
-}
-
-- (AudioChunk*)peek:(int)index {
-    id peekObject = nil;
-
-    if ([self.queue lastObject]) {
-        if (index < [self.queue count]) {
-            peekObject = [self.queue objectAtIndex:index];
-        }
-    }
-
-    return peekObject;
-}
-
-- (AudioChunk*)peekHead {
-    return [self peek:0];
-}
-
-- (AudioChunk*)peekTail {
-    return [self.queue lastObject];
 }
 
 - (BOOL)isQueueEmpty {
