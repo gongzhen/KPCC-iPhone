@@ -98,6 +98,10 @@
     [pv.currentProgressView.layer addSublayer:pv.currentBarLine];
     [pv.view layoutIfNeeded];
     
+
+    [SCPRProgressViewController show];
+    
+    
 }
 
 - (void)setupProgressBarsWithProgram:(Program *)program {
@@ -143,13 +147,16 @@
     
     CGFloat vBeginning = 60*6/duration;
     
+    NSLog(@"currentBarLine strokeEnd : %1.2f",pv.currentBarLine.strokeEnd);
+    
     [CATransaction begin]; {
         [CATransaction setCompletionBlock:^{
-            pv.lastCurrentValue = 0.0;
+            pv.lastCurrentValue = vBeginning;
             pv.shuttling = NO;
+            pv.currentBarLine.strokeEnd = vBeginning;
+            [pv.currentBarLine removeAllAnimations];
         }];
         CABasicAnimation *currentAnim = [CABasicAnimation animationWithKeyPath:@"strokeEnd"];
-        [currentAnim setFromValue:[NSNumber numberWithFloat:pv.lastCurrentValue]];
         [currentAnim setToValue:[NSNumber numberWithFloat:vBeginning]];
         [currentAnim setDuration:4];
         [currentAnim setRemovedOnCompletion:NO];
@@ -174,13 +181,16 @@
     
     CGFloat vBeginning = (live - beginning)/duration;
     
+    NSLog(@"currentBarLine strokeEnd : %1.2f",pv.currentBarLine.strokeEnd);
+    
     [CATransaction begin]; {
         [CATransaction setCompletionBlock:^{
             pv.lastCurrentValue = 0.0;
             pv.shuttling = NO;
+            pv.currentBarLine.strokeEnd = vBeginning;
+            [pv.currentBarLine removeAllAnimations];
         }];
         CABasicAnimation *currentAnim = [CABasicAnimation animationWithKeyPath:@"strokeEnd"];
-        [currentAnim setFromValue:[NSNumber numberWithFloat:pv.lastCurrentValue]];
         [currentAnim setToValue:[NSNumber numberWithFloat:vBeginning]];
         [currentAnim setDuration:2];
         [currentAnim setRemovedOnCompletion:NO];
@@ -194,9 +204,7 @@
 + (void)tick {
     
     SCPRProgressViewController *pv = [SCPRProgressViewController o];
-    if ( pv.view.alpha == 0.0 ) {
-        [SCPRProgressViewController show];
-    }
+
     
     if ( pv.shuttling ) return;
     
@@ -220,14 +228,17 @@
         
         [CATransaction begin]; {
             [CATransaction setCompletionBlock:^{
-               
+                pv.liveBarLine.strokeEnd = liveDiff / duration;
+                pv.currentBarLine.strokeEnd = currentDiff / duration;
+                [pv.currentBarLine removeAllAnimations];
+                [pv.liveBarLine removeAllAnimations];
             }];
             
             CABasicAnimation *liveAnim = [CABasicAnimation animationWithKeyPath:@"strokeEnd"];
             [liveAnim setFromValue:[NSNumber numberWithFloat:pv.lastLiveValue]];
             [liveAnim setToValue:[NSNumber numberWithFloat:liveDiff/duration]];
             [liveAnim setDuration:0.1];
-            [liveAnim setRemovedOnCompletion:NO];
+            [liveAnim setRemovedOnCompletion:YES];
             [liveAnim setFillMode:kCAFillModeForwards];
             [pv.liveBarLine addAnimation:liveAnim forKey:[NSString stringWithFormat:@"incrementLive%1.1f",liveDiff]];
             
@@ -235,7 +246,7 @@
             [currentAnim setFromValue:[NSNumber numberWithFloat:pv.lastCurrentValue]];
             [currentAnim setToValue:[NSNumber numberWithFloat:currentDiff/duration]];
             [currentAnim setDuration:0.1];
-            [currentAnim setRemovedOnCompletion:NO];
+            [currentAnim setRemovedOnCompletion:YES];
             [currentAnim setFillMode:kCAFillModeForwards];
             [pv.currentBarLine addAnimation:currentAnim forKey:[NSString stringWithFormat:@"incrementCurrent%1.1f",currentDiff]];
             

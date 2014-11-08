@@ -642,6 +642,7 @@ static CGFloat kDisabledAlpha = 0.15;
     
     [[AudioManager shared] setCurrentAudioMode:AudioModeLive];
     
+    [SCPRProgressViewController show];
 }
 
 - (void)setOnDemandUI:(BOOL)animated forProgram:(Program*)program withAudio:(NSArray*)array atCurrentIndex:(int)index {
@@ -651,6 +652,7 @@ static CGFloat kDisabledAlpha = 0.15;
 
     
     [[SessionManager shared] setCurrentProgram:nil];
+    [SCPRProgressViewController hide];
     
     self.navigationItem.title = @"Programs";
     [self.timeLabelOnDemand setText:@""];
@@ -829,6 +831,9 @@ static CGFloat kDisabledAlpha = 0.15;
 
 - (void)cloakForMenu:(BOOL)animated {
     [self removeAllAnimations];
+    
+    [SCPRProgressViewController hide];
+    
     self.navigationItem.title = @"Menu";
     
     [self.blurView setNeedsDisplay];
@@ -880,9 +885,12 @@ static CGFloat kDisabledAlpha = 0.15;
 - (void)decloakForMenu:(BOOL)animated {
     [self removeAllAnimations];
 
+
+    
     if (setForOnDemandUI) {
         self.navigationItem.title = @"Programs";
     } else {
+        [SCPRProgressViewController show];
         self.navigationItem.title = @"KPCC Live";
     }
 

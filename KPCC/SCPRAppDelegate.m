@@ -69,10 +69,12 @@
         [[ContentManager shared] saveContext];
     }];
     
+#ifdef USE_NOTIFICATIONS
     if ( [[UIApplication sharedApplication] respondsToSelector:@selector(registerUserNotificationSettings:)] ) {
         [[UIApplication sharedApplication] registerUserNotificationSettings:[UIUserNotificationSettings settingsForTypes:UIUserNotificationTypeAlert
                                                                                                               categories:nil]];
     }
+#endif
     
     // Override point for customization after application launch.
     return YES;

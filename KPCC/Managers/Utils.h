@@ -19,7 +19,7 @@
 
 #define kUpdateProgramKey @":UPDATE-PROGRAM:"
 #define SEQ(a,b) [a isEqualToString:b]
-#define kFadeDuration 1.0
+#define kFadeDuration 0.5
 
 @interface Utils : NSObject
 
