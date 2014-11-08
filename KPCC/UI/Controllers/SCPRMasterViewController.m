@@ -70,11 +70,11 @@ static CGFloat kDisabledAlpha = 0.15;
         if (event.subtype == UIEventSubtypeRemoteControlPlay ||
             event.subtype == UIEventSubtypeRemoteControlPause ||
             event.subtype == UIEventSubtypeRemoteControlTogglePlayPause) {
-            //[self playOrPauseTapped:nil];
+//            [self playOrPauseTapped:nil];
         } else if (event.subtype == UIEventSubtypeRemoteControlPreviousTrack) {
-            [self rewindFifteen];
+//            [self nextEpisodeTapped:nil];
         } else if (event.subtype == UIEventSubtypeRemoteControlNextTrack) {
-            [self fastForwardFifteen];
+//            [self prevEpisodeTapped:nil];
         }
     }
 }
@@ -116,26 +116,7 @@ static CGFloat kDisabledAlpha = 0.15;
 
     // Initially flag as KPCC Live view
     setForLiveStreamUI = YES;
-
-    MPRemoteCommandCenter *rcc = [MPRemoteCommandCenter sharedCommandCenter];
-
-    MPSkipIntervalCommand *skipBackwardIntervalCommand = [rcc skipBackwardCommand];
-    [skipBackwardIntervalCommand setEnabled:YES];
-    [skipBackwardIntervalCommand addTarget:self action:@selector(skipBackwardEvent:)];
-    skipBackwardIntervalCommand.preferredIntervals = @[@(15)];
-
-    MPSkipIntervalCommand *skipForwardIntervalCommand = [rcc skipForwardCommand];
-    skipForwardIntervalCommand.preferredIntervals = @[@(15)];  // Max 99
-    [skipForwardIntervalCommand setEnabled:YES];
-    [skipForwardIntervalCommand addTarget:self action:@selector(skipForwardEvent:)];
-
-    MPRemoteCommand *pauseCommand = [rcc pauseCommand];
-    [pauseCommand setEnabled:YES];
-    [pauseCommand addTarget:self action:@selector(playOrPauseTapped:)];
-
-    MPRemoteCommand *playCommand = [rcc playCommand];
-    [playCommand setEnabled:YES];
-    [playCommand addTarget:self action:@selector(playOrPauseTapped:)];
+    [self primeRemoteCommandCenter:YES];
 
     self.jogShuttle = [[SCPRJogShuttleViewController alloc] init];
     self.jogShuttle.view = self.rewindView;
@@ -147,10 +128,6 @@ static CGFloat kDisabledAlpha = 0.15;
     self.queueScrollView.backgroundColor = [UIColor clearColor];
     self.queueScrollView.pagingEnabled = YES;
     self.queueScrollView.delegate = self;
-
-
-    [self.view bringSubviewToFront:self.playerControlsView];
-    
     self.queueScrollView.hidden = YES;
     [self.view insertSubview:self.queueScrollView belowSubview:self.initialControlsView];
     
@@ -232,7 +209,7 @@ static CGFloat kDisabledAlpha = 0.15;
             initialPlay = YES;
         }];
     } else {
-        [self primePlaybackUI];
+        [self primePlaybackUI:YES];
 
         POPBasicAnimation *programTitleAnim = [POPBasicAnimation animationWithPropertyNamed:kPOPLayoutConstraintConstant];
         programTitleAnim.toValue = @(14);
@@ -250,7 +227,6 @@ static CGFloat kDisabledAlpha = 0.15;
     }
 
     if (![[AudioManager shared] isStreamPlaying]) {
-        
         if ( [[SessionManager shared] sessionIsExpired] ) {
             [[SessionManager shared] fetchCurrentProgram:^(id returnedObject) {
                 self.setPlaying = YES;
@@ -290,6 +266,25 @@ static CGFloat kDisabledAlpha = 0.15;
 }
 - (IBAction)nextEpisodeTapped:(id)sender {
     [[QueueManager shared] playNext];
+}
+
+/**
+ * For MPRemoteCommandCenter - see [self primeRemoteCommandCenter]
+ */
+- (void)pauseTapped:(id)sender {
+    if ([[AudioManager shared] isStreamPlaying]) {
+        self.setPlaying = NO;
+        [self pauseStream];
+    }
+}
+- (void)playTapped:(id)sender {
+    if (![[AudioManager shared] isStreamPlaying]) {
+        self.setPlaying = YES;
+        if ([[AudioManager shared] isStreamBuffering]) {
+            [[AudioManager shared] stopAllAudio];
+        }
+        [self playStream];
+    }
 }
 
 - (void)snapJogWheel {
@@ -496,7 +491,7 @@ static CGFloat kDisabledAlpha = 0.15;
 
 - (void)setUIContents:(BOOL)animated {
 
-    if ( self.jogging ) {
+    if ( self.jogging || self.queueBlurShown ) {
         return;
     }
     
@@ -620,6 +615,7 @@ static CGFloat kDisabledAlpha = 0.15;
 
 - (void)setLiveStreamingUI:(BOOL)animated {
     self.navigationItem.title = @"KPCC Live";
+    [self primeRemoteCommandCenter:YES];
 
     if ([self.liveStreamView isHidden]) {
         [self.liveStreamView setHidden:NO];
@@ -659,11 +655,20 @@ static CGFloat kDisabledAlpha = 0.15;
     self.navigationItem.title = @"Programs";
     [self.timeLabelOnDemand setText:@""];
     [self.progressView setProgress:0.0 animated:YES];
+    self.progressView.alpha = 1.0;
+    self.queueScrollView.alpha = 1.0;
+    self.onDemandPlayerView.alpha = 1.0;
+
+    [self primeRemoteCommandCenter:NO];
+
+    // Make sure the larger play button is hidden ...
+    [self primePlaybackUI:NO];
+    initialPlay = YES;
 
     for (UIView *v in [self.queueScrollView subviews]) {
         [v removeFromSuperview];
     }
-    [self.queueScrollView setHidden:NO];
+    self.queueContents = array;
     for (int i = 0; i < [array count]; i++) {
         CGRect frame;
         frame.origin.x = self.queueScrollView.frame.size.width * i;
@@ -676,9 +681,9 @@ static CGFloat kDisabledAlpha = 0.15;
         [self.queueScrollView addSubview:queueSubView];
     }
     self.queueScrollView.contentSize = CGSizeMake(self.queueScrollView.frame.size.width * [array count], self.queueScrollView.frame.size.height);
-    [self setPositionForQueue:index];
+    [self setPositionForQueue:index animated:NO];
+    [self.queueScrollView setHidden:NO];
 
-    // Update UILabels, content, etc.
     [self setDataForOnDemand:program andAudioChunk:[array objectAtIndex:index]];
 
     if ([self.onDemandPlayerView isHidden]) {
@@ -717,18 +722,24 @@ static CGFloat kDisabledAlpha = 0.15;
 
         [self.programTitleOnDemand setText:[program.title uppercaseString]];
     }
-
-    if (audioChunk) {
-        self.onDemandEpUrl = audioChunk.contentShareUrl;
-    }
 }
 
-// TODO: Need to make this prettier - used by QueueManager playNext when an episode completes.
-- (void)setPositionForQueue:(int)index {
+- (void)setPositionForQueue:(int)index animated:(BOOL)animated {
     if (index >= 0 && index < [self.queueScrollView.subviews count]) {
-        self.queueScrollView.contentOffset = CGPointMake(self.queueScrollView.frame.size.width * index, 0);
-        self.queueCurrentPage = index;
+        if (animated) {
+            [UIView animateWithDuration:0.4 delay:0.0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
+                self.queueScrollView.contentOffset = CGPointMake(self.queueScrollView.frame.size.width * index, 0);
+            } completion:^(BOOL finished) {
+                [self queueScrollEnded];
+                self.queueCurrentPage = index;
+            }];
+        } else {
+            self.queueScrollView.contentOffset = CGPointMake(self.queueScrollView.frame.size.width * index, 0);
+            [self queueScrollEnded];
+            self.queueCurrentPage = index;
+        }
     }
+    [self.queueScrollView layoutIfNeeded];
 }
 
 - (void)treatUIforProgram {
@@ -776,29 +787,38 @@ static CGFloat kDisabledAlpha = 0.15;
     }
 }
 
-- (void)primePlaybackUI {
-    POPBasicAnimation *initialControlsFade = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
-    initialControlsFade.toValue = @(0);
-    initialControlsFade.duration = 0.3;
-    [self.initialPlayButton.layer pop_addAnimation:initialControlsFade forKey:@"initialControlsFadeAnimation"];
-    [self.initialControlsView setHidden:YES];
-
-    POPBasicAnimation *bottomAnim = [POPBasicAnimation animationWithPropertyNamed:kPOPLayoutConstraintConstant];
-    bottomAnim.toValue = @(50);
-    bottomAnim.duration = .3;
-    [self.playerControlsBottomYConstraint pop_addAnimation:bottomAnim forKey:@"animatePlayControlsDown"];
-
-    POPBasicAnimation *topAnim = [POPBasicAnimation animationWithPropertyNamed:kPOPLayoutConstraintConstant];
-    topAnim.toValue = @(CGRectGetMaxY(self.view.frame) - 245);
-    topAnim.duration = .3;
-    [self.playerControlsTopYConstraint pop_addAnimation:topAnim forKey:@"animateTopPlayControlsDown"];
+- (void)primePlaybackUI:(BOOL)animated {
 
     self.horizDividerLine.alpha = 0.4;
-    POPBasicAnimation *scaleAnimation = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerScaleXY];
-    scaleAnimation.fromValue  = [NSValue valueWithCGSize:CGSizeMake(0.0f, 0.0f)];
-    scaleAnimation.toValue  = [NSValue valueWithCGSize:CGSizeMake(1.0f, 1.0f)];
-    scaleAnimation.duration = 1.0;
-    [self.horizDividerLine.layer pop_addAnimation:scaleAnimation forKey:@"scaleAnimation"];
+    if (animated) {
+        POPBasicAnimation *initialControlsFade = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
+        initialControlsFade.toValue = @(0);
+        initialControlsFade.duration = 0.3;
+        [self.initialPlayButton.layer pop_addAnimation:initialControlsFade forKey:@"initialControlsFadeAnimation"];
+        [self.initialControlsView setHidden:YES];
+
+        POPBasicAnimation *bottomAnim = [POPBasicAnimation animationWithPropertyNamed:kPOPLayoutConstraintConstant];
+        bottomAnim.toValue = @(50);
+        bottomAnim.duration = .3;
+        [self.playerControlsBottomYConstraint pop_addAnimation:bottomAnim forKey:@"animatePlayControlsDown"];
+
+        POPBasicAnimation *topAnim = [POPBasicAnimation animationWithPropertyNamed:kPOPLayoutConstraintConstant];
+        topAnim.toValue = @(CGRectGetMaxY(self.view.frame) - 245);
+        topAnim.duration = .3;
+        [self.playerControlsTopYConstraint pop_addAnimation:topAnim forKey:@"animateTopPlayControlsDown"];
+
+        POPBasicAnimation *scaleAnimation = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerScaleXY];
+        scaleAnimation.fromValue  = [NSValue valueWithCGSize:CGSizeMake(0.0f, 0.0f)];
+        scaleAnimation.toValue  = [NSValue valueWithCGSize:CGSizeMake(1.0f, 1.0f)];
+        scaleAnimation.duration = 1.0;
+        [self.horizDividerLine.layer pop_addAnimation:scaleAnimation forKey:@"scaleAnimation"];
+    } else {
+        self.initialPlayButton.alpha = 0.0;
+        self.initialControlsView.hidden = YES;
+
+        [self.playerControlsBottomYConstraint setConstant:50];
+        [self.playerControlsTopYConstraint setConstant:CGRectGetMaxY(self.view.frame) - 245];
+    }
 }
 
 #pragma mark - Util
@@ -891,20 +911,20 @@ static CGFloat kDisabledAlpha = 0.15;
     darkBgFadeAnimation.toValue = @0;
     darkBgFadeAnimation.duration = 0.3;
 
-    POPBasicAnimation *controlsFadeAnimation = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
-    controlsFadeAnimation.toValue = @1;
-    controlsFadeAnimation.duration = 0.3;
+    POPBasicAnimation *controlsFadeIn = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
+    controlsFadeIn.toValue = @1;
+    controlsFadeIn.duration = 0.3;
 
     [self.blurView.layer pop_addAnimation:fadeAnimation forKey:@"blurViewFadeAnimation"];
     [self.darkBgView.layer pop_addAnimation:darkBgFadeAnimation forKey:@"darkBgFadeAnimation"];
-    [self.playerControlsView.layer pop_addAnimation:controlsFadeAnimation forKey:@"controlsViewFadeAnimation"];
-    [self.onDemandPlayerView.layer pop_addAnimation:controlsFadeAnimation forKey:@"onDemandViewFadeAnimation"];
-    [self.liveStreamView.layer pop_addAnimation:controlsFadeAnimation forKey:@"liveStreamViewFadeAnimation"];
+    [self.playerControlsView.layer pop_addAnimation:controlsFadeIn forKey:@"controlsViewFadeAnimation"];
+    [self.onDemandPlayerView.layer pop_addAnimation:controlsFadeIn forKey:@"onDemandViewFadeAnimation"];
+    [self.liveStreamView.layer pop_addAnimation:controlsFadeIn forKey:@"liveStreamViewFadeAnimation"];
     if (!initialPlay) {
-        [self.initialControlsView.layer pop_addAnimation:controlsFadeAnimation forKey:@"initialControlsViewFade"];
+        [self.initialControlsView.layer pop_addAnimation:controlsFadeIn forKey:@"initialControlsViewFade"];
     }
 
-    if ([[AudioManager shared] isStreamPlaying]) {
+    if (initialPlay) {
         POPBasicAnimation *dividerFadeAnim = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
         dividerFadeAnim.toValue = @0.4;
         dividerFadeAnim.duration = 0.3;
@@ -942,7 +962,7 @@ static CGFloat kDisabledAlpha = 0.15;
     }
 
     if (!initialPlay) {
-        [self primePlaybackUI];
+        [self primePlaybackUI:YES];
     }
 
     POPBasicAnimation *blurFadeAnimation = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
@@ -1023,6 +1043,19 @@ static CGFloat kDisabledAlpha = 0.15;
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
     NSLog(@"didEndDecel, currentPage: %f", scrollView.contentOffset.x / scrollView.frame.size.width);
 
+    int newPage = scrollView.contentOffset.x / scrollView.frame.size.width;
+    if (self.queueCurrentPage == newPage) {
+        [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationOptionCurveLinear animations:^{
+            self.timeLabelOnDemand.alpha = 1.0;
+            self.progressView.alpha = 1.0;
+            self.queueBlurView.alpha = 0.0;
+            self.queueDarkBgView.alpha = 0.0;
+            self.shareButton.alpha = 1.0;
+        } completion:^(BOOL finished) {
+            self.queueBlurShown = NO;
+        }];
+    }
+
     if (self.queueScrollTimer != nil && [self.queueScrollTimer isValid]) {
         [self.queueScrollTimer invalidate];
         self.queueScrollTimer = nil;
@@ -1039,6 +1072,7 @@ static CGFloat kDisabledAlpha = 0.15;
     [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationOptionCurveLinear animations:^{
         self.timeLabelOnDemand.alpha = 0.0;
         self.progressView.alpha = 0.0;
+        self.shareButton.alpha = 0.0;
     } completion:^(BOOL finished){
 
     }];
@@ -1062,6 +1096,12 @@ static CGFloat kDisabledAlpha = 0.15;
     } completion:nil];
 
     int newPage = self.queueScrollView.contentOffset.x / self.queueScrollView.frame.size.width;
+    if ([self.queueContents objectAtIndex:newPage]) {
+        AudioChunk *chunk = [self.queueContents objectAtIndex:newPage];
+        self.onDemandEpUrl = chunk.contentShareUrl;
+        [[AudioManager shared] updateNowPlayingInfoWithAudio:chunk];
+    }
+
     if (self.queueCurrentPage != newPage) {
         [[AudioManager shared] stopStream];
         self.timeLabelOnDemand.text = @"Loading...";
@@ -1076,6 +1116,7 @@ static CGFloat kDisabledAlpha = 0.15;
                 self.queueBlurView.alpha = 0.0;
                 self.queueDarkBgView.alpha = 0.0;
                 self.progressView.alpha = 1.0;
+                self.shareButton.alpha = 1.0;
             } completion:^(BOOL finished) {
                 self.queueBlurShown = NO;
             }];
@@ -1220,6 +1261,7 @@ static CGFloat kDisabledAlpha = 0.15;
             self.queueBlurView.alpha = 0.0;
             self.queueDarkBgView.alpha = 0.0;
             self.progressView.alpha = 1.0;
+            self.shareButton.alpha = 1.0;
         } completion:^(BOOL finished) {
             self.queueBlurShown = NO;
             self.queueLoading = NO;
@@ -1287,6 +1329,42 @@ static CGFloat kDisabledAlpha = 0.15;
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+- (void)primeRemoteCommandCenter:(BOOL)forLiveStream {
+    MPRemoteCommandCenter *rcc = [MPRemoteCommandCenter sharedCommandCenter];
+
+    if (forLiveStream) {
+        [[rcc previousTrackCommand] setEnabled:NO];
+        MPSkipIntervalCommand *skipBackwardIntervalCommand = [rcc skipBackwardCommand];
+        [skipBackwardIntervalCommand setEnabled:YES];
+        [skipBackwardIntervalCommand addTarget:self action:@selector(skipBackwardEvent:)];
+        skipBackwardIntervalCommand.preferredIntervals = @[@(15)];
+
+        [[rcc nextTrackCommand] setEnabled:NO];
+        MPSkipIntervalCommand *skipForwardIntervalCommand = [rcc skipForwardCommand];
+        skipForwardIntervalCommand.preferredIntervals = @[@(15)];  // Max 99
+        [skipForwardIntervalCommand setEnabled:YES];
+        [skipForwardIntervalCommand addTarget:self action:@selector(skipForwardEvent:)];
+    } else {
+        [[rcc skipBackwardCommand] setEnabled:NO];
+        MPRemoteCommand *prevTrackCommand = [rcc previousTrackCommand];
+        [prevTrackCommand addTarget:self action:@selector(prevEpisodeTapped:)];
+        [prevTrackCommand setEnabled:YES];
+
+        [[rcc skipForwardCommand] setEnabled:NO];
+        MPRemoteCommand *nextTrackCommand = [rcc nextTrackCommand];
+        [nextTrackCommand addTarget:self action:@selector(nextEpisodeTapped:)];
+        [nextTrackCommand setEnabled:YES];
+    }
+
+    MPRemoteCommand *pauseCommand = [rcc pauseCommand];
+    [pauseCommand setEnabled:YES];
+    [pauseCommand addTarget:self action:@selector(pauseTapped:)];
+
+    MPRemoteCommand *playCommand = [rcc playCommand];
+    [playCommand setEnabled:YES];
+    [playCommand addTarget:self action:@selector(playTapped:)];
 }
 
 /*

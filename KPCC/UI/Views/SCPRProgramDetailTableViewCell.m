@@ -40,7 +40,8 @@
         if ([episode isKindOfClass:[Episode class]]) {
             Episode *ep = (Episode *) episode;
 
-            self.episodeTitleLabel.text = ep.title;
+            NSString *trimmedTitle = [ep.title stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+            self.episodeTitleLabel.text = trimmedTitle;
             [self.episodeTitleLabel sizeToFit];
 
             if (ep.airDate != nil) {

@@ -44,6 +44,7 @@
 @property IBOutlet FXBlurView *queueBlurView;
 @property IBOutlet UIView *queueDarkBgView;
 @property (nonatomic,strong) NSTimer *queueScrollTimer;
+@property (nonatomic,strong) NSArray *queueContents;
 
 // Major holder views for different playback states.
 @property IBOutlet UIView *liveStreamView;
@@ -89,7 +90,7 @@
 
 - (void)setOnDemandUI:(BOOL)animated forProgram:(Program*)program withAudio:(NSArray*)array atCurrentIndex:(int)index;
 - (void)setLiveStreamingUI:(BOOL)animated;
-- (void)setPositionForQueue:(int)index;
+- (void)setPositionForQueue:(int)index animated:(BOOL)animated;
 
 - (void)treatUIforProgram;
 

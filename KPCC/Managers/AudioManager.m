@@ -140,6 +140,9 @@ static const NSString *ItemStatusContext;
 }
 
 - (void)playQueueItemWithUrl:(NSString *)url {
+#ifdef DEBUG
+    NSLog(@"playing queue item with url: %@", url);
+#endif
     [self playAudioWithURL:url];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playerItemDidFinishPlaying:) name:AVPlayerItemDidPlayToEndTimeNotification object:self.playerItem];
 }
@@ -169,7 +172,14 @@ static const NSString *ItemStatusContext;
         Program *program = (Program*)audio;
         if ( program.title ) {
             audioMetaData = @{ MPMediaItemPropertyArtist : @"89.3 KPCC",
-                           MPMediaItemPropertyTitle : program.title };
+                               MPMediaItemPropertyTitle : program.title };
+        }
+    } else if ([audio isKindOfClass:[AudioChunk class]]) {
+        AudioChunk *chunk = (AudioChunk*)audio;
+        if (chunk.programTitle && chunk.audioTitle && chunk.audioDuration) {
+            audioMetaData = @{ MPMediaItemPropertyArtist : chunk.programTitle,
+                               MPMediaItemPropertyTitle : chunk.audioTitle,
+                               MPMediaItemPropertyPlaybackDuration : chunk.audioDuration};
         }
     } else {
         audioMetaData = @{ MPMediaItemPropertyArtist : @"89.3 KPCC"};
