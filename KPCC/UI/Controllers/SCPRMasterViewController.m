@@ -84,6 +84,9 @@ static CGFloat kDisabledAlpha = 0.15;
     
     self.view.backgroundColor = [UIColor blackColor];
 
+    self.liveRewindAltButton.userInteractionEnabled = NO;
+    [self.liveRewindAltButton setAlpha:kDisabledAlpha];
+    
     pulldownMenu = [[SCPRPullDownMenu alloc] initWithView:self.view];
     pulldownMenu.delegate = self;
     [self.view addSubview:pulldownMenu];
@@ -346,13 +349,6 @@ static CGFloat kDisabledAlpha = 0.15;
         switch (distance) {
             case RewindDistanceBeginning:
                 if (cProgram) {
-#ifdef USE_LATENCY
-                    NSDate *raw = _currentProgram.starts_at;
-                    NSTimeInterval rawTI = [raw timeIntervalSince1970];
-                    rawTI += [[AudioManager shared] latencyCorrection];
-                    NSDate *cooked = [NSDate dateWithTimeIntervalSince1970:rawTI];
-                    [[AudioManager shared] seekToDate:cooked];
-#endif
                     if ( self.dirtyFromRewind ) {
                         [[AudioManager shared] specialSeekToDate:[[AudioManager shared] cookDateForActualSchedule:cProgram.starts_at]];
                     } else {
@@ -379,6 +375,9 @@ static CGFloat kDisabledAlpha = 0.15;
     self.jogging = YES;
     [self.liveDescriptionLabel pulsate:kForwardingText color:nil];
     [self.jogShuttle.view setAlpha:1.0];
+    
+    [SCPRProgressViewController forward];
+    
     [self.jogShuttle animateWithSpeed:0.66
                          hideableView:self.playPauseButton
                             direction:SpinDirectionForward
@@ -568,9 +567,6 @@ static CGFloat kDisabledAlpha = 0.15;
         POPBasicAnimation *genericFadeInAnim = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
         genericFadeInAnim.toValue = @(1);
         
-        if ( !self.rewindGate )
-            [self.liveRewindAltButton.layer pop_addAnimation:genericFadeInAnim forKey:@"liveRewindFadeInAnim"];
-        
         [self.backToLiveButton.layer pop_addAnimation:genericFadeInAnim forKey:@"backToLiveFadeInAnim"];
 
         POPBasicAnimation *genericFadeOutAnim = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
@@ -657,6 +653,7 @@ static CGFloat kDisabledAlpha = 0.15;
         [self decloakForMenu:NO];
     }
 
+    
     [[SessionManager shared] setCurrentProgram:nil];
     
     self.navigationItem.title = @"Programs";
@@ -1157,11 +1154,11 @@ static CGFloat kDisabledAlpha = 0.15;
     NSAssert([NSThread isMainThread],@"This is not the main thread...");
     NSTimeInterval ti = [[[AudioManager shared] maxSeekableDate] timeIntervalSinceDate:[[AudioManager shared] currentDate]];
     
-    self.tickCounter++;
-    //if ( self.tickCounter % 10 == 0 ) {
+    Program *program = [[SessionManager shared] currentProgram];
+    if ( program ) {
         [SCPRProgressViewController tick];
-        self.tickCounter = 0;
-    //}
+    }
+  
     
     if ( ti > 60 && ![[AudioManager shared] isStreamBuffering] ) {
         
@@ -1169,31 +1166,12 @@ static CGFloat kDisabledAlpha = 0.15;
         [self.liveDescriptionLabel fadeText:[NSString stringWithFormat:@"%@ BEHIND LIVE", [NSDate prettyTextFromSeconds:ti]]];
         [self.backToLiveButton setHidden:NO];
         
-        
-        
-        if ( !self.rewindGate ) {
-            if ( [self rewindAgainstStreamDelta] > kRewindGateThreshold ) {
-                self.liveRewindAltButton.userInteractionEnabled = YES;
-                [UIView animateWithDuration:0.33 animations:^{
-                    [self.liveRewindAltButton setAlpha:1.0];
-                }];
-            } else {
-                self.liveRewindAltButton.userInteractionEnabled = NO;
-                [self.liveRewindAltButton setAlpha:kDisabledAlpha];
-            }
-        }
-        
+
     } else {
         [self.liveDescriptionLabel fadeText:@"LIVE"];
         [self.backToLiveButton setHidden:YES];
-        self.liveRewindAltButton.userInteractionEnabled = YES;
         self.dirtyFromRewind = NO;
         
-        if ( ![[AudioManager shared] isStreamBuffering] ) {
-            [UIView animateWithDuration:0.33 animations:^{
-                [self.liveRewindAltButton setAlpha:1.0];
-            }];
-        }
     }
 
     if (setForOnDemandUI) {
@@ -1211,6 +1189,27 @@ static CGFloat kDisabledAlpha = 0.15;
             });
         }
     }
+    
+
+    NSDate *currentDate = [AudioManager shared].audioPlayer.currentItem.currentDate;
+    NSTimeInterval current = [currentDate timeIntervalSince1970];
+    NSTimeInterval beginning = [program.starts_at timeIntervalSince1970];
+
+    
+
+    
+    if ( !self.rewindGate ) {
+        if ( [self rewindAgainstStreamDelta] > kRewindGateThreshold ) {
+            if ( current - beginning > 60*7 ) {
+                self.liveRewindAltButton.userInteractionEnabled = YES;
+                [UIView animateWithDuration:0.33 animations:^{
+                    [self.liveRewindAltButton setAlpha:1.0];
+                }];
+            }
+        }
+    }
+    
+
 
     // NOTE: basically used instead of observing player rate change to know when actual playback starts
     // .. for decloaking queue blur

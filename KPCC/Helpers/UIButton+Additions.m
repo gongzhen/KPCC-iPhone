@@ -12,7 +12,7 @@
 @implementation UIButton (Additions)
 
 - (void)fadeImage:(UIImage*)image {
-    [self fadeImage:image duration:kFadeDuration];
+    [self fadeImage:image duration:0.15];
 }
 
 - (void)fadeImage:(UIImage *)image duration:(CGFloat)duration {
@@ -22,8 +22,8 @@
     CATransition *transition = [CATransition animation];
     transition.duration = duration;
     transition.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
-    //transition.type = kCATransitionFade;
-    transition.type = @"cube";
+    transition.type = kCATransitionFade;
+    //transition.type = @";
     [self.layer addAnimation:transition
                       forKey:nil];
 }

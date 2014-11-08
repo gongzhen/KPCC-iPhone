@@ -153,7 +153,8 @@ static long kStreamBufferLimit = 4*60*60;
     if ( [self sessionIsExpired] ) return NO;
     if (
             [[AudioManager shared] status] == StreamStatusPaused  ||
-            [[AudioManager shared] currentAudioMode] == AudioModeOnDemand
+            [[AudioManager shared] currentAudioMode] == AudioModeOnDemand ||
+            [self sessionIsBehindLive]
         
         )
     {
@@ -164,7 +165,20 @@ static long kStreamBufferLimit = 4*60*60;
     
 }
 
+
+
 #pragma mark - State handling
+- (BOOL)sessionIsBehindLive {
+    
+    NSDate *currentDate = [[AudioManager shared].audioPlayer.currentItem currentDate];
+    NSDate *live = [[AudioManager shared] maxSeekableDate];
+    
+    if ( abs([live timeIntervalSince1970] - [currentDate timeIntervalSince1970]) > 120 ) {
+        return YES;
+    }
+    
+    return NO;
+}
 
 - (BOOL)sessionIsExpired {
     

@@ -9,6 +9,7 @@
 #import "SCPRProgressViewController.h"
 #import "Utils.h"
 #import "AudioManager.h"
+#import "SessionManager.h"
 
 @interface SCPRProgressViewController ()
 
@@ -52,91 +53,196 @@
 
     pv.view.clipsToBounds = YES;
     
-    CGFloat width = viewController.view.frame.size.width-20.0;
-    pv.view.frame = CGRectMake(10.0,anchorView.frame.origin.y-5.0,
+    CGFloat width = viewController.view.frame.size.width;
+    pv.view.frame = CGRectMake(0.0,anchorView.frame.origin.y,
                                width,
-                               8.0);
+                               6.0);
     pv.view.backgroundColor = [UIColor clearColor];
     [viewController.view addSubview:pv.view];
+
+    
+    pv.barWidth = width;
+    pv.liveBarLine = [CAShapeLayer layer];
+    pv.currentBarLine = [CAShapeLayer layer];
+    
+    CGMutablePathRef liveLinePath = CGPathCreateMutable();
+    
+    CGPoint pts[2];
+    pts[0] = CGPointMake(0.0, 0.0);
+    pts[1] = CGPointMake(width, 0.0);
+    CGPathAddLines(liveLinePath, nil, pts, 2);
+    
+    CGMutablePathRef currentLinePath = CGPathCreateMutable();
+    pv.liveBarLine.path = liveLinePath;
+    pv.liveBarLine.strokeColor = pv.liveTintColor.CGColor;
+    pv.liveBarLine.strokeStart = 0.0;
+    pv.liveBarLine.strokeEnd = 0.0;
+    pv.liveBarLine.lineWidth = pv.liveProgressView.frame.size.height;
+    pv.liveBarLine.opacity = 1.0;
+    pv.liveBarLine.fillColor = pv.liveTintColor.CGColor;
+    
+    CGPoint lPts[2];
+    lPts[0] = CGPointMake(0.0, 0.0);
+    lPts[1] = CGPointMake(width, 0.0);
+    CGPathAddLines(currentLinePath, nil, lPts, 2);
+    
+    pv.currentBarLine.path = currentLinePath;
+    pv.currentBarLine.strokeColor = pv.currentTintColor.CGColor;
+    pv.currentBarLine.strokeStart = 0.0;
+    pv.currentBarLine.strokeEnd = 0.0;
+    pv.currentBarLine.lineWidth = pv.currentProgressView.frame.size.height;
+    pv.currentBarLine.opacity = 1.0;
+    pv.currentBarLine.fillColor = pv.currentTintColor.CGColor;
+    
+    [pv.liveProgressView.layer addSublayer:pv.liveBarLine];
+    [pv.currentProgressView.layer addSublayer:pv.currentBarLine];
     [pv.view layoutIfNeeded];
+    
 }
 
 - (void)setupProgressBarsWithProgram:(Program *)program {
     
     self.currentProgram = program;
-    self.liveProgressView.progressTintColor = [UIColor lightGrayColor];
-    self.liveProgressView.tintColor = [UIColor kpccOrangeColor];
-    self.liveProgressView.trackTintColor = [[UIColor cloudColor] translucify:0.22];
-    self.currentProgressView.progressTintColor = [UIColor kpccOrangeColor];
-    self.currentProgressView.trackTintColor = [[UIColor cloudColor] translucify:0.22];
+    self.liveTintColor = [UIColor whiteColor];
+    self.liveProgressView.backgroundColor = [UIColor clearColor];
+    self.currentTintColor = [UIColor kpccOrangeColor];
+    self.currentProgressView.backgroundColor = [UIColor clearColor];
+    self.lastLiveValue = 0.0;
+    self.lastCurrentValue = 0.0;
+    self.liveProgressView.clipsToBounds = YES;
+    self.currentProgressView.clipsToBounds = YES;
+    self.view.alpha = 0.0;
     
-    NSTimeInterval end = [program.ends_at timeIntervalSince1970];
-    NSTimeInterval live = [[AudioManager shared].maxSeekableDate timeIntervalSince1970];
-    NSTimeInterval current = [[AudioManager shared].currentDate timeIntervalSince1970];
-    
-    self.liveProgressView.progress = (float) live / end;
-    self.currentProgressView.progress = (float) current / end;
-    
+}
+
++ (void)hide {
+   SCPRProgressViewController *pv = [SCPRProgressViewController o];
+    [UIView animateWithDuration:0.25 animations:^{
+        [pv.view setAlpha:0.0];
+    }];
+}
+
++ (void)show {
+    SCPRProgressViewController *pv = [SCPRProgressViewController o];
+    [UIView animateWithDuration:0.25 animations:^{
+        [pv.view setAlpha:1.0];
+    }];
 }
 
 + (void)rewind {
     SCPRProgressViewController *pv = [SCPRProgressViewController o];
-    pv.rewindQueue = [[NSOperationQueue alloc] init];
-    [SCPRProgressViewController threadedRewind];
-}
-
-+ (void)threadedRewind {
-
-    SCPRProgressViewController *pv = [SCPRProgressViewController o];
-    NSLog(@"Progress : %1.2f",pv.currentProgressView.progress);
-    
-    if ( pv.currentProgressView.progress <= 0.05 ) {
-        return;
+    @synchronized(self) {
+        pv.shuttling = YES;
     }
-    NSBlockOperation *block = [NSBlockOperation blockOperationWithBlock:^{
-        dispatch_async(dispatch_get_main_queue(), ^{
-            float interval = pv.currentProgressView.progress / 50;
-            [pv.currentProgressView setProgress:pv.currentProgressView.progress-interval animated:YES];
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                [SCPRProgressViewController threadedRewind];
-            });
-        });
-    }];
-    [pv.rewindQueue addOperation:block];
+    
+    Program *program = [[SessionManager shared] currentProgram];
+    
+    NSTimeInterval beginning = [program.starts_at timeIntervalSince1970];
+    NSTimeInterval end = [program.ends_at timeIntervalSince1970];
+    NSTimeInterval duration = ( end - beginning );
+    
+    CGFloat vBeginning = 60*6/duration;
+    
+    [CATransaction begin]; {
+        [CATransaction setCompletionBlock:^{
+            pv.lastCurrentValue = 0.0;
+            pv.shuttling = NO;
+        }];
+        CABasicAnimation *currentAnim = [CABasicAnimation animationWithKeyPath:@"strokeEnd"];
+        [currentAnim setFromValue:[NSNumber numberWithFloat:pv.lastCurrentValue]];
+        [currentAnim setToValue:[NSNumber numberWithFloat:vBeginning]];
+        [currentAnim setDuration:4];
+        [currentAnim setRemovedOnCompletion:NO];
+        [currentAnim setFillMode:kCAFillModeForwards];
+        [pv.currentBarLine addAnimation:currentAnim forKey:@"decrementCurrent"];
+    }
+    [CATransaction commit];
 }
+
++ (void)forward {
+    SCPRProgressViewController *pv = [SCPRProgressViewController o];
+    @synchronized(self) {
+        pv.shuttling = YES;
+    }
+    
+    Program *program = [[SessionManager shared] currentProgram];
+    
+    NSTimeInterval beginning = [program.starts_at timeIntervalSince1970];
+    NSTimeInterval end = [program.ends_at timeIntervalSince1970];
+    NSTimeInterval duration = ( end - beginning );
+    NSTimeInterval live = [[AudioManager shared].maxSeekableDate timeIntervalSince1970];
+    
+    CGFloat vBeginning = (live - beginning)/duration;
+    
+    [CATransaction begin]; {
+        [CATransaction setCompletionBlock:^{
+            pv.lastCurrentValue = 0.0;
+            pv.shuttling = NO;
+        }];
+        CABasicAnimation *currentAnim = [CABasicAnimation animationWithKeyPath:@"strokeEnd"];
+        [currentAnim setFromValue:[NSNumber numberWithFloat:pv.lastCurrentValue]];
+        [currentAnim setToValue:[NSNumber numberWithFloat:vBeginning]];
+        [currentAnim setDuration:2];
+        [currentAnim setRemovedOnCompletion:NO];
+        [currentAnim setFillMode:kCAFillModeForwards];
+        [pv.currentBarLine addAnimation:currentAnim forKey:@"forwardCurrent"];
+    }
+    [CATransaction commit];
+}
+
 
 + (void)tick {
     
     SCPRProgressViewController *pv = [SCPRProgressViewController o];
-    Program *program = pv.currentProgram;
-    
-    NSTimeInterval beginning = [program.starts_at timeIntervalSince1970];
-    NSTimeInterval end = [program.ends_at timeIntervalSince1970];
-    NSTimeInterval duration = ( end - beginning ) / 60;
-    
-    NSTimeInterval live = [[AudioManager shared].maxSeekableDate timeIntervalSince1970];
-    NSTimeInterval current = [[AudioManager shared].currentDate timeIntervalSince1970];
-    
-    NSTimeInterval liveDiff = ( live - beginning ) / 60;
-    NSTimeInterval currentDiff = ( current - beginning ) / 60;
-    
-    double currentPtr = (double) ( currentDiff * 1.0f ) / ( duration * 1.0f );
-    double livePtr = (double) ( liveDiff * 1.0f ) / ( duration * 1.0f );
-    
-    NSInteger currentPct = currentPtr * 100;
-    NSInteger livePct = livePtr * 100;
-    
-    double finalLiveProgress = livePct / 100.0f;
-    double finalCurrentProgress = currentPct / 100.0f;
-    
-    if ( finalCurrentProgress == 0.0 || finalLiveProgress == 0.0 ) {
-        int x = 1;
-        x++;
+    if ( pv.view.alpha == 0.0 ) {
+        [SCPRProgressViewController show];
     }
     
+    if ( pv.shuttling ) return;
+    
+    Program *program = [[SessionManager shared] currentProgram];
+    
+    NSDate *currentDate = [AudioManager shared].audioPlayer.currentItem.currentDate;
+    NSTimeInterval beginning = [program.starts_at timeIntervalSince1970];
+    NSTimeInterval end = [program.ends_at timeIntervalSince1970];
+    NSTimeInterval duration = ( end - beginning );
+    
+    NSTimeInterval live = [[AudioManager shared].maxSeekableDate timeIntervalSince1970];
+    NSTimeInterval current = [currentDate timeIntervalSince1970];
+    
+    NSTimeInterval liveDiff = ( live - beginning );
+    NSTimeInterval currentDiff = ( current - beginning );
+    
+    pv.lastCurrentValue = currentDiff / duration;
+    pv.lastLiveValue = liveDiff / duration;
+    
     dispatch_async(dispatch_get_main_queue(), ^{
-        [pv.liveProgressView setProgress:finalLiveProgress animated:YES];
-        [pv.currentProgressView setProgress:finalCurrentProgress animated:YES];
+        
+        [CATransaction begin]; {
+            [CATransaction setCompletionBlock:^{
+               
+            }];
+            
+            CABasicAnimation *liveAnim = [CABasicAnimation animationWithKeyPath:@"strokeEnd"];
+            [liveAnim setFromValue:[NSNumber numberWithFloat:pv.lastLiveValue]];
+            [liveAnim setToValue:[NSNumber numberWithFloat:liveDiff/duration]];
+            [liveAnim setDuration:0.1];
+            [liveAnim setRemovedOnCompletion:NO];
+            [liveAnim setFillMode:kCAFillModeForwards];
+            [pv.liveBarLine addAnimation:liveAnim forKey:[NSString stringWithFormat:@"incrementLive%1.1f",liveDiff]];
+            
+            CABasicAnimation *currentAnim = [CABasicAnimation animationWithKeyPath:@"strokeEnd"];
+            [currentAnim setFromValue:[NSNumber numberWithFloat:pv.lastCurrentValue]];
+            [currentAnim setToValue:[NSNumber numberWithFloat:currentDiff/duration]];
+            [currentAnim setDuration:0.1];
+            [currentAnim setRemovedOnCompletion:NO];
+            [currentAnim setFillMode:kCAFillModeForwards];
+            [pv.currentBarLine addAnimation:currentAnim forKey:[NSString stringWithFormat:@"incrementCurrent%1.1f",currentDiff]];
+            
+        }
+        [CATransaction commit];
+
+        
     });
 
     

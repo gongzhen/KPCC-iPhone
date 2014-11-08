@@ -100,6 +100,7 @@ typedef NS_ENUM(NSUInteger, StreamStatus) {
 - (void)stopAllAudio;
 - (BOOL)isStreamPlaying;
 - (BOOL)isStreamBuffering;
+
 - (double)indicatedBitrate;
 - (double)observedMaxBitrate;
 - (double)observedMinBitrate;

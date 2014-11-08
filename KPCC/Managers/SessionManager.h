@@ -33,6 +33,7 @@
 - (void)processNotification:(UILocalNotification*)programUpdate;
 - (BOOL)ignoreProgramUpdating;
 - (BOOL)sessionIsExpired;
+- (BOOL)sessionIsBehindLive;
 
 - (void)handleSessionReactivation;
 - (void)tick;

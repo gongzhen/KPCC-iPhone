@@ -2,13 +2,13 @@
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6250" systemVersion="13F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6244"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6250"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="SCPRProgressViewController">
             <connections>
-                <outlet property="currentProgressView" destination="tXL-Io-0sB" id="CjX-mC-lIy"/>
-                <outlet property="liveProgressView" destination="noc-3G-X6s" id="G17-c7-GcB"/>
+                <outlet property="currentProgressView" destination="aqr-fZ-uuo" id="sX7-lc-Cga"/>
+                <outlet property="liveProgressView" destination="2Ts-lI-G1w" id="Gvc-Ab-sJ4"/>
                 <outlet property="view" destination="iN0-l3-epB" id="32O-cI-7E2"/>
             </connections>
         </placeholder>
@@ -17,29 +17,32 @@
             <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" progress="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="noc-3G-X6s" userLabel="LiveProgressView">
-                    <rect key="frame" x="8" y="299" width="584" height="2"/>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="2Ts-lI-G1w" userLabel="LiveProgressView">
+                    <rect key="frame" x="10" y="296" width="580" height="4"/>
+                    <color key="backgroundColor" red="0.41994310461956519" green="0.41994310461956519" blue="0.41994310461956519" alpha="1" colorSpace="calibratedRGB"/>
                     <constraints>
-                        <constraint firstAttribute="width" constant="584" id="7eC-kG-aO8"/>
-                        <constraint firstAttribute="height" constant="2" id="SrN-5A-XaO"/>
+                        <constraint firstAttribute="height" constant="4" id="w0W-Wy-UAU"/>
                     </constraints>
-                </progressView>
-                <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" progress="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="tXL-Io-0sB" userLabel="currentProgressView">
-                    <rect key="frame" x="8" y="299" width="584" height="2"/>
+                </view>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="aqr-fZ-uuo" userLabel="CurrentProgressView">
+                    <rect key="frame" x="10" y="296" width="580" height="4"/>
+                    <color key="backgroundColor" red="0.41994310460000001" green="0.41994310460000001" blue="0.41994310460000001" alpha="1" colorSpace="calibratedRGB"/>
                     <constraints>
-                        <constraint firstAttribute="height" constant="2" id="Znz-Je-WO4"/>
-                        <constraint firstAttribute="width" constant="584" id="jBg-ay-Z0r"/>
+                        <constraint firstAttribute="height" constant="4" id="b5Z-Ma-Get"/>
+                        <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="4" id="huu-tB-QNg"/>
                     </constraints>
-                </progressView>
+                </view>
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
             <constraints>
-                <constraint firstAttribute="centerX" secondItem="tXL-Io-0sB" secondAttribute="centerX" id="Rtu-LJ-twr"/>
-                <constraint firstAttribute="centerX" secondItem="noc-3G-X6s" secondAttribute="centerX" id="YA5-LX-0Ef"/>
-                <constraint firstAttribute="centerY" secondItem="tXL-Io-0sB" secondAttribute="centerY" id="aE4-zy-AAb"/>
-                <constraint firstAttribute="centerY" secondItem="noc-3G-X6s" secondAttribute="centerY" id="cR4-kx-aIP"/>
+                <constraint firstItem="2Ts-lI-G1w" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="10" id="5Nf-bX-XpW"/>
+                <constraint firstAttribute="centerY" secondItem="aqr-fZ-uuo" secondAttribute="centerY" constant="2" id="7IM-7y-pFi"/>
+                <constraint firstAttribute="trailing" secondItem="aqr-fZ-uuo" secondAttribute="trailing" constant="10" id="9GH-On-cMr"/>
+                <constraint firstAttribute="trailing" secondItem="2Ts-lI-G1w" secondAttribute="trailing" constant="10" id="LAf-3u-uQV"/>
+                <constraint firstAttribute="centerY" secondItem="2Ts-lI-G1w" secondAttribute="centerY" constant="2" id="PvK-wl-aJv"/>
+                <constraint firstItem="aqr-fZ-uuo" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="10" id="mQu-tu-lLQ"/>
             </constraints>
-            <point key="canvasLocation" x="340" y="315"/>
+            <point key="canvasLocation" x="289" y="320"/>
         </view>
     </objects>
 </document>
