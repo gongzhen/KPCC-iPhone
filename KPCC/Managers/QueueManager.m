@@ -56,7 +56,7 @@ static QueueManager *singleton = nil;
         [self enqueue:chunk];
 
         if (i == index && chunk != nil) {
-            [[AudioManager shared] playAudioWithURL:chunk.audioUrl];
+            [[AudioManager shared] playQueueItemWithUrl:chunk.audioUrl];
             self.currentlyPlayingIndex = index;
         }
     }
@@ -103,7 +103,7 @@ static QueueManager *singleton = nil;
 - (void)dequeueForPlayback {
     AudioChunk *chunk = [self dequeue];
     if (chunk) {
-        [[AudioManager shared] playAudioWithURL:chunk.audioUrl];
+        [[AudioManager shared] playQueueItemWithUrl:chunk.audioUrl];
     }
 }
 

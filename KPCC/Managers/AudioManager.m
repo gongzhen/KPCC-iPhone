@@ -130,10 +130,6 @@ static const NSString *ItemStatusContext;
 - (void)playAudioWithURL:(NSString *)url {
     [self takedownAudioPlayer];
     [self buildStreamer:url];
-
-// Subscribe to the AVPlayerItem's DidPlayToEndTime notification.
-//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playerItemDidFinishPlaying:) name:AVPlayerItemDidPlayToEndTimeNotification object:self.playerItem];
-
     [self startStream];
 }
 
