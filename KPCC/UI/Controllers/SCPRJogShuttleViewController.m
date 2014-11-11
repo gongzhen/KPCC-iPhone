@@ -112,6 +112,25 @@
     
 }
 
+- (void)animateIndefinitelyWithViewToHide:(UIView *)hideableView completion:(void (^)(void))completion {
+    
+    self.tension = 0.75;
+    self.strokeColor = [UIColor whiteColor];
+    self.strokeWidth = 2.0;
+    self.direction = SpinDirectionForward;
+    self.soundPlayedBit = YES;
+    self.completionBit = NO;
+    self.view.alpha = 1.0;
+    
+    [self animateWithSpeed:0.66
+                   tension:self.tension
+                     color:self.strokeColor
+               strokeWidth:self.strokeWidth
+              hideableView:hideableView
+                completion:completion];
+    
+}
+
 - (void)animateWithSpeed:(CGFloat)duration
                  tension:(CGFloat)tension
                    color:(UIColor *)color

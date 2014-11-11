@@ -87,6 +87,7 @@ typedef NS_ENUM(NSUInteger, StreamStatus) {
 
 @property CGFloat savedVolume;
 @property BOOL bufferMutex;
+@property BOOL waitForFirstTick;
 
 @property AudioMode currentAudioMode;
 

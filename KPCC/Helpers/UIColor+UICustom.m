@@ -61,6 +61,13 @@
                            alpha:1.0];
 }
 
++ (UIColor*)virtualWhiteColor {
+    return [UIColor colorWithRed:254.0/255.0
+                           green:254.0/255.0
+                            blue:254.0/255.0
+                           alpha:1.0];
+}
+
 + (UIColor*)cloudColor {
     return [UIColor colorWithRed:204.0/255.0
                            green:204.0/255.0

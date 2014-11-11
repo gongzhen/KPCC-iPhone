@@ -14,5 +14,6 @@
 + (UIColor*)virtualBlackColor;
 + (UIColor*)cloudColor;
 - (UIColor*)intensify;
++ (UIColor*)virtualWhiteColor;
 
 @end

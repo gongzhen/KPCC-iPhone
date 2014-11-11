@@ -36,6 +36,10 @@
 @property CGFloat barWidth;
 @property CGFloat lastLiveValue;
 @property CGFloat lastCurrentValue;
+
 @property BOOL shuttling;
+@property BOOL expanded;
+@property BOOL firstTickFinished;
+@property BOOL uiHidden;
 
 @end

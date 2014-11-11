@@ -100,6 +100,8 @@ static const NSString *ItemStatusContext;
         // Now playing, was stopped.
         if (oldRate == 0.0 && newRate == 1.0) {
             [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
+            
+
         }
     }
 }
@@ -143,6 +145,7 @@ static const NSString *ItemStatusContext;
 #ifdef DEBUG
     NSLog(@"playing queue item with url: %@", url);
 #endif
+    self.waitForFirstTick = YES;
     [self playAudioWithURL:url];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playerItemDidFinishPlaying:) name:AVPlayerItemDidPlayToEndTimeNotification object:self.playerItem];
 }
@@ -247,6 +250,15 @@ static const NSString *ItemStatusContext;
             weakSelf.latencyCorrection = [[NSDate date] timeIntervalSince1970] - [weakSelf.maxSeekableDate timeIntervalSince1970];
             
             if ([weakSelf.delegate respondsToSelector:@selector(onTimeChange)]) {
+                if ( weakSelf.waitForFirstTick ) {
+                    weakSelf.waitForFirstTick = NO;
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        
+                        [[NSNotificationCenter defaultCenter] postNotificationName:@"audio_player_began_playing"
+                                                                            object:nil];
+                        
+                    });
+                }
                 [weakSelf.delegate onTimeChange];
             }
             

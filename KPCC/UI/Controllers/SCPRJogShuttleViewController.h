@@ -29,6 +29,8 @@ typedef NS_ENUM(NSUInteger, SpinDirection) {
                withSound:(BOOL)withSound
               completion:(void (^)(void))completion;
 
+- (void)animateIndefinitelyWithViewToHide:(UIView*)hideableView completion:(void (^)(void))completion;
+
 - (void)endAnimations;
 
 @end
