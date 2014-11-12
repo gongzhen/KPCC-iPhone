@@ -34,8 +34,7 @@
 - (BOOL)ignoreProgramUpdating;
 - (BOOL)sessionIsExpired;
 - (BOOL)sessionIsBehindLive;
-
+- (BOOL)sessionIsInRecess;
 - (void)handleSessionReactivation;
-- (void)tick;
 
 @end

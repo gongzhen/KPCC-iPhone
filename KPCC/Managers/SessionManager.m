@@ -91,13 +91,9 @@ static long kStreamBufferLimit = 4*60*60;
         minDiff = 60 - minute;
     }
     
-#ifdef NO_PROGRAM_OFFSET_CORRECTION
     then = [NSDate dateWithTimeInterval:minDiff*60
                               sinceDate:now];
-#else
-    then = [NSDate dateWithTimeInterval:minDiff*60+(6 * 60)
-                              sinceDate:now];
-#endif
+
     NSDateComponents *cleanedComps = [[NSCalendar currentCalendar] components:unit
                                                                      fromDate:then];
     [cleanedComps setSecond:10];
