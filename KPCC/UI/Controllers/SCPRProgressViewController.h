@@ -12,13 +12,13 @@
 @interface SCPRProgressViewController : UIViewController
 
 + (SCPRProgressViewController*)o;
-+ (void)displayWithProgram:(Program*)program onView:(UIViewController*)viewController aboveSiblingView:(UIView*)anchorView;
-+ (void)tick;
-+ (void)hide;
-+ (void)show;
-+ (void)rewind;
-+ (void)forward;
-+ (void)threadedRewind;
+- (void)displayWithProgram:(Program*)program onView:(UIView*)viewController aboveSiblingView:(UIView*)anchorView;
+- (void)tick;
+- (void)hide;
+- (void)show;
+- (void)rewind;
+- (void)forward;
+- (void)threadedRewind;
 
 - (void)setupProgressBarsWithProgram:(Program*)program;
 

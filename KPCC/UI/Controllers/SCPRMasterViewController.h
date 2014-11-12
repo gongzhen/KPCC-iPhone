@@ -69,6 +69,11 @@
 @property (nonatomic) BOOL menuOpen;
 @property (nonatomic) BOOL preRollOpen;
 
+// Live
+@property (nonatomic,strong) SCPRProgressViewController *liveProgressViewController;
+@property (nonatomic,strong) IBOutlet UIView *liveProgressView;
+@property (nonatomic,strong) IBOutlet UIView *currentProgressBarView;
+@property (nonatomic,strong) IBOutlet UIView *liveProgressBarView;
 
 // Pre-Roll
 @property (nonatomic,strong) SCPRPreRollViewController *preRollViewController;
@@ -93,5 +98,8 @@
 - (void)setPositionForQueue:(int)index animated:(BOOL)animated;
 
 - (void)treatUIforProgram;
+
+- (void)moveTextIntoPlace:(BOOL)animated;
+- (void)goLive;
 
 @end

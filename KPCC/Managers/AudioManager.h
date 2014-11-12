@@ -93,6 +93,7 @@ typedef NS_ENUM(NSUInteger, StreamStatus) {
 
 - (void)playAudioWithURL:(NSString *)url;
 - (void)playQueueItemWithUrl:(NSString *)url;
+- (void)playLiveStream;
 
 - (NSString *)liveStreamURL;
 - (void)startStream;

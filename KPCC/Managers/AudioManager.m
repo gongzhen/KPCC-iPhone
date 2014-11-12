@@ -100,55 +100,13 @@ static const NSString *ItemStatusContext;
         // Now playing, was stopped.
         if (oldRate == 0.0 && newRate == 1.0) {
             [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
-            
-
         }
     }
 }
 
 
 
-- (void)buildStreamer:(NSString*)urlString {
-    NSURL *url;
-    if (urlString == nil) {
-        url = [NSURL URLWithString:kHLSLiveStreamURL];
-    } else {
-        url = [NSURL URLWithString:urlString];
-    }
-    
-    self.playerItem = [AVPlayerItem playerItemWithURL:url];
-    [self.playerItem addObserver:self forKeyPath:@"status" options:NSKeyValueObservingOptionOld|NSKeyValueObservingOptionNew context:nil];
-    [self.playerItem addObserver:self forKeyPath:@"playbackBufferEmpty" options:NSKeyValueObservingOptionNew context:nil];
-    [self.playerItem addObserver:self forKeyPath:@"playbackLikelyToKeepUp" options:NSKeyValueObservingOptionNew context:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playerItemFailedToPlayToEndTime:) name:AVPlayerItemFailedToPlayToEndTimeNotification object:self.playerItem];
 
-    self.audioPlayer = [AVPlayer playerWithPlayerItem:self.playerItem];
-    [self.audioPlayer addObserver:self forKeyPath:@"status" options:NSKeyValueObservingOptionOld|NSKeyValueObservingOptionNew context:nil];
-    [self.audioPlayer addObserver:self forKeyPath:@"rate" options:NSKeyValueObservingOptionOld|NSKeyValueObservingOptionNew context:nil];
-
-    
-    [self startObservingTime];
-}
-
-
-- (void)playAudioWithURL:(NSString *)url {
-    [self takedownAudioPlayer];
-    [self buildStreamer:url];
-
-// Subscribe to the AVPlayerItem's DidPlayToEndTime notification.
-//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playerItemDidFinishPlaying:) name:AVPlayerItemDidPlayToEndTimeNotification object:self.playerItem];
-
-    [self startStream];
-}
-
-- (void)playQueueItemWithUrl:(NSString *)url {
-#ifdef DEBUG
-    NSLog(@"playing queue item with url: %@", url);
-#endif
-    self.waitForFirstTick = YES;
-    [self playAudioWithURL:url];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playerItemDidFinishPlaying:) name:AVPlayerItemDidPlayToEndTimeNotification object:self.playerItem];
-}
 
 
 - (void)updateNowPlayingInfoWithAudio:(id)audio {
@@ -199,6 +157,8 @@ static const NSString *ItemStatusContext;
     if ( self.timeObserver ) {
         [self.audioPlayer removeTimeObserver:self.timeObserver];
     }
+    
+    self.waitForFirstTick = YES;
     
 #ifdef USE_LEGACY_STREAM_ANALYSIS
     @synchronized(self) {
@@ -478,11 +438,57 @@ static const NSString *ItemStatusContext;
     return [self.audioPlayer observedMinBitrate];
 }
 
+#pragma mark - Audio Control
+- (void)buildStreamer:(NSString*)urlString {
+    NSURL *url;
+    if ( urlString == nil || SEQ(urlString, kHLSLiveStreamURL) ) {
+        url = [NSURL URLWithString:kHLSLiveStreamURL];
+        self.currentAudioMode = AudioModeLive;
+    } else {
+        url = [NSURL URLWithString:urlString];
+        self.currentAudioMode = AudioModeOnDemand;
+    }
+    
+    self.playerItem = [AVPlayerItem playerItemWithURL:url];
+    [self.playerItem addObserver:self forKeyPath:@"status" options:NSKeyValueObservingOptionOld|NSKeyValueObservingOptionNew context:nil];
+    [self.playerItem addObserver:self forKeyPath:@"playbackBufferEmpty" options:NSKeyValueObservingOptionNew context:nil];
+    [self.playerItem addObserver:self forKeyPath:@"playbackLikelyToKeepUp" options:NSKeyValueObservingOptionNew context:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playerItemFailedToPlayToEndTime:) name:AVPlayerItemFailedToPlayToEndTimeNotification object:self.playerItem];
+    
+    self.audioPlayer = [AVPlayer playerWithPlayerItem:self.playerItem];
+    [self.audioPlayer addObserver:self forKeyPath:@"status" options:NSKeyValueObservingOptionOld|NSKeyValueObservingOptionNew context:nil];
+    [self.audioPlayer addObserver:self forKeyPath:@"rate" options:NSKeyValueObservingOptionOld|NSKeyValueObservingOptionNew context:nil];
+    
+    
+    [self startObservingTime];
+}
+
+
+- (void)playAudioWithURL:(NSString *)url {
+    [self takedownAudioPlayer];
+    [self buildStreamer:url];
+    [self startStream];
+}
+
+- (void)playQueueItemWithUrl:(NSString *)url {
+#ifdef DEBUG
+    NSLog(@"playing queue item with url: %@", url);
+#endif
+    [self playAudioWithURL:url];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playerItemDidFinishPlaying:) name:AVPlayerItemDidPlayToEndTimeNotification object:self.playerItem];
+}
+
+- (void)playLiveStream {
+    [self stopAllAudio];
+    [self buildStreamer:kHLSLiveStreamURL];
+    [self startStream];
+}
+
 - (void)startStream {
     if (!self.audioPlayer) {
         [self buildStreamer:kHLSLiveStreamURL];
     }
-    
+
     [self.audioPlayer play];
     
     [[SessionManager shared] setSessionPausedDate:nil];
@@ -552,8 +558,11 @@ static const NSString *ItemStatusContext;
 
 
 - (void)takedownAudioPlayer {
-    [self.audioPlayer pause];
-
+    if ( self.audioPlayer ) {
+        
+        [self.audioPlayer pause];
+        
+    }
     if (self.timeObserver) {
         [self.audioPlayer removeTimeObserver:self.timeObserver];
         self.timeObserver = nil;

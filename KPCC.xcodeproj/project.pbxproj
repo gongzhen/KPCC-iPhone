@@ -12,7 +12,6 @@
 		255943EC19F5C8B80007294D /* rewind_beat.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 255943EB19F5C8B80007294D /* rewind_beat.mp3 */; };
 		258BD3AE1A0BF65200E7560F /* UIButton+Additions.m in Sources */ = {isa = PBXBuildFile; fileRef = 258BD3AD1A0BF65200E7560F /* UIButton+Additions.m */; };
 		258BD3B11A0C0FFF00E7560F /* SCPRProgressViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 258BD3B01A0C0FFF00E7560F /* SCPRProgressViewController.m */; };
-		258BD3B31A0C14EE00E7560F /* SCPRProgressViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 258BD3B21A0C14EE00E7560F /* SCPRProgressViewController.xib */; };
 		258CA0FD1A09636900A3C8DB /* SessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 258CA0FC1A09636900A3C8DB /* SessionManager.m */; };
 		258CA1001A0982ED00A3C8DB /* SCPRCloakViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 258CA0FF1A0982ED00A3C8DB /* SCPRCloakViewController.m */; };
 		258FC47B1A018F3D00282D59 /* SCPRSpinnerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 258FC47A1A018F3D00282D59 /* SCPRSpinnerViewController.m */; };
@@ -224,7 +223,6 @@
 		258BD3AD1A0BF65200E7560F /* UIButton+Additions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIButton+Additions.m"; sourceTree = "<group>"; };
 		258BD3AF1A0C0FFF00E7560F /* SCPRProgressViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCPRProgressViewController.h; sourceTree = "<group>"; };
 		258BD3B01A0C0FFF00E7560F /* SCPRProgressViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SCPRProgressViewController.m; sourceTree = "<group>"; };
-		258BD3B21A0C14EE00E7560F /* SCPRProgressViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SCPRProgressViewController.xib; sourceTree = "<group>"; };
 		258CA0FB1A09636900A3C8DB /* SessionManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SessionManager.h; path = Managers/SessionManager.h; sourceTree = "<group>"; };
 		258CA0FC1A09636900A3C8DB /* SessionManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SessionManager.m; path = Managers/SessionManager.m; sourceTree = "<group>"; };
 		258CA0FE1A0982ED00A3C8DB /* SCPRCloakViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCPRCloakViewController.h; sourceTree = "<group>"; };
@@ -728,7 +726,6 @@
 				523126A619EDB78C008A47A7 /* SCPRPreRollViewController.xib */,
 				258BD3AF1A0C0FFF00E7560F /* SCPRProgressViewController.h */,
 				258BD3B01A0C0FFF00E7560F /* SCPRProgressViewController.m */,
-				258BD3B21A0C14EE00E7560F /* SCPRProgressViewController.xib */,
 			);
 			name = "View Controllers";
 			path = Controllers;
@@ -1074,7 +1071,6 @@
 				52EFF78B19C3688D0059A0E3 /* menu-clock.png in Resources */,
 				52D0FC2E19D20D29009AECEE /* program_avatar_marketplace-weekend.png in Resources */,
 				523126A819EDB78C008A47A7 /* SCPRPreRollViewController.xib in Resources */,
-				258BD3B31A0C14EE00E7560F /* SCPRProgressViewController.xib in Resources */,
 				52EFF81A19C368C00059A0E3 /* program_avatar_marketplace-morning-report.png in Resources */,
 				52EFF86219C368C00059A0E3 /* program_avatar_weekend-edition-saturday.png in Resources */,
 				52EFF79119C3688D0059A0E3 /* menu-glasses@2x.png in Resources */,

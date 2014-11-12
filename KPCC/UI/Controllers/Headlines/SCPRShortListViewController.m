@@ -26,6 +26,9 @@ static NSString *kShortListMenuURL = @"http://www.scpr.org/short-list/latest#no-
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    self.view.backgroundColor = [UIColor blackColor];
+    
     self.view.frame = [[DesignManager shared] screenFrame];
     
     self.mainScrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0.0, 0.0, self.view.frame.size.width,

@@ -13,8 +13,9 @@
 
 + (SCPRCloakViewController*)o;
 + (void)cloakWithCustomCenteredView:(UIView*)customView cloakAppeared:(CompletionBlock)cloakAppeared;
-+ (void)cloakWithCustomCenteredView:(UIView *)customView  useSpinner:(BOOL)useSpinner cloakAppeared:(CompletionBlock)cloakAppeared;
-
++ (void)cloakWithCustomCenteredView:(UIView *)customView useSpinner:(BOOL)useSpinner cloakAppeared:(CompletionBlock)cloakAppeared;
++ (void)cloakWithCustomCenteredView:(UIView *)customView useSpinner:(BOOL)useSpinner blackout:(BOOL)blackout cloakAppeared:(CompletionBlock)cloakAppeared;
++ (void)cloakWithCustomCenteredView:(UIView *)customView useSpinner:(BOOL)useSpinner blackout:(BOOL)blackout cloakAppeared:(CompletionBlock)cloakAppeared;
 + (void)uncloak;
 + (BOOL)cloakInUse;
 

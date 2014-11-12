@@ -26,13 +26,25 @@
     return cloak;
 }
 
-+ (void)cloakWithCustomCenteredView:(UIView *)customView useSpinner:(BOOL)useSpinner cloakAppeared:(CompletionBlock)cloakAppeared  {
++ (void)cloakWithCustomCenteredView:(UIView *)customView useSpinner:(BOOL)useSpinner cloakAppeared:(CompletionBlock)cloakAppeared {
+    [SCPRCloakViewController cloakWithCustomCenteredView:customView
+                                              useSpinner:useSpinner
+                                                blackout:YES
+                                           cloakAppeared:cloakAppeared];
+}
+
++ (void)cloakWithCustomCenteredView:(UIView *)customView useSpinner:(BOOL)useSpinner blackout:(BOOL)blackout cloakAppeared:(CompletionBlock)cloakAppeared  {
     
     SCPRCloakViewController *cloak = [SCPRCloakViewController o];
     if ( [cloak cloaked] ) {
         return;
     }
-    cloak.view.backgroundColor = [[UIColor virtualBlackColor] translucify:0.75];
+    
+    if ( blackout ) {
+        cloak.view.backgroundColor = [UIColor blackColor];
+    } else {
+        cloak.view.backgroundColor = [[UIColor virtualBlackColor] translucify:0.75];
+    }
     
     SCPRAppDelegate *del = (SCPRAppDelegate*)[[UIApplication sharedApplication] delegate];
     UIWindow *window = [del window];

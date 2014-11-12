@@ -50,6 +50,7 @@
 
     self.masterNavigationController = navigationController;
     self.masterViewController = navigationController.viewControllers.firstObject;
+    self.masterNavigationController.navigationBarHidden = YES;
     self.window.rootViewController = navigationController;
 
     // Fetch initial list of Programs from SCPRV4 and store in CoreData for later usage.

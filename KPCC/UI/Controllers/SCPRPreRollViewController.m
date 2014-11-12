@@ -93,9 +93,7 @@
         }];
     }
     
-    if ([self.delegate respondsToSelector:@selector(preRollCompleted)]) {
-        [self.delegate preRollCompleted];
-    }
+
 
     [UIView animateWithDuration:0.3f animations:^{
         CGRect frame = CGRectMake(self.view.frame.origin.x,
@@ -112,6 +110,10 @@
         }
 
         [self.adProgressView setProgress:0.0];
+        if ([self.delegate respondsToSelector:@selector(preRollCompleted)]) {
+            [self.delegate preRollCompleted];
+        }
+        
     }];
 }
 
@@ -121,11 +123,10 @@
         
         dispatch_async(dispatch_get_main_queue(), ^{
             [self.adProgressView setProgress:(currentPresentedDuration/[self.tritonAd.audioCreativeDuration floatValue]) animated:YES];
+            if (currentPresentedDuration >= [self.tritonAd.audioCreativeDuration floatValue]) {
+                [self dismissTapped:nil];
+            }
         });
-        
-        if (currentPresentedDuration >= [self.tritonAd.audioCreativeDuration floatValue]) {
-            [self dismissTapped:nil];
-        }
     }
 }
 

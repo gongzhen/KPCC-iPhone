@@ -114,6 +114,7 @@
 
 - (void)animateIndefinitelyWithViewToHide:(UIView *)hideableView completion:(void (^)(void))completion {
     
+
     self.tension = 0.75;
     self.strokeColor = [UIColor whiteColor];
     self.strokeWidth = 2.0;
@@ -138,7 +139,7 @@
             hideableView:(UIView*)viewToHide
               completion:(void (^)(void))completion {
     
-
+    self.spinning = YES;
     if ( !self.soundPlayedBit ) {
         self.soundPlayedBit = YES;
         if ( [[AudioManager shared] isStreamPlaying] ) {
@@ -277,18 +278,21 @@
     }
     [CATransaction commit];
 #else
+    self.spinning = NO;
+    self.completionBit = NO;
+    self.soundPlayedBit = NO;
+    [self.circleLayer removeFromSuperlayer];
+    self.circleLayer = nil;
     if ( completion ) {
-        self.completionBit = NO;
-        self.soundPlayedBit = NO;
-        [self.circleLayer removeFromSuperlayer];
-        self.circleLayer = nil;
         dispatch_async(dispatch_get_main_queue(), completion);
     }
 #endif
 }
 
 - (void)endAnimations {
-    [self setCompletionBit:YES];
+    if ( self.spinning ) {
+        [self setCompletionBit:YES];
+    }
 }
 
 /*
