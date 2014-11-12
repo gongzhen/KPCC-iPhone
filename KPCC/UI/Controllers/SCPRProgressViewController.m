@@ -14,7 +14,7 @@
 
 @interface SCPRProgressViewController ()
 
-+ (void)finishReveal;
+- (void)finishReveal;
 
 @end
 
@@ -146,14 +146,11 @@
     
     Program *program = [[SessionManager shared] currentProgram];
     
-    NSTimeInterval beginning = [program.starts_at timeIntervalSince1970];
-    NSTimeInterval end = [program.ends_at timeIntervalSince1970];
-    NSTimeInterval duration = ( end - beginning );
     
 #ifdef DONT_USE_LATENCY_CORRECTION
-    CGFloat vBeginning = 0.0;
+    CGFloat vBeginning = 0.1;
 #else
-    CGFloat vBeginning = 60*6/duration;
+    CGFloat vBeginning = 0.0;
 #endif
     
     NSLog(@"currentBarLine strokeEnd : %1.2f",self.currentBarLine.strokeEnd);
@@ -184,7 +181,7 @@
     
     Program *program = [[SessionManager shared] currentProgram];
     
-    NSTimeInterval beginning = [program.starts_at timeIntervalSince1970];
+    NSTimeInterval beginning = [program.soft_starts_at timeIntervalSince1970];
     NSTimeInterval end = [program.ends_at timeIntervalSince1970];
     NSTimeInterval duration = ( end - beginning );
     NSTimeInterval live = [[AudioManager shared].maxSeekableDate timeIntervalSince1970];
@@ -220,7 +217,7 @@
     Program *program = [[SessionManager shared] currentProgram];
     
     NSDate *currentDate = [AudioManager shared].audioPlayer.currentItem.currentDate;
-    NSTimeInterval beginning = [program.starts_at timeIntervalSince1970];
+    NSTimeInterval beginning = [program.soft_starts_at timeIntervalSince1970];
     NSTimeInterval end = [program.ends_at timeIntervalSince1970];
     NSTimeInterval duration = ( end - beginning );
     
@@ -237,29 +234,29 @@
         
         [CATransaction begin]; {
             [CATransaction setCompletionBlock:^{
-                //self.liveBarLine.strokeEnd = liveDiff/duration;
-                //self.currentBarLine.strokeEnd = currentDiff/duration;
-                //[self.currentBarLine removeAllAnimations];
-                //[self.liveBarLine removeAllAnimations];
+                /*self.liveBarLine.strokeEnd = liveDiff/duration;
+                self.currentBarLine.strokeEnd = currentDiff/duration;
+                [self.currentBarLine removeAllAnimations];
+                [self.liveBarLine removeAllAnimations];*/
             }];
             
             CABasicAnimation *liveAnim = [CABasicAnimation animationWithKeyPath:@"strokeEnd"];
             [liveAnim setFromValue:[NSNumber numberWithFloat:self.lastLiveValue]];
             [liveAnim setToValue:[NSNumber numberWithFloat:liveDiff/duration]];
             [liveAnim setDuration:0.25];
-            [liveAnim setRemovedOnCompletion:YES];
+            [liveAnim setRemovedOnCompletion:NO];
             [liveAnim setFillMode:kCAFillModeForwards];
-            [liveAnim setCumulative:YES];
-            [self.liveBarLine addAnimation:liveAnim forKey:[NSString stringWithFormat:@"incrementLive%1.1f",liveDiff]];
+
+            [self.liveBarLine addAnimation:liveAnim forKey:[NSString stringWithFormat:@"incrementLive"]];
             
             CABasicAnimation *currentAnim = [CABasicAnimation animationWithKeyPath:@"strokeEnd"];
             [currentAnim setFromValue:[NSNumber numberWithFloat:self.lastCurrentValue]];
             [currentAnim setToValue:[NSNumber numberWithFloat:currentDiff/duration]];
             [currentAnim setDuration:0.25];
-            [currentAnim setRemovedOnCompletion:YES];
+            [currentAnim setRemovedOnCompletion:NO];
             [currentAnim setFillMode:kCAFillModeForwards];
-            [currentAnim setCumulative:YES];
-            [self.currentBarLine addAnimation:currentAnim forKey:[NSString stringWithFormat:@"incrementCurrent%1.1f",currentDiff]];
+   
+            [self.currentBarLine addAnimation:currentAnim forKey:[NSString stringWithFormat:@"incrementCurrent"]];
             
         }
         [CATransaction commit];

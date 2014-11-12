@@ -338,9 +338,9 @@ static CGFloat kDisabledAlpha = 0.15;
             case RewindDistanceBeginning:
                 if (cProgram) {
                     if ( self.dirtyFromRewind ) {
-                        [[AudioManager shared] specialSeekToDate:[[AudioManager shared] cookDateForActualSchedule:cProgram.starts_at]];
+                        [[AudioManager shared] specialSeekToDate:cProgram.soft_starts_at];
                     } else {
-                        [[AudioManager shared] seekToDate:[[AudioManager shared] cookDateForActualSchedule:cProgram.starts_at]];
+                        [[AudioManager shared] seekToDate:cProgram.soft_starts_at];
                     }
                 }
                 break;
@@ -402,7 +402,7 @@ static CGFloat kDisabledAlpha = 0.15;
     NSTimeInterval current = [item.currentDate timeIntervalSince1970];
     
     if ( [[SessionManager shared] currentProgram] ) {
-        NSTimeInterval startOfProgram = [[[[SessionManager shared] currentProgram] starts_at] timeIntervalSince1970];
+        NSTimeInterval startOfProgram = [[[[SessionManager shared] currentProgram] soft_starts_at] timeIntervalSince1970];
         return current - startOfProgram;
     }
     
@@ -1191,10 +1191,6 @@ static CGFloat kDisabledAlpha = 0.15;
     if (self.queueCurrentPage != newPage) {
         
         self.timeLabelOnDemand.text = @"Loading...";
-     
-        
-
-        
         self.queueLoading = YES;
         
         [[QueueManager shared] playItemAtPosition:newPage];
@@ -1341,11 +1337,11 @@ static CGFloat kDisabledAlpha = 0.15;
 
     NSDate *currentDate = [AudioManager shared].audioPlayer.currentItem.currentDate;
     NSTimeInterval current = [currentDate timeIntervalSince1970];
-    NSTimeInterval beginning = [program.starts_at timeIntervalSince1970];
+    NSTimeInterval beginning = [program.soft_starts_at timeIntervalSince1970];
     
     if ( !self.rewindGate ) {
         if ( [self rewindAgainstStreamDelta] > kRewindGateThreshold ) {
-            if ( current - beginning > 60*7 ) {
+            if ( current - beginning > 90 ) {
                 self.liveRewindAltButton.userInteractionEnabled = YES;
                 [UIView animateWithDuration:0.33 animations:^{
                     [self.liveRewindAltButton setAlpha:1.0];

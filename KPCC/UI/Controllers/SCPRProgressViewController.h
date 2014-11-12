@@ -18,7 +18,6 @@
 - (void)show;
 - (void)rewind;
 - (void)forward;
-- (void)threadedRewind;
 
 - (void)setupProgressBarsWithProgram:(Program*)program;
 

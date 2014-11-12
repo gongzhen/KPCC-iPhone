@@ -18,6 +18,7 @@
 @property (nonatomic, retain) NSString * public_url;
 @property (nonatomic, retain) NSNumber * is_recurring;
 @property (nonatomic, retain) NSString * program_slug;
+@property (nonatomic, retain) NSDate * soft_starts_at;
 
 + (instancetype)insertNewObjectIntoContext:(NSManagedObjectContext *)context;
 + (instancetype)fetchObjectFromContext:(NSManagedObjectContext *)context;
