@@ -19,14 +19,14 @@
         self.uploadedAt         = [Utils dateFromRFCString:dict[@"uploaded_at"]];
 
         if (dict[@"id"] != nil) {
-            self.audioId = [NSNumber numberWithInteger:[dict[@"id"] integerValue]];
+//            self.audioId = [NSNumber numberWithInteger:[dict[@"id"] integerValue]];
         }
 
         if (dict[@"position"] != nil) {
-            self.position = [NSNumber numberWithInteger:[dict[@"position"] integerValue]];
+//            self.position = [NSNumber numberWithInteger:[dict[@"position"] integerValue]];
         }
 
-        if (dict[@"duration"] != nil) {
+        if (dict[@"duration"] != nil && dict[@"duration"] != [NSNull null]) {
             self.duration = [NSNumber numberWithInteger:[dict[@"duration"] integerValue]];
         }
 

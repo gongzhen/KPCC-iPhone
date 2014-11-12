@@ -105,10 +105,6 @@ static const NSString *ItemStatusContext;
 }
 
 
-
-
-
-
 - (void)updateNowPlayingInfoWithAudio:(id)audio {
     if (!audio) {
         return;
