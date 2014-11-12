@@ -49,12 +49,36 @@
     return moreIntense;
 }
 
++ (UIColor *)colorWithHex:(UInt32)hex {
+    return [UIColor colorWithRed:((CGFloat)((hex & 0xFF0000) >> 16))/255.0f green:((CGFloat)((hex & 0xFF00) >> 8))/255.0f blue:((CGFloat)(hex & 0xFF))/255.0f alpha:1.0f];
+}
+
+#pragma mark - Hard colors
++ (UIColor*)virtualBlackColor {
+    return [UIColor colorWithRed:1.0/255.0
+                           green:1.0/255.0
+                            blue:1.0/255.0
+                           alpha:1.0];
+}
+
++ (UIColor*)virtualWhiteColor {
+    return [UIColor colorWithRed:254.0/255.0
+                           green:254.0/255.0
+                            blue:254.0/255.0
+                           alpha:1.0];
+}
+
++ (UIColor*)cloudColor {
+    return [UIColor colorWithRed:204.0/255.0
+                           green:204.0/255.0
+                            blue:204.0/255.0
+                           alpha:1.0];
+}
+
 + (UIColor*)kpccOrangeColor {
     return [UIColor colorWithHex:0xFF8C26];
 }
 
-+ (UIColor *)colorWithHex:(UInt32)hex {
-    return [UIColor colorWithRed:((CGFloat)((hex & 0xFF0000) >> 16))/255.0f green:((CGFloat)((hex & 0xFF00) >> 8))/255.0f blue:((CGFloat)(hex & 0xFF))/255.0f alpha:1.0f];
-}
+
 
 @end

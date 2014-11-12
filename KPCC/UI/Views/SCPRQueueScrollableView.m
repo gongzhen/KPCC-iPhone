@@ -44,7 +44,8 @@
 }
 
 - (void)setAudioTitle:(NSString *)audioTitle {
-    [self.audioTitleLabel setText:audioTitle];
+    NSString *trimmedTitle = [audioTitle stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+    [self.audioTitleLabel setText:trimmedTitle];
     [self.audioTitleLabel sizeToFit];
 }
 

@@ -7,8 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "NetworkManager.h"
 #import "Program.h"
+
+typedef void (^CompletionBlock)(void);
+typedef void (^CompletionBlockWithValue)(id returnedObject);
 
 #define TICK   NSDate *startTime = [NSDate date]
 #define TOCK   NSLog(@"Execution Time: %f  -- [ %s ]=[ Line %d ]", -[startTime timeIntervalSinceNow], __PRETTY_FUNCTION__, __LINE__)
@@ -16,7 +18,7 @@
 @class SCPRMasterViewController;
 @class SCPRNavigationController;
 
-@interface SCPRAppDelegate : UIResponder <UIApplicationDelegate, ContentProcessor>
+@interface SCPRAppDelegate : UIResponder <UIApplicationDelegate>
 
 @property (strong, nonatomic) UIWindow *window;
 @property (strong, nonatomic) SCPRMasterViewController *masterViewController;

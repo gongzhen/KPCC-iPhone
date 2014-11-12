@@ -59,18 +59,14 @@ static NetworkManager *singleton = nil;
     return @"No Connection";
 }
 
-- (void)requestFromSCPRWithEndpoint:(NSString *)endpoint andDisplay:(id<ContentProcessor>)display {
-    [self requestFromSCPRWithEndpoint:endpoint andDisplay:display flags:nil];
-}
 
-- (void)requestFromSCPRWithEndpoint:(NSString *)endpoint andDisplay:(id<ContentProcessor>)display flags:(NSDictionary *)flags {
-
+- (void)requestFromSCPRWithEndpoint:(NSString *)endpoint completion:(CompletionBlockWithValue)completion {
     AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
     manager.responseSerializer = [AFJSONResponseSerializer serializerWithReadingOptions: NSJSONReadingMutableContainers];
     [manager GET:endpoint parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
         
         if ([responseObject objectForKey:@"meta"] && [[[[responseObject objectForKey:@"meta"] objectForKey:@"status"] objectForKey:@"code"] intValue] == 200) {
-
+            
             NSArray *keys = [responseObject allKeys];
             NSString *responseKey;
             for (NSString *key in keys) {
@@ -79,78 +75,64 @@ static NetworkManager *singleton = nil;
                     break;
                 }
             }
-
-            NSDictionary *elements = @{ @"chunk" : [responseObject objectForKey:responseKey],
-                                        @"port" : display };
             
-            if (flags && [flags count] > 0) {
-                elements = @{ @"chunk" : [responseObject objectForKey:responseKey],
-                              @"port" : display,
-                              @"flags" : flags };
-            }
-            
-            self.failoverCount = 0;
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [self processResponseData:elements];
-            });
-
-        } else {
-            
-            if (self.failoverCount < kFailoverThreshold) {
-                self.failoverCount++;
-                [self requestFromSCPRWithEndpoint:endpoint
-                                       andDisplay:display
-                                            flags:flags];
-                return;
+            if ( responseKey ) {
+                NSDictionary *response = (NSDictionary*)responseObject;
+                id serverObjects = response[responseKey];
+                if (!serverObjects) {
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        completion(nil);
+                    });
+                    return;
+                }
+                
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    completion(serverObjects);
+                });
+                
             } else {
-                self.failoverCount = 0;
+                
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    completion(nil);
+                });
+                return;
+                
             }
+            
         }
         
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        NSLog(@"Error: %@", error);
+        dispatch_async(dispatch_get_main_queue(), ^{
+            completion(nil);
+        });
+        return;
     }];
 }
 
-- (void)fetchProgramInformationFor:(NSDate *)thisTime display:(id<ContentProcessor>)display {
-    NSString *urlString = [NSString stringWithFormat:@"%@/schedule/at?time=%d",kServerBase,(int)[thisTime timeIntervalSince1970]];
-    [self requestFromSCPRWithEndpoint:urlString
-                           andDisplay:display];
-}
 
-- (void)fetchAllProgramInformation:(id<ContentProcessor>)display {
+
+- (void)fetchAllProgramInformation:(CompletionBlockWithValue)completion {
     NSString *urlString = [NSString stringWithFormat:@"%@/programs?air_status=onair",kServerBase];
-    [self requestFromSCPRWithEndpoint:urlString
-                           andDisplay:display];
+    [self requestFromSCPRWithEndpoint:urlString completion:^(id returnedObject) {
+        completion(returnedObject);
+    }];
 }
 
-- (void)fetchEpisodesForProgram:(NSString *)slug dispay:(id<ContentProcessor>)display {
+- (void)fetchEpisodesForProgram:(NSString *)slug completion:(CompletionBlockWithValue)completion {
     NSString *urlString = [NSString stringWithFormat:@"%@/episodes?program=%@&limit=8",kServerBase,slug];
     [self requestFromSCPRWithEndpoint:urlString
-                           andDisplay:display];
+                           completion:^(id returnedObject) {
+                               completion(returnedObject);
+                           }];
 }
 
-- (void)processResponseData:(NSDictionary *)content {
-    
-    NSDictionary *flags = @{};
-    if ([content objectForKey:@"flags"]) {
-        flags = [content objectForKey:@"flags"];
-    }
-    
-    id<ContentProcessor> display = [content objectForKey:@"port"];
-    id data = [content objectForKey:@"chunk"];
-    
-    if (data == [NSNull null]) {
-        [display handleProcessedContent:@[] flags:flags];
-        return;
-    }
-    
-    if ([data isKindOfClass:[NSDictionary class]]) {
-        [display handleProcessedContent:@[data] flags:flags];
-    } else {
-        [display handleProcessedContent:data flags:flags];
-    }
+- (void)fetchEditions:(CompletionBlockWithValue)completion {
+    NSString *urlString = [NSString stringWithFormat:@"%@/editions?limit=1",kServerBase];
+    [self requestFromSCPRWithEndpoint:urlString completion:^(id returnedObject) {
+        completion(returnedObject);
+    }];
 }
+
 
 - (void)fetchTritonAd:(NSString *)params completion:(void (^)(TritonAd* tritonAd))completion {
     AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];

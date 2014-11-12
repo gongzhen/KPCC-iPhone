@@ -14,5 +14,11 @@
 
 - (void)loadProgramImage:(NSString *)slug andImageView:(UIImageView *)imageView completion:(void (^)(BOOL status))completion;
 - (CGRect)screenFrame;
+- (void)loadStockPhotoToImageView:(UIImageView*)imageView;
+
+@property BOOL displayingStockPhoto;
+#ifdef TEST_PROGRAM_IMAGE
+@property (nonatomic,strong) NSString *currentSlug;
+#endif
 
 @end

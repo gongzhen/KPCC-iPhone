@@ -56,7 +56,7 @@ static QueueManager *singleton = nil;
         [self enqueue:chunk];
 
         if (i == index && chunk != nil) {
-            [[AudioManager shared] playAudioWithURL:chunk.audioUrl];
+            [[AudioManager shared] playQueueItemWithUrl:chunk.audioUrl];
             self.currentlyPlayingIndex = index;
         }
     }
@@ -66,12 +66,15 @@ static QueueManager *singleton = nil;
 }
 
 - (void)playNext {
+#ifdef DEBUG
+    NSLog(@"playNext fired");
+#endif
     if (![self isQueueEmpty]) {
         if (self.currentlyPlayingIndex + 1 < [self.queue count]) {
             AudioChunk *chunk = [self.queue objectAtIndex:self.currentlyPlayingIndex + 1];
             [[AudioManager shared] playQueueItemWithUrl:chunk.audioUrl];
             self.currentlyPlayingIndex += 1;
-            //[[[Utils del] masterViewController] setOnDemandUI:YES withProgram:nil andAudioChunk:chunk];
+            [[[Utils del] masterViewController] setPositionForQueue:(int)self.currentlyPlayingIndex animated:YES];
         }
     }
 }
@@ -82,7 +85,7 @@ static QueueManager *singleton = nil;
             AudioChunk *chunk = [self.queue objectAtIndex:self.currentlyPlayingIndex - 1];
             [[AudioManager shared] playQueueItemWithUrl:chunk.audioUrl];
             self.currentlyPlayingIndex -= 1;
-            //[[[Utils del] masterViewController] setOnDemandUI:YES withProgram:nil andAudioChunk:chunk];
+            [[[Utils del] masterViewController] setPositionForQueue:(int)self.currentlyPlayingIndex animated:YES];
         }
     }
 }
@@ -100,12 +103,12 @@ static QueueManager *singleton = nil;
 - (void)dequeueForPlayback {
     AudioChunk *chunk = [self dequeue];
     if (chunk) {
-        [[AudioManager shared] playAudioWithURL:chunk.audioUrl];
+        [[AudioManager shared] playQueueItemWithUrl:chunk.audioUrl];
     }
 }
 
 
-#pragma mark - Queue mechanism
+#pragma mark - Queue internal
 
 - (void)enqueue:(AudioChunk *)audio {
     [self.queue addObject:audio];
@@ -120,26 +123,6 @@ static QueueManager *singleton = nil;
     }
 
     return toDequeue;
-}
-
-- (AudioChunk*)peek:(int)index {
-    id peekObject = nil;
-
-    if ([self.queue lastObject]) {
-        if (index < [self.queue count]) {
-            peekObject = [self.queue objectAtIndex:index];
-        }
-    }
-
-    return peekObject;
-}
-
-- (AudioChunk*)peekHead {
-    return [self peek:0];
-}
-
-- (AudioChunk*)peekTail {
-    return [self.queue lastObject];
 }
 
 - (BOOL)isQueueEmpty {

@@ -19,10 +19,14 @@
 @property (nonatomic,copy) NSString *cachedParentTitle;
 @property (nonatomic,copy) NSString *currentObjectURL;
 
+@property (nonatomic,strong) NSArray *abstracts;
+
 @property BOOL initialLoad;
 @property BOOL detailInitialLoad;
 @property BOOL popping;
 @property BOOL finishing;
 @property BOOL pushing;
+
+- (void)findConcreteObjecrBasedOnUrl:(NSString*)url completion:(CompletionBlockWithValue)completion;
 
 @end

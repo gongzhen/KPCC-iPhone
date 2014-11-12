@@ -18,6 +18,7 @@
 @dynamic public_url;
 @dynamic is_recurring;
 @dynamic program_slug;
+@dynamic soft_starts_at;
 
 + (NSString *)entityName {
     return @"Program";
@@ -162,6 +163,9 @@
 
         if ( ![Utils pureNil:[dictionary objectForKey:@"public_url"]]) {
             program.public_url = [dictionary objectForKey:@"public_url"];
+        }
+        if ( ![Utils pureNil:dictionary[@"soft_starts_at"]] ) {
+            program.soft_starts_at = [Utils dateFromRFCString:dictionary[@"soft_starts_at"]];
         }
 
     } else {

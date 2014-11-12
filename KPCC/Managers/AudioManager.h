@@ -10,7 +10,11 @@
 #import <AVFoundation/AVFoundation.h>
 #import <MediaPlayer/MediaPlayer.h>
 
+#ifdef USE_TEST_STREAM
+#define kHLSLiveStreamURL @"http://vevoplaylist-live.hls.adaptive.level3.net/vevo/ch1/06/prog_index.m3u8"
+#else
 #define kHLSLiveStreamURL @"http://streammachine-hls001.scprdev.org/sg/kpcc-aac.m3u8"
+#endif
 
 #define kLiveStreamURL @"http://live.scpr.org/kpcclive"
 #define kLiveStreamNoPreRollURL @"http://live.scpr.org/kpcclive?preskip=true"
@@ -27,18 +31,23 @@
 #	define SCPRDebugLog(...)
 #endif
 
-typedef enum {
+typedef NS_ENUM(NSUInteger, AudioMode) {
+    AudioModeLive = 0,
+    AudioModeOnDemand
+};
+
+typedef NS_ENUM(NSUInteger, StreamState) {
     StreamStateHealthy = 0,
     StreamStateLostConnectivity = 1,
     StreamStateServerFail = 2,
     StreamStateUnknown = 3
-} StreamState;
+};
 
-typedef enum {
+typedef NS_ENUM(NSUInteger, StreamStatus) {
     StreamStatusStopped = 0,
     StreamStatusPlaying = 1,
     StreamStatusPaused = 2
-} StreamStatus;
+};
 
 @protocol AudioManagerDelegate <NSObject>
 @optional
@@ -78,9 +87,13 @@ typedef enum {
 
 @property CGFloat savedVolume;
 @property BOOL bufferMutex;
+@property BOOL waitForFirstTick;
+
+@property AudioMode currentAudioMode;
 
 - (void)playAudioWithURL:(NSString *)url;
 - (void)playQueueItemWithUrl:(NSString *)url;
+- (void)playLiveStream;
 
 - (NSString *)liveStreamURL;
 - (void)startStream;
@@ -89,6 +102,7 @@ typedef enum {
 - (void)stopAllAudio;
 - (BOOL)isStreamPlaying;
 - (BOOL)isStreamBuffering;
+
 - (double)indicatedBitrate;
 - (double)observedMaxBitrate;
 - (double)observedMinBitrate;
