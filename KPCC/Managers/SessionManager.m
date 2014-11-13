@@ -69,7 +69,12 @@ static long kStreamBufferLimit = 4*60*60;
 }
 
 - (void)fetchCurrentProgram:(CompletionBlockWithValue)completed {
-    [self fetchProgramAtDate:[NSDate date] completed:completed];
+    
+    NSDate *d2u = [NSDate date];
+    if ( [self sessionIsBehindLive] ) {
+        d2u = [[AudioManager shared].audioPlayer.currentItem currentDate];
+    }
+    [self fetchProgramAtDate:d2u completed:completed];
 }
 
 - (void)armProgramUpdater {
@@ -79,8 +84,16 @@ static long kStreamBufferLimit = 4*60*60;
     
     NSInteger unit = NSYearCalendarUnit|NSMonthCalendarUnit|NSDayCalendarUnit|NSHourCalendarUnit|NSMinuteCalendarUnit|NSSecondCalendarUnit;
     NSDate *now = [NSDate date];
+    NSDate *fakeNow = nil;
+    BOOL cookDate = NO;
+    if ( [self sessionIsBehindLive] ) {
+        fakeNow = [[AudioManager shared].audioPlayer.currentItem currentDate];
+        cookDate = YES;
+    }
+    
+    NSDate *nowToUse = cookDate ? fakeNow : now;
     NSDateComponents *components = [[NSCalendar currentCalendar] components:unit
-                                                                   fromDate:now];
+                                                                   fromDate:nowToUse];
     
     NSDate *then = nil;
     NSInteger minute = [components minute];
@@ -148,9 +161,8 @@ static long kStreamBufferLimit = 4*60*60;
     
     if ( [self sessionIsExpired] ) return NO;
     if (
-            [[AudioManager shared] status] == StreamStatusPaused  ||
-            [[AudioManager shared] currentAudioMode] == AudioModeOnDemand ||
-            [self sessionIsBehindLive]
+            /*[[AudioManager shared] status] == StreamStatusPaused  ||*/
+            [[AudioManager shared] currentAudioMode] == AudioModeOnDemand
         
         )
     {
@@ -188,6 +200,33 @@ static long kStreamBufferLimit = 4*60*60;
     }
     
     return NO;
+}
+
+- (BOOL)sessionIsInRecess {
+    
+    if ( [[AudioManager shared] currentAudioMode] == AudioModeOnDemand ) return NO;
+    Program *cp = self.currentProgram;
+    NSDate *soft = cp.soft_starts_at;
+    NSDate *hard = cp.starts_at;
+    NSDate *now = [NSDate date];
+    if ( [self sessionIsBehindLive] ) {
+        now = [[AudioManager shared].audioPlayer.currentItem currentDate];
+    }
+    
+    NSTimeInterval softTI = [soft timeIntervalSince1970];
+    NSTimeInterval hardTI = [hard timeIntervalSince1970];
+    NSTimeInterval nowTI = [now timeIntervalSince1970];
+    if ( nowTI >= hardTI && nowTI <= softTI ) {
+        return YES;
+    }
+    
+    return NO;
+    
+}
+
+- (void)invalidateSession {
+    if ( [[AudioManager shared] currentAudioMode] == AudioModeOnDemand ) return;
+    [self armProgramUpdater];
 }
 
 - (void)setSessionLeftDate:(NSDate *)sessionLeftDate {

@@ -292,110 +292,6 @@ static CGFloat kDisabledAlpha = 0.15;
     [self.playerControlsView layoutIfNeeded];
 }
 
-- (void)activateRewind:(RewindDistance)distance {
-    [self snapJogWheel];
-    [self.liveDescriptionLabel pulsate:kRewindingText color:nil];
-    self.jogging = YES;
-    
-    self.rewindGate = YES;
-    
-    // Disable this until the stream separates from the beginning
-    // of the program a litle bit
-    self.liveRewindAltButton.userInteractionEnabled = NO;
-    [self.liveRewindAltButton setAlpha:kDisabledAlpha];
-    
-    Program *cProgram = [[SessionManager shared] currentProgram];
-    [self.jogShuttle.view setAlpha:1.0];
-    [self.liveProgressViewController rewind];
-    
-    [self.jogShuttle animateWithSpeed:1.0
-                               hideableView:self.playPauseButton
-                            direction:SpinDirectionBackward
-                            withSound:YES
-                           completion:^{
-
-                               [[AudioManager shared].audioPlayer.currentItem cancelPendingSeeks];
-                               [self.liveDescriptionLabel stopPulsating];
-                               self.jogging = NO;
-                               self.dirtyFromRewind = YES;
-                               [self updateControlsAndUI:YES];
-                               seekRequested = NO;
-                               setPlaying = YES;
-                               
-                               [[AudioManager shared] adjustAudioWithValue:0.1 completion:^{
-                                   dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                                        self.rewindGate = NO;
-                                   });
-                               }];
-                                
-                                
-                            }];
-    
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        
-        seekRequested = YES;
-        switch (distance) {
-            case RewindDistanceBeginning:
-                if (cProgram) {
-                    if ( self.dirtyFromRewind ) {
-                        [[AudioManager shared] specialSeekToDate:cProgram.soft_starts_at];
-                    } else {
-                        [[AudioManager shared] seekToDate:cProgram.soft_starts_at];
-                    }
-                }
-                break;
-            case RewindDistanceFifteen:
-                [self rewindFifteen];
-                break;
-            case RewindDistanceThirty:
-            default:
-                break;
-        }
-        
-        
-    });
-    
-}
-
-- (void)activateFastForward {
-    [self snapJogWheel];
-    
-    if ( !setForOnDemandUI ) {
-        self.jogging = YES;
-        [self.liveDescriptionLabel pulsate:kForwardingText color:nil];
-    }
-    
-    [self.jogShuttle.view setAlpha:1.0];
-    
-    [self.liveProgressViewController forward];
-    
-    [self.jogShuttle animateWithSpeed:0.66
-                         hideableView:self.playPauseButton
-                            direction:SpinDirectionForward
-                            withSound:NO
-                           completion:^{
-                               
-                               [self.liveDescriptionLabel stopPulsating];
-                               self.jogging = NO;
-                               self.dirtyFromRewind = NO;
-                               [self updateControlsAndUI:YES];
-                               if ( !setPlaying ) {
-                                   seekRequested = NO;
-                                   setPlaying = YES;
-                               }
-                               
-                               [[AudioManager shared] adjustAudioWithValue:0.1 completion:^{
-                                   [self.view bringSubviewToFront:self.playerControlsView];
-                               }];
-                           }];
-    
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.66 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        
-        seekRequested = YES;
-        [[AudioManager shared] forwardSeekLive];
-        
-    });
-}
 
 - (NSTimeInterval)rewindAgainstStreamDelta {
     AVPlayerItem *item = [[AudioManager shared].audioPlayer currentItem];
@@ -493,6 +389,116 @@ static CGFloat kDisabledAlpha = 0.15;
     }];
     
 }
+
+- (void)activateRewind:(RewindDistance)distance {
+    [self snapJogWheel];
+    [self.liveDescriptionLabel pulsate:kRewindingText color:nil];
+    self.jogging = YES;
+    
+    self.rewindGate = YES;
+    
+    // Disable this until the stream separates from the beginning
+    // of the program a litle bit
+    self.liveRewindAltButton.userInteractionEnabled = NO;
+    [self.liveRewindAltButton setAlpha:kDisabledAlpha];
+    
+    Program *cProgram = [[SessionManager shared] currentProgram];
+    [self.jogShuttle.view setAlpha:1.0];
+    [self.liveProgressViewController rewind];
+    
+    [self.jogShuttle animateWithSpeed:1.0
+                         hideableView:self.playPauseButton
+                            direction:SpinDirectionBackward
+                            withSound:YES
+                           completion:^{
+                               
+                               [[AudioManager shared].audioPlayer.currentItem cancelPendingSeeks];
+                               [self.liveDescriptionLabel stopPulsating];
+                               self.jogging = NO;
+                               self.dirtyFromRewind = YES;
+                               [self updateControlsAndUI:YES];
+                               seekRequested = NO;
+                               setPlaying = YES;
+                               [[SessionManager shared] invalidateSession];
+                               
+                               [[AudioManager shared] adjustAudioWithValue:0.1 completion:^{
+                                   dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                                       self.rewindGate = NO;
+                                       
+                                   });
+                               }];
+                               
+                               
+                           }];
+    
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        
+        seekRequested = YES;
+        switch (distance) {
+            case RewindDistanceBeginning:
+                if (cProgram) {
+                    if ( self.dirtyFromRewind ) {
+                        [[AudioManager shared] specialSeekToDate:cProgram.soft_starts_at];
+                    } else {
+                        [[AudioManager shared] seekToDate:cProgram.soft_starts_at];
+                    }
+                }
+                break;
+            case RewindDistanceFifteen:
+                [self rewindFifteen];
+                break;
+            case RewindDistanceThirty:
+            default:
+                break;
+        }
+        
+        
+    });
+    
+}
+
+- (void)activateFastForward {
+    [self snapJogWheel];
+    
+    if ( !setForOnDemandUI ) {
+        self.jogging = YES;
+        [self.liveDescriptionLabel pulsate:kForwardingText color:nil];
+    }
+    
+    [self.jogShuttle.view setAlpha:1.0];
+    
+    [self.liveProgressViewController forward];
+    
+    [self.jogShuttle animateWithSpeed:0.66
+                         hideableView:self.playPauseButton
+                            direction:SpinDirectionForward
+                            withSound:NO
+                           completion:^{
+                               
+                               [self.liveDescriptionLabel stopPulsating];
+                               self.jogging = NO;
+                               self.dirtyFromRewind = NO;
+                               [self updateControlsAndUI:YES];
+                               if ( !setPlaying ) {
+                                   seekRequested = NO;
+                                   setPlaying = YES;
+                               }
+                               
+                               [[SessionManager shared] invalidateSession];
+                               
+                               [[AudioManager shared] adjustAudioWithValue:0.1 completion:^{
+                                   [self.view bringSubviewToFront:self.playerControlsView];
+                               }];
+                           }];
+    
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.66 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        
+        seekRequested = YES;
+        [[AudioManager shared] forwardSeekLive];
+        
+    });
+}
+
 
 
 # pragma mark - UI control
@@ -1145,6 +1151,7 @@ static CGFloat kDisabledAlpha = 0.15;
             [self snapJogWheel];
             [self.jogShuttle animateIndefinitelyWithViewToHide:self.playPauseButton completion:^{
                 self.playPauseButton.alpha = 1.0;
+                self.playPauseButton.enabled = YES;
             }];
         }
     }
@@ -1223,6 +1230,7 @@ static CGFloat kDisabledAlpha = 0.15;
     } else {
         [self.jogShuttle endAnimations];
     }
+    self.playPauseButton.userInteractionEnabled = YES;
 }
 
 # pragma mark - PulldownMenuDelegate
@@ -1340,13 +1348,11 @@ static CGFloat kDisabledAlpha = 0.15;
     NSTimeInterval beginning = [program.soft_starts_at timeIntervalSince1970];
     
     if ( !self.rewindGate ) {
-        if ( [self rewindAgainstStreamDelta] > kRewindGateThreshold ) {
-            if ( current - beginning > 90 ) {
-                self.liveRewindAltButton.userInteractionEnabled = YES;
-                [UIView animateWithDuration:0.33 animations:^{
-                    [self.liveRewindAltButton setAlpha:1.0];
-                }];
-            }
+        if ( current - beginning > 90 ) {
+            self.liveRewindAltButton.userInteractionEnabled = YES;
+            [UIView animateWithDuration:0.33 animations:^{
+                [self.liveRewindAltButton setAlpha:1.0];
+            }];
         }
     }
     
@@ -1365,6 +1371,7 @@ static CGFloat kDisabledAlpha = 0.15;
             self.queueLoading = NO;
         }];
     }
+    
 }
 
 - (void)onSeekCompleted {

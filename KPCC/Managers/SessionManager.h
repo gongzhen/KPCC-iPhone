@@ -36,5 +36,6 @@
 - (BOOL)sessionIsBehindLive;
 - (BOOL)sessionIsInRecess;
 - (void)handleSessionReactivation;
+- (void)invalidateSession;
 
 @end

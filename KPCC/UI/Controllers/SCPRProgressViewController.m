@@ -127,7 +127,7 @@
     
     if ( !self.uiHidden ) return;
     if ( [[AudioManager shared] status] == StreamStatusStopped ) return;
-    
+    if ( [[AudioManager shared] currentAudioMode] == AudioModeOnDemand ) return;
     
     [UIView animateWithDuration:0.25 animations:^{
         [self.view setAlpha:1.0];
