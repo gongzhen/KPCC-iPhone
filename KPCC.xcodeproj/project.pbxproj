@@ -9,12 +9,18 @@
 /* Begin PBXBuildFile section */
 		254E177019F863960022BF6B /* UILabel+Additions.m in Sources */ = {isa = PBXBuildFile; fileRef = 254E176F19F863960022BF6B /* UILabel+Additions.m */; };
 		255943EA19F1A7620007294D /* SCPRJogShuttleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 255943E919F1A7620007294D /* SCPRJogShuttleViewController.m */; };
-		255943EC19F5C8B80007294D /* rewind_beat.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 255943EB19F5C8B80007294D /* rewind_beat.mp3 */; };
 		258BD3AE1A0BF65200E7560F /* UIButton+Additions.m in Sources */ = {isa = PBXBuildFile; fileRef = 258BD3AD1A0BF65200E7560F /* UIButton+Additions.m */; };
 		258BD3B11A0C0FFF00E7560F /* SCPRProgressViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 258BD3B01A0C0FFF00E7560F /* SCPRProgressViewController.m */; };
 		258CA0FD1A09636900A3C8DB /* SessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 258CA0FC1A09636900A3C8DB /* SessionManager.m */; };
 		258CA1001A0982ED00A3C8DB /* SCPRCloakViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 258CA0FF1A0982ED00A3C8DB /* SCPRCloakViewController.m */; };
 		258E239F1A13FA84009F8F97 /* DataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 258E239C1A13FA84009F8F97 /* DataModel.xcdatamodeld */; };
+		258E8DFB1A16A6E800675E68 /* FeedbackManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 258E8DFA1A16A6E800675E68 /* FeedbackManager.m */; };
+		258E8E011A16AA3900675E68 /* Glass_Crash.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 258E8DFE1A16AA3900675E68 /* Glass_Crash.mp3 */; };
+		258E8E021A16AA3900675E68 /* rewind_beat.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 258E8DFF1A16AA3900675E68 /* rewind_beat.mp3 */; };
+		258E8E031A16AA3900675E68 /* Wood_Crash.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 258E8E001A16AA3900675E68 /* Wood_Crash.mp3 */; };
+		258E8E061A16AA4200675E68 /* desk_customer_template.json in Resources */ = {isa = PBXBuildFile; fileRef = 258E8E041A16AA4200675E68 /* desk_customer_template.json */; };
+		258E8E071A16AA4200675E68 /* desk_template.json in Resources */ = {isa = PBXBuildFile; fileRef = 258E8E051A16AA4200675E68 /* desk_template.json */; };
+		258E8E0A1A16AC5B00675E68 /* NSData+JSONAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 258E8E091A16AC5B00675E68 /* NSData+JSONAdditions.m */; };
 		258FC47B1A018F3D00282D59 /* SCPRSpinnerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 258FC47A1A018F3D00282D59 /* SCPRSpinnerViewController.m */; };
 		258FC47E1A01915E00282D59 /* UIColor+UICustom.m in Sources */ = {isa = PBXBuildFile; fileRef = 258FC47D1A01915E00282D59 /* UIColor+UICustom.m */; };
 		25B59A5619FEF93700D4885C /* SCPRShortListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 25B59A5419FEF93700D4885C /* SCPRShortListViewController.m */; };
@@ -197,8 +203,6 @@
 		76B9A9AC18EF59FD007A6D8C /* SCPRUserReportViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 76B9A9AA18EF59FD007A6D8C /* SCPRUserReportViewController.m */; };
 		76B9A9AE18EF59FD007A6D8C /* SCPRUserReportViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 76B9A9AB18EF59FD007A6D8C /* SCPRUserReportViewController.xib */; };
 		76B9A9B618EF79F6007A6D8C /* SCPRFooterView.m in Sources */ = {isa = PBXBuildFile; fileRef = 76B9A9B518EF79F6007A6D8C /* SCPRFooterView.m */; };
-		76B9A9BF18F609FF007A6D8C /* Glass_Crash.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 76B9A9BD18F609FF007A6D8C /* Glass_Crash.mp3 */; };
-		76B9A9C118F609FF007A6D8C /* Wood_Crash.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 76B9A9BE18F609FF007A6D8C /* Wood_Crash.mp3 */; };
 		76EF5E8A193E8D6B00568A9D /* Storyboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 76EF5E89193E8D6B00568A9D /* Storyboard.storyboard */; };
 		D60D1CDDD065418D8BE73D8C /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C4832A831DF6416997B73FBF /* libPods.a */; };
 /* End PBXBuildFile section */
@@ -218,7 +222,6 @@
 		254E176F19F863960022BF6B /* UILabel+Additions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UILabel+Additions.m"; sourceTree = "<group>"; };
 		255943E819F1A7620007294D /* SCPRJogShuttleViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCPRJogShuttleViewController.h; sourceTree = "<group>"; };
 		255943E919F1A7620007294D /* SCPRJogShuttleViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SCPRJogShuttleViewController.m; sourceTree = "<group>"; };
-		255943EB19F5C8B80007294D /* rewind_beat.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = rewind_beat.mp3; sourceTree = "<group>"; };
 		258BD3AC1A0BF65200E7560F /* UIButton+Additions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIButton+Additions.h"; sourceTree = "<group>"; };
 		258BD3AD1A0BF65200E7560F /* UIButton+Additions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIButton+Additions.m"; sourceTree = "<group>"; };
 		258BD3AF1A0C0FFF00E7560F /* SCPRProgressViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCPRProgressViewController.h; sourceTree = "<group>"; };
@@ -229,6 +232,15 @@
 		258CA0FF1A0982ED00A3C8DB /* SCPRCloakViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SCPRCloakViewController.m; sourceTree = "<group>"; };
 		258E239D1A13FA84009F8F97 /* DataModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = DataModel.xcdatamodel; sourceTree = "<group>"; };
 		258E239E1A13FA84009F8F97 /* KPCC-Proprietary-1.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "KPCC-Proprietary-1.xcdatamodel"; sourceTree = "<group>"; };
+		258E8DF91A16A6E800675E68 /* FeedbackManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FeedbackManager.h; path = Managers/FeedbackManager.h; sourceTree = "<group>"; };
+		258E8DFA1A16A6E800675E68 /* FeedbackManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FeedbackManager.m; path = Managers/FeedbackManager.m; sourceTree = "<group>"; };
+		258E8DFE1A16AA3900675E68 /* Glass_Crash.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = Glass_Crash.mp3; path = Audio/Glass_Crash.mp3; sourceTree = "<group>"; };
+		258E8DFF1A16AA3900675E68 /* rewind_beat.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = rewind_beat.mp3; path = Audio/rewind_beat.mp3; sourceTree = "<group>"; };
+		258E8E001A16AA3900675E68 /* Wood_Crash.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = Wood_Crash.mp3; path = Audio/Wood_Crash.mp3; sourceTree = "<group>"; };
+		258E8E041A16AA4200675E68 /* desk_customer_template.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = desk_customer_template.json; path = Fixtures/desk_customer_template.json; sourceTree = "<group>"; };
+		258E8E051A16AA4200675E68 /* desk_template.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = desk_template.json; path = Fixtures/desk_template.json; sourceTree = "<group>"; };
+		258E8E081A16AC5B00675E68 /* NSData+JSONAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+JSONAdditions.h"; sourceTree = "<group>"; };
+		258E8E091A16AC5B00675E68 /* NSData+JSONAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+JSONAdditions.m"; sourceTree = "<group>"; };
 		258FC4791A018F3D00282D59 /* SCPRSpinnerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCPRSpinnerViewController.h; sourceTree = "<group>"; };
 		258FC47A1A018F3D00282D59 /* SCPRSpinnerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SCPRSpinnerViewController.m; sourceTree = "<group>"; };
 		258FC47C1A01915E00282D59 /* UIColor+UICustom.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+UICustom.h"; sourceTree = "<group>"; };
@@ -457,8 +469,6 @@
 		76B9A9AB18EF59FD007A6D8C /* SCPRUserReportViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SCPRUserReportViewController.xib; sourceTree = "<group>"; };
 		76B9A9B418EF79F6007A6D8C /* SCPRFooterView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCPRFooterView.h; sourceTree = "<group>"; };
 		76B9A9B518EF79F6007A6D8C /* SCPRFooterView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SCPRFooterView.m; sourceTree = "<group>"; };
-		76B9A9BD18F609FF007A6D8C /* Glass_Crash.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = Glass_Crash.mp3; sourceTree = "<group>"; };
-		76B9A9BE18F609FF007A6D8C /* Wood_Crash.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = Wood_Crash.mp3; sourceTree = "<group>"; };
 		76EF5E84193E8BEC00568A9D /* KPCC-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "KPCC-Bridging-Header.h"; path = "UI/Controllers/KPCC-Bridging-Header.h"; sourceTree = "<group>"; };
 		76EF5E85193E8BEC00568A9D /* TestFlight-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "TestFlight-Bridging-Header.h"; path = "UI/Controllers/TestFlight-Bridging-Header.h"; sourceTree = "<group>"; };
 		76EF5E89193E8D6B00568A9D /* Storyboard.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Storyboard.storyboard; sourceTree = "<group>"; };
@@ -496,6 +506,25 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		258E8DFC1A16AA1100675E68 /* Fixtures */ = {
+			isa = PBXGroup;
+			children = (
+				258E8E041A16AA4200675E68 /* desk_customer_template.json */,
+				258E8E051A16AA4200675E68 /* desk_template.json */,
+			);
+			name = Fixtures;
+			sourceTree = "<group>";
+		};
+		258E8DFD1A16AA1800675E68 /* Audio */ = {
+			isa = PBXGroup;
+			children = (
+				258E8DFE1A16AA3900675E68 /* Glass_Crash.mp3 */,
+				258E8DFF1A16AA3900675E68 /* rewind_beat.mp3 */,
+				258E8E001A16AA3900675E68 /* Wood_Crash.mp3 */,
+			);
+			name = Audio;
+			sourceTree = "<group>";
+		};
 		25B59A5219FEF73300D4885C /* Short List / Headlines */ = {
 			isa = PBXGroup;
 			children = (
@@ -514,13 +543,6 @@
 			);
 			name = Transitions;
 			path = ..;
-			sourceTree = "<group>";
-		};
-		52D91F2D19A2535A00B8A02F /* json */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = json;
 			sourceTree = "<group>";
 		};
 		52EFF77A19C3688D0059A0E3 /* menu */ = {
@@ -686,6 +708,8 @@
 				258CA0FF1A0982ED00A3C8DB /* SCPRCloakViewController.m */,
 				258BD3AC1A0BF65200E7560F /* UIButton+Additions.h */,
 				258BD3AD1A0BF65200E7560F /* UIButton+Additions.m */,
+				258E8E081A16AC5B00675E68 /* NSData+JSONAdditions.h */,
+				258E8E091A16AC5B00675E68 /* NSData+JSONAdditions.m */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -918,6 +942,8 @@
 		76A3090118C93C3A0065D4B1 /* Managers */ = {
 			isa = PBXGroup;
 			children = (
+				258E8DF91A16A6E800675E68 /* FeedbackManager.h */,
+				258E8DFA1A16A6E800675E68 /* FeedbackManager.m */,
 				76A3090218C93C880065D4B1 /* AudioManager.h */,
 				76A3090318C93C880065D4B1 /* AudioManager.m */,
 				76349D1918D8C74F0027C3B8 /* NetworkManager.h */,
@@ -941,12 +967,10 @@
 		76B9A9BC18F609FF007A6D8C /* Assets */ = {
 			isa = PBXGroup;
 			children = (
-				255943EB19F5C8B80007294D /* rewind_beat.mp3 */,
-				52D91F2D19A2535A00B8A02F /* json */,
+				258E8DFD1A16AA1800675E68 /* Audio */,
+				258E8DFC1A16AA1100675E68 /* Fixtures */,
 				768C0662199590CC00F829EB /* Fonts */,
 				7685BD57194BBCB90075BB16 /* Images */,
-				76B9A9BD18F609FF007A6D8C /* Glass_Crash.mp3 */,
-				76B9A9BE18F609FF007A6D8C /* Wood_Crash.mp3 */,
 			);
 			path = Assets;
 			sourceTree = "<group>";
@@ -1078,12 +1102,12 @@
 				523E86D219C8A292006FC366 /* SCPRProgramDetailViewController.xib in Resources */,
 				76A308E518C8FB940065D4B1 /* Images.xcassets in Resources */,
 				52CF917619FEF306007BCFA8 /* btn_play.png in Resources */,
-				76B9A9BF18F609FF007A6D8C /* Glass_Crash.mp3 in Resources */,
 				52CF917719FEF306007BCFA8 /* btn_play@2x.png in Resources */,
 				768C0679199590CC00F829EB /* FreigSanProBookIt.otf in Resources */,
 				52EFF86E19C368C00059A0E3 /* program_avatar_writers-almanac.png in Resources */,
 				52EFF7EC19C368C00059A0E3 /* program_avatar_all-things-considered@2x.png in Resources */,
 				52EFF78919C3688D0059A0E3 /* menu-antenna@2x.png in Resources */,
+				258E8E071A16AA4200675E68 /* desk_template.json in Resources */,
 				768C067F199590CC00F829EB /* FreigSanProMed.otf in Resources */,
 				52EFF84619C368C00059A0E3 /* program_avatar_splendid-table.png in Resources */,
 				52EFF83C19C368C00059A0E3 /* program_avatar_radiolab@2x.png in Resources */,
@@ -1134,7 +1158,6 @@
 				52EFF83019C368C00059A0E3 /* program_avatar_on-being@2x.png in Resources */,
 				768C0685199590CC00F829EB /* FreigSanProSemIt.otf in Resources */,
 				52EFF85019C368C00059A0E3 /* program_avatar_tavis-smiley-show@2x.png in Resources */,
-				255943EC19F5C8B80007294D /* rewind_beat.mp3 in Resources */,
 				52EFF85C19C368C00059A0E3 /* program_avatar_this-american-life@2x.png in Resources */,
 				52EFF85419C368C00059A0E3 /* program_avatar_ted-radio-hour@2x.png in Resources */,
 				52EFF81019C368C00059A0E3 /* program_avatar_latino-usa@2x.png in Resources */,
@@ -1144,6 +1167,7 @@
 				768C067B199590CC00F829EB /* FreigSanProLig.otf in Resources */,
 				52EFF80619C368C00059A0E3 /* program_avatar_filmweek.png in Resources */,
 				52EFF82019C368C00059A0E3 /* program_avatar_marketplace@2x.png in Resources */,
+				258E8E021A16AA3900675E68 /* rewind_beat.mp3 in Resources */,
 				768C068C1995911600F829EB /* program_tile_generic@2x.jpg in Resources */,
 				52EFF81C19C368C00059A0E3 /* program_avatar_marketplace-morning-report@2x.png in Resources */,
 				52EFF80819C368C00059A0E3 /* program_avatar_filmweek@2x.png in Resources */,
@@ -1166,7 +1190,6 @@
 				52EFF7E619C368C00059A0E3 /* program_avatar_airtalk.png in Resources */,
 				52EFF7F019C368C00059A0E3 /* program_avatar_ask-me-another@2x.png in Resources */,
 				52D0FC3419D20D29009AECEE /* program_avatar_q-with-jian-ghomeshi@2x.png in Resources */,
-				76B9A9C118F609FF007A6D8C /* Wood_Crash.mp3 in Resources */,
 				52EFF81819C368C00059A0E3 /* program_avatar_loh-life@2x.png in Resources */,
 				52EFF7F219C368C00059A0E3 /* program_avatar_bbc-newshour.png in Resources */,
 				52D0FC2C19D20D29009AECEE /* program_avatar_marketplace-tech-report@2x.png in Resources */,
@@ -1176,17 +1199,20 @@
 				52E68B8419B8F2D10028F8AE /* SCPRNavigationController.xib in Resources */,
 				52EFF85819C368C00059A0E3 /* program_avatar_world@2x.png in Resources */,
 				52EFF80019C368C00059A0E3 /* program_avatar_car-talk@2x.png in Resources */,
+				258E8E031A16AA3900675E68 /* Wood_Crash.mp3 in Resources */,
 				52EFF88919C3BC020059A0E3 /* item-chevron-right@2x.png in Resources */,
 				761CC5A4195A2878006A6C7C /* Testflight-Info.plist in Resources */,
 				52EFF81E19C368C00059A0E3 /* program_avatar_marketplace.png in Resources */,
 				52EFF83A19C368C00059A0E3 /* program_avatar_radiolab.png in Resources */,
 				52EFF86A19C368C00059A0E3 /* program_avatar_wits.png in Resources */,
+				258E8E061A16AA4200675E68 /* desk_customer_template.json in Resources */,
 				52D9227A19D366C90018AD4B /* content-share@2x.png in Resources */,
 				52EFF86819C368C00059A0E3 /* program_avatar_weekend-edition-sunday@2x.png in Resources */,
 				52EFF84819C368C00059A0E3 /* program_avatar_splendid-table@2x.png in Resources */,
 				52EFF82419C368C00059A0E3 /* program_avatar_morning-edition@2x.png in Resources */,
 				768C06521995905D00F829EB /* btn_live_rewind_small.png in Resources */,
 				768C066F199590CC00F829EB /* FreigSanProBlk.otf in Resources */,
+				258E8E011A16AA3900675E68 /* Glass_Crash.mp3 in Resources */,
 				52D0FC3819D20D29009AECEE /* program_avatar_the-frame@2x.png in Resources */,
 				768C06601995905D00F829EB /* chevron_down@2x.png in Resources */,
 				768C0671199590CC00F829EB /* FreigSanProBlkIt.otf in Resources */,
@@ -1244,6 +1270,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				258E8DFB1A16A6E800675E68 /* FeedbackManager.m in Sources */,
 				76658AB518DCB0DC00026176 /* AnalyticsManager.m in Sources */,
 				523E86D919CB694B006FC366 /* Episode.m in Sources */,
 				52CF917D1A0036CA007BCFA8 /* AudioChunk.m in Sources */,
@@ -1271,6 +1298,7 @@
 				52D6B2001A02EEB90068B19A /* SCPRQueueScrollableView.m in Sources */,
 				525C6CA419F701FA0076C13B /* TritonAd.m in Sources */,
 				76A3090418C93C880065D4B1 /* AudioManager.m in Sources */,
+				258E8E0A1A16AC5B00675E68 /* NSData+JSONAdditions.m in Sources */,
 				258FC47B1A018F3D00282D59 /* SCPRSpinnerViewController.m in Sources */,
 				52D0FC2019D1FC0C009AECEE /* SCPRProgramDetailTableViewCell.m in Sources */,
 				760E3C4C194FB61B00D86D91 /* Program.m in Sources */,

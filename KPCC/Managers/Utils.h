@@ -12,6 +12,7 @@
 #import "UIColor+UICustom.h"
 #import "NSDate+Helper.h"
 #import "UIButton+Additions.h"
+#import "NSData+JSONAdditions.h"
 
 //@class SCPRMasterViewController;
 
@@ -34,5 +35,11 @@
 
 + (BOOL)pureNil:(id)object;
 + (BOOL)isRetina;
+
++ (NSDictionary*)gConfig;
++ (NSString *)base64:(NSData *)input;
++ (id)loadJson:(NSString*)json;
++ (NSString*)rawJson:(id)object;
++ (NSString*)prettyVersion;
 
 @end

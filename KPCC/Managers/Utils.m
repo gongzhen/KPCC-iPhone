@@ -8,6 +8,8 @@
 
 #import "Utils.h"
 
+static char *alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+
 @implementation Utils
 
 + (SCPRAppDelegate*)del {
@@ -101,11 +103,104 @@
     return NO;
 }
 
++ (NSDictionary*)gConfig {
+    NSString *path = [[NSBundle mainBundle] pathForResource:@"Config" ofType:@"plist"];
+    NSDictionary *globalConfig = [[NSDictionary alloc] initWithContentsOfFile:path];
+    return globalConfig;
+}
+
 + (BOOL)isRetina{
     return ([[UIScreen mainScreen] respondsToSelector:@selector(displayLinkWithTarget:selector:)] && ([UIScreen mainScreen].scale == 2.0))?1:0;
 }
 
++(NSString *)base64:(NSData *)input {
+    unsigned long encodedLength = (((([input length] % 3) + [input length]) / 3) * 4) + 1;
+    unsigned char *outputBuffer = malloc(encodedLength);
+    unsigned char *inputBuffer = (unsigned char *)[input bytes];
+    
+    NSInteger i;
+    NSInteger j = 0;
+    unsigned long remain;
+    
+    for(i = 0; i < [input length]; i += 3) {
+        remain = [input length] - i;
+        
+        outputBuffer[j++] = alphabet[(inputBuffer[i] & 0xFC) >> 2];
+        outputBuffer[j++] = alphabet[((inputBuffer[i] & 0x03) << 4) |
+                                     ((remain > 1) ? ((inputBuffer[i + 1] & 0xF0) >> 4): 0)];
+        
+        if(remain > 1)
+            outputBuffer[j++] = alphabet[((inputBuffer[i + 1] & 0x0F) << 2)
+                                         | ((remain > 2) ? ((inputBuffer[i + 2] & 0xC0) >> 6) : 0)];
+        else
+            outputBuffer[j++] = '=';
+        
+        if(remain > 2)
+            outputBuffer[j++] = alphabet[inputBuffer[i + 2] & 0x3F];
+        else
+            outputBuffer[j++] = '=';
+    }
+    
+    outputBuffer[j] = 0;
+    
+    NSString *result = [NSString stringWithCString:(const char*)outputBuffer
+                                          encoding:NSUTF8StringEncoding];
+    free(outputBuffer);
+    
+    return result;
+}
 
++ (id)loadJson:(NSString *)json {
+    NSError *jsonError = nil;
+    NSString *path = @"";
+    if ( [json rangeOfString:@".json"].location != NSNotFound ) {
+        path = [[NSBundle mainBundle] pathForResource:json
+                                               ofType:@""];
+    } else {
+        path = [[NSBundle mainBundle] pathForResource:json
+                                               ofType:@"json"];
+    }
+    
+    NSString *jsonString = [[NSString alloc] initWithContentsOfFile:path
+                                                           encoding:NSUTF8StringEncoding
+                                                              error:&jsonError];
+    if ( jsonError ) {
+        return nil;
+    }
+    
+    NSData *d = [jsonString dataUsingEncoding:NSUTF8StringEncoding];
+    id item = [NSJSONSerialization JSONObjectWithData:d
+                                              options:0
+                                                error:&jsonError];
+    
+    if ( jsonError ) {
+        return nil;
+    }
+    
+    return item;
+}
+
++ (NSString*)rawJson:(id)object {
+    NSError *jsonError = nil;
+    NSData *data = [NSJSONSerialization dataWithJSONObject:object
+                                                   options:NSJSONWritingPrettyPrinted
+                                                     error:&jsonError];
+    if ( jsonError ) {
+        return @"";
+    }
+    
+    return [[NSString alloc] initWithData:data
+                                 encoding:NSUTF8StringEncoding];
+}
+
++ (NSString*)prettyVersion {
+#ifndef VERBOSE_VERSION
+    return [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"];
+#else
+    return [NSString stringWithFormat:@"%@ %@",[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"],
+            [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"]];
+#endif
+}
 /**
  * Date helper functions
  * in Swift
