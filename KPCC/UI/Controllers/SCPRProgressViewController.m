@@ -245,11 +245,16 @@
     dispatch_async(dispatch_get_main_queue(), ^{
         
         [CATransaction begin]; {
-
+            [CATransaction setCompletionBlock:^{
+                self.liveBarLine.strokeEnd = self.lastLiveValue;
+                self.currentBarLine.strokeEnd = self.lastCurrentValue;
+                [self.liveBarLine removeAllAnimations];
+                [self.currentBarLine removeAllAnimations];
+            }];
             CABasicAnimation *liveAnim = [CABasicAnimation animationWithKeyPath:@"strokeEnd"];
             [liveAnim setFromValue:[NSNumber numberWithFloat:self.lastLiveValue]];
             [liveAnim setToValue:[NSNumber numberWithFloat:fminf(liveDiff/duration,0.98f)]];
-            [liveAnim setDuration:0.25];
+            [liveAnim setDuration:0.8];
             [liveAnim setRemovedOnCompletion:NO];
             [liveAnim setFillMode:kCAFillModeForwards];
 
@@ -258,7 +263,7 @@
             CABasicAnimation *currentAnim = [CABasicAnimation animationWithKeyPath:@"strokeEnd"];
             [currentAnim setFromValue:[NSNumber numberWithFloat:self.lastCurrentValue]];
             [currentAnim setToValue:[NSNumber numberWithFloat:fminf(currentDiff/duration,0.98f)]];
-            [currentAnim setDuration:0.25];
+            [currentAnim setDuration:0.8];
             [currentAnim setRemovedOnCompletion:NO];
             [currentAnim setFillMode:kCAFillModeForwards];
    

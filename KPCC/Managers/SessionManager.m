@@ -102,22 +102,19 @@ static long kStreamBufferLimit = 4*60*60;
     if ( [self ignoreProgramUpdating] ) return;
     
 #ifndef TESTING_PROGRAM_CHANGE
-    
-    
-
     NSInteger unit = NSYearCalendarUnit|NSMonthCalendarUnit|NSDayCalendarUnit|NSHourCalendarUnit|NSMinuteCalendarUnit|NSSecondCalendarUnit;
     NSDate *now = [NSDate date];
+    
+    
     NSDate *fakeNow = nil;
     BOOL cookDate = NO;
+    Program *cp = [self currentProgram];
     if ( [self sessionIsBehindLive] ) {
-        Program *cp = [self currentProgram];
-        NSTimeInterval ti = abs([cp.soft_starts_at timeIntervalSinceDate:cp.starts_at]);
         fakeNow = [[AudioManager shared].audioPlayer.currentItem currentDate];
-        fakeNow = [fakeNow dateByAddingTimeInterval:-1*ti];
         cookDate = YES;
     }
     
-    NSDate *nowToUse = cookDate ? fakeNow : now;
+    NSDate *nowToUse = cookDate ? cp.soft_starts_at : now;
     NSDateComponents *components = [[NSCalendar currentCalendar] components:unit
                                                                    fromDate:nowToUse];
     
@@ -298,7 +295,9 @@ static long kStreamBufferLimit = 4*60*60;
 
 - (void)setSessionReturnedDate:(NSDate *)sessionReturnedDate {
     _sessionReturnedDate = sessionReturnedDate;
-    [self handleSessionReactivation];
+    if ( sessionReturnedDate ) {
+        [self handleSessionReactivation];
+    }
 }
 
 - (void)processNotification:(UILocalNotification*)programUpdate {
@@ -327,13 +326,19 @@ static long kStreamBufferLimit = 4*60*60;
     if ( tiBetween > kStreamBufferLimit ) {
         [[AudioManager shared] stopStream];
         [self fetchCurrentProgram:^(id returnedObject) {
-                
+            self.sessionReturnedDate = nil;
         }];
     } else {
         if ( [[AudioManager shared] status] != StreamStatusPaused ) {
-            [self fetchCurrentProgram:^(id returnedObject) {
-                
-            }];
+            if ( [self sessionIsBehindLive] ) {
+                [self fetchProgramAtDate:[[AudioManager shared].audioPlayer.currentItem currentDate] completed:^(id returnedObject) {
+                    self.sessionReturnedDate = nil;
+                }];
+            } else {
+                [self fetchCurrentProgram:^(id returnedObject) {
+                    self.sessionReturnedDate = nil;
+                }];
+            }
         }
     }
 }
