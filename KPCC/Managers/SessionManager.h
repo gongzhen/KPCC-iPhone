@@ -36,5 +36,14 @@
 - (BOOL)sessionIsBehindLive;
 - (BOOL)sessionIsInRecess;
 - (void)handleSessionReactivation;
+- (void)invalidateSession;
+
+#ifdef TESTING_PROGRAM_CHANGE
+- (Program*)fakeProgram;
+@property NSInteger initialProgramRequested;
+@property (nonatomic,strong) Program *fakeCurrent;
+
+#endif
+
 
 @end

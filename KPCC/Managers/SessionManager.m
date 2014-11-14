@@ -19,12 +19,31 @@ static long kStreamBufferLimit = 4*60*60;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         mgr = [[SessionManager alloc] init];
+#ifdef TESTING_PROGRAM_CHANGE
+        mgr.initialProgramRequested = 0;
+#endif
     });
     return mgr;
 }
 
 #pragma mark - Program
 - (void)fetchProgramAtDate:(NSDate *)date completed:(CompletionBlockWithValue)completed {
+    
+#ifdef TESTING_PROGRAM_CHANGE
+    Program *p = [self fakeProgram];
+    self.currentProgram = p;
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"program_has_changed"
+                                                        object:nil
+                                                      userInfo:nil];
+    
+    completed(p);
+    
+
+    
+    [self armProgramUpdater];
+    return;
+#endif
+    
     NSString *urlString = [NSString stringWithFormat:@"%@/schedule/at?time=%d",kServerBase,(int)[date timeIntervalSince1970]];
     [[NetworkManager shared] requestFromSCPRWithEndpoint:urlString completion:^(id returnedObject) {
         // Create Program and insert into managed object context
@@ -69,7 +88,12 @@ static long kStreamBufferLimit = 4*60*60;
 }
 
 - (void)fetchCurrentProgram:(CompletionBlockWithValue)completed {
-    [self fetchProgramAtDate:[NSDate date] completed:completed];
+    
+    NSDate *d2u = [NSDate date];
+    if ( [self sessionIsBehindLive] ) {
+        d2u = [[AudioManager shared].audioPlayer.currentItem currentDate];
+    }
+    [self fetchProgramAtDate:d2u completed:completed];
 }
 
 - (void)armProgramUpdater {
@@ -77,10 +101,22 @@ static long kStreamBufferLimit = 4*60*60;
     
     if ( [self ignoreProgramUpdating] ) return;
     
+#ifndef TESTING_PROGRAM_CHANGE
     NSInteger unit = NSYearCalendarUnit|NSMonthCalendarUnit|NSDayCalendarUnit|NSHourCalendarUnit|NSMinuteCalendarUnit|NSSecondCalendarUnit;
     NSDate *now = [NSDate date];
+    
+    
+    NSDate *fakeNow = nil;
+    BOOL cookDate = NO;
+    Program *cp = [self currentProgram];
+    if ( [self sessionIsBehindLive] ) {
+        fakeNow = [[AudioManager shared].audioPlayer.currentItem currentDate];
+        cookDate = YES;
+    }
+    
+    NSDate *nowToUse = cookDate ? cp.soft_starts_at : now;
     NSDateComponents *components = [[NSCalendar currentCalendar] components:unit
-                                                                   fromDate:now];
+                                                                   fromDate:nowToUse];
     
     NSDate *then = nil;
     NSInteger minute = [components minute];
@@ -109,6 +145,7 @@ static long kStreamBufferLimit = 4*60*60;
 #ifdef TEST_PROGRAM_IMAGE
     then = [NSDate dateWithTimeInterval:30 sinceDate:now];
 #endif
+    NSTimeInterval sinceNow = [then timeIntervalSince1970] - [now timeIntervalSince1970];
     
     if ( [self useLocalNotifications] ) {
         UILocalNotification *localNote = [[UILocalNotification alloc] init];
@@ -117,7 +154,7 @@ static long kStreamBufferLimit = 4*60*60;
         [[UIApplication sharedApplication] scheduleLocalNotification:localNote];
     } else {
         
-        NSTimeInterval sinceNow = [then timeIntervalSince1970] - [now timeIntervalSince1970];
+
         self.programUpdateTimer = [NSTimer scheduledTimerWithTimeInterval:sinceNow
                                                                    target:self
                                                                  selector:@selector(processTimer:)
@@ -128,6 +165,16 @@ static long kStreamBufferLimit = 4*60*60;
 #endif
         
     }
+#else
+    NSDate *threeMinutesFromNow = [[NSDate date] dateByAddingTimeInterval:96];
+    NSLog(@"Program will check itself again at : %@",[threeMinutesFromNow prettyTimeString]);
+    self.programUpdateTimer = [NSTimer scheduledTimerWithTimeInterval:abs([threeMinutesFromNow timeIntervalSinceNow])
+                                                               target:self
+                                                             selector:@selector(processTimer:)
+                                                             userInfo:nil
+                                                              repeats:NO];
+    
+#endif
     
 }
 
@@ -148,9 +195,8 @@ static long kStreamBufferLimit = 4*60*60;
     
     if ( [self sessionIsExpired] ) return NO;
     if (
-            [[AudioManager shared] status] == StreamStatusPaused  ||
-            [[AudioManager shared] currentAudioMode] == AudioModeOnDemand ||
-            [self sessionIsBehindLive]
+            /*[[AudioManager shared] status] == StreamStatusPaused  ||*/
+            [[AudioManager shared] currentAudioMode] == AudioModeOnDemand
         
         )
     {
@@ -161,7 +207,33 @@ static long kStreamBufferLimit = 4*60*60;
     
 }
 
+#ifdef TESTING_PROGRAM_CHANGE
+- (Program*)fakeProgram {
+    if ( self.initialProgramRequested >= 2 ) {
+        Program *p = [Program insertNewObjectIntoContext:nil];
+        p.soft_starts_at = [[NSDate date] dateByAddingTimeInterval:(60*4)];
+        p.starts_at = [[NSDate date] dateByAddingTimeInterval:(60*3)];
+        p.ends_at = [[NSDate date] dateByAddingTimeInterval:(60*10)];
+        p.title = @"Next Program";
+        p.program_slug = [NSString stringWithFormat:@"%ld",(long)arc4random() % 10000];
+        return p;
+    }
+    
+    self.initialProgramRequested++;
+    if ( !self.fakeCurrent ) {
+        self.fakeCurrent = [Program insertNewObjectIntoContext:nil];
+        Program *p = self.fakeCurrent;
+        p.soft_starts_at = [[NSDate date] dateByAddingTimeInterval:-120];
+        p.starts_at = [[NSDate date] dateByAddingTimeInterval:-1*(120)];
+        p.ends_at = [[NSDate date] dateByAddingTimeInterval:(60*1)];
+        p.title = @"Current Program";
+    }
 
+    NSLog(@"Times a fake thing was requested : %d",self.initialProgramRequested);
+    return self.fakeCurrent;
+    
+}
+#endif
 
 #pragma mark - State handling
 - (BOOL)sessionIsBehindLive {
@@ -190,13 +262,42 @@ static long kStreamBufferLimit = 4*60*60;
     return NO;
 }
 
+- (BOOL)sessionIsInRecess {
+    
+    if ( [[AudioManager shared] currentAudioMode] == AudioModeOnDemand ) return NO;
+    Program *cp = self.currentProgram;
+    NSDate *soft = cp.soft_starts_at;
+    NSDate *hard = cp.starts_at;
+    NSDate *now = [NSDate date];
+    if ( [self sessionIsBehindLive] ) {
+        now = [[AudioManager shared].audioPlayer.currentItem currentDate];
+    }
+    
+    NSTimeInterval softTI = [soft timeIntervalSince1970];
+    NSTimeInterval hardTI = [hard timeIntervalSince1970];
+    NSTimeInterval nowTI = [now timeIntervalSince1970];
+    if ( nowTI >= hardTI && nowTI <= softTI ) {
+        return YES;
+    }
+    
+    return NO;
+    
+}
+
+- (void)invalidateSession {
+    if ( [[AudioManager shared] currentAudioMode] == AudioModeOnDemand ) return;
+    [self armProgramUpdater];
+}
+
 - (void)setSessionLeftDate:(NSDate *)sessionLeftDate {
     _sessionLeftDate = sessionLeftDate;
 }
 
 - (void)setSessionReturnedDate:(NSDate *)sessionReturnedDate {
     _sessionReturnedDate = sessionReturnedDate;
-    [self handleSessionReactivation];
+    if ( sessionReturnedDate ) {
+        [self handleSessionReactivation];
+    }
 }
 
 - (void)processNotification:(UILocalNotification*)programUpdate {
@@ -225,13 +326,19 @@ static long kStreamBufferLimit = 4*60*60;
     if ( tiBetween > kStreamBufferLimit ) {
         [[AudioManager shared] stopStream];
         [self fetchCurrentProgram:^(id returnedObject) {
-                
+            self.sessionReturnedDate = nil;
         }];
     } else {
         if ( [[AudioManager shared] status] != StreamStatusPaused ) {
-            [self fetchCurrentProgram:^(id returnedObject) {
-                
-            }];
+            if ( [self sessionIsBehindLive] ) {
+                [self fetchProgramAtDate:[[AudioManager shared].audioPlayer.currentItem currentDate] completed:^(id returnedObject) {
+                    self.sessionReturnedDate = nil;
+                }];
+            } else {
+                [self fetchCurrentProgram:^(id returnedObject) {
+                    self.sessionReturnedDate = nil;
+                }];
+            }
         }
     }
 }

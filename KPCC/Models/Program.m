@@ -26,6 +26,8 @@
 
 + (instancetype)insertNewObjectIntoContext:(NSManagedObjectContext *)context {
 
+    if ( !context ) context = [[ContentManager shared] managedObjectContext];
+    
     // Find or Create new Program
     NSEntityDescription *entityDescription = [NSEntityDescription entityForName:[self entityName] inManagedObjectContext:context];
     NSFetchRequest *request = [[NSFetchRequest alloc] init];
