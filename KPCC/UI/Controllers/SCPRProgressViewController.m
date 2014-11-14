@@ -102,13 +102,15 @@
     
     self.currentProgram = program;
     self.liveTintColor = [[UIColor virtualWhiteColor] translucify:0.6];
-    self.liveProgressView.backgroundColor = [[UIColor virtualWhiteColor] translucify:0.125];
+    self.liveProgressView.backgroundColor = [UIColor clearColor];
     self.currentTintColor = [UIColor kpccOrangeColor];
-    self.currentProgressView.backgroundColor = [[UIColor virtualWhiteColor] translucify:0.125];
+    self.currentProgressView.backgroundColor = [UIColor clearColor];
     self.lastLiveValue = 0.0;
     self.lastCurrentValue = 0.0;
     self.liveProgressView.clipsToBounds = YES;
     self.currentProgressView.clipsToBounds = YES;
+    self.currentProgressView.alpha = 0.0;
+    self.liveProgressView.alpha = 0.0;
     self.view.alpha = 0.0;
     
 }
@@ -133,6 +135,15 @@
         [self.view setAlpha:1.0];
     } completion:^(BOOL finished) {
         self.uiHidden = NO;
+        [UIView animateWithDuration:0.5 animations:^{
+            self.liveProgressView.alpha = 1.0;
+        } completion:^(BOOL finished) {
+            [UIView animateWithDuration:0.5 animations:^{
+                self.currentProgressView.alpha = 1.0;
+            } completion:^(BOOL finished) {
+                
+            }];
+        }];
     }];
 
 
@@ -143,8 +154,6 @@
     @synchronized(self) {
         self.shuttling = YES;
     }
-    
-    Program *program = [[SessionManager shared] currentProgram];
     
     
 #ifdef DONT_USE_LATENCY_CORRECTION
@@ -214,6 +223,9 @@
     if ( self.uiHidden ) return;
     if ( self.shuttling ) return;
     
+    if ( [[SessionManager shared] sessionIsBehindLive] ) {
+        
+    }
     Program *program = [[SessionManager shared] currentProgram];
     
     NSDate *currentDate = [AudioManager shared].audioPlayer.currentItem.currentDate;
@@ -233,16 +245,10 @@
     dispatch_async(dispatch_get_main_queue(), ^{
         
         [CATransaction begin]; {
-            [CATransaction setCompletionBlock:^{
-                /*self.liveBarLine.strokeEnd = liveDiff/duration;
-                self.currentBarLine.strokeEnd = currentDiff/duration;
-                [self.currentBarLine removeAllAnimations];
-                [self.liveBarLine removeAllAnimations];*/
-            }];
-            
+
             CABasicAnimation *liveAnim = [CABasicAnimation animationWithKeyPath:@"strokeEnd"];
             [liveAnim setFromValue:[NSNumber numberWithFloat:self.lastLiveValue]];
-            [liveAnim setToValue:[NSNumber numberWithFloat:liveDiff/duration]];
+            [liveAnim setToValue:[NSNumber numberWithFloat:fminf(liveDiff/duration,0.98f)]];
             [liveAnim setDuration:0.25];
             [liveAnim setRemovedOnCompletion:NO];
             [liveAnim setFillMode:kCAFillModeForwards];
@@ -251,7 +257,7 @@
             
             CABasicAnimation *currentAnim = [CABasicAnimation animationWithKeyPath:@"strokeEnd"];
             [currentAnim setFromValue:[NSNumber numberWithFloat:self.lastCurrentValue]];
-            [currentAnim setToValue:[NSNumber numberWithFloat:currentDiff/duration]];
+            [currentAnim setToValue:[NSNumber numberWithFloat:fminf(currentDiff/duration,0.98f)]];
             [currentAnim setDuration:0.25];
             [currentAnim setRemovedOnCompletion:NO];
             [currentAnim setFillMode:kCAFillModeForwards];

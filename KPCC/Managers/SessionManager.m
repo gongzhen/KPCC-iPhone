@@ -19,12 +19,31 @@ static long kStreamBufferLimit = 4*60*60;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         mgr = [[SessionManager alloc] init];
+#ifdef TESTING_PROGRAM_CHANGE
+        mgr.initialProgramRequested = 0;
+#endif
     });
     return mgr;
 }
 
 #pragma mark - Program
 - (void)fetchProgramAtDate:(NSDate *)date completed:(CompletionBlockWithValue)completed {
+    
+#ifdef TESTING_PROGRAM_CHANGE
+    Program *p = [self fakeProgram];
+    self.currentProgram = p;
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"program_has_changed"
+                                                        object:nil
+                                                      userInfo:nil];
+    
+    completed(p);
+    
+
+    
+    [self armProgramUpdater];
+    return;
+#endif
+    
     NSString *urlString = [NSString stringWithFormat:@"%@/schedule/at?time=%d",kServerBase,(int)[date timeIntervalSince1970]];
     [[NetworkManager shared] requestFromSCPRWithEndpoint:urlString completion:^(id returnedObject) {
         // Create Program and insert into managed object context
@@ -82,12 +101,19 @@ static long kStreamBufferLimit = 4*60*60;
     
     if ( [self ignoreProgramUpdating] ) return;
     
+#ifndef TESTING_PROGRAM_CHANGE
+    
+    
+
     NSInteger unit = NSYearCalendarUnit|NSMonthCalendarUnit|NSDayCalendarUnit|NSHourCalendarUnit|NSMinuteCalendarUnit|NSSecondCalendarUnit;
     NSDate *now = [NSDate date];
     NSDate *fakeNow = nil;
     BOOL cookDate = NO;
     if ( [self sessionIsBehindLive] ) {
+        Program *cp = [self currentProgram];
+        NSTimeInterval ti = abs([cp.soft_starts_at timeIntervalSinceDate:cp.starts_at]);
         fakeNow = [[AudioManager shared].audioPlayer.currentItem currentDate];
+        fakeNow = [fakeNow dateByAddingTimeInterval:-1*ti];
         cookDate = YES;
     }
     
@@ -122,6 +148,7 @@ static long kStreamBufferLimit = 4*60*60;
 #ifdef TEST_PROGRAM_IMAGE
     then = [NSDate dateWithTimeInterval:30 sinceDate:now];
 #endif
+    NSTimeInterval sinceNow = [then timeIntervalSince1970] - [now timeIntervalSince1970];
     
     if ( [self useLocalNotifications] ) {
         UILocalNotification *localNote = [[UILocalNotification alloc] init];
@@ -130,7 +157,7 @@ static long kStreamBufferLimit = 4*60*60;
         [[UIApplication sharedApplication] scheduleLocalNotification:localNote];
     } else {
         
-        NSTimeInterval sinceNow = [then timeIntervalSince1970] - [now timeIntervalSince1970];
+
         self.programUpdateTimer = [NSTimer scheduledTimerWithTimeInterval:sinceNow
                                                                    target:self
                                                                  selector:@selector(processTimer:)
@@ -141,6 +168,16 @@ static long kStreamBufferLimit = 4*60*60;
 #endif
         
     }
+#else
+    NSDate *threeMinutesFromNow = [[NSDate date] dateByAddingTimeInterval:96];
+    NSLog(@"Program will check itself again at : %@",[threeMinutesFromNow prettyTimeString]);
+    self.programUpdateTimer = [NSTimer scheduledTimerWithTimeInterval:abs([threeMinutesFromNow timeIntervalSinceNow])
+                                                               target:self
+                                                             selector:@selector(processTimer:)
+                                                             userInfo:nil
+                                                              repeats:NO];
+    
+#endif
     
 }
 
@@ -173,7 +210,33 @@ static long kStreamBufferLimit = 4*60*60;
     
 }
 
+#ifdef TESTING_PROGRAM_CHANGE
+- (Program*)fakeProgram {
+    if ( self.initialProgramRequested >= 2 ) {
+        Program *p = [Program insertNewObjectIntoContext:nil];
+        p.soft_starts_at = [[NSDate date] dateByAddingTimeInterval:(60*4)];
+        p.starts_at = [[NSDate date] dateByAddingTimeInterval:(60*3)];
+        p.ends_at = [[NSDate date] dateByAddingTimeInterval:(60*10)];
+        p.title = @"Next Program";
+        p.program_slug = [NSString stringWithFormat:@"%ld",(long)arc4random() % 10000];
+        return p;
+    }
+    
+    self.initialProgramRequested++;
+    if ( !self.fakeCurrent ) {
+        self.fakeCurrent = [Program insertNewObjectIntoContext:nil];
+        Program *p = self.fakeCurrent;
+        p.soft_starts_at = [[NSDate date] dateByAddingTimeInterval:-120];
+        p.starts_at = [[NSDate date] dateByAddingTimeInterval:-1*(120)];
+        p.ends_at = [[NSDate date] dateByAddingTimeInterval:(60*1)];
+        p.title = @"Current Program";
+    }
 
+    NSLog(@"Times a fake thing was requested : %d",self.initialProgramRequested);
+    return self.fakeCurrent;
+    
+}
+#endif
 
 #pragma mark - State handling
 - (BOOL)sessionIsBehindLive {

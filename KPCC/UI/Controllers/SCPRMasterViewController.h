@@ -69,6 +69,7 @@
 @property (nonatomic) BOOL menuOpen;
 @property (nonatomic) BOOL preRollOpen;
 
+
 // Live
 @property (nonatomic,strong) SCPRProgressViewController *liveProgressViewController;
 @property (nonatomic,strong) IBOutlet UIView *liveProgressView;

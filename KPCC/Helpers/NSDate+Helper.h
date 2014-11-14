@@ -28,6 +28,7 @@
 - (NSDate *)beginningOfDay;
 - (NSDate *)endOfWeek;
 - (NSDate *)lastDayOfMonth;
+
 - (NSDate*)forceMidnight;
 - (BOOL)isYesterday;
 
