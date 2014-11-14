@@ -233,7 +233,7 @@ static FeedbackManager *singleton = nil;
     }
     
     NSString *prettyMessage = [NSString stringWithFormat:@"%@ : %@ : (UID: %@, Version : %@)",headline,meta[@"message"],
-                               [[[UIDevice currentDevice] identifierForVendor] UUIDString],[Utilities prettyVersion]];
+                               [[[UIDevice currentDevice] identifierForVendor] UUIDString],[Utils prettyVersion]];
     
     NSString *customerMessage = [NSString stringWithFormat:@"%@/customers/%@", kBaseDeskURL, customerID];
     
@@ -249,7 +249,7 @@ static FeedbackManager *singleton = nil;
                                                    withString:priority];
     
     NSDate *date = [meta objectForKey:@"date"];
-    NSString *rfc = [Utilities isoDateStringFromDate:date];
+    NSString *rfc = [date iso];
     
     asString = [asString stringByReplacingOccurrencesOfString:kDeskTimestampYield
                                                    withString:rfc];
@@ -261,14 +261,14 @@ static FeedbackManager *singleton = nil;
     [request setHTTPBody:requestData];
     [request setValue:@"application/json" forHTTPHeaderField:@"Accept"];
     [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
-    [request setValue:[NSString stringWithFormat:@"%d", [requestData length]] forHTTPHeaderField:@"Content-Length"];
+    [request setValue:[NSString stringWithFormat:@"%ld",(long) [requestData length]] forHTTPHeaderField:@"Content-Length"];
     
     NSString *authStr = [NSString stringWithFormat:@"%@:%@",
-                         [[[[FileManager shared] globalConfig] objectForKey:@"Desk"] objectForKey:@"AuthUser"],
-                         [[[[FileManager shared] globalConfig] objectForKey:@"Desk"] objectForKey:@"AuthPassword"]];
+                         [[[Utils gConfig] objectForKey:@"Desk"] objectForKey:@"AuthUser"],
+                         [[[Utils gConfig] objectForKey:@"Desk"] objectForKey:@"AuthPassword"]];
     
     NSData *authData = [authStr dataUsingEncoding:NSASCIIStringEncoding];
-    NSString *authValue = [NSString stringWithFormat:@"Basic %@", [Utilities base64:authData]];
+    NSString *authValue = [NSString stringWithFormat:@"Basic %@", [Utils base64:authData]];
     
     [request setValue:authValue forHTTPHeaderField:@"Authorization"];
     [NSURLConnection sendAsynchronousRequest:request queue:[[NSOperationQueue alloc] init]
@@ -286,12 +286,12 @@ static FeedbackManager *singleton = nil;
                                
                                dispatch_async(dispatch_get_main_queue(), ^{
                                    NSString *s = [[NSString alloc] initWithData:d encoding:NSUTF8StringEncoding];
-                                   if ( [Utilities pureNil:s] ) {
+                                   if ( [Utils pureNil:s] ) {
                                        [self fail];
                                        return;
                                    }
                                    
-                                   NSDictionary *auth = (NSDictionary*)[s JSONValue];
+                                   NSDictionary *auth = (NSDictionary*)[d jsonify];
                                    
                                    if ( !auth ) {
                                        [self fail];
@@ -299,7 +299,7 @@ static FeedbackManager *singleton = nil;
                                    }
                                    
                                    NSLog(@"POST Desk info : %@",s);
-                                   NSLog(@"POST As dict : %@",[auth JSONRepresentation]);
+                           
                                    
                                    [[NSNotificationCenter defaultCenter]
                                     postNotificationName:@"feedback_submitted"

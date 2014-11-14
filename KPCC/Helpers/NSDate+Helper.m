@@ -210,6 +210,11 @@
   
 }
 
+- (NSString*)iso {
+    return [NSDate stringFromDate:self
+                       withFormat:@"yyyy-MM-dd'T'HH:mm:ssZ"];
+}
+
 + (NSString *)dbFormatString {
 	return @"yyyy-MM-dd HH:mm:ss";
 }

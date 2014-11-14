@@ -7,9 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "SCPRFlatShadedButton.h"
 #import "SCPRSpinnerViewController.h"
-#import "global.h"
+#import "FeedbackManager.h"
 
 typedef enum {
   ValidationResultUnknown = 0,

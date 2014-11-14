@@ -21,6 +21,8 @@
 		258E8E061A16AA4200675E68 /* desk_customer_template.json in Resources */ = {isa = PBXBuildFile; fileRef = 258E8E041A16AA4200675E68 /* desk_customer_template.json */; };
 		258E8E071A16AA4200675E68 /* desk_template.json in Resources */ = {isa = PBXBuildFile; fileRef = 258E8E051A16AA4200675E68 /* desk_template.json */; };
 		258E8E0A1A16AC5B00675E68 /* NSData+JSONAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 258E8E091A16AC5B00675E68 /* NSData+JSONAdditions.m */; };
+		258E8E0F1A16AE0400675E68 /* SCPRFeedbackViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 258E8E0D1A16AE0400675E68 /* SCPRFeedbackViewController.m */; };
+		258E8E101A16AE0400675E68 /* SCPRFeedbackViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 258E8E0E1A16AE0400675E68 /* SCPRFeedbackViewController.xib */; };
 		258FC47B1A018F3D00282D59 /* SCPRSpinnerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 258FC47A1A018F3D00282D59 /* SCPRSpinnerViewController.m */; };
 		258FC47E1A01915E00282D59 /* UIColor+UICustom.m in Sources */ = {isa = PBXBuildFile; fileRef = 258FC47D1A01915E00282D59 /* UIColor+UICustom.m */; };
 		25B59A5619FEF93700D4885C /* SCPRShortListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 25B59A5419FEF93700D4885C /* SCPRShortListViewController.m */; };
@@ -241,6 +243,9 @@
 		258E8E051A16AA4200675E68 /* desk_template.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = desk_template.json; path = Fixtures/desk_template.json; sourceTree = "<group>"; };
 		258E8E081A16AC5B00675E68 /* NSData+JSONAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+JSONAdditions.h"; sourceTree = "<group>"; };
 		258E8E091A16AC5B00675E68 /* NSData+JSONAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+JSONAdditions.m"; sourceTree = "<group>"; };
+		258E8E0C1A16AE0400675E68 /* SCPRFeedbackViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCPRFeedbackViewController.h; path = Feedback/SCPRFeedbackViewController.h; sourceTree = "<group>"; };
+		258E8E0D1A16AE0400675E68 /* SCPRFeedbackViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SCPRFeedbackViewController.m; path = Feedback/SCPRFeedbackViewController.m; sourceTree = "<group>"; };
+		258E8E0E1A16AE0400675E68 /* SCPRFeedbackViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = SCPRFeedbackViewController.xib; path = Feedback/SCPRFeedbackViewController.xib; sourceTree = "<group>"; };
 		258FC4791A018F3D00282D59 /* SCPRSpinnerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCPRSpinnerViewController.h; sourceTree = "<group>"; };
 		258FC47A1A018F3D00282D59 /* SCPRSpinnerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SCPRSpinnerViewController.m; sourceTree = "<group>"; };
 		258FC47C1A01915E00282D59 /* UIColor+UICustom.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+UICustom.h"; sourceTree = "<group>"; };
@@ -525,6 +530,16 @@
 			name = Audio;
 			sourceTree = "<group>";
 		};
+		258E8E0B1A16ADD800675E68 /* Feedback */ = {
+			isa = PBXGroup;
+			children = (
+				258E8E0C1A16AE0400675E68 /* SCPRFeedbackViewController.h */,
+				258E8E0D1A16AE0400675E68 /* SCPRFeedbackViewController.m */,
+				258E8E0E1A16AE0400675E68 /* SCPRFeedbackViewController.xib */,
+			);
+			name = Feedback;
+			sourceTree = "<group>";
+		};
 		25B59A5219FEF73300D4885C /* Short List / Headlines */ = {
 			isa = PBXGroup;
 			children = (
@@ -728,6 +743,7 @@
 		76658ABC18E0AF8500026176 /* View Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				258E8E0B1A16ADD800675E68 /* Feedback */,
 				25B59A5219FEF73300D4885C /* Short List / Headlines */,
 				255943E819F1A7620007294D /* SCPRJogShuttleViewController.h */,
 				255943E919F1A7620007294D /* SCPRJogShuttleViewController.m */,
@@ -1145,6 +1161,7 @@
 				52EFF82E19C368C00059A0E3 /* program_avatar_on-being.png in Resources */,
 				52D9227819D366C90018AD4B /* content-share.png in Resources */,
 				52EFF85619C368C00059A0E3 /* program_avatar_world.png in Resources */,
+				258E8E101A16AE0400675E68 /* SCPRFeedbackViewController.xib in Resources */,
 				52EFF79319C3688D0059A0E3 /* menu-heart-plus.png in Resources */,
 				768C065A1995905D00F829EB /* btn_play_large.png in Resources */,
 				52EFF78D19C3688D0059A0E3 /* menu-clock@2x.png in Resources */,
@@ -1300,6 +1317,7 @@
 				76A3090418C93C880065D4B1 /* AudioManager.m in Sources */,
 				258E8E0A1A16AC5B00675E68 /* NSData+JSONAdditions.m in Sources */,
 				258FC47B1A018F3D00282D59 /* SCPRSpinnerViewController.m in Sources */,
+				258E8E0F1A16AE0400675E68 /* SCPRFeedbackViewController.m in Sources */,
 				52D0FC2019D1FC0C009AECEE /* SCPRProgramDetailTableViewCell.m in Sources */,
 				760E3C4C194FB61B00D86D91 /* Program.m in Sources */,
 				25B59A5619FEF93700D4885C /* SCPRShortListViewController.m in Sources */,

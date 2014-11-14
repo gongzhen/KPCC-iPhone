@@ -41,5 +41,6 @@
 - (NSInteger)secondsUntil;
 + (NSString*)prettyTextFromSeconds:(NSInteger)seconds;
 - (NSString*)prettyTimeString;
+- (NSString*)iso;
 
 @end
