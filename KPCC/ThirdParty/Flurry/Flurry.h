@@ -29,12 +29,12 @@
  *  @since 4.2.0
  *
  */
-typedef enum {
+typedef NS_ENUM(NSInteger, FlurryLogLevel) {
     FlurryLogLevelNone = 0,         //No output
     FlurryLogLevelCriticalOnly,     //Default, outputs only critical log events
     FlurryLogLevelDebug,            //Debug level, outputs critical and main log events
     FlurryLogLevelAll               //Highest level, outputs all log events
-} FlurryLogLevel;
+} ;
 
 
 @interface Flurry : NSObject {

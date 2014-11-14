@@ -15,6 +15,7 @@
 #define kMenuItemAlarm      @"Alarm Clock"
 #define kMenuItemDonate     @"Donate"
 #define kMenuItemSettings   @"Settings"
+#define kMenuItemFeedback   @"Feedback"
 
 #define kIconKPCCLive   @"antenna"
 #define kIconPrograms   @"microphone"
@@ -22,7 +23,7 @@
 #define kIconAlarm      @"clock"
 #define kIconDonate     @"heart-plus"
 #define kIconSettings   @"settings"
-
+#define kIconFeedback   @"feedback"
 
 @implementation SCPRPullDownMenu
 
@@ -42,13 +43,13 @@
             fullyOpen,
             delegate;
 
-- (id)init {
+- (instancetype)init {
     self = [super init];
 
     NSOrderedSet* orderedItems = [NSOrderedSet orderedSetWithObjects:   kMenuItemKPCCLive,
                                                                         kMenuItemPrograms,
                                                                         kMenuItemShortList,
-                                                                        //kMenuItemAlarm,
+                                                                        kMenuItemFeedback,
                                                                         //kMenuItemDonate,
                                                                         //kMenuItemSettings,
                                                                         nil];
@@ -58,7 +59,8 @@
                             kMenuItemShortList  : kIconShortList,
                             kMenuItemAlarm      : kIconAlarm,
                             kMenuItemDonate     : kIconDonate,
-                            kMenuItemSettings   : kIconSettings };
+                            kMenuItemSettings   : kIconSettings,
+                            kMenuItemFeedback   : kIconFeedback };
 
     menuItems = [[NSMutableArray alloc] init];
     for (NSString *menuItem in orderedItems) {
@@ -83,7 +85,7 @@
     return self;
 }
 
-- (id)initWithView:(UIView *)view {
+- (instancetype)initWithView:(UIView *)view {
     self = [self init];
 
     if (self)
@@ -154,15 +156,15 @@
 
     [cell.menuItemLabel setTextColor:[self cellTextColor]];
     cell.menuItemLabel.font = [self cellFont];
-    [cell.menuItemLabel setText:[menuItems objectAtIndex:indexPath.item]];
+    [cell.menuItemLabel setText:menuItems[indexPath.item]];
 
-    if ([[menuItems objectAtIndex:indexPath.item] isEqualToString:kMenuItemKPCCLive]) {
+    if ([menuItems[indexPath.item] isEqualToString:kMenuItemKPCCLive]) {
         [cell.rightChevronImageView setHidden:YES];
     } else {
         [cell.rightChevronImageView setHidden:NO];
     }
 
-    NSString *iconNamed = [menuItemsDictionary objectForKey:[menuItems objectAtIndex:indexPath.item]];
+    NSString *iconNamed = menuItemsDictionary[menuItems[indexPath.item]];
     if (iconNamed) {
         UIImage *iconImg = [UIImage imageNamed:[NSString stringWithFormat:@"menu-%@", iconNamed]];
         [cell.iconImageView setImage:iconImg];
@@ -222,7 +224,7 @@
                          animations:^{
                              if (!fullyOpen)
                              {
-                                 self.center = CGPointMake(self.frame.size.width / 2, (/*(self.frame.size.height / 2) +*/ topMargin + 20.0));
+                                 self.center = CGPointMake(self.frame.size.width / 2, (/*(self.frame.size.height / 2) +*/ topMargin + (12.0 * [menuItems count])));
                                  fullyOpen = YES;
                              }
                          }

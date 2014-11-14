@@ -10,13 +10,13 @@
 #import "SCPRSpinnerViewController.h"
 #import "FeedbackManager.h"
 
-typedef enum {
+typedef NS_ENUM(NSInteger, ValidationResult) {
   ValidationResultUnknown = 0,
   ValidationResultNoName,
   ValidationResultBadEmail,
   ValidationResultNoComments,
   ValidationResultOK
-} ValidationResult;
+} ;
 
 @interface SCPRFeedbackViewController : UIViewController<UITextFieldDelegate,UITextViewDelegate,UITableViewDataSource,UITableViewDelegate>
 
@@ -44,7 +44,7 @@ typedef enum {
 
 - (IBAction)buttonTapped:(id)sender;
 
-- (ValidationResult)validate;
+@property (NS_NONATOMIC_IOSONLY, readonly) ValidationResult validate;
 - (void)failWithValidationResult:(ValidationResult)reason;
 
 - (void)showBar;

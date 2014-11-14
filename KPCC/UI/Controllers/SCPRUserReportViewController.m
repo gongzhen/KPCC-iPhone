@@ -18,7 +18,7 @@
 
 @implementation SCPRUserReportViewController
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil{
+- (instancetype)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil{
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Custom initialization
@@ -42,7 +42,7 @@
        NSFontAttributeName:[UIFont fontWithName:@"HelveticaNeue-Light" size:16.0f]}
                                      forState:UIControlStateNormal];*/
 
-    self.versionNumberLabel.text = [NSString stringWithFormat:@"%@",[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"]];
+    self.versionNumberLabel.text = [NSString stringWithFormat:@"%@",[[NSBundle mainBundle] infoDictionary][@"CFBundleShortVersionString"]];
 
     //self.userReportDetails.delegate = self;
 }

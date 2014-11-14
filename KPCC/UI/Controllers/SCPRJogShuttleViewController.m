@@ -30,7 +30,7 @@
 @property BOOL muteSound;
 
 - (void)completeWithCallback:(void (^)(void))completion;
-- (CAShapeLayer*)generateCircleLayer;
+@property (NS_NONATOMIC_IOSONLY, readonly, strong) CAShapeLayer *generateCircleLayer;
 - (void)snapFrame;
 - (void)animateWithSpeed:(CGFloat)duration
                  tension:(CGFloat)tension

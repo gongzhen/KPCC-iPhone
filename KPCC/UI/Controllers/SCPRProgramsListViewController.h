@@ -12,7 +12,7 @@
 
 @interface SCPRProgramsListViewController : UIViewController
 
-- (id)initWithBackgroundProgram:(Program *)program;
+- (instancetype)initWithBackgroundProgram:(Program *)program;
 
 @property IBOutlet UIImageView *programBgImage;
 @property IBOutlet UITableView *programsTable;

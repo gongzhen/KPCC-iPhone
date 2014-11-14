@@ -10,6 +10,6 @@
 
 @interface NSData (JSONAdditions)
 
-- (id)jsonify;
+@property (NS_NONATOMIC_IOSONLY, readonly, strong) id jsonify;
 
 @end

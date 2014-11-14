@@ -42,7 +42,7 @@
     } else {
         if([result count] > 0) {
             NSLog(@"fetch saved Program");
-            return (Program *)[result objectAtIndex:0];
+            return (Program *)result[0];
         } else {
             NSLog(@"create new Program");
             return (Program *)[NSEntityDescription insertNewObjectForEntityForName:[self entityName] inManagedObjectContext:context];
@@ -56,8 +56,8 @@
     
     Program* programObj = nil;
     
-    if ([dictionary objectForKey:@"program"] != [NSNull null] && [[dictionary objectForKey:@"program"] objectForKey:@"slug"] != [NSNull null]) {
-        programObj = [self fetchProgramWithSlug:[[dictionary objectForKey:@"program"] objectForKey:@"slug"] fromManagedObjectContext:context];
+    if (dictionary[@"program"] != [NSNull null] && dictionary[@"program"][@"slug"] != [NSNull null]) {
+        programObj = [self fetchProgramWithSlug:dictionary[@"program"][@"slug"] fromManagedObjectContext:context];
     }
 
     if (programObj == nil) {
@@ -82,21 +82,21 @@
     if ([storedRecords count] != 0) {
 
         for (NSDictionary *program in array) {
-            NSPredicate *predicate = [NSPredicate predicateWithFormat:@"program_slug LIKE %@", [program objectForKey:@"slug"]];
+            NSPredicate *predicate = [NSPredicate predicateWithFormat:@"program_slug LIKE %@", program[@"slug"]];
             NSArray *matchedArray = [storedRecords filteredArrayUsingPredicate:predicate];
 
             Program *programObj = nil;
 
             if ([matchedArray count] == 1) {
                 // Update existing Program
-                NSLog(@"Update Program - %@", [[matchedArray objectAtIndex:0] program_slug]);
-                programObj = [matchedArray objectAtIndex:0];
+                NSLog(@"Update Program - %@", [matchedArray[0] program_slug]);
+                programObj = matchedArray[0];
                 [self updateProgramObject:programObj withDictionary:program];
             } else if ([matchedArray count] > 1) {
-                NSLog(@"UH OH! More than one Program for - %@ - exists in CoreData", [[matchedArray objectAtIndex:0] program_slug]);
+                NSLog(@"UH OH! More than one Program for - %@ - exists in CoreData", [matchedArray[0] program_slug]);
             } else {
                 // Creating new Program
-                NSLog(@"Create new Program - %@",  [program objectForKey:@"slug"]);
+                NSLog(@"Create new Program - %@",  program[@"slug"]);
                 programObj = (Program *)[NSEntityDescription insertNewObjectForEntityForName:[self entityName] inManagedObjectContext:context];
                 [self updateProgramObject:programObj withDictionary:program];
             }
@@ -112,7 +112,7 @@
         for (Program *storedProgram in storedRecords) {
             BOOL foundInApi = NO;
             for (NSDictionary *apiProgram in array) {
-                if (![Utils pureNil:[apiProgram objectForKey:@"slug"]] && [[apiProgram objectForKey:@"slug"] isEqualToString:storedProgram.program_slug]) {
+                if (![Utils pureNil:apiProgram[@"slug"]] && [apiProgram[@"slug"] isEqualToString:storedProgram.program_slug]) {
                     foundInApi = YES;
                     break;
                 }
@@ -145,42 +145,42 @@
      * from the /programs endpoint.
      * See SCPRv4 API docs for details - https://github.com/SCPR/api-docs/tree/master/KPCC/v2
      */
-    if ( ![Utils pureNil:[dictionary objectForKey:@"program"]]) {
+    if ( ![Utils pureNil:dictionary[@"program"]]) {
 
-        if ( ![Utils pureNil:[dictionary objectForKey:@"title"]]) {
-            program.title = [dictionary objectForKey:@"title"];
+        if ( ![Utils pureNil:dictionary[@"title"]]) {
+            program.title = dictionary[@"title"];
         }
 
-        if ( ![Utils pureNil:[[dictionary objectForKey:@"program"] objectForKey:@"slug"]]) {
-            program.program_slug = [[dictionary objectForKey:@"program"] objectForKey:@"slug"];
+        if ( ![Utils pureNil:dictionary[@"program"][@"slug"]]) {
+            program.program_slug = dictionary[@"program"][@"slug"];
         }
 
-        if ( ![Utils pureNil:[dictionary objectForKey:@"starts_at"]]) {
-            program.starts_at = [Utils dateFromRFCString:[dictionary objectForKey:@"starts_at"]];
+        if ( ![Utils pureNil:dictionary[@"starts_at"]]) {
+            program.starts_at = [Utils dateFromRFCString:dictionary[@"starts_at"]];
         }
 
-        if ( ![Utils pureNil:[dictionary objectForKey:@"ends_at"]]) {
-            program.ends_at = [Utils dateFromRFCString:[dictionary objectForKey:@"ends_at"]];
+        if ( ![Utils pureNil:dictionary[@"ends_at"]]) {
+            program.ends_at = [Utils dateFromRFCString:dictionary[@"ends_at"]];
         }
 
-        if ( ![Utils pureNil:[dictionary objectForKey:@"public_url"]]) {
-            program.public_url = [dictionary objectForKey:@"public_url"];
+        if ( ![Utils pureNil:dictionary[@"public_url"]]) {
+            program.public_url = dictionary[@"public_url"];
         }
         if ( ![Utils pureNil:dictionary[@"soft_starts_at"]] ) {
             program.soft_starts_at = [Utils dateFromRFCString:dictionary[@"soft_starts_at"]];
         }
 
     } else {
-        if ( ![Utils pureNil:[dictionary objectForKey:@"title"]]) {
-            program.title = [dictionary objectForKey:@"title"];
+        if ( ![Utils pureNil:dictionary[@"title"]]) {
+            program.title = dictionary[@"title"];
         }
 
-        if ( ![Utils pureNil:[dictionary objectForKey:@"slug"]]) {
-            program.program_slug = [dictionary objectForKey:@"slug"];
+        if ( ![Utils pureNil:dictionary[@"slug"]]) {
+            program.program_slug = dictionary[@"slug"];
         }
         
-        if ( ![Utils pureNil:[dictionary objectForKey:@"public_url"]]) {
-            program.public_url = [dictionary objectForKey:@"public_url"];
+        if ( ![Utils pureNil:dictionary[@"public_url"]]) {
+            program.public_url = dictionary[@"public_url"];
         }
     }
 
@@ -204,7 +204,7 @@
     } else {
         if([result count] > 0) {
             NSLog(@"fetch saved Program");
-            return (Program *)[result objectAtIndex:0];
+            return (Program *)result[0];
         }
     }
     
@@ -253,7 +253,7 @@
         NSLog(@"no results with '%@' slug found", slug);
     } else {
         NSLog(@"one result for '%@' slug found", slug);
-        return (Program *)[result objectAtIndex:0];
+        return (Program *)result[0];
     }
 
     return nil;

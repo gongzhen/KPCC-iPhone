@@ -31,15 +31,15 @@
 - (void)disarmProgramUpdater;
 
 - (void)processNotification:(UILocalNotification*)programUpdate;
-- (BOOL)ignoreProgramUpdating;
-- (BOOL)sessionIsExpired;
-- (BOOL)sessionIsBehindLive;
-- (BOOL)sessionIsInRecess;
+@property (NS_NONATOMIC_IOSONLY, readonly) BOOL ignoreProgramUpdating;
+@property (NS_NONATOMIC_IOSONLY, readonly) BOOL sessionIsExpired;
+@property (NS_NONATOMIC_IOSONLY, readonly) BOOL sessionIsBehindLive;
+@property (NS_NONATOMIC_IOSONLY, readonly) BOOL sessionIsInRecess;
 - (void)handleSessionReactivation;
 - (void)invalidateSession;
 
 #ifdef TESTING_PROGRAM_CHANGE
-- (Program*)fakeProgram;
+@property (NS_NONATOMIC_IOSONLY, readonly, strong) Program *fakeProgram;
 @property NSInteger initialProgramRequested;
 @property (nonatomic,strong) Program *fakeCurrent;
 

@@ -87,8 +87,8 @@
 - (void)activateRewind:(RewindDistance)distance;
 - (void)activateFastForward;
 - (void)snapJogWheel;
-- (BOOL)uiIsJogging;
-- (NSTimeInterval)rewindAgainstStreamDelta;
+@property (NS_NONATOMIC_IOSONLY, readonly) BOOL uiIsJogging;
+@property (NS_NONATOMIC_IOSONLY, readonly) NSTimeInterval rewindAgainstStreamDelta;
 
 // Instance methods.
 - (void)cloakForMenu:(BOOL)animated;

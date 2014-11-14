@@ -16,7 +16,7 @@
 
 @implementation SCPRFeedbackViewController
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+- (instancetype)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
@@ -41,7 +41,7 @@
     self.descriptionInputView.layer.cornerRadius = 4.0;
     self.descriptionInputView.layer.borderColor = [UIColor lightGrayColor].CGColor;
     self.descriptionInputView.layer.borderWidth = 1.0;
-    
+    self.navigationItem.title = @"Feedback";
 
     
     self.authButton.layer.cornerRadius = 4.0;
@@ -56,6 +56,7 @@
     
     
     NSString *versionText = [NSString stringWithFormat:@"KPCC iPhone v%@",[Utils prettyVersion]];
+    self.versionLabel.text = versionText;
     self.versionLabel.textColor = [UIColor darkGrayColor];
 
     
@@ -266,8 +267,10 @@
         UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1
                                                        reuseIdentifier:@"n"];
         if ( indexPath.row == 0 ) {
+            cell.textLabel.text = @"Name";
             cell.accessoryView = self.nameTextField;
         } else {
+            cell.textLabel.text = @"Email";
             cell.accessoryView = self.emailTextField;
         }
         
@@ -279,7 +282,7 @@
         UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1
                                                        reuseIdentifier:@"n"];
         
-        NSString *reason = [self.values objectAtIndex:indexPath.row];
+        NSString *reason = (self.values)[indexPath.row];
         if ( [self.currentReason isEqualToString:reason] ) {
             cell.accessoryType = UITableViewCellAccessoryCheckmark;
         } else {
@@ -315,7 +318,7 @@
         return;
     }
     if ( indexPath.section == 1 ) {
-        self.currentReason = [self.values objectAtIndex:indexPath.row];
+        self.currentReason = (self.values)[indexPath.row];
         [tableView reloadData];
         return;
     }

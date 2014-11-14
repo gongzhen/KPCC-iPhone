@@ -13,7 +13,7 @@
 
 @implementation SCPRProgramDetailTableViewCell
 
-- (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
+- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
 
     self.episodeTitleLabel = [[UILabel alloc] initWithFrame:CGRectMake(8.f, 18.f, self.frame.size.width - 16.f, 60.f)];

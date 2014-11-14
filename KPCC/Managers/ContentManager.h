@@ -17,7 +17,7 @@
 @property (strong, nonatomic) NSManagedObjectModel *managedObjectModel;
 @property (strong, nonatomic) NSPersistentStoreCoordinator *persistentStoreCoordinator;
 
-- (NSString*)modelBase;
+@property (NS_NONATOMIC_IOSONLY, readonly, copy) NSString *modelBase;
 - (void)saveContext;
 
 @end

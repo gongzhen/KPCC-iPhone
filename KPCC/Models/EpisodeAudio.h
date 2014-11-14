@@ -10,7 +10,7 @@
 
 @interface EpisodeAudio : NSObject
 
--(id)initWithDict:(NSDictionary *)dict;
+-(instancetype)initWithDict:(NSDictionary *)dict NS_DESIGNATED_INITIALIZER;
 
 @property(nonatomic,strong) NSNumber    *audioId;
 @property(nonatomic,strong) NSString    *audDescription;

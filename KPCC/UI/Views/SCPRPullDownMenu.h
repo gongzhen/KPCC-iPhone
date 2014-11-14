@@ -48,7 +48,7 @@
 @property (nonatomic) float cellHeight;
 @property (nonatomic) BOOL fullyOpen;
 
-- (id)initWithView:(UIView *)view;
+- (instancetype)initWithView:(UIView *)view;
 - (void)insertButton:(NSString *)title;
 - (void)loadMenu;
 - (void)animateDropDown;

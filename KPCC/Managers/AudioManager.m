@@ -90,8 +90,8 @@ static const NSString *ItemStatusContext;
     // Monitoring AVPlayer rate.
     if (object == self.audioPlayer && [keyPath isEqualToString:@"rate"]) {
         
-        CGFloat oldRate = [[change objectForKey:@"old"] floatValue];
-        CGFloat newRate = [[change objectForKey:@"new"] floatValue];
+        CGFloat oldRate = [change[@"old"] floatValue];
+        CGFloat newRate = [change[@"new"] floatValue];
         
         if ([self.delegate respondsToSelector:@selector(onRateChange)]) {
             [self.delegate onRateChange];
@@ -199,7 +199,7 @@ static const NSString *ItemStatusContext;
         
         NSArray *seekRange = audioPlayer.currentItem.seekableTimeRanges;
         if (seekRange && [seekRange count] > 0) {
-            CMTimeRange range = [[seekRange objectAtIndex:0] CMTimeRangeValue];
+            CMTimeRange range = [seekRange[0] CMTimeRangeValue];
 
             weakSelf.minSeekableDate = [NSDate dateWithTimeInterval:( -1 * (CMTimeGetSeconds(time) - CMTimeGetSeconds(range.start))) sinceDate:weakSelf.currentDate];
             weakSelf.maxSeekableDate = [NSDate dateWithTimeInterval:(CMTimeGetSeconds(CMTimeRangeGetEnd(range)) - CMTimeGetSeconds(time)) sinceDate:weakSelf.currentDate];
@@ -228,7 +228,7 @@ static const NSString *ItemStatusContext;
 - (void)seekToPercent:(CGFloat)percent {
     NSArray *seekRange = self.audioPlayer.currentItem.seekableTimeRanges;
     if (seekRange && [seekRange count] > 0) {
-        CMTimeRange range = [[seekRange objectAtIndex:0] CMTimeRangeValue];
+        CMTimeRange range = [seekRange[0] CMTimeRangeValue];
 
         CMTime seekTime = CMTimeMakeWithSeconds( CMTimeGetSeconds(range.start) + ( CMTimeGetSeconds(range.duration) * (percent / 100)),
                                                 range.start.timescale);

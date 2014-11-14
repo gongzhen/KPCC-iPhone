@@ -10,7 +10,7 @@
 
 @interface TritonAd : NSObject
 
-- (id)initWithDict:(NSDictionary *)dictionary;
+- (instancetype)initWithDict:(NSDictionary *)dictionary NS_DESIGNATED_INITIALIZER;
 
 @property (nonatomic,strong) NSString *adId;
 @property (nonatomic,strong) NSString *impressionUrl;

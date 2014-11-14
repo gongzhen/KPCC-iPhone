@@ -30,8 +30,8 @@ static FeedbackManager *singleton = nil;
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url];
     [request setValue:@"application/json" forHTTPHeaderField:@"Accept"];
     NSString *authStr = [NSString stringWithFormat:@"%@:%@",
-                         [[[Utils gConfig] objectForKey:@"Desk"] objectForKey:@"AuthUser"],
-                         [[[Utils gConfig] objectForKey:@"Desk"] objectForKey:@"AuthPassword"]];
+                         [Utils gConfig][@"Desk"][@"AuthUser"],
+                         [Utils gConfig][@"Desk"][@"AuthPassword"]];
     NSData *authData = [authStr dataUsingEncoding:NSASCIIStringEncoding];
     NSString *authValue = [NSString stringWithFormat:@"Basic %@", [Utils base64:authData]];
     
@@ -66,8 +66,8 @@ static FeedbackManager *singleton = nil;
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url];
     [request setValue:@"application/json" forHTTPHeaderField:@"Accept"];
     NSString *authStr = [NSString stringWithFormat:@"%@:%@",
-                         [[[Utils gConfig] objectForKey:@"Desk"] objectForKey:@"AuthUser"],
-                         [[[Utils gConfig] objectForKey:@"Desk"] objectForKey:@"AuthPassword"]];
+                         [Utils gConfig][@"Desk"][@"AuthUser"],
+                         [Utils gConfig][@"Desk"][@"AuthPassword"]];
     NSData *authData = [authStr dataUsingEncoding:NSASCIIStringEncoding];
     NSString *authValue = [NSString stringWithFormat:@"Basic %@", [Utils base64:authData]];
     
@@ -107,12 +107,12 @@ static FeedbackManager *singleton = nil;
     
     NSString *firstName = [NSString stringWithFormat:@""];
     if ([filteredNameArray count] > 0) {
-        firstName = [filteredNameArray objectAtIndex:0];
+        firstName = filteredNameArray[0];
     }
     
     NSString *lastName = [NSString stringWithFormat:@""];
     if ([filteredNameArray count] > 1) {
-        lastName = [filteredNameArray objectAtIndex:1];
+        lastName = filteredNameArray[1];
     }
     
     asString = [asString stringByReplacingOccurrencesOfString:kDeskCustomerEmailYield
@@ -135,8 +135,8 @@ static FeedbackManager *singleton = nil;
     [request setValue:[NSString stringWithFormat:@"%ld", (long)[requestData length]] forHTTPHeaderField:@"Content-Length"];
     
     NSString *authStr = [NSString stringWithFormat:@"%@:%@",
-                         [[[Utils gConfig] objectForKey:@"Desk"] objectForKey:@"AuthUser"],
-                         [[[Utils gConfig] objectForKey:@"Desk"] objectForKey:@"AuthPassword"]];
+                         [Utils gConfig][@"Desk"][@"AuthUser"],
+                         [Utils gConfig][@"Desk"][@"AuthPassword"]];
     NSData *authData = [authStr dataUsingEncoding:NSASCIIStringEncoding];
     NSString *authValue = [NSString stringWithFormat:@"Basic %@", [Utils base64:authData]];
     [request setValue:authValue forHTTPHeaderField:@"Authorization"];
@@ -161,8 +161,8 @@ static FeedbackManager *singleton = nil;
                                                                                                          error:&jsonError];
 
                                    
-                                   if ([auth objectForKey:(@"id")]) {
-                                       NSString *cust_id = [auth objectForKey:@"id"];
+                                   if (auth[(@"id")]) {
+                                       NSString *cust_id = auth[@"id"];
                                        [self postFeedback:meta customer_id:cust_id];
                                    } else {
                                        
@@ -188,11 +188,11 @@ static FeedbackManager *singleton = nil;
                                                                   dispatch_async(dispatch_get_main_queue(), ^{
                                                                     
                                                                       NSDictionary *auth = (NSDictionary*)[d jsonify];
-                                                                      if (auth [@"total_entries"] && [[auth objectForKey:@"total_entries"] integerValue] >= 1) {
-                                                                          if ([[[auth objectForKey:@"_embedded"] objectForKey:@"entries"] objectAtIndex:0]) {
-                                                                              NSDictionary *entry = [[[auth objectForKey:@"_embedded"] objectForKey:@"entries"] objectAtIndex:0];
-                                                                              if ([entry objectForKey:@"id"]) {
-                                                                                  [self postFeedback:meta customer_id:[entry objectForKey:@"id"]];
+                                                                      if (auth [@"total_entries"] && [auth[@"total_entries"] integerValue] >= 1) {
+                                                                          if (auth[@"_embedded"][@"entries"][0]) {
+                                                                              NSDictionary *entry = auth[@"_embedded"][@"entries"][0];
+                                                                              if (entry[@"id"]) {
+                                                                                  [self postFeedback:meta customer_id:entry[@"id"]];
                                                                               }
                                                                           }
                                                                       } else {
@@ -213,10 +213,10 @@ static FeedbackManager *singleton = nil;
     NSDictionary *deskPost = [Utils loadJson:@"desk_template"];
     NSString *asString = [Utils rawJson:deskPost];
     
-    NSString *headline = [NSString stringWithFormat:@"%@ for KPCC from %@",[meta objectForKey:@"type"],
-                          [meta objectForKey:@"name"]];
+    NSString *headline = [NSString stringWithFormat:@"%@ for KPCC from %@",meta[@"type"],
+                          meta[@"name"]];
     
-    NSString *type = [meta objectForKey:@"type"];
+    NSString *type = meta[@"type"];
     NSString *priority = @"5";
     
     if ( [type isEqualToString:@"Bug"] ) {
@@ -242,13 +242,13 @@ static FeedbackManager *singleton = nil;
     asString = [asString stringByReplacingOccurrencesOfString:kDeskBodyYield
                                                    withString:prettyMessage];
     asString = [asString stringByReplacingOccurrencesOfString:kDeskEmailYield
-                                                   withString:[meta objectForKey:@"email"]];
+                                                   withString:meta[@"email"]];
     asString = [asString stringByReplacingOccurrencesOfString:kDeskSubjectYield
                                                    withString:headline];
     asString = [asString stringByReplacingOccurrencesOfString:[NSString stringWithFormat:@"\"%@\"",kDeskPriorityYield]
                                                    withString:priority];
     
-    NSDate *date = [meta objectForKey:@"date"];
+    NSDate *date = meta[@"date"];
     NSString *rfc = [date iso];
     
     asString = [asString stringByReplacingOccurrencesOfString:kDeskTimestampYield
@@ -264,8 +264,8 @@ static FeedbackManager *singleton = nil;
     [request setValue:[NSString stringWithFormat:@"%ld",(long) [requestData length]] forHTTPHeaderField:@"Content-Length"];
     
     NSString *authStr = [NSString stringWithFormat:@"%@:%@",
-                         [[[Utils gConfig] objectForKey:@"Desk"] objectForKey:@"AuthUser"],
-                         [[[Utils gConfig] objectForKey:@"Desk"] objectForKey:@"AuthPassword"]];
+                         [Utils gConfig][@"Desk"][@"AuthUser"],
+                         [Utils gConfig][@"Desk"][@"AuthPassword"]];
     
     NSData *authData = [authStr dataUsingEncoding:NSASCIIStringEncoding];
     NSString *authValue = [NSString stringWithFormat:@"Basic %@", [Utils base64:authData]];

@@ -143,8 +143,7 @@ static char *alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz012
     
     outputBuffer[j] = 0;
     
-    NSString *result = [NSString stringWithCString:(const char*)outputBuffer
-                                          encoding:NSUTF8StringEncoding];
+    NSString *result = @((const char*)outputBuffer);
     free(outputBuffer);
     
     return result;
@@ -195,7 +194,7 @@ static char *alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz012
 
 + (NSString*)prettyVersion {
 #ifndef VERBOSE_VERSION
-    return [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"];
+    return [[NSBundle mainBundle] infoDictionary][@"CFBundleShortVersionString"];
 #else
     return [NSString stringWithFormat:@"%@ %@",[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"],
             [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"]];

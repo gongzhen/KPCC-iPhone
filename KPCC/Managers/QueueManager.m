@@ -48,10 +48,10 @@ static QueueManager *singleton = nil;
 
     for (int i = 0; i < [episodes count]; i++) {
         AudioChunk *chunk;
-        if ([[episodes objectAtIndex:i] class] == [Episode class]) {
-            chunk = [[AudioChunk alloc] initWithEpisode:[episodes objectAtIndex:i]];
-        } else if ([[episodes objectAtIndex:i] class] == [Segment class]) {
-            chunk = [[AudioChunk alloc] initWithSegment:[episodes objectAtIndex:i]];
+        if ([episodes[i] class] == [Episode class]) {
+            chunk = [[AudioChunk alloc] initWithEpisode:episodes[i]];
+        } else if ([episodes[i] class] == [Segment class]) {
+            chunk = [[AudioChunk alloc] initWithSegment:episodes[i]];
         }
         [self enqueue:chunk];
 
@@ -71,7 +71,7 @@ static QueueManager *singleton = nil;
 #endif
     if (![self isQueueEmpty]) {
         if (self.currentlyPlayingIndex + 1 < [self.queue count]) {
-            AudioChunk *chunk = [self.queue objectAtIndex:self.currentlyPlayingIndex + 1];
+            AudioChunk *chunk = (self.queue)[self.currentlyPlayingIndex + 1];
             [[AudioManager shared] playQueueItemWithUrl:chunk.audioUrl];
             self.currentlyPlayingIndex += 1;
             [[[Utils del] masterViewController] setPositionForQueue:(int)self.currentlyPlayingIndex animated:YES];
@@ -82,7 +82,7 @@ static QueueManager *singleton = nil;
 - (void)playPrev {
     if (![self isQueueEmpty]) {
         if (self.currentlyPlayingIndex > 0) {
-            AudioChunk *chunk = [self.queue objectAtIndex:self.currentlyPlayingIndex - 1];
+            AudioChunk *chunk = (self.queue)[self.currentlyPlayingIndex - 1];
             [[AudioManager shared] playQueueItemWithUrl:chunk.audioUrl];
             self.currentlyPlayingIndex -= 1;
             [[[Utils del] masterViewController] setPositionForQueue:(int)self.currentlyPlayingIndex animated:YES];
@@ -93,7 +93,7 @@ static QueueManager *singleton = nil;
 - (void)playItemAtPosition:(int)index {
     if (![self isQueueEmpty]) {
         if (index >= 0 && index < [self.queue count]) {
-            AudioChunk *chunk = [self.queue objectAtIndex:index];
+            AudioChunk *chunk = (self.queue)[index];
             [[AudioManager shared] playQueueItemWithUrl:chunk.audioUrl];
             self.currentlyPlayingIndex = index;
         }
@@ -118,7 +118,7 @@ static QueueManager *singleton = nil;
     id toDequeue = nil;
 
     if ([self.queue lastObject]) {
-        toDequeue = [self.queue objectAtIndex:0];
+        toDequeue = (self.queue)[0];
         [self.queue removeObjectAtIndex:0];
     }
 

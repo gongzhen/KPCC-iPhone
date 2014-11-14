@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		254E177019F863960022BF6B /* UILabel+Additions.m in Sources */ = {isa = PBXBuildFile; fileRef = 254E176F19F863960022BF6B /* UILabel+Additions.m */; };
 		255943EA19F1A7620007294D /* SCPRJogShuttleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 255943E919F1A7620007294D /* SCPRJogShuttleViewController.m */; };
+		256DE7271A16B9D90022EB84 /* menu-feedback.png in Resources */ = {isa = PBXBuildFile; fileRef = 256DE7251A16B9D90022EB84 /* menu-feedback.png */; };
+		256DE7281A16B9D90022EB84 /* menu-feedback@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 256DE7261A16B9D90022EB84 /* menu-feedback@2x.png */; };
 		258BD3AE1A0BF65200E7560F /* UIButton+Additions.m in Sources */ = {isa = PBXBuildFile; fileRef = 258BD3AD1A0BF65200E7560F /* UIButton+Additions.m */; };
 		258BD3B11A0C0FFF00E7560F /* SCPRProgressViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 258BD3B01A0C0FFF00E7560F /* SCPRProgressViewController.m */; };
 		258CA0FD1A09636900A3C8DB /* SessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 258CA0FC1A09636900A3C8DB /* SessionManager.m */; };
@@ -224,6 +226,8 @@
 		254E176F19F863960022BF6B /* UILabel+Additions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UILabel+Additions.m"; sourceTree = "<group>"; };
 		255943E819F1A7620007294D /* SCPRJogShuttleViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCPRJogShuttleViewController.h; sourceTree = "<group>"; };
 		255943E919F1A7620007294D /* SCPRJogShuttleViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SCPRJogShuttleViewController.m; sourceTree = "<group>"; };
+		256DE7251A16B9D90022EB84 /* menu-feedback.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "menu-feedback.png"; sourceTree = "<group>"; };
+		256DE7261A16B9D90022EB84 /* menu-feedback@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "menu-feedback@2x.png"; sourceTree = "<group>"; };
 		258BD3AC1A0BF65200E7560F /* UIButton+Additions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIButton+Additions.h"; sourceTree = "<group>"; };
 		258BD3AD1A0BF65200E7560F /* UIButton+Additions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIButton+Additions.m"; sourceTree = "<group>"; };
 		258BD3AF1A0C0FFF00E7560F /* SCPRProgressViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCPRProgressViewController.h; sourceTree = "<group>"; };
@@ -563,6 +567,8 @@
 		52EFF77A19C3688D0059A0E3 /* menu */ = {
 			isa = PBXGroup;
 			children = (
+				256DE7251A16B9D90022EB84 /* menu-feedback.png */,
+				256DE7261A16B9D90022EB84 /* menu-feedback@2x.png */,
 				52EFF77B19C3688D0059A0E3 /* menu-antenna.png */,
 				52EFF77C19C3688D0059A0E3 /* menu-antenna@2x.png */,
 				52EFF77D19C3688D0059A0E3 /* menu-clock.png */,
@@ -1139,6 +1145,7 @@
 				52EFF84019C368C00059A0E3 /* program_avatar_science-friday@2x.png in Resources */,
 				768C0683199590CC00F829EB /* FreigSanProSem.otf in Resources */,
 				7685BD62194BBCB90075BB16 /* playButton@2x.png in Resources */,
+				256DE7281A16B9D90022EB84 /* menu-feedback@2x.png in Resources */,
 				52EFF7F619C368C00059A0E3 /* program_avatar_bbc-world-service.png in Resources */,
 				52EFF86619C368C00059A0E3 /* program_avatar_weekend-edition-sunday.png in Resources */,
 				768C065E1995905D00F829EB /* chevron_down.png in Resources */,
@@ -1212,6 +1219,7 @@
 				52D0FC2C19D20D29009AECEE /* program_avatar_marketplace-tech-report@2x.png in Resources */,
 				52EFF81219C368C00059A0E3 /* program_avatar_loh-down-on-science.png in Resources */,
 				52EFF83419C368C00059A0E3 /* program_avatar_on-the-media@2x.png in Resources */,
+				256DE7271A16B9D90022EB84 /* menu-feedback.png in Resources */,
 				52EFF78F19C3688D0059A0E3 /* menu-glasses.png in Resources */,
 				52E68B8419B8F2D10028F8AE /* SCPRNavigationController.xib in Resources */,
 				52EFF85819C368C00059A0E3 /* program_avatar_world@2x.png in Resources */,

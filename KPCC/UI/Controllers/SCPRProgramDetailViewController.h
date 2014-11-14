@@ -12,7 +12,7 @@
 
 @interface SCPRProgramDetailViewController : UIViewController<UITableViewDataSource, UITableViewDelegate>
 
-- (id)initWithProgram:(Program *)program;
+- (instancetype)initWithProgram:(Program *)program;
 
 @property (nonatomic,strong) Program *program;
 @property IBOutlet UIImageView *programBgImage;

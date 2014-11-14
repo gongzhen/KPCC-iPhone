@@ -10,7 +10,7 @@
 
 @implementation SCPRProgramDetailHeaderView
 
-- (id)initWithFrame:(CGRect)frame {
+- (instancetype)initWithFrame:(CGRect)frame {
     if (self = [super initWithFrame:frame]) {
 
         self.headerLabel = [[UILabel alloc] initWithFrame:CGRectMake(frame.origin.x + 9.f, frame.size.height - 36.f, frame.size.width - 16.f, 20.f)];

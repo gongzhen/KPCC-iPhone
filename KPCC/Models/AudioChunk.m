@@ -10,7 +10,7 @@
 
 @implementation AudioChunk
 
-- (id)initWithEpisode:(Episode *)episode {
+- (instancetype)initWithEpisode:(Episode *)episode {
     if ((self = [super init])) {
         if (episode.audio != nil) {
             self.audioUrl = episode.audio.url;
@@ -25,7 +25,7 @@
     return self;
 }
 
-- (id)initWithSegment:(Segment *)segment {
+- (instancetype)initWithSegment:(Segment *)segment {
     if ((self = [super init])) {
         if (segment.audio != nil) {
             self.audioUrl = segment.audio.url;

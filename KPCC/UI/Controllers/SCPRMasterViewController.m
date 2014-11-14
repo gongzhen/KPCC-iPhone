@@ -17,6 +17,7 @@
 #import "NSDate+Helper.h"
 #import "SessionManager.h"
 #import "SCPRCloakViewController.h"
+#import "SCPRFeedbackViewController.h"
 
 static NSString *kRewindingText = @"REWINDING...";
 static NSString *kForwardingText = @"GOING LIVE...";
@@ -726,7 +727,7 @@ static CGFloat kDisabledAlpha = 0.15;
         frame.size = self.queueScrollView.frame.size;
 
         SCPRQueueScrollableView *queueSubView = [[SCPRQueueScrollableView alloc] initWithFrame:frame];
-        [queueSubView setAudioChunk:[array objectAtIndex:i]];
+        [queueSubView setAudioChunk:array[i]];
 
         [self.queueScrollView addSubview:queueSubView];
     }
@@ -734,7 +735,7 @@ static CGFloat kDisabledAlpha = 0.15;
     [self setPositionForQueue:index animated:NO];
     [self.queueScrollView setHidden:NO];
 
-    [self setDataForOnDemand:program andAudioChunk:[array objectAtIndex:index]];
+    [self setDataForOnDemand:program andAudioChunk:array[index]];
 
     if ([self.onDemandPlayerView isHidden]) {
         [self.onDemandPlayerView setHidden:NO];
@@ -1174,8 +1175,8 @@ static CGFloat kDisabledAlpha = 0.15;
     } completion:nil];
 
     int newPage = self.queueScrollView.contentOffset.x / self.queueScrollView.frame.size.width;
-    if ([self.queueContents objectAtIndex:newPage]) {
-        AudioChunk *chunk = [self.queueContents objectAtIndex:newPage];
+    if ((self.queueContents)[newPage]) {
+        AudioChunk *chunk = (self.queueContents)[newPage];
         self.onDemandEpUrl = chunk.contentShareUrl;
         [[AudioManager shared] updateNowPlayingInfoWithAudio:chunk];
     }
@@ -1244,6 +1245,15 @@ static CGFloat kDisabledAlpha = 0.15;
             SCPRShortListViewController *slVC = [[SCPRShortListViewController alloc] initWithNibName:@"SCPRShortListViewController"
                                                                                               bundle:nil];
             [self.navigationController pushViewController:slVC animated:YES];
+            break;
+            
+        }
+            
+        case 3: {
+            
+            SCPRFeedbackViewController *fbVC = [[SCPRFeedbackViewController alloc] initWithNibName:@"SCPRFeedbackViewController"
+                                                                                            bundle:nil];
+            [self.navigationController pushViewController:fbVC animated:YES];
             break;
             
         }
