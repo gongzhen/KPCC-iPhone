@@ -326,6 +326,7 @@
     [self.descriptionInputView becomeFirstResponder];
     
 }
+
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     if ( indexPath.section == 2 ) {
         return self.descriptionCell.frame.size.height;

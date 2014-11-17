@@ -187,6 +187,9 @@
 - (UIView*)showWithStatus:(NSString *)status
                     style:(JDStatusBarStyle*)style;
 {
+    // first, check if status bar is visible at all
+    if ([UIApplication sharedApplication].statusBarHidden) return nil;
+    
     // prepare for new style
     if (style != self.activeStyle) {
         self.activeStyle = style;
@@ -275,6 +278,7 @@
     } completion:^(BOOL finished) {
         [self.overlayWindow removeFromSuperview];
         [self.overlayWindow setHidden:YES];
+        _overlayWindow.rootViewController = nil;        
         _overlayWindow = nil;
         _progressView = nil;
         _topBar = nil;
@@ -530,10 +534,14 @@
             preferredInterfaceOrientationForPresentation];
 }
 
-// statusbar style
+// statusbar
 
 - (UIStatusBarStyle)preferredStatusBarStyle {
     return [[UIApplication sharedApplication] statusBarStyle];
+}
+
+- (BOOL)prefersStatusBarHidden {
+    return NO;
 }
 
 @end

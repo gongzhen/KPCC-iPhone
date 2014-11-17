@@ -87,6 +87,7 @@
 - (void)activateRewind:(RewindDistance)distance;
 - (void)activateFastForward;
 - (void)snapJogWheel;
+
 @property (NS_NONATOMIC_IOSONLY, readonly) BOOL uiIsJogging;
 @property (NS_NONATOMIC_IOSONLY, readonly) NSTimeInterval rewindAgainstStreamDelta;
 
@@ -97,7 +98,7 @@
 - (void)setOnDemandUI:(BOOL)animated forProgram:(Program*)program withAudio:(NSArray*)array atCurrentIndex:(int)index;
 - (void)setLiveStreamingUI:(BOOL)animated;
 - (void)setPositionForQueue:(int)index animated:(BOOL)animated;
-
+- (void)primeManualControlButton;
 - (void)treatUIforProgram;
 
 - (void)moveTextIntoPlace:(BOOL)animated;
