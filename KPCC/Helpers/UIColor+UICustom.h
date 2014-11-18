@@ -13,7 +13,7 @@
 + (UIColor*)kpccOrangeColor;
 + (UIColor*)virtualBlackColor;
 + (UIColor*)cloudColor;
-- (UIColor*)intensify;
+@property (NS_NONATOMIC_IOSONLY, readonly, copy) UIColor *intensify;
 + (UIColor*)virtualWhiteColor;
 
 @end

@@ -32,6 +32,7 @@ static const NSString *ItemStatusContext;
             singleton = [[AudioManager alloc] init];
             singleton.fadeQueue = [[NSOperationQueue alloc] init];
             singleton.status = StreamStatusStopped;
+            singleton.savedVolumeFromMute = -1.0;
         }
     }
     return singleton;
@@ -90,8 +91,8 @@ static const NSString *ItemStatusContext;
     // Monitoring AVPlayer rate.
     if (object == self.audioPlayer && [keyPath isEqualToString:@"rate"]) {
         
-        CGFloat oldRate = [[change objectForKey:@"old"] floatValue];
-        CGFloat newRate = [[change objectForKey:@"new"] floatValue];
+        CGFloat oldRate = [change[@"old"] floatValue];
+        CGFloat newRate = [change[@"new"] floatValue];
         
         if ([self.delegate respondsToSelector:@selector(onRateChange)]) {
             [self.delegate onRateChange];
@@ -199,7 +200,7 @@ static const NSString *ItemStatusContext;
         
         NSArray *seekRange = audioPlayer.currentItem.seekableTimeRanges;
         if (seekRange && [seekRange count] > 0) {
-            CMTimeRange range = [[seekRange objectAtIndex:0] CMTimeRangeValue];
+            CMTimeRange range = [seekRange[0] CMTimeRangeValue];
 
             weakSelf.minSeekableDate = [NSDate dateWithTimeInterval:( -1 * (CMTimeGetSeconds(time) - CMTimeGetSeconds(range.start))) sinceDate:weakSelf.currentDate];
             weakSelf.maxSeekableDate = [NSDate dateWithTimeInterval:(CMTimeGetSeconds(CMTimeRangeGetEnd(range)) - CMTimeGetSeconds(time)) sinceDate:weakSelf.currentDate];
@@ -228,7 +229,7 @@ static const NSString *ItemStatusContext;
 - (void)seekToPercent:(CGFloat)percent {
     NSArray *seekRange = self.audioPlayer.currentItem.seekableTimeRanges;
     if (seekRange && [seekRange count] > 0) {
-        CMTimeRange range = [[seekRange objectAtIndex:0] CMTimeRangeValue];
+        CMTimeRange range = [seekRange[0] CMTimeRangeValue];
 
         CMTime seekTime = CMTimeMakeWithSeconds( CMTimeGetSeconds(range.start) + ( CMTimeGetSeconds(range.duration) * (percent / 100)),
                                                 range.start.timescale);
@@ -255,6 +256,7 @@ static const NSString *ItemStatusContext;
 
     } else {
         [self.audioPlayer pause];
+        NSDate *justABitInTheFuture = [NSDate dateWithTimeInterval:2 sinceDate:date];
         [self.audioPlayer.currentItem seekToDate:date completionHandler:^(BOOL finished) {
             if ( !finished ) {
                 NSLog(@" **************** AUDIOPLAYER NOT FINISHED BUFFERING ****************** ");
@@ -485,7 +487,18 @@ static const NSString *ItemStatusContext;
         [self buildStreamer:kHLSLiveStreamURL];
     }
 
+    BOOL fadein = NO;
+    if ( self.savedVolumeFromMute >= 0.0 ) {
+        fadein = YES;
+        [self.audioPlayer setVolume:0.0];
+    }
     [self.audioPlayer play];
+    
+    if ( fadein ) {
+        [[AudioManager shared] adjustAudioWithValue:0.1 completion:^{
+            
+        }];
+    }
     
     [[SessionManager shared] setSessionPausedDate:nil];
     
@@ -517,7 +530,13 @@ static const NSString *ItemStatusContext;
 
 - (void)adjustAudioWithValue:(CGFloat)increment completion:(void (^)(void))completion {
     if ( increment < 0.0 ) {
-        self.savedVolume = self.audioPlayer.volume;
+        if ( self.savedVolumeFromMute >= 0.0 ) {
+            self.savedVolume = self.savedVolumeFromMute;
+        } else {
+            self.savedVolume = self.audioPlayer.volume;
+        }
+    } else {
+        self.savedVolumeFromMute = -1.0;
     }
     [self threadedAdjustWithValue:increment completion:completion];
 }
@@ -552,6 +571,15 @@ static const NSString *ItemStatusContext;
     }
 }
 
+- (void)muteAudio {
+    self.savedVolumeFromMute = self.audioPlayer.volume;
+    if ( self.savedVolumeFromMute == 0.0 ) self.savedVolumeFromMute = 1.0;
+}
+
+- (void)unmuteAudio {
+    self.audioPlayer.volume = self.savedVolumeFromMute;
+    self.savedVolumeFromMute = -1.0;
+}
 
 - (void)takedownAudioPlayer {
     if ( self.audioPlayer ) {

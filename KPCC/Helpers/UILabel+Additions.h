@@ -14,5 +14,8 @@
 - (void)fadeText:(NSString *)text duration:(CGFloat)duration;
 - (void)pulsate:(NSString*)newText color:(UIColor*)color;
 - (void)stopPulsating;
+- (void)proLightFontize;
+- (void)proMediumFontize;
+- (void)proBookFontize;
 
 @end

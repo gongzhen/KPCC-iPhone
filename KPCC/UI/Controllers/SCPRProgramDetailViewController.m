@@ -27,12 +27,12 @@
 
 @synthesize episodesList;
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
+- (instancetype)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     return self;
 }
 
-- (id)initWithProgram:(Program *)program {
+- (instancetype)initWithProgram:(Program *)program {
     self = [self initWithNibName:nil bundle:nil];
     self.program = program;
     self.title = program.title;
@@ -118,7 +118,7 @@
     }
 
     cell.backgroundColor = [UIColor clearColor];
-    [cell setEpisode:[self.episodesList objectAtIndex:indexPath.row]];
+    [cell setEpisode:(self.episodesList)[indexPath.row]];
     return cell;
 }
 

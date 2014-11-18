@@ -65,7 +65,7 @@ static NetworkManager *singleton = nil;
     manager.responseSerializer = [AFJSONResponseSerializer serializerWithReadingOptions: NSJSONReadingMutableContainers];
     [manager GET:endpoint parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
         
-        if ([responseObject objectForKey:@"meta"] && [[[[responseObject objectForKey:@"meta"] objectForKey:@"status"] objectForKey:@"code"] intValue] == 200) {
+        if (responseObject[@"meta"] && [responseObject[@"meta"][@"status"][@"code"] intValue] == 200) {
             
             NSArray *keys = [responseObject allKeys];
             NSString *responseKey;
@@ -144,8 +144,8 @@ static NetworkManager *singleton = nil;
         NSLog(@"convertedData %@", convertedData);
 
         TritonAd *tritonAd = nil;
-        if (convertedData != nil && [convertedData objectForKey:@"Ad"]) {
-            tritonAd = [[TritonAd alloc] initWithDict:[convertedData objectForKey:@"Ad"]];
+        if (convertedData != nil && convertedData[@"Ad"]) {
+            tritonAd = [[TritonAd alloc] initWithDict:convertedData[@"Ad"]];
         }
 
         completion(tritonAd);

@@ -104,6 +104,22 @@ static DesignManager *singleton = nil;
     
 }
 
+- (UIView*)textHeaderWithText:(NSString *)text textColor:(UIColor*)color backgroundColor:(UIColor*)backgroundColor {
+    return [self textHeaderWithText:text textColor:color backgroundColor:backgroundColor divider:YES];
+}
+
+- (UIView*)textHeaderWithText:(NSString *)text textColor:(UIColor *)color backgroundColor:(UIColor *)backgroundColor divider:(BOOL)divider {
+    UIView *header = [[UIView alloc] initWithFrame:CGRectMake(0.0,0.0,768.0,36.0)];
+    header.backgroundColor = backgroundColor;
+    UILabel *captionLabel = [[UILabel alloc] initWithFrame:CGRectMake(0.0,0.0, 768.0, 36.0)];
+    captionLabel.font = [UIFont systemFontOfSize:14.0];
+    captionLabel.backgroundColor = [UIColor clearColor];
+    captionLabel.textColor = color;
+    [captionLabel setText:[NSString stringWithFormat:@"                %@",text]];
+    
+    [header addSubview:captionLabel];
+    return header;
+}
 
 - (CGRect)screenFrame {
     SCPRAppDelegate *del = (SCPRAppDelegate*)[[UIApplication sharedApplication] delegate];

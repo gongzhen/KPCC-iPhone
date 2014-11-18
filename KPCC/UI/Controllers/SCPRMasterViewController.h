@@ -78,17 +78,22 @@
 
 // Pre-Roll
 @property (nonatomic,strong) SCPRPreRollViewController *preRollViewController;
+@property BOOL lockPreroll;
 
 // Rewinding UI
 @property (nonatomic,strong) SCPRJogShuttleViewController *jogShuttle;
 @property (nonatomic,strong) IBOutlet UIView *rewindView;
 @property BOOL rewindGate;
+@property BOOL initiateRewind;
+
 
 - (void)activateRewind:(RewindDistance)distance;
 - (void)activateFastForward;
 - (void)snapJogWheel;
-- (BOOL)uiIsJogging;
-- (NSTimeInterval)rewindAgainstStreamDelta;
+- (void)specialRewind;
+
+@property (NS_NONATOMIC_IOSONLY, readonly) BOOL uiIsJogging;
+@property (NS_NONATOMIC_IOSONLY, readonly) NSTimeInterval rewindAgainstStreamDelta;
 
 // Instance methods.
 - (void)cloakForMenu:(BOOL)animated;
@@ -97,7 +102,7 @@
 - (void)setOnDemandUI:(BOOL)animated forProgram:(Program*)program withAudio:(NSArray*)array atCurrentIndex:(int)index;
 - (void)setLiveStreamingUI:(BOOL)animated;
 - (void)setPositionForQueue:(int)index animated:(BOOL)animated;
-
+- (void)primeManualControlButton;
 - (void)treatUIforProgram;
 
 - (void)moveTextIntoPlace:(BOOL)animated;

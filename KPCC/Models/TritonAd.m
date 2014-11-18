@@ -10,59 +10,59 @@
 
 @implementation TritonAd
 
-- (id)initWithDict:(NSDictionary *)dictionary {
+- (instancetype)initWithDict:(NSDictionary *)dictionary {
     if ((self = [super init])) {
 
-        if ([dictionary objectForKey:@"_id"]) {
-            self.adId = [dictionary objectForKey:@"_id"];
+        if (dictionary[@"_id"]) {
+            self.adId = dictionary[@"_id"];
         }
 
-        if ([dictionary objectForKey:@"InLine"]) {
-            NSDictionary *inlineDict = [[NSDictionary alloc] initWithDictionary:[dictionary objectForKey:@"InLine"]];
+        if (dictionary[@"InLine"]) {
+            NSDictionary *inlineDict = [[NSDictionary alloc] initWithDictionary:dictionary[@"InLine"]];
 
             // Impression URL
-            if ([inlineDict objectForKey:@"Impression"] && [[inlineDict objectForKey:@"Impression"] objectForKey:@"__text"]) {
-                self.impressionUrl = [[inlineDict objectForKey:@"Impression"] objectForKey:@"__text"];
+            if (inlineDict[@"Impression"] && inlineDict[@"Impression"][@"__text"]) {
+                self.impressionUrl = inlineDict[@"Impression"][@"__text"];
             }
 
             // Ad assets
-            if ([inlineDict objectForKey:@"Creatives"] && [[inlineDict objectForKey:@"Creatives"] objectForKey:@"Creative"]) {
-                NSArray *creatives = [[inlineDict objectForKey:@"Creatives"] objectForKey:@"Creative"];
+            if (inlineDict[@"Creatives"] && inlineDict[@"Creatives"][@"Creative"]) {
+                NSArray *creatives = inlineDict[@"Creatives"][@"Creative"];
                 if (creatives && [creatives count] > 0) {
 
                     // Audio component
-                    NSDictionary *firstCreative = [creatives objectAtIndex:0];
-                    if ([firstCreative objectForKey:@"Linear"]) {
-                        NSDictionary *audioAsset = [firstCreative objectForKey:@"Linear"];
+                    NSDictionary *firstCreative = creatives[0];
+                    if (firstCreative[@"Linear"]) {
+                        NSDictionary *audioAsset = firstCreative[@"Linear"];
 
                         // File duration
-                        if ([audioAsset objectForKey:@"Duration"]) {
-                            NSArray* tokens = [[audioAsset objectForKey:@"Duration"] componentsSeparatedByString:@":"];
+                        if (audioAsset[@"Duration"]) {
+                            NSArray* tokens = [audioAsset[@"Duration"] componentsSeparatedByString:@":"];
                             double lengthInSeconds = 0;
                             for (int i = 0 ; i != tokens.count ; i++) {
-                                lengthInSeconds = 60 *lengthInSeconds + [[tokens objectAtIndex:i] doubleValue];
+                                lengthInSeconds = 60 *lengthInSeconds + [tokens[i] doubleValue];
                             }
-                            self.audioCreativeDuration = [NSNumber numberWithDouble:lengthInSeconds];
+                            self.audioCreativeDuration = @(lengthInSeconds);
                         }
 
                         // Audio file url
-                        if ([audioAsset objectForKey:@"MediaFiles"] && [[audioAsset objectForKey:@"MediaFiles"] objectForKey:@"MediaFile"]) {
-                            NSDictionary *audioFile = [[audioAsset objectForKey:@"MediaFiles"] objectForKey:@"MediaFile"];
-                            if ([audioFile objectForKey:@"__text"]) {
-                                self.audioCreativeUrl = [audioFile objectForKey:@"__text"];
+                        if (audioAsset[@"MediaFiles"] && audioAsset[@"MediaFiles"][@"MediaFile"]) {
+                            NSDictionary *audioFile = audioAsset[@"MediaFiles"][@"MediaFile"];
+                            if (audioFile[@"__text"]) {
+                                self.audioCreativeUrl = audioFile[@"__text"];
                             }
                         }
                     }
 
                     // Image component
-                    if ([creatives objectAtIndex:1]) {
-                        NSDictionary *secondCreative = [creatives objectAtIndex:1];
-                        if ([[secondCreative objectForKey:@"CompanionAds"] objectForKey:@"Companion"]) {
-                            NSArray *imageAssets = [[secondCreative objectForKey:@"CompanionAds"] objectForKey:@"Companion"];
+                    if (creatives[1]) {
+                        NSDictionary *secondCreative = creatives[1];
+                        if (secondCreative[@"CompanionAds"][@"Companion"]) {
+                            NSArray *imageAssets = secondCreative[@"CompanionAds"][@"Companion"];
                             NSDictionary *staticResource;
 
                             for (NSDictionary *imgAsset in imageAssets) {
-                                if ([imgAsset objectForKey:@"StaticResource"]) {
+                                if (imgAsset[@"StaticResource"]) {
                                     staticResource = imgAsset;
                                     break;
                                 }
@@ -70,22 +70,22 @@
 
                             if (staticResource) {
                                 // Image file url
-                                if ([[staticResource objectForKey:@"StaticResource"] objectForKey:@"__text"]) {
-                                    self.imageCreativeUrl = [[staticResource objectForKey:@"StaticResource"] objectForKey:@"__text"];
+                                if (staticResource[@"StaticResource"][@"__text"]) {
+                                    self.imageCreativeUrl = staticResource[@"StaticResource"][@"__text"];
                                 }
 
                                 // Image dimensions
-                                if ([staticResource objectForKey:@"_height"]) {
-                                    self.imageCreativeHeight = [NSNumber numberWithDouble:[[staticResource objectForKey:@"_height"] doubleValue]];
+                                if (staticResource[@"_height"]) {
+                                    self.imageCreativeHeight = @([staticResource[@"_height"] doubleValue]);
                                 }
-                                if ([staticResource objectForKey:@"_width"]) {
-                                    self.imageCreativeWidth = [NSNumber numberWithDouble:[[staticResource objectForKey:@"_width"] doubleValue]];
+                                if (staticResource[@"_width"]) {
+                                    self.imageCreativeWidth = @([staticResource[@"_width"] doubleValue]);
                                 }
 
                                 // URL for tracking clicks?
-                                if ([staticResource objectForKey:@"TrackingEvents"] && [[staticResource objectForKey:@"TrackingEvents"] objectForKey:@"Tracking"]) {
-                                    if ([[[staticResource objectForKey:@"TrackingEvents"] objectForKey:@"Tracking"] objectForKey:@"__text"]) {
-                                        self.creativeTrackingUrl = [[[staticResource objectForKey:@"TrackingEvents"] objectForKey:@"Tracking"] objectForKey:@"__text"];
+                                if (staticResource[@"TrackingEvents"] && staticResource[@"TrackingEvents"][@"Tracking"]) {
+                                    if (staticResource[@"TrackingEvents"][@"Tracking"][@"__text"]) {
+                                        self.creativeTrackingUrl = staticResource[@"TrackingEvents"][@"Tracking"][@"__text"];
                                     }
                                 }
                             }

@@ -12,18 +12,18 @@
 
 @implementation Episode
 
-- (id)initWithDict:(NSDictionary *)episodeDict {
+- (instancetype)initWithDict:(NSDictionary *)episodeDict {
     if((self = [super init])) {
         self.title      = episodeDict[@"title"];
         self.summary    = episodeDict[@"summary"];
         self.airDate    = [Utils dateFromRFCString:episodeDict[@"air_date"]];
         self.publicUrl  = episodeDict[@"public_url"];
         self.teaser     = episodeDict[@"teaser"];
-        self.programName= [episodeDict[@"program"] objectForKey:@"title"];
+        self.programName= (episodeDict[@"program"])[@"title"];
 //        self.assets     = episodeDict[@"assets"];
 
         if (episodeDict[@"audio"] && [episodeDict[@"audio"] count] > 0 ) {
-            self.audio = [[EpisodeAudio alloc] initWithDict:[episodeDict[@"audio"] objectAtIndex:0]];
+            self.audio = [[EpisodeAudio alloc] initWithDict:(episodeDict[@"audio"])[0]];
         }
 
 

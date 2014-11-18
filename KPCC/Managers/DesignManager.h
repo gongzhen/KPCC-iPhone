@@ -13,8 +13,10 @@
 + (DesignManager*)shared;
 
 - (void)loadProgramImage:(NSString *)slug andImageView:(UIImageView *)imageView completion:(void (^)(BOOL status))completion;
-- (CGRect)screenFrame;
+@property (NS_NONATOMIC_IOSONLY, readonly) CGRect screenFrame;
 - (void)loadStockPhotoToImageView:(UIImageView*)imageView;
+- (UIView*)textHeaderWithText:(NSString *)text textColor:(UIColor*)color backgroundColor:(UIColor*)backgroundColor;
+- (UIView*)textHeaderWithText:(NSString *)text textColor:(UIColor *)color backgroundColor:(UIColor *)backgroundColor divider:(BOOL)divider;
 
 @property BOOL displayingStockPhoto;
 #ifdef TEST_PROGRAM_IMAGE

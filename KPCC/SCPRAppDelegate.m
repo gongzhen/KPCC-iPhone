@@ -30,12 +30,12 @@
     NSDictionary *globalConfig = [[NSDictionary alloc] initWithContentsOfFile:path];
     
 #ifdef ENABLE_TESTFLIGHT
-    [TestFlight takeOff: [[globalConfig objectForKey:@"TestFlight"] objectForKey:@"AppToken"]];
+    [TestFlight takeOff: globalConfig[@"TestFlight"][@"AppToken"]];
 #endif
     
     [Flurry setCrashReportingEnabled:YES];
     [Flurry setDebugLogEnabled:YES];
-    [Flurry startSession: [[globalConfig objectForKey:@"Flurry"] objectForKey:@"DebugKey"] ];
+    [Flurry startSession: globalConfig[@"Flurry"][@"DebugKey"] ];
     [Flurry setBackgroundSessionEnabled:NO];
     
     // Apply application-wide styling
@@ -125,9 +125,8 @@
     [[UINavigationBar appearance] setBarStyle:UIBarStyleBlackTranslucent];
 
     [[UINavigationBar appearance] setTitleTextAttributes:
-     [NSDictionary dictionaryWithObjectsAndKeys:
-      [UIColor whiteColor], NSForegroundColorAttributeName,
-      [UIFont fontWithName:@"FreightSansProMedium-Regular" size:23.0f], NSFontAttributeName, nil]];
+     @{NSForegroundColorAttributeName: [UIColor whiteColor],
+      NSFontAttributeName: [UIFont fontWithName:@"FreightSansProMedium-Regular" size:23.0f]}];
     
     /*[[UIBarButtonItem appearanceWhenContainedIn:[UINavigationBar class], nil]
     setTitleTextAttributes: @{NSForegroundColorAttributeName:[UIColor whiteColor],

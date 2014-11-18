@@ -11,7 +11,7 @@
 
 @implementation EpisodeAudio
 
--(id)initWithDict:(NSDictionary *)dict {
+-(instancetype)initWithDict:(NSDictionary *)dict {
     if((self = [super init])) {
         self.audDescription     = dict[@"description"];
         self.url                = dict[@"url"];
@@ -27,7 +27,7 @@
         }
 
         if (dict[@"duration"] != nil && dict[@"duration"] != [NSNull null]) {
-            self.duration = [NSNumber numberWithInteger:[dict[@"duration"] integerValue]];
+            self.duration = @([dict[@"duration"] integerValue]);
         }
 
 //        self.filesize           = [NSNumber numberWithInteger:[dict[@"filesize"] integerValue]];

@@ -83,27 +83,27 @@ typedef void (^NetworkUnreachable)(Reachability * reachability);
 +(Reachability*)reachabilityWithAddress:(const struct sockaddr_in*)hostAddress;
 +(Reachability*)reachabilityForLocalWiFi;
 
--(Reachability *)initWithReachabilityRef:(SCNetworkReachabilityRef)ref;
+-(Reachability *)initWithReachabilityRef:(SCNetworkReachabilityRef)ref NS_DESIGNATED_INITIALIZER;
 
--(BOOL)startNotifier;
+@property (NS_NONATOMIC_IOSONLY, readonly) BOOL startNotifier;
 -(void)stopNotifier;
 
--(BOOL)isReachable;
--(BOOL)isReachableViaWWAN;
--(BOOL)isReachableViaWiFi;
+@property (NS_NONATOMIC_IOSONLY, getter=isReachable, readonly) BOOL reachable;
+@property (NS_NONATOMIC_IOSONLY, getter=isReachableViaWWAN, readonly) BOOL reachableViaWWAN;
+@property (NS_NONATOMIC_IOSONLY, getter=isReachableViaWiFi, readonly) BOOL reachableViaWiFi;
 
 // WWAN may be available, but not active until a connection has been established.
 // WiFi may require a connection for VPN on Demand.
--(BOOL)isConnectionRequired; // Identical DDG variant.
--(BOOL)connectionRequired; // Apple's routine.
-// Dynamic, on demand connection?
--(BOOL)isConnectionOnDemand;
-// Is user intervention required?
--(BOOL)isInterventionRequired;
+@property (NS_NONATOMIC_IOSONLY, getter=isConnectionRequired, readonly) BOOL connectionRequired; // Identical DDG variant.
 
--(NetworkStatus)currentReachabilityStatus;
--(SCNetworkReachabilityFlags)reachabilityFlags;
--(NSString*)currentReachabilityString;
--(NSString*)currentReachabilityFlags;
+// Dynamic, on demand connection?
+@property (NS_NONATOMIC_IOSONLY, getter=isConnectionOnDemand, readonly) BOOL connectionOnDemand;
+// Is user intervention required?
+@property (NS_NONATOMIC_IOSONLY, getter=isInterventionRequired, readonly) BOOL interventionRequired;
+
+@property (NS_NONATOMIC_IOSONLY, readonly) NetworkStatus currentReachabilityStatus;
+@property (NS_NONATOMIC_IOSONLY, readonly) SCNetworkReachabilityFlags reachabilityFlags;
+@property (NS_NONATOMIC_IOSONLY, readonly, copy) NSString *currentReachabilityString;
+@property (NS_NONATOMIC_IOSONLY, readonly, copy) NSString *currentReachabilityFlags;
 
 @end

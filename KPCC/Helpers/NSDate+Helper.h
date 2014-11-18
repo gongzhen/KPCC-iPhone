@@ -10,11 +10,11 @@
 
 @interface NSDate (Helper)
 
-- (NSInteger)daysAgo;
-- (NSUInteger)daysAgoAgainstMidnight;
-- (NSString *)stringDaysAgo;
+@property (NS_NONATOMIC_IOSONLY, readonly) NSInteger daysAgo;
+@property (NS_NONATOMIC_IOSONLY, readonly) NSUInteger daysAgoAgainstMidnight;
+@property (NS_NONATOMIC_IOSONLY, readonly, copy) NSString *stringDaysAgo;
 - (NSString *)stringDaysAgoAgainstMidnight:(BOOL)flag;
-- (NSUInteger)weekday;
+@property (NS_NONATOMIC_IOSONLY, readonly) NSUInteger weekday;
 
 + (NSString *)dbFormatString;
 + (NSDate *)dateFromString:(NSString *)string;
@@ -24,22 +24,23 @@
 + (NSString *)stringForDisplayFromDate:(NSDate *)date prefixed:(BOOL)prefixed;
 
 - (NSDate*)dateChangedBy:(NSInteger)days;
-- (NSDate *)beginningOfWeek;
-- (NSDate *)beginningOfDay;
-- (NSDate *)endOfWeek;
-- (NSDate *)lastDayOfMonth;
+@property (NS_NONATOMIC_IOSONLY, readonly, copy) NSDate *beginningOfWeek;
+@property (NS_NONATOMIC_IOSONLY, readonly, copy) NSDate *beginningOfDay;
+@property (NS_NONATOMIC_IOSONLY, readonly, copy) NSDate *endOfWeek;
+@property (NS_NONATOMIC_IOSONLY, readonly, copy) NSDate *lastDayOfMonth;
 
-- (NSDate*)forceMidnight;
-- (BOOL)isYesterday;
+@property (NS_NONATOMIC_IOSONLY, readonly, copy) NSDate *forceMidnight;
+@property (NS_NONATOMIC_IOSONLY, getter=isYesterday, readonly) BOOL yesterday;
 
 - (NSString*)prettyCompare:(NSDate*)date;
 - (NSUInteger)daysBetween:(NSDate *)otherDate;
 
-- (BOOL)isToday;
-- (BOOL)isExpired;
+@property (NS_NONATOMIC_IOSONLY, getter=isToday, readonly) BOOL today;
+@property (NS_NONATOMIC_IOSONLY, getter=isExpired, readonly) BOOL expired;
 - (BOOL)isOlderThanInSeconds:(NSInteger)secondsAgo;
-- (NSInteger)secondsUntil;
+@property (NS_NONATOMIC_IOSONLY, readonly) NSInteger secondsUntil;
 + (NSString*)prettyTextFromSeconds:(NSInteger)seconds;
-- (NSString*)prettyTimeString;
+@property (NS_NONATOMIC_IOSONLY, readonly, copy) NSString *prettyTimeString;
+- (NSString*)iso;
 
 @end

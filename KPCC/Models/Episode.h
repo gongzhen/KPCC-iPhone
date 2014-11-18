@@ -11,8 +11,8 @@
 
 @interface Episode : NSObject
 
-- (id)initWithDict:(NSDictionary *)episodeDict;
-- (BOOL)hasEpisodeAudio;
+- (instancetype)initWithDict:(NSDictionary *)episodeDict NS_DESIGNATED_INITIALIZER;
+@property (NS_NONATOMIC_IOSONLY, readonly) BOOL hasEpisodeAudio;
 
 @property(nonatomic,strong) NSString        *title;
 @property(nonatomic,strong) NSString        *summary;

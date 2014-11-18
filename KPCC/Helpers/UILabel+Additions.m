@@ -76,4 +76,16 @@
     [self.layer removeAllAnimations];
 }
 
+- (void)proLightFontize {
+    self.font = [UIFont fontWithName:@"FreightSansProLight-Regular" size:self.font.pointSize];
+}
+
+- (void)proMediumFontize {
+    self.font = [UIFont fontWithName:@"FreightSansProMedium-Regular" size:self.font.pointSize];
+}
+
+- (void)proBookFontize {
+    self.font = [UIFont fontWithName:@"FreightSansProBook-Regular" size:self.font.pointSize];
+}
+
 @end

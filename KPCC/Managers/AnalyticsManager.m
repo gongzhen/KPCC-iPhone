@@ -28,8 +28,7 @@ static AnalyticsManager *singleton = nil;
     NSMutableDictionary *userInfo = [[NSMutableDictionary alloc] init];
     
     for ( NSString *key in [parameters allKeys] ) {
-        [userInfo setObject:[parameters objectForKey:key]
-                     forKey:key];
+        userInfo[key] = parameters[key];
     }
     
 #ifdef DEBUG

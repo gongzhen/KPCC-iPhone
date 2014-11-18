@@ -25,12 +25,12 @@
 
 @implementation SCPRProgramsListViewController
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
+- (instancetype)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     return self;
 }
 
-- (id)initWithBackgroundProgram:(Program *)program {
+- (instancetype)initWithBackgroundProgram:(Program *)program {
     self = [self initWithNibName:nil bundle:nil];
     self.currentProgram = program;
     self.title = @"Programs";
@@ -108,9 +108,9 @@
     }
 
     cell.backgroundColor = [UIColor clearColor];
-    cell.programLabel.text = [NSString stringWithFormat:@"%@", [[self.programsList objectAtIndex:indexPath.row] title]];
+    cell.programLabel.text = [NSString stringWithFormat:@"%@", [(self.programsList)[indexPath.row] title]];
 
-    NSString *iconNamed = [[self.programsList objectAtIndex:indexPath.row] program_slug];
+    NSString *iconNamed = [(self.programsList)[indexPath.row] program_slug];
     if (iconNamed) {
         UIImage *iconImg = [UIImage imageNamed:[NSString stringWithFormat:@"program_avatar_%@", iconNamed]];
         [cell.iconImageView setImage:iconImg];
@@ -129,9 +129,9 @@
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
 
     SCPRProgramDetailViewController *programDetailViewController = [[SCPRProgramDetailViewController alloc]
-                                                                    initWithProgram:[self.programsList objectAtIndex:indexPath.row]];
+                                                                    initWithProgram:(self.programsList)[indexPath.row]];
 
-    programDetailViewController.program = [self.programsList objectAtIndex:indexPath.row];
+    programDetailViewController.program = (self.programsList)[indexPath.row];
     [self.navigationController pushViewController:programDetailViewController animated:YES];
 }
 

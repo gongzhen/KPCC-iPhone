@@ -19,7 +19,7 @@
 
 @implementation SCPRQueueScrollableView
 
-- (id)initWithFrame:(CGRect)frame {
+- (instancetype)initWithFrame:(CGRect)frame {
     if (self = [super initWithFrame:frame]) {
 
         self.audioTitleLabel = [[UILabel alloc]initWithFrame:CGRectMake(15, 40, frame.size.width - 30, 100)];

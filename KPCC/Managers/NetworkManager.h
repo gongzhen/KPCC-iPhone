@@ -19,14 +19,14 @@
 
 
 
-typedef enum {
+typedef NS_ENUM(NSInteger, NetworkHealth) {
     NetworkHealthUnknown = 0,
     NetworkHealthServerOK = 1,
     NetworkHealthNetworkOK = 2,
     NetworkHealthServerDown = 3,
     NetworkHealthNetworkDown = 4,
     NetworkHealthAllOK = 5
-} NetworkHealth;
+} ;
 
 
 @interface NetworkManager : NSObject {
@@ -40,7 +40,7 @@ typedef enum {
 @property (nonatomic,strong) Reachability *networkHealthReachability;
 
 - (NetworkHealth)checkNetworkHealth:(NSString*)server;
-- (NSString *)networkInformation;
+@property (NS_NONATOMIC_IOSONLY, readonly, copy) NSString *networkInformation;
 
 
 - (void)fetchAllProgramInformation:(CompletionBlockWithValue)completion;

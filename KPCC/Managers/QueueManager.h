@@ -33,8 +33,8 @@
 
 // Internal queue
 - (void)enqueue:(AudioChunk*)audio;
-- (AudioChunk*)dequeue;
-- (BOOL)isQueueEmpty;
+@property (NS_NONATOMIC_IOSONLY, readonly, strong) AudioChunk *dequeue;
+@property (NS_NONATOMIC_IOSONLY, getter=isQueueEmpty, readonly) BOOL queueEmpty;
 - (void)clearQueue;
 
 @end

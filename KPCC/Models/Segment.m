@@ -10,7 +10,7 @@
 
 @implementation Segment
 
--(id)initWithDict:(NSDictionary *)dict {
+-(instancetype)initWithDict:(NSDictionary *)dict {
 
     if((self = [super init])) {
         self.segmentId      = dict[@"id"];
@@ -22,7 +22,7 @@
         self.publicUrl      = dict[@"public_url"];
 
         if (dict[@"audio"] && [dict[@"audio"] count] > 0 ) {
-            self.audio = [[EpisodeAudio alloc] initWithDict:[dict[@"audio"] objectAtIndex:0]];
+            self.audio = [[EpisodeAudio alloc] initWithDict:(dict[@"audio"])[0]];
         }
     }
     return self;

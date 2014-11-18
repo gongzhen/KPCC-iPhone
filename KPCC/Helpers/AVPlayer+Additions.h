@@ -9,7 +9,7 @@
 #import <AVFoundation/AVFoundation.h>
 
 @interface AVPlayer (Additions)
-- (double)indicatedBitrate;
-- (double)observedMaxBitrate;
-- (double)observedMinBitrate;
+@property (NS_NONATOMIC_IOSONLY, readonly) double indicatedBitrate;
+@property (NS_NONATOMIC_IOSONLY, readonly) double observedMaxBitrate;
+@property (NS_NONATOMIC_IOSONLY, readonly) double observedMinBitrate;
 @end

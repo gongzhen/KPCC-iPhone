@@ -12,7 +12,7 @@
 
 @interface Segment : NSObject
 
--(id)initWithDict:(NSDictionary *)dict;
+-(instancetype)initWithDict:(NSDictionary *)dict NS_DESIGNATED_INITIALIZER;
 
 @property(nonatomic,strong) NSNumber        *segmentId;
 @property(nonatomic,strong) NSString        *title;

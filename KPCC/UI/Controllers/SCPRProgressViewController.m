@@ -101,7 +101,7 @@
 - (void)setupProgressBarsWithProgram:(Program *)program {
     
     self.currentProgram = program;
-    self.liveTintColor = [[UIColor virtualWhiteColor] translucify:0.6];
+    self.liveTintColor = [[UIColor virtualWhiteColor] translucify:0.33];
     self.liveProgressView.backgroundColor = [UIColor clearColor];
     self.currentTintColor = [UIColor kpccOrangeColor];
     self.currentProgressView.backgroundColor = [UIColor clearColor];
@@ -253,7 +253,7 @@
             }];
             CABasicAnimation *liveAnim = [CABasicAnimation animationWithKeyPath:@"strokeEnd"];
             [liveAnim setFromValue:[NSNumber numberWithFloat:self.lastLiveValue]];
-            [liveAnim setToValue:[NSNumber numberWithFloat:fminf(liveDiff/duration,0.98f)]];
+            [liveAnim setToValue:@(fminf(liveDiff/duration,0.98f))];
             [liveAnim setDuration:0.8];
             [liveAnim setRemovedOnCompletion:NO];
             [liveAnim setFillMode:kCAFillModeForwards];
@@ -262,7 +262,7 @@
             
             CABasicAnimation *currentAnim = [CABasicAnimation animationWithKeyPath:@"strokeEnd"];
             [currentAnim setFromValue:[NSNumber numberWithFloat:self.lastCurrentValue]];
-            [currentAnim setToValue:[NSNumber numberWithFloat:fminf(currentDiff/duration,0.98f)]];
+            [currentAnim setToValue:@(fminf(currentDiff/duration,0.98f))];
             [currentAnim setDuration:0.8];
             [currentAnim setRemovedOnCompletion:NO];
             [currentAnim setFillMode:kCAFillModeForwards];

@@ -86,6 +86,7 @@ typedef NS_ENUM(NSUInteger, StreamStatus) {
 @property long bufferObservationCount;
 
 @property CGFloat savedVolume;
+@property CGFloat savedVolumeFromMute;
 @property BOOL bufferMutex;
 @property BOOL waitForFirstTick;
 
@@ -95,18 +96,21 @@ typedef NS_ENUM(NSUInteger, StreamStatus) {
 - (void)playQueueItemWithUrl:(NSString *)url;
 - (void)playLiveStream;
 
-- (NSString *)liveStreamURL;
+@property (NS_NONATOMIC_IOSONLY, readonly, copy) NSString *liveStreamURL;
 - (void)startStream;
 - (void)pauseStream;
 - (void)stopStream;
 - (void)stopAllAudio;
-- (BOOL)isStreamPlaying;
-- (BOOL)isStreamBuffering;
+- (void)muteAudio;
+- (void)unmuteAudio;
 
-- (double)indicatedBitrate;
-- (double)observedMaxBitrate;
-- (double)observedMinBitrate;
-- (NSString *)currentDateTimeString;
+@property (NS_NONATOMIC_IOSONLY, getter=isStreamPlaying, readonly) BOOL streamPlaying;
+@property (NS_NONATOMIC_IOSONLY, getter=isStreamBuffering, readonly) BOOL streamBuffering;
+
+@property (NS_NONATOMIC_IOSONLY, readonly) double indicatedBitrate;
+@property (NS_NONATOMIC_IOSONLY, readonly) double observedMaxBitrate;
+@property (NS_NONATOMIC_IOSONLY, readonly) double observedMinBitrate;
+@property (NS_NONATOMIC_IOSONLY, readonly, copy) NSString *currentDateTimeString;
 - (void)updateNowPlayingInfoWithAudio:(id)audio;
 
 - (void)seekToPercent:(CGFloat)percent;
