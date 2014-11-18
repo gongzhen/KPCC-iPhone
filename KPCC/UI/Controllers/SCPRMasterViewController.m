@@ -231,6 +231,7 @@ static CGFloat kDisabledAlpha = 0.15;
 
 - (void)specialRewind {
     self.initiateRewind = YES;
+    [[AudioManager shared] muteAudio];
     [self initialPlayTapped:nil];
 }
 
@@ -366,7 +367,12 @@ static CGFloat kDisabledAlpha = 0.15;
 
 # pragma mark - Audio commands
 - (void)playStream {
-    [[AudioManager shared] startStream];
+    [[AudioManager shared] muteAudio];
+    [[AudioManager shared] playLiveStream];
+    [[AudioManager shared] adjustAudioWithValue:0.1 completion:^{
+        
+    }];
+    
 }
 
 - (void)pauseStream {
@@ -1195,10 +1201,17 @@ static CGFloat kDisabledAlpha = 0.15;
 # pragma mark - SCPRPreRollControllerDelegate
 
 - (void)preRollCompleted {
+    if ( self.lockPreroll ) {
+        self.lockPreroll = NO;
+        return;
+    }
+    
+    self.lockPreroll = YES;
     if (self.preRollOpen) {
         [self decloakForPreRoll:YES];
     }
     
+    [[AudioManager shared] muteAudio];
     [self playStream];
 }
 
@@ -1304,10 +1317,8 @@ static CGFloat kDisabledAlpha = 0.15;
             self.progressView.alpha = 1.0;
             self.shareButton.alpha = 1.0;
             
-            
         } completion:^(BOOL finished) {
             self.queueBlurShown = NO;
-            
         }];
         
     } else {
@@ -1407,7 +1418,6 @@ static CGFloat kDisabledAlpha = 0.15;
         [self.liveDescriptionLabel fadeText:@"LIVE"];
         [self.backToLiveButton setHidden:YES];
         self.dirtyFromRewind = NO;
-        
     }
 
     if (setForOnDemandUI) {
@@ -1428,8 +1438,14 @@ static CGFloat kDisabledAlpha = 0.15;
         if ( !self.menuOpen ) {
             if ( self.initialPlay ) {
                 [self.liveProgressViewController show];
-                if ( self.initiateRewind ) {
-                    [self activateRewind:RewindDistanceBeginning];
+                if ( !self.preRollOpen ) {
+                    if ( self.initiateRewind ) {
+                        self.initiateRewind = NO;
+                        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                            [[AudioManager shared] muteAudio];
+                            [self activateRewind:RewindDistanceBeginning];
+                        });
+                    }
                 }
             }
         }

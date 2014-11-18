@@ -78,12 +78,14 @@
 
 // Pre-Roll
 @property (nonatomic,strong) SCPRPreRollViewController *preRollViewController;
+@property BOOL lockPreroll;
 
 // Rewinding UI
 @property (nonatomic,strong) SCPRJogShuttleViewController *jogShuttle;
 @property (nonatomic,strong) IBOutlet UIView *rewindView;
 @property BOOL rewindGate;
 @property BOOL initiateRewind;
+
 
 - (void)activateRewind:(RewindDistance)distance;
 - (void)activateFastForward;

@@ -32,6 +32,7 @@ static const NSString *ItemStatusContext;
             singleton = [[AudioManager alloc] init];
             singleton.fadeQueue = [[NSOperationQueue alloc] init];
             singleton.status = StreamStatusStopped;
+            singleton.savedVolumeFromMute = -1.0;
         }
     }
     return singleton;
@@ -255,6 +256,7 @@ static const NSString *ItemStatusContext;
 
     } else {
         [self.audioPlayer pause];
+        NSDate *justABitInTheFuture = [NSDate dateWithTimeInterval:2 sinceDate:date];
         [self.audioPlayer.currentItem seekToDate:date completionHandler:^(BOOL finished) {
             if ( !finished ) {
                 NSLog(@" **************** AUDIOPLAYER NOT FINISHED BUFFERING ****************** ");
@@ -485,7 +487,18 @@ static const NSString *ItemStatusContext;
         [self buildStreamer:kHLSLiveStreamURL];
     }
 
+    BOOL fadein = NO;
+    if ( self.savedVolumeFromMute >= 0.0 ) {
+        fadein = YES;
+        [self.audioPlayer setVolume:0.0];
+    }
     [self.audioPlayer play];
+    
+    if ( fadein ) {
+        [[AudioManager shared] adjustAudioWithValue:0.1 completion:^{
+            
+        }];
+    }
     
     [[SessionManager shared] setSessionPausedDate:nil];
     
@@ -517,7 +530,13 @@ static const NSString *ItemStatusContext;
 
 - (void)adjustAudioWithValue:(CGFloat)increment completion:(void (^)(void))completion {
     if ( increment < 0.0 ) {
-        self.savedVolume = self.audioPlayer.volume;
+        if ( self.savedVolumeFromMute >= 0.0 ) {
+            self.savedVolume = self.savedVolumeFromMute;
+        } else {
+            self.savedVolume = self.audioPlayer.volume;
+        }
+    } else {
+        self.savedVolumeFromMute = -1.0;
     }
     [self threadedAdjustWithValue:increment completion:completion];
 }
@@ -552,6 +571,15 @@ static const NSString *ItemStatusContext;
     }
 }
 
+- (void)muteAudio {
+    self.savedVolumeFromMute = self.audioPlayer.volume;
+    if ( self.savedVolumeFromMute == 0.0 ) self.savedVolumeFromMute = 1.0;
+}
+
+- (void)unmuteAudio {
+    self.audioPlayer.volume = self.savedVolumeFromMute;
+    self.savedVolumeFromMute = -1.0;
+}
 
 - (void)takedownAudioPlayer {
     if ( self.audioPlayer ) {

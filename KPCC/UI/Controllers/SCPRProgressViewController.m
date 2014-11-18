@@ -101,7 +101,7 @@
 - (void)setupProgressBarsWithProgram:(Program *)program {
     
     self.currentProgram = program;
-    self.liveTintColor = [[UIColor virtualWhiteColor] translucify:0.6];
+    self.liveTintColor = [[UIColor virtualWhiteColor] translucify:0.33];
     self.liveProgressView.backgroundColor = [UIColor clearColor];
     self.currentTintColor = [UIColor kpccOrangeColor];
     self.currentProgressView.backgroundColor = [UIColor clearColor];

@@ -86,6 +86,7 @@ typedef NS_ENUM(NSUInteger, StreamStatus) {
 @property long bufferObservationCount;
 
 @property CGFloat savedVolume;
+@property CGFloat savedVolumeFromMute;
 @property BOOL bufferMutex;
 @property BOOL waitForFirstTick;
 
@@ -100,6 +101,9 @@ typedef NS_ENUM(NSUInteger, StreamStatus) {
 - (void)pauseStream;
 - (void)stopStream;
 - (void)stopAllAudio;
+- (void)muteAudio;
+- (void)unmuteAudio;
+
 @property (NS_NONATOMIC_IOSONLY, getter=isStreamPlaying, readonly) BOOL streamPlaying;
 @property (NS_NONATOMIC_IOSONLY, getter=isStreamBuffering, readonly) BOOL streamBuffering;
 
