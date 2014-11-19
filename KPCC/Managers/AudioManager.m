@@ -255,9 +255,8 @@ static const NSString *ItemStatusContext;
         });
 
     } else {
-        [self.audioPlayer pause];
         NSDate *justABitInTheFuture = [NSDate dateWithTimeInterval:2 sinceDate:date];
-        [self.audioPlayer.currentItem seekToDate:date completionHandler:^(BOOL finished) {
+        [self.audioPlayer.currentItem seekToDate:justABitInTheFuture completionHandler:^(BOOL finished) {
             if ( !finished ) {
                 NSLog(@" **************** AUDIOPLAYER NOT FINISHED BUFFERING ****************** ");
             }
@@ -536,6 +535,9 @@ static const NSString *ItemStatusContext;
             self.savedVolume = self.audioPlayer.volume;
         }
     } else {
+        if ( self.savedVolumeFromMute >= 0.0 ) {
+            self.savedVolume = self.savedVolumeFromMute;
+        }
         self.savedVolumeFromMute = -1.0;
     }
     [self threadedAdjustWithValue:increment completion:completion];

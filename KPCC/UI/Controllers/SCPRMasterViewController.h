@@ -86,6 +86,8 @@
 @property BOOL rewindGate;
 @property BOOL initiateRewind;
 
+// Onboarding
+@property BOOL automationMode;
 
 - (void)activateRewind:(RewindDistance)distance;
 - (void)activateFastForward;

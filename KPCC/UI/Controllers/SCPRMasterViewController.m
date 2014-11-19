@@ -469,7 +469,13 @@ static CGFloat kDisabledAlpha = 0.15;
         
         seekRequested = YES;
         switch (distance) {
+            case RewindDistanceFifteen:
+                [self rewindFifteen];
+                break;
+            case RewindDistanceThirty:
+                break;
             case RewindDistanceBeginning:
+            default:
                 if (cProgram) {
                     if ( self.dirtyFromRewind ) {
                         [[AudioManager shared] specialSeekToDate:cProgram.soft_starts_at];
@@ -478,12 +484,7 @@ static CGFloat kDisabledAlpha = 0.15;
                     }
                 }
                 break;
-            case RewindDistanceFifteen:
-                [self rewindFifteen];
-                break;
-            case RewindDistanceThirty:
-            default:
-                break;
+               
         }
         
         
@@ -1032,6 +1033,9 @@ static CGFloat kDisabledAlpha = 0.15;
         [self.initialControlsView.layer pop_addAnimation:controlsFadeAnimation forKey:@"initialControlsViewFade"];
     }
 
+    [UIView animateWithDuration:0.33 animations:^{
+        self.liveRewindAltButton.alpha = 0.0;
+    }];
     
     POPBasicAnimation *dividerFadeAnim = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
     dividerFadeAnim.toValue = @0;
@@ -1080,6 +1084,15 @@ static CGFloat kDisabledAlpha = 0.15;
     controlsFadeIn.toValue = @1;
     controlsFadeIn.duration = 0.3;
 
+    if ( [AudioManager shared].status != StreamStatusStopped ) {
+        [self.horizDividerLine.layer setOpacity:0.4];
+        if ( [AudioManager shared].status == StreamStatusPaused ) {
+            [UIView animateWithDuration:0.33 animations:^{
+                self.liveRewindAltButton.alpha = 1.0;
+            }];
+        }
+    }
+    
     [self.blurView.layer pop_addAnimation:fadeAnimation forKey:@"blurViewFadeAnimation"];
     [self.darkBgView.layer pop_addAnimation:darkBgFadeAnimation forKey:@"darkBgFadeAnimation"];
     [self.playerControlsView.layer pop_addAnimation:controlsFadeIn forKey:@"controlsViewFadeAnimation"];
@@ -1146,6 +1159,8 @@ static CGFloat kDisabledAlpha = 0.15;
     controlsFadeAnimation.toValue = @(0);
     controlsFadeAnimation.duration = 0.3;
 
+
+    
     [self.blurView.layer pop_addAnimation:blurFadeAnimation forKey:@"blurViewFadeAnimation"];
     [self.darkBgView.layer pop_addAnimation:darkBgFadeAnimation forKey:@"darkBgFadeAnimation"];
     //[self.playerControlsView.layer pop_addAnimation:controlsFadeAnimation forKey:@"controlsViewFadeAnimation"];
@@ -1332,8 +1347,12 @@ static CGFloat kDisabledAlpha = 0.15;
 - (void)menuItemSelected:(NSIndexPath *)indexPath {
     switch (indexPath.row) {
         case 0:{
-            
-            [self goLive];
+            if ( [AudioManager shared].currentAudioMode == AudioModeLive ) {
+                [self decloakForMenu:YES];
+            } else {
+                [self decloakForMenu:YES];
+                [self goLive];
+            }
             break;
         }
 

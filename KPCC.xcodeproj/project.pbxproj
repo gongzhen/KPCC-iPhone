@@ -15,6 +15,8 @@
 		255943EA19F1A7620007294D /* SCPRJogShuttleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 255943E919F1A7620007294D /* SCPRJogShuttleViewController.m */; };
 		256DE7271A16B9D90022EB84 /* menu-feedback.png in Resources */ = {isa = PBXBuildFile; fileRef = 256DE7251A16B9D90022EB84 /* menu-feedback.png */; };
 		256DE7281A16B9D90022EB84 /* menu-feedback@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 256DE7261A16B9D90022EB84 /* menu-feedback@2x.png */; };
+		258BB0381A1C07FD00B8FCFE /* UXmanager.m in Sources */ = {isa = PBXBuildFile; fileRef = 258BB0371A1C07FD00B8FCFE /* UXmanager.m */; };
+		258BB03E1A1C083B00B8FCFE /* Settings.m in Sources */ = {isa = PBXBuildFile; fileRef = 258BB03D1A1C083B00B8FCFE /* Settings.m */; };
 		258BD3AE1A0BF65200E7560F /* UIButton+Additions.m in Sources */ = {isa = PBXBuildFile; fileRef = 258BD3AD1A0BF65200E7560F /* UIButton+Additions.m */; };
 		258BD3B11A0C0FFF00E7560F /* SCPRProgressViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 258BD3B01A0C0FFF00E7560F /* SCPRProgressViewController.m */; };
 		258CA0FD1A09636900A3C8DB /* SessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 258CA0FC1A09636900A3C8DB /* SessionManager.m */; };
@@ -236,6 +238,10 @@
 		255943E919F1A7620007294D /* SCPRJogShuttleViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SCPRJogShuttleViewController.m; sourceTree = "<group>"; };
 		256DE7251A16B9D90022EB84 /* menu-feedback.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "menu-feedback.png"; sourceTree = "<group>"; };
 		256DE7261A16B9D90022EB84 /* menu-feedback@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "menu-feedback@2x.png"; sourceTree = "<group>"; };
+		258BB0361A1C07FD00B8FCFE /* UXmanager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UXmanager.h; path = Managers/UXmanager.h; sourceTree = "<group>"; };
+		258BB0371A1C07FD00B8FCFE /* UXmanager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UXmanager.m; path = Managers/UXmanager.m; sourceTree = "<group>"; };
+		258BB03C1A1C083B00B8FCFE /* Settings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Settings.h; sourceTree = "<group>"; };
+		258BB03D1A1C083B00B8FCFE /* Settings.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Settings.m; sourceTree = "<group>"; };
 		258BD3AC1A0BF65200E7560F /* UIButton+Additions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIButton+Additions.h"; sourceTree = "<group>"; };
 		258BD3AD1A0BF65200E7560F /* UIButton+Additions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIButton+Additions.m"; sourceTree = "<group>"; };
 		258BD3AF1A0C0FFF00E7560F /* SCPRProgressViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCPRProgressViewController.h; sourceTree = "<group>"; };
@@ -681,6 +687,8 @@
 		760E3C45194FB4F700D86D91 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				258BB03C1A1C083B00B8FCFE /* Settings.h */,
+				258BB03D1A1C083B00B8FCFE /* Settings.m */,
 				258E239C1A13FA84009F8F97 /* DataModel.xcdatamodeld */,
 				760E3C4A194FB61B00D86D91 /* Program.h */,
 				760E3C4B194FB61B00D86D91 /* Program.m */,
@@ -994,6 +1002,8 @@
 				52CF91791A0032C7007BCFA8 /* QueueManager.m */,
 				258CA0FB1A09636900A3C8DB /* SessionManager.h */,
 				258CA0FC1A09636900A3C8DB /* SessionManager.m */,
+				258BB0361A1C07FD00B8FCFE /* UXmanager.h */,
+				258BB0371A1C07FD00B8FCFE /* UXmanager.m */,
 			);
 			name = Managers;
 			sourceTree = "<group>";
@@ -1317,6 +1327,7 @@
 				52CF917D1A0036CA007BCFA8 /* AudioChunk.m in Sources */,
 				76349D1B18D8C74F0027C3B8 /* NetworkManager.m in Sources */,
 				52D0FC1C19D1F24F009AECEE /* SCPRProgramDetailHeaderView.m in Sources */,
+				258BB03E1A1C083B00B8FCFE /* Settings.m in Sources */,
 				258CA1001A0982ED00A3C8DB /* SCPRCloakViewController.m in Sources */,
 				254E177019F863960022BF6B /* UILabel+Additions.m in Sources */,
 				52EFF87819C37D350059A0E3 /* SCPRMenuCell.m in Sources */,
@@ -1325,6 +1336,7 @@
 				258FC47E1A01915E00282D59 /* UIColor+UICustom.m in Sources */,
 				258BD3B11A0C0FFF00E7560F /* SCPRProgressViewController.m in Sources */,
 				52CF917A1A0032C7007BCFA8 /* QueueManager.m in Sources */,
+				258BB0381A1C07FD00B8FCFE /* UXmanager.m in Sources */,
 				76B9A9AC18EF59FD007A6D8C /* SCPRUserReportViewController.m in Sources */,
 				76658AB918DCB51000026176 /* NSDate+Helper.m in Sources */,
 				76B9A9B618EF79F6007A6D8C /* SCPRFooterView.m in Sources */,
@@ -1480,8 +1492,8 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Ben Hochberg (DV3XGN3P68)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Ben Hochberg (DV3XGN3P68)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Southern California Public Radio";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Southern California Public Radio";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "KPCC/KPCC-Prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -1499,7 +1511,7 @@
 					"$(PROJECT_DIR)/KPCC/ThirdParty/Flurry",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "b8d21f5f-03c3-4f96-aa08-53339a863498";
+				PROVISIONING_PROFILE = "92b9c3f6-4039-4005-93a0-90471d88e766";
 				SWIFT_OBJC_BRIDGING_HEADER = "KPCC/UI/Controllers/KPCC-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				TARGETED_DEVICE_FAMILY = 1;
