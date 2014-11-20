@@ -21,11 +21,13 @@
 @property (nonatomic, copy) NSDate *lastProgramUpdate;
 @property (nonatomic, strong) NSTimer *programUpdateTimer;
 @property BOOL useLocalNotifications;
+@property BOOL onboardingRewound;
 
 @property (nonatomic, strong) Program *currentProgram;
 
 - (void)fetchCurrentProgram:(CompletionBlockWithValue)completed;
 - (void)fetchProgramAtDate:(NSDate*)date completed:(CompletionBlockWithValue)completed;
+- (void)fetchOnboardingProgramWithSegment:(NSInteger)segment completed:(CompletionBlockWithValue)completed;
 
 - (void)armProgramUpdater;
 - (void)disarmProgramUpdater;

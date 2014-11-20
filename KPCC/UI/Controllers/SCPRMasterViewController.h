@@ -69,6 +69,8 @@
 @property (nonatomic) BOOL menuOpen;
 @property (nonatomic) BOOL preRollOpen;
 
+// Controllable Constraints
+@property (nonatomic,strong) IBOutlet NSLayoutConstraint *initialControlsYConstraint;
 
 // Live
 @property (nonatomic,strong) SCPRProgressViewController *liveProgressViewController;
@@ -88,6 +90,7 @@
 
 // Onboarding
 @property BOOL automationMode;
+@property (nonatomic,strong) IBOutlet UILabel *letsGoLabel;
 
 - (void)activateRewind:(RewindDistance)distance;
 - (void)activateFastForward;
@@ -109,5 +112,11 @@
 
 - (void)moveTextIntoPlace:(BOOL)animated;
 - (void)goLive;
+
+// Onboarding methods
+- (void)primeOnboarding;
+- (void)onboarding_revealPlayerControls;
+- (void)onboarding_beginOnboardingAudio;
+- (void)onboarding_rewindToBeginning;
 
 @end

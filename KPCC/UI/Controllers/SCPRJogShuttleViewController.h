@@ -11,7 +11,8 @@
 typedef NS_ENUM(NSUInteger, RewindDistance) {
     RewindDistanceBeginning = 0,
     RewindDistanceFifteen,
-    RewindDistanceThirty
+    RewindDistanceThirty,
+    RewindDistanceOnboardingBeginning
 };
 
 typedef NS_ENUM(NSUInteger, SpinDirection) {

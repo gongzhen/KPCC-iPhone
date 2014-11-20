@@ -142,7 +142,7 @@
     self.spinning = YES;
     if ( !self.soundPlayedBit ) {
         self.soundPlayedBit = YES;
-        if ( [[AudioManager shared] isStreamPlaying] ) {
+        //if ( [[AudioManager shared] isStreamPlaying] ) {
             [[AudioManager shared] adjustAudioWithValue:-0.1 completion:^{
                 if ( !self.muteSound ) {
                     [self.rewindTriggerPlayer play];
@@ -156,9 +156,9 @@
             }];
             
             return;
-        } else {
-            [self.rewindTriggerPlayer play];
-        }
+       // } else {
+           // [self.rewindTriggerPlayer play];
+       // }
     }
     
     self.tension = tension;
@@ -202,7 +202,8 @@
                     CGAffineTransform tForm = CGAffineTransformMakeScale(1.0, 1.0);
                     viewToHide.transform = tForm;
                 } completion:^(BOOL finished) {
-                    [self completeWithCallback:completion];
+                    if ( completion )
+                        [self completeWithCallback:completion];
                 }];
             } else {
                 [self animateWithSpeed:duration

@@ -32,8 +32,10 @@
 #endif
 
 typedef NS_ENUM(NSUInteger, AudioMode) {
-    AudioModeLive = 0,
-    AudioModeOnDemand
+    AudioModeNeutral = 0,
+    AudioModeLive,
+    AudioModeOnDemand,
+    AudioModeOnboarding
 };
 
 typedef NS_ENUM(NSUInteger, StreamState) {
@@ -78,6 +80,7 @@ typedef NS_ENUM(NSUInteger, StreamStatus) {
 @property NSDate *minSeekableDate;
 @property NSDate *maxSeekableDate;
 @property NSDate *requestedSeekDate;
+@property NSDate *relativeFauxDate;
 
 @property long latencyCorrection;
 
@@ -89,7 +92,8 @@ typedef NS_ENUM(NSUInteger, StreamStatus) {
 @property CGFloat savedVolumeFromMute;
 @property BOOL bufferMutex;
 @property BOOL waitForFirstTick;
-
+@property BOOL autoMuted;
+@property NSInteger onboardingSegment;
 @property AudioMode currentAudioMode;
 
 - (void)playAudioWithURL:(NSString *)url;
@@ -98,11 +102,16 @@ typedef NS_ENUM(NSUInteger, StreamStatus) {
 
 @property (NS_NONATOMIC_IOSONLY, readonly, copy) NSString *liveStreamURL;
 - (void)startStream;
+- (void)playStream;
 - (void)pauseStream;
 - (void)stopStream;
 - (void)stopAllAudio;
 - (void)muteAudio;
 - (void)unmuteAudio;
+- (void)buildStreamer:(NSString*)urlString;
+- (void)buildStreamer:(NSString*)urlString local:(BOOL)local;
+
+- (void)playOnboardingAudio:(NSInteger)segment;
 
 @property (NS_NONATOMIC_IOSONLY, getter=isStreamPlaying, readonly) BOOL streamPlaying;
 @property (NS_NONATOMIC_IOSONLY, getter=isStreamBuffering, readonly) BOOL streamBuffering;

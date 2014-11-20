@@ -35,7 +35,8 @@
 
 + (BOOL)pureNil:(id)object;
 + (BOOL)isRetina;
-
++ (BOOL)isThreePointFive;
++ (BOOL)isIOS8;
 + (NSDictionary*)gConfig;
 + (NSString *)base64:(NSData *)input;
 + (id)loadJson:(NSString*)json;

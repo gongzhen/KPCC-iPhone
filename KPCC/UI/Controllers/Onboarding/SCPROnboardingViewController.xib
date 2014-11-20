@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6250" systemVersion="13F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6244"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="SCPROnboardingViewController">
+            <connections>
+                <outlet property="brandingView" destination="3aK-j3-aRR" id="9eU-Hc-1W6"/>
+                <outlet property="dividerView" destination="h2N-Bf-oxo" id="NQ7-hq-bbi"/>
+                <outlet property="kpccLogoView" destination="ky3-rC-tNp" id="fqS-Br-P8f"/>
+                <outlet property="lensTopConstraint" destination="lxL-iq-GaB" id="pdc-dh-Wor"/>
+                <outlet property="lensVC" destination="tAH-eb-gSy" id="LBU-Gr-Grh"/>
+                <outlet property="lenstLeftConstraint" destination="lwt-28-V3h" id="2B2-q6-F0h"/>
+                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+                <outlet property="welcomeLabel" destination="BF9-6O-t4a" id="cyR-cO-m4p"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3aK-j3-aRR" userLabel="BrandingView">
+                    <rect key="frame" x="157" y="76" width="300" height="157"/>
+                    <subviews>
+                        <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="kpcc-logo.png" translatesAutoresizingMaskIntoConstraints="NO" id="ky3-rC-tNp">
+                            <rect key="frame" x="90" y="32" width="120" height="26"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="26" id="5RE-ZQ-OUA"/>
+                                <constraint firstAttribute="width" constant="120" id="MEw-tI-Udz"/>
+                            </constraints>
+                        </imageView>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="h2N-Bf-oxo" userLabel="horizontalDivider">
+                            <rect key="frame" x="65" y="67" width="170" height="1"/>
+                            <color key="backgroundColor" white="1" alpha="0.20000000000000001" colorSpace="calibratedWhite"/>
+                            <constraints>
+                                <constraint firstAttribute="width" constant="170" id="Ulb-3N-bUI"/>
+                                <constraint firstAttribute="height" constant="1" id="Vf2-GY-tgt"/>
+                            </constraints>
+                        </view>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Welcome." textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BF9-6O-t4a">
+                            <rect key="frame" x="54" y="81" width="193" height="21"/>
+                            <constraints>
+                                <constraint firstAttribute="width" constant="193" id="4o3-K0-i5W"/>
+                                <constraint firstAttribute="height" constant="21" id="kgr-0n-IO5"/>
+                            </constraints>
+                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                            <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                    </subviews>
+                    <color key="backgroundColor" white="1" alpha="0.0" colorSpace="calibratedWhite"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="157" id="8lx-3n-C4L"/>
+                        <constraint firstItem="ky3-rC-tNp" firstAttribute="top" secondItem="3aK-j3-aRR" secondAttribute="top" constant="32" id="MGw-hx-ukU"/>
+                        <constraint firstItem="BF9-6O-t4a" firstAttribute="top" secondItem="h2N-Bf-oxo" secondAttribute="bottom" constant="13" id="aVR-DZ-3VA"/>
+                        <constraint firstAttribute="centerX" secondItem="h2N-Bf-oxo" secondAttribute="centerX" id="j9d-Xf-exT"/>
+                        <constraint firstAttribute="centerX" secondItem="ky3-rC-tNp" secondAttribute="centerX" id="tC5-DH-8o8"/>
+                        <constraint firstAttribute="width" constant="300" id="vPe-Sq-s9f"/>
+                        <constraint firstItem="h2N-Bf-oxo" firstAttribute="top" secondItem="ky3-rC-tNp" secondAttribute="bottom" constant="9" id="ydG-5K-9dx"/>
+                        <constraint firstAttribute="centerX" secondItem="BF9-6O-t4a" secondAttribute="centerX" constant="-0.5" id="yrP-jE-pCs"/>
+                    </constraints>
+                </view>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="OIZ-zB-C1J">
+                    <rect key="frame" x="0.0" y="0.0" width="40" height="40"/>
+                    <color key="backgroundColor" red="0.020336561593379265" green="0.0" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="40" id="SYz-Cy-N0S"/>
+                        <constraint firstAttribute="height" constant="40" id="jbF-tw-QrO"/>
+                    </constraints>
+                </view>
+            </subviews>
+            <color key="backgroundColor" red="0.14657091450227416" green="0.21788733784831041" blue="0.61459748641304346" alpha="1" colorSpace="calibratedRGB"/>
+            <constraints>
+                <constraint firstAttribute="centerX" secondItem="3aK-j3-aRR" secondAttribute="centerX" constant="-7" id="H9V-Yt-Hp4"/>
+                <constraint firstItem="3aK-j3-aRR" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="76" id="KJV-in-lW8"/>
+                <constraint firstItem="OIZ-zB-C1J" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="lwt-28-V3h"/>
+                <constraint firstItem="OIZ-zB-C1J" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="lxL-iq-GaB"/>
+            </constraints>
+            <point key="canvasLocation" x="388" y="37"/>
+        </view>
+        <viewController id="tAH-eb-gSy" customClass="SCPRLensViewController">
+            <connections>
+                <outlet property="view" destination="OIZ-zB-C1J" id="ghs-G7-ErN"/>
+            </connections>
+            <point key="canvasLocation" x="-326" y="153"/>
+        </viewController>
+    </objects>
+    <resources>
+        <image name="kpcc-logo.png" width="116" height="17"/>
+    </resources>
+</document>

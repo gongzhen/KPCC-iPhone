@@ -13,6 +13,7 @@
 #import "Flurry.h"
 #import "SessionManager.h"
 #import "NetworkManager.h"
+#import "SCPROnboardingViewController.h"
 
 #ifdef ENABLE_TESTFLIGHT
 #import "TestFlight.h"
@@ -48,11 +49,20 @@
     // Launch our root view controller
     SCPRNavigationController *navigationController = [[UIStoryboard storyboardWithName:@"Storyboard" bundle:nil] instantiateInitialViewController];
 
+    self.onboardingController = [[SCPROnboardingViewController alloc] initWithNibName:@"SCPROnboardingViewController"
+                                                                               bundle:nil];
+    self.onboardingController.view.frame = CGRectMake(0.0,0.0,self.window.frame.size.width,
+                                                      self.window.frame.size.height);
+
+    self.onboardingController.view.backgroundColor = [UIColor clearColor];
+    
     self.masterNavigationController = navigationController;
     self.masterViewController = navigationController.viewControllers.firstObject;
     self.masterNavigationController.navigationBarHidden = YES;
     self.window.rootViewController = navigationController;
 
+
+    
     // Fetch initial list of Programs from SCPRV4 and store in CoreData for later usage.
     [[NetworkManager shared] fetchAllProgramInformation:^(id returnedObject) {
         
