@@ -219,7 +219,6 @@
 - (void)tick {
     
 
-    if ( self.uiHidden ) return;
     if ( self.shuttling ) return;
     
     Program *program = [[SessionManager shared] currentProgram];
@@ -259,12 +258,12 @@
             [CATransaction setCompletionBlock:^{
                 self.currentBarLine.strokeEnd = currentDiff / duration;
                 self.liveBarLine.strokeEnd = liveDiff / duration;
-                //[self.liveBarLine removeAllAnimations];
-                //[self.currentBarLine removeAllAnimations];
+                [self.liveBarLine removeAllAnimations];
+                [self.currentBarLine removeAllAnimations];
                 self.lastCurrentValue = currentDiff / duration;
                 self.lastLiveValue = liveDiff / duration;
-                
             }];
+            
             CABasicAnimation *liveAnim = [CABasicAnimation animationWithKeyPath:@"strokeEnd"];
             [liveAnim setFromValue:[NSNumber numberWithFloat:self.lastLiveValue]];
             [liveAnim setToValue:@(fminf(liveDiff/duration,0.98f))];

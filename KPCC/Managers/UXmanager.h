@@ -18,6 +18,8 @@
 @property (nonatomic,strong) Settings *settings;
 @property (nonatomic,weak) SCPROnboardingViewController *onboardingCtrl;
 @property (nonatomic,weak) SCPRMasterViewController *masterCtrl;
+@property BOOL listeningForQueues;
+@property (nonatomic,strong) NSDictionary *keyPoints;
 
 + (instancetype)shared;
 - (void)load;
@@ -27,7 +29,16 @@
 - (void)loadOnboarding;
 - (void)beginOnboarding:(SCPRMasterViewController*)masterCtrl;
 - (void)fadeInBranding;
+- (void)fadeOutBrandingWithCompletion:(CompletionBlock)completed;
 - (void)beginAudio;
 - (void)presentLensOverRewindButton;
+- (void)listenForQueues;
+- (void)activateDropdown;
+- (void)handleKeypoint:(NSInteger)keypoint;
+- (void)selectMenuItem:(NSInteger)menuitem;
+- (void)closeMenu;
+- (void)askForPushNotifications;
+- (void)closeOutOnboarding;
+- (void)endOnboarding;
 
 @end

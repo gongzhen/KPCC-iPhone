@@ -10,6 +10,8 @@
 #import "SCPRAppDelegate.h"
 #import "SCPROnboardingViewController.h"
 #import "SCPRMasterViewController.h"
+#import "SCPRNavigationController.h"
+#import "SessionManager.h"
 
 @implementation UXmanager
 + (instancetype)shared {
@@ -56,12 +58,18 @@
     SCPRAppDelegate *del = (SCPRAppDelegate*)[[UIApplication sharedApplication] delegate];
     UIWindow *mw = [del window];
     [mw addSubview:del.onboardingController.view];
+    
+
+    SCPRNavigationController *nav = [del masterNavigationController];
+    nav.menuButton.alpha = 0.0;
+    
     del.onboardingController.view.frame = CGRectMake(0.0,0.0,mw.frame.size.width,
                                                      mw.frame.size.height);
     [del.onboardingController prepare];
     self.onboardingCtrl = del.onboardingController;
     self.onboardingCtrl.view.alpha = 0.0;
     self.onboardingCtrl.lensVC.view.layer.opacity = 0.0;
+
     [self.onboardingCtrl.view layoutIfNeeded];
 }
 
@@ -69,13 +77,17 @@
     self.masterCtrl = masterCtrl;
     self.onboardingCtrl.view.alpha = 1.0;
     [self.masterCtrl primeOnboarding];
+    
     self.onboardingCtrl.interactionButton.frame = [self.masterCtrl.view convertRect:self.masterCtrl.initialControlsView.frame
                                                                              toView:self.onboardingCtrl.view];
     [self.onboardingCtrl.interactionButton addTarget:self.masterCtrl
                                               action:@selector(initialPlayTapped:)
                                     forControlEvents:UIControlEventTouchUpInside];
     [self.onboardingCtrl.view addSubview:self.onboardingCtrl.interactionButton];
-
+    //self.onboardingCtrl.interactionButton.backgroundColor = [UIColor orangeColor];
+    
+    [self.onboardingCtrl.view layoutIfNeeded];
+    
 }
 
 - (void)fadeInBranding {
@@ -84,16 +96,26 @@
     }];
 }
 
+- (void)fadeOutBrandingWithCompletion:(CompletionBlock)completed {
+    [UIView animateWithDuration:0.25 animations:^{
+        self.onboardingCtrl.brandingView.alpha = 0.0;
+    } completion:^(BOOL finished) {
+        completed();
+    }];
+}
+
 - (void)beginAudio {
+    self.onboardingCtrl.interactionButton.alpha = 0.0;
     [self.masterCtrl onboarding_beginOnboardingAudio];
 }
 
 - (void)presentLensOverRewindButton {
+    [self.masterCtrl primeManualControlButton];
     CGPoint origin = self.masterCtrl.liveRewindAltButton.frame.origin;
-    [self.onboardingCtrl revealLensWithOrigin:[self.masterCtrl.view convertPoint:CGPointMake(origin.x+5.0, origin.y)
+    [self.onboardingCtrl revealLensWithOrigin:[self.masterCtrl.liveStreamView convertPoint:CGPointMake(origin.x, origin.y)
                                                                           toView:self.onboardingCtrl.view]];
   
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         
         [self.onboardingCtrl.lensVC squeeze:^{
             
@@ -104,6 +126,107 @@
         }];
         
     });
+}
+
+- (void)listenForQueues {
+    self.listeningForQueues = YES;
+    self.keyPoints = [@{ @"8" : @"activateDropdown",
+                         @"12" : @"selectFirstMenuItem",
+                         @"16" : @"selectSecondMenuItem",
+                         @"28" : @"closeMenu" } mutableCopy];
+}
+
+- (void)handleKeypoint:(NSInteger)keypoint {
+    NSString *key = [NSString stringWithFormat:@"%ld",(long)keypoint];
+    NSString *value = self.keyPoints[key];
+    if ( value ) {
+        if ( SEQ(value, @"activateDropdown") ) {
+            [self activateDropdown];
+        }
+        if ( SEQ(value, @"selectFirstMenuItem") ) {
+            [self selectMenuItem:1];
+        }
+        if ( SEQ(value, @"selectSecondMenuItem") ) {
+            [self selectMenuItem:2];
+        }
+        if ( SEQ(value, @"closeMenu") ) {
+            [self closeMenu];
+        }
+    }
+}
+
+- (void)activateDropdown {
+    SCPRAppDelegate *del = (SCPRAppDelegate*)[[UIApplication sharedApplication] delegate];
+    SCPRNavigationController *nav = [del masterNavigationController];
+    [UIView animateWithDuration:0.2 animations:^{
+        nav.menuButton.alpha = 1.0;
+    } completion:^(BOOL finished) {
+        [self.onboardingCtrl revealLensWithOrigin:CGPointMake(8.0, 22.0)];
+        
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            
+            
+            
+            self.onboardingCtrl.lensVC.lock = NO;
+            [self.onboardingCtrl.lensVC squeeze:^{
+                [self.masterCtrl cloakForMenu:YES];
+                [nav.menuButton animateToClose];
+            }];
+            
+        });
+    }];
+
+}
+
+- (void)closeMenu {
+    [self.masterCtrl decloakForMenu:YES];
+    SCPRAppDelegate *del = (SCPRAppDelegate*)[[UIApplication sharedApplication] delegate];
+    SCPRNavigationController *nav = [del masterNavigationController];
+    [self.onboardingCtrl hideLens];
+    [nav.menuButton animateToMenu];
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.25 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [UIView animateWithDuration:0.15 animations:^{
+            [nav.menuButton setAlpha:0.0];
+        }];
+    });
+}
+
+- (void)selectMenuItem:(NSInteger)menuitem {
+    [self.onboardingCtrl revealLensWithOrigin:CGPointMake(4.0+((menuitem-1)*5.0), (64*menuitem)+90.0)];
+    [self.masterCtrl.pulldownMenu lightUpCellWithIndex:menuitem];
+}
+
+- (void)askForPushNotifications {
+    self.listeningForQueues = NO;
+    [UIView animateWithDuration:0.25 animations:^{
+        [self.masterCtrl.blurView.layer setOpacity:1.0];
+        [self.masterCtrl.darkBgView.layer setOpacity:0.75];
+    } completion:^(BOOL finished) {
+        if ( [[UIApplication sharedApplication] respondsToSelector:@selector(registerUserNotificationSettings:)] ) {
+            [[UIApplication sharedApplication] registerUserNotificationSettings:[UIUserNotificationSettings settingsForTypes:UIUserNotificationTypeAlert|UIRemoteNotificationTypeSound|UIRemoteNotificationTypeBadge
+                                                                                                                  categories:nil]];
+        } else {
+            [[UIApplication sharedApplication] registerForRemoteNotificationTypes:UIRemoteNotificationTypeAlert|UIRemoteNotificationTypeBadge|UIRemoteNotificationTypeSound];
+        }
+    }];
+}
+
+- (void)closeOutOnboarding {
+    [UIView animateWithDuration:0.25 animations:^{
+        [self.masterCtrl.blurView.layer setOpacity:0.0];
+        [self.masterCtrl.darkBgView.layer setOpacity:0.35];
+    } completion:^(BOOL finished) {
+        [[SessionManager shared] fetchOnboardingProgramWithSegment:3 completed:^(id returnedObject) {
+            
+            [[AudioManager shared] setTemporaryMutex:NO];
+            [self.masterCtrl onboarding_beginOutro];
+            
+        }];
+    }];
+}
+
+- (void)endOnboarding {
+    
 }
 
 @end

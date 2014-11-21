@@ -59,6 +59,15 @@
     
 }
 
+- (void)hideLens {
+    POPSpringAnimation *scaleAnimation = [POPSpringAnimation animationWithPropertyNamed:kPOPLayerScaleXY];
+    scaleAnimation.fromValue  = [NSValue valueWithCGSize:CGSizeMake(1.0f, 1.0f)];
+    scaleAnimation.toValue  = [NSValue valueWithCGSize:CGSizeMake(0.0f, 0.0f)];
+    scaleAnimation.springBounciness = 1.0f;
+    scaleAnimation.springSpeed = .5f;
+    [self.lensVC.view.layer pop_addAnimation:scaleAnimation forKey:@"popToInvisible"];
+}
+
 - (void)revealBrandingWithCompletion:(CompletionBlock)completed {
     [UIView animateWithDuration:0.33 animations:^{
         self.kpccLogoView.alpha = 1.0;

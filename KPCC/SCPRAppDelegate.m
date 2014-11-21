@@ -14,6 +14,7 @@
 #import "SessionManager.h"
 #import "NetworkManager.h"
 #import "SCPROnboardingViewController.h"
+#import "UXmanager.h"
 
 #ifdef ENABLE_TESTFLIGHT
 #import "TestFlight.h"
@@ -80,12 +81,7 @@
         [[ContentManager shared] saveContext];
     }];
     
-#ifdef USE_NOTIFICATIONS
-    if ( [[UIApplication sharedApplication] respondsToSelector:@selector(registerUserNotificationSettings:)] ) {
-        [[UIApplication sharedApplication] registerUserNotificationSettings:[UIUserNotificationSettings settingsForTypes:UIUserNotificationTypeAlert
-                                                                                                              categories:nil]];
-    }
-#endif
+
     
     // Override point for customization after application launch.
     return YES;
@@ -94,6 +90,11 @@
 - (void)application:(UIApplication *)application didRegisterUserNotificationSettings:(UIUserNotificationSettings *)notificationSettings {
     UIUserNotificationType types = notificationSettings.types;
     [[SessionManager shared] setUseLocalNotifications:( types & UIUserNotificationTypeAlert )];
+    if ( types > 0 ) {
+        if ( ![[UXmanager shared] userHasSeenOnboarding] ) {
+            [[UXmanager shared] closeOutOnboarding];
+        }
+    }
 }
 							
 - (void)applicationWillResignActive:(UIApplication *)application {

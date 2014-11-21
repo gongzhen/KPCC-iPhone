@@ -118,5 +118,8 @@
 - (void)onboarding_revealPlayerControls;
 - (void)onboarding_beginOnboardingAudio;
 - (void)onboarding_rewindToBeginning;
+- (void)onboarding_beginOutro;
+- (void)onboarding_fin;
+
 
 @end

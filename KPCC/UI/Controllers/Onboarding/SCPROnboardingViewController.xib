@@ -23,7 +23,7 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3aK-j3-aRR" userLabel="BrandingView">
-                    <rect key="frame" x="157" y="76" width="300" height="157"/>
+                    <rect key="frame" x="150" y="76" width="300" height="157"/>
                     <subviews>
                         <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="kpcc-logo.png" translatesAutoresizingMaskIntoConstraints="NO" id="ky3-rC-tNp">
                             <rect key="frame" x="90" y="32" width="120" height="26"/>
@@ -74,7 +74,7 @@
             </subviews>
             <color key="backgroundColor" red="0.14657091450227416" green="0.21788733784831041" blue="0.61459748641304346" alpha="1" colorSpace="calibratedRGB"/>
             <constraints>
-                <constraint firstAttribute="centerX" secondItem="3aK-j3-aRR" secondAttribute="centerX" constant="-7" id="H9V-Yt-Hp4"/>
+                <constraint firstAttribute="centerX" secondItem="3aK-j3-aRR" secondAttribute="centerX" id="H9V-Yt-Hp4"/>
                 <constraint firstItem="3aK-j3-aRR" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="76" id="KJV-in-lW8"/>
                 <constraint firstItem="OIZ-zB-C1J" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="lwt-28-V3h"/>
                 <constraint firstItem="OIZ-zB-C1J" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="lxL-iq-GaB"/>

@@ -32,5 +32,6 @@
 - (void)prepare;
 - (void)revealLensWithOrigin:(CGPoint)origin;
 - (void)revealBrandingWithCompletion:(CompletionBlock)completed;
+- (void)hideLens;
 
 @end

@@ -17,8 +17,10 @@ typedef NS_ENUM(NSUInteger, CustomLeftBarItem) {
                 
 @interface SCPRNavigationController : UINavigationController<UIGestureRecognizerDelegate,UINavigationControllerDelegate,MenuButtonDelegate,
 UIViewControllerTransitioningDelegate> {
-    SCPRMenuButton *menuButton;
+    
 }
+
+@property (nonatomic,strong) SCPRMenuButton *menuButton;
 
 - (void)applyCustomLeftBarItem:(CustomLeftBarItem)leftBarItemType proxyDelegate:(id<MenuButtonDelegate>)proxyDelegate;
 - (void)restoreLeftBarItem:(id<MenuButtonDelegate>)proxyDelegate;

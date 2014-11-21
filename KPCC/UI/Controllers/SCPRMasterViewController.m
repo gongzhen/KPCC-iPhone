@@ -19,6 +19,7 @@
 #import "SCPRCloakViewController.h"
 #import "SCPRFeedbackViewController.h"
 #import "UXmanager.h"
+#import "SCPRNavigationController.h"
 
 static NSString *kRewindingText = @"REWINDING...";
 static NSString *kForwardingText = @"GOING LIVE...";
@@ -173,6 +174,7 @@ static CGFloat kDisabledAlpha = 0.15;
         if ( [[UXmanager shared] userHasSeenOnboarding] ) {
             [self updateDataForUI];
             [self primeManualControlButton];
+            [self.view layoutIfNeeded];
         }
     }];
 
@@ -215,6 +217,9 @@ static CGFloat kDisabledAlpha = 0.15;
 }
 
 - (void)addPreRollController {
+    
+    if ( ![[UXmanager shared] userHasSeenOnboarding] ) return;
+    
     self.preRollViewController = [[SCPRPreRollViewController alloc] initWithNibName:nil bundle:nil];
     self.preRollViewController.delegate = self;
 
@@ -234,21 +239,27 @@ static CGFloat kDisabledAlpha = 0.15;
 
 #pragma mark - Onboarding
 - (void)primeOnboarding {
+    SCPRAppDelegate *del = (SCPRAppDelegate*)[[UIApplication sharedApplication] delegate];
+    SCPRNavigationController *nav = [del masterNavigationController];
+
+    
     self.automationMode = YES;
     self.programImageView.image = [UIImage imageNamed:@"onboarding.jpg"];
     self.initialControlsView.layer.opacity = 0.0;
     self.liveStreamView.alpha = 0.0;
+    self.darkBgView.alpha = 1.0;
     self.liveDescriptionLabel.alpha = 0.0;
-    self.programTitleLabel.font = [UIFont systemFontOfSize:24.0];
-    [self.programTitleLabel proMediumFontize];
-    
+    self.programTitleLabel.font = [UIFont systemFontOfSize:30.0];
+    [self.programTitleLabel proLightFontize];
+    self.navigationController.navigationBarHidden = NO;
     self.liveProgressViewController.view.alpha = 0.0;
     [[SessionManager shared] fetchOnboardingProgramWithSegment:1 completed:^(id returnedObject) {
         self.programTitleLabel.text = [[[SessionManager shared] currentProgram] title];
         [SCPRCloakViewController uncloak];
         [UIView animateWithDuration:0.33 animations:^{
             self.view.alpha = 1.0;
-            self.darkBgView.alpha = 0.5;
+            self.darkBgView.layer.opacity = 0.35;
+            nav.menuButton.alpha = 0.0;
         } completion:^(BOOL finished) {
             [[UXmanager shared] fadeInBranding];
         }];
@@ -268,6 +279,8 @@ static CGFloat kDisabledAlpha = 0.15;
     
     [self.initialControlsView.layer pop_addAnimation:scaleAnimation forKey:@"revealPlayer"];
     self.initialControlsView.layer.opacity = 1.0;
+    
+    NSLog(@"Rewind button frame : %1.1f x, %1.1f y, %1.1f alpha",self.liveRewindAltButton.frame.origin.x,self.liveRewindAltButton.frame.origin.y,self.liveRewindAltButton.alpha);
 }
 
 - (void)onboarding_beginOnboardingAudio {
@@ -279,6 +292,7 @@ static CGFloat kDisabledAlpha = 0.15;
     [UIView animateWithDuration:0.33 animations:^{
         self.liveProgressViewController.view.alpha = 1.0;
         self.liveStreamView.alpha = 1.0;
+        [self primeManualControlButton];
     }];
     [[AudioManager shared] playOnboardingAudio:1];
 
@@ -288,14 +302,25 @@ static CGFloat kDisabledAlpha = 0.15;
     
 }
 
+- (void)onboarding_beginOutro {
+    [[AudioManager shared] playOnboardingAudio:3];
+}
+
+- (void)onboarding_fin {
+    [[UXmanager shared].settings setUserHasViewedOnboarding:YES];
+    [self updateDataForUI];
+}
+
 # pragma mark - Actions
 
 - (IBAction)initialPlayTapped:(id)sender {
     
     if ( ![[UXmanager shared] userHasSeenOnboarding] ) {
-        [self moveTextIntoPlace:YES];
-        [self primePlaybackUI:YES];
-        return;
+        [[UXmanager shared] fadeOutBrandingWithCompletion:^{
+            [self moveTextIntoPlace:YES];
+            [self primePlaybackUI:YES];
+            return;
+        }];
     }
     
     self.initialPlay = YES;
@@ -547,9 +572,15 @@ static CGFloat kDisabledAlpha = 0.15;
                                        });
                                    }];
                                } else {
-                                   [[AudioManager shared] adjustAudioWithValue:0.1 completion:^{
-                                       [[AudioManager shared] playOnboardingAudio:2];
-                                   }];
+                                   dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(.33 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                                       [[AudioManager shared] adjustAudioWithValue:0.1 completion:^{
+                                           [[SessionManager shared] fetchOnboardingProgramWithSegment:2 completed:^(id returnedObject) {
+                                               [[UXmanager shared] listenForQueues];
+                                               [[AudioManager shared] playOnboardingAudio:2];
+                                           }];
+                                           
+                                       }];
+                                   });
                                }
                                
                            }];
@@ -1023,7 +1054,7 @@ static CGFloat kDisabledAlpha = 0.15;
     
     
     BOOL okToShow = ( [[AudioManager shared] status] == StreamStatusPaused &&
-                     [[AudioManager shared] currentAudioMode] == AudioModeLive &&
+                     [[AudioManager shared] currentAudioMode] != AudioModeOnDemand &&
                      ![self jogging] );
  
     if ( [[AudioManager shared] status] == StreamStatusStopped && !initialPlay ) {
@@ -1118,7 +1149,7 @@ static CGFloat kDisabledAlpha = 0.15;
     blurFadeAnimation.duration = 0.3;
 
     POPBasicAnimation *darkBgFadeAnimation = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
-    darkBgFadeAnimation.toValue = @0.35;
+    darkBgFadeAnimation.toValue = @0.75;
     darkBgFadeAnimation.duration = 0.3;
 
     POPBasicAnimation *controlsFadeAnimation = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
@@ -1178,7 +1209,7 @@ static CGFloat kDisabledAlpha = 0.15;
     fadeAnimation.duration = 0.3;
 
     POPBasicAnimation *darkBgFadeAnimation = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
-    darkBgFadeAnimation.toValue = @0;
+    darkBgFadeAnimation.toValue = @0.35;
     darkBgFadeAnimation.duration = 0.3;
 
     POPBasicAnimation *controlsFadeIn = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
@@ -1570,10 +1601,11 @@ static CGFloat kDisabledAlpha = 0.15;
         }
     } else {
         
-        if ( ![[UXmanager shared] userHasSeenOnboarding] ) {
-            [self.liveProgressViewController show];
-        }
+
         if ( !self.menuOpen ) {
+            if ( ![[UXmanager shared] userHasSeenOnboarding] ) {
+                [self.liveProgressViewController show];
+            }
             if ( self.initialPlay ) {
                 [self.liveProgressViewController show];
             }
@@ -1608,6 +1640,12 @@ static CGFloat kDisabledAlpha = 0.15;
             self.queueBlurShown = NO;
             self.queueLoading = NO;
         }];
+    }
+    
+    if ( [[UXmanager shared] listeningForQueues] ) {
+        CMTime currentPoint = [AudioManager shared].audioPlayer.currentItem.currentTime;
+        NSInteger seconds = CMTimeGetSeconds(currentPoint);
+        [[UXmanager shared] handleKeypoint:seconds];
     }
     
 }

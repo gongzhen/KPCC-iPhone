@@ -75,12 +75,31 @@
                                         <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <nil key="highlightedColor"/>
                                     </label>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uVS-5U-Chc">
+                                        <rect key="frame" x="21" y="432" width="278" height="36"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="36" id="dlk-eV-LhD"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" name="FreightSansProLight-Regular" family="FreightSans Pro" pointSize="18"/>
+                                        <state key="normal" title=" Rewind to the start of this show" image="btn_live_rewind_small.png">
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <state key="highlighted">
+                                            <color key="titleColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="rewindToStartTapped:" destination="4pL-7p-2vt" eventType="touchUpInside" id="st2-bd-HVL"/>
+                                        </connections>
+                                    </button>
                                 </subviews>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstItem="ao2-yr-kyf" firstAttribute="top" secondItem="g8v-J1-2Ng" secondAttribute="bottom" constant="-6" id="K6s-m8-mkg"/>
+                                    <constraint firstAttribute="bottom" secondItem="uVS-5U-Chc" secondAttribute="bottom" constant="36" id="Lq6-MO-4y6"/>
                                     <constraint firstAttribute="centerX" secondItem="ao2-yr-kyf" secondAttribute="centerX" id="Ume-M2-oah"/>
+                                    <constraint firstAttribute="trailing" secondItem="uVS-5U-Chc" secondAttribute="trailing" constant="21" id="dRw-Wu-Okr"/>
                                     <constraint firstAttribute="centerX" secondItem="g8v-J1-2Ng" secondAttribute="centerX" constant="-0.5" id="im5-zy-8fO"/>
+                                    <constraint firstItem="uVS-5U-Chc" firstAttribute="leading" secondItem="m78-b6-vle" secondAttribute="leading" constant="21" id="lYO-QB-5Yj"/>
                                     <constraint firstAttribute="bottom" secondItem="ao2-yr-kyf" secondAttribute="bottom" constant="338" id="ufq-sa-p64"/>
                                 </constraints>
                             </view>
@@ -215,28 +234,11 @@
                                     <constraint firstItem="alx-1P-Yo8" firstAttribute="leading" secondItem="NyH-8S-Oy4" secondAttribute="leading" constant="5" id="zxZ-IL-Q8s"/>
                                 </constraints>
                             </view>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uVS-5U-Chc">
-                                <rect key="frame" x="21" y="496" width="278" height="36"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="36" id="dlk-eV-LhD"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" name="FreightSansProLight-Regular" family="FreightSans Pro" pointSize="18"/>
-                                <state key="normal" title=" Rewind to the start of this show" image="btn_live_rewind_small.png">
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <state key="highlighted">
-                                    <color key="titleColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <action selector="rewindToStartTapped:" destination="4pL-7p-2vt" eventType="touchUpInside" id="st2-bd-HVL"/>
-                                </connections>
-                            </button>
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="cGF-WE-JDq" firstAttribute="leading" secondItem="QEk-eP-ZIb" secondAttribute="leadingMargin" constant="-16" id="06D-Pc-QTS"/>
                             <constraint firstAttribute="trailing" secondItem="Duc-cQ-dAe" secondAttribute="trailing" constant="5" id="3QZ-3k-Kyp"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="uVS-5U-Chc" secondAttribute="trailing" constant="5" id="3Vk-hb-VoL"/>
                             <constraint firstItem="LAZ-J2-lj5" firstAttribute="top" secondItem="6Hq-JG-6xh" secondAttribute="bottom" constant="-64" id="9s7-ml-2AL"/>
                             <constraint firstItem="Nkc-gw-Tz3" firstAttribute="top" secondItem="sYL-12-Hgi" secondAttribute="bottom" id="DYq-k2-RLl"/>
                             <constraint firstItem="cGF-WE-JDq" firstAttribute="top" secondItem="6Hq-JG-6xh" secondAttribute="bottom" constant="-64" id="EY3-b7-cYZ"/>
@@ -257,7 +259,6 @@
                             <constraint firstItem="sYL-12-Hgi" firstAttribute="leading" secondItem="QEk-eP-ZIb" secondAttribute="leadingMargin" constant="-16" id="Ued-Te-iYn"/>
                             <constraint firstItem="Nkc-gw-Tz3" firstAttribute="top" secondItem="Syv-nA-vpR" secondAttribute="bottom" id="W8Z-VH-2sd"/>
                             <constraint firstItem="Nkc-gw-Tz3" firstAttribute="top" secondItem="3WP-os-1RZ" secondAttribute="bottom" constant="161" id="Z6z-Fe-l98"/>
-                            <constraint firstItem="Nkc-gw-Tz3" firstAttribute="top" secondItem="uVS-5U-Chc" secondAttribute="bottom" constant="36" id="ZKO-wQ-6zQ"/>
                             <constraint firstItem="Nkc-gw-Tz3" firstAttribute="top" secondItem="cGF-WE-JDq" secondAttribute="bottom" id="bEy-Xh-NNg"/>
                             <constraint firstItem="m78-b6-vle" firstAttribute="top" secondItem="6Hq-JG-6xh" secondAttribute="bottom" id="cKa-LM-1SU"/>
                             <constraint firstItem="Duc-cQ-dAe" firstAttribute="leading" secondItem="QEk-eP-ZIb" secondAttribute="leading" constant="5" id="cVe-Az-Ipi"/>
@@ -273,7 +274,6 @@
                             <constraint firstItem="yse-EI-1wa" firstAttribute="leading" secondItem="3WP-os-1RZ" secondAttribute="trailing" constant="-140" id="n6n-tj-W2a"/>
                             <constraint firstItem="NyH-8S-Oy4" firstAttribute="bottom" secondItem="Duc-cQ-dAe" secondAttribute="bottom" id="o0t-a9-ad9"/>
                             <constraint firstAttribute="trailingMargin" secondItem="jYj-xG-3QJ" secondAttribute="trailing" constant="-16" id="q8Y-qp-dKl"/>
-                            <constraint firstItem="uVS-5U-Chc" firstAttribute="leading" secondItem="QEk-eP-ZIb" secondAttribute="leadingMargin" constant="5" id="s6T-7y-P1z"/>
                             <constraint firstAttribute="trailingMargin" secondItem="Syv-nA-vpR" secondAttribute="trailing" constant="-16" id="sXk-p2-nmP"/>
                             <constraint firstItem="Syv-nA-vpR" firstAttribute="top" secondItem="6Hq-JG-6xh" secondAttribute="bottom" id="vd1-cv-nxc"/>
                             <constraint firstItem="Nkc-gw-Tz3" firstAttribute="top" secondItem="jYj-xG-3QJ" secondAttribute="bottom" id="wjX-U9-FSk"/>

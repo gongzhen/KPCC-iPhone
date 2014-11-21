@@ -15,6 +15,7 @@
 		255943EA19F1A7620007294D /* SCPRJogShuttleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 255943E919F1A7620007294D /* SCPRJogShuttleViewController.m */; };
 		256DE7271A16B9D90022EB84 /* menu-feedback.png in Resources */ = {isa = PBXBuildFile; fileRef = 256DE7251A16B9D90022EB84 /* menu-feedback.png */; };
 		256DE7281A16B9D90022EB84 /* menu-feedback@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 256DE7261A16B9D90022EB84 /* menu-feedback@2x.png */; };
+		258B5CC31A1EC27000165F45 /* onboarding3.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 258B5CC21A1EC27000165F45 /* onboarding3.mp3 */; };
 		258BB0381A1C07FD00B8FCFE /* UXmanager.m in Sources */ = {isa = PBXBuildFile; fileRef = 258BB0371A1C07FD00B8FCFE /* UXmanager.m */; };
 		258BB03E1A1C083B00B8FCFE /* Settings.m in Sources */ = {isa = PBXBuildFile; fileRef = 258BB03D1A1C083B00B8FCFE /* Settings.m */; };
 		258BD3AE1A0BF65200E7560F /* UIButton+Additions.m in Sources */ = {isa = PBXBuildFile; fileRef = 258BD3AD1A0BF65200E7560F /* UIButton+Additions.m */; };
@@ -247,6 +248,7 @@
 		255943E919F1A7620007294D /* SCPRJogShuttleViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SCPRJogShuttleViewController.m; sourceTree = "<group>"; };
 		256DE7251A16B9D90022EB84 /* menu-feedback.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "menu-feedback.png"; sourceTree = "<group>"; };
 		256DE7261A16B9D90022EB84 /* menu-feedback@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "menu-feedback@2x.png"; sourceTree = "<group>"; };
+		258B5CC21A1EC27000165F45 /* onboarding3.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = onboarding3.mp3; path = Audio/onboarding3.mp3; sourceTree = "<group>"; };
 		258BB0361A1C07FD00B8FCFE /* UXmanager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UXmanager.h; path = Managers/UXmanager.h; sourceTree = "<group>"; };
 		258BB0371A1C07FD00B8FCFE /* UXmanager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UXmanager.m; path = Managers/UXmanager.m; sourceTree = "<group>"; };
 		258BB03C1A1C083B00B8FCFE /* Settings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Settings.h; sourceTree = "<group>"; };
@@ -562,6 +564,7 @@
 		258E8DFD1A16AA1800675E68 /* Audio */ = {
 			isa = PBXGroup;
 			children = (
+				258B5CC21A1EC27000165F45 /* onboarding3.mp3 */,
 				259E450C1A1D583A00F5CD65 /* onboarding1.mp3 */,
 				259E450D1A1D583A00F5CD65 /* onboarding2.mp3 */,
 				258E8DFE1A16AA3900675E68 /* Glass_Crash.mp3 */,
@@ -1185,6 +1188,7 @@
 				52EFF86219C368C00059A0E3 /* program_avatar_weekend-edition-saturday.png in Resources */,
 				52EFF79119C3688D0059A0E3 /* menu-glasses@2x.png in Resources */,
 				768C0675199590CC00F829EB /* FreigSanProBoldIt.otf in Resources */,
+				258B5CC31A1EC27000165F45 /* onboarding3.mp3 in Resources */,
 				523E86D219C8A292006FC366 /* SCPRProgramDetailViewController.xib in Resources */,
 				76A308E518C8FB940065D4B1 /* Images.xcassets in Resources */,
 				52CF917619FEF306007BCFA8 /* btn_play.png in Resources */,

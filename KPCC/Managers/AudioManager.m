@@ -95,15 +95,19 @@ static const NSString *ItemStatusContext;
         
         CGFloat oldRate = [change[@"old"] floatValue];
         CGFloat newRate = [change[@"new"] floatValue];
+        // Now playing, was stopped.
+        if (oldRate == 0.0 && newRate == 1.0) {
+            [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
+        }
+        if ( oldRate == 1.0 && newRate == 0.0 ) {
+            self.status = StreamStatusPaused;
+        }
         
         if ([self.delegate respondsToSelector:@selector(onRateChange)]) {
             [self.delegate onRateChange];
         }
         
-        // Now playing, was stopped.
-        if (oldRate == 0.0 && newRate == 1.0) {
-            [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
-        }
+
     }
 }
 
@@ -413,6 +417,12 @@ static const NSString *ItemStatusContext;
     if ( self.onboardingSegment == 1 ) {
         [[UXmanager shared] presentLensOverRewindButton];
     }
+    if ( self.onboardingSegment == 2 ) {
+        [[UXmanager shared] askForPushNotifications];
+    }
+    if ( self.onboardingSegment == 3 ) {
+        [[UXmanager shared] endOnboarding];
+    }
 }
 
 - (NSString *)liveStreamURL {
@@ -483,12 +493,6 @@ static const NSString *ItemStatusContext;
     [self.audioPlayer addObserver:self forKeyPath:@"status" options:NSKeyValueObservingOptionOld|NSKeyValueObservingOptionNew context:nil];
     [self.audioPlayer addObserver:self forKeyPath:@"rate" options:NSKeyValueObservingOptionOld|NSKeyValueObservingOptionNew context:nil];
     
-    if ( self.currentAudioMode == AudioModeOnboarding ) {
-        [[NSNotificationCenter defaultCenter] addObserver:self
-                                                 selector:@selector(onboardingSegmentCompleted)
-                                                     name:AVPlayerItemDidPlayToEndTimeNotification
-                                                   object:self.playerItem];
-    }
     
     [self startObservingTime];
 }
@@ -520,14 +524,35 @@ static const NSString *ItemStatusContext;
 }
 
 - (void)playOnboardingAudio:(NSInteger)segment {
+    if ( self.temporaryMutex ) {
+        self.temporaryMutex = NO;
+        return;
+    }
+    
+    self.temporaryMutex = YES;
+    
+    [self takedownAudioPlayer];
     self.onboardingSegment = segment;
     NSString *file = [NSString stringWithFormat:@"onboarding%ld",(long)segment];
     [self buildStreamer:file local:YES];
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:AVPlayerItemDidPlayToEndTimeNotification
+                                                  object:nil];
+     
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(onboardingSegmentCompleted)
+                                                 name:AVPlayerItemDidPlayToEndTimeNotification
+                                               object:nil];
+    
     [self startStream];
     
 }
 
 - (void)startStream {
+    
+
+    
     if (!self.audioPlayer) {
         [self buildStreamer:kHLSLiveStreamURL];
     }

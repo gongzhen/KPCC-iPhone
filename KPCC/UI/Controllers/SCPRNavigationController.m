@@ -33,8 +33,8 @@
     }
 
     // Menu button to be used across all pushed view controllers.
-    menuButton = [SCPRMenuButton buttonWithOrigin:CGPointMake(10.f, 10.f)];
-    menuButton.delegate = self;
+    self.menuButton = [SCPRMenuButton buttonWithOrigin:CGPointMake(10.f, 10.f)];
+    self.menuButton.delegate = self;
 
     // Add observers for pull down menu open/close to update button state.
     [[NSNotificationCenter defaultCenter] addObserver:self
@@ -55,14 +55,14 @@
 - (void)applyCustomLeftBarItem:(CustomLeftBarItem)leftBarItemType proxyDelegate:(id<MenuButtonDelegate>)proxyDelegate {
     self.proxyDelegate = proxyDelegate;
     if ( leftBarItemType == CustomLeftBarItemPop ) {
-        [menuButton animateToPop:proxyDelegate];
+        [self.menuButton animateToPop:proxyDelegate];
     }
 }
 
 - (void)restoreLeftBarItem:(id<MenuButtonDelegate>)proxyDelegate {
     if ( proxyDelegate == self.proxyDelegate ) {
-        [menuButton animateToBack];
-        [menuButton setProxyDelegate:nil];
+        [self.menuButton animateToBack];
+        [self.menuButton setProxyDelegate:nil];
         self.proxyDelegate = nil;
     }
 }
@@ -74,12 +74,12 @@
 
     [super pushViewController:viewController animated:animated];
     [self addButton:viewController.navigationItem];
-    [menuButton animateToBack];
+    [self.menuButton animateToBack];
 }
 
 - (void)addButton:(UINavigationItem *)item{
     if (item.leftBarButtonItem == nil){
-        item.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:menuButton];
+        item.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:self.menuButton];
     }
 }
 
@@ -94,9 +94,9 @@
 - (void)navigationController:(UINavigationController *)navigationController willShowViewController:(UIViewController *)viewController animated:(BOOL)animated {
     if (viewController == [[Utils del] masterViewController]) {
         if ([[[Utils del] masterViewController] menuOpen]) {
-            [menuButton animateToClose];
+            [self.menuButton animateToClose];
         } else {
-            [menuButton animateToMenu];
+            [self.menuButton animateToMenu];
         }
     }
 }
@@ -136,10 +136,10 @@
 - (void)menuPressed {
     if ([[[Utils del] masterViewController] menuOpen]) {
         [[[Utils del] masterViewController] decloakForMenu:YES];
-        [menuButton animateToMenu];
+        [self.menuButton animateToMenu];
     } else {
         [[[Utils del] masterViewController] cloakForMenu:YES];
-        [menuButton animateToClose];
+        [self.menuButton animateToClose];
     }
 }
 
@@ -153,9 +153,9 @@
 - (void)handleMenuClosed:(NSNotification *)notification {
     // Handle when we close menu programatically, and update
     // menu button to proper state.
-    if (![menuButton showBackArrow]) {
-        if (![menuButton showMenu]) {
-            [menuButton animateToMenu];
+    if (![self.menuButton showBackArrow]) {
+        if (![self.menuButton showMenu]) {
+            [self.menuButton animateToMenu];
         }
     }
 }
