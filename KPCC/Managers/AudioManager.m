@@ -501,6 +501,12 @@ static const NSString *ItemStatusContext;
     [self buildStreamer:urlString local:NO];
 }
 
+- (void)sanitizeFromOnboarding {
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:AVPlayerItemDidPlayToEndTimeNotification
+                                                  object:nil];
+}
+
 
 - (void)playAudioWithURL:(NSString *)url {
     [self takedownAudioPlayer];
@@ -551,8 +557,12 @@ static const NSString *ItemStatusContext;
 
 - (void)startStream {
     
-
+    if ( self.temporaryMutex ) {
+        self.temporaryMutex = NO;
+        return;
+    }
     
+    self.temporaryMutex = YES;
     if (!self.audioPlayer) {
         [self buildStreamer:kHLSLiveStreamURL];
     }
@@ -663,6 +673,8 @@ static const NSString *ItemStatusContext;
 }
 
 - (void)takedownAudioPlayer {
+    
+    self.temporaryMutex = NO;
     if ( self.audioPlayer ) {
         
         [self.audioPlayer pause];

@@ -99,13 +99,13 @@ static CGFloat kDisabledAlpha = 0.15;
         }
     }
     
+    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
+    
     self.liveProgressViewController = [[SCPRProgressViewController alloc] init];
     self.liveProgressViewController.view = self.liveProgressView;
     self.liveProgressViewController.liveProgressView = self.liveProgressBarView;
     self.liveProgressViewController.currentProgressView = self.currentProgressBarView;
     self.playerControlsView.backgroundColor = [UIColor clearColor];
-    
-    
     
     self.liveRewindAltButton.userInteractionEnabled = NO;
     [self.liveRewindAltButton setAlpha:0.0];
@@ -241,23 +241,31 @@ static CGFloat kDisabledAlpha = 0.15;
 - (void)primeOnboarding {
     SCPRAppDelegate *del = (SCPRAppDelegate*)[[UIApplication sharedApplication] delegate];
     SCPRNavigationController *nav = [del masterNavigationController];
+    //nav.navigationBarHidden = YES;
 
-    
     self.automationMode = YES;
     self.programImageView.image = [UIImage imageNamed:@"onboarding.jpg"];
+
+    
     self.initialControlsView.layer.opacity = 0.0;
     self.liveStreamView.alpha = 0.0;
     self.darkBgView.alpha = 1.0;
     self.liveDescriptionLabel.alpha = 0.0;
+    self.pulldownMenu.alpha = 0.0;
+    
+
+    //[[UIApplication sharedApplication] setStatusBarHidden:YES];
     self.programTitleLabel.font = [UIFont systemFontOfSize:30.0];
     [self.programTitleLabel proLightFontize];
-    self.navigationController.navigationBarHidden = NO;
     self.liveProgressViewController.view.alpha = 0.0;
+    nav.navigationBarHidden = NO;
     [[SessionManager shared] fetchOnboardingProgramWithSegment:1 completed:^(id returnedObject) {
+        [self.blurView setNeedsDisplay];
         self.programTitleLabel.text = [[[SessionManager shared] currentProgram] title];
         [SCPRCloakViewController uncloak];
         [UIView animateWithDuration:0.33 animations:^{
             self.view.alpha = 1.0;
+            [self.blurView.layer setOpacity:1.0];
             self.darkBgView.layer.opacity = 0.35;
             nav.menuButton.alpha = 0.0;
         } completion:^(BOOL finished) {
@@ -270,6 +278,8 @@ static CGFloat kDisabledAlpha = 0.15;
     [UIView animateWithDuration:0.2 animations:^{
         self.letsGoLabel.alpha = 1.0;
     }];
+    
+
     
     POPSpringAnimation *scaleAnimation = [POPSpringAnimation animationWithPropertyNamed:kPOPLayerScaleXY];
     scaleAnimation.fromValue  = [NSValue valueWithCGSize:CGSizeMake(0.0f, 0.0f)];
@@ -289,6 +299,8 @@ static CGFloat kDisabledAlpha = 0.15;
                                        aboveSiblingView:self.playerControlsView];
     [self.liveProgressViewController hide];
     
+
+    
     [UIView animateWithDuration:0.33 animations:^{
         self.liveProgressViewController.view.alpha = 1.0;
         self.liveStreamView.alpha = 1.0;
@@ -303,11 +315,27 @@ static CGFloat kDisabledAlpha = 0.15;
 }
 
 - (void)onboarding_beginOutro {
+    [[AudioManager shared] setTemporaryMutex:NO];
     [[AudioManager shared] playOnboardingAudio:3];
 }
 
 - (void)onboarding_fin {
+    
+    self.initialPlay = YES;
+    [self addPreRollController];
+    
+    SCPRAppDelegate *del = (SCPRAppDelegate*)[[UIApplication sharedApplication] delegate];
+    
+    [UIView animateWithDuration:0.33 animations:^{
+        self.liveDescriptionLabel.alpha = 1.0;
+        del.masterNavigationController.menuButton.alpha = 1.0;
+        [self.darkBgView.layer setOpacity:0.35];
+        self.onDemandPlayerView.alpha = 0.0;
+    }];
+    
     [[UXmanager shared].settings setUserHasViewedOnboarding:YES];
+    //[[UXmanager shared] persist];
+    
     [self updateDataForUI];
 }
 
@@ -846,7 +874,7 @@ static CGFloat kDisabledAlpha = 0.15;
     
     [self moveTextIntoPlace:NO];
     [[AudioManager shared] setCurrentAudioMode:AudioModeLive];
-    [self.liveProgressViewController show];
+    //[self.liveProgressViewController show];
 }
 
 - (void)setOnDemandUI:(BOOL)animated forProgram:(Program*)program withAudio:(NSArray*)array atCurrentIndex:(int)index {
@@ -972,7 +1000,9 @@ static CGFloat kDisabledAlpha = 0.15;
                                               self.navigationController.navigationBarHidden = NO;
                                               
                                               [self.view layoutIfNeeded];
+                                              [self.liveStreamView layoutIfNeeded];
                                               [self.initialControlsView layoutIfNeeded];
+                                              [self.liveRewindAltButton layoutIfNeeded];
                                               
                                               self.view.alpha = 1.0;
                                               if ( [SCPRCloakViewController cloakInUse] ) {
@@ -1026,12 +1056,17 @@ static CGFloat kDisabledAlpha = 0.15;
             scaleAnimation.fromValue  = [NSValue valueWithCGSize:CGSizeMake(0.025f, 1.0f)];
             scaleAnimation.toValue  = [NSValue valueWithCGSize:CGSizeMake(1.0f, 1.0f)];
             [scaleAnimation setCompletionBlock:^(POPAnimation *p, BOOL c) {
+                if ( self.springLock ) {
+                    self.springLock = NO;
+                    return;
+                }
                 
+                self.springLock = YES;
                 if ( [[UXmanager shared] userHasSeenOnboarding] ) {
                     self.initialPlay = YES;
-                    if ( !self.preRollViewController.tritonAd ) {
+                    //if ( !self.preRollViewController.tritonAd ) {
                         [self playStream];
-                    }
+                    //}
                 } else {
                     [[UXmanager shared] beginAudio];
                 }
@@ -1122,6 +1157,8 @@ static CGFloat kDisabledAlpha = 0.15;
 
 - (void)cloakForMenu:(BOOL)animated {
     [self removeAllAnimations];
+    
+    self.pulldownMenu.alpha = 1.0;
     
     [self.liveProgressViewController hide];
     
@@ -1305,7 +1342,8 @@ static CGFloat kDisabledAlpha = 0.15;
     //[self.playerControlsView.layer pop_addAnimation:controlsFadeAnimation forKey:@"controlsViewFadeAnimation"];
     [self.onDemandPlayerView.layer pop_addAnimation:controlsFadeAnimation forKey:@"onDemandViewFadeAnimation"];
     [self.liveStreamView.layer pop_addAnimation:controlsFadeAnimation forKey:@"liveStreamViewFadeAnimation"];
-
+    [self.initialControlsView.layer pop_addAnimation:controlsFadeAnimation forKey:@"controlsFade"];
+    
     self.preRollOpen = YES;
 }
 
@@ -1365,6 +1403,7 @@ static CGFloat kDisabledAlpha = 0.15;
         return;
     }
     
+    
     self.lockPreroll = YES;
     self.initialPlay = YES;
     
@@ -1372,7 +1411,7 @@ static CGFloat kDisabledAlpha = 0.15;
         if (self.preRollOpen) {
             [self decloakForPreRoll:YES];
         }
-        [self playStream];
+        [self primePlaybackUI:YES];
     });
 
 }

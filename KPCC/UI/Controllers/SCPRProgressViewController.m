@@ -44,7 +44,10 @@
 - (void)displayWithProgram:(Program*)program onView:(UIView *)view aboveSiblingView:(UIView *)anchorView {
     
     [self setupProgressBarsWithProgram:program];
-
+    if ( self.liveBarLine || self.currentBarLine ) {
+        return;
+    }
+    
     self.view.clipsToBounds = YES;
     
     self.view.backgroundColor = [UIColor clearColor];
@@ -111,6 +114,7 @@
     self.currentProgressView.clipsToBounds = YES;
     self.currentProgressView.alpha = 0.0;
     self.liveProgressView.alpha = 0.0;
+    self.uiHidden = YES;
     self.view.alpha = 0.0;
     
 }
@@ -200,7 +204,7 @@
     
     [CATransaction begin]; {
         [CATransaction setCompletionBlock:^{
-            self.lastCurrentValue = 0.0;
+            self.lastCurrentValue = vBeginning;
             self.shuttling = NO;
             self.currentBarLine.strokeEnd = vBeginning;
             [self.currentBarLine removeAllAnimations];
@@ -228,8 +232,6 @@
         if ( [[AudioManager shared] relativeFauxDate] ) {
             currentDate = [[AudioManager shared] relativeFauxDate];
         }
-    } else {
-        NSLog(@"Player item has a date ...");
     }
     NSTimeInterval beginning = [program.soft_starts_at timeIntervalSince1970];
     if ( [[AudioManager shared] currentAudioMode] == AudioModeOnboarding ) {

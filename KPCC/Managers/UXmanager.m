@@ -69,7 +69,7 @@
     self.onboardingCtrl = del.onboardingController;
     self.onboardingCtrl.view.alpha = 0.0;
     self.onboardingCtrl.lensVC.view.layer.opacity = 0.0;
-
+    self.onboardingCtrl.orangeStripView.backgroundColor = [UIColor kpccOrangeColor];
     [self.onboardingCtrl.view layoutIfNeeded];
 }
 
@@ -97,16 +97,42 @@
 }
 
 - (void)fadeOutBrandingWithCompletion:(CompletionBlock)completed {
+    
+    SCPRAppDelegate *del = (SCPRAppDelegate*)[[UIApplication sharedApplication] delegate];
+    SCPRNavigationController *nav = del.masterNavigationController;
+
     [UIView animateWithDuration:0.25 animations:^{
         self.onboardingCtrl.brandingView.alpha = 0.0;
+        self.onboardingCtrl.orangeStripView.alpha = 0.0;
+        [self.masterCtrl.blurView setNeedsDisplay];
+        
+        nav.menuButton.alpha = 0.0;
+        
+
+        
+        [[UIApplication sharedApplication] setStatusBarHidden:NO
+                                                withAnimation:UIStatusBarAnimationSlide];
+        
     } completion:^(BOOL finished) {
+        [self.onboardingCtrl.view layoutIfNeeded];
+        [self.masterCtrl.view layoutIfNeeded];
+        [self.onboardingCtrl.notificationsView layoutIfNeeded];
+        
         completed();
     }];
 }
 
 - (void)beginAudio {
-    self.onboardingCtrl.interactionButton.alpha = 0.0;
-    [self.masterCtrl onboarding_beginOnboardingAudio];
+    
+
+    [UIView animateWithDuration:0.66 animations:^{
+        self.masterCtrl.blurView.layer.opacity = 0.0;
+    } completion:^(BOOL finished) {
+        self.onboardingCtrl.interactionButton.alpha = 0.0;
+        [self.masterCtrl onboarding_beginOnboardingAudio];
+    }];
+
+
 }
 
 - (void)presentLensOverRewindButton {
@@ -117,7 +143,7 @@
   
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         
-        [self.onboardingCtrl.lensVC squeeze:^{
+        [self.onboardingCtrl.lensVC squeezeWithAnchorView:self.masterCtrl.liveRewindAltButton completed:^{
             
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.25 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                 [self.masterCtrl activateRewind:RewindDistanceOnboardingBeginning];
@@ -131,9 +157,9 @@
 - (void)listenForQueues {
     self.listeningForQueues = YES;
     self.keyPoints = [@{ @"8" : @"activateDropdown",
-                         @"12" : @"selectFirstMenuItem",
+                         @"13" : @"selectFirstMenuItem",
                          @"16" : @"selectSecondMenuItem",
-                         @"28" : @"closeMenu" } mutableCopy];
+                         @"23" : @"closeMenu" } mutableCopy];
 }
 
 - (void)handleKeypoint:(NSInteger)keypoint {
@@ -168,7 +194,7 @@
             
             
             self.onboardingCtrl.lensVC.lock = NO;
-            [self.onboardingCtrl.lensVC squeeze:^{
+            [self.onboardingCtrl.lensVC squeezeWithAnchorView:nil completed:^{
                 [self.masterCtrl cloakForMenu:YES];
                 [nav.menuButton animateToClose];
             }];
@@ -179,7 +205,9 @@
 }
 
 - (void)closeMenu {
+    [self.masterCtrl.pulldownMenu clearMenu];
     [self.masterCtrl decloakForMenu:YES];
+    
     SCPRAppDelegate *del = (SCPRAppDelegate*)[[UIApplication sharedApplication] delegate];
     SCPRNavigationController *nav = [del masterNavigationController];
     [self.onboardingCtrl hideLens];
@@ -198,35 +226,63 @@
 
 - (void)askForPushNotifications {
     self.listeningForQueues = NO;
-    [UIView animateWithDuration:0.25 animations:^{
+    [UIView animateWithDuration:0.5 animations:^{
         [self.masterCtrl.blurView.layer setOpacity:1.0];
         [self.masterCtrl.darkBgView.layer setOpacity:0.75];
+        self.masterCtrl.playerControlsView.alpha = 0.0;
+        [self.masterCtrl.liveProgressViewController hide];
+        [self.masterCtrl.horizDividerLine setAlpha:0.0];
+        [self.masterCtrl.liveStreamView setAlpha:0.0];
     } completion:^(BOOL finished) {
-        if ( [[UIApplication sharedApplication] respondsToSelector:@selector(registerUserNotificationSettings:)] ) {
-            [[UIApplication sharedApplication] registerUserNotificationSettings:[UIUserNotificationSettings settingsForTypes:UIUserNotificationTypeAlert|UIRemoteNotificationTypeSound|UIRemoteNotificationTypeBadge
-                                                                                                                  categories:nil]];
+        [self.onboardingCtrl revealNotificationsPrompt];
+    }];
+}
+
+- (void)restorePreNotificationUI:(BOOL)prompt {
+    [self.onboardingCtrl collapseNotificationsPrompt];
+    [UIView animateWithDuration:0.5 animations:^{
+        [self.masterCtrl.blurView.layer setOpacity:0.0];
+        [self.masterCtrl.darkBgView.layer setOpacity:0.35];
+        self.masterCtrl.playerControlsView.alpha = 1.0;
+        [self.masterCtrl.liveProgressViewController show];
+        [self.masterCtrl.horizDividerLine setAlpha:0.4];
+        [self.masterCtrl.liveStreamView setAlpha:1.0];
+    } completion:^(BOOL finished) {
+        if ( prompt ) {
+            [self askSystemForNotificationPermissions];
         } else {
-            [[UIApplication sharedApplication] registerForRemoteNotificationTypes:UIRemoteNotificationTypeAlert|UIRemoteNotificationTypeBadge|UIRemoteNotificationTypeSound];
+            [self closeOutOnboarding];
         }
     }];
 }
 
+- (void)askSystemForNotificationPermissions {
+    if ( [[UIApplication sharedApplication] respondsToSelector:@selector(registerUserNotificationSettings:)] ) {
+        [[UIApplication sharedApplication] registerUserNotificationSettings:[UIUserNotificationSettings settingsForTypes:UIUserNotificationTypeAlert|UIRemoteNotificationTypeSound|UIRemoteNotificationTypeBadge
+                                                                                                              categories:nil]];
+    } else {
+        [[UIApplication sharedApplication] registerForRemoteNotificationTypes:UIRemoteNotificationTypeAlert|UIRemoteNotificationTypeBadge|UIRemoteNotificationTypeSound];
+    }
+}
+
 - (void)closeOutOnboarding {
-    [UIView animateWithDuration:0.25 animations:^{
+   /* [UIView animateWithDuration:0.25 animations:^{
         [self.masterCtrl.blurView.layer setOpacity:0.0];
         [self.masterCtrl.darkBgView.layer setOpacity:0.35];
-    } completion:^(BOOL finished) {
+    } completion:^(BOOL finished) {*/
         [[SessionManager shared] fetchOnboardingProgramWithSegment:3 completed:^(id returnedObject) {
             
             [[AudioManager shared] setTemporaryMutex:NO];
             [self.masterCtrl onboarding_beginOutro];
             
         }];
-    }];
+   // }];
 }
 
 - (void)endOnboarding {
-    
+    [[AudioManager shared] setRelativeFauxDate:nil];
+    [self.onboardingCtrl.view removeFromSuperview];
+    [self.masterCtrl onboarding_fin];
 }
 
 @end

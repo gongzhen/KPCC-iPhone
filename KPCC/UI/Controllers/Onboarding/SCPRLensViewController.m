@@ -56,7 +56,7 @@
     
 }
 
-- (void)squeeze:(CompletionBlock)completed {
+- (void)squeezeWithAnchorView:(UIView*)anchorView completed:(CompletionBlock)completed {
     POPSpringAnimation *scaleAnimation = [POPSpringAnimation animationWithPropertyNamed:kPOPLayerScaleXY];
     scaleAnimation.fromValue  = [NSValue valueWithCGSize:CGSizeMake(1.0f, 1.0f)];
     scaleAnimation.toValue  = [NSValue valueWithCGSize:CGSizeMake(0.75f, 0.75f)];
@@ -73,35 +73,23 @@
             }];
         }
     }];
-    [self.view.layer pop_addAnimation:scaleAnimation
-                           forKey:@"tap"];
+
     
-    /*
-    [CATransaction begin]; {
-        [CATransaction setCompletionBlock:^{
-            [UIView animateWithDuration:0.33 animations:^{
-                self.view.alpha = 0.0;
-            } completion:^(BOOL finished) {
-                completed();
-            }];
-        }];
-        
-        CABasicAnimation *colorAnimation = [CABasicAnimation animation];
-        colorAnimation.keyPath = @"fillColor";
-        colorAnimation.fromValue = (id)self.circleShape.fillColor;
-        colorAnimation.toValue = (id)[[UIColor virtualBlackColor] translucify:0.33].CGColor;
-        colorAnimation.duration = 0.5f;
-        colorAnimation.autoreverses = YES;
-        [self.circleShape addAnimation:colorAnimation
-                                forKey:@"colorSwap"];
+    if ( anchorView ) {
+        POPSpringAnimation *anchorScale = [POPSpringAnimation animationWithPropertyNamed:kPOPLayerScaleXY];
+        anchorScale.fromValue  = [NSValue valueWithCGSize:CGSizeMake(1.0f, 1.0f)];
+        anchorScale.toValue  = [NSValue valueWithCGSize:CGSizeMake(0.88f, 0.88f)];
+        anchorScale.springBounciness = 1.0f;
+        anchorScale.springSpeed = .5f;
+        anchorScale.autoreverses = YES;
+        [anchorView.layer pop_addAnimation:anchorScale
+                                    forKey:@"anchorTap"];
     }
-    [CATransaction commit];
-     */
-        
-
     
-
     
+    [self.view.layer pop_addAnimation:scaleAnimation
+                               forKey:@"tap"];
+
 
 }
 /*

@@ -104,6 +104,14 @@
                          scrollPosition:UITableViewScrollPositionNone];
 }
 
+- (void)clearMenu {
+    for ( unsigned i = 0; i < [menuItems count]; i++ ) {
+        [self.menuList deselectRowAtIndexPath:[NSIndexPath indexPathForItem:i
+                                                                  inSection:0]
+                                     animated:YES];
+    }
+}
+
 - (void)loadMenu {
     tableHeight = ([menuItems count] * cellHeight);
 

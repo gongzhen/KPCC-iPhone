@@ -128,4 +128,39 @@ static DesignManager *singleton = nil;
                       window.bounds.size.height);
 }
 
+- (void)sculptButton:(UIButton *)button withStyle:(SculptingStyle)style andText:(NSString *)text {
+    [button setTitle:text forState:UIControlStateNormal];
+    [button setTitle:text forState:UIControlStateHighlighted];
+    [button.titleLabel proMediumFontize];
+    
+    switch (style) {
+        case SculptingStylePeriwinkle:
+        {
+            button.backgroundColor = [UIColor kpccPeriwinkleColor];
+            [button setTitleColor:[UIColor whiteColor]
+                         forState:UIControlStateNormal];
+            [button setTitleColor:[[UIColor virtualWhiteColor] translucify:0.75]
+                         forState:UIControlStateHighlighted];
+            break;
+        }
+        case SculptingStyleClearWithBorder:
+        {
+            button.backgroundColor = [UIColor clearColor];
+            button.layer.borderColor = [UIColor virtualWhiteColor].CGColor;
+            button.layer.borderWidth = 1.0;
+            [button setTitleColor:[UIColor whiteColor]
+                         forState:UIControlStateNormal];
+            [button setTitleColor:[[UIColor virtualWhiteColor] translucify:0.75]
+                         forState:UIControlStateHighlighted];
+            break;
+        }
+        case SculptingStyleNormal:
+        default:
+        {
+            
+            
+        }
+    }
+}
+
 @end

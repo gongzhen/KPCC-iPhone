@@ -16,6 +16,6 @@
 @property BOOL lock;
 
 - (void)prepare;
-- (void)squeeze:(CompletionBlock)completed;
+- (void)squeezeWithAnchorView:(UIView*)anchorView completed:(CompletionBlock)completed;
 
 @end

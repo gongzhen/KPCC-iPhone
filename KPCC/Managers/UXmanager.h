@@ -38,6 +38,8 @@
 - (void)selectMenuItem:(NSInteger)menuitem;
 - (void)closeMenu;
 - (void)askForPushNotifications;
+- (void)askSystemForNotificationPermissions;
+- (void)restorePreNotificationUI:(BOOL)prompt;
 - (void)closeOutOnboarding;
 - (void)endOnboarding;
 

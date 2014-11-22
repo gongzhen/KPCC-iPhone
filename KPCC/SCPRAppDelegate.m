@@ -59,9 +59,8 @@
     
     self.masterNavigationController = navigationController;
     self.masterViewController = navigationController.viewControllers.firstObject;
-    self.masterNavigationController.navigationBarHidden = YES;
     self.window.rootViewController = navigationController;
-
+    navigationController.navigationBarHidden = YES;
 
     
     // Fetch initial list of Programs from SCPRV4 and store in CoreData for later usage.
@@ -90,13 +89,19 @@
 - (void)application:(UIApplication *)application didRegisterUserNotificationSettings:(UIUserNotificationSettings *)notificationSettings {
     UIUserNotificationType types = notificationSettings.types;
     [[SessionManager shared] setUseLocalNotifications:( types & UIUserNotificationTypeAlert )];
-    if ( types > 0 ) {
-        if ( ![[UXmanager shared] userHasSeenOnboarding] ) {
-            [[UXmanager shared] closeOutOnboarding];
-        }
+   
+    if ( ![[UXmanager shared] userHasSeenOnboarding] ) {
+        [[UXmanager shared] closeOutOnboarding];
+    }
+    
+}
+
+- (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error {
+    if ( ![[UXmanager shared] userHasSeenOnboarding] ) {
+        [[UXmanager shared] closeOutOnboarding];
     }
 }
-							
+
 - (void)applicationWillResignActive:(UIApplication *)application {
     
     [[SessionManager shared] disarmProgramUpdater];

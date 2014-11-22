@@ -87,6 +87,7 @@
 @property (nonatomic,strong) IBOutlet UIView *rewindView;
 @property BOOL rewindGate;
 @property BOOL initiateRewind;
+@property BOOL springLock;
 
 // Onboarding
 @property BOOL automationMode;

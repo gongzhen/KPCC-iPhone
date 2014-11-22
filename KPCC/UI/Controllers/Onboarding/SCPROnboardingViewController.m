@@ -9,6 +9,8 @@
 #import "SCPROnboardingViewController.h"
 #import "UIColor+UICustom.h"
 #import "UILabel+Additions.h"
+#import "DesignManager.h"
+#import "UXmanager.h"
 
 @interface SCPROnboardingViewController ()
 
@@ -34,12 +36,29 @@
     self.dividerView.alpha = 0.0;
     self.welcomeLabel.alpha = 0.0;
     self.brandingView.alpha = 1.0;
+    self.notificationsView.alpha = 0.0;
+    
+    [[DesignManager shared] sculptButton:self.yesToNotificationsButton
+                               withStyle:SculptingStylePeriwinkle
+                                 andText:@"Yes, I'm interested!"];
+    [[DesignManager shared] sculptButton:self.noToNotificationsButton
+                               withStyle:SculptingStyleClearWithBorder
+                                 andText:@"Not right now."];
+    
+    [self.yesToNotificationsButton addTarget:self
+                                      action:@selector(yesToNotifications)
+                            forControlEvents:UIControlEventTouchUpInside];
+    
+    [self.noToNotificationsButton addTarget:self
+                                     action:@selector(noToNotifications)
+                           forControlEvents:UIControlEventTouchUpInside];
+    
+    [self.notificationsCaptionLabel proMediumFontize];
+    [self.notificationsQuestionLabel proLightFontize];
+    
     self.interactionButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [self.welcomeLabel proMediumFontize];
     
-    //self.view.backgroundColor = [[UIColor orangeColor] translucify:0.25];
-    
-    //[self.lensVC.view.layer setTransform:CATransform3DMakeScale(0.0, 0.0, 1.0)];
 }
 
 - (void)revealLensWithOrigin:(CGPoint)origin {
@@ -52,6 +71,7 @@
     scaleAnimation.toValue  = [NSValue valueWithCGSize:CGSizeMake(1.0f, 1.0f)];
     scaleAnimation.springBounciness = 1.0f;
     scaleAnimation.springSpeed = .5f;
+
     
     self.lensVC.view.layer.opacity = 1.0;
     
@@ -82,6 +102,50 @@
             }];
         }];
     }];
+}
+
+- (void)revealNotificationsPrompt {
+    POPSpringAnimation *scaleAnimation = [POPSpringAnimation animationWithPropertyNamed:kPOPLayerScaleXY];
+    scaleAnimation.fromValue  = [NSValue valueWithCGSize:CGSizeMake(0.0f, 0.0f)];
+    scaleAnimation.toValue  = [NSValue valueWithCGSize:CGSizeMake(1.0f, 1.0f)];
+    scaleAnimation.springBounciness = 1.0f;
+    scaleAnimation.springSpeed = .5f;
+    
+    [self.radioIconImage.layer pop_addAnimation:scaleAnimation forKey:@"iconScale"];
+    [self.notificationsCaptionLabel.layer pop_addAnimation:scaleAnimation forKey:@"iconScale"];
+    [self.notificationsQuestionLabel.layer pop_addAnimation:scaleAnimation forKey:@"iconScale"];
+    [self.yesToNotificationsButton.layer pop_addAnimation:scaleAnimation forKey:@"iconScale"];
+    [self.noToNotificationsButton.layer pop_addAnimation:scaleAnimation forKey:@"iconScale"];
+    
+    [UIView animateWithDuration:0.33 animations:^{
+        self.notificationsView.alpha = 1.0;
+    }];
+}
+
+- (void)collapseNotificationsPrompt {
+    POPSpringAnimation *scaleAnimation = [POPSpringAnimation animationWithPropertyNamed:kPOPLayerScaleXY];
+    scaleAnimation.fromValue  = [NSValue valueWithCGSize:CGSizeMake(1.0f, 1.0f)];
+    scaleAnimation.toValue  = [NSValue valueWithCGSize:CGSizeMake(0.0f, 0.0f)];
+    scaleAnimation.springBounciness = 1.0f;
+    scaleAnimation.springSpeed = .5f;
+    
+    [self.radioIconImage.layer pop_addAnimation:scaleAnimation forKey:@"iconScale"];
+    [self.notificationsCaptionLabel.layer pop_addAnimation:scaleAnimation forKey:@"iconScale"];
+    [self.notificationsQuestionLabel.layer pop_addAnimation:scaleAnimation forKey:@"iconScale"];
+    [self.yesToNotificationsButton.layer pop_addAnimation:scaleAnimation forKey:@"iconScale"];
+    [self.noToNotificationsButton.layer pop_addAnimation:scaleAnimation forKey:@"iconScale"];
+    
+    [UIView animateWithDuration:0.33 animations:^{
+        self.notificationsView.alpha = 0.0;
+    }];
+}
+
+- (void)yesToNotifications {
+    [[UXmanager shared] restorePreNotificationUI:YES];
+}
+
+- (void)noToNotifications {
+    [[UXmanager shared] restorePreNotificationUI:NO];
 }
 
 /*
