@@ -45,8 +45,6 @@
 @property (nonatomic,strong) IBOutlet NSLayoutConstraint *calloutAnchor;
 @property (nonatomic,strong) IBOutlet NSLayoutConstraint *buttonAnchor;
 
-// 
-
 - (void)prepare;
 - (void)revealLensWithOrigin:(CGPoint)origin;
 - (void)revealBrandingWithCompletion:(CompletionBlock)completed;

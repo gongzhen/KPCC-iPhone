@@ -5,4 +5,6 @@ pod 'JDStatusBarNotification'
 pod 'pop', '~> 1.0'
 pod 'FXBlurView', '~> 1.6'
 pod 'XMLDictionary', '~> 1.4'
+pod 'FlurrySDK'
+pod 'Parse'
 link_with ['KPCC', 'KPCC-TestFlight']
