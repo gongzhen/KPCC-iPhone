@@ -44,7 +44,10 @@
 - (void)displayWithProgram:(Program*)program onView:(UIView *)view aboveSiblingView:(UIView *)anchorView {
     
     [self setupProgressBarsWithProgram:program];
-
+    if ( self.liveBarLine || self.currentBarLine ) {
+        return;
+    }
+    
     self.view.clipsToBounds = YES;
     
     self.view.backgroundColor = [UIColor clearColor];
@@ -111,6 +114,7 @@
     self.currentProgressView.clipsToBounds = YES;
     self.currentProgressView.alpha = 0.0;
     self.liveProgressView.alpha = 0.0;
+    self.uiHidden = YES;
     self.view.alpha = 0.0;
     
 }
@@ -169,7 +173,6 @@
             self.lastCurrentValue = vBeginning;
             self.shuttling = NO;
             self.currentBarLine.strokeEnd = vBeginning;
-            [self.currentBarLine removeAllAnimations];
         }];
         
         CABasicAnimation *currentAnim = [CABasicAnimation animationWithKeyPath:@"strokeEnd"];
@@ -201,7 +204,7 @@
     
     [CATransaction begin]; {
         [CATransaction setCompletionBlock:^{
-            self.lastCurrentValue = 0.0;
+            self.lastCurrentValue = vBeginning;
             self.shuttling = NO;
             self.currentBarLine.strokeEnd = vBeginning;
             [self.currentBarLine removeAllAnimations];
@@ -220,41 +223,50 @@
 - (void)tick {
     
 
-    if ( self.uiHidden ) return;
     if ( self.shuttling ) return;
     
-    if ( [[SessionManager shared] sessionIsBehindLive] ) {
-        
-    }
     Program *program = [[SessionManager shared] currentProgram];
     
     NSDate *currentDate = [AudioManager shared].audioPlayer.currentItem.currentDate;
     NSTimeInterval beginning = [program.soft_starts_at timeIntervalSince1970];
+    if ( [[AudioManager shared] currentAudioMode] == AudioModeOnboarding ) {
+        NSDate *fauxDate = [[AudioManager shared] relativeFauxDate];
+        beginning = [fauxDate timeIntervalSince1970];
+    }
     NSTimeInterval end = [program.ends_at timeIntervalSince1970];
+    if ( [[AudioManager shared] currentAudioMode] == AudioModeOnboarding ) {
+        NSDictionary *p = [[SessionManager shared] onboardingAudio];
+        end = [(NSDate*)p[@"ends_at"] timeIntervalSince1970];
+    }
     NSTimeInterval duration = ( end - beginning );
     
     NSTimeInterval live = [[AudioManager shared].maxSeekableDate timeIntervalSince1970];
+    if ( [[AudioManager shared] currentAudioMode] == AudioModeOnboarding ) {
+        live = [[NSDate date] timeIntervalSince1970];
+    }
     NSTimeInterval current = [currentDate timeIntervalSince1970];
-    
+    if ( [[AudioManager shared] currentAudioMode] == AudioModeOnboarding ) {
+        current = live;
+    }
     NSTimeInterval liveDiff = ( live - beginning );
     NSTimeInterval currentDiff = ( current - beginning );
-    
-    self.lastCurrentValue = currentDiff / duration;
-    self.lastLiveValue = liveDiff / duration;
     
     dispatch_async(dispatch_get_main_queue(), ^{
         
         [CATransaction begin]; {
             [CATransaction setCompletionBlock:^{
-                self.liveBarLine.strokeEnd = self.lastLiveValue;
-                self.currentBarLine.strokeEnd = self.lastCurrentValue;
+                self.currentBarLine.strokeEnd = currentDiff / duration;
+                self.liveBarLine.strokeEnd = liveDiff / duration;
                 [self.liveBarLine removeAllAnimations];
                 [self.currentBarLine removeAllAnimations];
+                self.lastCurrentValue = currentDiff / duration;
+                self.lastLiveValue = liveDiff / duration;
             }];
+            
             CABasicAnimation *liveAnim = [CABasicAnimation animationWithKeyPath:@"strokeEnd"];
             [liveAnim setFromValue:[NSNumber numberWithFloat:self.lastLiveValue]];
             [liveAnim setToValue:@(fminf(liveDiff/duration,0.98f))];
-            [liveAnim setDuration:0.8];
+            [liveAnim setDuration:0.97];
             [liveAnim setRemovedOnCompletion:NO];
             [liveAnim setFillMode:kCAFillModeForwards];
 
@@ -263,7 +275,7 @@
             CABasicAnimation *currentAnim = [CABasicAnimation animationWithKeyPath:@"strokeEnd"];
             [currentAnim setFromValue:[NSNumber numberWithFloat:self.lastCurrentValue]];
             [currentAnim setToValue:@(fminf(currentDiff/duration,0.98f))];
-            [currentAnim setDuration:0.8];
+            [currentAnim setDuration:0.97];
             [currentAnim setRemovedOnCompletion:NO];
             [currentAnim setFillMode:kCAFillModeForwards];
    

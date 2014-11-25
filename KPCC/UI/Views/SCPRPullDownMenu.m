@@ -8,6 +8,7 @@
 
 #import "SCPRPullDownMenu.h"
 #import "SCPRMenuCell.h"
+#import "UIColor+UICustom.h"
 
 #define kMenuItemKPCCLive   @"KPCC Live"
 #define kMenuItemPrograms   @"Programs"
@@ -49,7 +50,7 @@
     NSOrderedSet* orderedItems = [NSOrderedSet orderedSetWithObjects:   kMenuItemKPCCLive,
                                                                         kMenuItemPrograms,
                                                                         kMenuItemShortList,
-                                                                        kMenuItemFeedback,
+                                                                        //kMenuItemFeedback,
                                                                         //kMenuItemDonate,
                                                                         //kMenuItemSettings,
                                                                         nil];
@@ -74,7 +75,7 @@
     topMarginPortrait = 100;
     topMarginLandscape = 0;
     cellColor = [UIColor clearColor];
-    cellSelectedColor = [UIColor lightGrayColor];
+    cellSelectedColor = [[UIColor virtualWhiteColor] translucify:0.2];
     cellFont = [UIFont fontWithName:@"FreightSansProLight-Regular" size:24.0f];
     cellTextColor = [UIColor whiteColor];
     cellSelectionStyle = UITableViewCellSelectionStyleDefault;
@@ -95,6 +96,20 @@
     }
 
     return self;
+}
+
+- (void)lightUpCellWithIndex:(NSInteger)index {
+    [self.menuList selectRowAtIndexPath:[NSIndexPath indexPathForItem:index inSection:0]
+                               animated:YES
+                         scrollPosition:UITableViewScrollPositionNone];
+}
+
+- (void)clearMenu {
+    for ( unsigned i = 0; i < [menuItems count]; i++ ) {
+        [self.menuList deselectRowAtIndexPath:[NSIndexPath indexPathForItem:i
+                                                                  inSection:0]
+                                     animated:YES];
+    }
 }
 
 - (void)loadMenu {

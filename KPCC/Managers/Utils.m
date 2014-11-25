@@ -103,6 +103,14 @@ static char *alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz012
     return NO;
 }
 
++ (BOOL)isIOS8 {
+    if (floor(NSFoundationVersionNumber) <= NSFoundationVersionNumber_iOS_7_1) {
+        return NO;
+    }
+    
+    return YES;
+}
+
 + (NSDictionary*)gConfig {
     NSString *path = [[NSBundle mainBundle] pathForResource:@"Config" ofType:@"plist"];
     NSDictionary *globalConfig = [[NSDictionary alloc] initWithContentsOfFile:path];
@@ -111,6 +119,10 @@ static char *alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz012
 
 + (BOOL)isRetina{
     return ([[UIScreen mainScreen] respondsToSelector:@selector(displayLinkWithTarget:selector:)] && ([UIScreen mainScreen].scale == 2.0))?1:0;
+}
+
++ (BOOL)isThreePointFive {
+    return [[UIScreen mainScreen] bounds].size.height < 568.0;
 }
 
 +(NSString *)base64:(NSData *)input {

@@ -17,5 +17,6 @@
 - (void)proLightFontize;
 - (void)proMediumFontize;
 - (void)proBookFontize;
+- (void)proSemiBoldFontize;
 
 @end

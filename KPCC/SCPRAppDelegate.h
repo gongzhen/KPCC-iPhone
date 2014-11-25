@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "Program.h"
 
+
 typedef void (^CompletionBlock)(void);
 typedef void (^CompletionBlockWithValue)(id returnedObject);
 
@@ -17,11 +18,13 @@ typedef void (^CompletionBlockWithValue)(id returnedObject);
 
 @class SCPRMasterViewController;
 @class SCPRNavigationController;
+@class SCPROnboardingViewController;
 
 @interface SCPRAppDelegate : UIResponder <UIApplicationDelegate>
 
 @property (strong, nonatomic) UIWindow *window;
 @property (strong, nonatomic) SCPRMasterViewController *masterViewController;
 @property (strong, nonatomic) SCPRNavigationController *masterNavigationController;
+@property (strong, nonatomic) SCPROnboardingViewController *onboardingController;
 
 @end

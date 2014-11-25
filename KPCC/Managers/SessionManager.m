@@ -27,6 +27,29 @@ static long kStreamBufferLimit = 4*60*60;
 }
 
 #pragma mark - Program
+- (void)fetchOnboardingProgramWithSegment:(NSInteger)segment completed:(CompletionBlockWithValue)completed {
+    NSMutableDictionary *p = [NSMutableDictionary new];
+    p[@"soft_starts_at"] = [NSDate date];
+    p[@"starts_at"] = [NSDate date];
+    
+    NSString *s = [NSString stringWithFormat:@"onboarding%ld.mp3",(long)segment];
+    NSString *fqp = [[NSBundle mainBundle] pathForResource:s
+                                                    ofType:@""];
+    AVAsset *item = [AVAsset assetWithURL:[NSURL fileURLWithPath:fqp]];
+    CMTime duration = item.duration;
+    NSInteger seconds = CMTimeGetSeconds(duration);
+    NSInteger modifier = segment == 1 ? seconds : 0;
+    p[@"ends_at"] = [[NSDate date] dateByAddingTimeInterval:seconds+modifier];
+    p[@"title"] = @"Welcome to KPCC";
+    p[@"program_slug"] = [NSString stringWithFormat:@"onboarding%ld",segment];
+    self.onboardingAudio = p;
+    
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.33 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        completed(p);
+    });
+    
+}
+
 - (void)fetchProgramAtDate:(NSDate *)date completed:(CompletionBlockWithValue)completed {
     
 #ifdef TESTING_PROGRAM_CHANGE

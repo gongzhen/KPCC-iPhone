@@ -13,6 +13,8 @@
 #import "Flurry.h"
 #import "SessionManager.h"
 #import "NetworkManager.h"
+#import "SCPROnboardingViewController.h"
+#import "UXmanager.h"
 
 #ifdef ENABLE_TESTFLIGHT
 #import "TestFlight.h"
@@ -48,11 +50,19 @@
     // Launch our root view controller
     SCPRNavigationController *navigationController = [[UIStoryboard storyboardWithName:@"Storyboard" bundle:nil] instantiateInitialViewController];
 
+    self.onboardingController = [[SCPROnboardingViewController alloc] initWithNibName:@"SCPROnboardingViewController"
+                                                                               bundle:nil];
+    self.onboardingController.view.frame = CGRectMake(0.0,0.0,self.window.frame.size.width,
+                                                      self.window.frame.size.height);
+
+    self.onboardingController.view.backgroundColor = [UIColor clearColor];
+    
     self.masterNavigationController = navigationController;
     self.masterViewController = navigationController.viewControllers.firstObject;
-    self.masterNavigationController.navigationBarHidden = YES;
     self.window.rootViewController = navigationController;
+    navigationController.navigationBarHidden = YES;
 
+    
     // Fetch initial list of Programs from SCPRV4 and store in CoreData for later usage.
     [[NetworkManager shared] fetchAllProgramInformation:^(id returnedObject) {
         
@@ -70,12 +80,7 @@
         [[ContentManager shared] saveContext];
     }];
     
-#ifdef USE_NOTIFICATIONS
-    if ( [[UIApplication sharedApplication] respondsToSelector:@selector(registerUserNotificationSettings:)] ) {
-        [[UIApplication sharedApplication] registerUserNotificationSettings:[UIUserNotificationSettings settingsForTypes:UIUserNotificationTypeAlert
-                                                                                                              categories:nil]];
-    }
-#endif
+
     
     // Override point for customization after application launch.
     return YES;
@@ -83,9 +88,22 @@
 
 - (void)application:(UIApplication *)application didRegisterUserNotificationSettings:(UIUserNotificationSettings *)notificationSettings {
     UIUserNotificationType types = notificationSettings.types;
+    
+    [[UXmanager shared] setSuppressBalloon:YES];
     [[SessionManager shared] setUseLocalNotifications:( types & UIUserNotificationTypeAlert )];
+   
+    if ( ![[UXmanager shared] userHasSeenOnboarding] ) {
+        [[UXmanager shared] closeOutOnboarding];
+    }
+    
 }
-							
+
+- (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error {
+    if ( ![[UXmanager shared] userHasSeenOnboarding] ) {
+        [[UXmanager shared] closeOutOnboarding];
+    }
+}
+
 - (void)applicationWillResignActive:(UIApplication *)application {
     
     [[SessionManager shared] disarmProgramUpdater];

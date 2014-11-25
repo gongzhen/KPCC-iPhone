@@ -16,6 +16,7 @@
 #import "Segment.h"
 #import "NSDate+Helper.h"
 #import "SessionManager.h"
+#import "UXmanager.h"
 
 static AudioManager *singleton = nil;
 static NSInteger kBufferObservationThreshold = 10;
@@ -33,6 +34,7 @@ static const NSString *ItemStatusContext;
             singleton.fadeQueue = [[NSOperationQueue alloc] init];
             singleton.status = StreamStatusStopped;
             singleton.savedVolumeFromMute = -1.0;
+            singleton.currentAudioMode = AudioModeNeutral;
         }
     }
     return singleton;
@@ -93,17 +95,23 @@ static const NSString *ItemStatusContext;
         
         CGFloat oldRate = [change[@"old"] floatValue];
         CGFloat newRate = [change[@"new"] floatValue];
+        // Now playing, was stopped.
+        if (oldRate == 0.0 && newRate == 1.0) {
+            [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
+        }
+        if ( oldRate == 1.0 && newRate == 0.0 ) {
+            self.status = StreamStatusPaused;
+        }
         
         if ([self.delegate respondsToSelector:@selector(onRateChange)]) {
             [self.delegate onRateChange];
         }
         
-        // Now playing, was stopped.
-        if (oldRate == 0.0 && newRate == 1.0) {
-            [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
-        }
+
     }
 }
+
+
 
 
 - (void)updateNowPlayingInfoWithAudio:(id)audio {
@@ -245,7 +253,7 @@ static const NSString *ItemStatusContext;
             [self.audioPlayer.currentItem seekToDate:date completionHandler:^(BOOL finished) {
                 if(self.audioPlayer.status == AVPlayerStatusReadyToPlay &&
                    self.audioPlayer.currentItem.status == AVPlayerItemStatusReadyToPlay) {
-                    [self.audioPlayer play];
+                    [self playStream];
 
                     if ([self.delegate respondsToSelector:@selector(onSeekCompleted)]) {
                         [self.delegate onSeekCompleted];
@@ -255,9 +263,15 @@ static const NSString *ItemStatusContext;
         });
 
     } else {
-        [self.audioPlayer pause];
+        
+        /*
+        if ( [AudioManager shared].status == StreamStatusPlaying ) {
+            [self.audioPlayer pause];
+        }
+        */
+        
         NSDate *justABitInTheFuture = [NSDate dateWithTimeInterval:2 sinceDate:date];
-        [self.audioPlayer.currentItem seekToDate:date completionHandler:^(BOOL finished) {
+        [self.audioPlayer.currentItem seekToDate:justABitInTheFuture completionHandler:^(BOOL finished) {
             if ( !finished ) {
                 NSLog(@" **************** AUDIOPLAYER NOT FINISHED BUFFERING ****************** ");
             }
@@ -275,13 +289,15 @@ static const NSString *ItemStatusContext;
                 self.bufferObservationCount = 0;
 #endif
                 
-                if ( [self.audioPlayer rate] == 0.0 ) {
-                    [self.audioPlayer play];
-                }
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    if ( [self.audioPlayer rate] == 0.0 ) {
+                        [self playStream];
+                    }
+                    if ([self.delegate respondsToSelector:@selector(onSeekCompleted)]) {
+                        [self.delegate onSeekCompleted];
+                    }
+                });
 
-                if ([self.delegate respondsToSelector:@selector(onSeekCompleted)]) {
-                    [self.delegate onSeekCompleted];
-                }
                 
 #ifdef VERBOSE_STREAM_LOGGING
                 [self dump:NO];
@@ -306,7 +322,7 @@ static const NSString *ItemStatusContext;
     if (!self.audioPlayer) {
         [self buildStreamer:kHLSLiveStreamURL];
     } else {
-        [self.audioPlayer pause];
+        //[self.audioPlayer pause];
     }
 
     //double time = MAXFLOAT;
@@ -315,7 +331,7 @@ static const NSString *ItemStatusContext;
     [self dump:NO];
 #endif
     [self.audioPlayer seekToDate:[self maxSeekableDate] completionHandler:^(BOOL finished) {
-        [self.audioPlayer play];
+        [self playStream];
 
         if ([self.delegate respondsToSelector:@selector(onSeekCompleted)]) {
             [self.delegate onSeekCompleted];
@@ -397,6 +413,18 @@ static const NSString *ItemStatusContext;
     }
 }
 
+- (void)onboardingSegmentCompleted {
+    if ( self.onboardingSegment == 1 ) {
+        [[UXmanager shared] presentLensOverRewindButton];
+    }
+    if ( self.onboardingSegment == 2 ) {
+        [[UXmanager shared] askForPushNotifications];
+    }
+    if ( self.onboardingSegment == 3 ) {
+        [[UXmanager shared] endOnboarding];
+    }
+}
+
 - (NSString *)liveStreamURL {
 
     if (self.audioPlayer) {
@@ -437,7 +465,7 @@ static const NSString *ItemStatusContext;
 }
 
 #pragma mark - Audio Control
-- (void)buildStreamer:(NSString*)urlString {
+- (void)buildStreamer:(NSString*)urlString local:(BOOL)local {
     NSURL *url;
     if ( urlString == nil || SEQ(urlString, kHLSLiveStreamURL) ) {
         url = [NSURL URLWithString:kHLSLiveStreamURL];
@@ -447,6 +475,14 @@ static const NSString *ItemStatusContext;
         self.currentAudioMode = AudioModeOnDemand;
     }
     
+    if ( local ) {
+        NSString *filePath = [[NSBundle mainBundle] pathForResource:urlString
+                                                             ofType:@"mp3"];
+        url = [NSURL fileURLWithPath:filePath];
+        self.currentAudioMode = AudioModeOnboarding;
+        self.relativeFauxDate = [NSDate date];
+    }
+    
     self.playerItem = [AVPlayerItem playerItemWithURL:url];
     [self.playerItem addObserver:self forKeyPath:@"status" options:NSKeyValueObservingOptionOld|NSKeyValueObservingOptionNew context:nil];
     [self.playerItem addObserver:self forKeyPath:@"playbackBufferEmpty" options:NSKeyValueObservingOptionNew context:nil];
@@ -454,11 +490,26 @@ static const NSString *ItemStatusContext;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playerItemFailedToPlayToEndTime:) name:AVPlayerItemFailedToPlayToEndTimeNotification object:self.playerItem];
     
     self.audioPlayer = [AVPlayer playerWithPlayerItem:self.playerItem];
-    [self.audioPlayer addObserver:self forKeyPath:@"status" options:NSKeyValueObservingOptionOld|NSKeyValueObservingOptionNew context:nil];
-    [self.audioPlayer addObserver:self forKeyPath:@"rate" options:NSKeyValueObservingOptionOld|NSKeyValueObservingOptionNew context:nil];
-    
+    [self.audioPlayer addObserver:self
+                       forKeyPath:@"status"
+                          options:NSKeyValueObservingOptionOld|NSKeyValueObservingOptionNew
+                          context:nil];
+    [self.audioPlayer addObserver:self
+                       forKeyPath:@"rate"
+                          options:NSKeyValueObservingOptionOld|NSKeyValueObservingOptionNew
+                          context:nil];
     
     [self startObservingTime];
+}
+
+- (void)buildStreamer:(NSString *)urlString {
+    [self buildStreamer:urlString local:NO];
+}
+
+- (void)sanitizeFromOnboarding {
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:AVPlayerItemDidPlayToEndTimeNotification
+                                                  object:nil];
 }
 
 
@@ -476,13 +527,47 @@ static const NSString *ItemStatusContext;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playerItemDidFinishPlaying:) name:AVPlayerItemDidPlayToEndTimeNotification object:self.playerItem];
 }
 
+
 - (void)playLiveStream {
     [self stopAllAudio];
     [self buildStreamer:kHLSLiveStreamURL];
     [self startStream];
 }
 
+- (void)playOnboardingAudio:(NSInteger)segment {
+    if ( self.temporaryMutex ) {
+        self.temporaryMutex = NO;
+        return;
+    }
+    
+    self.temporaryMutex = YES;
+    
+    [self takedownAudioPlayer];
+    self.onboardingSegment = segment;
+    NSString *file = [NSString stringWithFormat:@"onboarding%ld",(long)segment];
+    [self buildStreamer:file local:YES];
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:AVPlayerItemDidPlayToEndTimeNotification
+                                                  object:nil];
+     
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(onboardingSegmentCompleted)
+                                                 name:AVPlayerItemDidPlayToEndTimeNotification
+                                               object:nil];
+    
+    [self startStream];
+    
+}
+
 - (void)startStream {
+    
+    if ( self.temporaryMutex ) {
+        self.temporaryMutex = NO;
+        return;
+    }
+    
+    self.temporaryMutex = YES;
     if (!self.audioPlayer) {
         [self buildStreamer:kHLSLiveStreamURL];
     }
@@ -503,6 +588,11 @@ static const NSString *ItemStatusContext;
     [[SessionManager shared] setSessionPausedDate:nil];
     
     self.status = StreamStatusPlaying;
+}
+
+- (void)playStream {
+    self.status = StreamStatusPlaying;
+    [self.audioPlayer play];
 }
 
 - (void)pauseStream {
@@ -536,6 +626,9 @@ static const NSString *ItemStatusContext;
             self.savedVolume = self.audioPlayer.volume;
         }
     } else {
+        if ( self.savedVolumeFromMute >= 0.0 ) {
+            self.savedVolume = self.savedVolumeFromMute;
+        }
         self.savedVolumeFromMute = -1.0;
     }
     [self threadedAdjustWithValue:increment completion:completion];
@@ -556,6 +649,9 @@ static const NSString *ItemStatusContext;
     if ( basecase ) {
         if ( increasing ) {
             self.audioPlayer.volume = self.savedVolume;
+            self.autoMuted = NO;
+        } else {
+            self.autoMuted = YES;
         }
         if ( completion ) {
             dispatch_async(dispatch_get_main_queue(), completion);
@@ -582,6 +678,8 @@ static const NSString *ItemStatusContext;
 }
 
 - (void)takedownAudioPlayer {
+    
+    self.temporaryMutex = NO;
     if ( self.audioPlayer ) {
         
         [self.audioPlayer pause];

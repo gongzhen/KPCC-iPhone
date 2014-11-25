@@ -79,6 +79,8 @@
     return [UIColor colorWithHex:0xFF8C26];
 }
 
-
++ (UIColor*)kpccPeriwinkleColor {
+    return [UIColor colorWithHex:0x32ACD5];
+}
 
 @end
