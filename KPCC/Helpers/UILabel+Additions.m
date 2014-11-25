@@ -88,4 +88,9 @@
     self.font = [UIFont fontWithName:@"FreightSansProBook-Regular" size:self.font.pointSize];
 }
 
+- (void)proSemiBoldFontize {
+    UIFont *f = [UIFont fontWithName:@"FreightSansProSemibold-Regular" size:self.font.pointSize];
+    self.font = f;
+}
+
 @end

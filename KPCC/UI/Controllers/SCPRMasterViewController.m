@@ -241,10 +241,12 @@ static CGFloat kDisabledAlpha = 0.15;
 - (void)primeOnboarding {
     SCPRAppDelegate *del = (SCPRAppDelegate*)[[UIApplication sharedApplication] delegate];
     SCPRNavigationController *nav = [del masterNavigationController];
+    [[UIApplication sharedApplication] setStatusBarHidden:YES];
+    
     //nav.navigationBarHidden = YES;
 
     self.automationMode = YES;
-    self.programImageView.image = [UIImage imageNamed:@"onboarding.jpg"];
+    self.programImageView.image = [UIImage imageNamed:@"onboarding-tile.jpg"];
 
     
     self.initialControlsView.layer.opacity = 0.0;
@@ -261,7 +263,7 @@ static CGFloat kDisabledAlpha = 0.15;
     nav.navigationBarHidden = NO;
     [[SessionManager shared] fetchOnboardingProgramWithSegment:1 completed:^(id returnedObject) {
         [self.blurView setNeedsDisplay];
-        self.programTitleLabel.text = [[[SessionManager shared] currentProgram] title];
+        self.programTitleLabel.text = @"Welcome to KPCC";
         [SCPRCloakViewController uncloak];
         [UIView animateWithDuration:0.33 animations:^{
             self.view.alpha = 1.0;
@@ -604,6 +606,7 @@ static CGFloat kDisabledAlpha = 0.15;
                                        [[AudioManager shared] adjustAudioWithValue:0.1 completion:^{
                                            [[SessionManager shared] fetchOnboardingProgramWithSegment:2 completed:^(id returnedObject) {
                                                [[UXmanager shared] listenForQueues];
+                                               [[AudioManager shared] setTemporaryMutex:NO];
                                                [[AudioManager shared] playOnboardingAudio:2];
                                            }];
                                            
@@ -1610,7 +1613,7 @@ static CGFloat kDisabledAlpha = 0.15;
     NSTimeInterval ti = [[[AudioManager shared] maxSeekableDate] timeIntervalSinceDate:[[AudioManager shared] currentDate]];
     
     Program *program = [[SessionManager shared] currentProgram];
-    if ( program ) {
+    if ( program || [AudioManager shared].currentAudioMode == AudioModeOnboarding ) {
         [self.liveProgressViewController tick];
     }
   

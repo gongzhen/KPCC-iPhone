@@ -7,6 +7,8 @@
 //
 
 #import "SCPRTextCalloutViewController.h"
+#import "UILabel+Additions.h"
+#import "UIColor+UICustom.h"
 
 @interface SCPRTextCalloutViewController ()
 
@@ -16,12 +18,23 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    [self.bodyTextLabel proBookFontize];
+    self.bodyContainerView.backgroundColor = [UIColor kpccPeriwinkleColor];
+    self.trianglePointerView.shadeColor = [UIColor kpccPeriwinkleColor];
+    [self.trianglePointerView setNeedsDisplay];
+    self.trianglePointerView.backgroundColor = [UIColor clearColor];
     // Do any additional setup after loading the view.
 }
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+- (void)slidePointer:(CGFloat)xCoordinate {
+    [self.pointerXPosition setConstant:xCoordinate];
+    
 }
 
 /*

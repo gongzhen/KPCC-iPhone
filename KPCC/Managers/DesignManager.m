@@ -131,7 +131,7 @@ static DesignManager *singleton = nil;
 - (void)sculptButton:(UIButton *)button withStyle:(SculptingStyle)style andText:(NSString *)text {
     [button setTitle:text forState:UIControlStateNormal];
     [button setTitle:text forState:UIControlStateHighlighted];
-    [button.titleLabel proMediumFontize];
+    [button.titleLabel proSemiBoldFontize];
     
     switch (style) {
         case SculptingStylePeriwinkle:

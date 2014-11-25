@@ -24,6 +24,7 @@
     return @"Program";
 }
 
+
 + (instancetype)insertNewObjectIntoContext:(NSManagedObjectContext *)context {
 
     if ( !context ) context = [[ContentManager shared] managedObjectContext];

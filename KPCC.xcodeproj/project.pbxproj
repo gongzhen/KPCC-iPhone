@@ -7,6 +7,14 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		254CC6961A23A7A600560805 /* onboarding-logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 254CC6901A23A7A600560805 /* onboarding-logo.png */; };
+		254CC6971A23A7A600560805 /* onboarding-logo@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 254CC6911A23A7A600560805 /* onboarding-logo@2x.png */; };
+		254CC6981A23A7A600560805 /* onboarding-push-icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 254CC6921A23A7A600560805 /* onboarding-push-icon.png */; };
+		254CC6991A23A7A600560805 /* onboarding-push-icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 254CC6931A23A7A600560805 /* onboarding-push-icon@2x.png */; };
+		254CC69A1A23A7A600560805 /* onboarding-tile.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 254CC6941A23A7A600560805 /* onboarding-tile.jpg */; };
+		254CC69B1A23A7A600560805 /* onboarding-tile@2x.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 254CC6951A23A7A600560805 /* onboarding-tile@2x.jpg */; };
+		254CC69E1A23B41D00560805 /* SCPRTriangleView.m in Sources */ = {isa = PBXBuildFile; fileRef = 254CC69D1A23B41D00560805 /* SCPRTriangleView.m */; };
+		254CC6A01A240B6200560805 /* onboarding-episode-swipe@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 254CC69F1A240B6200560805 /* onboarding-episode-swipe@2x.png */; };
 		254E177019F863960022BF6B /* UILabel+Additions.m in Sources */ = {isa = PBXBuildFile; fileRef = 254E176F19F863960022BF6B /* UILabel+Additions.m */; };
 		2557BA831A1A9BB800B0CAED /* btn_back_to_live_xtra-small.png in Resources */ = {isa = PBXBuildFile; fileRef = 2557BA7F1A1A9BB800B0CAED /* btn_back_to_live_xtra-small.png */; };
 		2557BA841A1A9BB800B0CAED /* btn_back_to_live_xtra-small@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2557BA801A1A9BB800B0CAED /* btn_back_to_live_xtra-small@2x.png */; };
@@ -15,7 +23,6 @@
 		255943EA19F1A7620007294D /* SCPRJogShuttleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 255943E919F1A7620007294D /* SCPRJogShuttleViewController.m */; };
 		256DE7271A16B9D90022EB84 /* menu-feedback.png in Resources */ = {isa = PBXBuildFile; fileRef = 256DE7251A16B9D90022EB84 /* menu-feedback.png */; };
 		256DE7281A16B9D90022EB84 /* menu-feedback@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 256DE7261A16B9D90022EB84 /* menu-feedback@2x.png */; };
-		258B5CC31A1EC27000165F45 /* onboarding3.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 258B5CC21A1EC27000165F45 /* onboarding3.mp3 */; };
 		258BB0381A1C07FD00B8FCFE /* UXmanager.m in Sources */ = {isa = PBXBuildFile; fileRef = 258BB0371A1C07FD00B8FCFE /* UXmanager.m */; };
 		258BB03E1A1C083B00B8FCFE /* Settings.m in Sources */ = {isa = PBXBuildFile; fileRef = 258BB03D1A1C083B00B8FCFE /* Settings.m */; };
 		258BD3AE1A0BF65200E7560F /* UIButton+Additions.m in Sources */ = {isa = PBXBuildFile; fileRef = 258BD3AD1A0BF65200E7560F /* UIButton+Additions.m */; };
@@ -38,9 +45,6 @@
 		259E44FF1A1D2CD300F5CD65 /* SCPROnboardingViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 259E44FD1A1D2CD300F5CD65 /* SCPROnboardingViewController.xib */; };
 		259E45021A1D2CE400F5CD65 /* SCPRLensViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 259E45011A1D2CE400F5CD65 /* SCPRLensViewController.m */; };
 		259E45051A1D2CF700F5CD65 /* SCPRTextCalloutViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 259E45041A1D2CF700F5CD65 /* SCPRTextCalloutViewController.m */; };
-		259E45071A1D382500F5CD65 /* onboarding@2x.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 259E45061A1D382500F5CD65 /* onboarding@2x.jpg */; };
-		259E450A1A1D444000F5CD65 /* kpcc-logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 259E45081A1D444000F5CD65 /* kpcc-logo.png */; };
-		259E450B1A1D444000F5CD65 /* kpcc-logo@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 259E45091A1D444000F5CD65 /* kpcc-logo@2x.png */; };
 		259E450E1A1D583A00F5CD65 /* onboarding1.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 259E450C1A1D583A00F5CD65 /* onboarding1.mp3 */; };
 		259E450F1A1D583A00F5CD65 /* onboarding2.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 259E450D1A1D583A00F5CD65 /* onboarding2.mp3 */; };
 		25B59A5619FEF93700D4885C /* SCPRShortListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 25B59A5419FEF93700D4885C /* SCPRShortListViewController.m */; };
@@ -238,6 +242,15 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		254CC6901A23A7A600560805 /* onboarding-logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "onboarding-logo.png"; sourceTree = "<group>"; };
+		254CC6911A23A7A600560805 /* onboarding-logo@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "onboarding-logo@2x.png"; sourceTree = "<group>"; };
+		254CC6921A23A7A600560805 /* onboarding-push-icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "onboarding-push-icon.png"; sourceTree = "<group>"; };
+		254CC6931A23A7A600560805 /* onboarding-push-icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "onboarding-push-icon@2x.png"; sourceTree = "<group>"; };
+		254CC6941A23A7A600560805 /* onboarding-tile.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "onboarding-tile.jpg"; sourceTree = "<group>"; };
+		254CC6951A23A7A600560805 /* onboarding-tile@2x.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "onboarding-tile@2x.jpg"; sourceTree = "<group>"; };
+		254CC69C1A23B41D00560805 /* SCPRTriangleView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCPRTriangleView.h; path = Onboarding/SCPRTriangleView.h; sourceTree = "<group>"; };
+		254CC69D1A23B41D00560805 /* SCPRTriangleView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SCPRTriangleView.m; path = Onboarding/SCPRTriangleView.m; sourceTree = "<group>"; };
+		254CC69F1A240B6200560805 /* onboarding-episode-swipe@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "onboarding-episode-swipe@2x.png"; sourceTree = "<group>"; };
 		254E176E19F863960022BF6B /* UILabel+Additions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UILabel+Additions.h"; sourceTree = "<group>"; };
 		254E176F19F863960022BF6B /* UILabel+Additions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UILabel+Additions.m"; sourceTree = "<group>"; };
 		2557BA7F1A1A9BB800B0CAED /* btn_back_to_live_xtra-small.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "btn_back_to_live_xtra-small.png"; sourceTree = "<group>"; };
@@ -248,7 +261,6 @@
 		255943E919F1A7620007294D /* SCPRJogShuttleViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SCPRJogShuttleViewController.m; sourceTree = "<group>"; };
 		256DE7251A16B9D90022EB84 /* menu-feedback.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "menu-feedback.png"; sourceTree = "<group>"; };
 		256DE7261A16B9D90022EB84 /* menu-feedback@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "menu-feedback@2x.png"; sourceTree = "<group>"; };
-		258B5CC21A1EC27000165F45 /* onboarding3.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = onboarding3.mp3; path = Audio/onboarding3.mp3; sourceTree = "<group>"; };
 		258BB0361A1C07FD00B8FCFE /* UXmanager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UXmanager.h; path = Managers/UXmanager.h; sourceTree = "<group>"; };
 		258BB0371A1C07FD00B8FCFE /* UXmanager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UXmanager.m; path = Managers/UXmanager.m; sourceTree = "<group>"; };
 		258BB03C1A1C083B00B8FCFE /* Settings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Settings.h; sourceTree = "<group>"; };
@@ -286,9 +298,6 @@
 		259E45011A1D2CE400F5CD65 /* SCPRLensViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SCPRLensViewController.m; path = Onboarding/SCPRLensViewController.m; sourceTree = "<group>"; };
 		259E45031A1D2CF700F5CD65 /* SCPRTextCalloutViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCPRTextCalloutViewController.h; path = Onboarding/SCPRTextCalloutViewController.h; sourceTree = "<group>"; };
 		259E45041A1D2CF700F5CD65 /* SCPRTextCalloutViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SCPRTextCalloutViewController.m; path = Onboarding/SCPRTextCalloutViewController.m; sourceTree = "<group>"; };
-		259E45061A1D382500F5CD65 /* onboarding@2x.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "onboarding@2x.jpg"; sourceTree = "<group>"; };
-		259E45081A1D444000F5CD65 /* kpcc-logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "kpcc-logo.png"; sourceTree = "<group>"; };
-		259E45091A1D444000F5CD65 /* kpcc-logo@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "kpcc-logo@2x.png"; sourceTree = "<group>"; };
 		259E450C1A1D583A00F5CD65 /* onboarding1.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = onboarding1.mp3; path = Audio/onboarding1.mp3; sourceTree = "<group>"; };
 		259E450D1A1D583A00F5CD65 /* onboarding2.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = onboarding2.mp3; path = Audio/onboarding2.mp3; sourceTree = "<group>"; };
 		25B59A5319FEF93700D4885C /* SCPRShortListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCPRShortListViewController.h; path = Headlines/SCPRShortListViewController.h; sourceTree = "<group>"; };
@@ -552,6 +561,20 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		254CC68F1A23A77B00560805 /* Onboarding */ = {
+			isa = PBXGroup;
+			children = (
+				254CC69F1A240B6200560805 /* onboarding-episode-swipe@2x.png */,
+				254CC6901A23A7A600560805 /* onboarding-logo.png */,
+				254CC6911A23A7A600560805 /* onboarding-logo@2x.png */,
+				254CC6921A23A7A600560805 /* onboarding-push-icon.png */,
+				254CC6931A23A7A600560805 /* onboarding-push-icon@2x.png */,
+				254CC6941A23A7A600560805 /* onboarding-tile.jpg */,
+				254CC6951A23A7A600560805 /* onboarding-tile@2x.jpg */,
+			);
+			name = Onboarding;
+			sourceTree = "<group>";
+		};
 		258E8DFC1A16AA1100675E68 /* Fixtures */ = {
 			isa = PBXGroup;
 			children = (
@@ -564,7 +587,6 @@
 		258E8DFD1A16AA1800675E68 /* Audio */ = {
 			isa = PBXGroup;
 			children = (
-				258B5CC21A1EC27000165F45 /* onboarding3.mp3 */,
 				259E450C1A1D583A00F5CD65 /* onboarding1.mp3 */,
 				259E450D1A1D583A00F5CD65 /* onboarding2.mp3 */,
 				258E8DFE1A16AA3900675E68 /* Glass_Crash.mp3 */,
@@ -594,6 +616,8 @@
 				259E45011A1D2CE400F5CD65 /* SCPRLensViewController.m */,
 				259E45031A1D2CF700F5CD65 /* SCPRTextCalloutViewController.h */,
 				259E45041A1D2CF700F5CD65 /* SCPRTextCalloutViewController.m */,
+				254CC69C1A23B41D00560805 /* SCPRTriangleView.h */,
+				254CC69D1A23B41D00560805 /* SCPRTriangleView.m */,
 			);
 			name = Onboarding;
 			sourceTree = "<group>";
@@ -862,9 +886,7 @@
 		7685BD57194BBCB90075BB16 /* Images */ = {
 			isa = PBXGroup;
 			children = (
-				259E45081A1D444000F5CD65 /* kpcc-logo.png */,
-				259E45091A1D444000F5CD65 /* kpcc-logo@2x.png */,
-				259E45061A1D382500F5CD65 /* onboarding@2x.jpg */,
+				254CC68F1A23A77B00560805 /* Onboarding */,
 				2557BA7F1A1A9BB800B0CAED /* btn_back_to_live_xtra-small.png */,
 				2557BA801A1A9BB800B0CAED /* btn_back_to_live_xtra-small@2x.png */,
 				2557BA811A1A9BB800B0CAED /* btn_live_rewind_xtra-small.png */,
@@ -1188,7 +1210,6 @@
 				52EFF86219C368C00059A0E3 /* program_avatar_weekend-edition-saturday.png in Resources */,
 				52EFF79119C3688D0059A0E3 /* menu-glasses@2x.png in Resources */,
 				768C0675199590CC00F829EB /* FreigSanProBoldIt.otf in Resources */,
-				258B5CC31A1EC27000165F45 /* onboarding3.mp3 in Resources */,
 				523E86D219C8A292006FC366 /* SCPRProgramDetailViewController.xib in Resources */,
 				76A308E518C8FB940065D4B1 /* Images.xcassets in Resources */,
 				52CF917619FEF306007BCFA8 /* btn_play.png in Resources */,
@@ -1204,6 +1225,7 @@
 				52EFF84E19C368C00059A0E3 /* program_avatar_tavis-smiley-show.png in Resources */,
 				52EFF80219C368C00059A0E3 /* program_avatar_dinner-party-download.png in Resources */,
 				52EFF87019C368C00059A0E3 /* program_avatar_writers-almanac@2x.png in Resources */,
+				254CC6961A23A7A600560805 /* onboarding-logo.png in Resources */,
 				52D0FC3019D20D29009AECEE /* program_avatar_marketplace-weekend@2x.png in Resources */,
 				52EFF83E19C368C00059A0E3 /* program_avatar_science-friday.png in Resources */,
 				52EFF82C19C368C00059A0E3 /* program_avatar_offramp@2x.png in Resources */,
@@ -1245,6 +1267,7 @@
 				52EFF80419C368C00059A0E3 /* program_avatar_dinner-party-download@2x.png in Resources */,
 				52D0FC3219D20D29009AECEE /* program_avatar_q-with-jian-ghomeshi.png in Resources */,
 				52EFF84C19C368C00059A0E3 /* program_avatar_take-two@2x.png in Resources */,
+				254CC6A01A240B6200560805 /* onboarding-episode-swipe@2x.png in Resources */,
 				52EFF82A19C368C00059A0E3 /* program_avatar_offramp.png in Resources */,
 				52EFF7E819C368C00059A0E3 /* program_avatar_airtalk@2x.png in Resources */,
 				52EFF84A19C368C00059A0E3 /* program_avatar_take-two.png in Resources */,
@@ -1252,6 +1275,7 @@
 				768C0685199590CC00F829EB /* FreigSanProSemIt.otf in Resources */,
 				52EFF85019C368C00059A0E3 /* program_avatar_tavis-smiley-show@2x.png in Resources */,
 				52EFF85C19C368C00059A0E3 /* program_avatar_this-american-life@2x.png in Resources */,
+				254CC69A1A23A7A600560805 /* onboarding-tile.jpg in Resources */,
 				52EFF85419C368C00059A0E3 /* program_avatar_ted-radio-hour@2x.png in Resources */,
 				52EFF81019C368C00059A0E3 /* program_avatar_latino-usa@2x.png in Resources */,
 				52EFF82219C368C00059A0E3 /* program_avatar_morning-edition.png in Resources */,
@@ -1273,6 +1297,7 @@
 				52EFF79B19C3688D0059A0E3 /* menu-settings.png in Resources */,
 				76A308D118C8FB940065D4B1 /* InfoPlist.strings in Resources */,
 				768C06581995905D00F829EB /* btn_pause@2x.png in Resources */,
+				254CC6991A23A7A600560805 /* onboarding-push-icon@2x.png in Resources */,
 				52EFF86C19C368C00059A0E3 /* program_avatar_wits@2x.png in Resources */,
 				2557BA861A1A9BB800B0CAED /* btn_live_rewind_xtra-small@2x.png in Resources */,
 				52EFF7EE19C368C00059A0E3 /* program_avatar_ask-me-another.png in Resources */,
@@ -1283,11 +1308,11 @@
 				52EFF7F819C368C00059A0E3 /* program_avatar_bbc-world-service@2x.png in Resources */,
 				52EFF82619C368C00059A0E3 /* program_avatar_moth-radio-hour.png in Resources */,
 				76EF5E8A193E8D6B00568A9D /* Storyboard.storyboard in Resources */,
+				254CC69B1A23A7A600560805 /* onboarding-tile@2x.jpg in Resources */,
 				769B907A19C0D5C300E812C7 /* Config.plist in Resources */,
 				52EFF7E619C368C00059A0E3 /* program_avatar_airtalk.png in Resources */,
 				52EFF7F019C368C00059A0E3 /* program_avatar_ask-me-another@2x.png in Resources */,
 				52D0FC3419D20D29009AECEE /* program_avatar_q-with-jian-ghomeshi@2x.png in Resources */,
-				259E450A1A1D444000F5CD65 /* kpcc-logo.png in Resources */,
 				52EFF81819C368C00059A0E3 /* program_avatar_loh-life@2x.png in Resources */,
 				52EFF7F219C368C00059A0E3 /* program_avatar_bbc-newshour.png in Resources */,
 				52D0FC2C19D20D29009AECEE /* program_avatar_marketplace-tech-report@2x.png in Resources */,
@@ -1308,14 +1333,14 @@
 				258E8E061A16AA4200675E68 /* desk_customer_template.json in Resources */,
 				52D9227A19D366C90018AD4B /* content-share@2x.png in Resources */,
 				52EFF86819C368C00059A0E3 /* program_avatar_weekend-edition-sunday@2x.png in Resources */,
-				259E45071A1D382500F5CD65 /* onboarding@2x.jpg in Resources */,
 				52EFF84819C368C00059A0E3 /* program_avatar_splendid-table@2x.png in Resources */,
+				254CC6971A23A7A600560805 /* onboarding-logo@2x.png in Resources */,
 				52EFF82419C368C00059A0E3 /* program_avatar_morning-edition@2x.png in Resources */,
 				768C06521995905D00F829EB /* btn_live_rewind_small.png in Resources */,
 				768C066F199590CC00F829EB /* FreigSanProBlk.otf in Resources */,
 				258E8E011A16AA3900675E68 /* Glass_Crash.mp3 in Resources */,
+				254CC6981A23A7A600560805 /* onboarding-push-icon.png in Resources */,
 				52D0FC3819D20D29009AECEE /* program_avatar_the-frame@2x.png in Resources */,
-				259E450B1A1D444000F5CD65 /* kpcc-logo@2x.png in Resources */,
 				768C06601995905D00F829EB /* chevron_down@2x.png in Resources */,
 				768C0671199590CC00F829EB /* FreigSanProBlkIt.otf in Resources */,
 				52CC6D6919D112F400C67322 /* SCPRProgramsListViewController.xib in Resources */,
@@ -1379,6 +1404,7 @@
 				76349D1B18D8C74F0027C3B8 /* NetworkManager.m in Sources */,
 				52D0FC1C19D1F24F009AECEE /* SCPRProgramDetailHeaderView.m in Sources */,
 				258BB03E1A1C083B00B8FCFE /* Settings.m in Sources */,
+				254CC69E1A23B41D00560805 /* SCPRTriangleView.m in Sources */,
 				258CA1001A0982ED00A3C8DB /* SCPRCloakViewController.m in Sources */,
 				254E177019F863960022BF6B /* UILabel+Additions.m in Sources */,
 				52EFF87819C37D350059A0E3 /* SCPRMenuCell.m in Sources */,
@@ -1546,8 +1572,8 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Southern California Public Radio";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Southern California Public Radio";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Jason Georges (K7Q582A4SU)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Jason Georges (K7Q582A4SU)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "KPCC/KPCC-Prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -1565,7 +1591,7 @@
 					"$(PROJECT_DIR)/KPCC/ThirdParty/Flurry",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "92b9c3f6-4039-4005-93a0-90471d88e766";
+				PROVISIONING_PROFILE = "0cff6867-0135-4f75-a407-3945603e106b";
 				SWIFT_OBJC_BRIDGING_HEADER = "KPCC/UI/Controllers/KPCC-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				TARGETED_DEVICE_FAMILY = 1;

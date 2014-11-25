@@ -19,6 +19,7 @@
 @property (nonatomic,weak) SCPROnboardingViewController *onboardingCtrl;
 @property (nonatomic,weak) SCPRMasterViewController *masterCtrl;
 @property BOOL listeningForQueues;
+@property BOOL suppressBalloon;
 @property (nonatomic,strong) NSDictionary *keyPoints;
 
 + (instancetype)shared;

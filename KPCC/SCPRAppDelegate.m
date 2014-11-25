@@ -88,6 +88,8 @@
 
 - (void)application:(UIApplication *)application didRegisterUserNotificationSettings:(UIUserNotificationSettings *)notificationSettings {
     UIUserNotificationType types = notificationSettings.types;
+    
+    [[UXmanager shared] setSuppressBalloon:YES];
     [[SessionManager shared] setUseLocalNotifications:( types & UIUserNotificationTypeAlert )];
    
     if ( ![[UXmanager shared] userHasSeenOnboarding] ) {

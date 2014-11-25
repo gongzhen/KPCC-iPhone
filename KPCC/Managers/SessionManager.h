@@ -20,6 +20,9 @@
 @property (nonatomic, copy) NSDate *sessionPausedDate;
 @property (nonatomic, copy) NSDate *lastProgramUpdate;
 @property (nonatomic, strong) NSTimer *programUpdateTimer;
+
+@property (nonatomic,strong) NSDictionary *onboardingAudio;
+
 @property BOOL useLocalNotifications;
 @property BOOL onboardingRewound;
 

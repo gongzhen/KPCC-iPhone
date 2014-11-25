@@ -228,17 +228,16 @@
     Program *program = [[SessionManager shared] currentProgram];
     
     NSDate *currentDate = [AudioManager shared].audioPlayer.currentItem.currentDate;
-    if ( !currentDate ) {
-        if ( [[AudioManager shared] relativeFauxDate] ) {
-            currentDate = [[AudioManager shared] relativeFauxDate];
-        }
-    }
     NSTimeInterval beginning = [program.soft_starts_at timeIntervalSince1970];
     if ( [[AudioManager shared] currentAudioMode] == AudioModeOnboarding ) {
         NSDate *fauxDate = [[AudioManager shared] relativeFauxDate];
         beginning = [fauxDate timeIntervalSince1970];
     }
     NSTimeInterval end = [program.ends_at timeIntervalSince1970];
+    if ( [[AudioManager shared] currentAudioMode] == AudioModeOnboarding ) {
+        NSDictionary *p = [[SessionManager shared] onboardingAudio];
+        end = [(NSDate*)p[@"ends_at"] timeIntervalSince1970];
+    }
     NSTimeInterval duration = ( end - beginning );
     
     NSTimeInterval live = [[AudioManager shared].maxSeekableDate timeIntervalSince1970];
@@ -251,8 +250,6 @@
     }
     NSTimeInterval liveDiff = ( live - beginning );
     NSTimeInterval currentDiff = ( current - beginning );
-    
-
     
     dispatch_async(dispatch_get_main_queue(), ^{
         
@@ -269,7 +266,7 @@
             CABasicAnimation *liveAnim = [CABasicAnimation animationWithKeyPath:@"strokeEnd"];
             [liveAnim setFromValue:[NSNumber numberWithFloat:self.lastLiveValue]];
             [liveAnim setToValue:@(fminf(liveDiff/duration,0.98f))];
-            [liveAnim setDuration:0.95];
+            [liveAnim setDuration:0.97];
             [liveAnim setRemovedOnCompletion:NO];
             [liveAnim setFillMode:kCAFillModeForwards];
 
@@ -278,7 +275,7 @@
             CABasicAnimation *currentAnim = [CABasicAnimation animationWithKeyPath:@"strokeEnd"];
             [currentAnim setFromValue:[NSNumber numberWithFloat:self.lastCurrentValue]];
             [currentAnim setToValue:@(fminf(currentDiff/duration,0.98f))];
-            [currentAnim setDuration:0.95];
+            [currentAnim setDuration:0.97];
             [currentAnim setRemovedOnCompletion:NO];
             [currentAnim setFillMode:kCAFillModeForwards];
    

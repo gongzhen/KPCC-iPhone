@@ -11,5 +11,6 @@
 @interface Settings : NSObject<NSCoding>
 
 @property BOOL userHasViewedOnboarding;
+@property BOOL userHasViewedOnDemandOnboarding;
 
 @end

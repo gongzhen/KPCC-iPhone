@@ -12,13 +12,15 @@
 
 - (id)initWithCoder:(NSCoder *)aDecoder {
     self.userHasViewedOnboarding = [aDecoder decodeBoolForKey:@"userHasViewedOnboarding"];
-    
+    self.userHasViewedOnDemandOnboarding = [aDecoder decodeBoolForKey:@"userHasViewedOnDemandOnboarding"];
     return self;
 }
 
 - (void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeBool:self.userHasViewedOnboarding
                 forKey:@"userHasViewedOnboarding"];
+    [aCoder encodeBool:self.userHasViewedOnDemandOnboarding
+                forKey:@"userHasViewedOnDemandOnboarding"];
 }
 
 @end

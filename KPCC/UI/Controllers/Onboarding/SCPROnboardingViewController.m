@@ -11,6 +11,7 @@
 #import "UILabel+Additions.h"
 #import "DesignManager.h"
 #import "UXmanager.h"
+#import "SCPRNavigationController.h"
 
 @interface SCPROnboardingViewController ()
 
@@ -23,6 +24,10 @@
     // Do any additional setup after loading the view from its nib.
 }
 
+- (void)viewDidAppear:(BOOL)animated {
+
+}
+
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
@@ -31,13 +36,14 @@
 
 - (void)prepare {
     [self.lensVC prepare];
+    
     self.lensVC.view.layer.opacity = 0.0;
     self.kpccLogoView.alpha = 0.0;
     self.dividerView.alpha = 0.0;
     self.welcomeLabel.alpha = 0.0;
     self.brandingView.alpha = 1.0;
     self.notificationsView.alpha = 0.0;
-    
+    self.orangeStripView.alpha = 0.0;
     [[DesignManager shared] sculptButton:self.yesToNotificationsButton
                                withStyle:SculptingStylePeriwinkle
                                  andText:@"Yes, I'm interested!"];
@@ -54,10 +60,14 @@
                            forControlEvents:UIControlEventTouchUpInside];
     
     [self.notificationsCaptionLabel proMediumFontize];
-    [self.notificationsQuestionLabel proLightFontize];
+    [self.notificationsQuestionLabel proBookFontize];
     
     self.interactionButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [self.welcomeLabel proMediumFontize];
+    
+    if ( [Utils isThreePointFive] ) {
+        [self.buttonAnchor setConstant:325.0];
+    }
     
 }
 
@@ -89,17 +99,20 @@
 }
 
 - (void)revealBrandingWithCompletion:(CompletionBlock)completed {
-    [UIView animateWithDuration:0.33 animations:^{
-        self.kpccLogoView.alpha = 1.0;
+    self.brandingView.clipsToBounds = YES;
+    [UIView animateWithDuration:0.33f animations:^{
+        self.dividerView.alpha = 1.0f;
     } completion:^(BOOL finished) {
-        [UIView animateWithDuration:0.33 animations:^{
-            self.dividerView.alpha = 1.0;
+        [UIView animateWithDuration:0.45f delay:0.0 options:UIViewAnimationOptionCurveEaseOut animations:^{
+            [self.logoTopAnchor setConstant:10.0f];
+            [self.sloganTopAnchor setConstant:13.0f];
+            [self.brandingView layoutIfNeeded];
+            self.kpccLogoView.alpha = 1.0f;
+            self.welcomeLabel.alpha = 1.0f;
         } completion:^(BOOL finished) {
-            [UIView animateWithDuration:0.33 animations:^{
-                self.welcomeLabel.alpha = 1.0;
-            } completion:^(BOOL finished) {
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                 completed();
-            }];
+            });
         }];
     }];
 }
@@ -137,6 +150,32 @@
     
     [UIView animateWithDuration:0.33 animations:^{
         self.notificationsView.alpha = 0.0;
+    }];
+}
+
+- (void)showCalloutWithText:(NSString *)text pointerPosition:(CGFloat)pointer /*ignore position for now*/ position:(CGPoint)position {
+    self.textCalloutBalloonCtrl.view.alpha = 0.0;
+    
+    CGFloat magicNumber = [Utils isThreePointFive] ? 20.0 : 70.0;
+    [self.calloutAnchor setConstant:magicNumber];
+    
+    
+    [self.textCalloutBalloonCtrl slidePointer:170.0];
+
+    [self.view layoutIfNeeded];
+    [self.textCalloutBalloonCtrl.view layoutIfNeeded];
+    self.textCalloutBalloonCtrl.bodyTextLabel.text = text;
+    
+    [UIView animateWithDuration:0.4 animations:^{
+        self.textCalloutBalloonCtrl.view.alpha = 1.0;
+    }];
+}
+
+- (void)hideCallout {
+    [UIView animateWithDuration:0.4 animations:^{
+        self.textCalloutBalloonCtrl.view.alpha = 0.0;
+    } completion:^(BOOL finished) {
+        [self.textCalloutBalloonCtrl.view removeFromSuperview];
     }];
 }
 

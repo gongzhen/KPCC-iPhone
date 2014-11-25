@@ -490,9 +490,14 @@ static const NSString *ItemStatusContext;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playerItemFailedToPlayToEndTime:) name:AVPlayerItemFailedToPlayToEndTimeNotification object:self.playerItem];
     
     self.audioPlayer = [AVPlayer playerWithPlayerItem:self.playerItem];
-    [self.audioPlayer addObserver:self forKeyPath:@"status" options:NSKeyValueObservingOptionOld|NSKeyValueObservingOptionNew context:nil];
-    [self.audioPlayer addObserver:self forKeyPath:@"rate" options:NSKeyValueObservingOptionOld|NSKeyValueObservingOptionNew context:nil];
-    
+    [self.audioPlayer addObserver:self
+                       forKeyPath:@"status"
+                          options:NSKeyValueObservingOptionOld|NSKeyValueObservingOptionNew
+                          context:nil];
+    [self.audioPlayer addObserver:self
+                       forKeyPath:@"rate"
+                          options:NSKeyValueObservingOptionOld|NSKeyValueObservingOptionNew
+                          context:nil];
     
     [self startObservingTime];
 }
