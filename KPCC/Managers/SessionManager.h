@@ -49,6 +49,7 @@
 
 @property BOOL sessionIsHot;
 @property BOOL rewindSessionIsHot;
+@property BOOL rewindSessionWillBegin;
 
 - (void)handleSessionReactivation;
 - (void)invalidateSession;

@@ -177,7 +177,7 @@
         
         CABasicAnimation *currentAnim = [CABasicAnimation animationWithKeyPath:@"strokeEnd"];
         [currentAnim setToValue:[NSNumber numberWithFloat:vBeginning]];
-        [currentAnim setDuration:4];
+        [currentAnim setDuration:2.6f];
         [currentAnim setRemovedOnCompletion:NO];
         [currentAnim setFillMode:kCAFillModeForwards];
         [self.currentBarLine addAnimation:currentAnim forKey:@"decrementCurrent"];

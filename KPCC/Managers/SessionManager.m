@@ -55,13 +55,27 @@ static long kStreamBufferLimit = 4*60*60;
 
 - (NSString*)endLiveSession {
     
+    if ( self.rewindSessionWillBegin ) {
+        self.rewindSessionWillBegin = NO;
+        
+        NSString *sid = self.liveSessionID;
+        if ( !sid ) {
+            NSString *ct = [NSString stringWithFormat:@"%ld",(long)[[NSDate date] timeIntervalSince1970]];
+            self.liveSessionID = [Utils sha1:ct];
+        }
+        
+        return @"";
+    }
+    
     NSTimeInterval now = [[NSDate date] timeIntervalSince1970];
     NSTimeInterval sessionLength = abs(now - self.liveStreamSessionBegan);
     NSString *pt = [NSDate prettyTextFromSeconds:sessionLength];
     
     NSString *sid = self.liveSessionID;
-    
-    
+    if ( !sid ) {
+        NSString *ct = [NSString stringWithFormat:@"%ld",(long)[[NSDate date] timeIntervalSince1970]];
+        sid = [Utils sha1:ct];
+    }
     NSLog(@"Logging pause event for Live Stream...");
     
     Program *p = self.currentProgram;

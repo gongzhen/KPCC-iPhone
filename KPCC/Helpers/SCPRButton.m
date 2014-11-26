@@ -31,7 +31,7 @@
 - (void)squeeze {
     POPSpringAnimation *scaleAnimation = [POPSpringAnimation animationWithPropertyNamed:kPOPLayerScaleXY];
     scaleAnimation.fromValue  = [NSValue valueWithCGSize:CGSizeMake(1.0f, 1.0f)];
-    scaleAnimation.toValue  = [NSValue valueWithCGSize:CGSizeMake(0.8f, 0.8f)];
+    scaleAnimation.toValue  = [NSValue valueWithCGSize:CGSizeMake(0.86f, 0.86f)];
     scaleAnimation.springBounciness = 2.0f;
     scaleAnimation.springSpeed = 1.0f;
     [scaleAnimation setCompletionBlock:^(POPAnimation *p, BOOL c) {
@@ -43,15 +43,16 @@
 - (void)expand {
     //if ( !self.small ) {
         POPSpringAnimation *scaleAnimation = [POPSpringAnimation animationWithPropertyNamed:kPOPLayerScaleXY];
-        scaleAnimation.fromValue  = [NSValue valueWithCGSize:CGSizeMake(.8f, .8f)];
+        scaleAnimation.fromValue  = [NSValue valueWithCGSize:CGSizeMake(.86f, .86f)];
         scaleAnimation.toValue  = [NSValue valueWithCGSize:CGSizeMake(1.0f, 1.0f)];
-        scaleAnimation.springBounciness = 2.0f;
-        scaleAnimation.springSpeed = 1.0f;
+        scaleAnimation.springBounciness = 1.0f;
+        scaleAnimation.springSpeed = 2.0f;
         [scaleAnimation setCompletionBlock:^(POPAnimation *p, BOOL c) {
             self.small = NO;
             [self.target performSelector:self.postPushMethod withObject:nil afterDelay:0];
         }];
-        [self.layer pop_addAnimation:scaleAnimation forKey:@"expand"];
+    [self.layer pop_addAnimation:scaleAnimation forKey:@"expand"];
+    
     //}
 }
 

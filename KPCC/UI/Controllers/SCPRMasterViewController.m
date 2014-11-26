@@ -23,8 +23,6 @@
 
 static NSString *kRewindingText = @"REWINDING...";
 static NSString *kForwardingText = @"GOING LIVE...";
-static CGFloat kRewindGateThreshold = 8.0;
-static CGFloat kDisabledAlpha = 0.15;
 
 @interface SCPRMasterViewController () <AudioManagerDelegate, UINavigationControllerDelegate, UIViewControllerTransitioningDelegate, SCPRPreRollControllerDelegate, UIScrollViewDelegate>
 
@@ -45,8 +43,7 @@ static CGFloat kDisabledAlpha = 0.15;
 @property IBOutlet NSLayoutConstraint *rewindHeightContraint;
 @property IBOutlet NSLayoutConstraint *programTitleYConstraint;
 
-
-
+- (void)playStream:(BOOL)hard;
 
 @end
 
@@ -176,7 +173,13 @@ static CGFloat kDisabledAlpha = 0.15;
     [self.initialPlayButton addTarget:self
                                action:@selector(initialPlayTapped:)
                      forControlEvents:UIControlEventTouchUpInside
+     
      special:YES];
+    
+    [self.playPauseButton addTarget:self
+                             action:@selector(playOrPauseTapped:)
+                   forControlEvents:UIControlEventTouchUpInside
+                            special:YES];
     
     [SCPRCloakViewController cloakWithCustomCenteredView:nil cloakAppeared:^{
         if ( [[UXmanager shared] userHasSeenOnboarding] ) {
@@ -389,27 +392,22 @@ static CGFloat kDisabledAlpha = 0.15;
     if (![[AudioManager shared] isStreamPlaying]) {
         if ( [[SessionManager shared] sessionIsExpired] ) {
             [[SessionManager shared] fetchCurrentProgram:^(id returnedObject) {
-                self.setPlaying = YES;
-                
                 if ([[AudioManager shared] isStreamBuffering]) {
                     [[AudioManager shared] stopAllAudio];
                 } else {
-                    [self playStream];
+                    [self playStream:YES];
                 }
             }];
         } else {
-            self.setPlaying = YES;
-            
             if ([[AudioManager shared] isStreamBuffering]) {
                 [[AudioManager shared] stopAllAudio];
             } else {
-                [self playStream];
+                [self playStream:NO];
             }
         }
 
     } else {
         self.setPlaying = NO;
-
         [self pauseStream];
     }
     
@@ -435,17 +433,15 @@ static CGFloat kDisabledAlpha = 0.15;
  */
 - (void)pauseTapped:(id)sender {
     if ([[AudioManager shared] isStreamPlaying]) {
-        self.setPlaying = NO;
         [self pauseStream];
     }
 }
 - (void)playTapped:(id)sender {
     if (![[AudioManager shared] isStreamPlaying]) {
-        self.setPlaying = YES;
         if ([[AudioManager shared] isStreamBuffering]) {
             [[AudioManager shared] stopAllAudio];
         }
-        [self playStream];
+        [self playStream:YES];
     }
 }
 
@@ -512,8 +508,13 @@ static CGFloat kDisabledAlpha = 0.15;
 }
 
 # pragma mark - Audio commands
-- (void)playStream {
-    [[AudioManager shared] playLiveStream];
+- (void)playStream:(BOOL)hard {
+    if ( hard ) {
+        [[AudioManager shared] playLiveStream];
+    } else {
+        [[SessionManager shared] startLiveSession];
+        [[AudioManager shared] playStream];
+    }
 }
 
 - (void)pauseStream {
@@ -585,7 +586,7 @@ static CGFloat kDisabledAlpha = 0.15;
     [self.jogShuttle.view setAlpha:1.0];
     [self.liveProgressViewController rewind];
     
-    [self.jogShuttle animateWithSpeed:1.0
+    [self.jogShuttle animateWithSpeed:0.8
                          hideableView:self.playPauseButton
                             direction:SpinDirectionBackward
                             withSound:YES
@@ -598,15 +599,14 @@ static CGFloat kDisabledAlpha = 0.15;
                                    self.dirtyFromRewind = YES;
                                    [self updateControlsAndUI:YES];
                                    seekRequested = NO;
-                                   setPlaying = YES;
+                              
                                    [[SessionManager shared] invalidateSession];
                                    
                                    [[AudioManager shared] adjustAudioWithValue:0.1 completion:^{
-                                       dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                                       dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                                            self.rewindGate = NO;
                                            [self primeManualControlButton];
                                            [[SessionManager shared] setRewindSessionIsHot:YES];
-                                           
                                        });
                                    }];
                                } else {
@@ -624,7 +624,7 @@ static CGFloat kDisabledAlpha = 0.15;
                                
                            }];
     
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.0f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         
         seekRequested = YES;
         switch (distance) {
@@ -682,10 +682,6 @@ static CGFloat kDisabledAlpha = 0.15;
                                self.jogging = NO;
                                self.dirtyFromRewind = NO;
                                [self updateControlsAndUI:YES];
-                               if ( !setPlaying ) {
-                                   seekRequested = NO;
-                                   setPlaying = YES;
-                               }
                                
                                [[SessionManager shared] invalidateSession];
                                
@@ -793,7 +789,7 @@ static CGFloat kDisabledAlpha = 0.15;
 }
 
 - (void)setUIPositioning {
-
+/*
     if ([[AudioManager shared] isStreamPlaying] || [[AudioManager shared] isStreamBuffering]) {
 
         POPBasicAnimation *genericFadeInAnim = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
@@ -813,6 +809,7 @@ static CGFloat kDisabledAlpha = 0.15;
             }
         }
     }
+*/
 }
 
 
@@ -1075,9 +1072,7 @@ static CGFloat kDisabledAlpha = 0.15;
                 self.springLock = YES;
                 if ( [[UXmanager shared] userHasSeenOnboarding] ) {
                     self.initialPlay = YES;
-                    //if ( !self.preRollViewController.tritonAd ) {
-                        [self playStream];
-                    //}
+                    [self playStream:YES];
                 } else {
                     [[UXmanager shared] beginAudio];
                 }
@@ -1124,7 +1119,8 @@ static CGFloat kDisabledAlpha = 0.15;
                                   forState:UIControlStateHighlighted];
         [self.liveRewindAltButton addTarget:self
                                      action:@selector(activateFastForward)
-                           forControlEvents:UIControlEventTouchUpInside];
+                           forControlEvents:UIControlEventTouchUpInside
+         special:YES];
     } else {
         [self.liveRewindAltButton setImage:[UIImage imageNamed:@"btn_live_rewind_xtra-small.png"]
                                   forState:UIControlStateHighlighted];
@@ -1138,11 +1134,13 @@ static CGFloat kDisabledAlpha = 0.15;
         if ( initialPlay ) {
             [self.liveRewindAltButton addTarget:self
                                      action:@selector(activateRewind:)
-                           forControlEvents:UIControlEventTouchUpInside];
+                           forControlEvents:UIControlEventTouchUpInside
+             special:YES];
         } else {
             [self.liveRewindAltButton addTarget:self
                                          action:@selector(specialRewind)
-                               forControlEvents:UIControlEventTouchUpInside];
+                               forControlEvents:UIControlEventTouchUpInside
+             special:YES];
         }
     }
     
@@ -1663,6 +1661,7 @@ static CGFloat kDisabledAlpha = 0.15;
                 if ( self.initiateRewind ) {
                     self.initiateRewind = NO;
                     if ( [AudioManager shared].status == StreamStatusPlaying ) {
+                        [[SessionManager shared] setRewindSessionWillBegin:YES];
                         [[AudioManager shared] pauseStream];
                         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.33 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                             [self activateRewind:RewindDistanceBeginning];
@@ -1704,12 +1703,6 @@ static CGFloat kDisabledAlpha = 0.15;
     // Make sure UI gets set to "Playing" state after a seek.
     if ( self.jogging ) {
         [self.jogShuttle endAnimations];
-    } else {
-        if (!setPlaying) {
-            seekRequested = NO;            
-            [self setUIPositioning];
-            setPlaying = YES;
-        }
     }
 }
 

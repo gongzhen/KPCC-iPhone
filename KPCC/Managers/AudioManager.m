@@ -250,6 +250,14 @@ static const NSString *ItemStatusContext;
 }
 
 - (void)seekToDate:(NSDate *)date {
+    
+    NSTimeInterval s2d = [date timeIntervalSince1970];
+    NSTimeInterval now = [[NSDate date] timeIntervalSince1970];
+    BOOL nudge = NO;
+    if ( now - s2d > 60 ) {
+        nudge = YES;
+    }
+    
     if (!self.audioPlayer) {
         [self buildStreamer:kHLSLiveStreamURL];
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
@@ -274,7 +282,7 @@ static const NSString *ItemStatusContext;
         }
         */
         
-        NSDate *justABitInTheFuture = [NSDate dateWithTimeInterval:2 sinceDate:date];
+        NSDate *justABitInTheFuture = nudge ? [NSDate dateWithTimeInterval:2 sinceDate:date] : date;
         [self.audioPlayer.currentItem seekToDate:justABitInTheFuture completionHandler:^(BOOL finished) {
             if ( !finished ) {
                 NSLog(@" **************** AUDIOPLAYER NOT FINISHED BUFFERING ****************** ");
@@ -327,18 +335,7 @@ static const NSString *ItemStatusContext;
         //[self.audioPlayer pause];
     }
 
-    //double time = MAXFLOAT;
-    //[self.audioPlayer seekToTime: CMTimeMakeWithSeconds(time, NSEC_PER_SEC) completionHandler:^(BOOL finished) {
-#ifdef VERBOSE_STREAM_LOGGING
-    [self dump:NO];
-#endif
-    [self.audioPlayer seekToDate:[self maxSeekableDate] completionHandler:^(BOOL finished) {
-        [self startStream];
-
-        if ([self.delegate respondsToSelector:@selector(onSeekCompleted)]) {
-            [self.delegate onSeekCompleted];
-        }
-    }];
+    [self seekToDate:[self maxSeekableDate]];
 }
 
 - (void)forwardSeekThirtySeconds {
@@ -606,9 +603,7 @@ static const NSString *ItemStatusContext;
     
     if ( self.currentAudioMode == AudioModeLive ) {
         [[SessionManager shared] setSessionPausedDate:[NSDate date]];
-        if ( self.currentAudioMode == AudioModeLive ) {
-            [[SessionManager shared] endLiveSession];
-        }
+        [[SessionManager shared] endLiveSession];
     }
     
     self.status = StreamStatusPaused;

@@ -20,13 +20,14 @@
     [self setImage:image forState:UIControlStateNormal];
     [self setImage:image forState:UIControlStateHighlighted];
     
+    /*
     CATransition *transition = [CATransition animation];
     transition.duration = duration;
     transition.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
     transition.type = kCATransitionFade;
     //transition.type = @";
     [self.layer addAnimation:transition
-                      forKey:nil];
+                      forKey:nil];*/
 }
 
 
