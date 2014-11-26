@@ -236,7 +236,7 @@
     NSTimeInterval end = [program.ends_at timeIntervalSince1970];
     if ( [[AudioManager shared] currentAudioMode] == AudioModeOnboarding ) {
         NSDictionary *p = [[SessionManager shared] onboardingAudio];
-        end = [(NSDate*)p[@"ends_at"] timeIntervalSince1970];
+        end = [[[NSDate date] dateByAddingTimeInterval:[p[@"duration"] intValue]] timeIntervalSince1970];
     }
     NSTimeInterval duration = ( end - beginning );
     

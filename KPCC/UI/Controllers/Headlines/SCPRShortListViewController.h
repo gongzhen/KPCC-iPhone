@@ -20,6 +20,8 @@
 @property (nonatomic,copy) NSString *currentObjectURL;
 
 @property (nonatomic,strong) NSArray *abstracts;
+@property (nonatomic,strong) NSMutableArray *secondaryLoadingLocks;
+@property (nonatomic,strong) NSTimer *loadingTimer;
 
 @property BOOL initialLoad;
 @property BOOL detailInitialLoad;

@@ -21,6 +21,7 @@
 @property (nonatomic,weak) id<QueueManagerDelegate> delegate;
 @property (nonatomic,strong) NSMutableArray *queue;
 @property (nonatomic) NSInteger currentlyPlayingIndex;
+@property (nonatomic,strong) AudioChunk *currentChunk;
 
 // Playback actions
 - (void)enqueueEpisode:(Episode *)episode;

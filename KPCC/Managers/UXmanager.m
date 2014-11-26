@@ -59,7 +59,7 @@
     SCPRNavigationController *nav = [del masterNavigationController];
     nav.menuButton.alpha = 0.0;
     
-    
+
     
     del.onboardingController.view.frame = CGRectMake(0.0,0.0,mw.frame.size.width,
                                                      mw.frame.size.height);
@@ -252,7 +252,7 @@
     [self.onboardingCtrl collapseNotificationsPrompt];
     [UIView animateWithDuration:0.5 animations:^{
         //[self.masterCtrl.blurView.layer setOpacity:0.0];
-        [self.masterCtrl.darkBgView.layer setOpacity:0.35];
+        [self.masterCtrl.darkBgView.layer setOpacity:0.0];
         self.masterCtrl.playerControlsView.alpha = 1.0;
         
         [self.masterCtrl.liveStreamView setAlpha:1.0];

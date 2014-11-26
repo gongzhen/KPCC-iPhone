@@ -57,6 +57,7 @@ static QueueManager *singleton = nil;
 
         if (i == index && chunk != nil) {
             [[AudioManager shared] playQueueItemWithUrl:chunk.audioUrl];
+            self.currentChunk = chunk;
             self.currentlyPlayingIndex = index;
         }
     }
@@ -72,6 +73,7 @@ static QueueManager *singleton = nil;
     if (![self isQueueEmpty]) {
         if (self.currentlyPlayingIndex + 1 < [self.queue count]) {
             AudioChunk *chunk = (self.queue)[self.currentlyPlayingIndex + 1];
+            self.currentChunk = chunk;
             [[AudioManager shared] playQueueItemWithUrl:chunk.audioUrl];
             self.currentlyPlayingIndex += 1;
             [[[Utils del] masterViewController] setPositionForQueue:(int)self.currentlyPlayingIndex animated:YES];
@@ -83,6 +85,7 @@ static QueueManager *singleton = nil;
     if (![self isQueueEmpty]) {
         if (self.currentlyPlayingIndex > 0) {
             AudioChunk *chunk = (self.queue)[self.currentlyPlayingIndex - 1];
+            self.currentChunk = chunk;
             [[AudioManager shared] playQueueItemWithUrl:chunk.audioUrl];
             self.currentlyPlayingIndex -= 1;
             [[[Utils del] masterViewController] setPositionForQueue:(int)self.currentlyPlayingIndex animated:YES];
@@ -94,6 +97,7 @@ static QueueManager *singleton = nil;
     if (![self isQueueEmpty]) {
         if (index >= 0 && index < [self.queue count]) {
             AudioChunk *chunk = (self.queue)[index];
+            self.currentChunk = chunk;
             [[AudioManager shared] playQueueItemWithUrl:chunk.audioUrl];
             self.currentlyPlayingIndex = index;
         }
@@ -104,6 +108,7 @@ static QueueManager *singleton = nil;
     AudioChunk *chunk = [self dequeue];
     if (chunk) {
         [[AudioManager shared] playQueueItemWithUrl:chunk.audioUrl];
+        self.currentChunk = chunk;
     }
 }
 
@@ -131,6 +136,7 @@ static QueueManager *singleton = nil;
 
 - (void)clearQueue {
     [self.queue removeAllObjects];
+    self.currentChunk = nil;
 }
 
 @end

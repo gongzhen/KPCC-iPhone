@@ -214,6 +214,9 @@ static const NSString *ItemStatusContext;
             weakSelf.maxSeekableDate = [NSDate dateWithTimeInterval:(CMTimeGetSeconds(CMTimeRangeGetEnd(range)) - CMTimeGetSeconds(time)) sinceDate:weakSelf.currentDate];
             weakSelf.latencyCorrection = [[NSDate date] timeIntervalSince1970] - [weakSelf.maxSeekableDate timeIntervalSince1970];
             
+            [[SessionManager shared] trackLiveSession];
+            [[SessionManager shared] trackRewindSession];
+            
             if ([weakSelf.delegate respondsToSelector:@selector(onTimeChange)]) {
                 if ( weakSelf.waitForFirstTick ) {
                     weakSelf.waitForFirstTick = NO;
@@ -253,6 +256,7 @@ static const NSString *ItemStatusContext;
             [self.audioPlayer.currentItem seekToDate:date completionHandler:^(BOOL finished) {
                 if(self.audioPlayer.status == AVPlayerStatusReadyToPlay &&
                    self.audioPlayer.currentItem.status == AVPlayerItemStatusReadyToPlay) {
+                    
                     [self playStream];
 
                     if ([self.delegate respondsToSelector:@selector(onSeekCompleted)]) {
@@ -297,8 +301,6 @@ static const NSString *ItemStatusContext;
                         [self.delegate onSeekCompleted];
                     }
                 });
-
-                
 #ifdef VERBOSE_STREAM_LOGGING
                 [self dump:NO];
 #endif
@@ -331,7 +333,7 @@ static const NSString *ItemStatusContext;
     [self dump:NO];
 #endif
     [self.audioPlayer seekToDate:[self maxSeekableDate] completionHandler:^(BOOL finished) {
-        [self playStream];
+        [self startStream];
 
         if ([self.delegate respondsToSelector:@selector(onSeekCompleted)]) {
             [self.delegate onSeekCompleted];
@@ -579,6 +581,10 @@ static const NSString *ItemStatusContext;
     }
     [self.audioPlayer play];
     
+    if ( self.currentAudioMode == AudioModeLive ) {
+        [[SessionManager shared] startLiveSession];
+    }
+    
     if ( fadein ) {
         [[AudioManager shared] adjustAudioWithValue:0.1 completion:^{
             
@@ -600,6 +606,9 @@ static const NSString *ItemStatusContext;
     
     if ( self.currentAudioMode == AudioModeLive ) {
         [[SessionManager shared] setSessionPausedDate:[NSDate date]];
+        if ( self.currentAudioMode == AudioModeLive ) {
+            [[SessionManager shared] endLiveSession];
+        }
     }
     
     self.status = StreamStatusPaused;
@@ -756,11 +765,13 @@ static const NSString *ItemStatusContext;
         }
     }
     
+    /*
     NSLog(@"currentDate : %@",[self.audioPlayer.currentItem.currentDate prettyTimeString]);
     NSDate *msd = [self maxSeekableDate];
     NSLog(@" ******* MAX SEEKABLE DATE : %@ *******",msd);
     NSDate *minSd = [self minSeekableDate];
     NSLog(@" ******* MIN SEEKABLE DATE : %@ *******",minSd);
+     */
     
 }
 

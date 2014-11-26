@@ -13,4 +13,5 @@
 - (void)fadeImage:(UIImage*)image;
 - (void)fadeImage:(UIImage *)image duration:(CGFloat)duration;
 
+
 @end

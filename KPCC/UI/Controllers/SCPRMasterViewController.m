@@ -135,7 +135,7 @@ static CGFloat kDisabledAlpha = 0.15;
     [self.blurView setDynamic:NO];
     
     // Config dark background view. Will sit on top of blur view, between player controls view.
-    [self.darkBgView setAlpha:0.0];
+    [self.darkBgView.layer setOpacity:0.0];
 
     // Initially flag as KPCC Live view
     setForLiveStreamUI = YES;
@@ -169,12 +169,22 @@ static CGFloat kDisabledAlpha = 0.15;
     [self.letsGoLabel proMediumFontize];
     self.letsGoLabel.alpha = 0.0;
     
-    [[UXmanager shared] loadOnboarding];
+    if ( ![[UXmanager shared] userHasSeenOnboarding] ) {
+        [[UXmanager shared] loadOnboarding];
+    }
+    
+    [self.initialPlayButton addTarget:self
+                               action:@selector(initialPlayTapped:)
+                     forControlEvents:UIControlEventTouchUpInside
+     special:YES];
+    
     [SCPRCloakViewController cloakWithCustomCenteredView:nil cloakAppeared:^{
         if ( [[UXmanager shared] userHasSeenOnboarding] ) {
             [self updateDataForUI];
             [self primeManualControlButton];
             [self.view layoutIfNeeded];
+        } else {
+            
         }
     }];
 
@@ -247,11 +257,8 @@ static CGFloat kDisabledAlpha = 0.15;
 
     self.automationMode = YES;
     self.programImageView.image = [UIImage imageNamed:@"onboarding-tile.jpg"];
-
-    
     self.initialControlsView.layer.opacity = 0.0;
     self.liveStreamView.alpha = 0.0;
-    self.darkBgView.alpha = 1.0;
     self.liveDescriptionLabel.alpha = 0.0;
     self.pulldownMenu.alpha = 0.0;
     
@@ -268,7 +275,7 @@ static CGFloat kDisabledAlpha = 0.15;
         [UIView animateWithDuration:0.33 animations:^{
             self.view.alpha = 1.0;
             [self.blurView.layer setOpacity:1.0];
-            self.darkBgView.layer.opacity = 0.35;
+            self.darkBgView.layer.opacity = 0.0;
             nav.menuButton.alpha = 0.0;
         } completion:^(BOOL finished) {
             [[UXmanager shared] fadeInBranding];
@@ -301,13 +308,12 @@ static CGFloat kDisabledAlpha = 0.15;
                                        aboveSiblingView:self.playerControlsView];
     [self.liveProgressViewController hide];
     
-
-    
     [UIView animateWithDuration:0.33 animations:^{
         self.liveProgressViewController.view.alpha = 1.0;
         self.liveStreamView.alpha = 1.0;
         [self primeManualControlButton];
     }];
+    
     [[AudioManager shared] playOnboardingAudio:1];
 
 }
@@ -331,7 +337,7 @@ static CGFloat kDisabledAlpha = 0.15;
     [UIView animateWithDuration:0.33 animations:^{
         self.liveDescriptionLabel.alpha = 1.0;
         del.masterNavigationController.menuButton.alpha = 1.0;
-        [self.darkBgView.layer setOpacity:0.35];
+        [self.darkBgView.layer setOpacity:0.0];
         self.onDemandPlayerView.alpha = 0.0;
     }];
     
@@ -599,6 +605,8 @@ static CGFloat kDisabledAlpha = 0.15;
                                        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                                            self.rewindGate = NO;
                                            [self primeManualControlButton];
+                                           [[SessionManager shared] setRewindSessionIsHot:YES];
+                                           
                                        });
                                    }];
                                } else {
@@ -663,9 +671,7 @@ static CGFloat kDisabledAlpha = 0.15;
     }];
     
     [self.jogShuttle.view setAlpha:1.0];
-    
     [self.liveProgressViewController forward];
-    
     [self.jogShuttle animateWithSpeed:0.66
                          hideableView:self.playPauseButton
                             direction:SpinDirectionForward
@@ -951,6 +957,8 @@ static CGFloat kDisabledAlpha = 0.15;
         [self.progressView setHidden:NO];
     }
 
+    self.darkBgView.layer.opacity = 0.0;
+    
     [[AudioManager shared] setCurrentAudioMode:AudioModeOnDemand];
 }
 
@@ -1249,7 +1257,7 @@ static CGFloat kDisabledAlpha = 0.15;
     fadeAnimation.duration = 0.3;
 
     POPBasicAnimation *darkBgFadeAnimation = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
-    darkBgFadeAnimation.toValue = @0.35;
+    darkBgFadeAnimation.toValue = @0.0;
     darkBgFadeAnimation.duration = 0.3;
 
     POPBasicAnimation *controlsFadeIn = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
@@ -1324,7 +1332,7 @@ static CGFloat kDisabledAlpha = 0.15;
     blurFadeAnimation.duration = 0.3;
 
     POPBasicAnimation *darkBgFadeAnimation = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
-    darkBgFadeAnimation.toValue = @0.35;
+    darkBgFadeAnimation.toValue = @0.0;
     darkBgFadeAnimation.duration = 0.3;
 
     POPBasicAnimation *controlsFadeAnimation = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
@@ -1469,7 +1477,7 @@ static CGFloat kDisabledAlpha = 0.15;
         [self.queueBlurView setNeedsDisplay];
         [UIView animateWithDuration:0.3 delay:0. options:UIViewAnimationOptionCurveLinear animations:^{
             self.queueBlurView.alpha = 1.0;
-            self.queueDarkBgView.alpha = 0.35;
+            self.queueDarkBgView.alpha = 0.0;
         } completion:^(BOOL finished) {
             self.queueBlurShown = YES;
         }];

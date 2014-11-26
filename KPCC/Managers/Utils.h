@@ -42,5 +42,6 @@
 + (id)loadJson:(NSString*)json;
 + (NSString*)rawJson:(id)object;
 + (NSString*)prettyVersion;
++ (NSString*)sha1:(NSString*)input;
 
 @end

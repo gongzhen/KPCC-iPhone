@@ -17,6 +17,8 @@
 @property NSString *lastErrorLoggedComments;
 
 + (AnalyticsManager*)shared;
+
+- (void)trackHeadlinesDismissal;
 - (void)failStream:(StreamState)cause comments:(NSString*)comments;
 - (void)logEvent:(NSString*)event withParameters:(NSDictionary*)parameters;
 

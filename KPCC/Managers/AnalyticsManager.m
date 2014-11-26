@@ -10,6 +10,9 @@
 #import "AudioManager.h"
 #import "NetworkManager.h"
 #import "NSDate+Helper.h"
+#import "SessionManager.h"
+#import "Program.h"
+#import "QueueManager.h"
 
 static AnalyticsManager *singleton = nil;
 
@@ -24,6 +27,25 @@ static AnalyticsManager *singleton = nil;
     return singleton;
 }
 
+- (void)trackHeadlinesDismissal {
+    
+    NSString *programTitle = @"";
+    if ( [AudioManager shared].status != StreamStatusPlaying ) {
+        programTitle = @"[NO AUDIO]";
+    } else {
+        if ( [AudioManager shared].currentAudioMode == AudioModeLive ) {
+            Program *p = [[SessionManager shared] currentProgram];
+            programTitle = p.title;
+        } else {
+            AudioChunk *c = [[QueueManager shared] currentChunk];
+            programTitle = c.programTitle;
+        }
+    }
+    
+    [self logEvent:@"userClosedHeadlines"
+    withParameters:@{ @"programTitle" : programTitle }];
+}
+
 - (void)logEvent:(NSString *)event withParameters:(NSDictionary *)parameters {
     NSMutableDictionary *userInfo = [[NSMutableDictionary alloc] init];
     
@@ -34,6 +56,7 @@ static AnalyticsManager *singleton = nil;
 #ifdef DEBUG
     NSLog(@"Logging to Flurry now - %@ - with params %@", event, parameters);
 #endif
+    
     [Flurry logEvent:event withParameters:userInfo timed:YES];
 }
 
