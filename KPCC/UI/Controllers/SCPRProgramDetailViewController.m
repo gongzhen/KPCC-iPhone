@@ -118,6 +118,12 @@
     }
 
     cell.backgroundColor = [UIColor clearColor];
+    cell.selectedBackgroundView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0,
+                                                                           cell.frame.size.width,
+                                                                           cell.frame.size.height)];
+    
+    cell.selectedBackgroundView.backgroundColor = [[UIColor virtualWhiteColor] translucify:0.2];
+    
     [cell setEpisode:(self.episodesList)[indexPath.row]];
     return cell;
 }

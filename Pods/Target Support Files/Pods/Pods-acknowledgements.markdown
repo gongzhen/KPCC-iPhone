@@ -374,6 +374,15 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 See https://www.parse.com/about/terms
 
+## TestFlightSDK
+
+All text and design is copyright © 2010-2014 TestFlight App, Inc.
+
+All rights reserved.
+
+https://testflightapp.com/tos/
+
+
 ## XMLDictionary
 
 XMLDictionary

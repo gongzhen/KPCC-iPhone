@@ -30,6 +30,7 @@ PODS:
   - Parse (1.5.0):
     - Bolts (~> 1.1.3)
   - pop (1.0.7)
+  - TestFlightSDK (3.0.2)
   - XMLDictionary (1.4)
 
 DEPENDENCIES:
@@ -40,6 +41,7 @@ DEPENDENCIES:
   - Mixpanel
   - Parse
   - pop (~> 1.0)
+  - TestFlightSDK
   - XMLDictionary (~> 1.4)
 
 SPEC CHECKSUMS:
@@ -51,6 +53,7 @@ SPEC CHECKSUMS:
   Mixpanel: 87167a0b0a74f11f0ee3787f291357494730617c
   Parse: 7de25b6f70f0b233e5d25835f62eabfa91e4f9d7
   pop: 2f14a1ea61339767af9e66741b418c831b3844df
+  TestFlightSDK: 0c24c533748d0d84bfe7a3cb6036fa79124d84ee
   XMLDictionary: 735e81b9a043e220b0d24e9d4f16719606f2e0fc
 
 COCOAPODS: 0.35.0

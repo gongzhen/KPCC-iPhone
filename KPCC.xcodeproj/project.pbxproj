@@ -173,7 +173,6 @@
 		760EA9961953724E009B504E /* ContentManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 760EA9951953724E009B504E /* ContentManager.m */; };
 		7617729B195B646300F69EFC /* Utils.m in Sources */ = {isa = PBXBuildFile; fileRef = 7617729A195B646300F69EFC /* Utils.m */; };
 		761CC5A4195A2878006A6C7C /* Testflight-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 761CC5A3195A2878006A6C7C /* Testflight-Info.plist */; };
-		76349CA618D372B30027C3B8 /* libTestFlight.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 76349CA218D372B30027C3B8 /* libTestFlight.a */; };
 		76349CAA18D3747E0027C3B8 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 76349CA918D3747E0027C3B8 /* libz.dylib */; };
 		76349D1B18D8C74F0027C3B8 /* NetworkManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 76349D1A18D8C74F0027C3B8 /* NetworkManager.m */; };
 		76349D2118D8F8A30027C3B8 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 76349D2018D8F8A30027C3B8 /* Reachability.m */; };
@@ -540,7 +539,6 @@
 				768EAAE118D26C9C00469734 /* AVFoundation.framework in Frameworks */,
 				768EAADF18D26C5500469734 /* MediaPlayer.framework in Frameworks */,
 				76A308C918C8FB940065D4B1 /* CoreGraphics.framework in Frameworks */,
-				76349CA618D372B30027C3B8 /* libTestFlight.a in Frameworks */,
 				76A308CB18C8FB940065D4B1 /* UIKit.framework in Frameworks */,
 				76A308C718C8FB940065D4B1 /* Foundation.framework in Frameworks */,
 				D60D1CDDD065418D8BE73D8C /* libPods.a in Frameworks */,

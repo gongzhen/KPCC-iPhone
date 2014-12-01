@@ -1484,12 +1484,12 @@ static NSString *kForwardingText = @"GOING LIVE...";
 
 - (void)queueScrollEnded {
     
-
-    
     [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationOptionCurveLinear animations:^{
         self.timeLabelOnDemand.alpha = 1.0;
     } completion:nil];
 
+    [[SessionManager shared] endOnDemandSessionWithReason:OnDemandFinishedReasonEpisodeSkipped];
+    
     int newPage = self.queueScrollView.contentOffset.x / self.queueScrollView.frame.size.width;
     if ((self.queueContents)[newPage]) {
         AudioChunk *chunk = (self.queueContents)[newPage];

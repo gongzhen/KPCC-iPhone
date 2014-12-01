@@ -10,6 +10,8 @@
 #import "AudioManager.h"
 #import "NetworkManager.h"
 #import "AnalyticsManager.h"
+#import "AudioChunk.h"
+#import "QueueManager.h"
 
 static long kStreamBufferLimit = 4*60*60;
 
@@ -136,6 +138,67 @@ static long kStreamBufferLimit = 4*60*60;
                          withParameters:@{ @"behindLiveStatus" : pt,
                                            @"behindLiveSeconds" : [NSString stringWithFormat:@"%ld",(long)seconds],
                                            @"programTitle" : self.currentProgram.title }];
+}
+
+- (NSString*)startOnDemandSession {
+    
+    if ( self.odSessionIsHot ) return @"";
+    
+    NSString *ct = [NSString stringWithFormat:@"%ld",(long)[[NSDate date] timeIntervalSince1970]];
+    NSString *sid = [Utils sha1:ct];
+    self.odSessionID = sid;
+    @synchronized(self) {
+        self.odSessionIsHot = YES;
+    }
+    
+    self.onDemandSessionBegan = (int64_t)[[NSDate date] timeIntervalSince1970];
+    
+    return sid;
+}
+
+- (NSString*)endOnDemandSessionWithReason:(OnDemandFinishedReason)reason {
+    
+    if ( !self.odSessionIsHot ) return @"";
+
+    NSTimeInterval now = [[NSDate date] timeIntervalSince1970];
+    NSTimeInterval sessionLength = abs(now - self.onDemandSessionBegan);
+    NSString *pt = [NSDate prettyTextFromSeconds:sessionLength];
+    
+    NSString *sid = self.odSessionID;
+    if ( !sid ) {
+        NSString *ct = [NSString stringWithFormat:@"%ld",(long)[[NSDate date] timeIntervalSince1970]];
+        sid = [Utils sha1:ct];
+    }
+    NSLog(@"Logging pause event for Live Stream...");
+    
+    AudioChunk *chunk = [[QueueManager shared] currentChunk];
+    NSString *event = @"";
+    switch (reason) {
+        case OnDemandFinishedReasonEpisodeEnd:
+            event = @"onDemandAudioCompleted";
+            break;
+        case OnDemandFinishedReasonEpisodePaused:
+            event = @"onDemandAudioPaused";
+            break;
+        case OnDemandFinishedReasonEpisodeSkipped:
+            event = @"onDemandEpisodeSkipped";
+            break;
+        default:
+            break;
+    }
+    
+    [[AnalyticsManager shared] logEvent:event
+                         withParameters:@{ @"sessionID" : sid,
+                                           @"programTitle" : chunk.audioTitle,
+                                           @"sessionLength" : pt,
+                                           @"sessionLengthInSeconds" : [NSString stringWithFormat:@"%ld",(long)sessionLength] }];
+    self.odSessionIsHot = NO;
+    self.odSessionID = nil;
+    return sid;
+}
+
+- (void)trackOnDemandSession {
+    
 }
 
 #pragma mark - Program

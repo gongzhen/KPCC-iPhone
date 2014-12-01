@@ -109,7 +109,13 @@
 
     cell.backgroundColor = [UIColor clearColor];
     cell.programLabel.text = [NSString stringWithFormat:@"%@", [(self.programsList)[indexPath.row] title]];
-
+    
+    cell.selectedBackgroundView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0,
+                                                                           cell.frame.size.width,
+                                                                           cell.frame.size.height)];
+    
+    cell.selectedBackgroundView.backgroundColor = [[UIColor virtualWhiteColor] translucify:0.2];
+    
     NSString *iconNamed = [(self.programsList)[indexPath.row] program_slug];
     if (iconNamed) {
         UIImage *iconImg = [UIImage imageNamed:[NSString stringWithFormat:@"program_avatar_%@", iconNamed]];

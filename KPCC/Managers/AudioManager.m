@@ -216,6 +216,7 @@ static const NSString *ItemStatusContext;
             
             [[SessionManager shared] trackLiveSession];
             [[SessionManager shared] trackRewindSession];
+            [[SessionManager shared] trackOnDemandSession];
             
             if ([weakSelf.delegate respondsToSelector:@selector(onTimeChange)]) {
                 if ( weakSelf.waitForFirstTick ) {
@@ -404,6 +405,7 @@ static const NSString *ItemStatusContext;
     }
 
     if ( ![[QueueManager shared]isQueueEmpty] ) {
+        [[SessionManager shared] endOnDemandSessionWithReason:OnDemandFinishedReasonEpisodeEnd];
         [[QueueManager shared] playNext];
     } else {
         [self takedownAudioPlayer];
@@ -522,8 +524,14 @@ static const NSString *ItemStatusContext;
 #ifdef DEBUG
     NSLog(@"playing queue item with url: %@", url);
 #endif
+    
+    [[SessionManager shared] startOnDemandSession];
+    
     [self playAudioWithURL:url];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playerItemDidFinishPlaying:) name:AVPlayerItemDidPlayToEndTimeNotification object:self.playerItem];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(playerItemDidFinishPlaying:)
+                                                 name:AVPlayerItemDidPlayToEndTimeNotification
+                                               object:self.playerItem];
 }
 
 
@@ -604,6 +612,8 @@ static const NSString *ItemStatusContext;
     if ( self.currentAudioMode == AudioModeLive ) {
         [[SessionManager shared] setSessionPausedDate:[NSDate date]];
         [[SessionManager shared] endLiveSession];
+    } else {
+        [[SessionManager shared] endOnDemandSessionWithReason:OnDemandFinishedReasonEpisodePaused];
     }
     
     self.status = StreamStatusPaused;
