@@ -20,6 +20,8 @@
 #import "SCPRFeedbackViewController.h"
 #import "UXmanager.h"
 #import "SCPRNavigationController.h"
+#import "AnalyticsManager.h"
+
 
 static NSString *kRewindingText = @"REWINDING...";
 static NSString *kForwardingText = @"GOING LIVE...";
@@ -144,7 +146,9 @@ static NSString *kForwardingText = @"GOING LIVE...";
     [self.jogShuttle prepare];
 
     // Views for audio queue
-    self.queueScrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 64, self.view.frame.size.width, self.timeLabelOnDemand.frame.origin.y - 64)];
+    self.queueScrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 64,
+                                                                          self.view.frame.size.width,
+                                                                          self.timeLabelOnDemand.frame.origin.y - 64)];
     self.queueScrollView.backgroundColor = [UIColor clearColor];
     self.queueScrollView.pagingEnabled = YES;
     self.queueScrollView.delegate = self;
@@ -180,6 +184,11 @@ static NSString *kForwardingText = @"GOING LIVE...";
                              action:@selector(playOrPauseTapped:)
                    forControlEvents:UIControlEventTouchUpInside
                             special:YES];
+    
+    [self.shareButton addTarget:self
+                         action:@selector(shareButtonTapped:)
+               forControlEvents:UIControlEventTouchUpInside
+                        special:YES];
     
     [SCPRCloakViewController cloakWithCustomCenteredView:nil cloakAppeared:^{
         if ( [[UXmanager shared] userHasSeenOnboarding] ) {
@@ -354,6 +363,8 @@ static NSString *kForwardingText = @"GOING LIVE...";
 
 - (IBAction)initialPlayTapped:(id)sender {
     
+    [[AudioManager shared] setEaseInAudio:YES];
+    
     if ( ![[UXmanager shared] userHasSeenOnboarding] ) {
         [[UXmanager shared] fadeOutBrandingWithCompletion:^{
             [self moveTextIntoPlace:YES];
@@ -496,6 +507,13 @@ static NSString *kForwardingText = @"GOING LIVE...";
                                                 initWithActivityItems:@[self.onDemandEpUrl]
                                                 applicationActivities:nil];
         controller.excludedActivityTypes = @[UIActivityTypeAirDrop];
+        [controller setCompletionHandler:^(NSString *activityType, BOOL completed) {
+            if ( completed ) {
+                [[AnalyticsManager shared] logEvent:[NSString stringWithFormat:@"programEpisodeShared%@",[activityType capitalizedString]]
+                                     withParameters:@{ @"episodeUrl" : self.onDemandEpUrl,
+                                                       @"programTitle" : [[[QueueManager shared] currentChunk] programTitle] }];
+            }
+        }];
         [self presentViewController:controller animated:YES completion:nil];
     }
 }
@@ -962,7 +980,7 @@ static NSString *kForwardingText = @"GOING LIVE...";
 - (void)setDataForOnDemand:(Program *)program andAudioChunk:(AudioChunk*)audioChunk {
     if (program != nil) {
         self.onDemandProgram = program;
-
+        self.onDemandEpUrl = audioChunk.contentShareUrl;
         [[AudioManager shared] updateNowPlayingInfoWithAudio:audioChunk];
         [[DesignManager shared] loadProgramImage:program.program_slug
                                     andImageView:self.programImageView
@@ -1525,6 +1543,7 @@ static NSString *kForwardingText = @"GOING LIVE...";
             self.queueDarkBgView.alpha = 0.0;
             self.progressView.alpha = 1.0;
             self.shareButton.alpha = 1.0;
+            self.timeLabelOnDemand.alpha = 1.0;
             
         } completion:^(BOOL finished) {
             self.queueBlurShown = NO;
@@ -1539,8 +1558,12 @@ static NSString *kForwardingText = @"GOING LIVE...";
 # pragma mark - PulldownMenuDelegate
 
 - (void)menuItemSelected:(NSIndexPath *)indexPath {
+    
+    NSString *event = @"";
     switch (indexPath.row) {
-        case 0:{
+        case 0:
+        {
+            event = @"menuSelectionLiveStream";
             if ( [AudioManager shared].currentAudioMode == AudioModeLive ) {
                 [self decloakForMenu:YES];
             } else {
@@ -1550,7 +1573,9 @@ static NSString *kForwardingText = @"GOING LIVE...";
             break;
         }
 
-        case 1: {
+        case 1:
+        {
+            event = @"menuSelectionPrograms";
             Program *prog = [[SessionManager shared] currentProgram];
             if (setForOnDemandUI && self.onDemandProgram != nil) {
                 prog = self.onDemandProgram;
@@ -1563,6 +1588,7 @@ static NSString *kForwardingText = @"GOING LIVE...";
             
         case 2: {
             
+            event = @"menuSelectionHeadlines";
             SCPRShortListViewController *slVC = [[SCPRShortListViewController alloc] initWithNibName:@"SCPRShortListViewController"
                                                                                               bundle:nil];
             [self.navigationController pushViewController:slVC animated:YES];
@@ -1572,6 +1598,7 @@ static NSString *kForwardingText = @"GOING LIVE...";
             
         case 3: {
             
+            event = @"menuSelectionFeedback";
             SCPRFeedbackViewController *fbVC = [[SCPRFeedbackViewController alloc] initWithNibName:@"SCPRFeedbackViewController"
                                                                                             bundle:nil];
             [self.navigationController pushViewController:fbVC animated:YES];
@@ -1583,6 +1610,9 @@ static NSString *kForwardingText = @"GOING LIVE...";
             break;
         }
     }
+    
+    [[AnalyticsManager shared] logEvent:event
+                         withParameters:@{}];
 }
 
 - (void)pullDownAnimated:(BOOL)open {

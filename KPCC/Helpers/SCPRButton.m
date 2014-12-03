@@ -29,31 +29,31 @@
 }
 
 - (void)squeeze {
-    POPSpringAnimation *scaleAnimation = [POPSpringAnimation animationWithPropertyNamed:kPOPLayerScaleXY];
-    scaleAnimation.fromValue  = [NSValue valueWithCGSize:CGSizeMake(1.0f, 1.0f)];
-    scaleAnimation.toValue  = [NSValue valueWithCGSize:CGSizeMake(0.86f, 0.86f)];
-    scaleAnimation.springBounciness = 2.0f;
-    scaleAnimation.springSpeed = 1.0f;
-    [scaleAnimation setCompletionBlock:^(POPAnimation *p, BOOL c) {
-        self.small = YES;
+    
+    [UIView animateWithDuration:0.11 delay:0.0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
+        
+        self.transform = CGAffineTransformMakeScale(0.80f, 0.80f);
+        
+    } completion:^(BOOL finished) {
+        
+        
     }];
-    [self.layer pop_addAnimation:scaleAnimation forKey:@"squeeze"];
+    
 }
 
 - (void)expand {
-    //if ( !self.small ) {
-        POPSpringAnimation *scaleAnimation = [POPSpringAnimation animationWithPropertyNamed:kPOPLayerScaleXY];
-        scaleAnimation.fromValue  = [NSValue valueWithCGSize:CGSizeMake(.86f, .86f)];
-        scaleAnimation.toValue  = [NSValue valueWithCGSize:CGSizeMake(1.0f, 1.0f)];
-        scaleAnimation.springBounciness = 1.0f;
-        scaleAnimation.springSpeed = 2.0f;
-        [scaleAnimation setCompletionBlock:^(POPAnimation *p, BOOL c) {
-            self.small = NO;
-            [self.target performSelector:self.postPushMethod withObject:nil afterDelay:0];
-        }];
+
+    POPSpringAnimation *scaleAnimation = [POPSpringAnimation animationWithPropertyNamed:kPOPLayerScaleXY];
+    scaleAnimation.toValue  = [NSValue valueWithCGSize:CGSizeMake(1.0f, 1.0f)];
+    scaleAnimation.springBounciness = 2.0f;
+    scaleAnimation.springSpeed = 1.0f;
+    [scaleAnimation setCompletionBlock:^(POPAnimation *p, BOOL c) {
+        self.small = NO;
+        
+    }];
     [self.layer pop_addAnimation:scaleAnimation forKey:@"expand"];
+    [self.target performSelector:self.postPushMethod withObject:nil afterDelay:0];
     
-    //}
 }
 
 @end

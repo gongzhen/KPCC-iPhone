@@ -10,6 +10,7 @@
 #import "SCPRProgramTableViewCell.h"
 #import "SCPRProgramDetailViewController.h"
 #import "DesignManager.h"
+#import "AnalyticsManager.h"
 
 /**
  * Programs with these slugs will be hidden from this table view.
@@ -139,6 +140,14 @@
 
     programDetailViewController.program = (self.programsList)[indexPath.row];
     [self.navigationController pushViewController:programDetailViewController animated:YES];
+    
+    NSString *title = [NSString stringWithFormat:@"%@", [(self.programsList)[indexPath.row] title]];
+    if ( !title ) {
+        title = @"[UNKNOWN]";
+    }
+    
+    [[AnalyticsManager shared] logEvent:@"programSelected"
+                         withParameters:@{ @"programTitle" : title }];
 }
 
 

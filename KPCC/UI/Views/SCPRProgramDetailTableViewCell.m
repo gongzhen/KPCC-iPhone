@@ -34,6 +34,8 @@
 
 - (void)setEpisode:(NSObject *)episode {
     if (episode != nil) {
+        
+        
         [self.episodeTitleLabel setFrame:CGRectMake(8.f, 18.f, self.frame.size.width - 16.f, 60.f)];
         [self.episodeInfoLabel setFrame:CGRectMake(8.f, 40.f, self.frame.size.width - 16.f, 40.f)];
 
@@ -62,6 +64,19 @@
             }
         }
     }
+}
+
+- (NSString*)episodeTitle {
+    NSString *title = @"[UNKNOWN]";
+    if ([self.episode isKindOfClass:[Episode class]]) {
+        Episode *ep = (Episode *) self.episode;
+        title = [ep.title stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+    } else {
+        Segment *seg = (Segment *) self.episode;
+        title = seg.title;
+    }
+    
+    return title;
 }
 
 - (void)awakeFromNib {

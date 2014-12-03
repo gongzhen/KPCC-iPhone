@@ -58,7 +58,7 @@
 @property IBOutlet UILabel *programTitleOnDemand;
 @property IBOutlet UIView *dividerOnDemand;
 @property IBOutlet UILabel *timeLabelOnDemand;
-@property IBOutlet UIButton *shareButton;
+@property IBOutlet SCPRButton *shareButton;
 @property IBOutlet UIProgressView *progressView;
 
 

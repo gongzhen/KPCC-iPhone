@@ -27,6 +27,29 @@ static AnalyticsManager *singleton = nil;
     return singleton;
 }
 
+- (void)setup {
+    
+    NSString *path = [[NSBundle mainBundle] pathForResource:@"Config" ofType:@"plist"];
+    NSDictionary *globalConfig = [[NSDictionary alloc] initWithContentsOfFile:path];
+    
+    [Flurry setCrashReportingEnabled:YES];
+    [Flurry setDebugLogEnabled:YES];
+    [Flurry startSession: globalConfig[@"Flurry"][@"DebugKey"] ];
+    [Flurry setBackgroundSessionEnabled:NO];
+    
+    NSString *token = @"SandboxToken";
+#ifdef PRODUCTION
+    token = @"ProductionToken";
+#endif
+    
+    [Mixpanel sharedInstanceWithToken:globalConfig[@"Mixpanel"][token]];
+    Mixpanel *mxp = [Mixpanel sharedInstance];
+    NSString *uuid = [[[UIDevice currentDevice] identifierForVendor] UUIDString];
+    [mxp identify:uuid];
+    [mxp.people set:@{ @"uuid" : uuid }];
+    
+}
+
 - (void)trackHeadlinesDismissal {
     
     NSString *programTitle = @"";
@@ -46,6 +69,7 @@ static AnalyticsManager *singleton = nil;
     withParameters:@{ @"programTitle" : programTitle }];
 }
 
+
 - (void)logEvent:(NSString *)event withParameters:(NSDictionary *)parameters {
     NSMutableDictionary *userInfo = [[NSMutableDictionary alloc] init];
     
@@ -58,6 +82,9 @@ static AnalyticsManager *singleton = nil;
 #endif
     
     [Flurry logEvent:event withParameters:userInfo timed:YES];
+    
+    Mixpanel *mxp = [Mixpanel sharedInstance];
+    [mxp track:event properties:parameters];
 }
 
 - (void)failStream:(StreamState)cause comments:(NSString *)comments {

@@ -198,7 +198,29 @@ static long kStreamBufferLimit = 4*60*60;
 }
 
 - (void)trackOnDemandSession {
+    if ( !self.odSessionIsHot ) return;
+    if ( [AudioManager shared].currentAudioMode != AudioModeOnDemand ) return;
     
+    @synchronized(self) {
+        self.odSessionIsHot = NO;
+    }
+    
+    NSLog(@"Logging play event for Live Stream...");
+    
+    NSDate *d = [[[QueueManager shared] currentChunk] audioTimeStamp];
+    NSString *pubDateStr = [NSDate stringFromDate:d
+                                       withFormat:@"MM/dd/YYYY hh:mm a"];
+    NSNumber *duration = [[[QueueManager shared] currentChunk] audioDuration];
+    NSInteger dur = [duration intValue];
+    NSString *pretty = [NSDate prettyTextFromSeconds:dur];
+    
+    [[AnalyticsManager shared] logEvent:@"onDemandEpisodeBegan"
+                         withParameters:@{ @"sessionID" : self.odSessionID,
+                                           @"programPublishedAt" : pubDateStr,
+                                           @"programTitle" : [[[QueueManager shared] currentChunk] programTitle],
+                                           @"programLengthInSeconds" : [NSString stringWithFormat:@"%@",duration],
+                                           @"programLength" : pretty
+                                           }];
 }
 
 #pragma mark - Program
@@ -216,7 +238,7 @@ static long kStreamBufferLimit = 4*60*60;
     NSInteger modifier = segment == 1 ? 1 : 0;
     p[@"duration"] = @(seconds+modifier);
     p[@"title"] = @"Welcome to KPCC";
-    p[@"program_slug"] = [NSString stringWithFormat:@"onboarding%ld",segment];
+    p[@"program_slug"] = [NSString stringWithFormat:@"onboarding%ld",(long)segment];
     self.onboardingAudio = p;
     
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.33 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
@@ -343,6 +365,7 @@ static long kStreamBufferLimit = 4*60*60;
 #ifdef TEST_PROGRAM_IMAGE
     then = [NSDate dateWithTimeInterval:30 sinceDate:now];
 #endif
+    
     NSTimeInterval sinceNow = [then timeIntervalSince1970] - [now timeIntervalSince1970];
     
     if ( [self useLocalNotifications] ) {
@@ -361,7 +384,6 @@ static long kStreamBufferLimit = 4*60*60;
 #ifdef DEBUG
         NSLog(@"Program will check itself again at : %@",[then prettyTimeString]);
 #endif
-        
     }
 #else
     NSDate *threeMinutesFromNow = [[NSDate date] dateByAddingTimeInterval:96];

@@ -10,6 +10,7 @@
 #import "Flurry.h"
 #include <mach/mach_time.h>
 #import "AudioManager.h"
+#import "Mixpanel.h"
 
 @interface AnalyticsManager : NSObject
 
@@ -18,8 +19,9 @@
 
 + (AnalyticsManager*)shared;
 
+- (void)setup;
 - (void)trackHeadlinesDismissal;
+- (void)logEvent:(NSString *)event withParameters:(NSDictionary *)parameters;
 - (void)failStream:(StreamState)cause comments:(NSString*)comments;
-- (void)logEvent:(NSString*)event withParameters:(NSDictionary*)parameters;
 
 @end

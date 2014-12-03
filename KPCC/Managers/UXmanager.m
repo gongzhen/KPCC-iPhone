@@ -238,7 +238,7 @@
     [UIView animateWithDuration:0.5 animations:^{
         [self.masterCtrl.blurView.layer setOpacity:1.0];
         [self.masterCtrl.darkBgView.layer setOpacity:0.75];
-        self.masterCtrl.playerControlsView.alpha = 0.0;
+        [self.masterCtrl.playerControlsView setAlpha:0.0];
         [self.masterCtrl.liveProgressViewController hide];
         [self.masterCtrl.horizDividerLine setAlpha:0.0];
         [self.masterCtrl.liveStreamView setAlpha:0.0];
@@ -251,10 +251,8 @@
 - (void)restorePreNotificationUI:(BOOL)prompt {
     [self.onboardingCtrl collapseNotificationsPrompt];
     [UIView animateWithDuration:0.5 animations:^{
-        //[self.masterCtrl.blurView.layer setOpacity:0.0];
         [self.masterCtrl.darkBgView.layer setOpacity:0.0];
         self.masterCtrl.playerControlsView.alpha = 1.0;
-        
         [self.masterCtrl.liveStreamView setAlpha:1.0];
     } completion:^(BOOL finished) {
         if ( prompt ) {
@@ -285,22 +283,11 @@
 }
 
 - (void)closeOutOnboarding {
-   /* [UIView animateWithDuration:0.25 animations:^{
-        [self.masterCtrl.blurView.layer setOpacity:0.0];
-        [self.masterCtrl.darkBgView.layer setOpacity:0.35];
-    } completion:^(BOOL finished) {*/
     [self.onboardingCtrl hideCallout];
     [UIView animateWithDuration:0.33 animations:^{
         [self.masterCtrl.horizDividerLine setAlpha:0.4];
         [self.masterCtrl.blurView.layer setOpacity:0.0];
     } completion:^(BOOL finished) {
-        /*[[SessionManager shared] fetchOnboardingProgramWithSegment:3 completed:^(id returnedObject) {
-            
-            [[AudioManager shared] setTemporaryMutex:NO];
-            [self.masterCtrl onboarding_beginOutro];
-            [self.masterCtrl.liveProgressViewController show];
-            
-        }];*/
         [self endOnboarding];
     }];
 

@@ -36,10 +36,7 @@
     [TestFlight takeOff: globalConfig[@"TestFlight"][@"AppToken"]];
 #endif
     
-    [Flurry setCrashReportingEnabled:YES];
-    [Flurry setDebugLogEnabled:YES];
-    [Flurry startSession: globalConfig[@"Flurry"][@"DebugKey"] ];
-    [Flurry setBackgroundSessionEnabled:NO];
+    [[AnalyticsManager shared] setup];
     
 #ifdef DEBUG
     [[UXmanager shared].settings setUserHasViewedOnboarding:YES];

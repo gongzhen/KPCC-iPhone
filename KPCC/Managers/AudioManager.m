@@ -176,35 +176,6 @@ static const NSString *ItemStatusContext;
     
     self.timeObserver = [self.audioPlayer addPeriodicTimeObserverForInterval:CMTimeMake(1, 1)  queue:nil usingBlock:^(CMTime time) {
         weakSelf.currentDate = audioPlayer.currentItem.currentDate;
-#ifdef USE_LEGACY_STREAM_ANALYSIS
-        NSDate *d2u = weakSelf.requestedSeekDate ? weakSelf.requestedSeekDate : [NSDate date];
-        NSTimeInterval drift = [d2u timeIntervalSinceDate:[weakSelf currentDate]];
-        if ( weakSelf.bufferMutex ) {
-            if ( abs(drift) <= kAllowableDriftThreshold ) {
-                if ( weakSelf.bufferObservationCount >= kBufferObservationThreshold ) {
-                    @synchronized(weakSelf) {
-                        weakSelf.bufferMutex = NO;
-#ifdef VERBOSE_STREAM_LOGGING
-                        NSLog(@"Finished buffering...");
-#endif
-                    }
-                } else {
-#ifdef VERBOSE_STREAM_LOGGING
-                    NSLog(@"Drift Stabilizing... : %ld seconds",(long)drift);
-#endif
-                    weakSelf.bufferObservationCount++;
-                }
-            } else {
-#ifdef VERBOSE_STREAM_LOGGING
-                NSLog(@"Drift (Buffering) : %ld seconds",(long)drift);
-#endif
-            }
-        }
-#endif
-        
-#ifdef DEBUG
-        [weakSelf streamFrame];
-#endif
         
         NSArray *seekRange = audioPlayer.currentItem.seekableTimeRanges;
         if (seekRange && [seekRange count] > 0) {
@@ -226,6 +197,7 @@ static const NSString *ItemStatusContext;
                         [[NSNotificationCenter defaultCenter] postNotificationName:@"audio_player_began_playing"
                                                                             object:nil];
                         
+                        
                     });
                 }
                 [weakSelf.delegate onTimeChange];
@@ -233,6 +205,16 @@ static const NSString *ItemStatusContext;
             
         } else {
             NSLog(@"no seekable time range for current item");
+        }
+        
+        if ( weakSelf.easeInAudio ) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                weakSelf.easeInAudio = NO;
+                weakSelf.savedVolume = 1.0;
+                [weakSelf adjustAudioWithValue:0.1 completion:^{
+                    
+                }];
+            });
         }
     }];
     
@@ -579,26 +561,22 @@ static const NSString *ItemStatusContext;
         [self buildStreamer:kHLSLiveStreamURL];
     }
 
-    BOOL fadein = NO;
-    if ( self.savedVolumeFromMute >= 0.0 ) {
-        fadein = YES;
+
+    if ( self.easeInAudio ) {
         [self.audioPlayer setVolume:0.0];
     }
+    
     [self.audioPlayer play];
     
     if ( self.currentAudioMode == AudioModeLive ) {
         [[SessionManager shared] startLiveSession];
     }
-    
-    if ( fadein ) {
-        [[AudioManager shared] adjustAudioWithValue:0.1 completion:^{
-            
-        }];
-    }
-    
+
     [[SessionManager shared] setSessionPausedDate:nil];
     
     self.status = StreamStatusPlaying;
+  
+
 }
 
 - (void)playStream {
