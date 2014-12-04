@@ -19,8 +19,7 @@
 #import "UXmanager.h"
 
 static AudioManager *singleton = nil;
-static NSInteger kBufferObservationThreshold = 10;
-static NSInteger kAllowableDriftThreshold = 80;
+
 
 // Define this constant for the key-value observation context.
 static const NSString *ItemStatusContext;
@@ -241,6 +240,10 @@ static const NSString *ItemStatusContext;
         nudge = YES;
     }
     
+    if ( [self.audioPlayer.currentItem status] != AVPlayerItemStatusReadyToPlay ) {
+        NSLog(@" ******* PLAYER ITEM NOT READY TO PLAY BEFORE SEEKING ******* ");
+    }
+    
     if (!self.audioPlayer) {
         [self buildStreamer:kHLSLiveStreamURL];
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
@@ -248,8 +251,9 @@ static const NSString *ItemStatusContext;
                 if(self.audioPlayer.status == AVPlayerStatusReadyToPlay &&
                    self.audioPlayer.currentItem.status == AVPlayerItemStatusReadyToPlay) {
                     
-                    [self playStream];
-
+                    if ( self.audioPlayer.rate == 0.0 ) {
+                        [self playStream];
+                    }
                     if ([self.delegate respondsToSelector:@selector(onSeekCompleted)]) {
                         [self.delegate onSeekCompleted];
                     }
@@ -259,12 +263,6 @@ static const NSString *ItemStatusContext;
 
     } else {
         
-        /*
-        if ( [AudioManager shared].status == StreamStatusPlaying ) {
-            [self.audioPlayer pause];
-        }
-        */
-        
         NSDate *justABitInTheFuture = nudge ? [NSDate dateWithTimeInterval:2 sinceDate:date] : date;
         [self.audioPlayer.currentItem seekToDate:justABitInTheFuture completionHandler:^(BOOL finished) {
             if ( !finished ) {
@@ -273,16 +271,25 @@ static const NSString *ItemStatusContext;
             if(self.audioPlayer.status == AVPlayerStatusReadyToPlay &&
                self.audioPlayer.currentItem.status == AVPlayerItemStatusReadyToPlay) {
                 
+                if ( [[SessionManager shared] secondsBehindLive] > 14000 ) {
+                    // Try again
+                    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                        if ( [self.delegate respondsToSelector:@selector(interfere)] ) {
+                            [self.delegate interfere];
+                        }
+                        [self.audioPlayer pause];
+                        [self seekToDate:date];
+                    });
+                    
+                    return;
+                }
+                
                 if ( [[NSDate date] timeIntervalSinceDate:date] > 60 ) {
                     self.requestedSeekDate = date;
                 } else {
                     self.requestedSeekDate = nil;
                 }
   
-#ifdef USE_LEGACY_STREAM_ANALYSIS
-                self.bufferMutex = YES;
-                self.bufferObservationCount = 0;
-#endif
                 
                 dispatch_async(dispatch_get_main_queue(), ^{
                     if ( [self.audioPlayer rate] == 0.0 ) {
@@ -292,9 +299,7 @@ static const NSString *ItemStatusContext;
                         [self.delegate onSeekCompleted];
                     }
                 });
-#ifdef VERBOSE_STREAM_LOGGING
-                [self dump:NO];
-#endif
+
             }
         }];
     }
@@ -463,7 +468,6 @@ static const NSString *ItemStatusContext;
                                                              ofType:@"mp3"];
         url = [NSURL fileURLWithPath:filePath];
         self.currentAudioMode = AudioModeOnboarding;
-        self.relativeFauxDate = [NSDate date];
     }
     
     self.playerItem = [AVPlayerItem playerItemWithURL:url];
@@ -487,6 +491,11 @@ static const NSString *ItemStatusContext;
 
 - (void)buildStreamer:(NSString *)urlString {
     [self buildStreamer:urlString local:NO];
+}
+
+- (void)resetPlayer {
+    [self takedownAudioPlayer];
+    [self buildStreamer:kHLSLiveStreamURL];
 }
 
 - (void)sanitizeFromOnboarding {
@@ -544,6 +553,8 @@ static const NSString *ItemStatusContext;
                                              selector:@selector(onboardingSegmentCompleted)
                                                  name:AVPlayerItemDidPlayToEndTimeNotification
                                                object:nil];
+    
+    [[AudioManager shared] setRelativeFauxDate:[NSDate date]];
     
     [self startStream];
     

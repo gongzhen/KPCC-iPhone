@@ -128,6 +128,7 @@ static DesignManager *singleton = nil;
                       window.bounds.size.height);
 }
 
+#pragma mark - Makeovers
 - (void)sculptButton:(UIButton *)button withStyle:(SculptingStyle)style andText:(NSString *)text {
     [button setTitle:text forState:UIControlStateNormal];
     [button setTitle:text forState:UIControlStateHighlighted];
@@ -161,6 +162,24 @@ static DesignManager *singleton = nil;
             
         }
     }
+}
+
+#pragma mark - Fonts
+- (UIFont*)proLight:(CGFloat)size {
+    return [UIFont fontWithName:@"FreightSansProLight-Regular" size:size];
+}
+
+- (UIFont*)proMedium:(CGFloat)size {
+    return [UIFont fontWithName:@"FreightSansProMedium-Regular" size:size];
+}
+
+- (UIFont*)proBook:(CGFloat)size {
+    return [UIFont fontWithName:@"FreightSansProBook-Regular" size:size];
+}
+
+- (UIFont*)proBold:(CGFloat)size {
+    return [UIFont fontWithName:@"FreightSansProSemibold-Regular" size:size];
+
 }
 
 @end

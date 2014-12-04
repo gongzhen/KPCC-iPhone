@@ -52,13 +52,15 @@
     
     self.feedbackTable.separatorColor = [UIColor lightGrayColor];
     
-    self.view.backgroundColor = [UIColor whiteColor];
-    
+    self.view.backgroundColor = [UIColor blackColor];
+    self.feedbackTable.separatorColor = [UIColor colorWithRed:222.f/255.f green:228.f/255.f blue:229.f/255.f alpha:0.3f];
     
     NSString *versionText = [NSString stringWithFormat:@"KPCC iPhone v%@",[Utils prettyVersion]];
     self.versionLabel.text = versionText;
     self.versionLabel.textColor = [UIColor darkGrayColor];
 
+    [self.nameTextField setFont:[[DesignManager shared] proLight:self.nameTextField.font.pointSize]];
+    [self.emailTextField setFont:[[DesignManager shared] proLight:self.emailTextField.font.pointSize]];
     
     /*
     NSString *email = [[ContentManager shared].settings userEmail];
@@ -269,12 +271,17 @@
         if ( indexPath.row == 0 ) {
             cell.textLabel.text = @"Name";
             cell.accessoryView = self.nameTextField;
+
         } else {
             cell.textLabel.text = @"Email";
             cell.accessoryView = self.emailTextField;
         }
         
+        
+        [cell.textLabel proSemiBoldFontize];
+        cell.textLabel.textColor = [UIColor whiteColor];
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
+        cell.backgroundColor = [UIColor clearColor];
         return cell;
     }
     if ( indexPath.section == 1 ) {
@@ -289,11 +296,16 @@
             cell.accessoryType = UITableViewCellAccessoryNone;
         }
         
+        cell.tintColor = [UIColor kpccOrangeColor];
+        
         cell.textLabel.text = reason;
+        [cell.textLabel proSemiBoldFontize];
+        cell.backgroundColor = [UIColor clearColor];
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
         return cell;
     }
     
+    [self.descriptionCell setBackgroundColor:[UIColor clearColor]];
     self.descriptionCell.selectionStyle = UITableViewCellSelectionStyleNone;
     
     return self.descriptionCell;
@@ -338,20 +350,20 @@
 - (UIView*)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
     if ( section == 0 ) {
         return [[DesignManager shared] textHeaderWithText:@"YOUR DETAILS"
-                                                textColor:[UIColor blueColor]
-                                          backgroundColor:[UIColor whiteColor]
+                                                textColor:[UIColor kpccOrangeColor]
+                                          backgroundColor:[UIColor blackColor]
                                                   divider:NO];
     }
     if ( section == 1 ) {
         return [[DesignManager shared] textHeaderWithText:@"REASON FOR INQUIRY"
-                                                textColor:[UIColor blueColor]
-                                          backgroundColor:[UIColor whiteColor]
+                                                textColor:[UIColor kpccOrangeColor]
+                                          backgroundColor:[UIColor blackColor]
                                                   divider:NO];
     }
     
     return [[DesignManager shared] textHeaderWithText:@"COMMENTS"
-                                            textColor:[UIColor blueColor]
-                                      backgroundColor:[UIColor whiteColor]
+                                            textColor:[UIColor kpccOrangeColor]
+                                      backgroundColor:[UIColor blackColor]
                                               divider:NO];
 }
 

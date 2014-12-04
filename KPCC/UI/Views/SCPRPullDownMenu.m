@@ -51,7 +51,7 @@
     NSOrderedSet* orderedItems = [NSOrderedSet orderedSetWithObjects:   kMenuItemKPCCLive,
                                                                         kMenuItemPrograms,
                                                                         kMenuItemShortList,
-                                                                        //kMenuItemFeedback,
+                                                                        kMenuItemFeedback,
                                                                         //kMenuItemDonate,
                                                                         //kMenuItemSettings,
                                                                         nil];

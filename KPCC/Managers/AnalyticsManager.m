@@ -33,7 +33,7 @@ static AnalyticsManager *singleton = nil;
     NSDictionary *globalConfig = [[NSDictionary alloc] initWithContentsOfFile:path];
     
     [Flurry setCrashReportingEnabled:YES];
-    [Flurry setDebugLogEnabled:YES];
+    [Flurry setDebugLogEnabled:NO];
     [Flurry startSession: globalConfig[@"Flurry"][@"DebugKey"] ];
     [Flurry setBackgroundSessionEnabled:NO];
     
@@ -52,7 +52,7 @@ static AnalyticsManager *singleton = nil;
 
 - (void)trackHeadlinesDismissal {
     
-    NSString *programTitle = @"";
+    /*NSString *programTitle = @"";
     if ( [AudioManager shared].status != StreamStatusPlaying ) {
         programTitle = @"[NO AUDIO]";
     } else {
@@ -63,10 +63,10 @@ static AnalyticsManager *singleton = nil;
             AudioChunk *c = [[QueueManager shared] currentChunk];
             programTitle = c.programTitle;
         }
-    }
+    }*/
     
     [self logEvent:@"userClosedHeadlines"
-    withParameters:@{ @"programTitle" : programTitle }];
+    withParameters:@{ }];
 }
 
 

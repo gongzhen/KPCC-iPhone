@@ -25,6 +25,7 @@
 
 static NSString *kRewindingText = @"REWINDING...";
 static NSString *kForwardingText = @"GOING LIVE...";
+static NSString *kBufferingText = @"BUFFERING...";
 
 @interface SCPRMasterViewController () <AudioManagerDelegate, UINavigationControllerDelegate, UIViewControllerTransitioningDelegate, SCPRPreRollControllerDelegate, UIScrollViewDelegate>
 
@@ -189,6 +190,8 @@ static NSString *kForwardingText = @"GOING LIVE...";
                          action:@selector(shareButtonTapped:)
                forControlEvents:UIControlEventTouchUpInside
                         special:YES];
+    
+    self.previousRewindThreshold = 0;
     
     [SCPRCloakViewController cloakWithCustomCenteredView:nil cloakAppeared:^{
         if ( [[UXmanager shared] userHasSeenOnboarding] ) {
@@ -356,6 +359,7 @@ static NSString *kForwardingText = @"GOING LIVE...";
     [[UXmanager shared].settings setUserHasViewedOnboarding:YES];
     //[[UXmanager shared] persist];
     
+    [[AudioManager shared] resetPlayer];
     [self updateDataForUI];
 }
 
@@ -363,7 +367,7 @@ static NSString *kForwardingText = @"GOING LIVE...";
 
 - (IBAction)initialPlayTapped:(id)sender {
     
-    [[AudioManager shared] setEaseInAudio:YES];
+    //[[AudioManager shared] setEaseInAudio:YES];
     
     if ( ![[UXmanager shared] userHasSeenOnboarding] ) {
         [[UXmanager shared] fadeOutBrandingWithCompletion:^{
@@ -390,6 +394,15 @@ static NSString *kForwardingText = @"GOING LIVE...";
 
 }
 
+- (void)updateDataForUI {
+    [[SessionManager shared] fetchCurrentProgram:^(id returnedObject) {
+        [self.liveProgressViewController displayWithProgram:(Program*)returnedObject
+                                                     onView:self.view
+                                           aboveSiblingView:self.playerControlsView];
+        [self.liveProgressViewController hide];
+    }];
+}
+
 - (void)specialRewind {
     self.initiateRewind = YES;
     [self initialPlayTapped:nil];
@@ -413,6 +426,7 @@ static NSString *kForwardingText = @"GOING LIVE...";
             if ([[AudioManager shared] isStreamBuffering]) {
                 [[AudioManager shared] stopAllAudio];
             } else {
+                
                 [self playStream:NO];
             }
         }
@@ -550,14 +564,7 @@ static NSString *kForwardingText = @"GOING LIVE...";
     [[AudioManager shared] forwardSeekFifteenSeconds];
 }
 
-- (void)updateDataForUI {
-    [[SessionManager shared] fetchCurrentProgram:^(id returnedObject) {
-        [self.liveProgressViewController displayWithProgram:(Program*)returnedObject
-                                                onView:self.view
-                                    aboveSiblingView:self.playerControlsView];
-        [self.liveProgressViewController hide];
-    }];
-}
+
 
 - (void)goLive {
     
@@ -604,7 +611,7 @@ static NSString *kForwardingText = @"GOING LIVE...";
     [self.jogShuttle.view setAlpha:1.0];
     [self.liveProgressViewController rewind];
     
-    [self.jogShuttle animateWithSpeed:0.8
+    [self.jogShuttle animateWithSpeed:0.44
                          hideableView:self.playPauseButton
                             direction:SpinDirectionBackward
                             withSound:YES
@@ -690,7 +697,7 @@ static NSString *kForwardingText = @"GOING LIVE...";
     
     [self.jogShuttle.view setAlpha:1.0];
     [self.liveProgressViewController forward];
-    [self.jogShuttle animateWithSpeed:0.66
+    [self.jogShuttle animateWithSpeed:0.44
                          hideableView:self.playPauseButton
                             direction:SpinDirectionForward
                             withSound:NO
@@ -759,7 +766,7 @@ static NSString *kForwardingText = @"GOING LIVE...";
                 if ( ![self uiIsJogging] ) {
                     [self.liveDescriptionLabel fadeText:@"LIVE"];
                 }
-                [self.rewindToShowStartButton setAlpha:0.0];
+                [self.liveRewindAltButton setAlpha:0.0];
             } else {
                 if ( ![self.liveDescriptionLabel.text isEqualToString:@"LIVE"] ) {
                     [self.liveDescriptionLabel fadeText:@"ON NOW"];
@@ -790,7 +797,7 @@ static NSString *kForwardingText = @"GOING LIVE...";
             if ( ![self uiIsJogging] ) {
                 [self.liveDescriptionLabel fadeText:@"LIVE"];
             }
-            [self.rewindToShowStartButton setAlpha:0.0];
+            [self.liveRewindAltButton setAlpha:0.0];
         } else {
             if ( ![self.liveDescriptionLabel.text isEqualToString:@"LIVE"] ) {
                 [self.liveDescriptionLabel fadeText:@"ON NOW"];
@@ -1306,6 +1313,12 @@ static NSString *kForwardingText = @"GOING LIVE...";
         [self.horizDividerLine.layer pop_addAnimation:dividerFadeAnim forKey:@"horizDividerFadeOutAnimation"];
         
     }
+    
+    if ( !self.initialPlay ) {
+        [UIView animateWithDuration:0.33 animations:^{
+            self.liveRewindAltButton.alpha = 1.0;
+        }];
+    }
 
     self.menuOpen = NO;
 }
@@ -1646,7 +1659,9 @@ static NSString *kForwardingText = @"GOING LIVE...";
 #endif
     
     NSAssert([NSThread isMainThread],@"This is not the main thread...");
-    NSTimeInterval ti = [[[AudioManager shared] maxSeekableDate] timeIntervalSinceDate:[[AudioManager shared] currentDate]];
+    
+    NSDate *ciCurrentDate = [AudioManager shared].audioPlayer.currentItem.currentDate;
+    NSTimeInterval ti = [[[AudioManager shared] maxSeekableDate] timeIntervalSinceDate:ciCurrentDate];
     
     Program *program = [[SessionManager shared] currentProgram];
     if ( program || [AudioManager shared].currentAudioMode == AudioModeOnboarding ) {
@@ -1655,8 +1670,11 @@ static NSString *kForwardingText = @"GOING LIVE...";
   
     
     if ( ti > 60 && ![[AudioManager shared] isStreamBuffering] ) {
-        [self.liveDescriptionLabel fadeText:[NSString stringWithFormat:@"%@ BEHIND LIVE", [NSDate prettyTextFromSeconds:ti]]];
+        if ( abs(self.previousRewindThreshold - [[AudioManager shared].audioPlayer.currentItem.currentDate timeIntervalSince1970]) > 120 ) {
+            [self.liveDescriptionLabel fadeText:[NSString stringWithFormat:@"%@ BEHIND LIVE", [NSDate prettyTextFromSeconds:ti]]];
+        }
         [self.backToLiveButton setHidden:NO];
+        self.previousRewindThreshold = [[AudioManager shared].audioPlayer.currentItem.currentDate timeIntervalSince1970];
     } else {
         [self.liveDescriptionLabel fadeText:@"LIVE"];
         [self.backToLiveButton setHidden:YES];
@@ -1692,8 +1710,7 @@ static NSString *kForwardingText = @"GOING LIVE...";
                     self.initiateRewind = NO;
                     if ( [AudioManager shared].status == StreamStatusPlaying ) {
                         [[SessionManager shared] setRewindSessionWillBegin:YES];
-                        [[AudioManager shared] pauseStream];
-                        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.33 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                             [self activateRewind:RewindDistanceBeginning];
                         });
                     } else {
@@ -1736,6 +1753,10 @@ static NSString *kForwardingText = @"GOING LIVE...";
     }
 }
 
+- (void)interfere {
+    [self.liveDescriptionLabel stopPulsating];
+    [self.liveDescriptionLabel fadeText:kBufferingText];
+}
 
 #pragma mark - ContentProcessor
 

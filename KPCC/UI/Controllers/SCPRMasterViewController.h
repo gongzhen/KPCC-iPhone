@@ -89,6 +89,7 @@
 @property BOOL rewindGate;
 @property BOOL initiateRewind;
 @property BOOL springLock;
+@property NSInteger previousRewindThreshold;
 
 // Onboarding
 @property BOOL automationMode;

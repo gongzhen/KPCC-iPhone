@@ -35,17 +35,21 @@ static NSString *kShortListMenuURL = @"http://www.scpr.org/short-list/latest#no-
     self.view.backgroundColor = [UIColor blackColor];
     self.secondaryLoadingLocks = [NSMutableArray new];
     
+    SCPRAppDelegate *del = (SCPRAppDelegate*)[UIApplication sharedApplication].delegate;
+    SCPRNavigationController *navigation = [del masterNavigationController];
+    CGFloat nbHeight = navigation.navigationBar.frame.size.height;
+    
     self.view.frame = [[DesignManager shared] screenFrame];
     
     self.mainScrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0.0, 0.0, self.view.frame.size.width,
                                                                  self.view.frame.size.height)];
     self.detailWebView = [[UIWebView alloc] initWithFrame:CGRectMake(self.view.frame.size.width,
                                                                      0.0, self.view.frame.size.width,
-                                                                     self.view.frame.size.height)];
+                                                                     self.view.frame.size.height-nbHeight)];
     self.slWebView = [[UIWebView alloc] initWithFrame:CGRectMake(0.0,
                                                                  0.0,
                                                                  self.view.frame.size.width,
-                                                                 self.view.frame.size.height)];
+                                                                 self.view.frame.size.height-nbHeight)];
     [self.view addSubview:self.mainScrollView];
     
     self.mainScrollView.contentSize = CGSizeMake(2*self.mainScrollView.frame.size.width,

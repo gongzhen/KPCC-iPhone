@@ -236,7 +236,7 @@ static long kStreamBufferLimit = 4*60*60;
     CMTime duration = item.duration;
     NSInteger seconds = CMTimeGetSeconds(duration);
     NSInteger modifier = segment == 1 ? 1 : 0;
-    p[@"duration"] = @(seconds+modifier);
+    p[@"duration"] = @(seconds+(modifier*seconds));
     p[@"title"] = @"Welcome to KPCC";
     p[@"program_slug"] = [NSString stringWithFormat:@"onboarding%ld",(long)segment];
     self.onboardingAudio = p;
@@ -312,6 +312,8 @@ static long kStreamBufferLimit = 4*60*60;
     NSDate *d2u = [NSDate date];
     if ( [self sessionIsBehindLive] ) {
         d2u = [[AudioManager shared].audioPlayer.currentItem currentDate];
+        NSLog(@"Adjusted time to fetch program : %@",[NSDate stringFromDate:d2u
+                                                                 withFormat:@"hh:mm:ss a"]);
     }
     [self fetchProgramAtDate:d2u completed:completed];
 }
@@ -329,6 +331,9 @@ static long kStreamBufferLimit = 4*60*60;
     NSDate *fakeNow = nil;
     BOOL cookDate = NO;
     Program *cp = [self currentProgram];
+    NSLog(@"%@ soft starts at %@",cp.title,[NSDate stringFromDate:cp.soft_starts_at
+                                                       withFormat:@"hh:mm:ss a"]);
+    
     if ( [self sessionIsBehindLive] ) {
         fakeNow = [[AudioManager shared].audioPlayer.currentItem currentDate];
         cookDate = YES;
@@ -361,13 +366,12 @@ static long kStreamBufferLimit = 4*60*60;
         then = [NSDate dateWithTimeInterval:30*60
                                   sinceDate:then];
     }
-    
-#ifdef TEST_PROGRAM_IMAGE
-    then = [NSDate dateWithTimeInterval:30 sinceDate:now];
-#endif
-    
+
+
     NSTimeInterval sinceNow = [then timeIntervalSince1970] - [now timeIntervalSince1970];
-    
+    if ( cookDate ) {
+        sinceNow = minDiff * 60;
+    }
     if ( [self useLocalNotifications] ) {
         UILocalNotification *localNote = [[UILocalNotification alloc] init];
         localNote.fireDate = then;
@@ -382,7 +386,7 @@ static long kStreamBufferLimit = 4*60*60;
                                                                  userInfo:nil
                                                                   repeats:NO];
 #ifdef DEBUG
-        NSLog(@"Program will check itself again at : %@",[then prettyTimeString]);
+        NSLog(@"Program will check itself again at %@ (Approx %@ from now)",[then prettyTimeString],[NSDate prettyTextFromSeconds:sinceNow]);
 #endif
     }
 #else
