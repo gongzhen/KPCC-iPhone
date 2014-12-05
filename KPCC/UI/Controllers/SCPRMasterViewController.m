@@ -192,6 +192,9 @@ static NSString *kBufferingText = @"BUFFERING...";
                         special:YES];
     
     self.previousRewindThreshold = 0;
+    self.mpvv = [[MPVolumeView alloc] initWithFrame:CGRectMake(-30.0, -300.0, 1.0, 1.0)];
+    self.mpvv.alpha = 0.1;
+    [self.view addSubview:self.mpvv];
     
     [SCPRCloakViewController cloakWithCustomCenteredView:nil cloakAppeared:^{
         if ( [[UXmanager shared] userHasSeenOnboarding] ) {
@@ -427,7 +430,10 @@ static NSString *kBufferingText = @"BUFFERING...";
                 [[AudioManager shared] stopAllAudio];
             } else {
                 
+
                 [self playStream:NO];
+                
+                
             }
         }
 
@@ -786,7 +792,9 @@ static NSString *kBufferingText = @"BUFFERING...";
             // [self scaleBackgroundImage];
         
             [UIView animateWithDuration:0.1 animations:^{
-                [self.playPauseButton setAlpha:1.0];
+                if ( [AudioManager shared].currentAudioMode != AudioModeOnDemand ) {
+                    [self.playPauseButton setAlpha:1.0];
+                }
                 [self.jogShuttle.view setAlpha:0.0];
             }];
             
@@ -910,78 +918,97 @@ static NSString *kBufferingText = @"BUFFERING...";
 
 - (void)setOnDemandUI:(BOOL)animated forProgram:(Program*)program withAudio:(NSArray*)array atCurrentIndex:(int)index {
     
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(rebootOnDemandUI)
-                                                 name:@"audio_player_began_playing"
-                                               object:nil];
+    [self snapJogWheel];
     
-    setForOnDemandUI = YES;
-    setForLiveStreamUI = NO;
-    
-    if (self.menuOpen) {
-        [self decloakForMenu:NO];
-    }
-
-    
-    [[SessionManager shared] setCurrentProgram:nil];
-    [self.liveProgressViewController hide];
-    
-    
-    self.navigationItem.title = @"Programs";
-    [self.timeLabelOnDemand setText:@""];
-    [self.progressView setProgress:0.0 animated:YES];
-    self.progressView.alpha = 1.0;
-    self.queueScrollView.alpha = 1.0;
-    self.onDemandPlayerView.alpha = 1.0;
-
-    [self primeRemoteCommandCenter:NO];
-
-    // Make sure the larger play button is hidden ...
-    [self primePlaybackUI:NO];
-    
-    initialPlay = YES;
-
-    for (UIView *v in [self.queueScrollView subviews]) {
-        [v removeFromSuperview];
-    }
-    self.queueContents = array;
-    for (int i = 0; i < [array count]; i++) {
-        CGRect frame;
-        frame.origin.x = self.queueScrollView.frame.size.width * i;
-        frame.origin.y = 0;
-        frame.size = self.queueScrollView.frame.size;
-
-        SCPRQueueScrollableView *queueSubView = [[SCPRQueueScrollableView alloc] initWithFrame:frame];
-        [queueSubView setAudioChunk:array[i]];
-
-        [self.queueScrollView addSubview:queueSubView];
-    }
-    self.queueScrollView.contentSize = CGSizeMake(self.queueScrollView.frame.size.width * [array count], self.queueScrollView.frame.size.height);
-    [self setPositionForQueue:index animated:NO];
-    [self.queueScrollView setHidden:NO];
-
-    [self setDataForOnDemand:program andAudioChunk:array[index]];
-
     if ([self.onDemandPlayerView isHidden]) {
         [self.onDemandPlayerView setHidden:NO];
     }
-
+    
     if (![self.liveStreamView isHidden]) {
         [self.liveStreamView setHidden:YES];
         setForLiveStreamUI = NO;
     }
-
+    
     if ([self.timeLabelOnDemand isHidden]) {
         [self.timeLabelOnDemand setHidden:NO];
     }
-
+    
     if ([self.progressView isHidden]) {
         [self.progressView setHidden:NO];
     }
-
-    self.darkBgView.layer.opacity = 0.0;
     
-    [[AudioManager shared] setCurrentAudioMode:AudioModeOnDemand];
+
+    self.timeLabelOnDemand.text = @"Loading...";
+    self.queueLoading = YES;
+    
+    [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationOptionCurveLinear animations:^{
+        self.jogShuttle.view.alpha = 1.0;
+        self.timeLabelOnDemand.alpha = 1.0;
+    } completion:^(BOOL finished) {
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(rebootOnDemandUI)
+                                                     name:@"audio_player_began_playing"
+                                                   object:nil];
+        
+        setForOnDemandUI = YES;
+        setForLiveStreamUI = NO;
+        
+        if (self.menuOpen) {
+            [self decloakForMenu:NO];
+        }
+        
+        
+        [[SessionManager shared] setCurrentProgram:nil];
+        [self.liveProgressViewController hide];
+        
+        
+        self.navigationItem.title = @"Programs";
+        //[self.timeLabelOnDemand setText:@""];
+        [self.progressView setProgress:0.0 animated:YES];
+        self.progressView.alpha = 1.0;
+        self.queueScrollView.alpha = 1.0;
+        self.onDemandPlayerView.alpha = 1.0;
+        
+        [self primeRemoteCommandCenter:NO];
+        
+        // Make sure the larger play button is hidden ...
+        [self primePlaybackUI:NO];
+        
+        initialPlay = YES;
+        
+        for (UIView *v in [self.queueScrollView subviews]) {
+            [v removeFromSuperview];
+        }
+        self.queueContents = array;
+        for (int i = 0; i < [array count]; i++) {
+            CGRect frame;
+            frame.origin.x = self.queueScrollView.frame.size.width * i;
+            frame.origin.y = 0;
+            frame.size = self.queueScrollView.frame.size;
+            
+            SCPRQueueScrollableView *queueSubView = [[SCPRQueueScrollableView alloc] initWithFrame:frame];
+            [queueSubView setAudioChunk:array[i]];
+            
+            [self.queueScrollView addSubview:queueSubView];
+        }
+        self.queueScrollView.contentSize = CGSizeMake(self.queueScrollView.frame.size.width * [array count], self.queueScrollView.frame.size.height);
+        [self setPositionForQueue:index animated:NO];
+        [self.queueScrollView setHidden:NO];
+        
+        [self setDataForOnDemand:program andAudioChunk:array[index]];
+        
+        self.darkBgView.layer.opacity = 0.0;
+        
+        [[AudioManager shared] setCurrentAudioMode:AudioModeOnDemand];
+        
+        [self.navigationController popToRootViewControllerAnimated:YES];
+        
+        [self.jogShuttle animateIndefinitelyWithViewToHide:self.playPauseButton completion:^{
+            self.playPauseButton.enabled = YES;
+        }];
+    }];
+
 }
 
 - (void)setDataForOnDemand:(Program *)program andAudioChunk:(AudioChunk*)audioChunk {
@@ -1482,7 +1509,6 @@ static NSString *kBufferingText = @"BUFFERING...";
     if ( [[AudioManager shared] status] == StreamStatusPlaying ) {
         if ( ![self.jogShuttle spinning] ) {
             [self snapJogWheel];
-
         }
     }
     
@@ -1530,7 +1556,6 @@ static NSString *kBufferingText = @"BUFFERING...";
 
     if (self.queueCurrentPage != newPage) {
         [self.jogShuttle animateIndefinitelyWithViewToHide:self.playPauseButton completion:^{
-            self.playPauseButton.alpha = 1.0;
             self.playPauseButton.enabled = YES;
         }];
         self.timeLabelOnDemand.text = @"Loading...";
@@ -1644,6 +1669,7 @@ static NSString *kBufferingText = @"BUFFERING...";
 
 - (void)onRateChange {
     [self updateControlsAndUI:YES];
+    [self primeManualControlButton];
 }
 
 - (void)onTimeChange {
@@ -1755,7 +1781,34 @@ static NSString *kBufferingText = @"BUFFERING...";
 
 - (void)interfere {
     [self.liveDescriptionLabel stopPulsating];
-    [self.liveDescriptionLabel fadeText:kBufferingText];
+    [self rollInterferenceText];
+}
+
+- (void)rollInterferenceText {
+    NSString *fmt = @"%@";
+    if ( [self.liveDescriptionLabel.text rangeOfString:@"..."].location != NSNotFound ) {
+        fmt = @"%@";
+    } else if ( [self.liveDescriptionLabel.text rangeOfString:@".."].location != NSNotFound ) {
+        fmt = @"%@...";
+    } else if ( [self.liveDescriptionLabel.text rangeOfString:@"."].location != NSNotFound ) {
+        fmt = @"%@..";
+    } else {
+        fmt = @"%@.";
+    }
+    
+    [self.liveDescriptionLabel fadeText:[NSString stringWithFormat:fmt,kBufferingText]];
+}
+
+- (void)onDemandAudioFailed {
+    [self.jogShuttle endAnimations];
+    [self rebootOnDemandUI];
+    self.timeLabelOnDemand.text = @"FAILED TO LOAD";
+    
+    [[[UIAlertView alloc] initWithTitle:@"Oops.."
+                                message:@"We had some trouble loading that audio. Try again later or try a different show. Sorry."
+                               delegate:nil
+                      cancelButtonTitle:@"OK"
+                      otherButtonTitles:nil] show];
 }
 
 #pragma mark - ContentProcessor

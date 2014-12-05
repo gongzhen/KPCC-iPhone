@@ -60,6 +60,7 @@ typedef NS_ENUM(NSUInteger, StreamStatus) {
 - (void)onRateChange;
 - (void)onSeekCompleted;
 - (void)interfere;
+- (void)onDemandAudioFailed;
 @end
 
 @interface AudioManager : NSObject

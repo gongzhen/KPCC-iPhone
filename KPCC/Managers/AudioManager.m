@@ -56,6 +56,11 @@ static const NSString *ItemStatusContext;
         if ([self.audioPlayer.currentItem status] == AVPlayerItemStatusFailed) {
             NSError *error = [self.audioPlayer.currentItem error];
             NSLog(@"AVPlayerItemStatus ERROR! --- %@", error);
+            if ( [self currentAudioMode] == AudioModeOnDemand ) {
+                if ( [self.delegate respondsToSelector:@selector(onDemandAudioFailed)] ) {
+                    [self.delegate onDemandAudioFailed];
+                }
+            }
             return;
         } else if ([self.audioPlayer.currentItem status] == AVPlayerItemStatusReadyToPlay) {
             NSLog(@"AVPlayerItemStatus - ReadyToPlay");
@@ -277,7 +282,9 @@ static const NSString *ItemStatusContext;
                         if ( [self.delegate respondsToSelector:@selector(interfere)] ) {
                             [self.delegate interfere];
                         }
-                        [self.audioPlayer pause];
+                        if ( self.audioPlayer.rate > 0.0 ) {
+                            [self.audioPlayer pause];
+                        }
                         [self seekToDate:date];
                     });
                     
@@ -290,7 +297,6 @@ static const NSString *ItemStatusContext;
                     self.requestedSeekDate = nil;
                 }
   
-                
                 dispatch_async(dispatch_get_main_queue(), ^{
                     if ( [self.audioPlayer rate] == 0.0 ) {
                         [self playStream];

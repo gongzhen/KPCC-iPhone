@@ -42,6 +42,8 @@
 		258E8E101A16AE0400675E68 /* SCPRFeedbackViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 258E8E0E1A16AE0400675E68 /* SCPRFeedbackViewController.xib */; };
 		258FC47B1A018F3D00282D59 /* SCPRSpinnerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 258FC47A1A018F3D00282D59 /* SCPRSpinnerViewController.m */; };
 		258FC47E1A01915E00282D59 /* UIColor+UICustom.m in Sources */ = {isa = PBXBuildFile; fileRef = 258FC47D1A01915E00282D59 /* UIColor+UICustom.m */; };
+		2594B53F1A30F8410013B93A /* SCPRKeyboardToolbar.m in Sources */ = {isa = PBXBuildFile; fileRef = 2594B53E1A30F8410013B93A /* SCPRKeyboardToolbar.m */; };
+		2594B5411A31420D0013B93A /* onboarding-episode-swipe.png in Resources */ = {isa = PBXBuildFile; fileRef = 2594B5401A31420D0013B93A /* onboarding-episode-swipe.png */; };
 		259E44FE1A1D2CD300F5CD65 /* SCPROnboardingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 259E44FC1A1D2CD300F5CD65 /* SCPROnboardingViewController.m */; };
 		259E44FF1A1D2CD300F5CD65 /* SCPROnboardingViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 259E44FD1A1D2CD300F5CD65 /* SCPROnboardingViewController.xib */; };
 		259E45021A1D2CE400F5CD65 /* SCPRLensViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 259E45011A1D2CE400F5CD65 /* SCPRLensViewController.m */; };
@@ -292,6 +294,9 @@
 		258FC47A1A018F3D00282D59 /* SCPRSpinnerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SCPRSpinnerViewController.m; sourceTree = "<group>"; };
 		258FC47C1A01915E00282D59 /* UIColor+UICustom.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+UICustom.h"; sourceTree = "<group>"; };
 		258FC47D1A01915E00282D59 /* UIColor+UICustom.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+UICustom.m"; sourceTree = "<group>"; };
+		2594B53D1A30F8410013B93A /* SCPRKeyboardToolbar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCPRKeyboardToolbar.h; path = Helpers/SCPRKeyboardToolbar.h; sourceTree = "<group>"; };
+		2594B53E1A30F8410013B93A /* SCPRKeyboardToolbar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SCPRKeyboardToolbar.m; path = Helpers/SCPRKeyboardToolbar.m; sourceTree = "<group>"; };
+		2594B5401A31420D0013B93A /* onboarding-episode-swipe.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "onboarding-episode-swipe.png"; sourceTree = "<group>"; };
 		259E44FB1A1D2CD300F5CD65 /* SCPROnboardingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCPROnboardingViewController.h; path = Onboarding/SCPROnboardingViewController.h; sourceTree = "<group>"; };
 		259E44FC1A1D2CD300F5CD65 /* SCPROnboardingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SCPROnboardingViewController.m; path = Onboarding/SCPROnboardingViewController.m; sourceTree = "<group>"; };
 		259E44FD1A1D2CD300F5CD65 /* SCPROnboardingViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = SCPROnboardingViewController.xib; path = Onboarding/SCPROnboardingViewController.xib; sourceTree = "<group>"; };
@@ -561,6 +566,7 @@
 		254CC68F1A23A77B00560805 /* Onboarding */ = {
 			isa = PBXGroup;
 			children = (
+				2594B5401A31420D0013B93A /* onboarding-episode-swipe.png */,
 				254CC69F1A240B6200560805 /* onboarding-episode-swipe@2x.png */,
 				254CC6901A23A7A600560805 /* onboarding-logo.png */,
 				254CC6911A23A7A600560805 /* onboarding-logo@2x.png */,
@@ -1060,6 +1066,8 @@
 				258CA0FC1A09636900A3C8DB /* SessionManager.m */,
 				258BB0361A1C07FD00B8FCFE /* UXmanager.h */,
 				258BB0371A1C07FD00B8FCFE /* UXmanager.m */,
+				2594B53D1A30F8410013B93A /* SCPRKeyboardToolbar.h */,
+				2594B53E1A30F8410013B93A /* SCPRKeyboardToolbar.m */,
 			);
 			name = Managers;
 			sourceTree = "<group>";
@@ -1205,6 +1213,7 @@
 				52CF917719FEF306007BCFA8 /* btn_play@2x.png in Resources */,
 				768C0679199590CC00F829EB /* FreigSanProBookIt.otf in Resources */,
 				52EFF86E19C368C00059A0E3 /* program_avatar_writers-almanac.png in Resources */,
+				2594B5411A31420D0013B93A /* onboarding-episode-swipe.png in Resources */,
 				52EFF7EC19C368C00059A0E3 /* program_avatar_all-things-considered@2x.png in Resources */,
 				52EFF78919C3688D0059A0E3 /* menu-antenna@2x.png in Resources */,
 				258E8E071A16AA4200675E68 /* desk_template.json in Resources */,
@@ -1398,6 +1407,7 @@
 				258CA1001A0982ED00A3C8DB /* SCPRCloakViewController.m in Sources */,
 				254E177019F863960022BF6B /* UILabel+Additions.m in Sources */,
 				52EFF87819C37D350059A0E3 /* SCPRMenuCell.m in Sources */,
+				2594B53F1A30F8410013B93A /* SCPRKeyboardToolbar.m in Sources */,
 				5248858E19CBA180005F59CC /* EpisodeAudio.m in Sources */,
 				523E86D019C8A292006FC366 /* SCPRProgramDetailViewController.m in Sources */,
 				258FC47E1A01915E00282D59 /* UIColor+UICustom.m in Sources */,

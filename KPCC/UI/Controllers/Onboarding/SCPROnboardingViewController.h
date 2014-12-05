@@ -45,6 +45,12 @@
 @property (nonatomic,strong) IBOutlet NSLayoutConstraint *calloutAnchor;
 @property (nonatomic,strong) IBOutlet NSLayoutConstraint *buttonAnchor;
 
+// Ondemand
+@property (nonatomic,strong) IBOutlet UIImageView *onDemandSwipeImageView;
+@property (nonatomic,strong) IBOutlet UILabel *swipeToSkipLabel;
+@property (nonatomic,strong) IBOutlet UIButton *gotItButton;
+@property (nonatomic,strong) IBOutlet UIView *onDemandContainerView;
+
 - (void)prepare;
 - (void)revealLensWithOrigin:(CGPoint)origin;
 - (void)revealBrandingWithCompletion:(CompletionBlock)completed;
@@ -53,6 +59,7 @@
 - (void)hideLens;
 - (void)showCalloutWithText:(NSString*)text pointerPosition:(CGFloat)pointer position:(CGPoint)position;
 - (void)hideCallout;
+- (void)ondemandMode;
 
 // User responses
 - (void)yesToNotifications;

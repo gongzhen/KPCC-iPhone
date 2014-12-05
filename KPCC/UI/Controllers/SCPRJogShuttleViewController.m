@@ -122,6 +122,7 @@
     self.soundPlayedBit = YES;
     self.completionBit = NO;
     self.view.alpha = 1.0;
+    self.view.layer.opacity = 1.0;
     
     [self animateWithSpeed:0.66
                    tension:self.tension
@@ -201,6 +202,7 @@
                     // of the overall animation
                     CGAffineTransform tForm = CGAffineTransformMakeScale(1.0, 1.0);
                     viewToHide.transform = tForm;
+                    viewToHide.alpha = 1.0;
                 } completion:^(BOOL finished) {
                     if ( completion )
                         [self completeWithCallback:completion];

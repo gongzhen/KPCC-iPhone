@@ -10,6 +10,8 @@
 #import "DesignManager.h"
 
 
+static NSString *kCommentsPlaceholder = @"... Add your comments here";
+
 @interface SCPRFeedbackViewController ()
 
 @end
@@ -29,6 +31,7 @@
 {
     [super viewDidLoad];
     
+    [self.toolbar prep];
     self.values = @[ @"Bug", @"Suggestion", @"General Feedback", @"Other" ];
     self.feedbackTable.dataSource = self;
     self.feedbackTable.delegate = self;
@@ -38,49 +41,71 @@
     self.currentReason = @"Bug";
     self.descriptionInputView.delegate = self;
     self.emailTextField.delegate = self;
-    self.descriptionInputView.layer.cornerRadius = 4.0;
-    self.descriptionInputView.layer.borderColor = [UIColor lightGrayColor].CGColor;
-    self.descriptionInputView.layer.borderWidth = 1.0;
+    self.splashBlurView.blurRadius = 7.0f;
+    self.splashView.image = [UIImage imageNamed:@"onboarding-tile.jpg"];
     self.navigationItem.title = @"Feedback";
 
-    
-    self.authButton.layer.cornerRadius = 4.0;
-    
-    self.authButton.frame = CGRectMake(13.0,4.0,
-                                       self.authButton.frame.size.width,
-                                       self.authButton.frame.size.height);
     
     self.feedbackTable.separatorColor = [UIColor lightGrayColor];
     
     self.view.backgroundColor = [UIColor blackColor];
-    self.feedbackTable.separatorColor = [UIColor colorWithRed:222.f/255.f green:228.f/255.f blue:229.f/255.f alpha:0.3f];
+    self.feedbackTable.separatorColor = [UIColor colorWithRed:222.f/255.f
+                                                        green:228.f/255.f
+                                                         blue:229.f/255.f alpha:0.3f];
     
     NSString *versionText = [NSString stringWithFormat:@"KPCC iPhone v%@",[Utils prettyVersion]];
     self.versionLabel.text = versionText;
     self.versionLabel.textColor = [UIColor darkGrayColor];
 
+    self.nameTextField.textColor = [UIColor whiteColor];
+    self.emailTextField.textColor = [UIColor whiteColor];
+    
+    [self.authButton.titleLabel proSemiBoldFontize];
+    
     [self.nameTextField setFont:[[DesignManager shared] proLight:self.nameTextField.font.pointSize]];
     [self.emailTextField setFont:[[DesignManager shared] proLight:self.emailTextField.font.pointSize]];
+    [self.versionLabel proLightFontize];
     
-    /*
-    NSString *email = [[ContentManager shared].settings userEmail];
-    if ( ![Utilities pureNil:email] ) {
-        self.emailTextField.text = email;
-    } else {*/
-        self.emailTextField.placeholder = @"you@domain.com";
-    //}
+    NSMutableAttributedString *nph = [[NSMutableAttributedString alloc] initWithString:@"e.x. Ornette Coleman"
+                                                                            attributes:@{ NSForegroundColorAttributeName : [[UIColor virtualWhiteColor] translucify:0.63] }];
+    NSMutableAttributedString *eph = [[NSMutableAttributedString alloc] initWithString:@"you@domain.com"
+                                                                            attributes:@{ NSForegroundColorAttributeName : [[UIColor virtualWhiteColor] translucify:0.63] }];
+    NSMutableAttributedString *dph = [[NSMutableAttributedString alloc] initWithString:kCommentsPlaceholder
+                                                                            attributes:@{ NSForegroundColorAttributeName : [[UIColor virtualWhiteColor] translucify:0.63] }];
+    self.nameTextField.attributedPlaceholder = nph;
+    self.emailTextField.attributedPlaceholder = eph;
+    self.descriptionInputView.attributedText = dph;
     
-
+    self.splashBlurView.backgroundColor = [UIColor clearColor];
+    self.splashView.contentMode = UIViewContentModeScaleAspectFill;
+    self.splashView.clipsToBounds = YES;
+    
+    self.descriptionInputView.backgroundColor = [UIColor clearColor];
+    self.descriptionInputView.textColor = [UIColor whiteColor];
+    [self.descriptionInputView setFont:[[DesignManager shared] proLight:self.descriptionInputView.font.pointSize]];
+    
+    self.splashBlurView.tintColor = [UIColor clearColor];
+    self.nativeSpinner.alpha = 0.0;
     
 #ifdef DEBUG
     self.emailTextField.text = @"bhochberg@scpr.org";
-    self.descriptionInputView.text = @"This is a test to see if the API is working";
+    self.descriptionInputView.text = @"This is an iPhone Desk test to see if the API is working";
     self.nameTextField.text = @"Ben Hochberg";
 #endif
     
+    [self.authButton addTarget:self
+                        action:@selector(buttonTapped:)
+              forControlEvents:UIControlEventTouchUpInside
+                       special:YES];
     
-
-    self.authButton.titleLabel.shadowOffset = CGSizeMake(0.0, 0.0);
+    [self.authButton setTitleColor:[UIColor whiteColor]
+                          forState:UIControlStateNormal];
+    [self.authButton setTitleColor:[UIColor whiteColor]
+                          forState:UIControlStateHighlighted];
+    self.authButton.layer.borderColor = [[UIColor virtualWhiteColor] translucify:0.45].CGColor;
+    self.authButton.layer.borderWidth = 1.0;
+    
+    self.versionLabel.textColor = [UIColor whiteColor];
     
     // Do any additional setup after loading the view from its nib.
 }
@@ -232,13 +257,11 @@
 }
 
 - (void)showBar {
-
-    
+    [self.toolbar presentOnController:self withOptions:@{}];
 }
 
 - (void)hideBar {
-    
-
+    [self.toolbar dismiss];
 }
 
 #pragma mark - UITableView
@@ -278,7 +301,7 @@
         }
         
         
-        [cell.textLabel proSemiBoldFontize];
+        [cell.textLabel proMediumFontize];
         cell.textLabel.textColor = [UIColor whiteColor];
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
         cell.backgroundColor = [UIColor clearColor];
@@ -299,7 +322,8 @@
         cell.tintColor = [UIColor kpccOrangeColor];
         
         cell.textLabel.text = reason;
-        [cell.textLabel proSemiBoldFontize];
+        [cell.textLabel proMediumFontize];
+        cell.textLabel.textColor = [UIColor whiteColor];
         cell.backgroundColor = [UIColor clearColor];
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
         return cell;
@@ -351,19 +375,19 @@
     if ( section == 0 ) {
         return [[DesignManager shared] textHeaderWithText:@"YOUR DETAILS"
                                                 textColor:[UIColor kpccOrangeColor]
-                                          backgroundColor:[UIColor blackColor]
+                                          backgroundColor:[[UIColor virtualBlackColor] translucify:0.25]
                                                   divider:NO];
     }
     if ( section == 1 ) {
         return [[DesignManager shared] textHeaderWithText:@"REASON FOR INQUIRY"
                                                 textColor:[UIColor kpccOrangeColor]
-                                          backgroundColor:[UIColor blackColor]
+                                          backgroundColor:[[UIColor virtualBlackColor] translucify:0.25]
                                                   divider:NO];
     }
     
     return [[DesignManager shared] textHeaderWithText:@"COMMENTS"
                                             textColor:[UIColor kpccOrangeColor]
-                                      backgroundColor:[UIColor blackColor]
+                                      backgroundColor:[[UIColor virtualBlackColor] translucify:0.25]
                                               divider:NO];
 }
 
@@ -373,14 +397,20 @@
 
 #pragma mark - UITextView
 - (void)textViewDidBeginEditing:(UITextView *)textView {
-    
+    if ( SEQ(textView.attributedText.string,kCommentsPlaceholder) ) {
+        textView.attributedText = [[NSMutableAttributedString alloc] initWithString:@""
+                                                                         attributes:@{}];
+    }
     self.currentField = textView;
     [self showBar];
 }
 
 - (void)textViewDidEndEditing:(UITextView *)textView {
-
     [self hideBar];
+    if ( SEQ(textView.attributedText.string,kCommentsPlaceholder) ) {
+        textView.attributedText = [[NSMutableAttributedString alloc] initWithString:kCommentsPlaceholder
+                                                                         attributes:@{ NSForegroundColorAttributeName : [[UIColor virtualWhiteColor] translucify:0.63] }];
+    }
 }
 
 #pragma mark - UITextField

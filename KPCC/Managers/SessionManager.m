@@ -370,7 +370,7 @@ static long kStreamBufferLimit = 4*60*60;
 
     NSTimeInterval sinceNow = [then timeIntervalSince1970] - [now timeIntervalSince1970];
     if ( cookDate ) {
-        sinceNow = minDiff * 60;
+        sinceNow = minDiff * 60 + 6;
     }
     if ( [self useLocalNotifications] ) {
         UILocalNotification *localNote = [[UILocalNotification alloc] init];

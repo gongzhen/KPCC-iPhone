@@ -49,10 +49,9 @@
     scaleAnimation.springSpeed = 1.0f;
     [scaleAnimation setCompletionBlock:^(POPAnimation *p, BOOL c) {
         self.small = NO;
-        
     }];
     [self.layer pop_addAnimation:scaleAnimation forKey:@"expand"];
-    [self.target performSelector:self.postPushMethod withObject:nil afterDelay:0];
+    [self.target performSelector:self.postPushMethod withObject:self afterDelay:0];
     
 }
 

@@ -154,10 +154,9 @@
     
     NSArray *audioChunks = [[QueueManager shared] enqueueEpisodes:self.episodesList withCurrentIndex:indexPath.row];
     [[[Utils del] masterViewController] setOnDemandUI:YES forProgram:self.program withAudio:audioChunks atCurrentIndex:(int)indexPath.row];
-    [self.navigationController popToRootViewControllerAnimated:YES];
+    //[self.navigationController popToRootViewControllerAnimated:YES];
     
     id episode = self.episodesList[indexPath.row];
-    
     NSString *title = @"[UNKNOWN]";
     NSString *programTitle = @"[UNKNOWN]";
     if ([episode isKindOfClass:[Episode class]]) {

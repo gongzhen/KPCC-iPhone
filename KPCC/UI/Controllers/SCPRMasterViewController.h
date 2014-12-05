@@ -37,6 +37,8 @@
 @property IBOutlet FXBlurView *blurView;
 @property IBOutlet UIView *darkBgView;
 
+@property (nonatomic,strong) MPVolumeView *mpvv;
+
 @property NSInteger tickCounter;
 
 // For audio queue
@@ -124,5 +126,6 @@
 - (void)onboarding_beginOutro;
 - (void)onboarding_fin;
 
+- (void)rollInterferenceText;
 
 @end
