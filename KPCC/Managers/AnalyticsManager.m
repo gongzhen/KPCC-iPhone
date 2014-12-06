@@ -13,6 +13,7 @@
 #import "SessionManager.h"
 #import "Program.h"
 #import "QueueManager.h"
+#import "UXmanager.h"
 
 static AnalyticsManager *singleton = nil;
 
@@ -72,6 +73,8 @@ static AnalyticsManager *singleton = nil;
 
 - (void)logEvent:(NSString *)event withParameters:(NSDictionary *)parameters {
     NSMutableDictionary *userInfo = [[NSMutableDictionary alloc] init];
+    
+    if ( ![[UXmanager shared].settings userHasViewedOnboarding] ) return;
     
     for ( NSString *key in [parameters allKeys] ) {
         userInfo[key] = parameters[key];

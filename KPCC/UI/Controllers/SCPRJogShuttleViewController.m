@@ -196,6 +196,25 @@
     
     [CATransaction begin]; {
         [CATransaction setCompletionBlock:^{
+            if ( self.forceSingleRotation ) {
+                self.view.layer.transform = CATransform3DMakeRotation(M_PI_4, 0.0, 0.0, 1.0);
+                CABasicAnimation* rotationAnimation;
+                rotationAnimation = [CABasicAnimation animationWithKeyPath:@"transform.rotation.z"];
+                
+                CGFloat modifier = self.direction == SpinDirectionBackward ? -1.0 : 1.0;
+
+                
+                rotationAnimation.toValue = [NSNumber numberWithFloat:2.0*M_PI*modifier];
+                rotationAnimation.duration = 0.2;
+                rotationAnimation.cumulative = YES;
+                rotationAnimation.repeatCount = 1.0;
+                rotationAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseIn];
+                rotationAnimation.removedOnCompletion = YES;
+                [self.view.layer addAnimation:rotationAnimation
+                                       forKey:@"transform.rotation.z"];
+                self.completionBit = YES;
+                self.forceSingleRotation = NO;
+            }
             if ( self.completionBit ) {
                 [UIView animateWithDuration:0.15 animations:^{
                     // FIXME: Really this should also reset the alpha to 1, but it doesn't exactly fit the timing
@@ -237,8 +256,15 @@
         CABasicAnimation* rotationAnimation;
         rotationAnimation = [CABasicAnimation animationWithKeyPath:@"transform.rotation.z"];
         
+        CGFloat degrees = 0.0;
         CGFloat modifier = self.direction == SpinDirectionBackward ? -1.0 : 1.0;
-        rotationAnimation.toValue = [NSNumber numberWithFloat: modifier * M_PI * 6.0];
+        if ( self.forceSingleRotation ) {
+            degrees = modifier * M_PI * 6.0;
+        } else {
+            degrees = M_PI_4 / 2;
+        }
+        
+        rotationAnimation.toValue = [NSNumber numberWithFloat:degrees];
         rotationAnimation.duration = duration;
         rotationAnimation.cumulative = YES;
         rotationAnimation.repeatCount = 1.0;

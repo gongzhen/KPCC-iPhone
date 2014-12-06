@@ -9,11 +9,12 @@
 #import <Foundation/Foundation.h>
 #import "Settings.h"
 #import "SCPRAppDelegate.h"
+#import <AVFoundation/AVFoundation.h>
 
 @class SCPROnboardingViewController;
 @class SCPRMasterViewController;
 
-@interface UXmanager : NSObject
+@interface UXmanager : NSObject<AVAudioPlayerDelegate>
 
 @property (nonatomic,strong) Settings *settings;
 @property (nonatomic,weak) SCPROnboardingViewController *onboardingCtrl;
@@ -21,11 +22,16 @@
 @property BOOL listeningForQueues;
 @property BOOL suppressBalloon;
 @property (nonatomic,strong) NSDictionary *keyPoints;
+@property (nonatomic,strong) NSTimer *observerTimer;
+@property (nonatomic,strong) AVAudioPlayer *musicPlayer;
+@property (nonatomic,strong) AVAudioPlayer *lisaPlayer;
+@property (nonatomic,strong) NSOperationQueue *fadeQueue;
 
 + (instancetype)shared;
 - (void)load;
 - (void)persist;
 
+- (void)freezeProgressBar;
 - (BOOL)userHasSeenOnboarding;
 - (void)loadOnboarding;
 - (void)beginOnboarding:(SCPRMasterViewController*)masterCtrl;
@@ -43,5 +49,6 @@
 - (void)restorePreNotificationUI:(BOOL)prompt;
 - (void)closeOutOnboarding;
 - (void)endOnboarding;
+- (void)fadePlayer:(AVAudioPlayer*)player;
 
 @end

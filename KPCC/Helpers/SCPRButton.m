@@ -55,4 +55,23 @@
     
 }
 
+- (void)stretch {
+    
+    [UIView animateWithDuration:0.31 delay:0.0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
+        
+        self.transform = CGAffineTransformMakeScale(1.2f, 1.2f);
+        
+    } completion:^(BOOL finished) {
+        
+        [UIView animateWithDuration:0.31 delay:0.0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
+            
+            self.transform = CGAffineTransformMakeScale(1.0f, 1.0f);
+            
+        } completion:^(BOOL finished) {
+            
+            
+        }];
+    }];
+}
+
 @end

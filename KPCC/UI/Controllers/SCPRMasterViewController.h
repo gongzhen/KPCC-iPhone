@@ -91,6 +91,7 @@
 @property BOOL rewindGate;
 @property BOOL initiateRewind;
 @property BOOL springLock;
+@property BOOL lockPlayback;
 @property NSInteger previousRewindThreshold;
 
 // Onboarding
@@ -116,7 +117,7 @@
 - (void)treatUIforProgram;
 
 - (void)moveTextIntoPlace:(BOOL)animated;
-- (void)goLive;
+- (void)goLive:(BOOL)play;
 
 // Onboarding methods
 - (void)primeOnboarding;
@@ -127,5 +128,6 @@
 - (void)onboarding_fin;
 
 - (void)rollInterferenceText;
+- (void)showOnDemandOnboarding;
 
 @end

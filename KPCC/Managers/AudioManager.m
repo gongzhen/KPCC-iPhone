@@ -17,6 +17,7 @@
 #import "NSDate+Helper.h"
 #import "SessionManager.h"
 #import "UXmanager.h"
+#import "SCPRMasterViewController.h"
 
 static AudioManager *singleton = nil;
 
@@ -408,11 +409,13 @@ static const NSString *ItemStatusContext;
 }
 
 - (void)onboardingSegmentCompleted {
+
+    
     if ( self.onboardingSegment == 1 ) {
         [[UXmanager shared] presentLensOverRewindButton];
     }
     if ( self.onboardingSegment == 2 ) {
-        [[UXmanager shared] askForPushNotifications];
+        [[UXmanager shared] endOnboarding];
     }
     if ( self.onboardingSegment == 3 ) {
         [[UXmanager shared] endOnboarding];
@@ -521,8 +524,16 @@ static const NSString *ItemStatusContext;
 #ifdef DEBUG
     NSLog(@"playing queue item with url: %@", url);
 #endif
+    if ( !url ) {
+        if ( [self.delegate respondsToSelector:@selector(onDemandAudioFailed)] ) {
+            [self.delegate onDemandAudioFailed];
+        }
+        return;
+    }
     
     [[SessionManager shared] startOnDemandSession];
+    
+    [[[Utils del] masterViewController] showOnDemandOnboarding];
     
     [self playAudioWithURL:url];
     [[NSNotificationCenter defaultCenter] addObserver:self
@@ -579,10 +590,9 @@ static const NSString *ItemStatusContext;
     }
 
 
-    if ( self.easeInAudio ) {
-        [self.audioPlayer setVolume:0.0];
+    if ( self.currentAudioMode == AudioModeOnboarding ) {
+        self.audioPlayer.volume = 0.0;
     }
-    
     [self.audioPlayer play];
     
     if ( self.currentAudioMode == AudioModeLive ) {
@@ -597,6 +607,10 @@ static const NSString *ItemStatusContext;
 }
 
 - (void)playStream {
+    if ( [self currentAudioMode] == AudioModeOnboarding ) {
+        self.audioPlayer.volume = 0.0;
+    }
+    
     self.status = StreamStatusPlaying;
     [self.audioPlayer play];
 }

@@ -177,7 +177,7 @@
         
         CABasicAnimation *currentAnim = [CABasicAnimation animationWithKeyPath:@"strokeEnd"];
         [currentAnim setToValue:[NSNumber numberWithFloat:vBeginning]];
-        [currentAnim setDuration:2.6f];
+        [currentAnim setDuration:1.2f];
         [currentAnim setRemovedOnCompletion:NO];
         [currentAnim setFillMode:kCAFillModeForwards];
         [self.currentBarLine addAnimation:currentAnim forKey:@"decrementCurrent"];
@@ -211,7 +211,7 @@
         }];
         CABasicAnimation *currentAnim = [CABasicAnimation animationWithKeyPath:@"strokeEnd"];
         [currentAnim setToValue:[NSNumber numberWithFloat:vBeginning]];
-        [currentAnim setDuration:2];
+        [currentAnim setDuration:1.2f];
         [currentAnim setRemovedOnCompletion:NO];
         [currentAnim setFillMode:kCAFillModeForwards];
         [self.currentBarLine addAnimation:currentAnim forKey:@"forwardCurrent"];
@@ -222,8 +222,12 @@
 
 - (void)tick {
     
-
+    NSLog(@"Tick,,,");
     if ( self.shuttling ) return;
+    if ( self.mutex ) return;
+    
+    NSDictionary *p = [[SessionManager shared] onboardingAudio];
+
     
     Program *program = [[SessionManager shared] currentProgram];
 
@@ -235,9 +239,9 @@
     }
     NSTimeInterval end = [program.ends_at timeIntervalSince1970];
     if ( [[AudioManager shared] currentAudioMode] == AudioModeOnboarding ) {
-        NSDictionary *p = [[SessionManager shared] onboardingAudio];
         end = beginning + [p[@"duration"] intValue];
     }
+    
     NSTimeInterval duration = ( end - beginning );
     
     NSTimeInterval live = [[AudioManager shared].maxSeekableDate timeIntervalSince1970];
@@ -252,15 +256,22 @@
     NSTimeInterval currentDiff = ( current - beginning );
     
     dispatch_async(dispatch_get_main_queue(), ^{
+        self.mutex = YES;
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            self.mutex = NO;
+        });
         
         [CATransaction begin]; {
             [CATransaction setCompletionBlock:^{
-                self.currentBarLine.strokeEnd = currentDiff / duration;
-                self.liveBarLine.strokeEnd = liveDiff / duration;
+                
+                self.currentBarLine.strokeEnd = (currentDiff / duration)*1.0f;
+                self.liveBarLine.strokeEnd = (liveDiff / duration)*1.0f;
+                
                 [self.liveBarLine removeAllAnimations];
                 [self.currentBarLine removeAllAnimations];
-                self.lastCurrentValue = currentDiff / duration;
-                self.lastLiveValue = liveDiff / duration;
+                self.lastCurrentValue = (currentDiff / duration)*1.0f;
+                self.lastLiveValue = (liveDiff / duration)*1.0f;
+              
             }];
             
             CGFloat lpct = (liveDiff / duration)*1.0f;
@@ -293,6 +304,10 @@
     });
 
     
+}
+
+- (void)reset {
+    self.counter = 0;
 }
 
 - (void)finishReveal {

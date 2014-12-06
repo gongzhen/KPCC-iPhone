@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		25263A881A32669E00BD5FF9 /* onboarding3.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 25263A871A32669E00BD5FF9 /* onboarding3.mp3 */; };
+		25263A8B1A32844800BD5FF9 /* onboarding-music-bed.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 25263A891A32844800BD5FF9 /* onboarding-music-bed.mp3 */; };
+		25263A8C1A32844800BD5FF9 /* onboarding-vocal-bed.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 25263A8A1A32844800BD5FF9 /* onboarding-vocal-bed.mp3 */; };
 		254CC6961A23A7A600560805 /* onboarding-logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 254CC6901A23A7A600560805 /* onboarding-logo.png */; };
 		254CC6971A23A7A600560805 /* onboarding-logo@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 254CC6911A23A7A600560805 /* onboarding-logo@2x.png */; };
 		254CC6981A23A7A600560805 /* onboarding-push-icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 254CC6921A23A7A600560805 /* onboarding-push-icon.png */; };
@@ -243,6 +246,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		25263A871A32669E00BD5FF9 /* onboarding3.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = onboarding3.mp3; path = Audio/onboarding3.mp3; sourceTree = "<group>"; };
+		25263A891A32844800BD5FF9 /* onboarding-music-bed.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = "onboarding-music-bed.mp3"; path = "Audio/onboarding-music-bed.mp3"; sourceTree = "<group>"; };
+		25263A8A1A32844800BD5FF9 /* onboarding-vocal-bed.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = "onboarding-vocal-bed.mp3"; path = "Audio/onboarding-vocal-bed.mp3"; sourceTree = "<group>"; };
 		254CC6901A23A7A600560805 /* onboarding-logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "onboarding-logo.png"; sourceTree = "<group>"; };
 		254CC6911A23A7A600560805 /* onboarding-logo@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "onboarding-logo@2x.png"; sourceTree = "<group>"; };
 		254CC6921A23A7A600560805 /* onboarding-push-icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "onboarding-push-icon.png"; sourceTree = "<group>"; };
@@ -590,6 +596,9 @@
 		258E8DFD1A16AA1800675E68 /* Audio */ = {
 			isa = PBXGroup;
 			children = (
+				25263A891A32844800BD5FF9 /* onboarding-music-bed.mp3 */,
+				25263A8A1A32844800BD5FF9 /* onboarding-vocal-bed.mp3 */,
+				25263A871A32669E00BD5FF9 /* onboarding3.mp3 */,
 				259E450C1A1D583A00F5CD65 /* onboarding1.mp3 */,
 				259E450D1A1D583A00F5CD65 /* onboarding2.mp3 */,
 				258E8DFE1A16AA3900675E68 /* Glass_Crash.mp3 */,
@@ -1253,6 +1262,7 @@
 				52EFF7F419C368C00059A0E3 /* program_avatar_bbc-newshour@2x.png in Resources */,
 				52D0FC3619D20D29009AECEE /* program_avatar_the-frame.png in Resources */,
 				52EFF7EA19C368C00059A0E3 /* program_avatar_all-things-considered.png in Resources */,
+				25263A8B1A32844800BD5FF9 /* onboarding-music-bed.mp3 in Resources */,
 				52EFF82E19C368C00059A0E3 /* program_avatar_on-being.png in Resources */,
 				259E44FF1A1D2CD300F5CD65 /* SCPROnboardingViewController.xib in Resources */,
 				52D9227819D366C90018AD4B /* content-share.png in Resources */,
@@ -1330,11 +1340,13 @@
 				52EFF86A19C368C00059A0E3 /* program_avatar_wits.png in Resources */,
 				258E8E061A16AA4200675E68 /* desk_customer_template.json in Resources */,
 				52D9227A19D366C90018AD4B /* content-share@2x.png in Resources */,
+				25263A8C1A32844800BD5FF9 /* onboarding-vocal-bed.mp3 in Resources */,
 				52EFF86819C368C00059A0E3 /* program_avatar_weekend-edition-sunday@2x.png in Resources */,
 				52EFF84819C368C00059A0E3 /* program_avatar_splendid-table@2x.png in Resources */,
 				254CC6971A23A7A600560805 /* onboarding-logo@2x.png in Resources */,
 				52EFF82419C368C00059A0E3 /* program_avatar_morning-edition@2x.png in Resources */,
 				768C06521995905D00F829EB /* btn_live_rewind_small.png in Resources */,
+				25263A881A32669E00BD5FF9 /* onboarding3.mp3 in Resources */,
 				768C066F199590CC00F829EB /* FreigSanProBlk.otf in Resources */,
 				258E8E011A16AA3900675E68 /* Glass_Crash.mp3 in Resources */,
 				254CC6981A23A7A600560805 /* onboarding-push-icon.png in Resources */,

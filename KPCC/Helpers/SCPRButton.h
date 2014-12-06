@@ -15,5 +15,6 @@
 @property BOOL small;
 
 - (void)addTarget:(id)target action:(SEL)action forControlEvents:(UIControlEvents)controlEvents special:(BOOL)special;
+- (void)stretch;
 
 @end

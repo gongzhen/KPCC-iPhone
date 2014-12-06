@@ -61,7 +61,6 @@ static NSString *kCommentsPlaceholder = @"... Add your comments here";
     self.emailTextField.textColor = [UIColor whiteColor];
     
     [self.authButton.titleLabel proSemiBoldFontize];
-    
     [self.nameTextField setFont:[[DesignManager shared] proLight:self.nameTextField.font.pointSize]];
     [self.emailTextField setFont:[[DesignManager shared] proLight:self.emailTextField.font.pointSize]];
     [self.versionLabel proLightFontize];

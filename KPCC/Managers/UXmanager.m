@@ -51,15 +51,20 @@
     return self.settings.userHasViewedOnboarding;
 }
 
+- (void)freezeProgressBar {
+    self.masterCtrl.liveProgressViewController.freezeBit = YES;
+}
+
 - (void)loadOnboarding {
+    
+    [self listenForQueues];
+    
     SCPRAppDelegate *del = (SCPRAppDelegate*)[[UIApplication sharedApplication] delegate];
     UIWindow *mw = [del window];
     [mw addSubview:del.onboardingController.view];
  
     SCPRNavigationController *nav = [del masterNavigationController];
     nav.menuButton.alpha = 0.0;
-    
-
     
     del.onboardingController.view.frame = CGRectMake(0.0,0.0,mw.frame.size.width,
                                                      mw.frame.size.height);
@@ -76,6 +81,22 @@
     nav.navigationBar.layer.mask = [self.onboardingCtrl.navbarMask layer];
     
     [self.onboardingCtrl.view layoutIfNeeded];
+    
+    NSString *lisaPath = [[NSBundle mainBundle] pathForResource:@"onboarding-vocal-bed"
+                                                         ofType:@"mp3"];
+    NSString *musicPath = [[NSBundle mainBundle] pathForResource:@"onboarding-music-bed"
+                                                          ofType:@"mp3"];
+    
+    NSError *lisaError = nil;
+    NSError *musicError = nil;
+    self.lisaPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:[NSURL fileURLWithPath:lisaPath]
+                                                             error:&lisaError];
+    self.musicPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:[NSURL fileURLWithPath:musicPath]
+                                                              error:&musicError];
+    [self.lisaPlayer prepareToPlay];
+    [self.musicPlayer prepareToPlay];
+    
+    self.musicPlayer.volume = 0.2;
 
 }
 
@@ -140,13 +161,24 @@
         [self.masterCtrl onboarding_beginOnboardingAudio];
         [[UIApplication sharedApplication] setStatusBarHidden:NO
                                                 withAnimation:UIStatusBarAnimationSlide];
+        
+        [self.musicPlayer play];
+        [self.lisaPlayer play];
+        self.observerTimer = [NSTimer scheduledTimerWithTimeInterval:1.0
+                                                              target:self
+                                                            selector:@selector(fireHandler)
+                                                            userInfo:nil
+                                                             repeats:YES];
+        
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(8.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            [self.masterCtrl.playPauseButton stretch];
+        });
     }];
 
 
 }
 
 - (void)presentLensOverRewindButton {
-    [self.masterCtrl.liveProgressViewController tick];
     [self.masterCtrl primeManualControlButton];
     CGPoint origin = self.masterCtrl.liveRewindAltButton.frame.origin;
     [self.onboardingCtrl revealLensWithOrigin:[self.masterCtrl.liveStreamView convertPoint:CGPointMake(origin.x, origin.y)
@@ -165,13 +197,30 @@
     });
 }
 
-- (void)listenForQueues {
-    self.listeningForQueues = YES;
-    self.keyPoints = [@{ @"8" : @"activateDropdown",
-                         @"13" : @"selectFirstMenuItem",
-                         @"18" : @"selectSecondMenuItem",
-                         @"23" : @"closeMenu" } mutableCopy];
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
+
 }
+
+- (void)listenForQueues {
+    
+    self.listeningForQueues = YES;
+    self.keyPoints = [@{ @"18" : @"activateDropdown",
+                         @"21" : @"selectFirstMenuItem",
+                         @"25" : @"selectSecondMenuItem",
+                         @"29" : @"closeMenu",
+                         @"34" : @"askForNotifications" } mutableCopy];
+    
+
+}
+
+- (void)fireHandler {
+    NSInteger t = self.lisaPlayer.currentTime;
+    if ( self.listeningForQueues ) {
+        NSLog(@"Time is : %ld seconds",(long)t);
+        [self handleKeypoint:t];
+    }
+}
+
 
 - (void)handleKeypoint:(NSInteger)keypoint {
     NSString *key = [NSString stringWithFormat:@"%ld",(long)keypoint];
@@ -189,6 +238,9 @@
         if ( SEQ(value, @"closeMenu") ) {
             [self closeMenu];
         }
+        if ( SEQ(value, @"askForNotifications") ) {
+            [self askForPushNotifications];
+        }
     }
 }
 
@@ -200,7 +252,7 @@
     } completion:^(BOOL finished) {
         [self.onboardingCtrl revealLensWithOrigin:CGPointMake(8.0, 22.0)];
         
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.22 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             
             self.onboardingCtrl.lensVC.lock = NO;
             [self.onboardingCtrl.lensVC squeezeWithAnchorView:nil completed:^{
@@ -234,7 +286,17 @@
 }
 
 - (void)askForPushNotifications {
+    [[AudioManager shared].audioPlayer pause];
+    [self.lisaPlayer pause];
+    
     self.listeningForQueues = NO;
+    if ( self.observerTimer ) {
+        if ( [self.observerTimer isValid] ) {
+            [self.observerTimer invalidate];
+        }
+        self.observerTimer = nil;
+    }
+    
     [UIView animateWithDuration:0.5 animations:^{
         [self.masterCtrl.blurView.layer setOpacity:1.0];
         [self.masterCtrl.darkBgView.layer setOpacity:0.75];
@@ -242,7 +304,7 @@
         [self.masterCtrl.liveProgressViewController hide];
         [self.masterCtrl.horizDividerLine setAlpha:0.0];
         [self.masterCtrl.liveStreamView setAlpha:0.0];
-        [self.masterCtrl.liveProgressViewController hide];
+        [self.masterCtrl.liveProgressViewController.view setAlpha:0.0];
     } completion:^(BOOL finished) {
         [self.onboardingCtrl revealNotificationsPrompt];
     }];
@@ -254,6 +316,7 @@
         [self.masterCtrl.darkBgView.layer setOpacity:0.0];
         self.masterCtrl.playerControlsView.alpha = 1.0;
         [self.masterCtrl.liveStreamView setAlpha:1.0];
+        [self.masterCtrl.liveProgressViewController.view setAlpha:1.0];
     } completion:^(BOOL finished) {
         if ( prompt ) {
             [self askSystemForNotificationPermissions];
@@ -283,21 +346,49 @@
 }
 
 - (void)closeOutOnboarding {
+    
     [self.onboardingCtrl hideCallout];
     [UIView animateWithDuration:0.33 animations:^{
         [self.masterCtrl.horizDividerLine setAlpha:0.4];
         [self.masterCtrl.blurView.layer setOpacity:0.0];
     } completion:^(BOOL finished) {
-        [self endOnboarding];
+
+        [[AudioManager shared].audioPlayer play];
+        [self.lisaPlayer play];
+        
     }];
 
-   // }];
 }
 
 - (void)endOnboarding {
+
     [[AudioManager shared] setRelativeFauxDate:nil];
     [self.onboardingCtrl.view removeFromSuperview];
-    [self.masterCtrl onboarding_fin];
+    [self fadePlayer:self.musicPlayer];
+    
+    [UIView animateWithDuration:0.25 animations:^{
+        self.masterCtrl.liveProgressViewController.view.alpha = 0.0;
+    } completion:^(BOOL finished) {
+        [self.masterCtrl onboarding_fin];
+    }];
+    
+  
+}
+
+- (void)fadePlayer:(AVAudioPlayer *)player {
+    self.fadeQueue = [[NSOperationQueue alloc] init];
+    while ( player.volume >= 0.0 ) {
+        [self fadeThread:player];
+    }
+}
+
+- (void)fadeThread:(AVAudioPlayer*)player {
+    NSBlockOperation *block = [NSBlockOperation blockOperationWithBlock:^{
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.05 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            [player setVolume:(player.volume-0.1)];
+        });
+    }];
+    [self.fadeQueue addOperation:block];
 }
 
 @end

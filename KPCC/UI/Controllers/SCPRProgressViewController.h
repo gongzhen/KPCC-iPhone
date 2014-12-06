@@ -18,6 +18,7 @@
 - (void)show;
 - (void)rewind;
 - (void)forward;
+- (void)reset;
 
 - (void)setupProgressBarsWithProgram:(Program*)program;
 
@@ -40,5 +41,8 @@
 @property BOOL expanded;
 @property BOOL firstTickFinished;
 @property BOOL uiHidden;
+@property BOOL freezeBit;
+@property BOOL mutex;
+@property NSInteger counter;
 
 @end

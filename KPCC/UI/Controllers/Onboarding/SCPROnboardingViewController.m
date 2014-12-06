@@ -187,6 +187,48 @@
     [[UXmanager shared] restorePreNotificationUI:NO];
 }
 
+- (void)ondemandMode {
+    self.onDemandContainerView.alpha = 1.0;
+    self.notificationsView.alpha = 0.0;
+    self.brandingView.alpha = 0.0;
+    self.textCalloutBalloonCtrl.view.alpha = 0.0;
+    self.lensVC.view.alpha = 0.0;
+    self.view.backgroundColor = [[UIColor virtualBlackColor] translucify:0.75];
+    self.swiper = [[UISwipeGestureRecognizer alloc] initWithTarget:self
+                                                            action:@selector(dismissOnDemand)];
+    self.swiper.direction = UISwipeGestureRecognizerDirectionLeft|UISwipeGestureRecognizerDirectionRight;
+    [self.view addGestureRecognizer:self.swiper];
+    
+    [self.swipeToSkipLabel proBookFontize];
+    [self.gotItButton.titleLabel proSemiBoldFontize];
+    [self.gotItButton setTitleColor:[UIColor kpccPeriwinkleColor]
+                           forState:UIControlStateNormal];
+    [self.gotItButton setTitleColor:[UIColor kpccPeriwinkleColor]
+                           forState:UIControlStateHighlighted];
+    
+    if ( !self.view.superview ) {
+        SCPRAppDelegate *del = [Utils del];
+        self.view.frame = CGRectMake(0.0,0.0,del.window.frame.size.width,
+                                     del.window.frame.size.height);
+        [del.window addSubview:self.view];
+    }
+    
+    [self.gotItButton addTarget:self
+                         action:@selector(dismissOnDemand)
+               forControlEvents:UIControlEventTouchUpInside
+                        special:YES];
+}
+
+- (void)dismissOnDemand {
+    [UIView animateWithDuration:0.25 animations:^{
+        self.onDemandContainerView.alpha = 0.0;
+    } completion:^(BOOL finished) {
+        self.view.alpha = 0.0;
+        [UXmanager shared].settings.userHasViewedOnDemandOnboarding = YES;
+        [[UXmanager shared] persist];
+    }];
+}
+
 /*
 #pragma mark - Navigation
 

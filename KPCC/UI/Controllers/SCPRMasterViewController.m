@@ -21,6 +21,7 @@
 #import "UXmanager.h"
 #import "SCPRNavigationController.h"
 #import "AnalyticsManager.h"
+#import "SCPROnboardingViewController.h"
 
 
 static NSString *kRewindingText = @"REWINDING...";
@@ -341,6 +342,7 @@ static NSString *kBufferingText = @"BUFFERING...";
 }
 
 - (void)onboarding_beginOutro {
+    
     [[AudioManager shared] setTemporaryMutex:NO];
     [[AudioManager shared] playOnboardingAudio:3];
 }
@@ -364,6 +366,17 @@ static NSString *kBufferingText = @"BUFFERING...";
     
     [[AudioManager shared] resetPlayer];
     [self updateDataForUI];
+}
+
+- (void)showOnDemandOnboarding {
+    if ( ![UXmanager shared].settings.userHasViewedOnDemandOnboarding ) {
+        SCPRAppDelegate *del = [Utils del];
+        [del.onboardingController ondemandMode];
+        [del.window bringSubviewToFront:del.onboardingController.view];
+        [UIView animateWithDuration:0.25 animations:^{
+            del.onboardingController.view.alpha = 1.0;
+        }];
+    }
 }
 
 # pragma mark - Actions
@@ -557,7 +570,9 @@ static NSString *kBufferingText = @"BUFFERING...";
 
 - (void)pauseStream {
     [[AudioManager shared] pauseStream];
-    [self primeManualControlButton];
+    
+    if ( [UXmanager shared].settings.userHasViewedOnboarding )
+        [self primeManualControlButton];
 }
 
 - (void)rewindFifteen {
@@ -572,9 +587,11 @@ static NSString *kBufferingText = @"BUFFERING...";
 
 
 
-- (void)goLive {
+- (void)goLive:(BOOL)play {
     
     if ( [[AudioManager shared] currentAudioMode] == AudioModeLive ) return;
+    
+    self.lockPlayback = !play;
     
     [[NSNotificationCenter defaultCenter] removeObserver:self
                                                     name:@"audio_player_began_playing"
@@ -585,11 +602,13 @@ static NSString *kBufferingText = @"BUFFERING...";
         [self setLiveStreamingUI:YES];
         [self treatUIforProgram];
         [self primePlaybackUI:YES];
-        if ( self.initialPlay ) {
-            [[AudioManager shared] playLiveStream];
-        } else {
-            [self initialPlayTapped:nil];
-            [self decloakForMenu:YES];
+        if ( play ) {
+            if ( self.initialPlay ) {
+                //[[AudioManager shared] playLiveStream];
+            } else {
+                [self initialPlayTapped:nil];
+                [self decloakForMenu:YES];
+            }
         }
     }];
     
@@ -601,6 +620,8 @@ static NSString *kBufferingText = @"BUFFERING...";
     [self snapJogWheel];
     [self.liveDescriptionLabel pulsate:kRewindingText color:nil];
 
+    self.jogShuttle.forceSingleRotation = YES;
+    
     [UIView animateWithDuration:0.25 animations:^{
         self.liveRewindAltButton.alpha = 0.0;
     }];
@@ -617,10 +638,11 @@ static NSString *kBufferingText = @"BUFFERING...";
     [self.jogShuttle.view setAlpha:1.0];
     [self.liveProgressViewController rewind];
     
-    [self.jogShuttle animateWithSpeed:0.44
+    BOOL sound = [AudioManager shared].currentAudioMode == AudioModeOnboarding ? NO : YES;
+    [self.jogShuttle animateWithSpeed:1.2
                          hideableView:self.playPauseButton
                             direction:SpinDirectionBackward
-                            withSound:YES
+                            withSound:sound
                            completion:^{
                                
                                [self.liveDescriptionLabel stopPulsating];
@@ -641,21 +663,21 @@ static NSString *kBufferingText = @"BUFFERING...";
                                        });
                                    }];
                                } else {
-                                   dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(.33 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                                       [[AudioManager shared] adjustAudioWithValue:0.1 completion:^{
-                                           [[SessionManager shared] fetchOnboardingProgramWithSegment:2 completed:^(id returnedObject) {
-                                               [[UXmanager shared] listenForQueues];
-                                               [[AudioManager shared] setTemporaryMutex:NO];
-                                               [[AudioManager shared] playOnboardingAudio:2];
-                                           }];
+
+                                   //[[AudioManager shared] adjustAudioWithValue:0.1 completion:^{
+                                       [[SessionManager shared] fetchOnboardingProgramWithSegment:2 completed:^(id returnedObject) {
                                            
+                                           [[AudioManager shared] setTemporaryMutex:NO];
+                                           [[AudioManager shared] playOnboardingAudio:2];
                                        }];
-                                   });
+                                       
+                                   //}];
+                                 
                                }
                                
                            }];
     
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.0f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.2f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         
         seekRequested = YES;
         switch (distance) {
@@ -666,9 +688,6 @@ static NSString *kBufferingText = @"BUFFERING...";
                 break;
             case RewindDistanceOnboardingBeginning:
             {
-                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                    [self.jogShuttle endAnimations];
-                });
                 break;
             }
             case RewindDistanceBeginning:
@@ -918,6 +937,8 @@ static NSString *kBufferingText = @"BUFFERING...";
 
 - (void)setOnDemandUI:(BOOL)animated forProgram:(Program*)program withAudio:(NSArray*)array atCurrentIndex:(int)index {
     
+
+    
     [self snapJogWheel];
     
     if ([self.onDemandPlayerView isHidden]) {
@@ -1124,6 +1145,11 @@ static NSString *kBufferingText = @"BUFFERING...";
                 self.springLock = YES;
                 if ( [[UXmanager shared] userHasSeenOnboarding] ) {
                     self.initialPlay = YES;
+                    if ( self.lockPlayback ) {
+                        self.lockPlayback = NO;
+                        return;
+                    }
+                    
                     [self playStream:YES];
                 } else {
                     [[UXmanager shared] beginAudio];
@@ -1606,7 +1632,7 @@ static NSString *kBufferingText = @"BUFFERING...";
                 [self decloakForMenu:YES];
             } else {
                 [self decloakForMenu:YES];
-                [self goLive];
+                [self goLive:YES];
             }
             break;
         }
@@ -1668,8 +1694,11 @@ static NSString *kBufferingText = @"BUFFERING...";
 # pragma mark - AudioManagerDelegate
 
 - (void)onRateChange {
+    [self.liveProgressViewController setFreezeBit:YES];
     [self updateControlsAndUI:YES];
-    [self primeManualControlButton];
+    
+    if ( [UXmanager shared].settings.userHasViewedOnboarding )
+        [self primeManualControlButton];
 }
 
 - (void)onTimeChange {
@@ -1690,15 +1719,22 @@ static NSString *kBufferingText = @"BUFFERING...";
     NSTimeInterval ti = [[[AudioManager shared] maxSeekableDate] timeIntervalSinceDate:ciCurrentDate];
     
     Program *program = [[SessionManager shared] currentProgram];
+    long ct = (long)CMTimeGetSeconds([AudioManager shared].audioPlayer.currentTime);
     if ( program || [AudioManager shared].currentAudioMode == AudioModeOnboarding ) {
-        [self.liveProgressViewController tick];
+        if ( [[AudioManager shared].audioPlayer rate] > 0.0 ) {
+            if ( ct > 0 ) {
+                [self.liveProgressViewController tick];
+            }
+        } else {
+            NSLog(@"Trying to tick in non-playing state");
+        }
     }
   
     
     if ( ti > 60 && ![[AudioManager shared] isStreamBuffering] ) {
-        if ( abs(self.previousRewindThreshold - [[AudioManager shared].audioPlayer.currentItem.currentDate timeIntervalSince1970]) > 120 ) {
+        //if ( abs(self.previousRewindThreshold - [[AudioManager shared].audioPlayer.currentItem.currentDate timeIntervalSince1970]) > 60 ) {
             [self.liveDescriptionLabel fadeText:[NSString stringWithFormat:@"%@ BEHIND LIVE", [NSDate prettyTextFromSeconds:ti]]];
-        }
+        //}
         [self.backToLiveButton setHidden:NO];
         self.previousRewindThreshold = [[AudioManager shared].audioPlayer.currentItem.currentDate timeIntervalSince1970];
     } else {
@@ -1764,11 +1800,7 @@ static NSString *kBufferingText = @"BUFFERING...";
         }];
     }
     
-    if ( [[UXmanager shared] listeningForQueues] ) {
-        CMTime currentPoint = [AudioManager shared].audioPlayer.currentItem.currentTime;
-        NSInteger seconds = CMTimeGetSeconds(currentPoint);
-        [[UXmanager shared] handleKeypoint:seconds];
-    }
+
     
 }
 
@@ -1804,11 +1836,20 @@ static NSString *kBufferingText = @"BUFFERING...";
     [self rebootOnDemandUI];
     self.timeLabelOnDemand.text = @"FAILED TO LOAD";
     
+
+    
     [[[UIAlertView alloc] initWithTitle:@"Oops.."
                                 message:@"We had some trouble loading that audio. Try again later or try a different show. Sorry."
                                delegate:nil
                       cancelButtonTitle:@"OK"
                       otherButtonTitles:nil] show];
+    
+    [UIView animateWithDuration:0.15 animations:^{
+        self.playPauseButton.transform = CGAffineTransformMakeScale(1.0f, 1.0f);
+    } completion:^(BOOL finished) {
+        [self goLive:NO];
+    }];
+
 }
 
 #pragma mark - ContentProcessor

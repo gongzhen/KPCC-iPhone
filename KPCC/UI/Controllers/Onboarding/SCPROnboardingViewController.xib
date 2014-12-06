@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6250" systemVersion="13F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6254" systemVersion="13F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6244"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6247"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="SCPROnboardingViewController">
@@ -11,6 +11,7 @@
                 <outlet property="buttonAnchor" destination="HFP-E5-eKn" id="UOJ-LM-eX5"/>
                 <outlet property="calloutAnchor" destination="wTS-Ar-CUQ" id="Lho-Ub-B8f"/>
                 <outlet property="dividerView" destination="h2N-Bf-oxo" id="NQ7-hq-bbi"/>
+                <outlet property="gotItButton" destination="idU-cI-SgA" id="Uws-tL-Eqy"/>
                 <outlet property="kpccLogoView" destination="ky3-rC-tNp" id="fqS-Br-P8f"/>
                 <outlet property="lensTopConstraint" destination="lxL-iq-GaB" id="pdc-dh-Wor"/>
                 <outlet property="lensVC" destination="tAH-eb-gSy" id="LBU-Gr-Grh"/>
@@ -20,8 +21,11 @@
                 <outlet property="notificationsCaptionLabel" destination="u6b-8E-tgw" id="w2Y-bs-PM5"/>
                 <outlet property="notificationsQuestionLabel" destination="kkP-Eh-F6O" id="xBf-fD-weU"/>
                 <outlet property="notificationsView" destination="vPB-Kr-d7s" id="rTR-T7-xeu"/>
+                <outlet property="onDemandContainerView" destination="Qok-s5-TCn" id="5BL-J6-ZgQ"/>
+                <outlet property="onDemandSwipeImageView" destination="e4x-BH-4jP" id="66p-4U-eTT"/>
                 <outlet property="radioIconImage" destination="7cl-9Q-Ahk" id="Nni-8V-57b"/>
                 <outlet property="sloganTopAnchor" destination="UFB-bS-uZZ" id="EG1-1V-yvX"/>
+                <outlet property="swipeToSkipLabel" destination="boP-gT-EsI" id="tcV-Qf-7Bj"/>
                 <outlet property="textCalloutBalloonCtrl" destination="eO6-rQ-D6u" id="dr6-C6-Ekh"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
                 <outlet property="welcomeLabel" destination="BF9-6O-t4a" id="cyR-cO-m4p"/>
@@ -194,6 +198,51 @@
                         <constraint firstItem="Hlz-ac-PvZ" firstAttribute="leading" secondItem="Pzs-hM-WnC" secondAttribute="leading" id="r7e-PE-TWS"/>
                     </constraints>
                 </view>
+                <view alpha="0.0" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Qok-s5-TCn">
+                    <rect key="frame" x="150" y="132" width="300" height="300"/>
+                    <subviews>
+                        <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="onboarding-episode-swipe.png" translatesAutoresizingMaskIntoConstraints="NO" id="e4x-BH-4jP">
+                            <rect key="frame" x="1" y="40" width="280" height="80"/>
+                            <constraints>
+                                <constraint firstAttribute="width" constant="280" id="4Fl-EA-Mjh"/>
+                                <constraint firstAttribute="height" constant="80" id="HMO-jk-hZB"/>
+                            </constraints>
+                        </imageView>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Swipe to skip episodes" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="boP-gT-EsI">
+                            <rect key="frame" x="8" y="142" width="284" height="31"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="31" id="B95-96-JDf"/>
+                                <constraint firstAttribute="width" constant="284" id="p1j-La-rPX"/>
+                            </constraints>
+                            <fontDescription key="fontDescription" type="system" pointSize="24"/>
+                            <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="idU-cI-SgA" customClass="SCPRButton">
+                            <rect key="frame" x="10" y="199" width="280" height="57"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="57" id="AAb-0B-C6z"/>
+                                <constraint firstAttribute="width" constant="280" id="eyN-Wb-3o5"/>
+                            </constraints>
+                            <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                            <state key="normal" title="GOT IT">
+                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                            </state>
+                        </button>
+                    </subviews>
+                    <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="calibratedRGB"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="300" id="7sI-v2-Mrf"/>
+                        <constraint firstAttribute="width" constant="300" id="9Vh-SU-7ZI"/>
+                        <constraint firstItem="e4x-BH-4jP" firstAttribute="top" secondItem="Qok-s5-TCn" secondAttribute="top" constant="40" id="EiF-Ci-ohf"/>
+                        <constraint firstItem="boP-gT-EsI" firstAttribute="top" secondItem="e4x-BH-4jP" secondAttribute="bottom" constant="22" id="X8W-18-Wop"/>
+                        <constraint firstAttribute="trailing" secondItem="e4x-BH-4jP" secondAttribute="trailing" constant="19" id="avl-Ur-acE"/>
+                        <constraint firstItem="idU-cI-SgA" firstAttribute="top" secondItem="boP-gT-EsI" secondAttribute="bottom" constant="26" id="mBW-Er-Si0"/>
+                        <constraint firstAttribute="centerX" secondItem="idU-cI-SgA" secondAttribute="centerX" id="rpx-oB-cZm"/>
+                        <constraint firstAttribute="centerX" secondItem="boP-gT-EsI" secondAttribute="centerX" id="t9A-KM-hdC"/>
+                        <constraint firstItem="e4x-BH-4jP" firstAttribute="leading" secondItem="Qok-s5-TCn" secondAttribute="leading" constant="1" id="ziV-qZ-547"/>
+                    </constraints>
+                </view>
             </subviews>
             <color key="backgroundColor" red="0.14657091450227416" green="0.21788733784831041" blue="0.61459748641304346" alpha="1" colorSpace="calibratedRGB"/>
             <constraints>
@@ -206,6 +255,8 @@
                 <constraint firstItem="vPB-Kr-d7s" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="kfk-1i-AjF"/>
                 <constraint firstItem="OIZ-zB-C1J" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="lwt-28-V3h"/>
                 <constraint firstItem="OIZ-zB-C1J" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="lxL-iq-GaB"/>
+                <constraint firstAttribute="centerX" secondItem="Qok-s5-TCn" secondAttribute="centerX" id="rBi-58-QBt"/>
+                <constraint firstItem="Qok-s5-TCn" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="132" id="sbJ-hx-aJl"/>
                 <constraint firstAttribute="bottom" secondItem="Pzs-hM-WnC" secondAttribute="bottom" constant="70" id="wTS-Ar-CUQ"/>
             </constraints>
             <point key="canvasLocation" x="-207" y="98"/>
@@ -229,54 +280,9 @@
             </connections>
             <point key="canvasLocation" x="-250" y="767"/>
         </viewController>
-        <view contentMode="scaleToFill" id="Qok-s5-TCn">
-            <rect key="frame" x="0.0" y="0.0" width="300" height="300"/>
-            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-            <subviews>
-                <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="onboarding-episode-swipe.png" translatesAutoresizingMaskIntoConstraints="NO" id="e4x-BH-4jP">
-                    <rect key="frame" x="10" y="40" width="280" height="80"/>
-                    <constraints>
-                        <constraint firstAttribute="width" constant="280" id="4Fl-EA-Mjh"/>
-                        <constraint firstAttribute="height" constant="80" id="HMO-jk-hZB"/>
-                    </constraints>
-                </imageView>
-                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Swipe to skip episodes" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="boP-gT-EsI">
-                    <rect key="frame" x="8" y="142" width="284" height="31"/>
-                    <constraints>
-                        <constraint firstAttribute="height" constant="31" id="B95-96-JDf"/>
-                        <constraint firstAttribute="width" constant="284" id="p1j-La-rPX"/>
-                    </constraints>
-                    <fontDescription key="fontDescription" type="system" pointSize="24"/>
-                    <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
-                    <nil key="highlightedColor"/>
-                </label>
-                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="idU-cI-SgA">
-                    <rect key="frame" x="10" y="199" width="280" height="57"/>
-                    <constraints>
-                        <constraint firstAttribute="height" constant="57" id="AAb-0B-C6z"/>
-                        <constraint firstAttribute="width" constant="280" id="eyN-Wb-3o5"/>
-                    </constraints>
-                    <state key="normal" title="GOT IT">
-                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                    </state>
-                </button>
-            </subviews>
-            <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-            <constraints>
-                <constraint firstItem="e4x-BH-4jP" firstAttribute="top" secondItem="Qok-s5-TCn" secondAttribute="top" constant="40" id="EiF-Ci-ohf"/>
-                <constraint firstItem="boP-gT-EsI" firstAttribute="top" secondItem="e4x-BH-4jP" secondAttribute="bottom" constant="22" id="X8W-18-Wop"/>
-                <constraint firstItem="idU-cI-SgA" firstAttribute="top" secondItem="boP-gT-EsI" secondAttribute="bottom" constant="26" id="mBW-Er-Si0"/>
-                <constraint firstAttribute="centerX" secondItem="e4x-BH-4jP" secondAttribute="centerX" id="mp0-mY-vqH"/>
-                <constraint firstAttribute="centerX" secondItem="idU-cI-SgA" secondAttribute="centerX" id="rpx-oB-cZm"/>
-                <constraint firstAttribute="centerX" secondItem="boP-gT-EsI" secondAttribute="centerX" id="t9A-KM-hdC"/>
-            </constraints>
-            <nil key="simulatedStatusBarMetrics"/>
-            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
-            <point key="canvasLocation" x="159" y="749"/>
-        </view>
     </objects>
     <resources>
-        <image name="onboarding-episode-swipe.png" width="82" height="56"/>
+        <image name="onboarding-episode-swipe.png" width="83" height="56"/>
         <image name="onboarding-logo.png" width="158" height="23"/>
         <image name="onboarding-push-icon.png" width="48" height="55"/>
     </resources>
