@@ -21,20 +21,23 @@
 #import "SCPRJogShuttleViewController.h"
 #import "SCPRPreRollViewController.h"
 #import "SCPRProgressViewController.h"
+#import "SCPRButton.h"
 
 @interface SCPRMasterViewController : UIViewController<SCPRMenuDelegate>
 
 @property IBOutlet UILabel *programTitleLabel;
 @property IBOutlet UIImageView *programImageView;
-@property IBOutlet UIButton *playPauseButton;
-@property IBOutlet UIButton *initialPlayButton;
+@property IBOutlet SCPRButton *playPauseButton;
+@property IBOutlet SCPRButton *initialPlayButton;
 @property IBOutlet UIButton *rewindToShowStartButton;
-@property IBOutlet UIButton *liveRewindAltButton;
+@property IBOutlet SCPRButton *liveRewindAltButton;
 @property IBOutlet UILabel *liveDescriptionLabel;
 @property IBOutlet UIView *horizDividerLine;
 @property IBOutlet UIButton *backToLiveButton;
 @property IBOutlet FXBlurView *blurView;
 @property IBOutlet UIView *darkBgView;
+
+@property (nonatomic,strong) MPVolumeView *mpvv;
 
 @property NSInteger tickCounter;
 
@@ -57,7 +60,7 @@
 @property IBOutlet UILabel *programTitleOnDemand;
 @property IBOutlet UIView *dividerOnDemand;
 @property IBOutlet UILabel *timeLabelOnDemand;
-@property IBOutlet UIButton *shareButton;
+@property IBOutlet SCPRButton *shareButton;
 @property IBOutlet UIProgressView *progressView;
 
 
@@ -88,6 +91,8 @@
 @property BOOL rewindGate;
 @property BOOL initiateRewind;
 @property BOOL springLock;
+@property BOOL lockPlayback;
+@property NSInteger previousRewindThreshold;
 
 // Onboarding
 @property BOOL automationMode;
@@ -112,7 +117,7 @@
 - (void)treatUIforProgram;
 
 - (void)moveTextIntoPlace:(BOOL)animated;
-- (void)goLive;
+- (void)goLive:(BOOL)play;
 
 // Onboarding methods
 - (void)primeOnboarding;
@@ -122,5 +127,7 @@
 - (void)onboarding_beginOutro;
 - (void)onboarding_fin;
 
+- (void)rollInterferenceText;
+- (void)showOnDemandOnboarding;
 
 @end

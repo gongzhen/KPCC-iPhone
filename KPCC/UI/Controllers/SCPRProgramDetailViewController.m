@@ -17,6 +17,7 @@
 #import "Program.h"
 #import "Episode.h"
 #import "Segment.h"
+#import "AnalyticsManager.h"
 
 @interface SCPRProgramDetailViewController ()
 @property NSMutableArray *episodesList;
@@ -118,6 +119,12 @@
     }
 
     cell.backgroundColor = [UIColor clearColor];
+    cell.selectedBackgroundView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0,
+                                                                           cell.frame.size.width,
+                                                                           cell.frame.size.height)];
+    
+    cell.selectedBackgroundView.backgroundColor = [[UIColor virtualWhiteColor] translucify:0.2];
+    
     [cell setEpisode:(self.episodesList)[indexPath.row]];
     return cell;
 }
@@ -144,9 +151,28 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
 
+    
     NSArray *audioChunks = [[QueueManager shared] enqueueEpisodes:self.episodesList withCurrentIndex:indexPath.row];
     [[[Utils del] masterViewController] setOnDemandUI:YES forProgram:self.program withAudio:audioChunks atCurrentIndex:(int)indexPath.row];
-    [self.navigationController popToRootViewControllerAnimated:YES];
+    //[self.navigationController popToRootViewControllerAnimated:YES];
+    
+    id episode = self.episodesList[indexPath.row];
+    NSString *title = @"[UNKNOWN]";
+    NSString *programTitle = @"[UNKNOWN]";
+    if ([episode isKindOfClass:[Episode class]]) {
+        Episode *ep = (Episode *) episode;
+        title = [ep.title stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+        programTitle = ep.programName;
+    } else {
+        Segment *seg = (Segment *) episode;
+        title = seg.title;
+        programTitle = seg.programName;
+    }
+    
+    [[AnalyticsManager shared] logEvent:@"episodeOrSegmentSelected"
+                         withParameters:@{ @"episodeOrSegmentTitle" : title,
+                                           @"programTitle" : programTitle }];
+    
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {

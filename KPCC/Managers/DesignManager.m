@@ -104,6 +104,7 @@ static DesignManager *singleton = nil;
     
 }
 
+#pragma mark - View Factory
 - (UIView*)textHeaderWithText:(NSString *)text textColor:(UIColor*)color backgroundColor:(UIColor*)backgroundColor {
     return [self textHeaderWithText:text textColor:color backgroundColor:backgroundColor divider:YES];
 }
@@ -115,7 +116,8 @@ static DesignManager *singleton = nil;
     captionLabel.font = [UIFont systemFontOfSize:14.0];
     captionLabel.backgroundColor = [UIColor clearColor];
     captionLabel.textColor = color;
-    [captionLabel setText:[NSString stringWithFormat:@"                %@",text]];
+    [captionLabel proSemiBoldFontize];
+    [captionLabel setText:[NSString stringWithFormat:@"  %@",text]];
     
     [header addSubview:captionLabel];
     return header;
@@ -128,6 +130,7 @@ static DesignManager *singleton = nil;
                       window.bounds.size.height);
 }
 
+#pragma mark - Makeovers
 - (void)sculptButton:(UIButton *)button withStyle:(SculptingStyle)style andText:(NSString *)text {
     [button setTitle:text forState:UIControlStateNormal];
     [button setTitle:text forState:UIControlStateHighlighted];
@@ -161,6 +164,24 @@ static DesignManager *singleton = nil;
             
         }
     }
+}
+
+#pragma mark - Fonts
+- (UIFont*)proLight:(CGFloat)size {
+    return [UIFont fontWithName:@"FreightSansProLight-Regular" size:size];
+}
+
+- (UIFont*)proMedium:(CGFloat)size {
+    return [UIFont fontWithName:@"FreightSansProMedium-Regular" size:size];
+}
+
+- (UIFont*)proBook:(CGFloat)size {
+    return [UIFont fontWithName:@"FreightSansProBook-Regular" size:size];
+}
+
+- (UIFont*)proBold:(CGFloat)size {
+    return [UIFont fontWithName:@"FreightSansProSemibold-Regular" size:size];
+
 }
 
 @end

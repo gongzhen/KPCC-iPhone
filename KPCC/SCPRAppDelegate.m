@@ -15,6 +15,7 @@
 #import "NetworkManager.h"
 #import "SCPROnboardingViewController.h"
 #import "UXmanager.h"
+#import "AnalyticsManager.h"
 
 #ifdef ENABLE_TESTFLIGHT
 #import "TestFlight.h"
@@ -35,10 +36,13 @@
     [TestFlight takeOff: globalConfig[@"TestFlight"][@"AppToken"]];
 #endif
     
-    [Flurry setCrashReportingEnabled:YES];
-    [Flurry setDebugLogEnabled:YES];
-    [Flurry startSession: globalConfig[@"Flurry"][@"DebugKey"] ];
-    [Flurry setBackgroundSessionEnabled:NO];
+    [[AnalyticsManager shared] setup];
+    
+#ifdef DEBUG
+    //[[UXmanager shared].settings setUserHasViewedOnboarding:YES];
+    //[[UXmanager shared].settings setUserHasViewedOnDemandOnboarding:YES];
+    //[[UXmanager shared] persist];
+#endif
     
     // Apply application-wide styling
     [self applyStylesheet];
@@ -78,9 +82,8 @@
         
         // Save all changes made.
         [[ContentManager shared] saveContext];
+        
     }];
-    
-
     
     // Override point for customization after application launch.
     return YES;
@@ -114,6 +117,10 @@
 }
 
 - (void)applicationDidEnterBackground:(UIApplication *)application {
+    
+    if ( [[SessionManager shared] userIsViewingHeadlines] ) {
+        [[AnalyticsManager shared] trackHeadlinesDismissal];
+    }
     // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later. 
     // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
 }

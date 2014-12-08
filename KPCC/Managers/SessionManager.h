@@ -10,6 +10,11 @@
 #import "Utils.h"
 #import "Program.h"
 
+typedef NS_ENUM(NSUInteger, OnDemandFinishedReason) {
+    OnDemandFinishedReasonEpisodeEnd = 0,
+    OnDemandFinishedReasonEpisodeSkipped,
+    OnDemandFinishedReasonEpisodePaused
+};
 
 @interface SessionManager : NSObject
 
@@ -19,12 +24,19 @@
 @property (nonatomic, copy) NSDate *sessionReturnedDate;
 @property (nonatomic, copy) NSDate *sessionPausedDate;
 @property (nonatomic, copy) NSDate *lastProgramUpdate;
+@property (nonatomic, copy) NSString *liveSessionID;
+@property (nonatomic, copy) NSString *odSessionID;
 @property (nonatomic, strong) NSTimer *programUpdateTimer;
-
 @property (nonatomic,strong) NSDictionary *onboardingAudio;
+
+@property int64_t liveStreamSessionBegan;
+@property int64_t liveStreamSessionEnded;
+@property int64_t onDemandSessionBegan;
+@property int64_t onDemandSessionEnded;
 
 @property BOOL useLocalNotifications;
 @property BOOL onboardingRewound;
+@property (atomic) BOOL userIsViewingHeadlines;
 
 @property (nonatomic, strong) Program *currentProgram;
 
@@ -35,19 +47,35 @@
 - (void)armProgramUpdater;
 - (void)disarmProgramUpdater;
 
+- (NSTimeInterval)secondsBehindLive;
+
 - (void)processNotification:(UILocalNotification*)programUpdate;
-@property (NS_NONATOMIC_IOSONLY, readonly) BOOL ignoreProgramUpdating;
-@property (NS_NONATOMIC_IOSONLY, readonly) BOOL sessionIsExpired;
-@property (NS_NONATOMIC_IOSONLY, readonly) BOOL sessionIsBehindLive;
-@property (NS_NONATOMIC_IOSONLY, readonly) BOOL sessionIsInRecess;
+@property (NS_NONATOMIC_IOSONLY) BOOL ignoreProgramUpdating;
+@property (NS_NONATOMIC_IOSONLY) BOOL sessionIsExpired;
+@property (NS_NONATOMIC_IOSONLY) BOOL sessionIsBehindLive;
+@property (NS_NONATOMIC_IOSONLY) BOOL sessionIsInRecess;
+
+@property BOOL sessionIsHot;
+@property BOOL rewindSessionIsHot;
+@property BOOL rewindSessionWillBegin;
+@property BOOL odSessionIsHot;
+
 - (void)handleSessionReactivation;
 - (void)invalidateSession;
+
+- (NSString*)startLiveSession;
+- (NSString*)endLiveSession;
+- (void)trackLiveSession;
+- (void)trackRewindSession;
+
+- (NSString*)startOnDemandSession;
+- (NSString*)endOnDemandSessionWithReason:(OnDemandFinishedReason)reason;
+- (void)trackOnDemandSession;
 
 #ifdef TESTING_PROGRAM_CHANGE
 @property (NS_NONATOMIC_IOSONLY, readonly, strong) Program *fakeProgram;
 @property NSInteger initialProgramRequested;
 @property (nonatomic,strong) Program *fakeCurrent;
-
 #endif
 
 

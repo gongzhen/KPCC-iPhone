@@ -177,7 +177,7 @@
         
         CABasicAnimation *currentAnim = [CABasicAnimation animationWithKeyPath:@"strokeEnd"];
         [currentAnim setToValue:[NSNumber numberWithFloat:vBeginning]];
-        [currentAnim setDuration:4];
+        [currentAnim setDuration:1.2f];
         [currentAnim setRemovedOnCompletion:NO];
         [currentAnim setFillMode:kCAFillModeForwards];
         [self.currentBarLine addAnimation:currentAnim forKey:@"decrementCurrent"];
@@ -211,7 +211,7 @@
         }];
         CABasicAnimation *currentAnim = [CABasicAnimation animationWithKeyPath:@"strokeEnd"];
         [currentAnim setToValue:[NSNumber numberWithFloat:vBeginning]];
-        [currentAnim setDuration:2];
+        [currentAnim setDuration:1.2f];
         [currentAnim setRemovedOnCompletion:NO];
         [currentAnim setFillMode:kCAFillModeForwards];
         [self.currentBarLine addAnimation:currentAnim forKey:@"forwardCurrent"];
@@ -222,11 +222,15 @@
 
 - (void)tick {
     
-
+    NSLog(@"Tick,,,");
     if ( self.shuttling ) return;
+    if ( self.mutex ) return;
+    
+    NSDictionary *p = [[SessionManager shared] onboardingAudio];
+
     
     Program *program = [[SessionManager shared] currentProgram];
-    
+
     NSDate *currentDate = [AudioManager shared].audioPlayer.currentItem.currentDate;
     NSTimeInterval beginning = [program.soft_starts_at timeIntervalSince1970];
     if ( [[AudioManager shared] currentAudioMode] == AudioModeOnboarding ) {
@@ -235,9 +239,9 @@
     }
     NSTimeInterval end = [program.ends_at timeIntervalSince1970];
     if ( [[AudioManager shared] currentAudioMode] == AudioModeOnboarding ) {
-        NSDictionary *p = [[SessionManager shared] onboardingAudio];
-        end = [(NSDate*)p[@"ends_at"] timeIntervalSince1970];
+        end = beginning + [p[@"duration"] intValue];
     }
+    
     NSTimeInterval duration = ( end - beginning );
     
     NSTimeInterval live = [[AudioManager shared].maxSeekableDate timeIntervalSince1970];
@@ -252,29 +256,41 @@
     NSTimeInterval currentDiff = ( current - beginning );
     
     dispatch_async(dispatch_get_main_queue(), ^{
+        self.mutex = YES;
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            self.mutex = NO;
+        });
         
         [CATransaction begin]; {
             [CATransaction setCompletionBlock:^{
-                self.currentBarLine.strokeEnd = currentDiff / duration;
-                self.liveBarLine.strokeEnd = liveDiff / duration;
+                
+                self.currentBarLine.strokeEnd = (currentDiff / duration)*1.0f;
+                self.liveBarLine.strokeEnd = (liveDiff / duration)*1.0f;
+                
                 [self.liveBarLine removeAllAnimations];
                 [self.currentBarLine removeAllAnimations];
-                self.lastCurrentValue = currentDiff / duration;
-                self.lastLiveValue = liveDiff / duration;
+                self.lastCurrentValue = (currentDiff / duration)*1.0f;
+                self.lastLiveValue = (liveDiff / duration)*1.0f;
+              
             }];
+            
+            CGFloat lpct = (liveDiff / duration)*1.0f;
+ 
             
             CABasicAnimation *liveAnim = [CABasicAnimation animationWithKeyPath:@"strokeEnd"];
             [liveAnim setFromValue:[NSNumber numberWithFloat:self.lastLiveValue]];
-            [liveAnim setToValue:@(fminf(liveDiff/duration,0.98f))];
+            [liveAnim setToValue:@(fminf(lpct,0.98f))];
             [liveAnim setDuration:0.97];
             [liveAnim setRemovedOnCompletion:NO];
             [liveAnim setFillMode:kCAFillModeForwards];
 
             [self.liveBarLine addAnimation:liveAnim forKey:[NSString stringWithFormat:@"incrementLive"]];
             
+            CGFloat pct = (currentDiff / duration)*1.0f;
+      
             CABasicAnimation *currentAnim = [CABasicAnimation animationWithKeyPath:@"strokeEnd"];
             [currentAnim setFromValue:[NSNumber numberWithFloat:self.lastCurrentValue]];
-            [currentAnim setToValue:@(fminf(currentDiff/duration,0.98f))];
+            [currentAnim setToValue:@(fminf(pct,0.98f))];
             [currentAnim setDuration:0.97];
             [currentAnim setRemovedOnCompletion:NO];
             [currentAnim setFillMode:kCAFillModeForwards];
@@ -288,6 +304,10 @@
     });
 
     
+}
+
+- (void)reset {
+    self.counter = 0;
 }
 
 - (void)finishReveal {

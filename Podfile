@@ -7,4 +7,6 @@ pod 'FXBlurView', '~> 1.6'
 pod 'XMLDictionary', '~> 1.4'
 pod 'FlurrySDK'
 pod 'Parse'
+pod 'Mixpanel'
+pod 'TestFlightSDK'
 link_with ['KPCC', 'KPCC-TestFlight']

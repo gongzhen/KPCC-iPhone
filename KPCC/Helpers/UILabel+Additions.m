@@ -77,19 +77,19 @@
 }
 
 - (void)proLightFontize {
-    self.font = [UIFont fontWithName:@"FreightSansProLight-Regular" size:self.font.pointSize];
+    self.font = [[DesignManager shared] proLight:self.font.pointSize];
 }
 
 - (void)proMediumFontize {
-    self.font = [UIFont fontWithName:@"FreightSansProMedium-Regular" size:self.font.pointSize];
+    self.font = [[DesignManager shared] proMedium:self.font.pointSize];
 }
 
 - (void)proBookFontize {
-    self.font = [UIFont fontWithName:@"FreightSansProBook-Regular" size:self.font.pointSize];
+    self.font = [[DesignManager shared] proBook:self.font.pointSize];
 }
 
 - (void)proSemiBoldFontize {
-    UIFont *f = [UIFont fontWithName:@"FreightSansProSemibold-Regular" size:self.font.pointSize];
+    UIFont *f = [[DesignManager shared] proBold:self.font.pointSize];
     self.font = f;
 }
 

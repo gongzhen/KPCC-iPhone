@@ -12,8 +12,10 @@
 @interface SCPRProgramDetailTableViewCell : UITableViewCell
 
 - (void)setEpisode:(Episode*)episode;
+- (NSString*)episodeTitle;
 
 @property (nonatomic,strong) UILabel* episodeTitleLabel;
 @property (nonatomic,strong) UILabel* episodeInfoLabel;
+@property (nonatomic,strong) id episode;
 
 @end

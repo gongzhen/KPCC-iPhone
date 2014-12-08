@@ -13,6 +13,8 @@
 #import "SCPRAppDelegate.h"
 #import "SCPRSpinnerViewController.h"
 #import "NetworkManager.h"
+#import "SessionManager.h"
+#import "AnalyticsManager.h"
 
 @interface SCPRShortListViewController ()
 
@@ -27,7 +29,15 @@ static NSString *kShortListMenuURL = @"http://www.scpr.org/short-list/latest#no-
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    [[NSURLCache sharedURLCache] setMemoryCapacity:2*1024*1024];
+    [[NSURLCache sharedURLCache] setDiskCapacity:16*1024*1024];
+    
     self.view.backgroundColor = [UIColor blackColor];
+    self.secondaryLoadingLocks = [NSMutableArray new];
+    
+    SCPRAppDelegate *del = (SCPRAppDelegate*)[UIApplication sharedApplication].delegate;
+    SCPRNavigationController *navigation = [del masterNavigationController];
+    CGFloat nbHeight = navigation.navigationBar.frame.size.height;
     
     self.view.frame = [[DesignManager shared] screenFrame];
     
@@ -35,11 +45,11 @@ static NSString *kShortListMenuURL = @"http://www.scpr.org/short-list/latest#no-
                                                                  self.view.frame.size.height)];
     self.detailWebView = [[UIWebView alloc] initWithFrame:CGRectMake(self.view.frame.size.width,
                                                                      0.0, self.view.frame.size.width,
-                                                                     self.view.frame.size.height)];
+                                                                     self.view.frame.size.height-nbHeight)];
     self.slWebView = [[UIWebView alloc] initWithFrame:CGRectMake(0.0,
                                                                  0.0,
                                                                  self.view.frame.size.width,
-                                                                 self.view.frame.size.height)];
+                                                                 self.view.frame.size.height-nbHeight)];
     [self.view addSubview:self.mainScrollView];
     
     self.mainScrollView.contentSize = CGSizeMake(2*self.mainScrollView.frame.size.width,
@@ -49,7 +59,7 @@ static NSString *kShortListMenuURL = @"http://www.scpr.org/short-list/latest#no-
     self.mainScrollView.scrollEnabled = NO;
     
     NSURLRequest *rq = [[NSURLRequest alloc] initWithURL:[NSURL URLWithString:kShortListMenuURL]];
-    self.slWebView.transform = CGAffineTransformMakeScale(0.1, 0.1);
+    //self.slWebView.transform = CGAffineTransformMakeScale(0.1, 0.1);
     self.slWebView.layer.opacity = 0.0;
     
     //self.detailWebView.transform = CGAffineTransformMakeScale(0.1, 0.1);
@@ -64,6 +74,7 @@ static NSString *kShortListMenuURL = @"http://www.scpr.org/short-list/latest#no-
     self.currentObjectURL = kShortListMenuURL;
     
     [SCPRSpinnerViewController spinInCenterOfViewController:self appeared:^{
+        [[SessionManager shared] setUserIsViewingHeadlines:YES];
 #ifdef USE_API
         [[NetworkManager shared] fetchEditions:^(id returnedObject) {
             
@@ -85,6 +96,8 @@ static NSString *kShortListMenuURL = @"http://www.scpr.org/short-list/latest#no-
     self.navigationItem.title = self.cachedParentTitle;
     self.slWebView.delegate = nil;
     [self.slWebView loadHTMLString:@"" baseURL:nil];
+    [[SessionManager shared] setUserIsViewingHeadlines:NO];
+    [[AnalyticsManager shared] trackHeadlinesDismissal];
 }
 
 - (void)share {
@@ -104,19 +117,11 @@ static NSString *kShortListMenuURL = @"http://www.scpr.org/short-list/latest#no-
     if ( webView == self.slWebView ) {
         if ( !self.initialLoad ) {
             self.initialLoad = YES;
-            POPSpringAnimation *scaleAnimation = [POPSpringAnimation animationWithPropertyNamed:kPOPLayerScaleXY];
-           
-            scaleAnimation.fromValue  = [NSValue valueWithCGSize:CGSizeMake(0.0f, 0.0f)];
-            scaleAnimation.toValue  = [NSValue valueWithCGSize:CGSizeMake(1.0f, 1.0f)];
-            [scaleAnimation setCompletionBlock:^(POPAnimation *p, BOOL c) {
+            [UIView animateWithDuration:0.55 animations:^{
+                [self.slWebView.layer setOpacity:1.0];
+            } completion:^(BOOL finished) {
                 [SCPRSpinnerViewController finishSpinning];
             }];
-            
-            POPBasicAnimation *genericFadeInAnim = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
-            genericFadeInAnim.toValue = @(1);
-            
-            [self.slWebView.layer pop_addAnimation:scaleAnimation forKey:@"springToLife"];
-            [self.slWebView.layer pop_addAnimation:genericFadeInAnim forKey:@"springToOpaque"];
         }
     }
     if ( webView == self.detailWebView ) {
@@ -130,9 +135,7 @@ static NSString *kShortListMenuURL = @"http://www.scpr.org/short-list/latest#no-
         if ( !self.detailInitialLoad ) {
             self.detailInitialLoad = YES;
             [SCPRSpinnerViewController finishSpinning];
-            
 
-            
             POPSpringAnimation *shiftAnimation = [POPSpringAnimation animationWithPropertyNamed:kPOPScrollViewContentOffset];
             shiftAnimation.fromValue = [NSValue valueWithCGPoint:CGPointMake(0.0, self.mainScrollView.contentOffset.y)];
             shiftAnimation.toValue = [NSValue valueWithCGPoint:CGPointMake(self.mainScrollView.frame.size.width, self.mainScrollView.contentOffset.y)];
@@ -163,12 +166,11 @@ static NSString *kShortListMenuURL = @"http://www.scpr.org/short-list/latest#no-
                     
                     [navigation applyCustomLeftBarItem:CustomLeftBarItemPop
                                          proxyDelegate:self];
-                    self.navigationItem.leftBarButtonItem.enabled = YES;
+                
                     self.pushing = NO;
                     
                 }];
 #endif
-
             }];
             
             [self.mainScrollView pop_addAnimation:shiftAnimation
@@ -190,6 +192,7 @@ static NSString *kShortListMenuURL = @"http://www.scpr.org/short-list/latest#no-
         NSLog(@"Loading %@ ... ",str);
         
         if ( self.initialLoad ) {
+            
             if ( [str rangeOfString:@"googleads"].location != NSNotFound ) {
                 return YES;
             }
@@ -199,7 +202,7 @@ static NSString *kShortListMenuURL = @"http://www.scpr.org/short-list/latest#no-
             if ( [str rangeOfString:@"google.com/pagead"].location != NSNotFound ) {
                 return YES;
             }
-            if ( [str rangeOfString:@"pageview?url"].location != NSNotFound ) {
+            if ( [str rangeOfString:@"pageview?"].location != NSNotFound ) {
                 return YES;
             }
             if ( [str rangeOfString:@"http"].location != NSNotFound ) {
@@ -218,7 +221,8 @@ static NSString *kShortListMenuURL = @"http://www.scpr.org/short-list/latest#no-
                             self.navigationItem.leftBarButtonItem.enabled = NO;
                             [self.detailWebView loadRequest:request];
                         }];
-#else
+#else       
+                        self.detailWebView.delegate = self;
                         self.currentObjectURL = str;
                         self.pushing = YES;
                         self.navigationItem.leftBarButtonItem.enabled = NO;
@@ -247,9 +251,26 @@ static NSString *kShortListMenuURL = @"http://www.scpr.org/short-list/latest#no-
                               cancelButtonTitle:@"Will Do!"
                               otherButtonTitles:nil] show];
             return NO;
+        } else {
+            
+            if ( self.loadingTimer ) {
+                if ( [self.loadingTimer isValid] ) {
+                    [self.loadingTimer invalidate];
+                }
+                self.loadingTimer = nil;
+            }
+            self.loadingTimer = [NSTimer scheduledTimerWithTimeInterval:2.0 target:self
+                                                               selector:@selector(unlockBackButton)
+                                                               userInfo:nil
+                                                                repeats:NO];
+            
         }
     }
     return YES;
+}
+
+- (void)unlockBackButton {
+    self.navigationItem.leftBarButtonItem.enabled = YES;
 }
 
 #pragma mark - MenuButtonDelegate
@@ -257,23 +278,40 @@ static NSString *kShortListMenuURL = @"http://www.scpr.org/short-list/latest#no-
     
     if ( self.pushing ) return;
     
+    [self.detailWebView stopLoading];
+    self.detailWebView.delegate = nil;
+    if ( self.loadingTimer ) {
+        if ( [self.loadingTimer isValid] ) {
+            [self.loadingTimer invalidate];
+        }
+        self.loadingTimer = nil;
+    }
+    
     self.popping = YES;
     SCPRAppDelegate *del = (SCPRAppDelegate*)[UIApplication sharedApplication].delegate;
     SCPRNavigationController *navigation = [del masterNavigationController];
     [navigation restoreLeftBarItem:self];
     self.navigationItem.title = self.cachedTitle;
     
-    POPSpringAnimation *shiftAnimation = [POPSpringAnimation animationWithPropertyNamed:kPOPScrollViewContentOffset];
-    shiftAnimation.toValue = [NSValue valueWithCGPoint:CGPointMake(0.0, self.mainScrollView.contentOffset.y)];
-    shiftAnimation.fromValue = [NSValue valueWithCGPoint:CGPointMake(self.mainScrollView.frame.size.width, self.mainScrollView.contentOffset.y)];
-    [shiftAnimation setSpringBounciness:10.0];
-    [shiftAnimation setCompletionBlock:^(POPAnimation *anim, BOOL finished) {
-        self.currentObjectURL = kShortListMenuURL;
-        [self.detailWebView loadHTMLString:@"" baseURL:nil];
-        self.navigationItem.leftBarButtonItem.enabled = YES;
-    }];
-    [self.mainScrollView pop_addAnimation:shiftAnimation
-                                   forKey:@"fauxPop"];
+    [CATransaction begin]; {
+        POPSpringAnimation *shiftAnimation = [POPSpringAnimation animationWithPropertyNamed:kPOPScrollViewContentOffset];
+        shiftAnimation.toValue = [NSValue valueWithCGPoint:CGPointMake(0.0, self.mainScrollView.contentOffset.y)];
+        shiftAnimation.fromValue = [NSValue valueWithCGPoint:CGPointMake(self.mainScrollView.frame.size.width, self.mainScrollView.contentOffset.y)];
+        [shiftAnimation setSpringBounciness:10.0];
+        
+        [CATransaction setCompletionBlock:^{
+            self.currentObjectURL = kShortListMenuURL;
+            [self.detailWebView loadHTMLString:@"" baseURL:nil];
+            self.navigationItem.leftBarButtonItem.enabled = YES;
+            self.pushing = NO;
+            self.popping = NO;
+            
+        }];
+        
+        [self.mainScrollView pop_addAnimation:shiftAnimation
+                                       forKey:@"fauxPop"];
+    }
+    [CATransaction commit];
 }
 
 - (void)backPressed {

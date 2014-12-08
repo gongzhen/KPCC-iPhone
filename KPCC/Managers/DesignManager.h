@@ -27,6 +27,13 @@ typedef NS_ENUM(NSInteger, SculptingStyle) {
 - (UIView*)textHeaderWithText:(NSString *)text textColor:(UIColor *)color backgroundColor:(UIColor *)backgroundColor divider:(BOOL)divider;
 - (void)sculptButton:(UIButton*)button withStyle:(SculptingStyle)style andText:(NSString*)text;
 
+
+// Fonts
+- (UIFont*)proBook:(CGFloat)size;
+- (UIFont*)proBold:(CGFloat)size;
+- (UIFont*)proLight:(CGFloat)size;
+- (UIFont*)proMedium:(CGFloat)size;
+
 @property BOOL displayingStockPhoto;
 #ifdef TEST_PROGRAM_IMAGE
 @property (nonatomic,strong) NSString *currentSlug;

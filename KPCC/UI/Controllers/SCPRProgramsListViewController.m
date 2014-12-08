@@ -10,6 +10,7 @@
 #import "SCPRProgramTableViewCell.h"
 #import "SCPRProgramDetailViewController.h"
 #import "DesignManager.h"
+#import "AnalyticsManager.h"
 
 /**
  * Programs with these slugs will be hidden from this table view.
@@ -109,7 +110,13 @@
 
     cell.backgroundColor = [UIColor clearColor];
     cell.programLabel.text = [NSString stringWithFormat:@"%@", [(self.programsList)[indexPath.row] title]];
-
+    
+    cell.selectedBackgroundView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0,
+                                                                           cell.frame.size.width,
+                                                                           cell.frame.size.height)];
+    
+    cell.selectedBackgroundView.backgroundColor = [[UIColor virtualWhiteColor] translucify:0.2];
+    
     NSString *iconNamed = [(self.programsList)[indexPath.row] program_slug];
     if (iconNamed) {
         UIImage *iconImg = [UIImage imageNamed:[NSString stringWithFormat:@"program_avatar_%@", iconNamed]];
@@ -133,6 +140,14 @@
 
     programDetailViewController.program = (self.programsList)[indexPath.row];
     [self.navigationController pushViewController:programDetailViewController animated:YES];
+    
+    NSString *title = [NSString stringWithFormat:@"%@", [(self.programsList)[indexPath.row] title]];
+    if ( !title ) {
+        title = @"[UNKNOWN]";
+    }
+    
+    [[AnalyticsManager shared] logEvent:@"programSelected"
+                         withParameters:@{ @"programTitle" : title }];
 }
 
 

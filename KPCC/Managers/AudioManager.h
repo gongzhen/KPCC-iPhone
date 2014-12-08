@@ -59,6 +59,8 @@ typedef NS_ENUM(NSUInteger, StreamStatus) {
 - (void)onTimeChange;
 - (void)onRateChange;
 - (void)onSeekCompleted;
+- (void)interfere;
+- (void)onDemandAudioFailed;
 @end
 
 @interface AudioManager : NSObject
@@ -94,6 +96,8 @@ typedef NS_ENUM(NSUInteger, StreamStatus) {
 @property BOOL waitForFirstTick;
 @property BOOL autoMuted;
 @property BOOL temporaryMutex;
+@property BOOL easeInAudio;
+
 @property NSInteger onboardingSegment;
 @property AudioMode currentAudioMode;
 
@@ -138,6 +142,7 @@ typedef NS_ENUM(NSUInteger, StreamStatus) {
 - (void)adjustAudioWithValue:(CGFloat)increment completion:(void (^)(void))completion;
 - (void)threadedAdjustWithValue:(CGFloat)increment completion:(void (^)(void))completion;
 - (void)takedownAudioPlayer;
+- (void)resetPlayer;
 
 - (NSDate*)cookDateForActualSchedule:(NSDate*)date;
 

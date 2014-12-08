@@ -9,6 +9,9 @@
 #import "SessionManager.h"
 #import "AudioManager.h"
 #import "NetworkManager.h"
+#import "AnalyticsManager.h"
+#import "AudioChunk.h"
+#import "QueueManager.h"
 
 static long kStreamBufferLimit = 4*60*60;
 
@@ -26,6 +29,200 @@ static long kStreamBufferLimit = 4*60*60;
     return mgr;
 }
 
+#pragma mark - Session Mgmt
+- (NSTimeInterval)secondsBehindLive {
+    NSDate *currentTime = [AudioManager shared].audioPlayer.currentItem.currentDate;
+    NSDate *msd = [[AudioManager shared] maxSeekableDate];
+    NSTimeInterval ctTI = [currentTime timeIntervalSince1970];
+    NSTimeInterval msdTI = [msd timeIntervalSince1970];
+    NSTimeInterval seconds = abs(ctTI - msdTI);
+    return seconds;
+}
+
+- (NSString*)startLiveSession {
+    
+    if ( self.sessionIsHot ) return @"";
+    
+    NSString *ct = [NSString stringWithFormat:@"%ld",(long)[[NSDate date] timeIntervalSince1970]];
+    NSString *sid = [Utils sha1:ct];
+    self.liveSessionID = sid;
+    @synchronized(self) {
+        self.sessionIsHot = YES;
+    }
+    
+    self.liveStreamSessionBegan = (int64_t)[[NSDate date] timeIntervalSince1970];
+    
+    return sid;
+}
+
+- (NSString*)endLiveSession {
+    
+    if ( self.rewindSessionWillBegin ) {
+        self.rewindSessionWillBegin = NO;
+        
+        NSString *sid = self.liveSessionID;
+        if ( !sid ) {
+            NSString *ct = [NSString stringWithFormat:@"%ld",(long)[[NSDate date] timeIntervalSince1970]];
+            self.liveSessionID = [Utils sha1:ct];
+        }
+        
+        return @"";
+    }
+    
+    NSTimeInterval now = [[NSDate date] timeIntervalSince1970];
+    NSTimeInterval sessionLength = abs(now - self.liveStreamSessionBegan);
+    NSString *pt = [NSDate prettyTextFromSeconds:sessionLength];
+    
+    NSString *sid = self.liveSessionID;
+    if ( !sid ) {
+        NSString *ct = [NSString stringWithFormat:@"%ld",(long)[[NSDate date] timeIntervalSince1970]];
+        sid = [Utils sha1:ct];
+    }
+    NSLog(@"Logging pause event for Live Stream...");
+    
+    Program *p = self.currentProgram;
+    [[AnalyticsManager shared] logEvent:@"liveStreamPause"
+                         withParameters:@{ @"sessionID" : sid,
+                                           @"programTitle" : p.title,
+                                           @"sessionLength" : pt,
+                                           @"sessionLengthInSeconds" : [NSString stringWithFormat:@"%ld",(long)sessionLength] }];
+    self.sessionIsHot = NO;
+    self.liveSessionID = nil;
+    return sid;
+}
+
+- (void)trackLiveSession {
+    if ( !self.sessionIsHot ) return;
+    if ( [AudioManager shared].currentAudioMode != AudioModeLive ) return;
+    
+    @synchronized(self) {
+        self.sessionIsHot = NO;
+    }
+    
+    NSTimeInterval seconds = [self secondsBehindLive];
+    NSString *pt = @"";
+    if ( seconds > 60 ) {
+        pt = [NSDate prettyTextFromSeconds:seconds];
+    } else {
+        pt = @"LIVE";
+    }
+    
+    NSString *literalValue = [NSString stringWithFormat:@"%ld",(long)seconds];
+    
+    Program *p = self.currentProgram;
+    
+    NSLog(@"Logging play event for Live Stream...");
+    
+    [[AnalyticsManager shared] logEvent:@"liveStreamPlay"
+                         withParameters:@{ @"sessionID" : self.liveSessionID ,
+                                           @"behindLiveStatus" : pt,
+                                           @"behindLiveSeconds" : literalValue,
+                                           @"programTitle" : p.title }];
+    
+}
+
+- (void)trackRewindSession {
+    if ( !self.rewindSessionIsHot ) return;
+    if ( [AudioManager shared].currentAudioMode != AudioModeLive ) return;
+    
+    @synchronized(self) {
+        self.rewindSessionIsHot = NO;
+    }
+    
+    NSInteger seconds = [self secondsBehindLive];
+    NSString *pt = [NSDate prettyTextFromSeconds:seconds];
+    
+    NSLog(@"Tracking rewind session...");
+    
+    [[AnalyticsManager shared] logEvent:@"liveStreamRewound"
+                         withParameters:@{ @"behindLiveStatus" : pt,
+                                           @"behindLiveSeconds" : [NSString stringWithFormat:@"%ld",(long)seconds],
+                                           @"programTitle" : self.currentProgram.title }];
+}
+
+- (NSString*)startOnDemandSession {
+    
+    if ( self.odSessionIsHot ) return @"";
+    
+    NSString *ct = [NSString stringWithFormat:@"%ld",(long)[[NSDate date] timeIntervalSince1970]];
+    NSString *sid = [Utils sha1:ct];
+    self.odSessionID = sid;
+    @synchronized(self) {
+        self.odSessionIsHot = YES;
+    }
+    
+    self.onDemandSessionBegan = (int64_t)[[NSDate date] timeIntervalSince1970];
+    
+    return sid;
+}
+
+- (NSString*)endOnDemandSessionWithReason:(OnDemandFinishedReason)reason {
+    
+    if ( !self.odSessionIsHot ) return @"";
+
+    NSTimeInterval now = [[NSDate date] timeIntervalSince1970];
+    NSTimeInterval sessionLength = abs(now - self.onDemandSessionBegan);
+    NSString *pt = [NSDate prettyTextFromSeconds:sessionLength];
+    
+    NSString *sid = self.odSessionID;
+    if ( !sid ) {
+        NSString *ct = [NSString stringWithFormat:@"%ld",(long)[[NSDate date] timeIntervalSince1970]];
+        sid = [Utils sha1:ct];
+    }
+    NSLog(@"Logging pause event for Live Stream...");
+    
+    AudioChunk *chunk = [[QueueManager shared] currentChunk];
+    NSString *event = @"";
+    switch (reason) {
+        case OnDemandFinishedReasonEpisodeEnd:
+            event = @"onDemandAudioCompleted";
+            break;
+        case OnDemandFinishedReasonEpisodePaused:
+            event = @"onDemandAudioPaused";
+            break;
+        case OnDemandFinishedReasonEpisodeSkipped:
+            event = @"onDemandEpisodeSkipped";
+            break;
+        default:
+            break;
+    }
+    
+    [[AnalyticsManager shared] logEvent:event
+                         withParameters:@{ @"sessionID" : sid,
+                                           @"programTitle" : chunk.audioTitle,
+                                           @"sessionLength" : pt,
+                                           @"sessionLengthInSeconds" : [NSString stringWithFormat:@"%ld",(long)sessionLength] }];
+    self.odSessionIsHot = NO;
+    self.odSessionID = nil;
+    return sid;
+}
+
+- (void)trackOnDemandSession {
+    if ( !self.odSessionIsHot ) return;
+    if ( [AudioManager shared].currentAudioMode != AudioModeOnDemand ) return;
+    
+    @synchronized(self) {
+        self.odSessionIsHot = NO;
+    }
+    
+    NSLog(@"Logging play event for Live Stream...");
+    
+    NSDate *d = [[[QueueManager shared] currentChunk] audioTimeStamp];
+    NSString *pubDateStr = [NSDate stringFromDate:d
+                                       withFormat:@"MM/dd/YYYY hh:mm a"];
+    NSNumber *duration = [[[QueueManager shared] currentChunk] audioDuration];
+    NSInteger dur = [duration intValue];
+    NSString *pretty = [NSDate prettyTextFromSeconds:dur];
+    
+    [[AnalyticsManager shared] logEvent:@"onDemandEpisodeBegan"
+                         withParameters:@{ @"sessionID" : self.odSessionID,
+                                           @"programPublishedAt" : pubDateStr,
+                                           @"programTitle" : [[[QueueManager shared] currentChunk] programTitle],
+                                           @"programLengthInSeconds" : [NSString stringWithFormat:@"%@",duration],
+                                           @"programLength" : pretty
+                                           }];
+}
+
 #pragma mark - Program
 - (void)fetchOnboardingProgramWithSegment:(NSInteger)segment completed:(CompletionBlockWithValue)completed {
     NSMutableDictionary *p = [NSMutableDictionary new];
@@ -38,10 +235,10 @@ static long kStreamBufferLimit = 4*60*60;
     AVAsset *item = [AVAsset assetWithURL:[NSURL fileURLWithPath:fqp]];
     CMTime duration = item.duration;
     NSInteger seconds = CMTimeGetSeconds(duration);
-    NSInteger modifier = segment == 1 ? seconds : 0;
-    p[@"ends_at"] = [[NSDate date] dateByAddingTimeInterval:seconds+modifier];
+    NSInteger modifier = segment == 1 ? 1 : 0;
+    p[@"duration"] = @(seconds+(modifier*seconds));
     p[@"title"] = @"Welcome to KPCC";
-    p[@"program_slug"] = [NSString stringWithFormat:@"onboarding%ld",segment];
+    p[@"program_slug"] = [NSString stringWithFormat:@"onboarding%ld",(long)segment];
     self.onboardingAudio = p;
     
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.33 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
@@ -115,6 +312,8 @@ static long kStreamBufferLimit = 4*60*60;
     NSDate *d2u = [NSDate date];
     if ( [self sessionIsBehindLive] ) {
         d2u = [[AudioManager shared].audioPlayer.currentItem currentDate];
+        NSLog(@"Adjusted time to fetch program : %@",[NSDate stringFromDate:d2u
+                                                                 withFormat:@"hh:mm:ss a"]);
     }
     [self fetchProgramAtDate:d2u completed:completed];
 }
@@ -132,6 +331,9 @@ static long kStreamBufferLimit = 4*60*60;
     NSDate *fakeNow = nil;
     BOOL cookDate = NO;
     Program *cp = [self currentProgram];
+    NSLog(@"%@ soft starts at %@",cp.title,[NSDate stringFromDate:cp.soft_starts_at
+                                                       withFormat:@"hh:mm:ss a"]);
+    
     if ( [self sessionIsBehindLive] ) {
         fakeNow = [[AudioManager shared].audioPlayer.currentItem currentDate];
         cookDate = YES;
@@ -164,12 +366,12 @@ static long kStreamBufferLimit = 4*60*60;
         then = [NSDate dateWithTimeInterval:30*60
                                   sinceDate:then];
     }
-    
-#ifdef TEST_PROGRAM_IMAGE
-    then = [NSDate dateWithTimeInterval:30 sinceDate:now];
-#endif
+
+
     NSTimeInterval sinceNow = [then timeIntervalSince1970] - [now timeIntervalSince1970];
-    
+    if ( cookDate ) {
+        sinceNow = minDiff * 60 + 6;
+    }
     if ( [self useLocalNotifications] ) {
         UILocalNotification *localNote = [[UILocalNotification alloc] init];
         localNote.fireDate = then;
@@ -184,9 +386,8 @@ static long kStreamBufferLimit = 4*60*60;
                                                                  userInfo:nil
                                                                   repeats:NO];
 #ifdef DEBUG
-        NSLog(@"Program will check itself again at : %@",[then prettyTimeString]);
+        NSLog(@"Program will check itself again at %@ (Approx %@ from now)",[then prettyTimeString],[NSDate prettyTextFromSeconds:sinceNow]);
 #endif
-        
     }
 #else
     NSDate *threeMinutesFromNow = [[NSDate date] dateByAddingTimeInterval:96];

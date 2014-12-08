@@ -9,6 +9,7 @@
 #import "SCPRPullDownMenu.h"
 #import "SCPRMenuCell.h"
 #import "UIColor+UICustom.h"
+#import "AnalyticsManager.h"
 
 #define kMenuItemKPCCLive   @"KPCC Live"
 #define kMenuItemPrograms   @"Programs"
@@ -50,7 +51,7 @@
     NSOrderedSet* orderedItems = [NSOrderedSet orderedSetWithObjects:   kMenuItemKPCCLive,
                                                                         kMenuItemPrograms,
                                                                         kMenuItemShortList,
-                                                                        //kMenuItemFeedback,
+                                                                        kMenuItemFeedback,
                                                                         //kMenuItemDonate,
                                                                         //kMenuItemSettings,
                                                                         nil];
@@ -231,6 +232,10 @@
 }
 
 - (void)openDropDown:(BOOL)animated {
+    
+    [[AnalyticsManager shared] logEvent:@"menuOpened"
+                         withParameters:@{}];
+    
     if (animated)
     {
         [UIView animateWithDuration: animationDuration
@@ -259,6 +264,9 @@
 
 - (void)closeDropDown:(BOOL)animated {
 
+    [[AnalyticsManager shared] logEvent:@"menuClosed"
+                         withParameters:@{}];
+    
     if (animated)
     {
         [UIView animateWithDuration: animationDuration

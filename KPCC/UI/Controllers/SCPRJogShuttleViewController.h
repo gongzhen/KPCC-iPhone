@@ -35,5 +35,6 @@ typedef NS_ENUM(NSUInteger, SpinDirection) {
 - (void)endAnimations;
 
 @property BOOL spinning;
+@property BOOL forceSingleRotation;
 
 @end

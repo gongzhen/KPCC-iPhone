@@ -12,6 +12,7 @@
 #import <POP/POP.h>
 #import "SCPRAppDelegate.h"
 #import "SCPRTextCalloutViewController.h"
+#import "SCPRButton.h"
 
 @interface SCPROnboardingViewController : UIViewController
 
@@ -45,6 +46,13 @@
 @property (nonatomic,strong) IBOutlet NSLayoutConstraint *calloutAnchor;
 @property (nonatomic,strong) IBOutlet NSLayoutConstraint *buttonAnchor;
 
+// Ondemand
+@property (nonatomic,strong) IBOutlet UIImageView *onDemandSwipeImageView;
+@property (nonatomic,strong) IBOutlet UILabel *swipeToSkipLabel;
+@property (nonatomic,strong) IBOutlet SCPRButton *gotItButton;
+@property (nonatomic,strong) IBOutlet UIView *onDemandContainerView;
+@property (nonatomic,strong) UISwipeGestureRecognizer *swiper;
+
 - (void)prepare;
 - (void)revealLensWithOrigin:(CGPoint)origin;
 - (void)revealBrandingWithCompletion:(CompletionBlock)completed;
@@ -53,6 +61,8 @@
 - (void)hideLens;
 - (void)showCalloutWithText:(NSString*)text pointerPosition:(CGFloat)pointer position:(CGPoint)position;
 - (void)hideCallout;
+- (void)ondemandMode;
+- (void)dismissOnDemand;
 
 // User responses
 - (void)yesToNotifications;

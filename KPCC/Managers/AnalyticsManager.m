@@ -10,6 +10,10 @@
 #import "AudioManager.h"
 #import "NetworkManager.h"
 #import "NSDate+Helper.h"
+#import "SessionManager.h"
+#import "Program.h"
+#import "QueueManager.h"
+#import "UXmanager.h"
 
 static AnalyticsManager *singleton = nil;
 
@@ -24,8 +28,53 @@ static AnalyticsManager *singleton = nil;
     return singleton;
 }
 
+- (void)setup {
+    
+    NSString *path = [[NSBundle mainBundle] pathForResource:@"Config" ofType:@"plist"];
+    NSDictionary *globalConfig = [[NSDictionary alloc] initWithContentsOfFile:path];
+    
+    [Flurry setCrashReportingEnabled:YES];
+    [Flurry setDebugLogEnabled:NO];
+    [Flurry startSession: globalConfig[@"Flurry"][@"DebugKey"] ];
+    [Flurry setBackgroundSessionEnabled:NO];
+    
+    NSString *token = @"SandboxToken";
+#ifdef PRODUCTION
+    token = @"ProductionToken";
+#endif
+    
+    [Mixpanel sharedInstanceWithToken:globalConfig[@"Mixpanel"][token]];
+    Mixpanel *mxp = [Mixpanel sharedInstance];
+    NSString *uuid = [[[UIDevice currentDevice] identifierForVendor] UUIDString];
+    [mxp identify:uuid];
+    [mxp.people set:@{ @"uuid" : uuid }];
+    
+}
+
+- (void)trackHeadlinesDismissal {
+    
+    /*NSString *programTitle = @"";
+    if ( [AudioManager shared].status != StreamStatusPlaying ) {
+        programTitle = @"[NO AUDIO]";
+    } else {
+        if ( [AudioManager shared].currentAudioMode == AudioModeLive ) {
+            Program *p = [[SessionManager shared] currentProgram];
+            programTitle = p.title;
+        } else {
+            AudioChunk *c = [[QueueManager shared] currentChunk];
+            programTitle = c.programTitle;
+        }
+    }*/
+    
+    [self logEvent:@"userClosedHeadlines"
+    withParameters:@{ }];
+}
+
+
 - (void)logEvent:(NSString *)event withParameters:(NSDictionary *)parameters {
     NSMutableDictionary *userInfo = [[NSMutableDictionary alloc] init];
+    
+    if ( ![[UXmanager shared].settings userHasViewedOnboarding] ) return;
     
     for ( NSString *key in [parameters allKeys] ) {
         userInfo[key] = parameters[key];
@@ -34,7 +83,11 @@ static AnalyticsManager *singleton = nil;
 #ifdef DEBUG
     NSLog(@"Logging to Flurry now - %@ - with params %@", event, parameters);
 #endif
+    
     [Flurry logEvent:event withParameters:userInfo timed:YES];
+    
+    Mixpanel *mxp = [Mixpanel sharedInstance];
+    [mxp track:event properties:parameters];
 }
 
 - (void)failStream:(StreamState)cause comments:(NSString *)comments {

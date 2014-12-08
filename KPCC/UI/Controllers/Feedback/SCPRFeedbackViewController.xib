@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.iPad.XIB" version="3.0" toolsVersion="6250" systemVersion="13F34" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.iPad.XIB" version="3.0" toolsVersion="6254" systemVersion="13F34" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6244"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6247"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="SCPRFeedbackViewController">
@@ -16,6 +16,8 @@
                 <outlet property="nameTextField" destination="43" id="52"/>
                 <outlet property="nativeSpinner" destination="FZ6-FH-lQR" id="lno-AF-SR6"/>
                 <outlet property="nextButton" destination="19" id="25"/>
+                <outlet property="splashBlurView" destination="fQx-MB-cOZ" id="6H6-Fe-hlg"/>
+                <outlet property="splashView" destination="xcD-fm-YyE" id="4aU-x3-4B3"/>
                 <outlet property="submitFooterView" destination="37" id="46"/>
                 <outlet property="toolbar" destination="17" id="26"/>
                 <outlet property="versionLabel" destination="Dgh-rz-JFI" id="zhW-zs-uTY"/>
@@ -27,47 +29,71 @@
             <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
+                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="xcD-fm-YyE">
+                    <rect key="frame" x="0.0" y="24" width="320" height="544"/>
+                </imageView>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fQx-MB-cOZ" customClass="FXBlurView">
+                    <rect key="frame" x="0.0" y="24" width="320" height="544"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                </view>
                 <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="grouped" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" translatesAutoresizingMaskIntoConstraints="NO" id="35">
-                    <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                    <rect key="frame" x="0.0" y="24" width="320" height="544"/>
                     <color key="backgroundColor" white="1" alpha="0.0" colorSpace="custom" customColorSpace="calibratedWhite"/>
                 </tableView>
+                <toolbar opaque="NO" clearsContextBeforeDrawing="NO" alpha="0.0" contentMode="scaleToFill" barStyle="blackTranslucent" translatesAutoresizingMaskIntoConstraints="NO" id="17" customClass="SCPRKeyboardToolbar">
+                    <rect key="frame" x="0.0" y="289" width="320" height="44"/>
+                    <items>
+                        <barButtonItem title="Done" style="done" id="18">
+                            <connections>
+                                <action selector="buttonTapped:" destination="-1" id="20"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem title="Next" id="19">
+                            <connections>
+                                <action selector="buttonTapped:" destination="-1" id="21"/>
+                            </connections>
+                        </barButtonItem>
+                    </items>
+                    <connections>
+                        <outlet property="topMargin" destination="P9w-PN-xNk" id="hIX-gP-jNV"/>
+                    </connections>
+                </toolbar>
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
             <constraints>
-                <constraint firstItem="35" firstAttribute="top" secondItem="2" secondAttribute="top" id="7pk-sm-Dtt"/>
+                <constraint firstItem="xcD-fm-YyE" firstAttribute="height" secondItem="fQx-MB-cOZ" secondAttribute="height" id="2e9-wc-gCL"/>
+                <constraint firstItem="xcD-fm-YyE" firstAttribute="width" secondItem="fQx-MB-cOZ" secondAttribute="width" id="38l-TU-Ym0"/>
+                <constraint firstAttribute="trailing" secondItem="17" secondAttribute="trailing" id="6Qb-4u-rbj"/>
+                <constraint firstItem="35" firstAttribute="top" secondItem="2" secondAttribute="top" constant="24" id="7pk-sm-Dtt"/>
+                <constraint firstAttribute="bottom" secondItem="xcD-fm-YyE" secondAttribute="bottom" id="Dd7-A2-z9P"/>
+                <constraint firstItem="fQx-MB-cOZ" firstAttribute="top" secondItem="2" secondAttribute="top" constant="24" id="EN7-tN-j4r"/>
+                <constraint firstItem="fQx-MB-cOZ" firstAttribute="leading" secondItem="2" secondAttribute="leading" id="F0L-ef-E57"/>
+                <constraint firstItem="17" firstAttribute="top" secondItem="2" secondAttribute="top" constant="289" id="P9w-PN-xNk"/>
+                <constraint firstAttribute="trailing" secondItem="xcD-fm-YyE" secondAttribute="trailing" id="SQ5-M4-Fpb"/>
+                <constraint firstItem="xcD-fm-YyE" firstAttribute="top" secondItem="2" secondAttribute="top" constant="24" id="Sqn-Xn-CVR"/>
                 <constraint firstAttribute="bottom" secondItem="35" secondAttribute="bottom" id="Szu-Bc-OLE"/>
                 <constraint firstAttribute="trailing" secondItem="35" secondAttribute="trailing" id="mKp-sK-VI3"/>
                 <constraint firstItem="35" firstAttribute="leading" secondItem="2" secondAttribute="leading" id="nsz-1S-rW1"/>
+                <constraint firstItem="xcD-fm-YyE" firstAttribute="leading" secondItem="2" secondAttribute="leading" id="tUO-Ri-lus"/>
+                <constraint firstItem="17" firstAttribute="leading" secondItem="2" secondAttribute="leading" id="ydY-Dv-gWn"/>
             </constraints>
             <simulatedStatusBarMetrics key="simulatedStatusBarMetrics" statusBarStyle="blackOpaque"/>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
-            <point key="canvasLocation" x="329" y="162"/>
+            <point key="canvasLocation" x="136" y="141"/>
         </view>
-        <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" barStyle="blackTranslucent" id="17">
-            <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
-            <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
-            <items>
-                <barButtonItem title="Done" style="done" id="18">
-                    <connections>
-                        <action selector="buttonTapped:" destination="-1" id="20"/>
-                    </connections>
-                </barButtonItem>
-                <barButtonItem title="Next" id="19">
-                    <connections>
-                        <action selector="buttonTapped:" destination="-1" id="21"/>
-                    </connections>
-                </barButtonItem>
-            </items>
-        </toolbar>
         <view contentMode="scaleToFill" id="37">
             <rect key="frame" x="0.0" y="0.0" width="320" height="121"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
             <subviews>
-                <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="FZ6-FH-lQR">
+                <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" style="white" translatesAutoresizingMaskIntoConstraints="NO" id="FZ6-FH-lQR">
                     <rect key="frame" x="78" y="25" width="20" height="20"/>
                 </activityIndicatorView>
-                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="38">
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="38" customClass="SCPRButton">
                     <rect key="frame" x="11" y="13" width="154" height="44"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="44" id="FEC-Lr-sp5"/>
+                        <constraint firstAttribute="width" constant="154" id="y5f-2J-Gxw"/>
+                    </constraints>
                     <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
                     <state key="normal" title="Submit">
                         <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
@@ -76,18 +102,25 @@
                     <state key="highlighted">
                         <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </state>
-                    <connections>
-                        <action selector="buttonTapped:" destination="-1" eventType="touchUpInside" id="56"/>
-                    </connections>
                 </button>
-                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Dgh-rz-JFI">
-                    <rect key="frame" x="173" y="36" width="140" height="21"/>
+                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Dgh-rz-JFI">
+                    <rect key="frame" x="11" y="92" width="140" height="21"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="21" id="FO1-Nc-Pek"/>
+                        <constraint firstAttribute="width" constant="140" id="G7x-Bq-UX6"/>
+                    </constraints>
                     <fontDescription key="fontDescription" type="system" pointSize="12"/>
                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                     <nil key="highlightedColor"/>
                 </label>
             </subviews>
             <color key="backgroundColor" white="1" alpha="0.0" colorSpace="custom" customColorSpace="calibratedWhite"/>
+            <constraints>
+                <constraint firstItem="Dgh-rz-JFI" firstAttribute="leading" secondItem="37" secondAttribute="leading" constant="11" id="4Yc-hQ-8L1"/>
+                <constraint firstItem="38" firstAttribute="leading" secondItem="37" secondAttribute="leading" constant="11" id="4t9-Mb-37q"/>
+                <constraint firstAttribute="bottom" secondItem="Dgh-rz-JFI" secondAttribute="bottom" constant="8" id="B5E-fi-oQi"/>
+                <constraint firstItem="38" firstAttribute="top" secondItem="37" secondAttribute="top" constant="13" id="TaM-mv-QIa"/>
+            </constraints>
             <nil key="simulatedStatusBarMetrics"/>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
         </view>
@@ -109,6 +142,7 @@
                     </textView>
                 </subviews>
             </tableViewCellContentView>
+            <point key="canvasLocation" x="-454" y="186"/>
         </tableViewCell>
         <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Your Name" textAlignment="right" minimumFontSize="17" id="43">
             <rect key="frame" x="0.0" y="0.0" width="243" height="30"/>
