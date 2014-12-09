@@ -216,7 +216,6 @@
 - (void)fireHandler {
     NSInteger t = self.lisaPlayer.currentTime;
     if ( self.listeningForQueues ) {
-        NSLog(@"Time is : %ld seconds",(long)t);
         [self handleKeypoint:t];
     }
 }
@@ -362,6 +361,7 @@
 
 - (void)endOnboarding {
 
+    self.fadeQueue = [[NSOperationQueue alloc] init];
     [[AudioManager shared] setRelativeFauxDate:nil];
     [self.onboardingCtrl.view removeFromSuperview];
     [self fadePlayer:self.musicPlayer];
@@ -376,16 +376,19 @@
 }
 
 - (void)fadePlayer:(AVAudioPlayer *)player {
-    self.fadeQueue = [[NSOperationQueue alloc] init];
-    while ( player.volume >= 0.0 ) {
-        [self fadeThread:player];
-    }
+    [self fadeThread:player];
 }
 
 - (void)fadeThread:(AVAudioPlayer*)player {
+    
+    if ( player.volume <= 0.0 ) {
+        [player stop];
+        return;
+    }
     NSBlockOperation *block = [NSBlockOperation blockOperationWithBlock:^{
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.05 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            [player setVolume:(player.volume-0.1)];
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            [player setVolume:(player.volume-0.05)];
+            [self fadeThread:player];
         });
     }];
     [self.fadeQueue addOperation:block];

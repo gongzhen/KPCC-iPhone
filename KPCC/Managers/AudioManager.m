@@ -65,6 +65,12 @@ static const NSString *ItemStatusContext;
             return;
         } else if ([self.audioPlayer.currentItem status] == AVPlayerItemStatusReadyToPlay) {
             NSLog(@"AVPlayerItemStatus - ReadyToPlay");
+            if ( self.waitForSeek ) {
+                self.waitForSeek = NO;
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                    [self seekToDate:self.queuedSeekDate];
+                });
+            }
         } else if ([self.audioPlayer.currentItem status] == AVPlayerItemStatusUnknown) {
             NSLog(@"AVPlayerItemStatus - Unknown");
         }
@@ -250,25 +256,19 @@ static const NSString *ItemStatusContext;
         NSLog(@" ******* PLAYER ITEM NOT READY TO PLAY BEFORE SEEKING ******* ");
     }
     
+    
     if (!self.audioPlayer) {
         [self buildStreamer:kHLSLiveStreamURL];
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
-            [self.audioPlayer.currentItem seekToDate:date completionHandler:^(BOOL finished) {
-                if(self.audioPlayer.status == AVPlayerStatusReadyToPlay &&
-                   self.audioPlayer.currentItem.status == AVPlayerItemStatusReadyToPlay) {
-                    
-                    if ( self.audioPlayer.rate == 0.0 ) {
-                        [self playStream];
-                    }
-                    if ([self.delegate respondsToSelector:@selector(onSeekCompleted)]) {
-                        [self.delegate onSeekCompleted];
-                    }
-                }
-            }];
-        });
+        self.waitForSeek = YES;
+        self.audioPlayer.volume = 0.0;
+        self.savedVolume = 1.0;
+        self.queuedSeekDate = date;
+        [self.audioPlayer play];
+        return;
+    }
 
-    } else {
-        
+    
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.15 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         NSDate *justABitInTheFuture = nudge ? [NSDate dateWithTimeInterval:2 sinceDate:date] : date;
         [self.audioPlayer.currentItem seekToDate:justABitInTheFuture completionHandler:^(BOOL finished) {
             if ( !finished ) {
@@ -279,7 +279,8 @@ static const NSString *ItemStatusContext;
                 
                 if ( [[SessionManager shared] secondsBehindLive] > 14000 ) {
                     // Try again
-                    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.25 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                        NSLog(@"Buffering ...");
                         if ( [self.delegate respondsToSelector:@selector(interfere)] ) {
                             [self.delegate interfere];
                         }
@@ -297,11 +298,12 @@ static const NSString *ItemStatusContext;
                 } else {
                     self.requestedSeekDate = nil;
                 }
-  
+
                 dispatch_async(dispatch_get_main_queue(), ^{
                     if ( [self.audioPlayer rate] == 0.0 ) {
                         [self playStream];
                     }
+                    self.status = StreamStatusPlaying;
                     if ([self.delegate respondsToSelector:@selector(onSeekCompleted)]) {
                         [self.delegate onSeekCompleted];
                     }
@@ -309,7 +311,9 @@ static const NSString *ItemStatusContext;
 
             }
         }];
-    }
+    
+    });
+
 }
 
 - (void)specialSeekToDate:(NSDate *)date {
@@ -410,7 +414,6 @@ static const NSString *ItemStatusContext;
 
 - (void)onboardingSegmentCompleted {
 
-    
     if ( self.onboardingSegment == 1 ) {
         [[UXmanager shared] presentLensOverRewindButton];
     }
@@ -666,8 +669,6 @@ static const NSString *ItemStatusContext;
         basecase = self.audioPlayer.volume >= self.savedVolume;
         increasing = YES;
     }
-
-    //NSLog(@"Player Volume : %1.1f",self.audioPlayer.volume);
     
     if ( basecase ) {
         if ( increasing ) {

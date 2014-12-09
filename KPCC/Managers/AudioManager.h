@@ -97,6 +97,9 @@ typedef NS_ENUM(NSUInteger, StreamStatus) {
 @property BOOL autoMuted;
 @property BOOL temporaryMutex;
 @property BOOL easeInAudio;
+@property BOOL waitForSeek;
+
+@property (nonatomic, strong) NSDate *queuedSeekDate;
 
 @property NSInteger onboardingSegment;
 @property AudioMode currentAudioMode;

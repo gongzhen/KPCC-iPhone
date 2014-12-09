@@ -44,10 +44,10 @@
     [super viewDidLoad];
 
     self.blurView.tintColor = [UIColor clearColor];
-    self.blurView.alpha = (self.episodesTable.contentOffset.y + 25) / 150;
     self.blurView.blurRadius = 20.f;
     self.blurView.dynamic = NO;
-
+    self.blurView.alpha = 0.0;
+    
     [[DesignManager shared] loadProgramImage:_program.program_slug
                                 andImageView:self.programBgImage
                                   completion:^(BOOL status) {
@@ -153,8 +153,10 @@
 
     
     NSArray *audioChunks = [[QueueManager shared] enqueueEpisodes:self.episodesList withCurrentIndex:indexPath.row];
-    [[[Utils del] masterViewController] setOnDemandUI:YES forProgram:self.program withAudio:audioChunks atCurrentIndex:(int)indexPath.row];
-    //[self.navigationController popToRootViewControllerAnimated:YES];
+    [[[Utils del] masterViewController] setOnDemandUI:YES
+                                           forProgram:self.program
+                                            withAudio:audioChunks
+                                       atCurrentIndex:(int)indexPath.row];
     
     id episode = self.episodesList[indexPath.row];
     NSString *title = @"[UNKNOWN]";
@@ -176,7 +178,7 @@
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-    self.blurView.alpha = (scrollView.contentOffset.y + 25) / 150;
+    self.blurView.alpha = (scrollView.contentOffset.y) / 150;
 }
 
 

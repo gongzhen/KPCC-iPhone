@@ -88,10 +88,14 @@
 // Rewinding UI
 @property (nonatomic,strong) SCPRJogShuttleViewController *jogShuttle;
 @property (nonatomic,strong) IBOutlet UIView *rewindView;
-@property BOOL rewindGate;
+
+@property BOOL shuttlingGate;
 @property BOOL initiateRewind;
+@property BOOL rewindNeedsUIRefresh;
 @property BOOL springLock;
 @property BOOL lockPlayback;
+@property BOOL lockAnimationUI;
+
 @property NSInteger previousRewindThreshold;
 
 // Onboarding

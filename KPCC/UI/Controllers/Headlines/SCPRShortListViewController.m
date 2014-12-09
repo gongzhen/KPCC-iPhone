@@ -32,7 +32,7 @@ static NSString *kShortListMenuURL = @"http://www.scpr.org/short-list/latest#no-
     [[NSURLCache sharedURLCache] setMemoryCapacity:2*1024*1024];
     [[NSURLCache sharedURLCache] setDiskCapacity:16*1024*1024];
     
-    self.view.backgroundColor = [UIColor blackColor];
+    self.view.backgroundColor = [UIColor whiteColor];
     self.secondaryLoadingLocks = [NSMutableArray new];
     
     SCPRAppDelegate *del = (SCPRAppDelegate*)[UIApplication sharedApplication].delegate;
@@ -115,12 +115,13 @@ static NSString *kShortListMenuURL = @"http://www.scpr.org/short-list/latest#no-
 - (void)webViewDidFinishLoad:(UIWebView *)webView {
     
     if ( webView == self.slWebView ) {
+        [SCPRSpinnerViewController finishSpinning];
         if ( !self.initialLoad ) {
             self.initialLoad = YES;
             [UIView animateWithDuration:0.55 animations:^{
                 [self.slWebView.layer setOpacity:1.0];
             } completion:^(BOOL finished) {
-                [SCPRSpinnerViewController finishSpinning];
+                self.view.backgroundColor = [UIColor blackColor];
             }];
         }
     }
@@ -384,12 +385,7 @@ static NSString *kShortListMenuURL = @"http://www.scpr.org/short-list/latest#no-
 }
 
 - (void)findConcreteObjecrBasedOnUrl:(NSString *)url completion:(CompletionBlockWithValue)completion {
-    
-    NSString *title = @"";
-    for ( NSDictionary *abstract in self.abstracts ) {
-        int x =1;
-        x++;
-    }
+
 }
 
 - (void)didReceiveMemoryWarning {

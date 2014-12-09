@@ -52,7 +52,7 @@
                                 <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.80000000000000004" colorSpace="custom" customColorSpace="sRGB"/>
                                 <color key="tintColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                             </view>
-                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Syv-nA-vpR" userLabel="OnDemandView">
+                            <view hidden="YES" opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Syv-nA-vpR" userLabel="OnDemandView">
                                 <rect key="frame" x="0.0" y="64" width="320" height="504"/>
                                 <subviews>
                                     <view alpha="0.29999999999999999" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="J5U-kb-6Je" userLabel="DividerOnDemand">
@@ -97,7 +97,7 @@
                                 <rect key="frame" x="0.0" y="64" width="320" height="504"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="250" text="ON NOW" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="g8v-J1-2Ng" userLabel="LiveDescription">
-                                        <rect key="frame" x="37" y="91" width="247" height="17"/>
+                                        <rect key="frame" x="37" y="84" width="247" height="17"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="247" id="FEG-a8-94M"/>
                                             <constraint firstAttribute="height" constant="17" id="U5S-P6-2x1"/>
@@ -132,7 +132,7 @@
                                 </subviews>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <constraints>
-                                    <constraint firstItem="ao2-yr-kyf" firstAttribute="top" secondItem="g8v-J1-2Ng" secondAttribute="bottom" constant="-6" id="K6s-m8-mkg"/>
+                                    <constraint firstItem="ao2-yr-kyf" firstAttribute="top" secondItem="g8v-J1-2Ng" secondAttribute="bottom" priority="998" constant="1" id="K6s-m8-mkg"/>
                                     <constraint firstAttribute="bottom" secondItem="uVS-5U-Chc" secondAttribute="bottom" constant="22" id="Lq6-MO-4y6"/>
                                     <constraint firstAttribute="centerX" secondItem="ao2-yr-kyf" secondAttribute="centerX" id="Ume-M2-oah"/>
                                     <constraint firstAttribute="trailing" secondItem="uVS-5U-Chc" secondAttribute="trailing" constant="21" id="dRw-Wu-Okr"/>
@@ -312,7 +312,7 @@
                         <outlet property="dividerOnDemand" destination="J5U-kb-6Je" id="5tr-af-9iL"/>
                         <outlet property="horizDividerLine" destination="Duc-cQ-dAe" id="3ce-uV-F9v"/>
                         <outlet property="initialControlsView" destination="3WP-os-1RZ" id="UZk-6c-p4n"/>
-                        <outlet property="initialControlsYConstraint" destination="ufq-sa-p64" id="NhG-CY-sQ5"/>
+                        <outlet property="initialControlsYConstraint" destination="Z6z-Fe-l98" id="SaH-ab-dHq"/>
                         <outlet property="initialPlayButton" destination="G5B-oE-ab2" id="8sf-rd-Zr7"/>
                         <outlet property="letsGoLabel" destination="yse-EI-1wa" id="VmE-eu-zi6"/>
                         <outlet property="liveDescriptionLabel" destination="g8v-J1-2Ng" id="sUp-r5-wI2"/>

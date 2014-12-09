@@ -32,7 +32,7 @@
     
     [UIView animateWithDuration:0.11 delay:0.0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
         
-        self.transform = CGAffineTransformMakeScale(0.80f, 0.80f);
+        self.transform = CGAffineTransformMakeScale(0.93f, 0.93f);
         
     } completion:^(BOOL finished) {
         

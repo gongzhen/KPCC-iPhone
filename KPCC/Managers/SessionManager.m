@@ -315,6 +315,12 @@ static long kStreamBufferLimit = 4*60*60;
         NSLog(@"Adjusted time to fetch program : %@",[NSDate stringFromDate:d2u
                                                                  withFormat:@"hh:mm:ss a"]);
     }
+    
+    if ( !d2u ) {
+        completed(nil);
+        return;
+    }
+    
     [self fetchProgramAtDate:d2u completed:completed];
 }
 

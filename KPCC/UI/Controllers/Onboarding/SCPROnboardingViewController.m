@@ -188,7 +188,8 @@
 }
 
 - (void)ondemandMode {
-    self.onDemandContainerView.alpha = 1.0;
+    self.view.alpha = 0.0;
+    self.onDemandContainerView.alpha = 0.0;
     self.notificationsView.alpha = 0.0;
     self.brandingView.alpha = 0.0;
     self.textCalloutBalloonCtrl.view.alpha = 0.0;
@@ -217,6 +218,12 @@
                          action:@selector(dismissOnDemand)
                forControlEvents:UIControlEventTouchUpInside
                         special:YES];
+    
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.25 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [UIView animateWithDuration:0.25 animations:^{
+            self.view.alpha = 1.0;
+        }];
+    });
 }
 
 - (void)dismissOnDemand {
