@@ -48,11 +48,24 @@
     scaleAnimation.springBounciness = 2.0f;
     scaleAnimation.springSpeed = 1.0f;
     [scaleAnimation setCompletionBlock:^(POPAnimation *p, BOOL c) {
-        self.small = NO;
+        
     }];
     [self.layer pop_addAnimation:scaleAnimation forKey:@"expand"];
-    [self.target performSelector:self.postPushMethod withObject:self afterDelay:0];
     
+    if ( !self.locked ) {
+        self.locked = YES;
+        [self.target performSelector:self.postPushMethod withObject:self afterDelay:0];
+        self.lockTimer = [NSTimer scheduledTimerWithTimeInterval:1.5
+                                                          target:self
+                                                        selector:@selector(unlock)
+                                                        userInfo:nil
+                                                         repeats:NO];
+    }
+    
+}
+
+- (void)unlock {
+    self.locked = NO;
 }
 
 - (void)stretch {

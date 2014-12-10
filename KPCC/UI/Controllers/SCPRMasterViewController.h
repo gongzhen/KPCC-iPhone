@@ -63,6 +63,8 @@
 @property IBOutlet SCPRButton *shareButton;
 @property IBOutlet UIProgressView *progressView;
 
+- (void)onDemandFadeDown;
+
 
 // Important Attrs.
 @property (nonatomic,strong) Program *currentProgram;
@@ -89,6 +91,7 @@
 @property (nonatomic,strong) SCPRJogShuttleViewController *jogShuttle;
 @property (nonatomic,strong) IBOutlet UIView *rewindView;
 
+@property (nonatomic, strong) IBOutlet NSLayoutConstraint *liveRewindBottomYConstraint;
 @property BOOL shuttlingGate;
 @property BOOL initiateRewind;
 @property BOOL rewindNeedsUIRefresh;
@@ -96,6 +99,7 @@
 @property BOOL lockPlayback;
 @property BOOL lockAnimationUI;
 
+@property NSInteger onDemandGateCount;
 @property NSInteger previousRewindThreshold;
 
 // Onboarding
@@ -130,6 +134,8 @@
 - (void)onboarding_rewindToBeginning;
 - (void)onboarding_beginOutro;
 - (void)onboarding_fin;
+
+@property BOOL onboardingRewindButtonShown;
 
 - (void)rollInterferenceText;
 - (void)showOnDemandOnboarding;

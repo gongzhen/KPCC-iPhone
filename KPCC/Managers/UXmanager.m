@@ -105,15 +105,13 @@
     self.onboardingCtrl.view.alpha = 1.0;
     [self.masterCtrl primeOnboarding];
     
-    
     self.onboardingCtrl.interactionButton.frame = [self.masterCtrl.view convertRect:self.masterCtrl.initialControlsView.frame
                                                                              toView:self.onboardingCtrl.view];
     [self.onboardingCtrl.interactionButton addTarget:self.masterCtrl
                                               action:@selector(initialPlayTapped:)
                                     forControlEvents:UIControlEventTouchUpInside];
-    [self.onboardingCtrl.view addSubview:self.onboardingCtrl.interactionButton];
-    //self.onboardingCtrl.interactionButton.backgroundColor = [UIColor orangeColor];
     
+    [self.onboardingCtrl.view addSubview:self.onboardingCtrl.interactionButton];
     [self.onboardingCtrl.view layoutIfNeeded];
     
 }
@@ -154,13 +152,24 @@
                                                           0.0,
                                                           self.onboardingCtrl.navbarMask.frame.size.width,
                                                           64.0);
+        
     } completion:^(BOOL finished) {
         [self.onboardingCtrl.navbarMask.layer removeFromSuperlayer];
         self.onboardingCtrl.interactionButton.alpha = 0.0;
         [self.onboardingCtrl.orangeStripView removeFromSuperview];
         [self.masterCtrl onboarding_beginOnboardingAudio];
+
         [[UIApplication sharedApplication] setStatusBarHidden:NO
                                                 withAnimation:UIStatusBarAnimationSlide];
+        
+        [UIView animateWithDuration:0.15 animations:^{
+            [self.masterCtrl.view setNeedsUpdateConstraints];
+            [self.masterCtrl.liveStreamView setNeedsUpdateConstraints];
+            [self.masterCtrl.liveStreamView setNeedsLayout];
+            [self.masterCtrl.view layoutIfNeeded];
+            [self.masterCtrl.liveStreamView layoutIfNeeded];
+        }];
+
         
         [self.musicPlayer play];
         [self.lisaPlayer play];
@@ -210,7 +219,6 @@
                          @"29" : @"closeMenu",
                          @"34" : @"askForNotifications" } mutableCopy];
     
-
 }
 
 - (void)fireHandler {
@@ -372,7 +380,6 @@
         [self.masterCtrl onboarding_fin];
     }];
     
-  
 }
 
 - (void)fadePlayer:(AVAudioPlayer *)player {

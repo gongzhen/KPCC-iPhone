@@ -30,7 +30,7 @@ typedef NS_ENUM(NSInteger, ValidationResult) {
 @property (nonatomic,strong) IBOutlet UITextField *emailTextField;
 @property (nonatomic,strong) IBOutlet UITextField *nameTextField;
 @property (nonatomic,strong) IBOutlet UILabel *descriptionLabel;
-@property (nonatomic,strong) IBOutlet UITextView *descriptionInputView;
+@property (nonatomic,strong) IBOutlet UITextField *descriptionInputView;
 @property (nonatomic,strong) IBOutlet SCPRKeyboardToolbar *toolbar;
 @property (nonatomic,strong) IBOutlet UIBarButtonItem *doneButton;
 @property (nonatomic,strong) IBOutlet UIBarButtonItem *nextButton;
@@ -38,6 +38,8 @@ typedef NS_ENUM(NSInteger, ValidationResult) {
 @property (nonatomic,strong) IBOutlet UILabel *versionLabel;
 @property (nonatomic,strong) IBOutlet UIImageView *splashView;
 @property (nonatomic,strong) IBOutlet FXBlurView *splashBlurView;
+
+@property (nonatomic, strong) UITapGestureRecognizer *tapper;
 
 @property BOOL barShowing;
 @property (nonatomic,weak) UIResponder *currentField;

@@ -29,8 +29,7 @@ static NSString *kShortListMenuURL = @"http://www.scpr.org/short-list/latest#no-
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    [[NSURLCache sharedURLCache] setMemoryCapacity:2*1024*1024];
-    [[NSURLCache sharedURLCache] setDiskCapacity:16*1024*1024];
+    [[SessionManager shared] resetCache];
     
     self.view.backgroundColor = [UIColor whiteColor];
     self.secondaryLoadingLocks = [NSMutableArray new];
@@ -120,8 +119,11 @@ static NSString *kShortListMenuURL = @"http://www.scpr.org/short-list/latest#no-
             self.initialLoad = YES;
             [UIView animateWithDuration:0.55 animations:^{
                 [self.slWebView.layer setOpacity:1.0];
+                
             } completion:^(BOOL finished) {
-                self.view.backgroundColor = [UIColor blackColor];
+                [UIView animateWithDuration:0.33 animations:^{
+                    self.view.backgroundColor = [UIColor blackColor];
+                }];
             }];
         }
     }

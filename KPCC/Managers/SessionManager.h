@@ -46,6 +46,7 @@ typedef NS_ENUM(NSUInteger, OnDemandFinishedReason) {
 
 - (void)armProgramUpdater;
 - (void)disarmProgramUpdater;
+- (void)resetCache;
 
 - (NSTimeInterval)secondsBehindLive;
 

@@ -52,6 +52,7 @@
                                 andImageView:self.programBgImage
                                   completion:^(BOOL status) {
                                       [self.blurView setNeedsDisplay];
+                                      self.programBgImage.contentMode = UIViewContentModeCenter;
                                   }];
 
     [[NetworkManager shared] fetchEpisodesForProgram:_program.program_slug

@@ -73,8 +73,9 @@
 
 - (void)revealLensWithOrigin:(CGPoint)origin {
     
-    self.lensTopConstraint.constant = origin.y;
-    self.lenstLeftConstraint.constant = origin.x;
+    CGFloat modifier = [Utils isIOS8] ? 0.0 : 20.0;
+    self.lensTopConstraint.constant = origin.y+modifier;
+    self.lenstLeftConstraint.constant = origin.x+modifier;
     
     POPSpringAnimation *scaleAnimation = [POPSpringAnimation animationWithPropertyNamed:kPOPLayerScaleXY];
     scaleAnimation.fromValue  = [NSValue valueWithCGSize:CGSizeMake(0.0f, 0.0f)];

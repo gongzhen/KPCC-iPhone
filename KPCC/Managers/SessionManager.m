@@ -223,6 +223,19 @@ static long kStreamBufferLimit = 4*60*60;
                                            }];
 }
 
+#pragma mark - Cache
+- (void)resetCache {
+    
+    [[NSURLCache sharedURLCache] removeAllCachedResponses];
+    
+    NSURLCache *shinyCache = [[NSURLCache alloc] initWithMemoryCapacity:2*1024*1024
+                                                           diskCapacity:16*1024*1024
+                                                               diskPath:nil];
+    
+    [NSURLCache setSharedURLCache:shinyCache];
+    
+}
+
 #pragma mark - Program
 - (void)fetchOnboardingProgramWithSegment:(NSInteger)segment completed:(CompletionBlockWithValue)completed {
     NSMutableDictionary *p = [NSMutableDictionary new];
@@ -286,6 +299,10 @@ static long kStreamBufferLimit = 4*60*60;
 #ifdef TEST_PROGRAM_IMAGE
                 touch = YES;
 #endif
+                if ( touch ) {
+                    touch = ![self ignoreProgramUpdating];
+                }
+                
                 self.currentProgram = programObj;
                 if ( touch ) {
                     [[NSNotificationCenter defaultCenter] postNotificationName:@"program_has_changed"
@@ -425,7 +442,7 @@ static long kStreamBufferLimit = 4*60*60;
     
     if ( [self sessionIsExpired] ) return NO;
     if (
-            /*[[AudioManager shared] status] == StreamStatusPaused  ||*/
+            [[AudioManager shared] status] == StreamStatusPaused  ||
             [[AudioManager shared] currentAudioMode] == AudioModeOnDemand
         
         )

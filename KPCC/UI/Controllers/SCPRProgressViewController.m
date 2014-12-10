@@ -308,6 +308,7 @@
 
 - (void)reset {
     self.counter = 0;
+    self.currentBarLine.strokeEnd = 0.0;
 }
 
 - (void)finishReveal {
