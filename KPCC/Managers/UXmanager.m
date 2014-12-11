@@ -96,6 +96,7 @@
     [self.lisaPlayer prepareToPlay];
     [self.musicPlayer prepareToPlay];
     
+    self.lisaPlayer.volume = 1.0;
     self.musicPlayer.volume = 0.2;
 
 }
@@ -369,6 +370,7 @@
 
 - (void)endOnboarding {
 
+    self.onboardingEnding = YES;
     self.fadeQueue = [[NSOperationQueue alloc] init];
     [[AudioManager shared] setRelativeFauxDate:nil];
     [self.onboardingCtrl.view removeFromSuperview];

@@ -51,8 +51,8 @@
     [[DesignManager shared] loadProgramImage:_program.program_slug
                                 andImageView:self.programBgImage
                                   completion:^(BOOL status) {
-                                      [self.blurView setNeedsDisplay];
                                       self.programBgImage.contentMode = UIViewContentModeCenter;
+                                      [self.blurView setNeedsDisplay];
                                   }];
 
     [[NetworkManager shared] fetchEpisodesForProgram:_program.program_slug

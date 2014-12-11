@@ -74,11 +74,12 @@ static DesignManager *singleton = nil;
                 
                 [imageView.layer addAnimation:transition
                                   forKey:nil];
+                completion(true);
             });
             
             
 
-            completion(true);
+            
         } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error) {
             [self loadStockPhotoToImageView:imageView];
             completion(true);

@@ -447,13 +447,18 @@ static NSString *kBufferingText = @"BUFFERING";
             if ([[AudioManager shared] isStreamBuffering]) {
                 [[AudioManager shared] stopAllAudio];
             } else {
-                [[SessionManager shared] armProgramUpdater];
                 [self playStream:NO];
+                [[SessionManager shared] armProgramUpdater];
             }
         }
     } else {
         self.setPlaying = NO;
         [self pauseStream];
+        [[SessionManager shared] disarmProgramUpdater];
+        NSLog(@"Session paused at (Literal): %@",[NSDate stringFromDate:[NSDate date]
+                                                             withFormat:@"hh:mm:ss a"]);
+        NSLog(@"Session paused at (Calculated): %@",[NSDate stringFromDate:[[AudioManager shared].audioPlayer.currentItem currentDate]
+                                                                withFormat:@"hh:mm:ss a"]);
     }
     
 }
@@ -606,11 +611,19 @@ static NSString *kBufferingText = @"BUFFERING";
                                                   object:nil];
     [self.jogShuttle endAnimations];
     
+
     [[SessionManager shared] fetchCurrentProgram:^(id returnedObject) {
+    
         [self setLiveStreamingUI:YES];
         [self treatUIforProgram];
+        
         if ( play ) {
             if ( self.initialPlay ) {
+                if ( self.preRollViewController.tritonAd ) {
+                    [self.preRollViewController showPreRollWithAnimation:YES completion:^(BOOL done) {
+                        
+                    }];
+                }
                 [[AudioManager shared] playLiveStream];
             } else {
                 [self initialPlayTapped:nil];
@@ -731,14 +744,12 @@ static NSString *kBufferingText = @"BUFFERING";
     self.shuttlingGate = YES;
     
     [self.jogShuttle.view setAlpha:1.0];
-    
-    Program *p = [[SessionManager shared] currentProgram];
-    
+    [[SessionManager shared] setSeekForwardRequested:YES];
     [[SessionManager shared] fetchCurrentProgram:^(id returnedObject) {
-        [self.jogShuttle animateWithSpeed:0.44
+        [self.jogShuttle animateWithSpeed:0.8
                              hideableView:self.playPauseButton
                                 direction:SpinDirectionForward
-                                withSound:NO
+                                withSound:YES
                                completion:^{
                                    
                                    [self.liveDescriptionLabel stopPulsating];
@@ -746,13 +757,12 @@ static NSString *kBufferingText = @"BUFFERING";
                                    self.dirtyFromRewind = NO;
                                    [self updateControlsAndUI:YES];
                                    
+                                   [[SessionManager shared] setSeekForwardRequested:NO];
                                    [[SessionManager shared] invalidateSession];
                                    
-                                   
-                                    [[AudioManager shared] adjustAudioWithValue:0.1 completion:^{
-                                        [self.view bringSubviewToFront:self.playerControlsView];
-                                    }];
-                                   
+                                   [[AudioManager shared] adjustAudioWithValue:0.1 completion:^{
+                                       [self.view bringSubviewToFront:self.playerControlsView];
+                                   }];
                                    
                                }];
         
@@ -823,11 +833,11 @@ static NSString *kBufferingText = @"BUFFERING";
             //[self.playPauseButton setAlpha:0.0];
 
             self.liveDescriptionLabel.alpha = 1.0;
-            if ([[AudioManager shared] isStreamPlaying] || [[AudioManager shared] isStreamBuffering]) {
+            /*if ([[AudioManager shared] isStreamPlaying] || [[AudioManager shared] isStreamBuffering]) {
                 if ( ![self uiIsJogging] ) {
                     [self.liveDescriptionLabel fadeText:@"LIVE"];
                 }
-            }
+            }*/
 
         } completion:^(BOOL finished) {
             if ([[AudioManager shared] isStreamPlaying] || [[AudioManager shared] isStreamBuffering]) {
@@ -849,7 +859,7 @@ static NSString *kBufferingText = @"BUFFERING";
         }];
 
     } else {
-        if ([[AudioManager shared] isStreamPlaying] || [[AudioManager shared] isStreamBuffering]) {
+        /*if ([[AudioManager shared] isStreamPlaying] || [[AudioManager shared] isStreamBuffering]) {
             if ( ![self uiIsJogging] ) {
                 [self.liveDescriptionLabel fadeText:@"LIVE"];
             }
@@ -857,7 +867,7 @@ static NSString *kBufferingText = @"BUFFERING";
             if ( ![self.liveDescriptionLabel.text isEqualToString:@"LIVE"] ) {
                 [self.liveDescriptionLabel fadeText:@"ON NOW"];
             }
-        }
+        }*/
 
         if ([[AudioManager shared] isStreamPlaying] || [[AudioManager shared] isStreamBuffering]) {
             [self.playPauseButton fadeImage:[UIImage imageNamed:@"btn_pause.png"] duration:0.2];
@@ -940,6 +950,7 @@ static NSString *kBufferingText = @"BUFFERING";
     
     [self.view layoutIfNeeded];
     
+    self.liveDescriptionLabel.text = @"LIVE";
     [[AudioManager shared] setCurrentAudioMode:AudioModeLive];
 
 }
@@ -1029,16 +1040,36 @@ static NSString *kBufferingText = @"BUFFERING";
         
         __block SCPRMasterViewController *weakSelf = self;
         [self setDataForOnDemand:program andAudioChunk:array[index] completion:^{
-            [weakSelf onDemandFadeDown];
-            
-            [[AudioManager shared] setCurrentAudioMode:AudioModeOnDemand];
-            
-            [weakSelf.navigationController popToRootViewControllerAnimated:YES];
-            
-            [weakSelf.jogShuttle animateIndefinitelyWithViewToHide:weakSelf.playPauseButton completion:^{
-                weakSelf.playPauseButton.enabled = YES;
-                [weakSelf setUIContents:YES];
+            [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationOptionCurveLinear animations:^{
+                weakSelf.timeLabelOnDemand.alpha = 0.0;
+                weakSelf.progressView.alpha = 0.0;
+                weakSelf.shareButton.alpha = 0.0;
+                
+            } completion:^(BOOL finished){
+                
+                if (!weakSelf.queueBlurShown) {
+                    //[weakSelf.queueBlurView setNeedsDisplay];
+                    [UIView animateWithDuration:0.3 delay:0. options:UIViewAnimationOptionCurveLinear animations:^{
+                        weakSelf.queueBlurView.alpha = 1.0;
+                        weakSelf.queueDarkBgView.alpha = 0.0;
+                    } completion:^(BOOL finished) {
+                        [[AudioManager shared] setCurrentAudioMode:AudioModeOnDemand];
+                        
+                        [weakSelf.navigationController popToRootViewControllerAnimated:YES];
+                        
+                        [weakSelf.jogShuttle animateIndefinitelyWithViewToHide:weakSelf.playPauseButton completion:^{
+                            weakSelf.playPauseButton.enabled = YES;
+                            [weakSelf setUIContents:YES];
+                        }];
+                    }];
+                }
+                
             }];
+            
+
+            
+
+
         }];
         
 
@@ -1353,12 +1384,16 @@ static NSString *kBufferingText = @"BUFFERING";
     POPBasicAnimation *controlsFadeAnimation = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
     controlsFadeAnimation.toValue = @(0);
     controlsFadeAnimation.duration = 0.3;
+    
+    POPBasicAnimation *lsFade = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
+    lsFade.toValue = @(0);
+    lsFade.duration = 0.3;
 
     [self.blurView.layer pop_addAnimation:blurFadeAnimation forKey:@"blurViewFadeAnimation"];
     [self.darkBgView.layer pop_addAnimation:darkBgFadeAnimation forKey:@"darkBgFadeAnimation"];
     [self.playerControlsView.layer pop_addAnimation:controlsFadeAnimation forKey:@"controlsViewFadeAnimation"];
     [self.onDemandPlayerView.layer pop_addAnimation:controlsFadeAnimation forKey:@"onDemandViewFadeAnimation"];
-    [self.liveStreamView.layer pop_addAnimation:controlsFadeAnimation forKey:@"liveStreamViewFadeAnimation"];
+    [self.liveStreamView.layer pop_addAnimation:lsFade forKey:@"liveStreamViewFadeAnimation"];
     if (!initialPlay) {
         [self.initialControlsView.layer pop_addAnimation:controlsFadeAnimation forKey:@"initialControlsViewFade"];
     }
@@ -1414,13 +1449,17 @@ static NSString *kBufferingText = @"BUFFERING";
     controlsFadeIn.toValue = @1;
     controlsFadeIn.duration = 0.3;
 
+    POPBasicAnimation *cfi = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
+    cfi.toValue = @1;
+    cfi.duration = 0.3;
+    
     [self primeManualControlButton];
     
     [self.blurView.layer pop_addAnimation:fadeAnimation forKey:@"blurViewFadeAnimation"];
     [self.darkBgView.layer pop_addAnimation:darkBgFadeAnimation forKey:@"darkBgFadeAnimation"];
     [self.playerControlsView.layer pop_addAnimation:controlsFadeIn forKey:@"controlsViewFadeAnimation"];
     [self.onDemandPlayerView.layer pop_addAnimation:controlsFadeIn forKey:@"onDemandViewFadeAnimation"];
-    [self.liveStreamView.layer pop_addAnimation:controlsFadeIn forKey:@"liveStreamViewFadeAnimation"];
+    [self.liveStreamView.layer pop_addAnimation:cfi forKey:@"liveStreamViewFadeAnimation"];
     if (!initialPlay) {
         [self.initialControlsView.layer pop_addAnimation:controlsFadeIn forKey:@"initialControlsViewFade"];
     }
@@ -1433,7 +1472,9 @@ static NSString *kBufferingText = @"BUFFERING";
         [self.horizDividerLine.layer pop_addAnimation:dividerFadeAnim forKey:@"horizDividerFadeOutAnimation"];
     }
     //}
-
+    if ( [AudioManager shared].currentAudioMode == AudioModeLive ) {
+        [self.liveProgressViewController show];
+    }
     self.menuOpen = NO;
 }
 
@@ -1825,11 +1866,24 @@ static NSString *kBufferingText = @"BUFFERING";
     
     if ( !self.menuOpen ) {
         if ( ti > 60 && ![[AudioManager shared] isStreamBuffering] ) {
-            [self.liveDescriptionLabel fadeText:[NSString stringWithFormat:@"%@ BEHIND LIVE", [NSDate prettyTextFromSeconds:ti]]];
+            [self.liveDescriptionLabel setText:[NSString stringWithFormat:@"%@ BEHIND LIVE", [NSDate prettyTextFromSeconds:ti]]];
             self.previousRewindThreshold = [[AudioManager shared].audioPlayer.currentItem.currentDate timeIntervalSince1970];
         } else {
-            [self.liveDescriptionLabel fadeText:@"LIVE"];
+            //if ( !SEQ(self.liveDescriptionLabel.text,@"LIVE") ) {
+            [self.liveDescriptionLabel setText:@"LIVE"];
             self.dirtyFromRewind = NO;
+            //}
+        }
+    }
+    
+    if ( [AudioManager shared].currentAudioMode == AudioModeLive ) {
+        if ( !self.menuOpen ) {
+            if ( self.liveStreamView.layer.opacity < 1.0 ) {
+                [UIView animateWithDuration:0.25 animations:^{
+                    NSLog(@"Opacity was affected");
+                    self.liveStreamView.layer.opacity = 1.0;
+                }];
+            }
         }
     }
     
@@ -1905,7 +1959,7 @@ static NSString *kBufferingText = @"BUFFERING";
 
 - (void)interfere {
     [self.liveDescriptionLabel stopPulsating];
-    //[self rollInterferenceText];
+    self.jogging = YES;
     [self.liveDescriptionLabel fadeText:@"BUFFERING..."];
 }
 

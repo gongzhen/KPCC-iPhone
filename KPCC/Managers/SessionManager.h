@@ -60,6 +60,7 @@ typedef NS_ENUM(NSUInteger, OnDemandFinishedReason) {
 @property BOOL rewindSessionIsHot;
 @property BOOL rewindSessionWillBegin;
 @property BOOL odSessionIsHot;
+@property BOOL seekForwardRequested;
 
 - (void)handleSessionReactivation;
 - (void)invalidateSession;
@@ -72,6 +73,7 @@ typedef NS_ENUM(NSUInteger, OnDemandFinishedReason) {
 - (NSString*)startOnDemandSession;
 - (NSString*)endOnDemandSessionWithReason:(OnDemandFinishedReason)reason;
 - (void)trackOnDemandSession;
+- (BOOL)programDirty:(Program*)p;
 
 #ifdef TESTING_PROGRAM_CHANGE
 @property (NS_NONATOMIC_IOSONLY, readonly, strong) Program *fakeProgram;

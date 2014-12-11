@@ -266,6 +266,17 @@ static const NSString *ItemStatusContext;
         return;
     }
 
+    for ( NSValue *str in self.audioPlayer.currentItem.seekableTimeRanges ) {
+        CMTimeRange r = [str CMTimeRangeValue];
+        NSLog(@"Seekable Start : %ld, duration : %ld",(long)CMTimeGetSeconds(r.start),(long)CMTimeGetSeconds(r.duration));
+    }
+    
+    for ( NSValue *str in self.audioPlayer.currentItem.loadedTimeRanges ) {
+        CMTimeRange r = [str CMTimeRangeValue];
+        NSLog(@"Loaded Start : %ld, duration : %ld",(long)CMTimeGetSeconds(r.start),(long)CMTimeGetSeconds(r.duration));
+    }
+    
+    [self dump:YES];
     
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.15 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         NSDate *justABitInTheFuture = nudge ? [NSDate dateWithTimeInterval:2 sinceDate:date] : date;
@@ -278,7 +289,7 @@ static const NSString *ItemStatusContext;
                 
                 if ( [[SessionManager shared] secondsBehindLive] > 14000 ) {
                     // Try again
-                    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.25 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.75 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                         NSLog(@"Buffering ...");
                         if ( [self.delegate respondsToSelector:@selector(interfere)] ) {
                             [self.delegate interfere];
@@ -286,6 +297,7 @@ static const NSString *ItemStatusContext;
                         if ( self.audioPlayer.rate > 0.0 ) {
                             [self.audioPlayer pause];
                         }
+                        [self.audioPlayer.currentItem cancelPendingSeeks];
                         [self seekToDate:date];
                     });
                     
@@ -725,7 +737,10 @@ static const NSString *ItemStatusContext;
     }
     
     [[SessionManager shared] resetCache];
-    [self.audioPlayer cancelPendingPrerolls];
+    
+    if ( self.currentAudioMode != AudioModeOnboarding ) {
+        [self.audioPlayer cancelPendingPrerolls];
+    }
     
     self.audioPlayer = nil;
 }

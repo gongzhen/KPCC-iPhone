@@ -190,7 +190,7 @@
 
 - (void)ondemandMode {
     self.view.alpha = 0.0;
-    self.onDemandContainerView.alpha = 0.0;
+    self.onDemandContainerView.alpha = 1.0;
     self.notificationsView.alpha = 0.0;
     self.brandingView.alpha = 0.0;
     self.textCalloutBalloonCtrl.view.alpha = 0.0;
@@ -230,10 +230,12 @@
 - (void)dismissOnDemand {
     [UIView animateWithDuration:0.25 animations:^{
         self.onDemandContainerView.alpha = 0.0;
-    } completion:^(BOOL finished) {
         self.view.alpha = 0.0;
+    } completion:^(BOOL finished) {
         [UXmanager shared].settings.userHasViewedOnDemandOnboarding = YES;
+#ifndef DEBUG
         [[UXmanager shared] persist];
+#endif
     }];
 }
 

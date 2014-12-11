@@ -21,6 +21,7 @@
 @property (nonatomic,weak) SCPRMasterViewController *masterCtrl;
 @property BOOL listeningForQueues;
 @property BOOL suppressBalloon;
+@property BOOL onboardingEnding;
 @property (nonatomic,strong) NSDictionary *keyPoints;
 @property (nonatomic,strong) NSTimer *observerTimer;
 @property (nonatomic,strong) AVAudioPlayer *musicPlayer;
