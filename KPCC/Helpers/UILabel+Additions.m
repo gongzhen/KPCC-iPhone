@@ -31,6 +31,7 @@
 
 - (void)pulsate:(NSString*)text color:(UIColor *)color {
     
+#ifdef USE_SECONDARY_ANIMATIONS
     UIColor *original = self.textColor;
     [CATransaction begin]; {
         [CATransaction setCompletionBlock:^{
@@ -70,6 +71,9 @@
                           forKey:nil];
     }
     [CATransaction commit];
+#else
+    [self fadeText:text];
+#endif
 }
 
 - (void)stopPulsating {

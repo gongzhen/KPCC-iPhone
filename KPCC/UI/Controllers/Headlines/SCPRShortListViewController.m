@@ -279,7 +279,6 @@ static NSString *kShortListMenuURL = @"http://www.scpr.org/short-list/latest#no-
         self.pushing = NO;
         self.popping = NO;
 
-        
     }];
 }
 

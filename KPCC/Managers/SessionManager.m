@@ -432,12 +432,12 @@ static long kStreamBufferLimit = 4*60*60;
 /*    if ( [self useLocalNotifications] ) {
         [[UIApplication sharedApplication] cancelAllLocalNotifications];
     } else {*/
-        if ( self.programUpdateTimer ) {
-            if ( [self.programUpdateTimer isValid] ) {
-                [self.programUpdateTimer invalidate];
-            }
-            self.programUpdateTimer = nil;
+    if ( self.programUpdateTimer ) {
+        if ( [self.programUpdateTimer isValid] ) {
+            [self.programUpdateTimer invalidate];
         }
+        self.programUpdateTimer = nil;
+    }
    // }
 }
 

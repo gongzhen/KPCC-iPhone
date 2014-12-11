@@ -77,9 +77,6 @@ static DesignManager *singleton = nil;
                 completion(true);
             });
             
-            
-
-            
         } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error) {
             [self loadStockPhotoToImageView:imageView];
             completion(true);

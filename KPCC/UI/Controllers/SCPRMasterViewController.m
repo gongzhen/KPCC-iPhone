@@ -1007,7 +1007,7 @@ static NSString *kBufferingText = @"BUFFERING";
         self.progressView.alpha = 1.0;
         self.queueScrollView.alpha = 1.0;
         self.onDemandPlayerView.alpha = 1.0;
-        
+        self.queueBlurView.alpha = 1.0;
         [self primeRemoteCommandCenter:NO];
         
         // Make sure the larger play button is hidden ...
@@ -1044,19 +1044,15 @@ static NSString *kBufferingText = @"BUFFERING";
                 weakSelf.timeLabelOnDemand.alpha = 0.0;
                 weakSelf.progressView.alpha = 0.0;
                 weakSelf.shareButton.alpha = 0.0;
-                
             } completion:^(BOOL finished){
                 
                 if (!weakSelf.queueBlurShown) {
-                    //[weakSelf.queueBlurView setNeedsDisplay];
                     [UIView animateWithDuration:0.3 delay:0. options:UIViewAnimationOptionCurveLinear animations:^{
                         weakSelf.queueBlurView.alpha = 1.0;
                         weakSelf.queueDarkBgView.alpha = 0.0;
                     } completion:^(BOOL finished) {
                         [[AudioManager shared] setCurrentAudioMode:AudioModeOnDemand];
-                        
                         [weakSelf.navigationController popToRootViewControllerAnimated:YES];
-                        
                         [weakSelf.jogShuttle animateIndefinitelyWithViewToHide:weakSelf.playPauseButton completion:^{
                             weakSelf.playPauseButton.enabled = YES;
                             [weakSelf setUIContents:YES];
@@ -1065,11 +1061,7 @@ static NSString *kBufferingText = @"BUFFERING";
                 }
                 
             }];
-            
-
-            
-
-
+      
         }];
         
 
@@ -1094,8 +1086,6 @@ static NSString *kBufferingText = @"BUFFERING";
                                               }
                                             });
                                       }];
-
-
     }
 }
 
