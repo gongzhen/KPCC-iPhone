@@ -23,6 +23,7 @@
 #import "AnalyticsManager.h"
 #import "SCPROnboardingViewController.h"
 
+@import MessageUI;
 
 static NSString *kRewindingText = @"REWINDING...";
 static NSString *kForwardingText = @"GOING LIVE...";
@@ -221,6 +222,8 @@ static NSString *kBufferingText = @"BUFFERING";
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
 
+    [[DesignManager shared] treatBar];
+    
     [AudioManager shared].delegate = self;
 
     if (self.menuOpen) {
@@ -246,6 +249,10 @@ static NSString *kBufferingText = @"BUFFERING";
             
         });
     }
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
@@ -444,21 +451,21 @@ static NSString *kBufferingText = @"BUFFERING";
                 }
             }];
         } else {
-            if ([[AudioManager shared] isStreamBuffering]) {
-                [[AudioManager shared] stopAllAudio];
-            } else {
-                [self playStream:NO];
+
+            [self playStream:NO];
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                 [[SessionManager shared] armProgramUpdater];
-            }
+            });
+
         }
     } else {
         self.setPlaying = NO;
         [self pauseStream];
-        [[SessionManager shared] disarmProgramUpdater];
-        NSLog(@"Session paused at (Literal): %@",[NSDate stringFromDate:[NSDate date]
-                                                             withFormat:@"hh:mm:ss a"]);
-        NSLog(@"Session paused at (Calculated): %@",[NSDate stringFromDate:[[AudioManager shared].audioPlayer.currentItem currentDate]
-                                                                withFormat:@"hh:mm:ss a"]);
+        
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            [[SessionManager shared] disarmProgramUpdater];
+        });
+
     }
     
 }
@@ -547,10 +554,14 @@ static NSString *kBufferingText = @"BUFFERING";
         et = [[[QueueManager shared] currentChunk] audioTitle];
         pt = [[[QueueManager shared] currentChunk] programTitle];
         NSString *complete = [NSString stringWithFormat:@"%@ - %@ - %@",et,pt,self.onDemandEpUrl];
+        
         UIActivityViewController *controller = [[UIActivityViewController alloc]
                                                 initWithActivityItems:@[complete]
                                                 applicationActivities:nil];
         controller.excludedActivityTypes = @[UIActivityTypeAirDrop];
+        
+        
+        
         [controller setCompletionHandler:^(NSString *activityType, BOOL completed) {
             if ( completed ) {
                 [[AnalyticsManager shared] logEvent:[NSString stringWithFormat:@"programEpisodeShared%@",[activityType capitalizedString]]
@@ -558,7 +569,11 @@ static NSString *kBufferingText = @"BUFFERING";
                                                        @"programTitle" : pt }];
             }
         }];
-        [self presentViewController:controller animated:YES completion:nil];
+        [self presentViewController:controller animated:YES completion:^{
+
+            [[DesignManager shared] normalizeBar];
+            
+        }];
     }
 }
 
@@ -574,8 +589,8 @@ static NSString *kBufferingText = @"BUFFERING";
     if ( hard ) {
         [[AudioManager shared] playLiveStream];
     } else {
-        [[SessionManager shared] startLiveSession];
         [[AudioManager shared] playStream];
+        [[SessionManager shared] startLiveSession];
     }
 }
 
@@ -1003,11 +1018,19 @@ static NSString *kBufferingText = @"BUFFERING";
         [self.liveProgressViewController hide];
         
         self.navigationItem.title = @"Programs";
+        
+        
+        UIImage *img = [[DesignManager shared] currentBlurredImage];
+        self.programImageView.image = img;
+        self.programImageView.alpha = 1.0;
+        
         [self.progressView setProgress:0.0 animated:YES];
         self.progressView.alpha = 1.0;
         self.queueScrollView.alpha = 1.0;
         self.onDemandPlayerView.alpha = 1.0;
-        self.queueBlurView.alpha = 1.0;
+        self.queueBlurView.alpha = 0.0;
+        self.queueDarkBgView.alpha = 0.0;
+        
         [self primeRemoteCommandCenter:NO];
         
         // Make sure the larger play button is hidden ...
@@ -1313,6 +1336,12 @@ static NSString *kBufferingText = @"BUFFERING";
             if ( [[AudioManager shared].audioPlayer.currentItem.currentDate timeIntervalSince1970] - [ssd timeIntervalSince1970] < 90 ) {
                 okToShow = NO;
             }
+        }
+    }
+    
+    if ( okToShow ) {
+        if ( [[SessionManager shared] sessionIsInRecess] ) {
+            okToShow = NO;
         }
     }
     
@@ -1860,8 +1889,12 @@ static NSString *kBufferingText = @"BUFFERING";
             self.previousRewindThreshold = [[AudioManager shared].audioPlayer.currentItem.currentDate timeIntervalSince1970];
         } else {
             //if ( !SEQ(self.liveDescriptionLabel.text,@"LIVE") ) {
-            [self.liveDescriptionLabel setText:@"LIVE"];
-            self.dirtyFromRewind = NO;
+            if ( [[SessionManager shared] sessionIsInRecess] ) {
+                [self.liveDescriptionLabel setText:@"UP NEXT"];
+            } else {
+                [self.liveDescriptionLabel setText:@"LIVE"];
+                self.dirtyFromRewind = NO;
+            }
             //}
         }
     }

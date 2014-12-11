@@ -276,7 +276,9 @@ static const NSString *ItemStatusContext;
         NSLog(@"Loaded Start : %ld, duration : %ld",(long)CMTimeGetSeconds(r.start),(long)CMTimeGetSeconds(r.duration));
     }
     
+#ifdef DEBUG
     [self dump:YES];
+#endif
     
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.15 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         NSDate *justABitInTheFuture = nudge ? [NSDate dateWithTimeInterval:2 sinceDate:date] : date;
@@ -506,6 +508,7 @@ static const NSString *ItemStatusContext;
                           options:NSKeyValueObservingOptionOld|NSKeyValueObservingOptionNew
                           context:nil];
     
+    self.status = StreamStatusStopped;
     [self startObservingTime];
 }
 
@@ -529,6 +532,7 @@ static const NSString *ItemStatusContext;
     [self takedownAudioPlayer];
     [self buildStreamer:url];
     [self startStream];
+    
 }
 
 - (void)playQueueItemWithUrl:(NSString *)url {
@@ -629,15 +633,17 @@ static const NSString *ItemStatusContext;
 
 - (void)pauseStream {
     [self.audioPlayer pause];
-    
-    if ( self.currentAudioMode == AudioModeLive ) {
-        [[SessionManager shared] setSessionPausedDate:[NSDate date]];
-        [[SessionManager shared] endLiveSession];
-    } else {
-        [[SessionManager shared] endOnDemandSessionWithReason:OnDemandFinishedReasonEpisodePaused];
-    }
-    
     self.status = StreamStatusPaused;
+    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+        if ( self.currentAudioMode == AudioModeLive ) {
+            [[SessionManager shared] setSessionPausedDate:[NSDate date]];
+            [[SessionManager shared] endLiveSession];
+        } else {
+            [[SessionManager shared] endOnDemandSessionWithReason:OnDemandFinishedReasonEpisodePaused];
+        }
+    });
+
 }
 
 - (void)stopStream {

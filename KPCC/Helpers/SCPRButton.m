@@ -55,7 +55,7 @@
     if ( !self.locked ) {
         self.locked = YES;
         [self.target performSelector:self.postPushMethod withObject:self afterDelay:0];
-        self.lockTimer = [NSTimer scheduledTimerWithTimeInterval:1.5
+        self.lockTimer = [NSTimer scheduledTimerWithTimeInterval:0.25
                                                           target:self
                                                         selector:@selector(unlock)
                                                         userInfo:nil

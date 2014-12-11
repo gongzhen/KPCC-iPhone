@@ -16,6 +16,8 @@
 #import "SessionManager.h"
 #import "AnalyticsManager.h"
 
+@import MessageUI;
+
 @interface SCPRShortListViewController ()
 
 - (void)extractTitleFromString:(NSString*)fullHTML completed:(CompletionBlockWithValue)completed;
@@ -94,6 +96,10 @@ static NSString *kShortListMenuURL = @"http://www.scpr.org/short-list/latest#no-
     
 }
 
+- (void)viewWillAppear:(BOOL)animated {
+    [[DesignManager shared] treatBar];
+}
+
 - (void)willMoveToParentViewController:(UIViewController *)parent {
     self.navigationItem.title = self.cachedParentTitle;
     self.slWebView.delegate = nil;
@@ -109,7 +115,11 @@ static NSString *kShortListMenuURL = @"http://www.scpr.org/short-list/latest#no-
                                                                                  applicationActivities:nil];
         [self presentViewController:activities
                            animated:YES
-                         completion:nil];
+                         completion:^{
+                           
+                             [[DesignManager shared] normalizeBar];
+                             
+                         }];
     }
 }
 

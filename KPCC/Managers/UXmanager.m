@@ -35,6 +35,8 @@
     } else {
         self.settings = [Settings new];
     }
+    
+    NSLog(@"Device Token : %@",[self.settings pushTokenString]);
 }
 
 - (void)persist {

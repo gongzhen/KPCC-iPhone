@@ -34,7 +34,15 @@ typedef NS_ENUM(NSInteger, SculptingStyle) {
 - (UIFont*)proLight:(CGFloat)size;
 - (UIFont*)proMedium:(CGFloat)size;
 
+- (void)normalizeBar;
+- (void)treatBar;
+
 @property BOOL displayingStockPhoto;
+@property BOOL barNormalized;
+
+@property (nonatomic, strong) UIImage *currentBlurredImage;
+@property (nonatomic, strong) NSDictionary *attributes;
+
 #ifdef TEST_PROGRAM_IMAGE
 @property (nonatomic,strong) NSString *currentSlug;
 #endif
