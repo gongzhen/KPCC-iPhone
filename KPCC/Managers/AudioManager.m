@@ -109,6 +109,7 @@ static const NSString *ItemStatusContext;
         // Now playing, was stopped.
         if (oldRate == 0.0 && newRate == 1.0) {
             [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
+            [self startObservingTime];
         }
         if ( oldRate == 1.0 && newRate == 0.0 ) {
             self.status = StreamStatusPaused;
@@ -263,6 +264,7 @@ static const NSString *ItemStatusContext;
         self.savedVolume = 1.0;
         self.queuedSeekDate = date;
         [self.audioPlayer play];
+    
         return;
     }
 
@@ -509,7 +511,7 @@ static const NSString *ItemStatusContext;
                           context:nil];
     
     self.status = StreamStatusStopped;
-    [self startObservingTime];
+    
 }
 
 - (void)buildStreamer:(NSString *)urlString {
@@ -618,7 +620,7 @@ static const NSString *ItemStatusContext;
     [[SessionManager shared] setSessionPausedDate:nil];
     
     self.status = StreamStatusPlaying;
-  
+
 
 }
 
@@ -629,6 +631,8 @@ static const NSString *ItemStatusContext;
     
     self.status = StreamStatusPlaying;
     [self.audioPlayer play];
+    
+ 
 }
 
 - (void)pauseStream {

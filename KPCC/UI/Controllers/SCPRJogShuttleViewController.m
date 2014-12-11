@@ -26,6 +26,7 @@
 @property SpinDirection direction;
 
 @property (atomic) BOOL completionBit;
+@property (atomic) BOOL killBit;
 @property (nonatomic,strong) AVAudioPlayer *rewindTriggerPlayer;
 @property BOOL muteSound;
 
@@ -195,6 +196,13 @@
                 [UIView animateWithDuration:0.15 animations:^{
                     viewToHide.alpha = 1.0;
                 } completion:^(BOOL finished) {
+                    if ( self.killBit ) {
+                        self.completionBit = NO;
+                        self.killBit = NO;
+                        return;
+                    }
+                    
+                    self.completionBit = NO;
                     if ( completion )
                         [self completeWithCallback:completion];
                 }];
@@ -292,6 +300,13 @@
 
 - (void)endAnimations {
     if ( self.spinning ) {
+        [self setCompletionBit:YES];
+    }
+}
+
+- (void)killAnimations {
+    if ( self.spinning ) {
+        [self setKillBit:YES];
         [self setCompletionBit:YES];
     }
 }

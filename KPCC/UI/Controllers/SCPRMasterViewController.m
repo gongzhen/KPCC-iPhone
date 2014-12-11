@@ -618,7 +618,7 @@ static NSString *kBufferingText = @"BUFFERING";
     
     if ( [[AudioManager shared] currentAudioMode] == AudioModeLive ) return;
     
- 
+    [[AudioManager shared] setCurrentAudioMode:AudioModeLive];
     self.lockPlayback = !play;
     
     [[NSNotificationCenter defaultCenter] removeObserver:self
@@ -845,14 +845,16 @@ static NSString *kBufferingText = @"BUFFERING";
     
     if (animated) {
         [UIView animateWithDuration:0.1 animations:^{
-            //[self.playPauseButton setAlpha:0.0];
+       
 
             self.liveDescriptionLabel.alpha = 1.0;
-            /*if ([[AudioManager shared] isStreamPlaying] || [[AudioManager shared] isStreamBuffering]) {
-                if ( ![self uiIsJogging] ) {
-                    [self.liveDescriptionLabel fadeText:@"LIVE"];
+            if ( [[AudioManager shared] status] == StreamStatusStopped ) {
+                if ( [[SessionManager shared] sessionIsInRecess] ) {
+                    self.liveDescriptionLabel.text = @"UP NEXT";
+                } else {
+                    self.liveDescriptionLabel.text = @"ON NOW";
                 }
-            }*/
+            }
 
         } completion:^(BOOL finished) {
             if ([[AudioManager shared] isStreamPlaying] || [[AudioManager shared] isStreamBuffering]) {
@@ -861,8 +863,6 @@ static NSString *kBufferingText = @"BUFFERING";
                 [self.playPauseButton fadeImage:[UIImage imageNamed:@"btn_play.png"] duration:0.2];
             }
 
-            // Leave this out for now.
-            // [self scaleBackgroundImage];
         
             [UIView animateWithDuration:0.1 animations:^{
                 if ( [AudioManager shared].currentAudioMode != AudioModeOnDemand ) {
@@ -872,23 +872,6 @@ static NSString *kBufferingText = @"BUFFERING";
             }];
             
         }];
-
-    } else {
-        /*if ([[AudioManager shared] isStreamPlaying] || [[AudioManager shared] isStreamBuffering]) {
-            if ( ![self uiIsJogging] ) {
-                [self.liveDescriptionLabel fadeText:@"LIVE"];
-            }
-        } else {
-            if ( ![self.liveDescriptionLabel.text isEqualToString:@"LIVE"] ) {
-                [self.liveDescriptionLabel fadeText:@"ON NOW"];
-            }
-        }*/
-
-        if ([[AudioManager shared] isStreamPlaying] || [[AudioManager shared] isStreamBuffering]) {
-            [self.playPauseButton fadeImage:[UIImage imageNamed:@"btn_pause.png"] duration:0.2];
-        } else {
-            [self.playPauseButton fadeImage:[UIImage imageNamed:@"btn_pause.png"] duration:0.2];
-        }
     }
 }
 
@@ -958,6 +941,9 @@ static NSString *kBufferingText = @"BUFFERING";
     if (![self.queueScrollView isHidden]) {
         [self.queueScrollView setHidden:YES];
     }
+    
+    self.queueBlurView.alpha = 0.0;
+    self.queueDarkBgView.alpha = 0.0;
 
     setForLiveStreamUI = YES;
     
@@ -1329,21 +1315,14 @@ static NSString *kBufferingText = @"BUFFERING";
     }
     
     
-    if ( okToShow && !self.dirtyFromRewind ) {
-        Program *p = [SessionManager shared].currentProgram;
-        if ( p ) {
-            NSDate *ssd = p.soft_starts_at;
-            if ( [[AudioManager shared].audioPlayer.currentItem.currentDate timeIntervalSince1970] - [ssd timeIntervalSince1970] < 90 ) {
-                okToShow = NO;
-            }
-        }
-    }
     
-    if ( okToShow ) {
+ 
+    if ( ![[SessionManager shared] sessionIsBehindLive] ) {
         if ( [[SessionManager shared] sessionIsInRecess] ) {
             okToShow = NO;
         }
     }
+    
     
     if ( okToShow ) {
         self.onboardingRewindButtonShown = YES;
@@ -1895,7 +1874,6 @@ static NSString *kBufferingText = @"BUFFERING";
                 [self.liveDescriptionLabel setText:@"LIVE"];
                 self.dirtyFromRewind = NO;
             }
-            //}
         }
     }
     
@@ -2003,7 +1981,6 @@ static NSString *kBufferingText = @"BUFFERING";
 
 - (void)onDemandAudioFailed {
     [self.jogShuttle endAnimations];
-    [self rebootOnDemandUI];
     self.timeLabelOnDemand.text = @"FAILED TO LOAD";
     
 

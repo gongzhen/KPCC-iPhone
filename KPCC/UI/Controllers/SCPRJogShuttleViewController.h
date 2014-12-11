@@ -33,6 +33,7 @@ typedef NS_ENUM(NSUInteger, SpinDirection) {
 - (void)animateIndefinitelyWithViewToHide:(UIView*)hideableView completion:(void (^)(void))completion;
 
 - (void)endAnimations;
+- (void)killAnimations;
 
 @property BOOL spinning;
 @property BOOL forceSingleRotation;

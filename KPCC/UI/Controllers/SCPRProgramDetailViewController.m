@@ -72,7 +72,9 @@
                                                   } else {
                                                       if (episode.segments != nil && [episode.segments count] > 0) {
                                                           for (Segment *segment in episode.segments) {
-                                                              [episodesArray addObject:segment];
+                                                              if ( segment.audio ) {
+                                                                  [episodesArray addObject:segment];
+                                                              }
                                                           }
                                                       }
                                                   }

@@ -526,13 +526,15 @@ static long kStreamBufferLimit = 4*60*60;
     
     if ( [[AudioManager shared] currentAudioMode] == AudioModeOnDemand ) return NO;
     if ( [[AudioManager shared] currentAudioMode] == AudioModeOnboarding ) return NO;
+    if ( [[AudioManager shared] status] == StreamStatusPaused ) return NO;
+    
     Program *cp = self.currentProgram;
     NSDate *soft = cp.soft_starts_at;
     NSDate *hard = cp.starts_at;
     NSDate *now = [NSDate date];
-    //if ( [self sessionIsBehindLive] ) {
+    if ( [self sessionIsBehindLive] ) {
         now = [[AudioManager shared].audioPlayer.currentItem currentDate];
-    //}
+    }
     
     NSTimeInterval softTI = [soft timeIntervalSince1970]+60;
     NSTimeInterval hardTI = [hard timeIntervalSince1970];
