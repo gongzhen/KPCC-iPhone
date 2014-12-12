@@ -136,6 +136,7 @@ typedef NS_ENUM(NSUInteger, StreamStatus) {
 
 - (void)seekToPercent:(CGFloat)percent;
 - (void)seekToDate:(NSDate *)date;
+- (void)seekToDate:(NSDate *)date forward:(BOOL)forward failover:(BOOL)failover;
 - (void)specialSeekToDate:(NSDate*)date;
 
 - (void)forwardSeekLive;

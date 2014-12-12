@@ -44,7 +44,7 @@
 // For audio queue
 @property (nonatomic,strong) UIScrollView *queueScrollView;
 @property (nonatomic) int queueCurrentPage;
-@property IBOutlet FXBlurView *queueBlurView;
+@property IBOutlet UIImageView *queueBlurView;
 @property IBOutlet UIView *queueDarkBgView;
 @property (nonatomic,strong) NSTimer *queueScrollTimer;
 @property (nonatomic,strong) NSArray *queueContents;
@@ -123,6 +123,7 @@
 - (void)setPositionForQueue:(int)index animated:(BOOL)animated;
 - (void)primeManualControlButton;
 - (void)treatUIforProgram;
+- (void)determinePlayState;
 
 - (void)moveTextIntoPlace:(BOOL)animated;
 - (void)goLive:(BOOL)play;

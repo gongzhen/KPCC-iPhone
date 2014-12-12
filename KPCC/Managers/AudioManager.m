@@ -66,9 +66,10 @@ static const NSString *ItemStatusContext;
         } else if ([self.audioPlayer.currentItem status] == AVPlayerItemStatusReadyToPlay) {
             NSLog(@"AVPlayerItemStatus - ReadyToPlay");
             if ( self.waitForSeek ) {
+                NSLog(@"Delayed seek");
                 self.waitForSeek = NO;
                 dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                    [self seekToDate:self.queuedSeekDate];
+                    [self seekToDate:self.queuedSeekDate forward:NO failover:NO];
                 });
             }
         } else if ([self.audioPlayer.currentItem status] == AVPlayerItemStatusUnknown) {
@@ -243,13 +244,10 @@ static const NSString *ItemStatusContext;
     }
 }
 
-- (void)seekToDate:(NSDate *)date {
-    
-    
+- (void)seekToDate:(NSDate *)date forward:(BOOL)forward failover:(BOOL)failover {
     if ( [self.audioPlayer.currentItem status] != AVPlayerItemStatusReadyToPlay ) {
         NSLog(@" ******* PLAYER ITEM NOT READY TO PLAY BEFORE SEEKING ******* ");
     }
-    
     
     if (!self.audioPlayer) {
         [self buildStreamer:kHLSLiveStreamURL];
@@ -258,11 +256,60 @@ static const NSString *ItemStatusContext;
         self.savedVolume = 1.0;
         self.queuedSeekDate = date;
         [self.audioPlayer play];
-    
         return;
     }
-
+    
+    if ( !failover || forward ) {
+        NSTimeInterval s2d = [date timeIntervalSince1970];
+        NSTimeInterval now = [[NSDate date] timeIntervalSince1970];
+        BOOL nudge = NO;
+        if ( abs(now - s2d) > 60 ) {
+            nudge = YES;
+        }
+        
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.15 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            NSDate *justABitInTheFuture = nudge ? [NSDate dateWithTimeInterval:2 sinceDate:date] : date;
+            [self.audioPlayer.currentItem seekToDate:justABitInTheFuture completionHandler:^(BOOL finished) {
+                if ( !finished ) {
+                    NSLog(@" **************** AUDIOPLAYER NOT FINISHED BUFFERING ****************** ");
+                }
+                if(self.audioPlayer.status == AVPlayerStatusReadyToPlay &&
+                   self.audioPlayer.currentItem.status == AVPlayerItemStatusReadyToPlay) {
+                    
+                    if ( [[SessionManager shared] secondsBehindLive] > 14000 ) {
+                        // Try again
+                        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.75 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                            NSLog(@"Buffering ...");
+                            if ( [self.delegate respondsToSelector:@selector(interfere)] ) {
+                                //[self.delegate interfere];
+                            }
+                            if ( self.audioPlayer.rate > 0.0 ) {
+                                [self.audioPlayer pause];
+                            }
+                            [self.audioPlayer.currentItem cancelPendingSeeks];
+                            [self seekToDate:date forward:forward failover:YES];
+                        });
+                        
+                        return;
+                    }
+                    
+                    if ( [self.audioPlayer rate] == 0.0 ) {
+                        [self playStream];
+                    }
+                    self.status = StreamStatusPlaying;
+                    if ([self.delegate respondsToSelector:@selector(onSeekCompleted)]) {
+                        [self.delegate onSeekCompleted];
+                    }
+                }
+            }];
+            
+        });
+        
+        return;
+    }
+    
     int64_t tsn = 0;
+    int64_t tsmsd = 0;
     int64_t start = 0;
     CMTime barometer;
     for ( NSValue *str in self.audioPlayer.currentItem.seekableTimeRanges ) {
@@ -272,28 +319,40 @@ static const NSString *ItemStatusContext;
             barometer = r.duration;
         }
         
-
-        tsn = [date timeIntervalSinceDate:[self maxSeekableDate]];
-        start = abs(CMTimeGetSeconds(r.start));
-        tsn = labs(tsn);
-
+        
+        tsn = [date timeIntervalSinceDate:[NSDate date]];
+        tsmsd = [date timeIntervalSinceDate:[self maxSeekableDate]];
+        NSInteger diff = [[self maxSeekableDate] timeIntervalSinceDate:[NSDate date]];
+        
+        start = CMTimeGetSeconds(r.start);
+        tsn = labs(tsn) - CMTimeGetSeconds(r.start);
+        tsmsd = labs(tsmsd) - CMTimeGetSeconds(r.start);
+        
+        tsn = MAX(tsmsd, tsn);
+        
+        if ( diff < 0 ) {
+            tsn += diff;
+        }
+        if ( start < 0 ) {
+            tsn -= start;
+        }
     }
     
-    if ( self.audioPlayer.currentItem.seekableTimeRanges.count == 0 || start < 0 ) {
+    if ( self.audioPlayer.currentItem.seekableTimeRanges.count == 0 ) {
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.75 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             NSLog(@" ******* BUFFERING ******* ");
             if ( [self.delegate respondsToSelector:@selector(interfere)] ) {
                 [self.delegate interfere];
             }
             [self.audioPlayer.currentItem cancelPendingSeeks];
-            [self seekToDate:date];
+            [self seekToDate:date forward:forward failover:YES];
         });
         return;
     }
     
     
     NSLog(@"Seek in seconds : %ld",(long)tsn);
-
+    
     CMTime seekTime = CMTimeMakeWithSeconds(CMTimeGetSeconds(barometer) - tsn, barometer.timescale);
     [self.audioPlayer.currentItem seekToTime:seekTime completionHandler:^(BOOL finished) {
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -305,7 +364,7 @@ static const NSString *ItemStatusContext;
                         [self.delegate interfere];
                     }
                     [self.audioPlayer.currentItem cancelPendingSeeks];
-                    [self seekToDate:date];
+                    [self seekToDate:date forward:forward failover:YES];
                 });
             }
             
@@ -318,11 +377,16 @@ static const NSString *ItemStatusContext;
             }
         });
     }];
+}
 
+- (void)seekToDate:(NSDate *)date {
+    
+    [self seekToDate:date forward:abs([date timeIntervalSinceDate:[NSDate date]] > 60)
+            failover:NO];
 }
 
 - (void)specialSeekToDate:(NSDate *)date {
-    [self.audioPlayer pause];
+  /*  [self.audioPlayer pause];
     [self.audioPlayer.currentItem seekToDate:[self maxSeekableDate] completionHandler:^(BOOL finished) {
 
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
@@ -330,6 +394,8 @@ static const NSString *ItemStatusContext;
         });
         
     }];
+   
+   */
 }
 
 - (void)forwardSeekLive {
@@ -337,7 +403,7 @@ static const NSString *ItemStatusContext;
         [self buildStreamer:kHLSLiveStreamURL];
     }
 
-    [self seekToDate:[self maxSeekableDate]];
+    [self seekToDate:[self maxSeekableDate] forward:YES failover:NO];
 }
 
 - (void)forwardSeekThirtySeconds {

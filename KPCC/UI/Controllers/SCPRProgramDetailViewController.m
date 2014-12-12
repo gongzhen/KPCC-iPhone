@@ -53,6 +53,10 @@
                                   completion:^(BOOL status) {
                                       self.programBgImage.contentMode = UIViewContentModeCenter;
                                       [self.blurView setNeedsDisplay];
+                                      UIImage *blurred = [self.programBgImage.image blurredImageWithRadius:20.0f
+                                                                                                iterations:1
+                                                                                                 tintColor:[UIColor clearColor]];
+                                      [[DesignManager shared] setCurrentBlurredImage:blurred];
                                   }];
 
     [[NetworkManager shared] fetchEpisodesForProgram:_program.program_slug
@@ -69,7 +73,7 @@
                                                   Episode *episode = [[Episode alloc] initWithDict:episodeDict];
                                                   if (episode.audio != nil) {
                                                       [episodesArray addObject:episode];
-                                                  } else {
+                                                  } /*else {
                                                       if (episode.segments != nil && [episode.segments count] > 0) {
                                                           for (Segment *segment in episode.segments) {
                                                               if ( segment.audio ) {
@@ -77,7 +81,7 @@
                                                               }
                                                           }
                                                       }
-                                                  }
+                                                  }*/
                                               }
                                               
                                               self.episodesList = episodesArray;

@@ -33,7 +33,7 @@ static long kStreamBufferLimit = 4*60*60;
 #pragma mark - Session Mgmt
 - (NSTimeInterval)secondsBehindLive {
     NSDate *currentTime = [AudioManager shared].audioPlayer.currentItem.currentDate;
-    NSDate *msd = [[AudioManager shared] maxSeekableDate];
+    NSDate *msd = [NSDate date];
     NSTimeInterval ctTI = [currentTime timeIntervalSince1970];
     NSTimeInterval msdTI = [msd timeIntervalSince1970];
     NSTimeInterval seconds = abs(ctTI - msdTI);
@@ -532,8 +532,11 @@ static long kStreamBufferLimit = 4*60*60;
     NSDate *soft = cp.soft_starts_at;
     NSDate *hard = cp.starts_at;
     NSDate *now = [NSDate date];
-    if ( [self sessionIsBehindLive] ) {
-        now = [[AudioManager shared].audioPlayer.currentItem currentDate];
+    
+    if ( [[AudioManager shared] status] != StreamStatusStopped ) {
+        if ( [self sessionIsBehindLive] ) {
+            now = [[AudioManager shared].audioPlayer.currentItem currentDate];
+        }
     }
     
     NSTimeInterval softTI = [soft timeIntervalSince1970]+60;

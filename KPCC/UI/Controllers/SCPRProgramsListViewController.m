@@ -61,9 +61,6 @@
                                 andImageView:self.programBgImage
                                   completion:^(BOOL status) {
                                       [self.blurView setNeedsDisplay];
-                                      [[DesignManager shared] setCurrentBlurredImage:[self.programBgImage.image blurredImageWithRadius:20.f
-                                                                                                                            iterations:1
-                                                                                                                             tintColor:[UIColor clearColor]]];
                                   }];
     
     self.view.backgroundColor = [UIColor clearColor];
