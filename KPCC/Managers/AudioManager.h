@@ -129,6 +129,9 @@ typedef NS_ENUM(NSUInteger, StreamStatus) {
 @property (NS_NONATOMIC_IOSONLY, readonly) double observedMaxBitrate;
 @property (NS_NONATOMIC_IOSONLY, readonly) double observedMinBitrate;
 @property (NS_NONATOMIC_IOSONLY, readonly, copy) NSString *currentDateTimeString;
+
+@property BOOL suppressTimeObservation;
+
 - (void)updateNowPlayingInfoWithAudio:(id)audio;
 
 - (void)seekToPercent:(CGFloat)percent;
@@ -146,6 +149,8 @@ typedef NS_ENUM(NSUInteger, StreamStatus) {
 - (void)threadedAdjustWithValue:(CGFloat)increment completion:(void (^)(void))completion;
 - (void)takedownAudioPlayer;
 - (void)resetPlayer;
+
+- (void)cheatPlay;
 
 - (NSDate*)cookDateForActualSchedule:(NSDate*)date;
 
