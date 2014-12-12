@@ -16,6 +16,6 @@
 
 @property (nonatomic,strong) UILabel* episodeTitleLabel;
 @property (nonatomic,strong) UILabel* episodeInfoLabel;
-@property (nonatomic,strong) id episode;
+@property (nonatomic,strong) Episode *episode;
 
 @end

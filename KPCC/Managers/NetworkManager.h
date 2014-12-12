@@ -47,7 +47,6 @@ typedef NS_ENUM(NSInteger, NetworkHealth) {
 - (void)fetchEpisodesForProgram:(NSString*)slug completion:(CompletionBlockWithValue)completion;
 - (void)fetchEditions:(CompletionBlockWithValue)completion;
 
-- (void)processResponseData:(NSDictionary*)content;
 
 
 - (void)requestFromSCPRWithEndpoint:(NSString *)endpoint completion:(CompletionBlockWithValue)completion;

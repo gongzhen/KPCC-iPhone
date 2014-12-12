@@ -44,7 +44,7 @@ static NSString *kCommentsPlaceholder = @"... Add your comments here";
     self.splashBlurView.blurRadius = 7.0f;
     self.splashView.image = [UIImage imageNamed:@"onboarding-tile.jpg"];
     self.navigationItem.title = @"Feedback";
-
+    self.splashView.alpha = 0.33;
     
     self.feedbackTable.separatorColor = [UIColor lightGrayColor];
     
@@ -73,7 +73,11 @@ static NSString *kCommentsPlaceholder = @"... Add your comments here";
                                                                             attributes:@{ NSForegroundColorAttributeName : [[UIColor virtualWhiteColor] translucify:0.63] }];
     self.nameTextField.attributedPlaceholder = nph;
     self.emailTextField.attributedPlaceholder = eph;
-    self.descriptionInputView.attributedText = dph;
+    self.descriptionInputView.attributedPlaceholder = dph;
+    
+    self.nameTextField.returnKeyType = UIReturnKeyNext;
+    self.emailTextField.returnKeyType = UIReturnKeyNext;
+    self.descriptionInputView.returnKeyType = UIReturnKeyNext;
     
     self.splashBlurView.backgroundColor = [UIColor clearColor];
     self.splashView.contentMode = UIViewContentModeScaleAspectFill;
@@ -256,11 +260,11 @@ static NSString *kCommentsPlaceholder = @"... Add your comments here";
 }
 
 - (void)showBar {
-    [self.toolbar presentOnController:self withOptions:@{}];
+   // [self.toolbar presentOnController:self withOptions:@{}];
 }
 
 - (void)hideBar {
-    [self.toolbar dismiss];
+  //  [self.toolbar dismiss];
 }
 
 #pragma mark - UITableView
@@ -395,13 +399,27 @@ static NSString *kCommentsPlaceholder = @"... Add your comments here";
 }
 
 #pragma mark - UITextView
+/*
 - (void)textViewDidBeginEditing:(UITextView *)textView {
+    
+    textView.userInteractionEnabled = NO;
+    
     if ( SEQ(textView.attributedText.string,kCommentsPlaceholder) ) {
         textView.attributedText = [[NSMutableAttributedString alloc] initWithString:@""
                                                                          attributes:@{}];
     }
+    
+    [self.feedbackTable setContentOffset:CGPointMake(0.0,240.0)
+                                animated:YES];
+    
     self.currentField = textView;
     [self showBar];
+    
+    if ( !self.tapper ) {
+        self.tapper = [[UITapGestureRecognizer alloc] initWithTarget:self
+                                                              action:@selector(dk)];
+        [self.view addGestureRecognizer:self.tapper];
+    }
 }
 
 - (void)textViewDidEndEditing:(UITextView *)textView {
@@ -410,20 +428,69 @@ static NSString *kCommentsPlaceholder = @"... Add your comments here";
         textView.attributedText = [[NSMutableAttributedString alloc] initWithString:kCommentsPlaceholder
                                                                          attributes:@{ NSForegroundColorAttributeName : [[UIColor virtualWhiteColor] translucify:0.63] }];
     }
+    
+
 }
+
+- (BOOL)textViewShouldEndEditing:(UITextView *)textView {
+    [self.nameTextField becomeFirstResponder];
+ 
+    return YES;
+}
+*/
 
 #pragma mark - UITextField
 - (void)textFieldDidBeginEditing:(UITextField *)textField {
     self.currentField = textField;
+    NSLog(@"Current offset : %1.1f",self.feedbackTable.contentOffset.y);
     
-    [self.feedbackTable setContentOffset:CGPointMake(0.0,0.0)
+    if ( textField == self.descriptionInputView ) {
+        [self.feedbackTable setContentOffset:CGPointMake(0.0,240.0)
+                                    animated:YES];
+    } else {
+        [self.feedbackTable setContentOffset:CGPointMake(0.0,0.0)
                                 animated:YES];
+    }
     
     [self showBar];
+    if ( !self.tapper ) {
+        self.tapper = [[UITapGestureRecognizer alloc] initWithTarget:self
+                                                              action:@selector(dk)];
+        [self.view addGestureRecognizer:self.tapper];
+    }
 }
 
 - (void)textFieldDidEndEditing:(UITextField *)textField {
     [self hideBar];
+ 
+    
+}
+
+- (BOOL)textFieldShouldReturn:(UITextField *)textField {
+    if ( textField == self.nameTextField ) {
+        [self.emailTextField becomeFirstResponder];
+    }
+    if ( textField == self.emailTextField ) {
+        [self.descriptionInputView becomeFirstResponder];
+    }
+    if ( textField == self.descriptionInputView ) {
+        [self.nameTextField becomeFirstResponder];
+    }
+    
+    return YES;
+}
+
+- (void)dk {
+    [self.view removeGestureRecognizer:self.tapper];
+    self.tapper = nil;
+    
+    [self.nameTextField resignFirstResponder];
+    [self.emailTextField resignFirstResponder];
+    [self.descriptionInputView resignFirstResponder];
+    
+    self.nameTextField.userInteractionEnabled = YES;
+    self.emailTextField.userInteractionEnabled = YES;
+    self.descriptionInputView.userInteractionEnabled = YES;
 }
 
 - (void)didReceiveMemoryWarning

@@ -12,6 +12,7 @@
 #import "AnalyticsManager.h"
 #import "AudioChunk.h"
 #import "QueueManager.h"
+#import "UXmanager.h"
 
 static long kStreamBufferLimit = 4*60*60;
 
@@ -32,7 +33,7 @@ static long kStreamBufferLimit = 4*60*60;
 #pragma mark - Session Mgmt
 - (NSTimeInterval)secondsBehindLive {
     NSDate *currentTime = [AudioManager shared].audioPlayer.currentItem.currentDate;
-    NSDate *msd = [[AudioManager shared] maxSeekableDate];
+    NSDate *msd = [NSDate date];
     NSTimeInterval ctTI = [currentTime timeIntervalSince1970];
     NSTimeInterval msdTI = [msd timeIntervalSince1970];
     NSTimeInterval seconds = abs(ctTI - msdTI);
@@ -223,6 +224,21 @@ static long kStreamBufferLimit = 4*60*60;
                                            }];
 }
 
+#pragma mark - Cache
+- (void)resetCache {
+    
+  
+    [[NSURLCache sharedURLCache] removeAllCachedResponses];
+    
+    NSURLCache *shinyCache = [[NSURLCache alloc] initWithMemoryCapacity:2*1024*1024
+                                                           diskCapacity:16*1024*1024
+                                                               diskPath:nil];
+    
+    [NSURLCache setSharedURLCache:shinyCache];
+   
+    
+}
+
 #pragma mark - Program
 - (void)fetchOnboardingProgramWithSegment:(NSInteger)segment completed:(CompletionBlockWithValue)completed {
     NSMutableDictionary *p = [NSMutableDictionary new];
@@ -286,6 +302,10 @@ static long kStreamBufferLimit = 4*60*60;
 #ifdef TEST_PROGRAM_IMAGE
                 touch = YES;
 #endif
+                if ( touch ) {
+                    touch = ![self ignoreProgramUpdating];
+                }
+                
                 self.currentProgram = programObj;
                 if ( touch ) {
                     [[NSNotificationCenter defaultCenter] postNotificationName:@"program_has_changed"
@@ -310,11 +330,17 @@ static long kStreamBufferLimit = 4*60*60;
 - (void)fetchCurrentProgram:(CompletionBlockWithValue)completed {
     
     NSDate *d2u = [NSDate date];
-    if ( [self sessionIsBehindLive] ) {
+    if ( [self sessionIsBehindLive] && ![self seekForwardRequested] ) {
         d2u = [[AudioManager shared].audioPlayer.currentItem currentDate];
         NSLog(@"Adjusted time to fetch program : %@",[NSDate stringFromDate:d2u
                                                                  withFormat:@"hh:mm:ss a"]);
     }
+    
+    if ( !d2u ) {
+        completed(nil);
+        return;
+    }
+    
     [self fetchProgramAtDate:d2u completed:completed];
 }
 
@@ -339,7 +365,7 @@ static long kStreamBufferLimit = 4*60*60;
         cookDate = YES;
     }
     
-    NSDate *nowToUse = cookDate ? cp.soft_starts_at : now;
+    NSDate *nowToUse = cookDate ? fakeNow : now;
     NSDateComponents *components = [[NSCalendar currentCalendar] components:unit
                                                                    fromDate:nowToUse];
     
@@ -372,12 +398,12 @@ static long kStreamBufferLimit = 4*60*60;
     if ( cookDate ) {
         sinceNow = minDiff * 60 + 6;
     }
-    if ( [self useLocalNotifications] ) {
+/*    if ( [self useLocalNotifications] ) {
         UILocalNotification *localNote = [[UILocalNotification alloc] init];
         localNote.fireDate = then;
         localNote.alertBody = kUpdateProgramKey;
         [[UIApplication sharedApplication] scheduleLocalNotification:localNote];
-    } else {
+    } else { */
         
 
         self.programUpdateTimer = [NSTimer scheduledTimerWithTimeInterval:sinceNow
@@ -388,7 +414,7 @@ static long kStreamBufferLimit = 4*60*60;
 #ifdef DEBUG
         NSLog(@"Program will check itself again at %@ (Approx %@ from now)",[then prettyTimeString],[NSDate prettyTextFromSeconds:sinceNow]);
 #endif
-    }
+   // }
 #else
     NSDate *threeMinutesFromNow = [[NSDate date] dateByAddingTimeInterval:96];
     NSLog(@"Program will check itself again at : %@",[threeMinutesFromNow prettyTimeString]);
@@ -403,23 +429,25 @@ static long kStreamBufferLimit = 4*60*60;
 }
 
 - (void)disarmProgramUpdater {
-    if ( [self useLocalNotifications] ) {
+/*    if ( [self useLocalNotifications] ) {
         [[UIApplication sharedApplication] cancelAllLocalNotifications];
-    } else {
-        if ( self.programUpdateTimer ) {
-            if ( [self.programUpdateTimer isValid] ) {
-                [self.programUpdateTimer invalidate];
-            }
-            self.programUpdateTimer = nil;
+    } else {*/
+    if ( self.programUpdateTimer ) {
+        if ( [self.programUpdateTimer isValid] ) {
+            [self.programUpdateTimer invalidate];
         }
+        self.programUpdateTimer = nil;
     }
+   // }
 }
 
 - (BOOL)ignoreProgramUpdating {
     
+    if ( [[UXmanager shared] onboardingEnding] ) return NO;
+    if ( [self seekForwardRequested] ) return NO;
     if ( [self sessionIsExpired] ) return NO;
     if (
-            /*[[AudioManager shared] status] == StreamStatusPaused  ||*/
+            ([[AudioManager shared] status] == StreamStatusPaused && [AudioManager shared].currentAudioMode != AudioModeOnboarding)  ||
             [[AudioManager shared] currentAudioMode] == AudioModeOnDemand
         
         )
@@ -459,13 +487,21 @@ static long kStreamBufferLimit = 4*60*60;
 }
 #endif
 
+- (BOOL)programDirty:(Program *)p {
+    Program *cp = self.currentProgram;
+    if ( !cp ) {
+        return YES;
+    }
+    return !SEQ(p.program_slug,cp.program_slug);
+}
+
 #pragma mark - State handling
 - (BOOL)sessionIsBehindLive {
     
     NSDate *currentDate = [[AudioManager shared].audioPlayer.currentItem currentDate];
     NSDate *live = [[AudioManager shared] maxSeekableDate];
     
-    if ( abs([live timeIntervalSince1970] - [currentDate timeIntervalSince1970]) > 120 ) {
+    if ( abs([live timeIntervalSince1970] - [currentDate timeIntervalSince1970]) > 60 ) {
         return YES;
     }
     
@@ -489,15 +525,21 @@ static long kStreamBufferLimit = 4*60*60;
 - (BOOL)sessionIsInRecess {
     
     if ( [[AudioManager shared] currentAudioMode] == AudioModeOnDemand ) return NO;
+    if ( [[AudioManager shared] currentAudioMode] == AudioModeOnboarding ) return NO;
+    if ( [[AudioManager shared] status] == StreamStatusPaused ) return NO;
+    
     Program *cp = self.currentProgram;
     NSDate *soft = cp.soft_starts_at;
     NSDate *hard = cp.starts_at;
     NSDate *now = [NSDate date];
-    if ( [self sessionIsBehindLive] ) {
-        now = [[AudioManager shared].audioPlayer.currentItem currentDate];
+    
+    if ( [[AudioManager shared] status] != StreamStatusStopped ) {
+        if ( [self sessionIsBehindLive] ) {
+            now = [[AudioManager shared].audioPlayer.currentItem currentDate];
+        }
     }
     
-    NSTimeInterval softTI = [soft timeIntervalSince1970];
+    NSTimeInterval softTI = [soft timeIntervalSince1970]+60;
     NSTimeInterval hardTI = [hard timeIntervalSince1970];
     NSTimeInterval nowTI = [now timeIntervalSince1970];
     if ( nowTI >= hardTI && nowTI <= softTI ) {

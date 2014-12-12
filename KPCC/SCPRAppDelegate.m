@@ -25,6 +25,9 @@
 @implementation SCPRAppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+    
+    //[[AudioManager shared] resetPlayer];
+    
     NSError* error;
     [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback error:&error];
     [[AVAudioSession sharedInstance] setActive:YES error:&error];
@@ -92,9 +95,12 @@
 - (void)application:(UIApplication *)application didRegisterUserNotificationSettings:(UIUserNotificationSettings *)notificationSettings {
     UIUserNotificationType types = notificationSettings.types;
     
+    [application registerForRemoteNotifications];
+    
     [[UXmanager shared] setSuppressBalloon:YES];
     [[SessionManager shared] setUseLocalNotifications:( types & UIUserNotificationTypeAlert )];
    
+    
     if ( ![[UXmanager shared] userHasSeenOnboarding] ) {
         [[UXmanager shared] closeOutOnboarding];
     }
@@ -105,6 +111,19 @@
     if ( ![[UXmanager shared] userHasSeenOnboarding] ) {
         [[UXmanager shared] closeOutOnboarding];
     }
+}
+
+- (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
+    const unsigned *tokenBytes = [deviceToken bytes];
+    NSString *hexToken = [NSString stringWithFormat:@"%08x%08x%08x%08x%08x%08x%08x%08x",
+                          ntohl(tokenBytes[0]), ntohl(tokenBytes[1]), ntohl(tokenBytes[2]),
+                          ntohl(tokenBytes[3]), ntohl(tokenBytes[4]), ntohl(tokenBytes[5]),
+                          ntohl(tokenBytes[6]), ntohl(tokenBytes[7])];
+    [[UXmanager shared].settings setPushTokenData:deviceToken];
+    [[UXmanager shared].settings setPushTokenString:hexToken];
+    [[UXmanager shared] persist];
+    
+    NSLog(@" ***** REGISTERING PUSH TOKEN : %@ *****", hexToken);
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application {

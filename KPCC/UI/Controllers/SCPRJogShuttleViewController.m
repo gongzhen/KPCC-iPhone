@@ -26,6 +26,7 @@
 @property SpinDirection direction;
 
 @property (atomic) BOOL completionBit;
+@property (atomic) BOOL killBit;
 @property (nonatomic,strong) AVAudioPlayer *rewindTriggerPlayer;
 @property BOOL muteSound;
 
@@ -68,6 +69,8 @@
         
     }
     
+    self.rewindTriggerPlayer.volume = 0.35;
+    
 }
 
 - (void)didReceiveMemoryWarning {
@@ -99,7 +102,7 @@
     
     self.tension = 0.75;
     self.strokeColor = [UIColor whiteColor];
-    self.strokeWidth = 2.0;
+    self.strokeWidth = 1.5f;
     self.muteSound = !withSound;
     self.direction = direction;
     
@@ -114,17 +117,16 @@
 
 - (void)animateIndefinitelyWithViewToHide:(UIView *)hideableView completion:(void (^)(void))completion {
     
-
     self.tension = 0.75;
     self.strokeColor = [UIColor whiteColor];
-    self.strokeWidth = 2.0;
+    self.strokeWidth = 1.5f;
     self.direction = SpinDirectionForward;
     self.soundPlayedBit = YES;
     self.completionBit = NO;
     self.view.alpha = 1.0;
     self.view.layer.opacity = 1.0;
     
-    [self animateWithSpeed:0.66
+    [self animateWithSpeed:0.76
                    tension:self.tension
                      color:self.strokeColor
                strokeWidth:self.strokeWidth
@@ -143,23 +145,19 @@
     self.spinning = YES;
     if ( !self.soundPlayedBit ) {
         self.soundPlayedBit = YES;
-        //if ( [[AudioManager shared] isStreamPlaying] ) {
-            [[AudioManager shared] adjustAudioWithValue:-0.1 completion:^{
-                if ( !self.muteSound ) {
-                    [self.rewindTriggerPlayer play];
-                }
-                [self animateWithSpeed:duration
-                               tension:tension
-                                 color:color
-                           strokeWidth:strokeWidth
-                          hideableView:viewToHide
-                            completion:completion];
-            }];
-            
-            return;
-       // } else {
-           // [self.rewindTriggerPlayer play];
-       // }
+        [[AudioManager shared] adjustAudioWithValue:-0.1 completion:^{
+            if ( !self.muteSound ) {
+                [self.rewindTriggerPlayer play];
+            }
+            [self animateWithSpeed:duration
+                           tension:tension
+                             color:color
+                       strokeWidth:strokeWidth
+                      hideableView:viewToHide
+                        completion:completion];
+        }];
+        
+        return;
     }
     
     self.tension = tension;
@@ -187,8 +185,6 @@
         
         [UIView animateWithDuration:0.15 animations:^{
             self.prehiddenFrame = viewToHide.frame;
-            CGAffineTransform tForm = CGAffineTransformMakeScale(0.1, 0.1);
-            viewToHide.transform = tForm;
             viewToHide.alpha = 0.0;
         }];
         
@@ -196,33 +192,17 @@
     
     [CATransaction begin]; {
         [CATransaction setCompletionBlock:^{
-            if ( self.forceSingleRotation ) {
-                self.view.layer.transform = CATransform3DMakeRotation(M_PI_4, 0.0, 0.0, 1.0);
-                CABasicAnimation* rotationAnimation;
-                rotationAnimation = [CABasicAnimation animationWithKeyPath:@"transform.rotation.z"];
-                
-                CGFloat modifier = self.direction == SpinDirectionBackward ? -1.0 : 1.0;
-
-                
-                rotationAnimation.toValue = [NSNumber numberWithFloat:2.0*M_PI*modifier];
-                rotationAnimation.duration = 0.2;
-                rotationAnimation.cumulative = YES;
-                rotationAnimation.repeatCount = 1.0;
-                rotationAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseIn];
-                rotationAnimation.removedOnCompletion = YES;
-                [self.view.layer addAnimation:rotationAnimation
-                                       forKey:@"transform.rotation.z"];
-                self.completionBit = YES;
-                self.forceSingleRotation = NO;
-            }
             if ( self.completionBit ) {
                 [UIView animateWithDuration:0.15 animations:^{
-                    // FIXME: Really this should also reset the alpha to 1, but it doesn't exactly fit the timing
-                    // of the overall animation
-                    CGAffineTransform tForm = CGAffineTransformMakeScale(1.0, 1.0);
-                    viewToHide.transform = tForm;
                     viewToHide.alpha = 1.0;
                 } completion:^(BOOL finished) {
+                    if ( self.killBit ) {
+                        self.completionBit = NO;
+                        self.killBit = NO;
+                        return;
+                    }
+                    
+                    self.completionBit = NO;
                     if ( completion )
                         [self completeWithCallback:completion];
                 }];
@@ -259,9 +239,9 @@
         CGFloat degrees = 0.0;
         CGFloat modifier = self.direction == SpinDirectionBackward ? -1.0 : 1.0;
         if ( self.forceSingleRotation ) {
-            degrees = modifier * M_PI * 6.0;
+            degrees = modifier * M_PI * 4.0;
         } else {
-            degrees = M_PI_4 / 2;
+            degrees = modifier * M_PI * 4.0;
         }
         
         rotationAnimation.toValue = [NSNumber numberWithFloat:degrees];
@@ -320,6 +300,13 @@
 
 - (void)endAnimations {
     if ( self.spinning ) {
+        [self setCompletionBit:YES];
+    }
+}
+
+- (void)killAnimations {
+    if ( self.spinning ) {
+        [self setKillBit:YES];
         [self setCompletionBit:YES];
     }
 }

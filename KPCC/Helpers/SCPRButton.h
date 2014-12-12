@@ -13,6 +13,8 @@
 @property SEL postPushMethod;
 @property (nonatomic, weak) id target;
 @property BOOL small;
+@property BOOL locked;
+@property (nonatomic,strong) NSTimer *lockTimer;
 
 - (void)addTarget:(id)target action:(SEL)action forControlEvents:(UIControlEvents)controlEvents special:(BOOL)special;
 - (void)stretch;

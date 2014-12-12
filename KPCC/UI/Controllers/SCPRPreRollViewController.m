@@ -51,6 +51,11 @@
             completion(false);
         }];
         
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(preRollCompleted)
+                                                     name:AVPlayerItemDidPlayToEndTimeNotification
+                                                   object:nil];
+        
         // Play audio for ad
         [[AudioManager shared] playAudioWithURL:self.tritonAd.audioCreativeUrl];
         
@@ -72,6 +77,9 @@
                                                             selector:@selector(setAdProgress)
                                                             userInfo:nil
                                                              repeats:YES];
+                
+
+                
             }
             completion(YES);
         }];
@@ -80,6 +88,13 @@
     } else {
         completion(YES);
     }
+}
+
+- (void)preRollCompleted {
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:AVPlayerItemDidPlayToEndTimeNotification
+                                                  object:nil];
+    [self.delegate preRollCompleted];
 }
 
 
@@ -93,8 +108,6 @@
         }];
     }
     
-
-
     [UIView animateWithDuration:0.3f animations:^{
         CGRect frame = CGRectMake(self.view.frame.origin.x,
                                   -self.view.frame.size.height,
@@ -123,9 +136,6 @@
         
         dispatch_async(dispatch_get_main_queue(), ^{
             [self.adProgressView setProgress:(currentPresentedDuration/[self.tritonAd.audioCreativeDuration floatValue]) animated:YES];
-            if (currentPresentedDuration >= [self.tritonAd.audioCreativeDuration floatValue]) {
-                [self dismissTapped:nil];
-            }
         });
     }
 }

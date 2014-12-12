@@ -73,8 +73,9 @@
 
 - (void)revealLensWithOrigin:(CGPoint)origin {
     
-    self.lensTopConstraint.constant = origin.y;
-    self.lenstLeftConstraint.constant = origin.x;
+    CGFloat modifier = [Utils isIOS8] ? 0.0 : 20.0;
+    self.lensTopConstraint.constant = origin.y+modifier;
+    self.lenstLeftConstraint.constant = origin.x+modifier;
     
     POPSpringAnimation *scaleAnimation = [POPSpringAnimation animationWithPropertyNamed:kPOPLayerScaleXY];
     scaleAnimation.fromValue  = [NSValue valueWithCGSize:CGSizeMake(0.0f, 0.0f)];
@@ -188,6 +189,7 @@
 }
 
 - (void)ondemandMode {
+    self.view.alpha = 0.0;
     self.onDemandContainerView.alpha = 1.0;
     self.notificationsView.alpha = 0.0;
     self.brandingView.alpha = 0.0;
@@ -217,15 +219,23 @@
                          action:@selector(dismissOnDemand)
                forControlEvents:UIControlEventTouchUpInside
                         special:YES];
+    
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.25 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [UIView animateWithDuration:0.25 animations:^{
+            self.view.alpha = 1.0;
+        }];
+    });
 }
 
 - (void)dismissOnDemand {
     [UIView animateWithDuration:0.25 animations:^{
         self.onDemandContainerView.alpha = 0.0;
-    } completion:^(BOOL finished) {
         self.view.alpha = 0.0;
+    } completion:^(BOOL finished) {
         [UXmanager shared].settings.userHasViewedOnDemandOnboarding = YES;
+#ifndef DEBUG
         [[UXmanager shared] persist];
+#endif
     }];
 }
 

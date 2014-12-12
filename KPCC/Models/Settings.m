@@ -13,6 +13,8 @@
 - (id)initWithCoder:(NSCoder *)aDecoder {
     self.userHasViewedOnboarding = [aDecoder decodeBoolForKey:@"userHasViewedOnboarding"];
     self.userHasViewedOnDemandOnboarding = [aDecoder decodeBoolForKey:@"userHasViewedOnDemandOnboarding"];
+    self.pushTokenString = [aDecoder decodeObjectForKey:@"pushTokenString"];
+    self.pushTokenData = [aDecoder decodeObjectForKey:@"pushTokenData"];
     return self;
 }
 
@@ -21,6 +23,10 @@
                 forKey:@"userHasViewedOnboarding"];
     [aCoder encodeBool:self.userHasViewedOnDemandOnboarding
                 forKey:@"userHasViewedOnDemandOnboarding"];
+    [aCoder encodeObject:self.pushTokenData
+                  forKey:@"pushTokenData"];
+    [aCoder encodeObject:self.pushTokenString
+                  forKey:@"pushTokenString"];
 }
 
 @end

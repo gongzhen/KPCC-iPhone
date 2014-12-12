@@ -16,5 +16,6 @@
 + (UIColor*)kpccPeriwinkleColor;
 @property (NS_NONATOMIC_IOSONLY, readonly, copy) UIColor *intensify;
 + (UIColor*)virtualWhiteColor;
++ (UIColor*)paleHorseColor;
 
 @end

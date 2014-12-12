@@ -97,6 +97,9 @@ typedef NS_ENUM(NSUInteger, StreamStatus) {
 @property BOOL autoMuted;
 @property BOOL temporaryMutex;
 @property BOOL easeInAudio;
+@property BOOL waitForSeek;
+
+@property (nonatomic, strong) NSDate *queuedSeekDate;
 
 @property NSInteger onboardingSegment;
 @property AudioMode currentAudioMode;
@@ -126,10 +129,14 @@ typedef NS_ENUM(NSUInteger, StreamStatus) {
 @property (NS_NONATOMIC_IOSONLY, readonly) double observedMaxBitrate;
 @property (NS_NONATOMIC_IOSONLY, readonly) double observedMinBitrate;
 @property (NS_NONATOMIC_IOSONLY, readonly, copy) NSString *currentDateTimeString;
+
+@property BOOL audioCheating;
+
 - (void)updateNowPlayingInfoWithAudio:(id)audio;
 
 - (void)seekToPercent:(CGFloat)percent;
 - (void)seekToDate:(NSDate *)date;
+- (void)seekToDate:(NSDate *)date forward:(BOOL)forward failover:(BOOL)failover;
 - (void)specialSeekToDate:(NSDate*)date;
 
 - (void)forwardSeekLive;
@@ -143,6 +150,8 @@ typedef NS_ENUM(NSUInteger, StreamStatus) {
 - (void)threadedAdjustWithValue:(CGFloat)increment completion:(void (^)(void))completion;
 - (void)takedownAudioPlayer;
 - (void)resetPlayer;
+
+- (void)cheatPlay;
 
 - (NSDate*)cookDateForActualSchedule:(NSDate*)date;
 

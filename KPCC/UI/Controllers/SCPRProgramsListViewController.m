@@ -11,6 +11,7 @@
 #import "SCPRProgramDetailViewController.h"
 #import "DesignManager.h"
 #import "AnalyticsManager.h"
+#import <FXBlurView.h>
 
 /**
  * Programs with these slugs will be hidden from this table view.
@@ -55,11 +56,13 @@
     self.blurView.blurRadius = 20.f;
     self.blurView.dynamic = NO;
 
+    
     [[DesignManager shared] loadProgramImage:_currentProgram.program_slug
                                 andImageView:self.programBgImage
                                   completion:^(BOOL status) {
                                       [self.blurView setNeedsDisplay];
                                   }];
+    
     self.view.backgroundColor = [UIColor clearColor];
 
     // Fetch all Programs from CoreData and filter, given HIDDEN_PROGRAMS.

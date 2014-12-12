@@ -13,6 +13,8 @@
 #import <POP/POP.h>
 #import "SCPRAppDelegate.h"
 
+@import MessageUI;
+
 #define kMediaServerPath @"http://media.scpr.org/iphone/program-images/"
 
 static DesignManager *singleton = nil;
@@ -24,6 +26,7 @@ static DesignManager *singleton = nil;
     if (!singleton) {
         @synchronized(self) {
             singleton = [[DesignManager alloc] init];
+  
         }
     }
     return singleton;
@@ -47,6 +50,7 @@ static DesignManager *singleton = nil;
 
         NSURL *imageUrl = [NSURL URLWithString:[NSString stringWithFormat:@"%@program_tile_%@.jpg", kMediaServerPath, slugWithScale]];
         NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:imageUrl];
+        
 #ifdef TEST_PROGRAM_IMAGE
         if ( self.currentSlug ) {
             if ( SEQ(self.currentSlug,slug) ) {
@@ -74,11 +78,9 @@ static DesignManager *singleton = nil;
                 
                 [imageView.layer addAnimation:transition
                                   forKey:nil];
+                completion(true);
             });
             
-            
-
-            completion(true);
         } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error) {
             [self loadStockPhotoToImageView:imageView];
             completion(true);
@@ -182,6 +184,30 @@ static DesignManager *singleton = nil;
 - (UIFont*)proBold:(CGFloat)size {
     return [UIFont fontWithName:@"FreightSansProSemibold-Regular" size:size];
 
+}
+
+#pragma mark - Appearance
+- (void)normalizeBar {
+    
+    if ( self.barNormalized ) return;
+    
+    self.attributes = [[UINavigationBar appearance] titleTextAttributes];
+    self.barNormalized = YES;
+    [[UINavigationBar appearance] setBarStyle:UIBarStyleDefault];
+    [[UINavigationBar appearance] setBarTintColor:[UIColor paleHorseColor]];
+    [[UINavigationBar appearance] setTitleTextAttributes:@{ NSFontAttributeName : [UIFont boldSystemFontOfSize:18.0],
+                                                            NSForegroundColorAttributeName : [UIColor blackColor] }];
+}
+
+- (void)treatBar {
+    
+    if ( !self.barNormalized ) return;
+    
+    self.barNormalized = NO;
+    [[UINavigationBar appearance] setBarStyle:UIBarStyleDefault];
+    [[UINavigationBar appearance] setBarTintColor:[UIColor kpccOrangeColor]];
+    [[UINavigationBar appearance] setTitleTextAttributes:self.attributes];
+    
 }
 
 @end

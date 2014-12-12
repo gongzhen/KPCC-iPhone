@@ -35,6 +35,8 @@
     } else {
         self.settings = [Settings new];
     }
+    
+    NSLog(@"Device Token : %@",[self.settings pushTokenString]);
 }
 
 - (void)persist {
@@ -96,6 +98,7 @@
     [self.lisaPlayer prepareToPlay];
     [self.musicPlayer prepareToPlay];
     
+    self.lisaPlayer.volume = 1.0;
     self.musicPlayer.volume = 0.2;
 
 }
@@ -105,15 +108,13 @@
     self.onboardingCtrl.view.alpha = 1.0;
     [self.masterCtrl primeOnboarding];
     
-    
     self.onboardingCtrl.interactionButton.frame = [self.masterCtrl.view convertRect:self.masterCtrl.initialControlsView.frame
                                                                              toView:self.onboardingCtrl.view];
     [self.onboardingCtrl.interactionButton addTarget:self.masterCtrl
                                               action:@selector(initialPlayTapped:)
                                     forControlEvents:UIControlEventTouchUpInside];
-    [self.onboardingCtrl.view addSubview:self.onboardingCtrl.interactionButton];
-    //self.onboardingCtrl.interactionButton.backgroundColor = [UIColor orangeColor];
     
+    [self.onboardingCtrl.view addSubview:self.onboardingCtrl.interactionButton];
     [self.onboardingCtrl.view layoutIfNeeded];
     
 }
@@ -154,13 +155,24 @@
                                                           0.0,
                                                           self.onboardingCtrl.navbarMask.frame.size.width,
                                                           64.0);
+        
     } completion:^(BOOL finished) {
         [self.onboardingCtrl.navbarMask.layer removeFromSuperlayer];
         self.onboardingCtrl.interactionButton.alpha = 0.0;
         [self.onboardingCtrl.orangeStripView removeFromSuperview];
         [self.masterCtrl onboarding_beginOnboardingAudio];
+
         [[UIApplication sharedApplication] setStatusBarHidden:NO
                                                 withAnimation:UIStatusBarAnimationSlide];
+        
+        [UIView animateWithDuration:0.15 animations:^{
+            [self.masterCtrl.view setNeedsUpdateConstraints];
+            [self.masterCtrl.liveStreamView setNeedsUpdateConstraints];
+            [self.masterCtrl.liveStreamView setNeedsLayout];
+            [self.masterCtrl.view layoutIfNeeded];
+            [self.masterCtrl.liveStreamView layoutIfNeeded];
+        }];
+
         
         [self.musicPlayer play];
         [self.lisaPlayer play];
@@ -179,22 +191,26 @@
 }
 
 - (void)presentLensOverRewindButton {
-    [self.masterCtrl primeManualControlButton];
-    CGPoint origin = self.masterCtrl.liveRewindAltButton.frame.origin;
-    [self.onboardingCtrl revealLensWithOrigin:[self.masterCtrl.liveStreamView convertPoint:CGPointMake(origin.x, origin.y)
-                                                                          toView:self.onboardingCtrl.view]];
-  
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+    [UIView animateWithDuration:0.15 animations:^{
+        self.masterCtrl.liveRewindAltButton.alpha = 1.0;
+    } completion:^(BOOL finished) {
+        CGPoint origin = self.masterCtrl.liveRewindAltButton.frame.origin;
+        [self.onboardingCtrl revealLensWithOrigin:[self.masterCtrl.liveStreamView convertPoint:CGPointMake(origin.x, origin.y)
+                                                                                        toView:self.onboardingCtrl.view]];
         
-        [self.onboardingCtrl.lensVC squeezeWithAnchorView:self.masterCtrl.liveRewindAltButton completed:^{
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.25 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                [self.masterCtrl activateRewind:RewindDistanceOnboardingBeginning];
-            });
+            [self.onboardingCtrl.lensVC squeezeWithAnchorView:self.masterCtrl.liveRewindAltButton completed:^{
+                
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.25 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                    [self.masterCtrl activateRewind:RewindDistanceOnboardingBeginning];
+                });
+                
+            }];
             
-        }];
-        
-    });
+        });
+    }];
+
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
@@ -210,13 +226,11 @@
                          @"29" : @"closeMenu",
                          @"34" : @"askForNotifications" } mutableCopy];
     
-
 }
 
 - (void)fireHandler {
     NSInteger t = self.lisaPlayer.currentTime;
     if ( self.listeningForQueues ) {
-        NSLog(@"Time is : %ld seconds",(long)t);
         [self handleKeypoint:t];
     }
 }
@@ -362,6 +376,8 @@
 
 - (void)endOnboarding {
 
+    self.onboardingEnding = YES;
+    self.fadeQueue = [[NSOperationQueue alloc] init];
     [[AudioManager shared] setRelativeFauxDate:nil];
     [self.onboardingCtrl.view removeFromSuperview];
     [self fadePlayer:self.musicPlayer];
@@ -372,20 +388,22 @@
         [self.masterCtrl onboarding_fin];
     }];
     
-  
 }
 
 - (void)fadePlayer:(AVAudioPlayer *)player {
-    self.fadeQueue = [[NSOperationQueue alloc] init];
-    while ( player.volume >= 0.0 ) {
-        [self fadeThread:player];
-    }
+    [self fadeThread:player];
 }
 
 - (void)fadeThread:(AVAudioPlayer*)player {
+    
+    if ( player.volume <= 0.0 ) {
+        [player stop];
+        return;
+    }
     NSBlockOperation *block = [NSBlockOperation blockOperationWithBlock:^{
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.05 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            [player setVolume:(player.volume-0.1)];
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            [player setVolume:(player.volume-0.05)];
+            [self fadeThread:player];
         });
     }];
     [self.fadeQueue addOperation:block];

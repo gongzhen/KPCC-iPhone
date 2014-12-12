@@ -51,8 +51,9 @@
     NSOrderedSet* orderedItems = [NSOrderedSet orderedSetWithObjects:   kMenuItemKPCCLive,
                                                                         kMenuItemPrograms,
                                                                         kMenuItemShortList,
+                                                                        kMenuItemDonate,
                                                                         kMenuItemFeedback,
-                                                                        //kMenuItemDonate,
+                                                                        //
                                                                         //kMenuItemSettings,
                                                                         nil];
 
@@ -244,7 +245,7 @@
                          animations:^{
                              if (!fullyOpen)
                              {
-                                 self.center = CGPointMake(self.frame.size.width / 2, (/*(self.frame.size.height / 2) +*/ topMargin + (12.0 * [menuItems count])));
+                                 self.center = CGPointMake(self.frame.size.width / 2, (/*(self.frame.size.height / 2) +*/ topMargin + (16.0 * [menuItems count])));
                                  fullyOpen = YES;
                              }
                          }

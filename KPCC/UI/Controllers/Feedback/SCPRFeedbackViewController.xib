@@ -9,14 +9,13 @@
             <connections>
                 <outlet property="authButton" destination="38" id="51"/>
                 <outlet property="descriptionCell" destination="44" id="48"/>
-                <outlet property="descriptionInputView" destination="45" id="47"/>
+                <outlet property="descriptionInputView" destination="2Ic-Bd-yCr" id="wh5-50-cPX"/>
                 <outlet property="doneButton" destination="18" id="27"/>
                 <outlet property="emailTextField" destination="49" id="50"/>
                 <outlet property="feedbackTable" destination="35" id="36"/>
                 <outlet property="nameTextField" destination="43" id="52"/>
                 <outlet property="nativeSpinner" destination="FZ6-FH-lQR" id="lno-AF-SR6"/>
                 <outlet property="nextButton" destination="19" id="25"/>
-                <outlet property="splashBlurView" destination="fQx-MB-cOZ" id="6H6-Fe-hlg"/>
                 <outlet property="splashView" destination="xcD-fm-YyE" id="4aU-x3-4B3"/>
                 <outlet property="submitFooterView" destination="37" id="46"/>
                 <outlet property="toolbar" destination="17" id="26"/>
@@ -32,10 +31,6 @@
                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="xcD-fm-YyE">
                     <rect key="frame" x="0.0" y="24" width="320" height="544"/>
                 </imageView>
-                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fQx-MB-cOZ" customClass="FXBlurView">
-                    <rect key="frame" x="0.0" y="24" width="320" height="544"/>
-                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                </view>
                 <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="grouped" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" translatesAutoresizingMaskIntoConstraints="NO" id="35">
                     <rect key="frame" x="0.0" y="24" width="320" height="544"/>
                     <color key="backgroundColor" white="1" alpha="0.0" colorSpace="custom" customColorSpace="calibratedWhite"/>
@@ -61,13 +56,9 @@
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
             <constraints>
-                <constraint firstItem="xcD-fm-YyE" firstAttribute="height" secondItem="fQx-MB-cOZ" secondAttribute="height" id="2e9-wc-gCL"/>
-                <constraint firstItem="xcD-fm-YyE" firstAttribute="width" secondItem="fQx-MB-cOZ" secondAttribute="width" id="38l-TU-Ym0"/>
                 <constraint firstAttribute="trailing" secondItem="17" secondAttribute="trailing" id="6Qb-4u-rbj"/>
                 <constraint firstItem="35" firstAttribute="top" secondItem="2" secondAttribute="top" constant="24" id="7pk-sm-Dtt"/>
                 <constraint firstAttribute="bottom" secondItem="xcD-fm-YyE" secondAttribute="bottom" id="Dd7-A2-z9P"/>
-                <constraint firstItem="fQx-MB-cOZ" firstAttribute="top" secondItem="2" secondAttribute="top" constant="24" id="EN7-tN-j4r"/>
-                <constraint firstItem="fQx-MB-cOZ" firstAttribute="leading" secondItem="2" secondAttribute="leading" id="F0L-ef-E57"/>
                 <constraint firstItem="17" firstAttribute="top" secondItem="2" secondAttribute="top" constant="289" id="P9w-PN-xNk"/>
                 <constraint firstAttribute="trailing" secondItem="xcD-fm-YyE" secondAttribute="trailing" id="SQ5-M4-Fpb"/>
                 <constraint firstItem="xcD-fm-YyE" firstAttribute="top" secondItem="2" secondAttribute="top" constant="24" id="Sqn-Xn-CVR"/>
@@ -124,31 +115,27 @@
             <nil key="simulatedStatusBarMetrics"/>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
         </view>
-        <tableViewCell contentMode="scaleToFill" selectionStyle="blue" indentationWidth="10" rowHeight="228" id="44">
-            <rect key="frame" x="0.0" y="0.0" width="328" height="228"/>
+        <tableViewCell contentMode="scaleToFill" selectionStyle="blue" indentationWidth="10" rowHeight="50" id="44">
+            <rect key="frame" x="0.0" y="0.0" width="328" height="50"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="44" id="5a1-gZ-Bvr">
                 <rect key="frame" x="0.0" y="0.0" width="328" height="227"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" showsHorizontalScrollIndicator="NO" translatesAutoresizingMaskIntoConstraints="NO" id="45">
-                        <rect key="frame" x="10" y="13" width="288" height="201"/>
-                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                    <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="2Ic-Bd-yCr">
+                        <rect key="frame" x="15" y="10" width="283" height="29"/>
                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                        <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
-                        <connections>
-                            <outlet property="delegate" destination="-1" id="53"/>
-                        </connections>
-                    </textView>
+                        <textInputTraits key="textInputTraits" enablesReturnKeyAutomatically="YES"/>
+                    </textField>
                 </subviews>
             </tableViewCellContentView>
-            <point key="canvasLocation" x="-454" y="186"/>
+            <point key="canvasLocation" x="-454" y="96"/>
         </tableViewCell>
         <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Your Name" textAlignment="right" minimumFontSize="17" id="43">
             <rect key="frame" x="0.0" y="0.0" width="243" height="30"/>
             <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxY="YES"/>
             <fontDescription key="fontDescription" type="system" pointSize="12"/>
-            <textInputTraits key="textInputTraits"/>
+            <textInputTraits key="textInputTraits" enablesReturnKeyAutomatically="YES"/>
             <connections>
                 <outlet property="delegate" destination="-1" id="54"/>
             </connections>
@@ -157,7 +144,7 @@
             <rect key="frame" x="0.0" y="0.0" width="243" height="30"/>
             <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxY="YES"/>
             <fontDescription key="fontDescription" type="system" pointSize="12"/>
-            <textInputTraits key="textInputTraits"/>
+            <textInputTraits key="textInputTraits" enablesReturnKeyAutomatically="YES"/>
             <connections>
                 <outlet property="delegate" destination="-1" id="55"/>
             </connections>

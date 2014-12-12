@@ -44,7 +44,7 @@
 // For audio queue
 @property (nonatomic,strong) UIScrollView *queueScrollView;
 @property (nonatomic) int queueCurrentPage;
-@property IBOutlet FXBlurView *queueBlurView;
+@property IBOutlet UIImageView *queueBlurView;
 @property IBOutlet UIView *queueDarkBgView;
 @property (nonatomic,strong) NSTimer *queueScrollTimer;
 @property (nonatomic,strong) NSArray *queueContents;
@@ -62,6 +62,8 @@
 @property IBOutlet UILabel *timeLabelOnDemand;
 @property IBOutlet SCPRButton *shareButton;
 @property IBOutlet UIProgressView *progressView;
+
+- (void)onDemandFadeDown;
 
 
 // Important Attrs.
@@ -88,10 +90,16 @@
 // Rewinding UI
 @property (nonatomic,strong) SCPRJogShuttleViewController *jogShuttle;
 @property (nonatomic,strong) IBOutlet UIView *rewindView;
-@property BOOL rewindGate;
+
+@property (nonatomic, strong) IBOutlet NSLayoutConstraint *liveRewindBottomYConstraint;
+@property BOOL shuttlingGate;
 @property BOOL initiateRewind;
+@property BOOL rewindNeedsUIRefresh;
 @property BOOL springLock;
 @property BOOL lockPlayback;
+@property BOOL lockAnimationUI;
+
+@property NSInteger onDemandGateCount;
 @property NSInteger previousRewindThreshold;
 
 // Onboarding
@@ -115,6 +123,7 @@
 - (void)setPositionForQueue:(int)index animated:(BOOL)animated;
 - (void)primeManualControlButton;
 - (void)treatUIforProgram;
+- (void)determinePlayState;
 
 - (void)moveTextIntoPlace:(BOOL)animated;
 - (void)goLive:(BOOL)play;
@@ -126,6 +135,8 @@
 - (void)onboarding_rewindToBeginning;
 - (void)onboarding_beginOutro;
 - (void)onboarding_fin;
+
+@property BOOL onboardingRewindButtonShown;
 
 - (void)rollInterferenceText;
 - (void)showOnDemandOnboarding;

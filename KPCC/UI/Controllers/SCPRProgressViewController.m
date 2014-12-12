@@ -177,7 +177,7 @@
         
         CABasicAnimation *currentAnim = [CABasicAnimation animationWithKeyPath:@"strokeEnd"];
         [currentAnim setToValue:[NSNumber numberWithFloat:vBeginning]];
-        [currentAnim setDuration:1.2f];
+        [currentAnim setDuration:1.6f];
         [currentAnim setRemovedOnCompletion:NO];
         [currentAnim setFillMode:kCAFillModeForwards];
         [self.currentBarLine addAnimation:currentAnim forKey:@"decrementCurrent"];
@@ -222,7 +222,6 @@
 
 - (void)tick {
     
-    NSLog(@"Tick,,,");
     if ( self.shuttling ) return;
     if ( self.mutex ) return;
     
@@ -234,8 +233,7 @@
     NSDate *currentDate = [AudioManager shared].audioPlayer.currentItem.currentDate;
     NSTimeInterval beginning = [program.soft_starts_at timeIntervalSince1970];
     if ( [[AudioManager shared] currentAudioMode] == AudioModeOnboarding ) {
-        NSDate *fauxDate = [[AudioManager shared] relativeFauxDate];
-        beginning = [fauxDate timeIntervalSince1970];
+        beginning = 0;
     }
     NSTimeInterval end = [program.ends_at timeIntervalSince1970];
     if ( [[AudioManager shared] currentAudioMode] == AudioModeOnboarding ) {
@@ -243,10 +241,12 @@
     }
     
     NSTimeInterval duration = ( end - beginning );
-    
+    if ( [[AudioManager shared] currentAudioMode] == AudioModeOnboarding ) {
+        duration = [p[@"duration"] intValue];
+    }
     NSTimeInterval live = [[AudioManager shared].maxSeekableDate timeIntervalSince1970];
     if ( [[AudioManager shared] currentAudioMode] == AudioModeOnboarding ) {
-        live = [[NSDate date] timeIntervalSince1970];
+        live = CMTimeGetSeconds([AudioManager shared].audioPlayer.currentItem.currentTime);
     }
     NSTimeInterval current = [currentDate timeIntervalSince1970];
     if ( [[AudioManager shared] currentAudioMode] == AudioModeOnboarding ) {
@@ -308,6 +308,7 @@
 
 - (void)reset {
     self.counter = 0;
+    self.currentBarLine.strokeEnd = 0.0;
 }
 
 - (void)finishReveal {

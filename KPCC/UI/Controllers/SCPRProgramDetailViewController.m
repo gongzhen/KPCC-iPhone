@@ -44,14 +44,19 @@
     [super viewDidLoad];
 
     self.blurView.tintColor = [UIColor clearColor];
-    self.blurView.alpha = (self.episodesTable.contentOffset.y + 25) / 150;
     self.blurView.blurRadius = 20.f;
     self.blurView.dynamic = NO;
-
+    self.blurView.alpha = 0.0;
+    
     [[DesignManager shared] loadProgramImage:_program.program_slug
                                 andImageView:self.programBgImage
                                   completion:^(BOOL status) {
+                                      self.programBgImage.contentMode = UIViewContentModeCenter;
                                       [self.blurView setNeedsDisplay];
+                                      UIImage *blurred = [self.programBgImage.image blurredImageWithRadius:20.0f
+                                                                                                iterations:1
+                                                                                                 tintColor:[UIColor clearColor]];
+                                      [[DesignManager shared] setCurrentBlurredImage:blurred];
                                   }];
 
     [[NetworkManager shared] fetchEpisodesForProgram:_program.program_slug
@@ -68,13 +73,15 @@
                                                   Episode *episode = [[Episode alloc] initWithDict:episodeDict];
                                                   if (episode.audio != nil) {
                                                       [episodesArray addObject:episode];
-                                                  } else {
+                                                  } /*else {
                                                       if (episode.segments != nil && [episode.segments count] > 0) {
                                                           for (Segment *segment in episode.segments) {
-                                                              [episodesArray addObject:segment];
+                                                              if ( segment.audio ) {
+                                                                  [episodesArray addObject:segment];
+                                                              }
                                                           }
                                                       }
-                                                  }
+                                                  }*/
                                               }
                                               
                                               self.episodesList = episodesArray;
@@ -153,8 +160,10 @@
 
     
     NSArray *audioChunks = [[QueueManager shared] enqueueEpisodes:self.episodesList withCurrentIndex:indexPath.row];
-    [[[Utils del] masterViewController] setOnDemandUI:YES forProgram:self.program withAudio:audioChunks atCurrentIndex:(int)indexPath.row];
-    //[self.navigationController popToRootViewControllerAnimated:YES];
+    [[[Utils del] masterViewController] setOnDemandUI:YES
+                                           forProgram:self.program
+                                            withAudio:audioChunks
+                                       atCurrentIndex:(int)indexPath.row];
     
     id episode = self.episodesList[indexPath.row];
     NSString *title = @"[UNKNOWN]";
@@ -176,7 +185,7 @@
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-    self.blurView.alpha = (scrollView.contentOffset.y + 25) / 150;
+    self.blurView.alpha = (scrollView.contentOffset.y) / 150;
 }
 
 
