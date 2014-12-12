@@ -191,22 +191,26 @@
 }
 
 - (void)presentLensOverRewindButton {
-    [self.masterCtrl primeManualControlButton];
-    CGPoint origin = self.masterCtrl.liveRewindAltButton.frame.origin;
-    [self.onboardingCtrl revealLensWithOrigin:[self.masterCtrl.liveStreamView convertPoint:CGPointMake(origin.x, origin.y)
-                                                                          toView:self.onboardingCtrl.view]];
-  
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+    [UIView animateWithDuration:0.15 animations:^{
+        self.masterCtrl.liveRewindAltButton.alpha = 1.0;
+    } completion:^(BOOL finished) {
+        CGPoint origin = self.masterCtrl.liveRewindAltButton.frame.origin;
+        [self.onboardingCtrl revealLensWithOrigin:[self.masterCtrl.liveStreamView convertPoint:CGPointMake(origin.x, origin.y)
+                                                                                        toView:self.onboardingCtrl.view]];
         
-        [self.onboardingCtrl.lensVC squeezeWithAnchorView:self.masterCtrl.liveRewindAltButton completed:^{
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.25 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                [self.masterCtrl activateRewind:RewindDistanceOnboardingBeginning];
-            });
+            [self.onboardingCtrl.lensVC squeezeWithAnchorView:self.masterCtrl.liveRewindAltButton completed:^{
+                
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.25 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                    [self.masterCtrl activateRewind:RewindDistanceOnboardingBeginning];
+                });
+                
+            }];
             
-        }];
-        
-    });
+        });
+    }];
+
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {

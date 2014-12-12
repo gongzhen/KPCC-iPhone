@@ -57,12 +57,12 @@ static NSString *kBufferingText = @"BUFFERING";
 @implementation SCPRMasterViewController
 
 @synthesize pulldownMenu,
-            seekRequested,
-            initialPlay,
-            setPlaying,
-            busyZoomAnim,
-            setForLiveStreamUI,
-            setForOnDemandUI;
+seekRequested,
+initialPlay,
+setPlaying,
+busyZoomAnim,
+setForLiveStreamUI,
+setForOnDemandUI;
 
 #pragma mark - UIViewController
 
@@ -77,11 +77,11 @@ static NSString *kBufferingText = @"BUFFERING";
         if (event.subtype == UIEventSubtypeRemoteControlPlay ||
             event.subtype == UIEventSubtypeRemoteControlPause ||
             event.subtype == UIEventSubtypeRemoteControlTogglePlayPause) {
-//            [self playOrPauseTapped:nil];
+            //            [self playOrPauseTapped:nil];
         } else if (event.subtype == UIEventSubtypeRemoteControlPreviousTrack) {
-//            [self nextEpisodeTapped:nil];
+            //            [self nextEpisodeTapped:nil];
         } else if (event.subtype == UIEventSubtypeRemoteControlNextTrack) {
-//            [self prevEpisodeTapped:nil];
+            //            [self prevEpisodeTapped:nil];
         }
     }
 }
@@ -91,7 +91,7 @@ static NSString *kBufferingText = @"BUFFERING";
     
     self.view.backgroundColor = [UIColor blackColor];
     self.horizDividerLine.layer.opacity = 0.0;
-
+    
     //self.initialControlsView.backgroundColor = [UIColor redColor];
     //self.initialPlayButton.backgroundColor = [UIColor blueColor];
     
@@ -122,16 +122,16 @@ static NSString *kBufferingText = @"BUFFERING";
     pulldownMenu.delegate = self;
     [self.view addSubview:pulldownMenu];
     [pulldownMenu loadMenu];
-
+    
     // Set up pre-roll child view controller.
     [self addPreRollController];
-
+    
     // Fetch program info and update audio control state.
     //[self updateDataForUI];
-
+    
     // Observe when the application becomes active again, and update UI if need-be.
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateDataForUI) name:UIApplicationWillEnterForegroundNotification object:nil];
-
+    
     // Make sure the system follows our playback status - to support the playback when the app enters the background mode.
     [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback error:nil];
     [[AVAudioSession sharedInstance] setActive: YES error: nil];
@@ -144,16 +144,16 @@ static NSString *kBufferingText = @"BUFFERING";
     
     // Config dark background view. Will sit on top of blur view, between player controls view.
     [self.darkBgView.layer setOpacity:0.0];
-
+    
     // Initially flag as KPCC Live view
     setForLiveStreamUI = YES;
     [self primeRemoteCommandCenter:YES];
-
+    
     self.jogShuttle = [[SCPRJogShuttleViewController alloc] init];
     self.jogShuttle.view = self.rewindView;
     self.jogShuttle.view.alpha = 0.0;
     [self.jogShuttle prepare];
-
+    
     // Views for audio queue
     self.queueScrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 64,
                                                                           self.view.frame.size.width,
@@ -187,7 +187,7 @@ static NSString *kBufferingText = @"BUFFERING";
                                action:@selector(initialPlayTapped:)
                      forControlEvents:UIControlEventTouchUpInside
      
-     special:YES];
+                              special:YES];
     
     [self.playPauseButton addTarget:self
                              action:@selector(playOrPauseTapped:)
@@ -216,16 +216,16 @@ static NSString *kBufferingText = @"BUFFERING";
             
         }
     }];
-
+    
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-
+    
     [[DesignManager shared] treatBar];
     
     [AudioManager shared].delegate = self;
-
+    
     if (self.menuOpen) {
         self.navigationItem.title = @"Menu";
     }
@@ -233,11 +233,11 @@ static NSString *kBufferingText = @"BUFFERING";
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-
+    
     
     [self.blurView setNeedsDisplay];
     [self.queueBlurView setNeedsDisplay];
-
+    
     // Once the view has appeared we can register to begin receiving system audio controls.
     [[UIApplication sharedApplication] beginReceivingRemoteControlEvents];
     [self becomeFirstResponder];
@@ -252,7 +252,7 @@ static NSString *kBufferingText = @"BUFFERING";
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
-
+    
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
@@ -267,17 +267,17 @@ static NSString *kBufferingText = @"BUFFERING";
     
     self.preRollViewController = [[SCPRPreRollViewController alloc] initWithNibName:nil bundle:nil];
     self.preRollViewController.delegate = self;
-
+    
     [[NetworkManager shared] fetchTritonAd:nil completion:^(TritonAd *tritonAd) {
         self.preRollViewController.tritonAd = tritonAd;
     }];
-
+    
     [self addChildViewController:self.preRollViewController];
-
+    
     CGRect frame = self.view.bounds;
     frame.origin.y = (-1)*self.view.bounds.size.height;
     self.preRollViewController.view.frame = frame;
-
+    
     [self.view addSubview:self.preRollViewController.view];
     [self.preRollViewController didMoveToParentViewController:self];
 }
@@ -289,7 +289,7 @@ static NSString *kBufferingText = @"BUFFERING";
     [[UIApplication sharedApplication] setStatusBarHidden:YES];
     
     //nav.navigationBarHidden = YES;
-
+    
     self.automationMode = YES;
     self.programImageView.image = [UIImage imageNamed:@"onboarding-tile.jpg"];
     self.initialControlsView.layer.opacity = 0.0;
@@ -297,7 +297,7 @@ static NSString *kBufferingText = @"BUFFERING";
     self.liveDescriptionLabel.alpha = 0.0;
     self.pulldownMenu.alpha = 0.0;
     
-
+    
     //[[UIApplication sharedApplication] setStatusBarHidden:YES];
     self.programTitleLabel.font = [UIFont systemFontOfSize:30.0];
     [self.programTitleLabel proLightFontize];
@@ -323,7 +323,7 @@ static NSString *kBufferingText = @"BUFFERING";
         self.letsGoLabel.alpha = 1.0;
     }];
     
-
+    
     
     POPSpringAnimation *scaleAnimation = [POPSpringAnimation animationWithPropertyNamed:kPOPLayerScaleXY];
     scaleAnimation.fromValue  = [NSValue valueWithCGSize:CGSizeMake(0.0f, 0.0f)];
@@ -345,11 +345,11 @@ static NSString *kBufferingText = @"BUFFERING";
     [UIView animateWithDuration:0.33 animations:^{
         self.liveProgressViewController.view.alpha = 1.0;
         self.liveStreamView.alpha = 1.0;
-        [self primeManualControlButton];
+        
     }];
     
     [[AudioManager shared] playOnboardingAudio:1];
-
+ 
 }
 
 - (void)onboarding_rewindToBeginning {
@@ -363,6 +363,9 @@ static NSString *kBufferingText = @"BUFFERING";
 }
 
 - (void)onboarding_fin {
+    
+    [[AudioManager shared] resetPlayer];
+    [[AudioManager shared].audioPlayer setVolume:1.0];
     
     self.initialPlay = YES;
     [self addPreRollController];
@@ -381,8 +384,8 @@ static NSString *kBufferingText = @"BUFFERING";
     [[UXmanager shared] persist];
 #endif
     
-    [[AudioManager shared] resetPlayer];
-    [[AudioManager shared].audioPlayer setVolume:1.0];
+    
+    
     [self updateDataForUI];
 }
 
@@ -414,7 +417,6 @@ static NSString *kBufferingText = @"BUFFERING";
     } completion:^(BOOL finished) {
         if (self.preRollViewController.tritonAd) {
             [self cloakForPreRoll:YES];
-            [self primeManualControlButton];
             [self.preRollViewController showPreRollWithAnimation:YES completion:^(BOOL done) {
                 [self primePlaybackUI:YES];
             }];
@@ -423,7 +425,7 @@ static NSString *kBufferingText = @"BUFFERING";
             self.initialPlay = YES;
         }
     }];
-
+    
 }
 
 
@@ -433,7 +435,6 @@ static NSString *kBufferingText = @"BUFFERING";
     [UIView animateWithDuration:0.15 animations:^{
         self.liveDescriptionLabel.text = @"";
     }];
-    [[AudioManager shared] cheatPlay];
     
     [self initialPlayTapped:nil];
 }
@@ -442,7 +443,7 @@ static NSString *kBufferingText = @"BUFFERING";
     if (seekRequested) {
         seekRequested = NO;
     }
-
+    
     if (![[AudioManager shared] isStreamPlaying]) {
         if ( [[SessionManager shared] sessionIsExpired] ) {
             [[SessionManager shared] fetchCurrentProgram:^(id returnedObject) {
@@ -453,12 +454,12 @@ static NSString *kBufferingText = @"BUFFERING";
                 }
             }];
         } else {
-
+            
             [self playStream:NO];
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                 [[SessionManager shared] armProgramUpdater];
             });
-
+            
         }
     } else {
         self.setPlaying = NO;
@@ -467,15 +468,15 @@ static NSString *kBufferingText = @"BUFFERING";
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             [[SessionManager shared] disarmProgramUpdater];
         });
-
+        
     }
     
 }
 
 - (IBAction)rewindToStartTapped:(id)sender {
-
+    
     if ( self.jogging ) return;
-
+    
     [self activateRewind:RewindDistanceBeginning];
     
 }
@@ -525,7 +526,7 @@ static NSString *kBufferingText = @"BUFFERING";
     }
     
     return (NSTimeInterval)0;
-
+    
 }
 
 - (BOOL)uiIsJogging {
@@ -572,7 +573,7 @@ static NSString *kBufferingText = @"BUFFERING";
             }
         }];
         [self presentViewController:controller animated:YES completion:^{
-
+            
             [[DesignManager shared] normalizeBar];
             
         }];
@@ -582,7 +583,7 @@ static NSString *kBufferingText = @"BUFFERING";
 - (IBAction)showPreRollTapped:(id)sender {
     [self cloakForPreRoll:YES];
     [self.preRollViewController showPreRollWithAnimation:YES completion:^(BOOL done) {
-
+        
     }];
 }
 
@@ -598,9 +599,6 @@ static NSString *kBufferingText = @"BUFFERING";
 
 - (void)pauseStream {
     [[AudioManager shared] pauseStream];
-    
-    if ( [UXmanager shared].settings.userHasViewedOnboarding )
-        [self primeManualControlButton];
 }
 
 - (void)rewindFifteen {
@@ -628,9 +626,9 @@ static NSString *kBufferingText = @"BUFFERING";
                                                   object:nil];
     [self.jogShuttle endAnimations];
     
-
-    [[SessionManager shared] fetchCurrentProgram:^(id returnedObject) {
     
+    [[SessionManager shared] fetchCurrentProgram:^(id returnedObject) {
+        
         [self setLiveStreamingUI:YES];
         [self treatUIforProgram];
         
@@ -655,7 +653,7 @@ static NSString *kBufferingText = @"BUFFERING";
     self.initiateRewind = NO;
     [self snapJogWheel];
     [self.liveDescriptionLabel pulsate:kRewindingText color:nil];
-
+    
     self.jogShuttle.forceSingleRotation = YES;
     
     [UIView animateWithDuration:0.25 animations:^{
@@ -672,7 +670,7 @@ static NSString *kBufferingText = @"BUFFERING";
     
     Program *cProgram = [[SessionManager shared] currentProgram];
     [self.jogShuttle.view setAlpha:1.0];
-
+    
     
     BOOL sound = [AudioManager shared].currentAudioMode == AudioModeOnboarding ? NO : YES;
     [self.jogShuttle animateWithSpeed:0.8
@@ -699,7 +697,7 @@ static NSString *kBufferingText = @"BUFFERING";
                                    }];
                                    
                                } else {
-
+                                   
                                    [[SessionManager shared] fetchOnboardingProgramWithSegment:2 completed:^(id returnedObject) {
                                        [[AudioManager shared] setTemporaryMutex:NO];
                                        [[AudioManager shared] playOnboardingAudio:2];
@@ -738,7 +736,7 @@ static NSString *kBufferingText = @"BUFFERING";
                     }
                 }
                 break;
-               
+                
         }
         
         
@@ -783,12 +781,12 @@ static NSString *kBufferingText = @"BUFFERING";
                                    
                                }];
         
-     
+        
         [self.liveProgressViewController forward];
-  
+        
     }];
     
-
+    
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.66 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         
         seekRequested = YES;
@@ -806,12 +804,21 @@ static NSString *kBufferingText = @"BUFFERING";
                                                      onView:self.view
                                            aboveSiblingView:self.playerControlsView];
         [self.liveProgressViewController hide];
+        
+      
+        if ( [[UXmanager shared] onboardingEnding] ) {
+            [[UXmanager shared] setOnboardingEnding:NO];
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.25 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                [self primeManualControlButton];
+            });
+        }
+        
     }];
 }
 
 
 - (void)moveTextIntoPlace:(BOOL)animated {
-
+    
     CGFloat constant = 200;
     if ( self.programTitleYConstraint.constant == constant ) return;
     if ( !animated ) {
@@ -821,7 +828,7 @@ static NSString *kBufferingText = @"BUFFERING";
         POPSpringAnimation *programTitleAnim = [POPSpringAnimation animationWithPropertyNamed:kPOPLayoutConstraintConstant];
         programTitleAnim.toValue = @(constant);
         [self.programTitleYConstraint pop_addAnimation:programTitleAnim forKey:@"animateProgramTitleDown"];
-
+        
         POPBasicAnimation *fadeControls = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
         fadeControls.toValue = @(0);
         
@@ -829,43 +836,44 @@ static NSString *kBufferingText = @"BUFFERING";
         [self.programTitleYConstraint pop_addAnimation:programTitleAnim forKey:@"animateProgramTitleDown"];
         
     }
-
+    
 }
 
 - (void)updateControlsAndUI:(BOOL)animated {
-
+    
     // First set contents of background, live-status labels, and play button.
     [self setUIContents:animated];
-
+    
 }
 
 - (void)setUIContents:(BOOL)animated {
-
+    
     if ( self.jogging || self.queueBlurShown ) {
         return;
     }
     
     if (animated) {
         [UIView animateWithDuration:0.1 animations:^{
-       
-
+            
+            
             self.liveDescriptionLabel.alpha = 1.0;
             if ( [[AudioManager shared] status] == StreamStatusStopped ) {
                 if ( [[SessionManager shared] sessionIsInRecess] ) {
                     self.liveDescriptionLabel.text = @"UP NEXT";
                 } else {
-                    self.liveDescriptionLabel.text = @"ON NOW";
+                    if ( [AudioManager shared].currentAudioMode != AudioModeOnboarding )
+                        self.liveDescriptionLabel.text = @"ON NOW";
                 }
             }
-
+            
         } completion:^(BOOL finished) {
             if ([[AudioManager shared] isStreamPlaying] || [[AudioManager shared] isStreamBuffering]) {
                 [self.playPauseButton fadeImage:[UIImage imageNamed:@"btn_pause.png"] duration:0.2];
             } else {
                 [self.playPauseButton fadeImage:[UIImage imageNamed:@"btn_play.png"] duration:0.2];
             }
-
-        
+            
+            
             [UIView animateWithDuration:0.1 animations:^{
                 if ( [AudioManager shared].currentAudioMode != AudioModeOnDemand ) {
                     [self.playPauseButton setAlpha:1.0];
@@ -878,7 +886,7 @@ static NSString *kBufferingText = @"BUFFERING";
 }
 
 - (void)setUIPositioning {
-
+    
 }
 
 
@@ -887,7 +895,7 @@ static NSString *kBufferingText = @"BUFFERING";
  */
 - (void)scaleBackgroundImage {
     POPSpringAnimation *scaleAnimation = [POPSpringAnimation animationWithPropertyNamed:kPOPLayerScaleXY];
-
+    
     if ([[AudioManager shared] isStreamPlaying] || [[AudioManager shared] isStreamBuffering]) {
         scaleAnimation.fromValue  = [NSValue valueWithCGSize:CGSizeMake(1.0f, 1.0f)];
         scaleAnimation.toValue  = [NSValue valueWithCGSize:CGSizeMake(1.2f, 1.2f)];
@@ -895,16 +903,16 @@ static NSString *kBufferingText = @"BUFFERING";
         scaleAnimation.fromValue  = [NSValue valueWithCGSize:CGSizeMake(1.2f, 1.2f)];
         scaleAnimation.toValue  = [NSValue valueWithCGSize:CGSizeMake(1.0f, 1.0f)];
     }
-
+    
     scaleAnimation.springBounciness = 2.0f;
     scaleAnimation.springSpeed = 2.0f;
-
+    
     // Used to ensure animation only gets started once.
     // This method stems from onRateChange: firing, which sometimes gets called rapidly.
     [scaleAnimation setCompletionBlock:^(POPAnimation *animation, BOOL done) {
         busyZoomAnim = NO;
     }];
-
+    
     if (!seekRequested && !busyZoomAnim) {
         busyZoomAnim = YES;
         [self.programImageView.layer pop_addAnimation:scaleAnimation forKey:@"scaleAnimation"];
@@ -917,25 +925,25 @@ static NSString *kBufferingText = @"BUFFERING";
     setForLiveStreamUI = YES;
     
     [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                 name:@"audio_player_began_playing"
-                                               object:nil];
+                                                    name:@"audio_player_began_playing"
+                                                  object:nil];
     
     self.navigationItem.title = @"KPCC Live";
     [self primeRemoteCommandCenter:YES];
-
+    
     if ([self.liveStreamView isHidden]) {
         [self.liveStreamView setHidden:NO];
     }
-
+    
     if (![self.onDemandPlayerView isHidden]) {
         [self.onDemandPlayerView setHidden:YES];
         setForOnDemandUI = NO;
     }
-
+    
     if (![self.timeLabelOnDemand isHidden]) {
         [self.timeLabelOnDemand setHidden:YES];
     }
-
+    
     if (![self.progressView isHidden]) {
         [self.progressView setHidden:YES];
     }
@@ -946,7 +954,7 @@ static NSString *kBufferingText = @"BUFFERING";
     
     self.queueBlurView.alpha = 0.0;
     self.queueDarkBgView.alpha = 0.0;
-
+    
     setForLiveStreamUI = YES;
     
     [self moveTextIntoPlace:NO];
@@ -955,7 +963,7 @@ static NSString *kBufferingText = @"BUFFERING";
     
     self.liveDescriptionLabel.text = @"LIVE";
     [[AudioManager shared] setCurrentAudioMode:AudioModeLive];
-
+    
 }
 
 - (void)setOnDemandUI:(BOOL)animated forProgram:(Program*)program withAudio:(NSArray*)array atCurrentIndex:(int)index {
@@ -1072,12 +1080,12 @@ static NSString *kBufferingText = @"BUFFERING";
                 }
                 
             }];
-      
+            
         }];
         
-
+        
     }];
-
+    
 }
 
 - (void)setDataForOnDemand:(Program *)program andAudioChunk:(AudioChunk*)audioChunk completion:(CompletionBlock)completion {
@@ -1095,7 +1103,7 @@ static NSString *kBufferingText = @"BUFFERING";
                                               if ( completion ) {
                                                   completion();
                                               }
-                                            });
+                                          });
                                       }];
     }
 }
@@ -1144,6 +1152,8 @@ static NSString *kBufferingText = @"BUFFERING";
                                               [self.initialControlsView layoutIfNeeded];
                                               [self.liveRewindAltButton layoutIfNeeded];
                                               
+                                             
+                                              
                                               self.view.alpha = 1.0;
                                               if ( [SCPRCloakViewController cloakInUse] ) {
                                                   [SCPRCloakViewController uncloak];
@@ -1152,7 +1162,7 @@ static NSString *kBufferingText = @"BUFFERING";
                                           
                                       }];
     } else {
-    
+        
         [self updateUIWithProgram:programObj];
         self.view.alpha = 1.0;
         
@@ -1164,7 +1174,7 @@ static NSString *kBufferingText = @"BUFFERING";
     if (!program) {
         return;
     }
-
+    
     if ([program title]) {
         if ([program title].length <= 14) {
             [self.programTitleLabel setFont:[self.programTitleLabel.font fontWithSize:46.0]];
@@ -1177,12 +1187,11 @@ static NSString *kBufferingText = @"BUFFERING";
     }
 }
 
-
-{
-
+- (void)primePlaybackUI:(BOOL)animated {
+    
     if ( self.lockAnimationUI ) return;
     self.lockAnimationUI = YES;
-
+    
     if (animated) {
         
         [UIView animateWithDuration:0.25 animations:^{
@@ -1263,15 +1272,40 @@ static NSString *kBufferingText = @"BUFFERING";
 
 - (void)primeManualControlButton {
     
-    BOOL okToShow = ( [[AudioManager shared] status] == StreamStatusPaused &&
+    /*BOOL okToShow = ( [[AudioManager shared] status] == StreamStatusPaused &&
                      [[AudioManager shared] currentAudioMode] != AudioModeOnDemand &&
-                     ![self jogging] );
- 
-    if ( [[AudioManager shared] status] == StreamStatusStopped && !initialPlay ) {
-        okToShow = YES;
+                     ![self jogging] );*/
+    
+    BOOL okToShow = YES;
+    if ( [[AudioManager shared] currentAudioMode] == AudioModeOnboarding ) {
+        NSLog(@"Rewind Button - Hiding because onboarding");
+        okToShow = NO;
     }
+    if ( [[AudioManager shared] status] == StreamStatusStopped && [[AudioManager shared] currentAudioMode] == AudioModeOnDemand ) {
+        if ( okToShow )
+            NSLog(@"Rewind Button - Hiding because onboarding initial state");
+        okToShow = NO;
+    }
+    if ( [[AudioManager shared] status] == StreamStatusPlaying ) {
+        if ( okToShow )
+            NSLog(@"Rewind Button - Hiding because audio is playing");
+        okToShow = NO;
+    }
+    if ( [[AudioManager shared] currentAudioMode] == AudioModeOnDemand ) {
+        if ( okToShow )
+            NSLog(@"Rewind Button - Hiding because Audio Mode is onDemand");
+        okToShow = NO;
+    }
+    if ( [self jogging] ) {
+        if ( okToShow )
+            NSLog(@"Rewind Button - Hiding because of the UI is jogging");
+        okToShow = NO;
+    }
+
     if ( self.preRollViewController.tritonAd ) {
         if ( self.initialPlay ) {
+            if ( okToShow )
+                NSLog(@"Rewind Button - Hiding because of a Triton Ad");
             okToShow = NO;
         }
     }
@@ -1281,11 +1315,11 @@ static NSString *kBufferingText = @"BUFFERING";
                           forControlEvents:UIControlEventAllEvents];
     
     [self.liveRewindAltButton setImageEdgeInsets:UIEdgeInsetsMake(0.0, 0.0, 0.0, 20.0)];
-    if ( [[SessionManager shared] sessionIsBehindLive] ) {
+    if ( [[SessionManager shared] sessionIsBehindLive] && [[AudioManager shared] status] != StreamStatusStopped ) {
         [self.liveRewindAltButton setImage:[UIImage imageNamed:@"btn_back_to_live_xtra-small.png"]
-                                      forState:UIControlStateHighlighted];
+                                  forState:UIControlStateHighlighted];
         [self.liveRewindAltButton setImage:[UIImage imageNamed:@"btn_back_to_live_xtra-small.png"]
-                                      forState:UIControlStateNormal];
+                                  forState:UIControlStateNormal];
         [self.liveRewindAltButton setTitle:@"Back to Live"
                                   forState:UIControlStateNormal];
         [self.liveRewindAltButton setTitle:@"Back to Live"
@@ -1293,7 +1327,7 @@ static NSString *kBufferingText = @"BUFFERING";
         [self.liveRewindAltButton addTarget:self
                                      action:@selector(activateFastForward)
                            forControlEvents:UIControlEventTouchUpInside
-         special:YES];
+                                    special:YES];
     } else {
         [self.liveRewindAltButton setImage:[UIImage imageNamed:@"btn_live_rewind_xtra-small.png"]
                                   forState:UIControlStateHighlighted];
@@ -1306,26 +1340,33 @@ static NSString *kBufferingText = @"BUFFERING";
         
         if ( initialPlay ) {
             [self.liveRewindAltButton addTarget:self
-                                     action:@selector(activateRewind:)
-                           forControlEvents:UIControlEventTouchUpInside
-             special:YES];
+                                         action:@selector(activateRewind:)
+                               forControlEvents:UIControlEventTouchUpInside
+                                        special:YES];
         } else {
             [self.liveRewindAltButton addTarget:self
                                          action:@selector(specialRewind)
                                forControlEvents:UIControlEventTouchUpInside
-             special:YES];
+                                        special:YES];
         }
     }
     
     
     
- 
+    
     if ( ![[SessionManager shared] sessionIsBehindLive] ) {
         if ( [[SessionManager shared] sessionIsInRecess] ) {
+            if ( okToShow )
+                NSLog(@"Rewind Button - Hiding because we're in no-mans-land");
             okToShow = NO;
         }
     }
     
+    if ( [[UXmanager shared] onboardingEnding] ) {
+        if ( okToShow )
+            NSLog(@"Rewind Button - Hiding because onboarding is ending");
+        okToShow = NO;
+    }
     
     if ( okToShow ) {
         self.onboardingRewindButtonShown = YES;
@@ -1358,13 +1399,13 @@ static NSString *kBufferingText = @"BUFFERING";
     self.navigationItem.title = @"Menu";
     
     [self.blurView setNeedsDisplay];
-
+    
     if (animated) {
         [pulldownMenu openDropDown:YES];
     } else {
         [pulldownMenu openDropDown:NO];
     }
-
+    
     if (setForOnDemandUI){
         POPBasicAnimation *onDemandElementsFade = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
         onDemandElementsFade.toValue = @0;
@@ -1373,15 +1414,15 @@ static NSString *kBufferingText = @"BUFFERING";
         [self.progressView.layer pop_addAnimation:onDemandElementsFade forKey:@"progressBarFadeAnimation"];
         [self.queueScrollView.layer pop_addAnimation:onDemandElementsFade forKey:@"queueScrollViewFadeAnimation"];
     }
-
+    
     POPBasicAnimation *blurFadeAnimation = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
     blurFadeAnimation.toValue = @1;
     blurFadeAnimation.duration = 0.3;
-
+    
     POPBasicAnimation *darkBgFadeAnimation = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
     darkBgFadeAnimation.toValue = @0.75;
     darkBgFadeAnimation.duration = 0.3;
-
+    
     POPBasicAnimation *controlsFadeAnimation = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
     controlsFadeAnimation.toValue = @(0);
     controlsFadeAnimation.duration = 0.3;
@@ -1389,7 +1430,7 @@ static NSString *kBufferingText = @"BUFFERING";
     POPBasicAnimation *lsFade = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
     lsFade.toValue = @(0);
     lsFade.duration = 0.3;
-
+    
     [self.blurView.layer pop_addAnimation:blurFadeAnimation forKey:@"blurViewFadeAnimation"];
     [self.darkBgView.layer pop_addAnimation:darkBgFadeAnimation forKey:@"darkBgFadeAnimation"];
     [self.playerControlsView.layer pop_addAnimation:controlsFadeAnimation forKey:@"controlsViewFadeAnimation"];
@@ -1398,7 +1439,7 @@ static NSString *kBufferingText = @"BUFFERING";
     if (!initialPlay) {
         [self.initialControlsView.layer pop_addAnimation:controlsFadeAnimation forKey:@"initialControlsViewFade"];
     }
-
+    
     [UIView animateWithDuration:0.33 animations:^{
         self.liveRewindAltButton.alpha = 0.0;
     }];
@@ -1414,21 +1455,21 @@ static NSString *kBufferingText = @"BUFFERING";
 
 - (void)decloakForMenu:(BOOL)animated {
     [self removeAllAnimations];
-
+    
     if (setForOnDemandUI) {
         self.navigationItem.title = @"Programs";
     } else {
         self.navigationItem.title = @"KPCC Live";
     }
-
+    
     [self.blurView setNeedsDisplay];
-
+    
     if (animated) {
         [pulldownMenu closeDropDown:YES];
     } else {
         [pulldownMenu closeDropDown:NO];
     }
-
+    
     if (setForOnDemandUI){
         POPBasicAnimation *onDemandElementsFade = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
         onDemandElementsFade.toValue = @1;
@@ -1437,19 +1478,19 @@ static NSString *kBufferingText = @"BUFFERING";
         [self.progressView.layer pop_addAnimation:onDemandElementsFade forKey:@"progressBarFadeAnimation"];
         [self.queueScrollView.layer pop_addAnimation:onDemandElementsFade forKey:@"queueScrollViewFadeInAnimation"];
     }
-
+    
     POPBasicAnimation *fadeAnimation = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
     fadeAnimation.toValue = @0;
     fadeAnimation.duration = 0.3;
-
+    
     POPBasicAnimation *darkBgFadeAnimation = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
     darkBgFadeAnimation.toValue = @0.0;
     darkBgFadeAnimation.duration = 0.3;
-
+    
     POPBasicAnimation *controlsFadeIn = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
     controlsFadeIn.toValue = @1;
     controlsFadeIn.duration = 0.3;
-
+    
     POPBasicAnimation *cfi = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
     cfi.toValue = @1;
     cfi.duration = 0.3;
@@ -1464,7 +1505,7 @@ static NSString *kBufferingText = @"BUFFERING";
     if (!initialPlay) {
         [self.initialControlsView.layer pop_addAnimation:controlsFadeIn forKey:@"initialControlsViewFade"];
     }
-
+    
     //if (setForOnDemandUI) {
     if ( self.initialPlay || setForOnDemandUI ) {
         POPBasicAnimation *dividerFadeAnim = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
@@ -1497,7 +1538,7 @@ static NSString *kBufferingText = @"BUFFERING";
 - (void)cloakForPreRoll:(BOOL)animated {
     [self removeAllAnimations];
     [self.blurView setNeedsDisplay];
-
+    
     if (setForOnDemandUI){
         POPBasicAnimation *onDemandElementsFade = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
         onDemandElementsFade.toValue = @0;
@@ -1507,19 +1548,19 @@ static NSString *kBufferingText = @"BUFFERING";
     } else {
         [self.liveProgressViewController hide];
     }
-
+    
     POPBasicAnimation *blurFadeAnimation = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
     blurFadeAnimation.toValue = @1;
     blurFadeAnimation.duration = 0.3;
-
+    
     POPBasicAnimation *darkBgFadeAnimation = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
     darkBgFadeAnimation.toValue = @0.0;
     darkBgFadeAnimation.duration = 0.3;
-
+    
     POPBasicAnimation *controlsFadeAnimation = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
     controlsFadeAnimation.toValue = @(0);
     controlsFadeAnimation.duration = 0.3;
-
+    
     
     [self.blurView.layer pop_addAnimation:blurFadeAnimation forKey:@"blurViewFadeAnimation"];
     [self.darkBgView.layer pop_addAnimation:darkBgFadeAnimation forKey:@"darkBgFadeAnimation"];
@@ -1537,9 +1578,9 @@ static NSString *kBufferingText = @"BUFFERING";
 
 - (void)decloakForPreRoll:(BOOL)animated {
     [self removeAllAnimations];
-
+    
     [self.blurView setNeedsDisplay];
-
+    
     if (setForOnDemandUI){
         POPBasicAnimation *onDemandElementsFade = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
         onDemandElementsFade.toValue = @1;
@@ -1548,19 +1589,19 @@ static NSString *kBufferingText = @"BUFFERING";
         [self.progressView.layer pop_addAnimation:onDemandElementsFade forKey:@"progressBarFadeAnimation"];
     }
     
-
+    
     POPBasicAnimation *fadeAnimation = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
     fadeAnimation.toValue = @0;
     fadeAnimation.duration = 0.3;
-
+    
     POPBasicAnimation *darkBgFadeAnimation = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
     darkBgFadeAnimation.toValue = @0;
     darkBgFadeAnimation.duration = 0.3;
-
+    
     POPBasicAnimation *controlsFadeAnimation = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
     controlsFadeAnimation.toValue = @1;
     controlsFadeAnimation.duration = 0.3;
-
+    
     [self.blurView.layer pop_addAnimation:fadeAnimation forKey:@"blurViewFadeAnimation"];
     [self.darkBgView.layer pop_addAnimation:darkBgFadeAnimation forKey:@"darkBgFadeAnimation"];
     [self.playerControlsView.layer pop_addAnimation:controlsFadeAnimation forKey:@"controlsViewFadeAnimation"];
@@ -1575,7 +1616,7 @@ static NSString *kBufferingText = @"BUFFERING";
         dividerFadeAnim.duration = 0.3;
         [self.horizDividerLine.layer pop_addAnimation:dividerFadeAnim forKey:@"horizDividerFadeOutAnimation"];
     }
-     
+    
     
     self.preRollOpen = NO;
 }
@@ -1608,8 +1649,7 @@ static NSString *kBufferingText = @"BUFFERING";
         if (self.preRollOpen) {
             [self decloakForPreRoll:YES];
         }
-        [self primeManualControlButton];
-        
+
         if ( self.initiateRewind ) {
             [[AudioManager shared] takedownAudioPlayer];
             [self activateRewind:RewindDistanceBeginning];
@@ -1620,7 +1660,7 @@ static NSString *kBufferingText = @"BUFFERING";
         }
         
     });
-
+    
 }
 
 
@@ -1631,7 +1671,7 @@ static NSString *kBufferingText = @"BUFFERING";
 }
 
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
-
+    
     int newPage = scrollView.contentOffset.x / scrollView.frame.size.width;
     if (self.queueCurrentPage == newPage) {
         [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationOptionCurveLinear animations:^{
@@ -1645,12 +1685,12 @@ static NSString *kBufferingText = @"BUFFERING";
         }];
         return;
     }
-
+    
     if (self.queueScrollTimer != nil && [self.queueScrollTimer isValid]) {
         [self.queueScrollTimer invalidate];
         self.queueScrollTimer = nil;
     }
-
+    
     if ( [[AudioManager shared] status] == StreamStatusPlaying ) {
         if ( ![self.jogShuttle spinning] ) {
             [self snapJogWheel];
@@ -1658,14 +1698,14 @@ static NSString *kBufferingText = @"BUFFERING";
     }
     
     self.queueScrollTimer = [NSTimer scheduledTimerWithTimeInterval:0.5
-                                     target:self
-                                   selector:@selector(queueScrollEnded)
-                                   userInfo:nil
-                                    repeats:NO];
+                                                             target:self
+                                                           selector:@selector(queueScrollEnded)
+                                                           userInfo:nil
+                                                            repeats:NO];
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-
+    
 }
 
 #pragma mark - On demand loading transitions
@@ -1694,7 +1734,7 @@ static NSString *kBufferingText = @"BUFFERING";
     [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationOptionCurveLinear animations:^{
         self.timeLabelOnDemand.alpha = 1.0;
     } completion:nil];
-
+    
     [[SessionManager shared] endOnDemandSessionWithReason:OnDemandFinishedReasonEpisodeSkipped];
     
     int newPage = self.queueScrollView.contentOffset.x / self.queueScrollView.frame.size.width;
@@ -1703,7 +1743,7 @@ static NSString *kBufferingText = @"BUFFERING";
         self.onDemandEpUrl = chunk.contentShareUrl;
         [[AudioManager shared] updateNowPlayingInfoWithAudio:chunk];
     }
-
+    
     if (self.queueCurrentPage != newPage) {
         [self.jogShuttle animateIndefinitelyWithViewToHide:self.playPauseButton completion:^{
             self.playPauseButton.enabled = YES;
@@ -1714,7 +1754,7 @@ static NSString *kBufferingText = @"BUFFERING";
         
         [[QueueManager shared] playItemAtPosition:newPage];
         self.queueCurrentPage = newPage;
-     
+        
     } else {
         [self.jogShuttle endAnimations];
         [self rebootOnDemandUI];
@@ -1759,7 +1799,7 @@ static NSString *kBufferingText = @"BUFFERING";
             }
             break;
         }
-
+            
         case 1:
         {
             event = @"menuSelectionPrograms";
@@ -1767,7 +1807,7 @@ static NSString *kBufferingText = @"BUFFERING";
             if (setForOnDemandUI && self.onDemandProgram != nil) {
                 prog = self.onDemandProgram;
             }
-
+            
             SCPRProgramsListViewController *vc = [[SCPRProgramsListViewController alloc] initWithBackgroundProgram:prog];
             [self.navigationController pushViewController:vc animated:YES];
             break;
@@ -1824,18 +1864,21 @@ static NSString *kBufferingText = @"BUFFERING";
 # pragma mark - AudioManagerDelegate
 
 - (void)onRateChange {
-
+    
     if ( !self.initiateRewind || self.preRollViewController.tritonAd ) {
         [self.liveProgressViewController setFreezeBit:YES];
         [self updateControlsAndUI:YES];
         
-        if ( [UXmanager shared].settings.userHasViewedOnboarding ) {
-            [self primeManualControlButton];
-        } else {
-            if ( !self.onboardingRewindButtonShown ) {
+
+        if ( ![[UXmanager shared].settings userHasViewedOnboarding] ) {
+            if ( [[AudioManager shared].audioPlayer rate] == 0.0 )
                 [self primeManualControlButton];
-            }
+        } else {
+        
+            [self primeManualControlButton];
+            
         }
+
     }
     
 }
@@ -1863,7 +1906,7 @@ static NSString *kBufferingText = @"BUFFERING";
             return;
         }
     }
-  
+    
     
     if ( !self.menuOpen ) {
         if ( ti > 60 && ![[AudioManager shared] isStreamBuffering] ) {
@@ -1893,14 +1936,14 @@ static NSString *kBufferingText = @"BUFFERING";
     
     if (setForOnDemandUI) {
         [self.progressView pop_removeAllAnimations];
-
+        
         if (CMTimeGetSeconds([[[[AudioManager shared].audioPlayer currentItem] asset] duration]) > 0) {
             double currentTime = CMTimeGetSeconds([[[AudioManager shared].audioPlayer currentItem] currentTime]);
             double duration = CMTimeGetSeconds([[[[AudioManager shared].audioPlayer currentItem] asset] duration]);
-
+            
             [self.timeLabelOnDemand setText:[Utils elapsedTimeStringWithPosition:currentTime
                                                                      andDuration:duration]];
-
+            
             dispatch_async(dispatch_get_main_queue(), ^{
                 [self.progressView setProgress:(currentTime / duration) animated:YES];
             });
@@ -1945,13 +1988,6 @@ static NSString *kBufferingText = @"BUFFERING";
         }
     }
     
-    if ( self.shuttlingGate ) {
-        self.shuttlingGate = NO;
-    } else {
-        if ( [[UXmanager shared].settings userHasViewedOnboarding] )
-            [self primeManualControlButton];
-    }
-    
 }
 
 - (void)onSeekCompleted {
@@ -1986,7 +2022,7 @@ static NSString *kBufferingText = @"BUFFERING";
     [self.jogShuttle endAnimations];
     self.timeLabelOnDemand.text = @"FAILED TO LOAD";
     
-
+    
     
     [[[UIAlertView alloc] initWithTitle:@"Oops.."
                                 message:@"We had some trouble loading that audio. Try again later or try a different show. Sorry."
@@ -1999,44 +2035,44 @@ static NSString *kBufferingText = @"BUFFERING";
     } completion:^(BOOL finished) {
         [self goLive:NO];
     }];
-
+    
 }
 
 #pragma mark - ContentProcessor
 
 - (void)handleProcessedContent:(NSArray *)content flags:(NSDictionary *)flags {
-/*    if ([content count] == 0) {
-        return;
-    }
-
-    // Create Program and insert into managed object context
-    if ([content objectAtIndex:0]) {
-        NSDictionary *programDict = [content objectAtIndex:0];
-
-        Program *programObj = [Program insertProgramWithDictionary:programDict inManagedObjectContext:[[ContentManager shared] managedObjectContext]];
-
-        // Only update background image when we're not in On Demand mode.
-        if (!setForOnDemandUI){
-            [[DesignManager shared] loadProgramImage:programObj.program_slug
-                                        andImageView:self.programImageView
-                                          completion:^(BOOL status) {
-                                              [self.blurView setNeedsDisplay];
-                                              [self.queueBlurView setNeedsDisplay];
-                                          }];
-        }
-
-        [self updateUIWithProgram:programObj];
-
-        if (!setForOnDemandUI) {
-            [[AudioManager shared] updateNowPlayingInfoWithAudio:programObj];
-        }
-
-        self.currentProgram = programObj;
-
-        // Save any programObj changes to CoreData.
-        [[ContentManager shared] saveContext];
-    }
- */
+    /*    if ([content count] == 0) {
+     return;
+     }
+     
+     // Create Program and insert into managed object context
+     if ([content objectAtIndex:0]) {
+     NSDictionary *programDict = [content objectAtIndex:0];
+     
+     Program *programObj = [Program insertProgramWithDictionary:programDict inManagedObjectContext:[[ContentManager shared] managedObjectContext]];
+     
+     // Only update background image when we're not in On Demand mode.
+     if (!setForOnDemandUI){
+     [[DesignManager shared] loadProgramImage:programObj.program_slug
+     andImageView:self.programImageView
+     completion:^(BOOL status) {
+     [self.blurView setNeedsDisplay];
+     [self.queueBlurView setNeedsDisplay];
+     }];
+     }
+     
+     [self updateUIWithProgram:programObj];
+     
+     if (!setForOnDemandUI) {
+     [[AudioManager shared] updateNowPlayingInfoWithAudio:programObj];
+     }
+     
+     self.currentProgram = programObj;
+     
+     // Save any programObj changes to CoreData.
+     [[ContentManager shared] saveContext];
+     }
+     */
 }
 
 - (void)dealloc {
@@ -2052,14 +2088,14 @@ static NSString *kBufferingText = @"BUFFERING";
 
 - (void)primeRemoteCommandCenter:(BOOL)forLiveStream {
     MPRemoteCommandCenter *rcc = [MPRemoteCommandCenter sharedCommandCenter];
-
+    
     if (forLiveStream) {
         [[rcc previousTrackCommand] setEnabled:NO];
         MPSkipIntervalCommand *skipBackwardIntervalCommand = [rcc skipBackwardCommand];
         [skipBackwardIntervalCommand setEnabled:YES];
         [skipBackwardIntervalCommand addTarget:self action:@selector(skipBackwardEvent:)];
         skipBackwardIntervalCommand.preferredIntervals = @[@(15)];
-
+        
         [[rcc nextTrackCommand] setEnabled:NO];
         MPSkipIntervalCommand *skipForwardIntervalCommand = [rcc skipForwardCommand];
         skipForwardIntervalCommand.preferredIntervals = @[@(15)];  // Max 99
@@ -2070,30 +2106,30 @@ static NSString *kBufferingText = @"BUFFERING";
         MPRemoteCommand *prevTrackCommand = [rcc previousTrackCommand];
         [prevTrackCommand addTarget:self action:@selector(prevEpisodeTapped:)];
         [prevTrackCommand setEnabled:YES];
-
+        
         [[rcc skipForwardCommand] setEnabled:NO];
         MPRemoteCommand *nextTrackCommand = [rcc nextTrackCommand];
         [nextTrackCommand addTarget:self action:@selector(nextEpisodeTapped:)];
         [nextTrackCommand setEnabled:YES];
     }
-
+    
     MPRemoteCommand *pauseCommand = [rcc pauseCommand];
     [pauseCommand setEnabled:YES];
     [pauseCommand addTarget:self action:@selector(pauseTapped:)];
-
+    
     MPRemoteCommand *playCommand = [rcc playCommand];
     [playCommand setEnabled:YES];
     [playCommand addTarget:self action:@selector(playTapped:)];
 }
 
 /*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
+ #pragma mark - Navigation
+ 
+ // In a storyboard-based application, you will often want to do a little preparation before navigation
+ - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+ // Get the new view controller using [segue destinationViewController].
+ // Pass the selected object to the new view controller.
+ }
+ */
 
 @end

@@ -130,7 +130,7 @@ typedef NS_ENUM(NSUInteger, StreamStatus) {
 @property (NS_NONATOMIC_IOSONLY, readonly) double observedMinBitrate;
 @property (NS_NONATOMIC_IOSONLY, readonly, copy) NSString *currentDateTimeString;
 
-@property BOOL suppressTimeObservation;
+@property BOOL audioCheating;
 
 - (void)updateNowPlayingInfoWithAudio:(id)audio;
 

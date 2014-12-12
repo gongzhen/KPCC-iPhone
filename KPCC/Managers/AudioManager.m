@@ -67,7 +67,7 @@ static const NSString *ItemStatusContext;
             NSLog(@"AVPlayerItemStatus - ReadyToPlay");
             if ( self.waitForSeek ) {
                 self.waitForSeek = NO;
-                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                     [self seekToDate:self.queuedSeekDate];
                 });
             }
@@ -109,8 +109,7 @@ static const NSString *ItemStatusContext;
         // Now playing, was stopped.
         if (oldRate == 0.0 && newRate == 1.0) {
             [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
-            if ( !self.suppressTimeObservation )
-                [self startObservingTime];
+            [self startObservingTime];
         }
         if ( oldRate == 1.0 && newRate == 0.0 ) {
             self.status = StreamStatusPaused;
@@ -246,12 +245,6 @@ static const NSString *ItemStatusContext;
 
 - (void)seekToDate:(NSDate *)date {
     
-    NSTimeInterval s2d = [date timeIntervalSince1970];
-    NSTimeInterval now = [[NSDate date] timeIntervalSince1970];
-    BOOL nudge = NO;
-    if ( now - s2d > 60 ) {
-        nudge = YES;
-    }
     
     if ( [self.audioPlayer.currentItem status] != AVPlayerItemStatusReadyToPlay ) {
         NSLog(@" ******* PLAYER ITEM NOT READY TO PLAY BEFORE SEEKING ******* ");
@@ -269,66 +262,62 @@ static const NSString *ItemStatusContext;
         return;
     }
 
+    int64_t tsn = 0;
+    int64_t start = 0;
+    CMTime barometer;
     for ( NSValue *str in self.audioPlayer.currentItem.seekableTimeRanges ) {
         CMTimeRange r = [str CMTimeRangeValue];
         NSLog(@"Seekable Start : %ld, duration : %ld",(long)CMTimeGetSeconds(r.start),(long)CMTimeGetSeconds(r.duration));
-    }
-    
-    for ( NSValue *str in self.audioPlayer.currentItem.loadedTimeRanges ) {
-        CMTimeRange r = [str CMTimeRangeValue];
-        NSLog(@"Loaded Start : %ld, duration : %ld",(long)CMTimeGetSeconds(r.start),(long)CMTimeGetSeconds(r.duration));
-    }
-    
-#ifdef DEBUG
-    [self dump:YES];
-#endif
-    
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.15 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        NSDate *justABitInTheFuture = nudge ? [NSDate dateWithTimeInterval:2 sinceDate:date] : date;
-        [self.audioPlayer.currentItem seekToDate:justABitInTheFuture completionHandler:^(BOOL finished) {
-            if ( !finished ) {
-                NSLog(@" **************** AUDIOPLAYER NOT FINISHED BUFFERING ****************** ");
-            }
-            if(self.audioPlayer.status == AVPlayerStatusReadyToPlay &&
-               self.audioPlayer.currentItem.status == AVPlayerItemStatusReadyToPlay) {
-                
-                if ( [[SessionManager shared] secondsBehindLive] > 14000 ) {
-                    // Try again
-                    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.75 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                        NSLog(@"Buffering ...");
-                        if ( [self.delegate respondsToSelector:@selector(interfere)] ) {
-                            [self.delegate interfere];
-                        }
-                        if ( self.audioPlayer.rate > 0.0 ) {
-                            [self.audioPlayer pause];
-                        }
-                        [self.audioPlayer.currentItem cancelPendingSeeks];
-                        [self seekToDate:date];
-                    });
-                    
-                    return;
-                }
-                
-                if ( [[NSDate date] timeIntervalSinceDate:date] > 60 ) {
-                    self.requestedSeekDate = date;
-                } else {
-                    self.requestedSeekDate = nil;
-                }
+        if ( CMTimeGetSeconds(r.duration) > 14400 ) {
+            barometer = r.duration;
+        }
+        
 
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    if ( [self.audioPlayer rate] == 0.0 ) {
-                        [self playStream];
+        tsn = [date timeIntervalSinceDate:[self maxSeekableDate]];
+        start = abs(CMTimeGetSeconds(r.start));
+        tsn = labs(tsn);
+
+    }
+    
+    if ( self.audioPlayer.currentItem.seekableTimeRanges.count == 0 || start < 0 ) {
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.75 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            NSLog(@" ******* BUFFERING ******* ");
+            if ( [self.delegate respondsToSelector:@selector(interfere)] ) {
+                [self.delegate interfere];
+            }
+            [self.audioPlayer.currentItem cancelPendingSeeks];
+            [self seekToDate:date];
+        });
+        return;
+    }
+    
+    
+    NSLog(@"Seek in seconds : %ld",(long)tsn);
+
+    CMTime seekTime = CMTimeMakeWithSeconds(CMTimeGetSeconds(barometer) - tsn, barometer.timescale);
+    [self.audioPlayer.currentItem seekToTime:seekTime completionHandler:^(BOOL finished) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            
+            if ( [[SessionManager shared] secondsBehindLive] > 14100 ) {
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.75 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                    NSLog(@" ******* BUFFERING ******* ");
+                    if ( [self.delegate respondsToSelector:@selector(interfere)] ) {
+                        [self.delegate interfere];
                     }
-                    self.status = StreamStatusPlaying;
-                    if ([self.delegate respondsToSelector:@selector(onSeekCompleted)]) {
-                        [self.delegate onSeekCompleted];
-                    }
+                    [self.audioPlayer.currentItem cancelPendingSeeks];
+                    [self seekToDate:date];
                 });
-
             }
-        }];
-    
-    });
+            
+            if ( [self.audioPlayer rate] == 0.0 ) {
+                [self playStream];
+            }
+            self.status = StreamStatusPlaying;
+            if ([self.delegate respondsToSelector:@selector(onSeekCompleted)]) {
+                [self.delegate onSeekCompleted];
+            }
+        });
+    }];
 
 }
 
@@ -658,7 +647,7 @@ static const NSString *ItemStatusContext;
 - (void)cheatPlay {
     [self buildStreamer:kHLSLiveStreamURL];
     [self.audioPlayer setVolume:0.0];
-    self.suppressTimeObservation = YES;
+    self.audioCheating = YES;
     [self.audioPlayer play];
 }
 
