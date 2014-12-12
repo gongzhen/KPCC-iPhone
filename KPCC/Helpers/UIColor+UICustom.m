@@ -82,6 +82,13 @@
                            alpha:1.0];
 }
 
++ (UIColor*)kpccSlateColor {
+    return [UIColor colorWithRed:108.0/255.0
+                           green:117.0/255.0
+                            blue:121.0/255.0
+                           alpha:1.0];
+}
+
 + (UIColor*)kpccOrangeColor {
     return [UIColor colorWithHex:0xFF8C26];
 }

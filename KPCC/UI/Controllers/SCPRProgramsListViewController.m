@@ -12,6 +12,7 @@
 #import "DesignManager.h"
 #import "AnalyticsManager.h"
 #import <FXBlurView.h>
+#import "SCPRGenericAvatarViewController.h"
 
 /**
  * Programs with these slugs will be hidden from this table view.
@@ -123,6 +124,13 @@
     NSString *iconNamed = [(self.programsList)[indexPath.row] program_slug];
     if (iconNamed) {
         UIImage *iconImg = [UIImage imageNamed:[NSString stringWithFormat:@"program_avatar_%@", iconNamed]];
+        if ( !iconImg ) {
+            SCPRGenericAvatarViewController *avatar = [[SCPRGenericAvatarViewController alloc]
+                                                       initWithNibName:@"SCPRGenericAvatarViewController"
+                                                       bundle:nil];
+            iconImg = [avatar avatarFromProgram:self.programsList[indexPath.row]];
+        }
+        
         [cell.iconImageView setImage:iconImg];
         cell.iconImageView.frame = CGRectMake(cell.iconImageView.frame.origin.x, 31 - iconImg.size.height/2,
                                               iconImg.size.width, iconImg.size.height);

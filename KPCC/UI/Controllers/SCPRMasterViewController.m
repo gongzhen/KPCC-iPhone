@@ -1819,7 +1819,7 @@ setForOnDemandUI;
         }
         case 3: {
             event = @"menuSelectionDonate";
-            NSString *urlStr = @"https://scprcontribute.publicradio.org/contribute.php";
+            NSString *urlStr = @"https://scprcontribute.publicradio.org/contribute.php?refId=iphone&askAmount=60";
             NSURL *url = [NSURL URLWithString:urlStr];
             [self decloakForMenu:YES];
             [[UIApplication sharedApplication] openURL:url];

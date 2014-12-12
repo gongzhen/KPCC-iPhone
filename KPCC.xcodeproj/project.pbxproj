@@ -55,6 +55,8 @@
 		259E450F1A1D583A00F5CD65 /* onboarding2.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 259E450D1A1D583A00F5CD65 /* onboarding2.mp3 */; };
 		25B59A5619FEF93700D4885C /* SCPRShortListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 25B59A5419FEF93700D4885C /* SCPRShortListViewController.m */; };
 		25B59A5719FEF93700D4885C /* SCPRShortListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 25B59A5519FEF93700D4885C /* SCPRShortListViewController.xib */; };
+		25F2BC7E1A3B9B4D00108F73 /* SCPRGenericAvatarViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 25F2BC7C1A3B9B4D00108F73 /* SCPRGenericAvatarViewController.m */; };
+		25F2BC7F1A3B9B4D00108F73 /* SCPRGenericAvatarViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 25F2BC7D1A3B9B4D00108F73 /* SCPRGenericAvatarViewController.xib */; };
 		523126A719EDB78C008A47A7 /* SCPRPreRollViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 523126A519EDB78C008A47A7 /* SCPRPreRollViewController.m */; };
 		523126A819EDB78C008A47A7 /* SCPRPreRollViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 523126A619EDB78C008A47A7 /* SCPRPreRollViewController.xib */; };
 		523E86D019C8A292006FC366 /* SCPRProgramDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 523E86CE19C8A292006FC366 /* SCPRProgramDetailViewController.m */; };
@@ -300,8 +302,8 @@
 		258FC47A1A018F3D00282D59 /* SCPRSpinnerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SCPRSpinnerViewController.m; sourceTree = "<group>"; };
 		258FC47C1A01915E00282D59 /* UIColor+UICustom.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+UICustom.h"; sourceTree = "<group>"; };
 		258FC47D1A01915E00282D59 /* UIColor+UICustom.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+UICustom.m"; sourceTree = "<group>"; };
-		2594B53D1A30F8410013B93A /* SCPRKeyboardToolbar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCPRKeyboardToolbar.h; path = Helpers/SCPRKeyboardToolbar.h; sourceTree = "<group>"; };
-		2594B53E1A30F8410013B93A /* SCPRKeyboardToolbar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SCPRKeyboardToolbar.m; path = Helpers/SCPRKeyboardToolbar.m; sourceTree = "<group>"; };
+		2594B53D1A30F8410013B93A /* SCPRKeyboardToolbar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCPRKeyboardToolbar.h; sourceTree = "<group>"; };
+		2594B53E1A30F8410013B93A /* SCPRKeyboardToolbar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SCPRKeyboardToolbar.m; sourceTree = "<group>"; };
 		2594B5401A31420D0013B93A /* onboarding-episode-swipe.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "onboarding-episode-swipe.png"; sourceTree = "<group>"; };
 		259E44FB1A1D2CD300F5CD65 /* SCPROnboardingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCPROnboardingViewController.h; path = Onboarding/SCPROnboardingViewController.h; sourceTree = "<group>"; };
 		259E44FC1A1D2CD300F5CD65 /* SCPROnboardingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SCPROnboardingViewController.m; path = Onboarding/SCPROnboardingViewController.m; sourceTree = "<group>"; };
@@ -315,6 +317,9 @@
 		25B59A5319FEF93700D4885C /* SCPRShortListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCPRShortListViewController.h; path = Headlines/SCPRShortListViewController.h; sourceTree = "<group>"; };
 		25B59A5419FEF93700D4885C /* SCPRShortListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SCPRShortListViewController.m; path = Headlines/SCPRShortListViewController.m; sourceTree = "<group>"; };
 		25B59A5519FEF93700D4885C /* SCPRShortListViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = SCPRShortListViewController.xib; path = Headlines/SCPRShortListViewController.xib; sourceTree = "<group>"; };
+		25F2BC7B1A3B9B4D00108F73 /* SCPRGenericAvatarViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCPRGenericAvatarViewController.h; sourceTree = "<group>"; };
+		25F2BC7C1A3B9B4D00108F73 /* SCPRGenericAvatarViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SCPRGenericAvatarViewController.m; sourceTree = "<group>"; };
+		25F2BC7D1A3B9B4D00108F73 /* SCPRGenericAvatarViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SCPRGenericAvatarViewController.xib; sourceTree = "<group>"; };
 		45A107003D6C750C5E0ECAC3 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		523126A419EDB78C008A47A7 /* SCPRPreRollViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCPRPreRollViewController.h; sourceTree = "<group>"; };
 		523126A519EDB78C008A47A7 /* SCPRPreRollViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SCPRPreRollViewController.m; sourceTree = "<group>"; };
@@ -796,6 +801,8 @@
 		76349D1E18D8F8A30027C3B8 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
+				2594B53D1A30F8410013B93A /* SCPRKeyboardToolbar.h */,
+				2594B53E1A30F8410013B93A /* SCPRKeyboardToolbar.m */,
 				258FC47C1A01915E00282D59 /* UIColor+UICustom.h */,
 				258FC47D1A01915E00282D59 /* UIColor+UICustom.m */,
 				76658AB718DCB51000026176 /* NSDate+Helper.h */,
@@ -816,6 +823,9 @@
 				258E8E091A16AC5B00675E68 /* NSData+JSONAdditions.m */,
 				254CC6A11A255A1E00560805 /* SCPRButton.h */,
 				254CC6A21A255A1E00560805 /* SCPRButton.m */,
+				25F2BC7B1A3B9B4D00108F73 /* SCPRGenericAvatarViewController.h */,
+				25F2BC7C1A3B9B4D00108F73 /* SCPRGenericAvatarViewController.m */,
+				25F2BC7D1A3B9B4D00108F73 /* SCPRGenericAvatarViewController.xib */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -1075,8 +1085,6 @@
 				258CA0FC1A09636900A3C8DB /* SessionManager.m */,
 				258BB0361A1C07FD00B8FCFE /* UXmanager.h */,
 				258BB0371A1C07FD00B8FCFE /* UXmanager.m */,
-				2594B53D1A30F8410013B93A /* SCPRKeyboardToolbar.h */,
-				2594B53E1A30F8410013B93A /* SCPRKeyboardToolbar.m */,
 			);
 			name = Managers;
 			sourceTree = "<group>";
@@ -1324,6 +1332,7 @@
 				52EFF81819C368C00059A0E3 /* program_avatar_loh-life@2x.png in Resources */,
 				52EFF7F219C368C00059A0E3 /* program_avatar_bbc-newshour.png in Resources */,
 				52D0FC2C19D20D29009AECEE /* program_avatar_marketplace-tech-report@2x.png in Resources */,
+				25F2BC7F1A3B9B4D00108F73 /* SCPRGenericAvatarViewController.xib in Resources */,
 				52EFF81219C368C00059A0E3 /* program_avatar_loh-down-on-science.png in Resources */,
 				52EFF83419C368C00059A0E3 /* program_avatar_on-the-media@2x.png in Resources */,
 				256DE7271A16B9D90022EB84 /* menu-feedback.png in Resources */,
@@ -1420,6 +1429,7 @@
 				254E177019F863960022BF6B /* UILabel+Additions.m in Sources */,
 				52EFF87819C37D350059A0E3 /* SCPRMenuCell.m in Sources */,
 				2594B53F1A30F8410013B93A /* SCPRKeyboardToolbar.m in Sources */,
+				25F2BC7E1A3B9B4D00108F73 /* SCPRGenericAvatarViewController.m in Sources */,
 				5248858E19CBA180005F59CC /* EpisodeAudio.m in Sources */,
 				523E86D019C8A292006FC366 /* SCPRProgramDetailViewController.m in Sources */,
 				258FC47E1A01915E00282D59 /* UIColor+UICustom.m in Sources */,

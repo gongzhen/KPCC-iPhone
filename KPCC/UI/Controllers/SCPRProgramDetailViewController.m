@@ -73,7 +73,7 @@
                                                   Episode *episode = [[Episode alloc] initWithDict:episodeDict];
                                                   if (episode.audio != nil) {
                                                       [episodesArray addObject:episode];
-                                                  } /*else {
+                                                  } else {
                                                       if (episode.segments != nil && [episode.segments count] > 0) {
                                                           for (Segment *segment in episode.segments) {
                                                               if ( segment.audio ) {
@@ -81,7 +81,7 @@
                                                               }
                                                           }
                                                       }
-                                                  }*/
+                                                  }
                                               }
                                               
                                               self.episodesList = episodesArray;
