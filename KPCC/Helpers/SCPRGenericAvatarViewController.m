@@ -29,6 +29,18 @@
 
 - (UIImage*)avatarFromProgram:(Program *)program {
     
+    CGFloat scale = [[UIScreen mainScreen] scale];
+    self.view.alpha = 1.0;
+    UIGraphicsBeginImageContextWithOptions(self.view.frame.size, YES, scale);
+    [self.view.layer.superlayer renderInContext:UIGraphicsGetCurrentContext()];
+    UIImage *resultingImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    [self.view setAlpha:0.0];
+    
+    return resultingImage;
+}
+
+- (void)setupWithProgram:(Program *)program {
     self.view.backgroundColor = [UIColor clearColor];
     self.seatView.layer.cornerRadius = self.view.frame.size.width / 2.0;
     self.seatView.backgroundColor = [UIColor kpccSlateColor];
@@ -52,17 +64,6 @@
     
     actionLetter = [actionWord substringWithRange:NSMakeRange(0, 1)];
     self.initialLetter.text = [actionLetter uppercaseString];
-    
-    
-    CGFloat scale = [[UIScreen mainScreen] scale];
-    UIGraphicsBeginImageContextWithOptions(self.view.frame.size, NO, scale);
-    [self.view.layer.superlayer renderInContext:UIGraphicsGetCurrentContext()];
-    
-    UIImage *resultingImage = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
-    [self.view removeFromSuperview];
-    
-    return resultingImage;
 }
 
 /*

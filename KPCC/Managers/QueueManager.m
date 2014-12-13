@@ -44,6 +44,12 @@ static QueueManager *singleton = nil;
 }
 
 - (NSArray*)enqueueEpisodes:(NSArray *)episodes withCurrentIndex:(NSInteger)index {
+    return [self enqueueEpisodes:episodes
+         withCurrentIndex:index
+          playImmediately:NO];
+}
+
+- (NSArray*)enqueueEpisodes:(NSArray *)episodes withCurrentIndex:(NSInteger)index playImmediately:(BOOL)playImmediately {
     [self clearQueue];
 
     for (int i = 0; i < [episodes count]; i++) {
@@ -59,7 +65,9 @@ static QueueManager *singleton = nil;
             
             self.currentChunk = chunk;
             self.currentlyPlayingIndex = index;
-            [[AudioManager shared] playQueueItemWithUrl:chunk.audioUrl];
+            if ( playImmediately ) {
+                [[AudioManager shared] playQueueItemWithUrl:chunk.audioUrl];
+            }
             
         }
     }

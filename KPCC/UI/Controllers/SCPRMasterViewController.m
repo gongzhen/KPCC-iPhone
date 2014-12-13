@@ -402,13 +402,16 @@ setForOnDemandUI;
 
 - (IBAction)initialPlayTapped:(id)sender {
     
-    if ( ![[UXmanager shared] userHasSeenOnboarding] ) {
+    if ( ![[UXmanager shared].settings userHasViewedOnboarding] ) {
         [[UXmanager shared] fadeOutBrandingWithCompletion:^{
             [self moveTextIntoPlace:YES];
             [self primePlaybackUI:YES];
-            return;
+            self.initialPlay = YES;
         }];
+        return;
     }
+    
+
     
     [UIView animateWithDuration:0.15 animations:^{
         self.liveRewindAltButton.alpha = 0.0;
@@ -1025,9 +1028,7 @@ setForOnDemandUI;
         [self.liveProgressViewController hide];
         
         self.navigationItem.title = @"Programs";
-        
 
-        
         [self.progressView setProgress:0.0 animated:YES];
         self.progressView.alpha = 1.0;
         self.queueScrollView.alpha = 1.0;
@@ -1073,18 +1074,14 @@ setForOnDemandUI;
             } completion:^(BOOL finished){
                 
                 if (!weakSelf.queueBlurShown) {
-
                     [[AudioManager shared] setCurrentAudioMode:AudioModeOnDemand];
                     [weakSelf.navigationController popToRootViewControllerAnimated:YES];
-
-
                 }
                 
+                [[QueueManager shared] playItemAtPosition:[[QueueManager shared] currentlyPlayingIndex]];
+                
             }];
-            
         }];
-        
-        
     }];
     
 }
@@ -1121,12 +1118,10 @@ setForOnDemandUI;
             [UIView animateWithDuration:0.4 delay:0.0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
                 self.queueScrollView.contentOffset = CGPointMake(self.queueScrollView.frame.size.width * index, 0);
             } completion:^(BOOL finished) {
-                [self rebootOnDemandUI];
                 self.queueCurrentPage = index;
             }];
         } else {
             self.queueScrollView.contentOffset = CGPointMake(self.queueScrollView.frame.size.width * index, 0);
-            [self rebootOnDemandUI];
             self.queueCurrentPage = index;
         }
     }
@@ -1153,7 +1148,7 @@ setForOnDemandUI;
                                               [self.initialControlsView layoutIfNeeded];
                                               [self.liveRewindAltButton layoutIfNeeded];
                                               
-                                             
+                                              [self primeManualControlButton];
                                               
                                               self.view.alpha = 1.0;
                                               if ( [SCPRCloakViewController cloakInUse] ) {
@@ -1960,6 +1955,7 @@ setForOnDemandUI;
                 self.queueDarkBgView.alpha = 0.0;
                 self.progressView.alpha = 1.0;
                 self.shareButton.alpha = 1.0;
+                self.onDemandPlayerView.alpha = 1.0;
             } completion:^(BOOL finished) {
                 self.queueBlurShown = NO;
                 self.queueLoading = NO;

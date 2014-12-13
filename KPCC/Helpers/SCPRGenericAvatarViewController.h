@@ -16,5 +16,6 @@
 @property (nonatomic,strong) IBOutlet UILabel *initialLetter;
 
 - (UIImage*)avatarFromProgram:(Program*)program;
+- (void)setupWithProgram:(Program*)program;
 
 @end

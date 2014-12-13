@@ -28,6 +28,15 @@
     return self;
 }
 
+- (void)prepareForReuse {
+    UIView *v = [self.contentView viewWithTag:11111];
+    if ( v ) {
+        [v removeFromSuperview];
+    }
+    self.gav = nil;
+    self.iconImageView.alpha = 0.0;
+}
+
 - (void)awakeFromNib {
     // Initialization code
 }

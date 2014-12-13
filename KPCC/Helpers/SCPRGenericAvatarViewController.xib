@@ -17,20 +17,34 @@
             <rect key="frame" x="0.0" y="0.0" width="32" height="32"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="RTp-gh-MaM">
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="RTp-gh-MaM">
                     <rect key="frame" x="0.0" y="0.0" width="32" height="32"/>
                     <subviews>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="B" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="K7Z-lO-KVO">
-                            <rect key="frame" x="0.0" y="0.0" width="32" height="32"/>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="B" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="K7Z-lO-KVO">
+                            <rect key="frame" x="0.0" y="-2" width="32" height="32"/>
+                            <constraints>
+                                <constraint firstAttribute="width" constant="32" id="CBq-oF-qqh"/>
+                                <constraint firstAttribute="height" constant="32" id="aYf-03-vu3"/>
+                            </constraints>
                             <fontDescription key="fontDescription" type="system" pointSize="23"/>
                             <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                             <nil key="highlightedColor"/>
                         </label>
                     </subviews>
                     <color key="backgroundColor" red="0.78424337635869568" green="0.78424337635869568" blue="0.78424337635869568" alpha="1" colorSpace="calibratedRGB"/>
+                    <constraints>
+                        <constraint firstAttribute="centerY" secondItem="K7Z-lO-KVO" secondAttribute="centerY" constant="2" id="0wH-SL-h1f"/>
+                        <constraint firstAttribute="centerX" secondItem="K7Z-lO-KVO" secondAttribute="centerX" id="GN4-F3-l5f"/>
+                        <constraint firstAttribute="height" constant="32" id="Rc7-Gn-GTY"/>
+                        <constraint firstAttribute="width" constant="32" id="w4D-fE-EUz"/>
+                    </constraints>
                 </view>
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+            <constraints>
+                <constraint firstAttribute="centerY" secondItem="RTp-gh-MaM" secondAttribute="centerY" id="bb7-q2-NSo"/>
+                <constraint firstAttribute="centerX" secondItem="RTp-gh-MaM" secondAttribute="centerX" id="uiq-aE-2RO"/>
+            </constraints>
             <nil key="simulatedStatusBarMetrics"/>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <point key="canvasLocation" x="305" y="313"/>

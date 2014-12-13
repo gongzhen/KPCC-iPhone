@@ -42,9 +42,9 @@
     [[AnalyticsManager shared] setup];
     
 #ifdef DEBUG
-    //[[UXmanager shared].settings setUserHasViewedOnboarding:YES];
-    //[[UXmanager shared].settings setUserHasViewedOnDemandOnboarding:YES];
-    //[[UXmanager shared] persist];
+    [[UXmanager shared].settings setUserHasViewedOnboarding:YES];
+    [[UXmanager shared].settings setUserHasViewedOnDemandOnboarding:YES];
+    [[UXmanager shared] persist];
 #endif
     
     // Apply application-wide styling

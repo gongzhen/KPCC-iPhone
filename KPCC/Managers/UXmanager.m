@@ -84,10 +84,10 @@
     
     [self.onboardingCtrl.view layoutIfNeeded];
     
-    NSString *lisaPath = [[NSBundle mainBundle] pathForResource:@"onboarding-vocal-bed"
-                                                         ofType:@"mp3"];
+    NSString *lisaPath = [[NSBundle mainBundle] pathForResource:@"onboarding-voiceover"
+                                                         ofType:@"m4a"];
     NSString *musicPath = [[NSBundle mainBundle] pathForResource:@"onboarding-music-bed"
-                                                          ofType:@"mp3"];
+                                                          ofType:@"m4a"];
     
     NSError *lisaError = nil;
     NSError *musicError = nil;
@@ -98,8 +98,8 @@
     [self.lisaPlayer prepareToPlay];
     [self.musicPlayer prepareToPlay];
     
-    self.lisaPlayer.volume = 1.0;
-    self.musicPlayer.volume = 0.2;
+    //self.lisaPlayer.volume = 1.0;
+    //self.musicPlayer.volume = 0.2;
 
 }
 
@@ -182,7 +182,7 @@
                                                             userInfo:nil
                                                              repeats:YES];
         
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(8.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(7.8 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             [self.masterCtrl.playPauseButton stretch];
         });
     }];
