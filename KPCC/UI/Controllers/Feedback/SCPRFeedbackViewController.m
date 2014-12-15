@@ -32,7 +32,7 @@ static NSString *kCommentsPlaceholder = @"... Add your comments here";
     [super viewDidLoad];
     
     [self.toolbar prep];
-    self.values = @[ @"Bug", @"Suggestion", @"General Feedback", @"Other" ];
+    self.values = @[ @"Bug", @"Suggestion", @"General Feedback"];
     self.feedbackTable.dataSource = self;
     self.feedbackTable.delegate = self;
     self.feedbackTable.tableFooterView = self.submitFooterView;
@@ -77,7 +77,7 @@ static NSString *kCommentsPlaceholder = @"... Add your comments here";
     
     self.nameTextField.returnKeyType = UIReturnKeyNext;
     self.emailTextField.returnKeyType = UIReturnKeyNext;
-    self.descriptionInputView.returnKeyType = UIReturnKeyNext;
+    self.descriptionInputView.returnKeyType = UIReturnKeyDone;
     
     self.splashBlurView.backgroundColor = [UIColor clearColor];
     self.splashView.contentMode = UIViewContentModeScaleAspectFill;
@@ -91,9 +91,9 @@ static NSString *kCommentsPlaceholder = @"... Add your comments here";
     self.nativeSpinner.alpha = 0.0;
     
 #ifdef DEBUG
-    self.emailTextField.text = @"bhochberg@scpr.org";
-    self.descriptionInputView.text = @"This is an iPhone Desk test to see if the API is working";
-    self.nameTextField.text = @"Ben Hochberg";
+    //self.emailTextField.text = @"bhochberg@scpr.org";
+    //self.descriptionInputView.text = @"This is an iPhone Desk test to see if the API is working";
+    //self.nameTextField.text = @"Ben Hochberg";
 #endif
     
     [self.authButton addTarget:self
@@ -110,6 +110,7 @@ static NSString *kCommentsPlaceholder = @"... Add your comments here";
     
     self.versionLabel.textColor = [UIColor whiteColor];
     
+    [self checkForm];
     // Do any additional setup after loading the view from its nib.
 }
 
@@ -134,21 +135,7 @@ static NSString *kCommentsPlaceholder = @"... Add your comments here";
     
     if ( sender == self.authButton ) {
         
-        ValidationResult result = [self validate];
-        if ( result == ValidationResultOK ) {
-            
-            
-            [UIView animateWithDuration:0.22
-                             animations:^{
-                                 self.nativeSpinner.alpha = 1.0;
-                                 [self.nativeSpinner startAnimating];
-                                 self.authButton.alpha = 0.0;
-                             } completion:^(BOOL finished) {
-                                 [self continueSubmission];
-                             }];
-        } else {
-            [self failWithValidationResult:result];
-        }
+        [self continueSubmission];
         
     }
     
@@ -212,7 +199,19 @@ static NSString *kCommentsPlaceholder = @"... Add your comments here";
 
 - (ValidationResult)validate {
     
-
+    if ( !self.currentReason || SEQ(self.currentReason,@"") ) {
+        return ValidationResultNoReasonProvided;
+    }
+    if ( SEQ(self.emailTextField.text,@"") || ![Utils validateEmail:self.emailTextField.text] ) {
+        return ValidationResultBadEmail;
+    }
+    if ( SEQ(self.nameTextField.text,@"") ) {
+        return ValidationResultNoName;
+    }
+    if ( SEQ(self.descriptionInputView.text,@"") ) {
+        return ValidationResultNoComments;
+    }
+    
     return ValidationResultOK;
     
 }
@@ -259,6 +258,23 @@ static NSString *kCommentsPlaceholder = @"... Add your comments here";
     }];
 }
 
+- (void)checkForm {
+    ValidationResult result = [self validate];
+    if ( result == ValidationResultOK ) {
+        [UIView animateWithDuration:0.22
+                         animations:^{
+                             self.authButton.alpha = 1.0;
+                             self.authButton.userInteractionEnabled = YES;
+                         }];
+    } else {
+        [UIView animateWithDuration:0.22
+                         animations:^{
+                             self.authButton.alpha = 0.35;
+                             self.authButton.userInteractionEnabled = NO;
+                         }];
+    }
+}
+
 - (void)showBar {
    // [self.toolbar presentOnController:self withOptions:@{}];
 }
@@ -273,12 +289,12 @@ static NSString *kCommentsPlaceholder = @"... Add your comments here";
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    if ( section == 0 ) {
+    if ( section == 1 ) {
         return 2;
     }
     
-    if ( section == 1 ) {
-        return 4;
+    if ( section == 0 ) {
+        return 3;
     }
     
     if ( section == 2 ) {
@@ -290,7 +306,7 @@ static NSString *kCommentsPlaceholder = @"... Add your comments here";
 }
 
 - (UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    if ( indexPath.section == 0 ) {
+    if ( indexPath.section == 1 ) {
         
         UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1
                                                        reuseIdentifier:@"n"];
@@ -310,7 +326,7 @@ static NSString *kCommentsPlaceholder = @"... Add your comments here";
         cell.backgroundColor = [UIColor clearColor];
         return cell;
     }
-    if ( indexPath.section == 1 ) {
+    if ( indexPath.section == 0 ) {
         
         UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1
                                                        reuseIdentifier:@"n"];
@@ -330,6 +346,7 @@ static NSString *kCommentsPlaceholder = @"... Add your comments here";
         cell.backgroundColor = [UIColor clearColor];
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
         return cell;
+        
     }
     
     [self.descriptionCell setBackgroundColor:[UIColor clearColor]];
@@ -375,13 +392,13 @@ static NSString *kCommentsPlaceholder = @"... Add your comments here";
 }
 
 - (UIView*)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
-    if ( section == 0 ) {
+    if ( section == 1 ) {
         return [[DesignManager shared] textHeaderWithText:@"YOUR DETAILS"
                                                 textColor:[UIColor kpccOrangeColor]
                                           backgroundColor:[[UIColor virtualBlackColor] translucify:0.25]
                                                   divider:NO];
     }
-    if ( section == 1 ) {
+    if ( section == 0 ) {
         return [[DesignManager shared] textHeaderWithText:@"REASON FOR INQUIRY"
                                                 textColor:[UIColor kpccOrangeColor]
                                           backgroundColor:[[UIColor virtualBlackColor] translucify:0.25]
@@ -448,7 +465,7 @@ static NSString *kCommentsPlaceholder = @"... Add your comments here";
         [self.feedbackTable setContentOffset:CGPointMake(0.0,240.0)
                                     animated:YES];
     } else {
-        [self.feedbackTable setContentOffset:CGPointMake(0.0,0.0)
+        [self.feedbackTable setContentOffset:CGPointMake(0.0,140.0)
                                 animated:YES];
     }
     
@@ -462,8 +479,6 @@ static NSString *kCommentsPlaceholder = @"... Add your comments here";
 
 - (void)textFieldDidEndEditing:(UITextField *)textField {
     [self hideBar];
- 
-    
 }
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {
@@ -474,8 +489,14 @@ static NSString *kCommentsPlaceholder = @"... Add your comments here";
         [self.descriptionInputView becomeFirstResponder];
     }
     if ( textField == self.descriptionInputView ) {
-        [self.nameTextField becomeFirstResponder];
+        [self.descriptionInputView resignFirstResponder];
     }
+    
+    return YES;
+}
+
+- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
+    [self checkForm];
     
     return YES;
 }

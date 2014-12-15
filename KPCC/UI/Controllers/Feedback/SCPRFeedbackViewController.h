@@ -18,6 +18,7 @@ typedef NS_ENUM(NSInteger, ValidationResult) {
   ValidationResultNoName,
   ValidationResultBadEmail,
   ValidationResultNoComments,
+  ValidationResultNoReasonProvided,
   ValidationResultOK
 } ;
 
@@ -56,5 +57,6 @@ typedef NS_ENUM(NSInteger, ValidationResult) {
 
 - (void)showBar;
 - (void)hideBar;
+- (void)checkForm;
 
 @end

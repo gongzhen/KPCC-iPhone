@@ -41,10 +41,10 @@
     
     [[AnalyticsManager shared] setup];
     
-#ifdef DEBUG
-    [[UXmanager shared].settings setUserHasViewedOnboarding:YES];
-    [[UXmanager shared].settings setUserHasViewedOnDemandOnboarding:YES];
-    [[UXmanager shared] persist];
+#ifndef PRODUCTION
+    //[[UXmanager shared].settings setUserHasViewedOnboarding:YES];
+    //[[UXmanager shared].settings setUserHasViewedOnDemandOnboarding:YES];
+    //[[UXmanager shared] persist];
 #endif
     
     // Apply application-wide styling
@@ -121,7 +121,9 @@
                           ntohl(tokenBytes[6]), ntohl(tokenBytes[7])];
     [[UXmanager shared].settings setPushTokenData:deviceToken];
     [[UXmanager shared].settings setPushTokenString:hexToken];
+#ifdef PRODUCTION
     [[UXmanager shared] persist];
+#endif
     
     NSLog(@" ***** REGISTERING PUSH TOKEN : %@ *****", hexToken);
 }

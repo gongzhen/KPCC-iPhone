@@ -295,8 +295,6 @@ setForOnDemandUI;
     self.liveDescriptionLabel.alpha = 0.0;
     self.pulldownMenu.alpha = 0.0;
     
-    
-    //[[UIApplication sharedApplication] setStatusBarHidden:YES];
     self.programTitleLabel.font = [UIFont systemFontOfSize:30.0];
     [self.programTitleLabel proLightFontize];
     self.liveProgressViewController.view.alpha = 0.0;
@@ -320,8 +318,6 @@ setForOnDemandUI;
     [UIView animateWithDuration:0.2 animations:^{
         self.letsGoLabel.alpha = 1.0;
     }];
-    
-    
     
     POPSpringAnimation *scaleAnimation = [POPSpringAnimation animationWithPropertyNamed:kPOPLayerScaleXY];
     scaleAnimation.fromValue  = [NSValue valueWithCGSize:CGSizeMake(0.0f, 0.0f)];
@@ -378,11 +374,9 @@ setForOnDemandUI;
     }];
     
     [[UXmanager shared].settings setUserHasViewedOnboarding:YES];
-#ifndef DEBUG
+#ifdef PRODUCTION
     [[UXmanager shared] persist];
 #endif
-    
-    
     
     [self updateDataForUI];
 }
@@ -455,8 +449,12 @@ setForOnDemandUI;
                 }
             }];
         } else {
-            
-            [self playStream:NO];
+            if ( [[UXmanager shared] onboardingEnding] ) {
+                [[UXmanager shared] setOnboardingEnding:NO];
+                [self playStream:YES];
+            } else {
+                [self playStream:NO];
+            }
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                 [[SessionManager shared] armProgramUpdater];
             });
@@ -702,8 +700,11 @@ setForOnDemandUI;
                                } else {
                                    
                                    [[SessionManager shared] fetchOnboardingProgramWithSegment:2 completed:^(id returnedObject) {
+                                       
                                        [[AudioManager shared] setTemporaryMutex:NO];
                                        [[AudioManager shared] playOnboardingAudio:2];
+                                       [[UXmanager shared] restoreInteractionButton];
+                                       
                                    }];
                                    
                                }
@@ -810,7 +811,6 @@ setForOnDemandUI;
         [self determinePlayState];
       
         if ( [[UXmanager shared] onboardingEnding] ) {
-            [[UXmanager shared] setOnboardingEnding:NO];
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.25 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                 [self primeManualControlButton];
             });
