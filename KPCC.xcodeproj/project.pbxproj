@@ -8,8 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		25263A881A32669E00BD5FF9 /* onboarding3.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 25263A871A32669E00BD5FF9 /* onboarding3.mp3 */; };
-		25263A8B1A32844800BD5FF9 /* onboarding-music-bed.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 25263A891A32844800BD5FF9 /* onboarding-music-bed.mp3 */; };
-		25263A8C1A32844800BD5FF9 /* onboarding-vocal-bed.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 25263A8A1A32844800BD5FF9 /* onboarding-vocal-bed.mp3 */; };
 		254CC6961A23A7A600560805 /* onboarding-logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 254CC6901A23A7A600560805 /* onboarding-logo.png */; };
 		254CC6971A23A7A600560805 /* onboarding-logo@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 254CC6911A23A7A600560805 /* onboarding-logo@2x.png */; };
 		254CC6981A23A7A600560805 /* onboarding-push-icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 254CC6921A23A7A600560805 /* onboarding-push-icon.png */; };
@@ -57,6 +55,8 @@
 		25B59A5719FEF93700D4885C /* SCPRShortListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 25B59A5519FEF93700D4885C /* SCPRShortListViewController.xib */; };
 		25F2BC7E1A3B9B4D00108F73 /* SCPRGenericAvatarViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 25F2BC7C1A3B9B4D00108F73 /* SCPRGenericAvatarViewController.m */; };
 		25F2BC7F1A3B9B4D00108F73 /* SCPRGenericAvatarViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 25F2BC7D1A3B9B4D00108F73 /* SCPRGenericAvatarViewController.xib */; };
+		25F2BC811A3BB60B00108F73 /* onboarding-music-bed.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 25F2BC801A3BB60B00108F73 /* onboarding-music-bed.m4a */; };
+		25F2BC831A3BB61300108F73 /* onboarding-voiceover.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 25F2BC821A3BB61300108F73 /* onboarding-voiceover.m4a */; };
 		523126A719EDB78C008A47A7 /* SCPRPreRollViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 523126A519EDB78C008A47A7 /* SCPRPreRollViewController.m */; };
 		523126A819EDB78C008A47A7 /* SCPRPreRollViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 523126A619EDB78C008A47A7 /* SCPRPreRollViewController.xib */; };
 		523E86D019C8A292006FC366 /* SCPRProgramDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 523E86CE19C8A292006FC366 /* SCPRProgramDetailViewController.m */; };
@@ -249,8 +249,6 @@
 
 /* Begin PBXFileReference section */
 		25263A871A32669E00BD5FF9 /* onboarding3.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = onboarding3.mp3; path = Audio/onboarding3.mp3; sourceTree = "<group>"; };
-		25263A891A32844800BD5FF9 /* onboarding-music-bed.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = "onboarding-music-bed.mp3"; path = "Audio/onboarding-music-bed.mp3"; sourceTree = "<group>"; };
-		25263A8A1A32844800BD5FF9 /* onboarding-vocal-bed.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = "onboarding-vocal-bed.mp3"; path = "Audio/onboarding-vocal-bed.mp3"; sourceTree = "<group>"; };
 		254CC6901A23A7A600560805 /* onboarding-logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "onboarding-logo.png"; sourceTree = "<group>"; };
 		254CC6911A23A7A600560805 /* onboarding-logo@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "onboarding-logo@2x.png"; sourceTree = "<group>"; };
 		254CC6921A23A7A600560805 /* onboarding-push-icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "onboarding-push-icon.png"; sourceTree = "<group>"; };
@@ -320,6 +318,8 @@
 		25F2BC7B1A3B9B4D00108F73 /* SCPRGenericAvatarViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCPRGenericAvatarViewController.h; sourceTree = "<group>"; };
 		25F2BC7C1A3B9B4D00108F73 /* SCPRGenericAvatarViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SCPRGenericAvatarViewController.m; sourceTree = "<group>"; };
 		25F2BC7D1A3B9B4D00108F73 /* SCPRGenericAvatarViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SCPRGenericAvatarViewController.xib; sourceTree = "<group>"; };
+		25F2BC801A3BB60B00108F73 /* onboarding-music-bed.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; name = "onboarding-music-bed.m4a"; path = "Audio/onboarding-music-bed.m4a"; sourceTree = "<group>"; };
+		25F2BC821A3BB61300108F73 /* onboarding-voiceover.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; name = "onboarding-voiceover.m4a"; path = "Audio/onboarding-voiceover.m4a"; sourceTree = "<group>"; };
 		45A107003D6C750C5E0ECAC3 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		523126A419EDB78C008A47A7 /* SCPRPreRollViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCPRPreRollViewController.h; sourceTree = "<group>"; };
 		523126A519EDB78C008A47A7 /* SCPRPreRollViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SCPRPreRollViewController.m; sourceTree = "<group>"; };
@@ -601,8 +601,8 @@
 		258E8DFD1A16AA1800675E68 /* Audio */ = {
 			isa = PBXGroup;
 			children = (
-				25263A891A32844800BD5FF9 /* onboarding-music-bed.mp3 */,
-				25263A8A1A32844800BD5FF9 /* onboarding-vocal-bed.mp3 */,
+				25F2BC821A3BB61300108F73 /* onboarding-voiceover.m4a */,
+				25F2BC801A3BB60B00108F73 /* onboarding-music-bed.m4a */,
 				25263A871A32669E00BD5FF9 /* onboarding3.mp3 */,
 				259E450C1A1D583A00F5CD65 /* onboarding1.mp3 */,
 				259E450D1A1D583A00F5CD65 /* onboarding2.mp3 */,
@@ -1270,7 +1270,6 @@
 				52EFF7F419C368C00059A0E3 /* program_avatar_bbc-newshour@2x.png in Resources */,
 				52D0FC3619D20D29009AECEE /* program_avatar_the-frame.png in Resources */,
 				52EFF7EA19C368C00059A0E3 /* program_avatar_all-things-considered.png in Resources */,
-				25263A8B1A32844800BD5FF9 /* onboarding-music-bed.mp3 in Resources */,
 				52EFF82E19C368C00059A0E3 /* program_avatar_on-being.png in Resources */,
 				259E44FF1A1D2CD300F5CD65 /* SCPROnboardingViewController.xib in Resources */,
 				52D9227819D366C90018AD4B /* content-share.png in Resources */,
@@ -1312,6 +1311,7 @@
 				2557BA851A1A9BB800B0CAED /* btn_live_rewind_xtra-small.png in Resources */,
 				52EFF79B19C3688D0059A0E3 /* menu-settings.png in Resources */,
 				76A308D118C8FB940065D4B1 /* InfoPlist.strings in Resources */,
+				25F2BC831A3BB61300108F73 /* onboarding-voiceover.m4a in Resources */,
 				768C06581995905D00F829EB /* btn_pause@2x.png in Resources */,
 				254CC6991A23A7A600560805 /* onboarding-push-icon@2x.png in Resources */,
 				52EFF86C19C368C00059A0E3 /* program_avatar_wits@2x.png in Resources */,
@@ -1349,7 +1349,6 @@
 				52EFF86A19C368C00059A0E3 /* program_avatar_wits.png in Resources */,
 				258E8E061A16AA4200675E68 /* desk_customer_template.json in Resources */,
 				52D9227A19D366C90018AD4B /* content-share@2x.png in Resources */,
-				25263A8C1A32844800BD5FF9 /* onboarding-vocal-bed.mp3 in Resources */,
 				52EFF86819C368C00059A0E3 /* program_avatar_weekend-edition-sunday@2x.png in Resources */,
 				52EFF84819C368C00059A0E3 /* program_avatar_splendid-table@2x.png in Resources */,
 				254CC6971A23A7A600560805 /* onboarding-logo@2x.png in Resources */,
@@ -1358,6 +1357,7 @@
 				25263A881A32669E00BD5FF9 /* onboarding3.mp3 in Resources */,
 				768C066F199590CC00F829EB /* FreigSanProBlk.otf in Resources */,
 				258E8E011A16AA3900675E68 /* Glass_Crash.mp3 in Resources */,
+				25F2BC811A3BB60B00108F73 /* onboarding-music-bed.m4a in Resources */,
 				254CC6981A23A7A600560805 /* onboarding-push-icon.png in Resources */,
 				52D0FC3819D20D29009AECEE /* program_avatar_the-frame@2x.png in Resources */,
 				768C06601995905D00F829EB /* chevron_down@2x.png in Resources */,

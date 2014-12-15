@@ -226,6 +226,8 @@
     if ( self.mutex ) return;
     
     NSDictionary *p = [[SessionManager shared] onboardingAudio];
+    self.liveBarLine.strokeEnd = self.lastLiveValue;
+    self.currentBarLine.strokeEnd = self.lastCurrentValue;
 
     
     Program *program = [[SessionManager shared] currentProgram];
@@ -257,7 +259,7 @@
     
     dispatch_async(dispatch_get_main_queue(), ^{
         self.mutex = YES;
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.75 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             self.mutex = NO;
         });
         
@@ -269,6 +271,7 @@
                 
                 [self.liveBarLine removeAllAnimations];
                 [self.currentBarLine removeAllAnimations];
+                
                 self.lastCurrentValue = (currentDiff / duration)*1.0f;
                 self.lastLiveValue = (liveDiff / duration)*1.0f;
               
@@ -278,7 +281,9 @@
  
             
             CABasicAnimation *liveAnim = [CABasicAnimation animationWithKeyPath:@"strokeEnd"];
-            [liveAnim setFromValue:[NSNumber numberWithFloat:self.lastLiveValue]];
+            
+            CGFloat min = fminf(self.lastLiveValue, self.liveBarLine.strokeEnd);
+            [liveAnim setFromValue:[NSNumber numberWithFloat:min]];
             [liveAnim setToValue:@(fminf(lpct,0.98f))];
             [liveAnim setDuration:0.97];
             [liveAnim setRemovedOnCompletion:NO];
@@ -288,8 +293,9 @@
             
             CGFloat pct = (currentDiff / duration)*1.0f;
       
+            CGFloat curMin = fminf(self.lastCurrentValue, self.currentBarLine.strokeEnd);
             CABasicAnimation *currentAnim = [CABasicAnimation animationWithKeyPath:@"strokeEnd"];
-            [currentAnim setFromValue:[NSNumber numberWithFloat:self.lastCurrentValue]];
+            [currentAnim setFromValue:[NSNumber numberWithFloat:curMin]];
             [currentAnim setToValue:@(fminf(pct,0.98f))];
             [currentAnim setDuration:0.97];
             [currentAnim setRemovedOnCompletion:NO];

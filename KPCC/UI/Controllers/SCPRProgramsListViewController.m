@@ -57,6 +57,14 @@
     self.blurView.blurRadius = 20.f;
     self.blurView.dynamic = NO;
 
+    self.genAvatar = [[SCPRGenericAvatarViewController alloc]
+                                               initWithNibName:@"SCPRGenericAvatarViewController"
+                                               bundle:nil];
+    self.genAvatar.view.frame = CGRectMake(0.0,64.0,
+                                           self.genAvatar.view.frame.size.width,
+                                           self.genAvatar.view.frame.size.height);
+    self.genAvatar.view.alpha = 0.0;
+    [self.view addSubview:self.genAvatar.view];
     
     [[DesignManager shared] loadProgramImage:_currentProgram.program_slug
                                 andImageView:self.programBgImage
@@ -125,19 +133,31 @@
     if (iconNamed) {
         UIImage *iconImg = [UIImage imageNamed:[NSString stringWithFormat:@"program_avatar_%@", iconNamed]];
         if ( !iconImg ) {
-            SCPRGenericAvatarViewController *avatar = [[SCPRGenericAvatarViewController alloc]
-                                                       initWithNibName:@"SCPRGenericAvatarViewController"
-                                                       bundle:nil];
-            iconImg = [avatar avatarFromProgram:self.programsList[indexPath.row]];
-        }
+            SCPRGenericAvatarViewController *av = [[SCPRGenericAvatarViewController alloc]
+                                                   initWithNibName:@"SCPRGenericAvatarViewController"
+                                                   bundle:nil];
+            av.view.frame = CGRectMake(0.0, 0.0,
+                                       32.0, 32.0);
+            av.view.center = CGPointMake(cell.iconImageView.center.x,cell.contentView.frame.size.height/2.0);
+            av.view.tag = 11111;
+         
+            
+            cell.gav = av;
+            [cell.contentView addSubview:av.view];
+            [av.view layoutIfNeeded];
         
-        [cell.iconImageView setImage:iconImg];
-        cell.iconImageView.frame = CGRectMake(cell.iconImageView.frame.origin.x, 31 - iconImg.size.height/2,
+        } else {
+        
+            [cell.iconImageView setImage:iconImg];
+            cell.iconImageView.frame = CGRectMake(cell.iconImageView.frame.origin.x, 31 - iconImg.size.height/2,
                                               iconImg.size.width, iconImg.size.height);
+            cell.iconImageView.alpha = 1.0;
+        }
     }
 
     return cell;
 }
+
 
 
 #pragma mark - Table view delegate
@@ -161,6 +181,16 @@
                          withParameters:@{ @"programTitle" : title }];
 }
 
+- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
+    SCPRProgramTableViewCell *tCell = (SCPRProgramTableViewCell*)cell;
+    [tCell.contentView layoutIfNeeded];
+    
+    
+    if ( tCell.gav ) {
+        [tCell.gav.view layoutIfNeeded];
+        [tCell.gav setupWithProgram:self.programsList[indexPath.row]];
+    }
+}
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];

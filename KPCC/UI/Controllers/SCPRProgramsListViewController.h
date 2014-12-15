@@ -10,12 +10,15 @@
 #import "Program.h"
 #import "FXBlurView.h"
 
-@interface SCPRProgramsListViewController : UIViewController
+@class SCPRGenericAvatarViewController;
+
+@interface SCPRProgramsListViewController : UIViewController<UITableViewDataSource,UITableViewDelegate>
 
 - (instancetype)initWithBackgroundProgram:(Program *)program;
 
 @property IBOutlet UIImageView *programBgImage;
 @property IBOutlet UITableView *programsTable;
 @property IBOutlet FXBlurView *blurView;
+@property (nonatomic,strong) SCPRGenericAvatarViewController *genAvatar;
 
 @end

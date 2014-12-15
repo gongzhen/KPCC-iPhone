@@ -61,6 +61,8 @@
     
     [self listenForQueues];
     
+    self.committedActions = [NSMutableDictionary new];
+    
     SCPRAppDelegate *del = (SCPRAppDelegate*)[[UIApplication sharedApplication] delegate];
     UIWindow *mw = [del window];
     [mw addSubview:del.onboardingController.view];
@@ -84,10 +86,10 @@
     
     [self.onboardingCtrl.view layoutIfNeeded];
     
-    NSString *lisaPath = [[NSBundle mainBundle] pathForResource:@"onboarding-vocal-bed"
-                                                         ofType:@"mp3"];
+    NSString *lisaPath = [[NSBundle mainBundle] pathForResource:@"onboarding-voiceover"
+                                                         ofType:@"m4a"];
     NSString *musicPath = [[NSBundle mainBundle] pathForResource:@"onboarding-music-bed"
-                                                          ofType:@"mp3"];
+                                                          ofType:@"m4a"];
     
     NSError *lisaError = nil;
     NSError *musicError = nil;
@@ -98,8 +100,8 @@
     [self.lisaPlayer prepareToPlay];
     [self.musicPlayer prepareToPlay];
     
-    self.lisaPlayer.volume = 1.0;
-    self.musicPlayer.volume = 0.2;
+    //self.lisaPlayer.volume = 1.0;
+    //self.musicPlayer.volume = 0.2;
 
 }
 
@@ -158,7 +160,18 @@
         
     } completion:^(BOOL finished) {
         [self.onboardingCtrl.navbarMask.layer removeFromSuperlayer];
-        self.onboardingCtrl.interactionButton.alpha = 0.0;
+        self.onboardingCtrl.interactionButton.frame = [self.masterCtrl.view convertRect:self.masterCtrl.playerControlsView.frame
+                                                       
+                                   toView:self.onboardingCtrl.view];
+        
+        [self.onboardingCtrl.interactionButton removeTarget:nil
+                                                     action:nil
+                                           forControlEvents:UIControlEventAllEvents];
+        
+        [self.onboardingCtrl.interactionButton addTarget:self
+                                                  action:@selector(godPauseOrPlay)
+                                        forControlEvents:UIControlEventTouchUpInside];
+        
         [self.onboardingCtrl.orangeStripView removeFromSuperview];
         [self.masterCtrl onboarding_beginOnboardingAudio];
 
@@ -182,15 +195,28 @@
                                                             userInfo:nil
                                                              repeats:YES];
         
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(8.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            [self.masterCtrl.playPauseButton stretch];
-        });
+        
     }];
 
 
 }
 
+- (void)godPauseOrPlay {
+    if ( self.paused ) {
+        [self.lisaPlayer play];
+        [self.musicPlayer play];
+        [[AudioManager shared].audioPlayer play];
+        self.paused = NO;
+    } else {
+        [self.lisaPlayer pause];
+        [self.musicPlayer pause];
+        [[AudioManager shared].audioPlayer pause];
+        self.paused = YES;
+    }
+}
+
 - (void)presentLensOverRewindButton {
+    self.onboardingCtrl.interactionButton.alpha = 0.0;
     [UIView animateWithDuration:0.15 animations:^{
         self.masterCtrl.liveRewindAltButton.alpha = 1.0;
     } completion:^(BOOL finished) {
@@ -213,6 +239,12 @@
 
 }
 
+- (void)restoreInteractionButton {
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.25 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        self.onboardingCtrl.interactionButton.alpha = 1.0;
+    });
+}
+
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
 
 }
@@ -220,13 +252,16 @@
 - (void)listenForQueues {
     
     self.listeningForQueues = YES;
-    self.keyPoints = [@{ @"18" : @"activateDropdown",
+    self.keyPoints = [@{
+                        @"7" : @"expandButton",
+                         @"18" : @"activateDropdown",
                          @"21" : @"selectFirstMenuItem",
                          @"25" : @"selectSecondMenuItem",
                          @"29" : @"closeMenu",
                          @"34" : @"askForNotifications" } mutableCopy];
     
 }
+
 
 - (void)fireHandler {
     NSInteger t = self.lisaPlayer.currentTime;
@@ -239,7 +274,7 @@
 - (void)handleKeypoint:(NSInteger)keypoint {
     NSString *key = [NSString stringWithFormat:@"%ld",(long)keypoint];
     NSString *value = self.keyPoints[key];
-    if ( value ) {
+    if ( value && !self.committedActions[value] ) {
         if ( SEQ(value, @"activateDropdown") ) {
             [self activateDropdown];
         }
@@ -255,6 +290,12 @@
         if ( SEQ(value, @"askForNotifications") ) {
             [self askForPushNotifications];
         }
+        if ( SEQ(value, @"expandButton") ) {
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.05 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                [self.masterCtrl.playPauseButton stretch];
+            });
+        }
+        self.committedActions[value] = @1;
     }
 }
 
@@ -300,8 +341,7 @@
 }
 
 - (void)askForPushNotifications {
-    [[AudioManager shared].audioPlayer pause];
-    [self.lisaPlayer pause];
+
     
     self.listeningForQueues = NO;
     if ( self.observerTimer ) {
@@ -321,6 +361,8 @@
         [self.masterCtrl.liveProgressViewController.view setAlpha:0.0];
     } completion:^(BOOL finished) {
         [self.onboardingCtrl revealNotificationsPrompt];
+        [[AudioManager shared].audioPlayer pause];
+        [self.lisaPlayer pause];
     }];
 }
 

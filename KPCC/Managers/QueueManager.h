@@ -26,6 +26,7 @@
 // Playback actions
 - (void)enqueueEpisode:(Episode *)episode;
 - (NSArray*)enqueueEpisodes:(NSArray *)episodes withCurrentIndex:(NSInteger)index;
+- (NSArray*)enqueueEpisodes:(NSArray *)episodes withCurrentIndex:(NSInteger)index playImmediately:(BOOL)playImmediately;
 - (void)playNext;
 - (void)playPrev;
 - (void)playItemAtPosition:(int)index;

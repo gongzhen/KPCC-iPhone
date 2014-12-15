@@ -8,10 +8,13 @@
 
 #import <UIKit/UIKit.h>
 
+@class SCPRGenericAvatarViewController;
+
 @interface SCPRProgramTableViewCell : UITableViewCell
 
 @property (nonatomic,strong) UILabel* programLabel;
 @property (nonatomic,strong) UIImageView* iconImageView;
 @property (nonatomic,strong) UIImageView* rightChevronImageView;
+@property (nonatomic,strong) SCPRGenericAvatarViewController *gav;
 
 @end

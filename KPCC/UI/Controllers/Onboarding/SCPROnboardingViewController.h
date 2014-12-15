@@ -63,6 +63,7 @@
 - (void)hideCallout;
 - (void)ondemandMode;
 - (void)dismissOnDemand;
+- (void)repurposeButton;
 
 // User responses
 - (void)yesToNotifications;

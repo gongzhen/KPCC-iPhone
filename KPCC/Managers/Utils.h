@@ -43,5 +43,6 @@
 + (NSString*)rawJson:(id)object;
 + (NSString*)prettyVersion;
 + (NSString*)sha1:(NSString*)input;
++ (BOOL)validateEmail:(NSString *)string;
 
 @end

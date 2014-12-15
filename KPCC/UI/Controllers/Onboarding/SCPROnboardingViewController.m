@@ -119,6 +119,9 @@
 }
 
 - (void)revealNotificationsPrompt {
+    
+    self.interactionButton.alpha = 0.0;
+    
     POPSpringAnimation *scaleAnimation = [POPSpringAnimation animationWithPropertyNamed:kPOPLayerScaleXY];
     scaleAnimation.fromValue  = [NSValue valueWithCGSize:CGSizeMake(0.0f, 0.0f)];
     scaleAnimation.toValue  = [NSValue valueWithCGSize:CGSizeMake(1.0f, 1.0f)];
@@ -137,6 +140,9 @@
 }
 
 - (void)collapseNotificationsPrompt {
+    
+    self.interactionButton.alpha = 1.0;
+    
     POPSpringAnimation *scaleAnimation = [POPSpringAnimation animationWithPropertyNamed:kPOPLayerScaleXY];
     scaleAnimation.fromValue  = [NSValue valueWithCGSize:CGSizeMake(1.0f, 1.0f)];
     scaleAnimation.toValue  = [NSValue valueWithCGSize:CGSizeMake(0.0f, 0.0f)];
@@ -233,7 +239,7 @@
         self.view.alpha = 0.0;
     } completion:^(BOOL finished) {
         [UXmanager shared].settings.userHasViewedOnDemandOnboarding = YES;
-#ifndef DEBUG
+#ifdef PRODUCTION
         [[UXmanager shared] persist];
 #endif
     }];

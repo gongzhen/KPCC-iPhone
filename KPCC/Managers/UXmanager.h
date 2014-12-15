@@ -22,11 +22,13 @@
 @property BOOL listeningForQueues;
 @property BOOL suppressBalloon;
 @property BOOL onboardingEnding;
+@property BOOL paused;
 @property (nonatomic,strong) NSDictionary *keyPoints;
 @property (nonatomic,strong) NSTimer *observerTimer;
 @property (nonatomic,strong) AVAudioPlayer *musicPlayer;
 @property (nonatomic,strong) AVAudioPlayer *lisaPlayer;
 @property (nonatomic,strong) NSOperationQueue *fadeQueue;
+@property (nonatomic,strong) NSMutableDictionary *committedActions;
 
 + (instancetype)shared;
 - (void)load;
@@ -51,5 +53,8 @@
 - (void)closeOutOnboarding;
 - (void)endOnboarding;
 - (void)fadePlayer:(AVAudioPlayer*)player;
+- (void)restoreInteractionButton;
+
+- (void)godPauseOrPlay;
 
 @end
