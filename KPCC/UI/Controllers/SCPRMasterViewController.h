@@ -23,7 +23,7 @@
 #import "SCPRProgressViewController.h"
 #import "SCPRButton.h"
 
-@interface SCPRMasterViewController : UIViewController<SCPRMenuDelegate>
+@interface SCPRMasterViewController : UIViewController<SCPRMenuDelegate,UIAlertViewDelegate>
 
 @property IBOutlet UILabel *programTitleLabel;
 @property IBOutlet UIImageView *programImageView;
@@ -98,6 +98,10 @@
 @property BOOL springLock;
 @property BOOL lockPlayback;
 @property BOOL lockAnimationUI;
+@property BOOL promptedAboutFailureAlready;
+@property BOOL recovering;
+@property BOOL uiLocked;
+@property BOOL dirtyFromFailure;
 
 @property NSInteger onDemandGateCount;
 @property NSInteger previousRewindThreshold;

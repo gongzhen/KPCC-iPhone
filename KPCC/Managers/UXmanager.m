@@ -189,7 +189,8 @@
         
         [self.musicPlayer play];
         [self.lisaPlayer play];
-        self.observerTimer = [NSTimer scheduledTimerWithTimeInterval:1.0
+        
+        self.observerTimer = [NSTimer scheduledTimerWithTimeInterval:0.1
                                                               target:self
                                                             selector:@selector(fireHandler)
                                                             userInfo:nil

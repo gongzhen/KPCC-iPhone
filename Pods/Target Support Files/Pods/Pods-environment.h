@@ -78,16 +78,28 @@
 #define COCOAPODS_VERSION_MINOR_JDStatusBarNotification 4
 #define COCOAPODS_VERSION_PATCH_JDStatusBarNotification 9
 
+// KSReachability
+#define COCOAPODS_POD_AVAILABLE_KSReachability
+#define COCOAPODS_VERSION_MAJOR_KSReachability 1
+#define COCOAPODS_VERSION_MINOR_KSReachability 4
+#define COCOAPODS_VERSION_PATCH_KSReachability 0
+
 // Mixpanel
 #define COCOAPODS_POD_AVAILABLE_Mixpanel
 #define COCOAPODS_VERSION_MAJOR_Mixpanel 2
-#define COCOAPODS_VERSION_MINOR_Mixpanel 5
-#define COCOAPODS_VERSION_PATCH_Mixpanel 4
+#define COCOAPODS_VERSION_MINOR_Mixpanel 6
+#define COCOAPODS_VERSION_PATCH_Mixpanel 2
+
+// Mixpanel/MPCategoryHelpers
+#define COCOAPODS_POD_AVAILABLE_Mixpanel_MPCategoryHelpers
+#define COCOAPODS_VERSION_MAJOR_Mixpanel_MPCategoryHelpers 2
+#define COCOAPODS_VERSION_MINOR_Mixpanel_MPCategoryHelpers 6
+#define COCOAPODS_VERSION_PATCH_Mixpanel_MPCategoryHelpers 2
 
 // Parse
 #define COCOAPODS_POD_AVAILABLE_Parse
 #define COCOAPODS_VERSION_MAJOR_Parse 1
-#define COCOAPODS_VERSION_MINOR_Parse 5
+#define COCOAPODS_VERSION_MINOR_Parse 6
 #define COCOAPODS_VERSION_PATCH_Parse 0
 
 // TestFlightSDK

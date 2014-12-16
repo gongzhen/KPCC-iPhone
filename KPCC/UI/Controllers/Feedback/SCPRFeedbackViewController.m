@@ -76,8 +76,8 @@ static NSString *kCommentsPlaceholder = @"... Add your comments here";
     self.descriptionInputView.attributedPlaceholder = dph;
     
     self.nameTextField.returnKeyType = UIReturnKeyNext;
-    self.emailTextField.returnKeyType = UIReturnKeyNext;
-    self.descriptionInputView.returnKeyType = UIReturnKeyDone;
+    self.emailTextField.returnKeyType = UIReturnKeyDone;
+    self.descriptionInputView.returnKeyType = UIReturnKeyNext;
     
     self.splashBlurView.backgroundColor = [UIColor clearColor];
     self.splashView.contentMode = UIViewContentModeScaleAspectFill;
@@ -486,10 +486,10 @@ static NSString *kCommentsPlaceholder = @"... Add your comments here";
         [self.emailTextField becomeFirstResponder];
     }
     if ( textField == self.emailTextField ) {
-        [self.descriptionInputView becomeFirstResponder];
+        [self.emailTextField resignFirstResponder];
     }
     if ( textField == self.descriptionInputView ) {
-        [self.descriptionInputView resignFirstResponder];
+        [self.nameTextField becomeFirstResponder];
     }
     
     return YES;

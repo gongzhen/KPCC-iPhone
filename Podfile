@@ -9,4 +9,5 @@ pod 'FlurrySDK'
 pod 'Parse'
 pod 'Mixpanel'
 pod 'TestFlightSDK'
+pod 'KSReachability'
 link_with ['KPCC', 'KPCC-TestFlight']

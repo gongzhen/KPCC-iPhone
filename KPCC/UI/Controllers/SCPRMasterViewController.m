@@ -51,6 +51,9 @@ static NSString *kBufferingText = @"BUFFERING";
 - (void)playStream:(BOOL)hard;
 - (void)setDataForOnDemand:(Program *)program andAudioChunk:(AudioChunk*)audioChunk;
 - (void)setDataForOnDemand:(Program *)program andAudioChunk:(AudioChunk*)audioChunk completion:(CompletionBlock)completion;
+- (void)lockUI:(id)note;
+- (void)unlockUI:(id)note;
+- (void)finishUpdatingForProgram;
 
 @end
 
@@ -105,6 +108,18 @@ setForOnDemandUI;
             [self.programTitleYConstraint setConstant:278.0];
         }
     }
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(unlockUI:)
+                                                 name:@"network-status-good"
+                                               object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(lockUI:)
+                                                 name:@"network-status-fail"
+                                               object:nil];
+    
+    
     
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
     
@@ -204,6 +219,8 @@ setForOnDemandUI;
     [self.view addSubview:self.mpvv];
     
     NSLog(@"Program Title Y Lock : %1.1f",self.programTitleYConstraint.constant);
+    
+    [[NetworkManager shared] setupReachability];
     
     [SCPRCloakViewController cloakWithCustomCenteredView:nil cloakAppeared:^{
         if ( [[UXmanager shared] userHasSeenOnboarding] ) {
@@ -453,7 +470,17 @@ setForOnDemandUI;
                 [[UXmanager shared] setOnboardingEnding:NO];
                 [self playStream:YES];
             } else {
-                [self playStream:NO];
+                if ( self.dirtyFromFailure ) {
+                    self.dirtyFromFailure = NO;
+                    if ( [[AudioManager shared] currentAudioMode] == AudioModeOnDemand ) {
+                        [[QueueManager shared] playItemAtPosition:[[QueueManager shared] currentlyPlayingIndex]];
+                    } else {
+                        [self playStream:YES];
+                    }
+                } else {
+                    [self playStream:NO];
+                }
+                
             }
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                 [[SessionManager shared] armProgramUpdater];
@@ -617,7 +644,18 @@ setForOnDemandUI;
 - (void)goLive:(BOOL)play {
     
     
-    if ( [[AudioManager shared] currentAudioMode] == AudioModeLive ) return;
+    if ( [[AudioManager shared] currentAudioMode] == AudioModeLive ) {
+        if ( [[AudioManager shared] status] == StreamStatusPaused ) {
+            [self playStream:NO];
+            return;
+        }
+        if ( [[AudioManager shared] status] == StreamStatusStopped ) {
+            [self playStream:YES];
+            return;
+        }
+        
+        return;
+    }
     
     [[AudioManager shared] setCurrentAudioMode:AudioModeLive];
     self.lockPlayback = !play;
@@ -804,18 +842,33 @@ setForOnDemandUI;
 # pragma mark - UI control
 - (void)updateDataForUI {
     [[SessionManager shared] fetchCurrentProgram:^(id returnedObject) {
-        [self.liveProgressViewController displayWithProgram:(Program*)returnedObject
-                                                     onView:self.view
-                                           aboveSiblingView:self.playerControlsView];
-        [self.liveProgressViewController hide];
-        [self determinePlayState];
-      
-        if ( [[UXmanager shared] onboardingEnding] ) {
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.25 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                [self primeManualControlButton];
-            });
+        if ( returnedObject ) {
+            [self.liveProgressViewController displayWithProgram:(Program*)returnedObject
+                                                         onView:self.view
+                                               aboveSiblingView:self.playerControlsView];
+            [self.liveProgressViewController hide];
+            [self determinePlayState];
+            
+            if ( self.uiLocked ) {
+                [self unlockUI:@1];
+            }
+            
+            if ( [[UXmanager shared] onboardingEnding] ) {
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.25 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                    [self primeManualControlButton];
+                });
+            }
+        } else {
+            
+            [self.liveProgressViewController displayWithProgram:(Program*)returnedObject
+                                                         onView:self.view
+                                               aboveSiblingView:self.playerControlsView];
+            [self.liveProgressViewController hide];
+            [self determinePlayState];
+            
+            
+            [self lockUI:@1];
         }
-        
     }];
 }
 
@@ -1132,29 +1185,21 @@ setForOnDemandUI;
     Program *programObj = [[SessionManager shared] currentProgram];
     // Only update background image when we're not in On Demand mode.
     if (!setForOnDemandUI){
+        
+        if ( !programObj ) {
+            [self updateUIWithProgram:nil];
+            self.programImageView.image = [UIImage imageNamed:@"program_tile_generic.jpg"];
+            [self finishUpdatingForProgram];
+            return;
+        }
+        
         [[DesignManager shared] loadProgramImage:programObj.program_slug
                                     andImageView:self.programImageView
                                       completion:^(BOOL status) {
                                           
-                                          [self.blurView setNeedsDisplay];
-                                          dispatch_async(dispatch_get_main_queue(), ^{
-                                              
-                                              [self updateUIWithProgram:programObj];
-                                              [[AudioManager shared] updateNowPlayingInfoWithAudio:programObj];
-                                              self.navigationController.navigationBarHidden = NO;
-                                              
-                                              [self.view layoutIfNeeded];
-                                              [self.liveStreamView layoutIfNeeded];
-                                              [self.initialControlsView layoutIfNeeded];
-                                              [self.liveRewindAltButton layoutIfNeeded];
-                                              
-                                              [self primeManualControlButton];
-                                              
-                                              self.view.alpha = 1.0;
-                                              if ( [SCPRCloakViewController cloakInUse] ) {
-                                                  [SCPRCloakViewController uncloak];
-                                              }
-                                          });
+                                          [self updateUIWithProgram:programObj];
+                                          [[AudioManager shared] updateNowPlayingInfoWithAudio:programObj];
+                                          [self finishUpdatingForProgram];
                                           
                                       }];
     } else {
@@ -1166,8 +1211,29 @@ setForOnDemandUI;
     
 }
 
+- (void)finishUpdatingForProgram {
+    [self.blurView setNeedsDisplay];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        self.navigationController.navigationBarHidden = NO;
+        
+        [self.view layoutIfNeeded];
+        [self.liveStreamView layoutIfNeeded];
+        [self.initialControlsView layoutIfNeeded];
+        [self.liveRewindAltButton layoutIfNeeded];
+        [self setUIContents:YES];
+        [self primeManualControlButton];
+        
+        self.view.alpha = 1.0;
+        if ( [SCPRCloakViewController cloakInUse] ) {
+            [SCPRCloakViewController uncloak];
+        }
+    });
+}
+
 - (void)updateUIWithProgram:(Program*)program {
     if (!program) {
+        self.programTitleLabel.text = @"";
+        self.liveDescriptionLabel.text = @"NO NETWORK";
         return;
     }
     
@@ -1361,6 +1427,11 @@ setForOnDemandUI;
             NSLog(@"Rewind Button - Hiding because onboarding is ending");
         okToShow = NO;
     }
+    if ( [[NetworkManager shared] networkDown] ) {
+        if ( okToShow )
+            NSLog(@"Rewind Button - Hiding because program is nil");
+        okToShow = NO;
+    }
     
     if ( okToShow ) {
         self.onboardingRewindButtonShown = YES;
@@ -1373,6 +1444,84 @@ setForOnDemandUI;
         [UIView animateWithDuration:0.33 animations:^{
             self.liveRewindAltButton.alpha = 0.0;
         }];
+    }
+    
+}
+
+- (void)lockUI:(NSNotification*)note {
+    
+    if ( self.uiLocked ) return;
+    self.uiLocked = YES;
+    
+    if ( [[AudioManager shared] currentAudioMode] == AudioModeOnDemand ) {
+        self.onDemandPlayerView.alpha = 0.45;
+        self.onDemandPlayerView.userInteractionEnabled = NO;
+        self.timeLabelOnDemand.text = @"";
+        self.timeLabelOnDemand.alpha = 0.0;
+    }
+    
+    if ( self.initialPlay ) {
+        if ( [[AudioManager shared] status] == StreamStatusPlaying ) {
+            [[AudioManager shared] adjustAudioWithValue:-0.1 completion:^{
+                
+                [[AudioManager shared] pauseStream];
+                [[AudioManager shared] takedownAudioPlayer];
+                
+                
+                self.playerControlsView.alpha = 0.45;
+                self.playerControlsView.userInteractionEnabled = NO;
+            }];
+        } else {
+            self.playerControlsView.alpha = 0.45;
+            self.playerControlsView.userInteractionEnabled = NO;
+        }
+    } else {
+        self.initialControlsView.alpha = 0.45;
+        self.initialControlsView.userInteractionEnabled = NO;
+    }
+    
+
+    
+    self.liveDescriptionLabel.text = @"NO NETWORK";
+    
+    if ( note && !self.promptedAboutFailureAlready ) {
+        self.promptedAboutFailureAlready = YES;
+        [[[UIAlertView alloc] initWithTitle:@"Network Availability"
+                                message:@"It looks like your connection has dropped. Please connect to Wi-Fi or retry once your signal has improved"
+                               delegate:self
+                      cancelButtonTitle:@"Cancel"
+                      otherButtonTitles:@"Retry", nil] show];
+    }
+    
+}
+
+- (void)unlockUI:(NSNotification*)note {
+    
+    if ( !self.uiLocked ) return;
+    self.uiLocked = NO;
+    self.dirtyFromFailure = YES;
+    
+    self.promptedAboutFailureAlready = NO;
+    if ( [[AudioManager shared] currentAudioMode] != AudioModeOnDemand ) {
+        if ( ![[SessionManager shared] currentProgram] ) {
+            [self updateDataForUI];
+        }
+        [self determinePlayState];
+    }
+    
+    if ( [[AudioManager shared] currentAudioMode] == AudioModeOnDemand ) {
+        self.onDemandPlayerView.alpha = 1.0;
+        self.onDemandPlayerView.userInteractionEnabled = YES;
+        self.timeLabelOnDemand.text = @"";
+        self.timeLabelOnDemand.alpha = 1.0;
+    }
+    
+    if ( self.initialPlay ) {
+        self.playerControlsView.alpha = 1.0;
+        self.playerControlsView.userInteractionEnabled = YES;
+    } else {
+        self.initialControlsView.alpha = 1.0;
+        self.initialControlsView.userInteractionEnabled = YES;
     }
     
 }
@@ -1929,13 +2078,15 @@ setForOnDemandUI;
         }
     } else {
         
-        if ( !self.menuOpen ) {
-            if ( !self.preRollOpen ) {
-                if ( ![[UXmanager shared] userHasSeenOnboarding] ) {
-                    [self.liveProgressViewController show];
-                }
-                if ( self.initialPlay ) {
-                    [self.liveProgressViewController show];
+        if ( [[AudioManager shared] currentAudioMode] == AudioModeLive ) {
+            if ( !self.menuOpen ) {
+                if ( !self.preRollOpen ) {
+                    if ( ![[UXmanager shared] userHasSeenOnboarding] ) {
+                        [self.liveProgressViewController show];
+                    }
+                    if ( self.initialPlay ) {
+                        [self.liveProgressViewController show];
+                    }
                 }
             }
         }
@@ -2100,6 +2251,17 @@ setForOnDemandUI;
     MPRemoteCommand *playCommand = [rcc playCommand];
     [playCommand setEnabled:YES];
     [playCommand addTarget:self action:@selector(playTapped:)];
+}
+
+#pragma mark - UIAlertView
+- (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex {
+    self.promptedAboutFailureAlready = NO;
+    if ( buttonIndex == 1 ) {
+        [self updateDataForUI];
+    } else {
+        [self lockUI:nil];
+    }
+    
 }
 
 /*

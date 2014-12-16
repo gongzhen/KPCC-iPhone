@@ -120,8 +120,6 @@
 }
 
 - (void)hide {
-    if ( self.uiHidden ) return;
-    
     [UIView animateWithDuration:0.25 animations:^{
         [self.view setAlpha:0.0];
     } completion:^(BOOL finished) {
@@ -135,10 +133,13 @@
     if ( [[AudioManager shared] status] == StreamStatusStopped ) return;
     if ( [[AudioManager shared] currentAudioMode] == AudioModeOnDemand ) return;
     
+    @synchronized(self) {
+        self.uiHidden = NO;
+    }
+    
     [UIView animateWithDuration:0.25 animations:^{
         [self.view setAlpha:1.0];
     } completion:^(BOOL finished) {
-        self.uiHidden = NO;
         [UIView animateWithDuration:0.5 animations:^{
             self.liveProgressView.alpha = 1.0;
         } completion:^(BOOL finished) {
@@ -171,8 +172,10 @@
     [CATransaction begin]; {
         [CATransaction setCompletionBlock:^{
             self.lastCurrentValue = vBeginning;
-            self.shuttling = NO;
+            
             self.currentBarLine.strokeEnd = vBeginning;
+            [self.currentBarLine removeAllAnimations];
+            self.shuttling = NO;
         }];
         
         CABasicAnimation *currentAnim = [CABasicAnimation animationWithKeyPath:@"strokeEnd"];
@@ -226,10 +229,6 @@
     if ( self.mutex ) return;
     
     NSDictionary *p = [[SessionManager shared] onboardingAudio];
-    self.liveBarLine.strokeEnd = self.lastLiveValue;
-    self.currentBarLine.strokeEnd = self.lastCurrentValue;
-
-    
     Program *program = [[SessionManager shared] currentProgram];
 
     NSDate *currentDate = [AudioManager shared].audioPlayer.currentItem.currentDate;
@@ -249,6 +248,7 @@
     NSTimeInterval live = [[AudioManager shared].maxSeekableDate timeIntervalSince1970];
     if ( [[AudioManager shared] currentAudioMode] == AudioModeOnboarding ) {
         live = CMTimeGetSeconds([AudioManager shared].audioPlayer.currentItem.currentTime);
+     
     }
     NSTimeInterval current = [currentDate timeIntervalSince1970];
     if ( [[AudioManager shared] currentAudioMode] == AudioModeOnboarding ) {
@@ -258,7 +258,7 @@
     NSTimeInterval currentDiff = ( current - beginning );
     
     dispatch_async(dispatch_get_main_queue(), ^{
-        self.mutex = YES;
+        /*self.mutex = YES;
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.75 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             self.mutex = NO;
         });
@@ -305,7 +305,10 @@
             
         }
         [CATransaction commit];
-
+         */
+        
+        self.currentBarLine.strokeEnd = (currentDiff / duration)*1.0f;
+        self.liveBarLine.strokeEnd = (liveDiff / duration)*1.0f;
         
     });
 

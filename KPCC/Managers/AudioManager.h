@@ -99,6 +99,7 @@ typedef NS_ENUM(NSUInteger, StreamStatus) {
 @property BOOL easeInAudio;
 @property BOOL waitForSeek;
 
+@property (nonatomic, copy) NSString *previousUrl;
 @property (nonatomic, strong) NSDate *queuedSeekDate;
 
 @property NSInteger onboardingSegment;

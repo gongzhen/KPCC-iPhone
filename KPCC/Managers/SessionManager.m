@@ -319,8 +319,11 @@ static long kStreamBufferLimit = 4*60*60;
             });
         } else {
             dispatch_async(dispatch_get_main_queue(), ^{
+                [[NSNotificationCenter defaultCenter] postNotificationName:@"program_has_changed"
+                                                                    object:nil
+                                                                  userInfo:nil];
+                
                 completed(nil);
-                [self armProgramUpdater];
             });
         }
     }];
@@ -413,6 +416,8 @@ static long kStreamBufferLimit = 4*60*60;
                                                                   repeats:NO];
 #ifdef DEBUG
         NSLog(@"Program will check itself again at %@ (Approx %@ from now)",[then prettyTimeString],[NSDate prettyTextFromSeconds:sinceNow]);
+    NSLog(@"Current player time is : %@",[NSDate stringFromDate:[[AudioManager shared].audioPlayer.currentItem currentDate]
+                                                     withFormat:@"hh:mm a"]);
 #endif
    // }
 #else
