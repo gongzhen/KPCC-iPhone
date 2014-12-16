@@ -204,6 +204,7 @@
                                      iconImg.size.width, iconImg.size.height);
     }
 
+#ifdef DISABLE_INTERRUPT
     if ( [[NetworkManager shared] networkDown] ) {
         cell.menuItemLabel.alpha = 0.35;
         cell.iconImageView.alpha = 0.35;
@@ -215,6 +216,7 @@
         cell.userInteractionEnabled = YES;
         [cell.rightChevronImageView setHidden:NO];
     }
+#endif
     
     return cell;
 }

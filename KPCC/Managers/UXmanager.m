@@ -151,7 +151,7 @@
     
 
     [UIView animateWithDuration:0.66 animations:^{
-        self.masterCtrl.blurView.layer.opacity = 0.0;
+        self.masterCtrl.blurView.alpha = 0.0;
 
         self.onboardingCtrl.navbarMask.frame = CGRectMake(self.onboardingCtrl.navbarMask.frame.origin.x,
                                                           0.0,
@@ -254,7 +254,7 @@
     
     self.listeningForQueues = YES;
     self.keyPoints = [@{
-                        @"7" : @"expandButton",
+                        @"8" : @"expandButton",
                          @"18" : @"activateDropdown",
                          @"21" : @"selectFirstMenuItem",
                          @"25" : @"selectSecondMenuItem",

@@ -10,7 +10,7 @@
 #import <XMLDictionary/XMLDictionary.h>
 #import "AudioManager.h"
 
-#define kFailThreshold 5.0
+#define kFailThreshold 2.0
 
 static NetworkManager *singleton = nil;
 

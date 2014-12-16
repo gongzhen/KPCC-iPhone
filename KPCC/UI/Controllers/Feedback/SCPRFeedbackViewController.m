@@ -289,7 +289,7 @@ static NSString *kCommentsPlaceholder = @"... Add your comments here";
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    if ( section == 1 ) {
+    if ( section == 2 ) {
         return 2;
     }
     
@@ -297,7 +297,7 @@ static NSString *kCommentsPlaceholder = @"... Add your comments here";
         return 3;
     }
     
-    if ( section == 2 ) {
+    if ( section == 1 ) {
         return 1;
     }
     
@@ -306,7 +306,7 @@ static NSString *kCommentsPlaceholder = @"... Add your comments here";
 }
 
 - (UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    if ( indexPath.section == 1 ) {
+    if ( indexPath.section == 2 ) {
         
         UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1
                                                        reuseIdentifier:@"n"];
@@ -364,7 +364,7 @@ static NSString *kCommentsPlaceholder = @"... Add your comments here";
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    if ( indexPath.section == 0 ) {
+    if ( indexPath.section == 2 ) {
         if ( indexPath.row == 0 ) {
             [self.nameTextField becomeFirstResponder];
         }
@@ -373,7 +373,7 @@ static NSString *kCommentsPlaceholder = @"... Add your comments here";
         }
         return;
     }
-    if ( indexPath.section == 1 ) {
+    if ( indexPath.section == 0 ) {
         self.currentReason = (self.values)[indexPath.row];
         [tableView reloadData];
         return;
@@ -384,7 +384,7 @@ static NSString *kCommentsPlaceholder = @"... Add your comments here";
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    if ( indexPath.section == 2 ) {
+    if ( indexPath.section == 1 ) {
         return self.descriptionCell.frame.size.height;
     }
     
@@ -392,7 +392,7 @@ static NSString *kCommentsPlaceholder = @"... Add your comments here";
 }
 
 - (UIView*)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
-    if ( section == 1 ) {
+    if ( section == 2 ) {
         return [[DesignManager shared] textHeaderWithText:@"YOUR DETAILS"
                                                 textColor:[UIColor kpccOrangeColor]
                                           backgroundColor:[[UIColor virtualBlackColor] translucify:0.25]

@@ -140,6 +140,7 @@
 - (void)onboarding_beginOutro;
 - (void)onboarding_fin;
 
+@property (nonatomic, strong) IBOutlet NSLayoutConstraint *imageTopConstraint;
 @property BOOL onboardingRewindButtonShown;
 
 - (void)rollInterferenceText;
