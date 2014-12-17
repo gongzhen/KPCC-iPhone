@@ -138,7 +138,13 @@ static NSString *kCommentsPlaceholder = @"... Add your comments here";
     
     if ( sender == self.authButton ) {
         
-        [self continueSubmission];
+        [UIView animateWithDuration:0.25 animations:^{
+            self.authButton.alpha = 0.0;
+            self.nativeSpinner.alpha = 1.0;
+            [self.nativeSpinner startAnimating];
+        } completion:^(BOOL finished) {
+            [self continueSubmission];
+        }];
         
     }
     
@@ -489,6 +495,7 @@ static NSString *kCommentsPlaceholder = @"... Add your comments here";
         [self.emailTextField becomeFirstResponder];
     }
     if ( textField == self.emailTextField ) {
+        [self.feedbackTable setContentOffset:CGPointMake(0.0, 0.0) animated:YES];
         [self.emailTextField resignFirstResponder];
     }
     if ( textField == self.descriptionInputView ) {
@@ -515,6 +522,9 @@ static NSString *kCommentsPlaceholder = @"... Add your comments here";
     self.nameTextField.userInteractionEnabled = YES;
     self.emailTextField.userInteractionEnabled = YES;
     self.descriptionInputView.userInteractionEnabled = YES;
+    
+    [self.feedbackTable setContentOffset:CGPointMake(0.0, 0.0) animated:YES];
+    
 }
 
 - (void)didReceiveMemoryWarning

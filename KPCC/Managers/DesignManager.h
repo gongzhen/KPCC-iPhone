@@ -39,6 +39,7 @@ typedef NS_ENUM(NSInteger, SculptingStyle) {
 
 @property BOOL displayingStockPhoto;
 @property BOOL barNormalized;
+@property BOOL protectBlurredImage;
 
 @property (nonatomic, strong) UIImage *currentBlurredImage;
 @property (nonatomic, strong) NSDictionary *attributes;

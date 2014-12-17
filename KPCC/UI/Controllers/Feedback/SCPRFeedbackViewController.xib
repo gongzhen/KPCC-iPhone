@@ -76,14 +76,13 @@
             <rect key="frame" x="0.0" y="0.0" width="320" height="121"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
             <subviews>
-                <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" style="white" translatesAutoresizingMaskIntoConstraints="NO" id="FZ6-FH-lQR">
-                    <rect key="frame" x="78" y="25" width="20" height="20"/>
+                <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="white" translatesAutoresizingMaskIntoConstraints="NO" id="FZ6-FH-lQR">
+                    <rect key="frame" x="150" y="25" width="20" height="20"/>
                 </activityIndicatorView>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="38" customClass="SCPRButton">
-                    <rect key="frame" x="11" y="13" width="154" height="44"/>
+                    <rect key="frame" x="11" y="13" width="298" height="44"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="44" id="FEC-Lr-sp5"/>
-                        <constraint firstAttribute="width" constant="154" id="y5f-2J-Gxw"/>
                     </constraints>
                     <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
                     <state key="normal" title="Submit">
@@ -95,7 +94,7 @@
                     </state>
                 </button>
                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Dgh-rz-JFI">
-                    <rect key="frame" x="11" y="92" width="140" height="21"/>
+                    <rect key="frame" x="11" y="77" width="140" height="21"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="21" id="FO1-Nc-Pek"/>
                         <constraint firstAttribute="width" constant="140" id="G7x-Bq-UX6"/>
@@ -107,10 +106,14 @@
             </subviews>
             <color key="backgroundColor" white="1" alpha="0.0" colorSpace="custom" customColorSpace="calibratedWhite"/>
             <constraints>
+                <constraint firstAttribute="centerX" secondItem="FZ6-FH-lQR" secondAttribute="centerX" id="3wk-bO-2KG"/>
                 <constraint firstItem="Dgh-rz-JFI" firstAttribute="leading" secondItem="37" secondAttribute="leading" constant="11" id="4Yc-hQ-8L1"/>
                 <constraint firstItem="38" firstAttribute="leading" secondItem="37" secondAttribute="leading" constant="11" id="4t9-Mb-37q"/>
-                <constraint firstAttribute="bottom" secondItem="Dgh-rz-JFI" secondAttribute="bottom" constant="8" id="B5E-fi-oQi"/>
+                <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="Dgh-rz-JFI" secondAttribute="bottom" constant="10" id="B5E-fi-oQi"/>
                 <constraint firstItem="38" firstAttribute="top" secondItem="37" secondAttribute="top" constant="13" id="TaM-mv-QIa"/>
+                <constraint firstAttribute="trailing" secondItem="38" secondAttribute="trailing" constant="11" id="V9g-yB-TCk"/>
+                <constraint firstItem="FZ6-FH-lQR" firstAttribute="top" secondItem="37" secondAttribute="top" constant="25" id="vsY-UJ-zHa"/>
+                <constraint firstItem="Dgh-rz-JFI" firstAttribute="top" secondItem="38" secondAttribute="bottom" constant="20" id="zUv-nr-aNc"/>
             </constraints>
             <nil key="simulatedStatusBarMetrics"/>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>

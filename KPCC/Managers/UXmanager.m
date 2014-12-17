@@ -350,7 +350,7 @@
 }
 
 - (void)selectMenuItem:(NSInteger)menuitem {
-    [self.onboardingCtrl revealLensWithOrigin:CGPointMake(10.0, (64*menuitem)+75.0-((menuitem-1)*4.0))];
+    [self.onboardingCtrl revealLensWithOrigin:CGPointMake(10.0, (64*menuitem)+74.0-((menuitem-1)*3.0))];
     [self.masterCtrl.pulldownMenu lightUpCellWithIndex:menuitem];
 }
 

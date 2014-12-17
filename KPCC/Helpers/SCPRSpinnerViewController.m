@@ -8,6 +8,7 @@
 
 #import "SCPRSpinnerViewController.h"
 #import "DesignManager.h"
+#import "UIView+PrintDimensions.h"
 
 @interface SCPRSpinnerViewController ()
 
@@ -45,19 +46,21 @@
                                     26.0,
                                     26.0);
     
-    
-    
     spinner.view.alpha = 0.0;
     [view addSubview:spinner.view];
-
+    [spinner.view setNeedsLayout];
     
     [view layoutIfNeeded];
     
     spinner.view.backgroundColor = [UIColor clearColor];
     [spinner generateCircle];
     
+    [view printDimensionsWithIdentifier:@"SpinnerContainer"];
+    
     spinner.view.center = CGPointMake(view.frame.size.width/2.0,
                                       view.frame.size.height/2.0+yOffset);
+    
+    [spinner.view printDimensionsWithIdentifier:@"Spinner"];
     
     [UIView animateWithDuration:0.13 animations:^{
         [spinner.view setAlpha:1.0];

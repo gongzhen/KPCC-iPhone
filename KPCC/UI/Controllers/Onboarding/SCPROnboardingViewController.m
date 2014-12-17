@@ -184,7 +184,7 @@
     [self.calloutAnchor setConstant:magicNumber];
     
     
-    [self.textCalloutBalloonCtrl slidePointer:156.0];
+    [self.textCalloutBalloonCtrl slidePointer:170.0];
 
     [self.view layoutIfNeeded];
     [self.textCalloutBalloonCtrl.view layoutIfNeeded];

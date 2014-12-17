@@ -22,6 +22,7 @@
 #import "SCPRNavigationController.h"
 #import "AnalyticsManager.h"
 #import "SCPROnboardingViewController.h"
+#import "UIView+PrintDimensions.h"
 
 @import MessageUI;
 
@@ -97,7 +98,7 @@ setForOnDemandUI;
     self.queueBlurView.layer.opacity = 0.0;
     
     self.darkBgView.hidden = NO;
-    self.darkBgView.backgroundColor = [[UIColor virtualBlackColor] translucify:0.75];
+    self.darkBgView.backgroundColor = [[UIColor virtualBlackColor] translucify:0.7];
     self.darkBgView.layer.opacity = 0.0;
     self.queueBlurView.alpha = 1.0;
     self.darkBgView.alpha = 1.0;
@@ -283,8 +284,6 @@ setForOnDemandUI;
 
 - (void)viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
-    self.queueBlurView.alpha = 0.0;
-    self.queueDarkBgView.alpha = 0.0;
 }
 
 - (void)addPreRollController {
@@ -319,6 +318,7 @@ setForOnDemandUI;
     self.liveDescriptionLabel.hidden = YES;
     self.automationMode = YES;
     self.programImageView.image = [UIImage imageNamed:@"onboarding-tile.jpg"];
+    
     self.blurView.layer.opacity = 1.0;
     
     CGFloat yOrigin = self.programImageView.frame.origin.y;
@@ -382,7 +382,6 @@ setForOnDemandUI;
     [UIView animateWithDuration:0.33 animations:^{
         self.liveProgressViewController.view.alpha = 1.0;
         self.liveStreamView.alpha = 1.0;
-        
     } completion:^(BOOL finished) {
         [self.programTitleLabel fadeText:@"Welcome to KPCC"];
     }];
@@ -1093,6 +1092,8 @@ setForOnDemandUI;
     [self snapJogWheel];
     
     self.onDemandGateCount = 0;
+    self.queueBlurView.alpha = 1.0;
+    self.queueBlurView.layer.opacity = 1.0;
     
     if ([self.onDemandPlayerView isHidden]) {
         [self.onDemandPlayerView setHidden:NO];
@@ -1117,11 +1118,12 @@ setForOnDemandUI;
     
     UIImage *img = [[DesignManager shared] currentBlurredImage];
     self.queueBlurView.image = img;
+    [[DesignManager shared] setProtectBlurredImage:YES];
     
     [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationOptionCurveLinear animations:^{
         self.jogShuttle.view.alpha = 1.0;
         self.timeLabelOnDemand.alpha = 1.0;
-        self.queueBlurView.alpha = 1.0;
+        self.queueBlurView.layer.opacity = 1.0;
     } completion:^(BOOL finished) {
         
         [self.jogShuttle animateIndefinitelyWithViewToHide:self.playPauseButton completion:^{
@@ -1196,6 +1198,7 @@ setForOnDemandUI;
                 }
                 
                 [[QueueManager shared] playItemAtPosition:(int)[[QueueManager shared] currentlyPlayingIndex]];
+                [[DesignManager shared] setProtectBlurredImage:NO];
                 
             }];
         }];
@@ -1278,28 +1281,25 @@ setForOnDemandUI;
     
     dispatch_async(dispatch_get_main_queue(), ^{
         
-        
         self.navigationController.navigationBarHidden = NO;
-        
         
         if ( [[UXmanager shared] onboardingEnding] ) {
             [[UXmanager shared] setOnboardingEnding:NO];
         }
         
-
+        [UIView animateWithDuration:0.25 animations:^{
+            self.imageTopConstraint.constant = -64.0;
+            [self.view setNeedsUpdateConstraints];
+            [self.view layoutIfNeeded];
+        }];
         
-        [self.view layoutIfNeeded];
+        
+
         [self.liveStreamView layoutIfNeeded];
         [self.initialControlsView layoutIfNeeded];
         [self.liveRewindAltButton layoutIfNeeded];
         [self.queueBlurView setNeedsDisplay];
         [self.programImageView layoutIfNeeded];
-        
-        UIImage *blurry = [self.programImageView.image blurredImageWithRadius:20.0f
-                                                                   iterations:1
-                                                                    tintColor:[UIColor clearColor]];
-        self.queueBlurView.image = blurry;
-        self.queueBlurView.contentMode = UIViewContentModeCenter;
         
         [self setUIContents:YES];
         [self primeManualControlButton];
@@ -1308,6 +1308,20 @@ setForOnDemandUI;
         if ( [SCPRCloakViewController cloakInUse] ) {
             [SCPRCloakViewController uncloak];
         }
+        
+
+        [self.programImageView printDimensionsWithIdentifier:@"programImage"];
+        [self.queueBlurView printDimensionsWithIdentifier:@"queueBlurImage"];
+        
+        
+        UIImage *blurry = [self.programImageView.image blurredImageWithRadius:20.0f
+                                                                   iterations:1
+                                                                    tintColor:[UIColor clearColor]];
+        
+        NSLog(@"Image : %1.1f, %1.1f",blurry.size.width,blurry.size.height);
+        
+        self.queueBlurView.image = blurry;
+        
     });
 }
 
@@ -1663,7 +1677,11 @@ setForOnDemandUI;
     lsFade.toValue = @(0);
     lsFade.duration = 0.3;
     
-    [self.queueBlurView.layer pop_addAnimation:blurFadeAnimation forKey:@"blurViewFadeAnimation"];
+    if ( [[AudioManager shared] currentAudioMode] == AudioModeOnboarding ) {
+        [self.blurView.layer pop_addAnimation:blurFadeAnimation forKey:@"blurViewFadeAnimation"];
+    } else {
+        [self.queueBlurView.layer pop_addAnimation:blurFadeAnimation forKey:@"blurViewFadeAnimation"];
+    }
     [self.darkBgView.layer pop_addAnimation:darkBgFadeAnimation forKey:@"darkBgFadeAnimation"];
     [self.playerControlsView.layer pop_addAnimation:controlsFadeAnimation forKey:@"controlsViewFadeAnimation"];
     [self.onDemandPlayerView.layer pop_addAnimation:controlsFadeAnimation forKey:@"onDemandViewFadeAnimation"];
@@ -1728,7 +1746,14 @@ setForOnDemandUI;
     cfi.toValue = restoredAlpha;
     cfi.duration = 0.3;
     
-    [self.queueBlurView.layer pop_addAnimation:fadeAnimation forKey:@"blurViewFadeAnimation"];
+    if ( [[AudioManager shared] currentAudioMode] == AudioModeOnboarding ) {
+        [self.blurView.layer pop_addAnimation:fadeAnimation forKey:@"blurViewFadeAnimation"];
+    } else {
+        if ( ![[DesignManager shared] protectBlurredImage] ) {
+            [self.queueBlurView.layer pop_addAnimation:fadeAnimation forKey:@"blurViewFadeAnimation"];
+        }
+    }
+    
     [self.darkBgView.layer pop_addAnimation:darkBgFadeAnimation forKey:@"darkBgFadeAnimation"];
     [self.playerControlsView.layer pop_addAnimation:controlsFadeIn forKey:@"controlsViewFadeAnimation"];
     [self.onDemandPlayerView.layer pop_addAnimation:controlsFadeIn forKey:@"onDemandViewFadeAnimation"];
@@ -2041,6 +2066,7 @@ setForOnDemandUI;
                 prog = self.onDemandProgram;
             }
             
+            [[DesignManager shared] setProtectBlurredImage:YES];
             SCPRProgramsListViewController *vc = [[SCPRProgramsListViewController alloc] initWithBackgroundProgram:prog];
             [self.navigationController pushViewController:vc animated:YES];
             break;

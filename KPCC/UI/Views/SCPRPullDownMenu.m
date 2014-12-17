@@ -190,12 +190,13 @@
     cell.menuItemLabel.font = [self cellFont];
     [cell.menuItemLabel setText:menuItems[indexPath.item]];
 
-    if ([menuItems[indexPath.item] isEqualToString:kMenuItemKPCCLive]) {
-        [cell.rightChevronImageView setHidden:YES];
-    } else {
-        [cell.rightChevronImageView setHidden:NO];
+    BOOL chevronStatus = NO;
+    if ( [menuItems[indexPath.item] isEqualToString:kMenuItemKPCCLive]) {
+        chevronStatus = YES;
     }
 
+    [cell.rightChevronImageView setHidden:chevronStatus];
+    
     NSString *iconNamed = menuItemsDictionary[menuItems[indexPath.item]];
     if (iconNamed) {
         UIImage *iconImg = [UIImage imageNamed:[NSString stringWithFormat:@"menu-%@", iconNamed]];
@@ -207,7 +208,7 @@
         cell.iconImageView.contentMode = UIViewContentModeCenter;
     }
 
-#ifdef DISABLE_INTERRUPT
+#ifndef DISABLE_INTERRUPT
     if ( [[NetworkManager shared] networkDown] ) {
         cell.menuItemLabel.alpha = 0.35;
         cell.iconImageView.alpha = 0.35;
@@ -217,7 +218,7 @@
         cell.menuItemLabel.alpha = 1.0;
         cell.iconImageView.alpha = 1.0;
         cell.userInteractionEnabled = YES;
-        [cell.rightChevronImageView setHidden:NO];
+        [cell.rightChevronImageView setHidden:chevronStatus];
     }
 #endif
     

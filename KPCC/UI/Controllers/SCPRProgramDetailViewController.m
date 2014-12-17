@@ -51,12 +51,25 @@
     self.blurView.alpha = 0.0;
     self.programBgImage.contentMode = UIViewContentModeCenter;
     self.curtainView.backgroundColor = [UIColor clearColor];
+
+    
+    [self.view setNeedsUpdateConstraints];
+    [self.view layoutIfNeeded];
+    
+    
+    
+    //[[NetworkManager shared] fetchEpisodesForProgram:_program.program_slug dispay:self];
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+
     [SCPRSpinnerViewController spinInCenterOfView:self.curtainView offset:110.0 delay:0.33 appeared:^{
         [[DesignManager shared] loadProgramImage:_program.program_slug
                                     andImageView:self.programBgImage
                                       completion:^(BOOL status) {
                                           
-                                    
+                                          
                                           
                                           self.programBgImage.clipsToBounds = YES;
                                           [self.blurView setNeedsDisplay];
@@ -94,7 +107,7 @@
                                                                                     
                                                                                     [self.episodesTable reloadData];
                                                                                     self.episodesTable.separatorColor = [[UIColor virtualWhiteColor] translucify:0.5];
-                                                                                  
+                                                                                    
                                                                                     
                                                                                     [SCPRSpinnerViewController finishSpinning];
                                                                                     [UIView animateWithDuration:0.25 animations:^{
@@ -107,15 +120,8 @@
                                           
                                       }];
         
-
+        
     }];
-
-    
-    //[[NetworkManager shared] fetchEpisodesForProgram:_program.program_slug dispay:self];
-}
-
-- (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
 
     SCPRProgramDetailHeaderView *headerView = [[SCPRProgramDetailHeaderView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 250)];
     self.episodesTable.tableHeaderView = headerView;

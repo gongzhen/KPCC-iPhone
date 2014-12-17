@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		25263A881A32669E00BD5FF9 /* onboarding3.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 25263A871A32669E00BD5FF9 /* onboarding3.mp3 */; };
+		254831C11A41555700963078 /* UIView+PrintDimensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 254831C01A41555700963078 /* UIView+PrintDimensions.m */; };
 		254CC6961A23A7A600560805 /* onboarding-logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 254CC6901A23A7A600560805 /* onboarding-logo.png */; };
 		254CC6971A23A7A600560805 /* onboarding-logo@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 254CC6911A23A7A600560805 /* onboarding-logo@2x.png */; };
 		254CC6981A23A7A600560805 /* onboarding-push-icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 254CC6921A23A7A600560805 /* onboarding-push-icon.png */; };
@@ -249,6 +250,8 @@
 
 /* Begin PBXFileReference section */
 		25263A871A32669E00BD5FF9 /* onboarding3.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = onboarding3.mp3; path = Audio/onboarding3.mp3; sourceTree = "<group>"; };
+		254831BF1A41555700963078 /* UIView+PrintDimensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIView+PrintDimensions.h"; path = "KPCC/Helpers/UIView+PrintDimensions.h"; sourceTree = SOURCE_ROOT; };
+		254831C01A41555700963078 /* UIView+PrintDimensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIView+PrintDimensions.m"; path = "KPCC/Helpers/UIView+PrintDimensions.m"; sourceTree = SOURCE_ROOT; };
 		254CC6901A23A7A600560805 /* onboarding-logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "onboarding-logo.png"; sourceTree = "<group>"; };
 		254CC6911A23A7A600560805 /* onboarding-logo@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "onboarding-logo@2x.png"; sourceTree = "<group>"; };
 		254CC6921A23A7A600560805 /* onboarding-push-icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "onboarding-push-icon.png"; sourceTree = "<group>"; };
@@ -894,6 +897,8 @@
 				52D0FC1F19D1FC0C009AECEE /* SCPRProgramDetailTableViewCell.m */,
 				52D6B1FE1A02EEB90068B19A /* SCPRQueueScrollableView.h */,
 				52D6B1FF1A02EEB90068B19A /* SCPRQueueScrollableView.m */,
+				254831BF1A41555700963078 /* UIView+PrintDimensions.h */,
+				254831C01A41555700963078 /* UIView+PrintDimensions.m */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -1423,6 +1428,7 @@
 				76349D1B18D8C74F0027C3B8 /* NetworkManager.m in Sources */,
 				254CC6A31A255A1E00560805 /* SCPRButton.m in Sources */,
 				52D0FC1C19D1F24F009AECEE /* SCPRProgramDetailHeaderView.m in Sources */,
+				254831C11A41555700963078 /* UIView+PrintDimensions.m in Sources */,
 				258BB03E1A1C083B00B8FCFE /* Settings.m in Sources */,
 				254CC69E1A23B41D00560805 /* SCPRTriangleView.m in Sources */,
 				258CA1001A0982ED00A3C8DB /* SCPRCloakViewController.m in Sources */,
@@ -1629,8 +1635,8 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Southern California Public Radio (SXALEDSVFU)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Southern California Public Radio (SXALEDSVFU)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Southern California Public Radio";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Southern California Public Radio";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "KPCC/KPCC-Prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -1648,7 +1654,7 @@
 					"$(PROJECT_DIR)/KPCC/ThirdParty/Flurry",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "82e6e303-71e1-4466-af49-f1d19c293201";
+				PROVISIONING_PROFILE = "7de88d41-fd13-4035-a8ee-18dabe63e82c";
 				SWIFT_OBJC_BRIDGING_HEADER = "KPCC/UI/Controllers/KPCC-Bridging-Header.h";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
