@@ -256,9 +256,7 @@
         self.view.alpha = 0.0;
     } completion:^(BOOL finished) {
         [UXmanager shared].settings.userHasViewedOnDemandOnboarding = YES;
-#ifdef PRODUCTION
         [[UXmanager shared] persist];
-#endif
     }];
 }
 

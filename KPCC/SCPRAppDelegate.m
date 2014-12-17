@@ -122,9 +122,7 @@
     
     [[UXmanager shared].settings setPushTokenData:deviceToken];
     [[UXmanager shared].settings setPushTokenString:hexToken];
-#ifdef PRODUCTION
     [[UXmanager shared] persist];
-#endif
     
     NSLog(@" ***** REGISTERING PUSH TOKEN : %@ *****", hexToken);
 }

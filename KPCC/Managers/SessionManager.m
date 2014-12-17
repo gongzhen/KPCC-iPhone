@@ -73,6 +73,7 @@ static long kStreamBufferLimit = 4*60*60;
     NSTimeInterval now = [[NSDate date] timeIntervalSince1970];
     NSTimeInterval sessionLength = abs(now - self.liveStreamSessionBegan);
     NSString *pt = [NSDate prettyTextFromSeconds:sessionLength];
+    if ( sessionLength > 30000 ) return @"";
     
     NSString *sid = self.liveSessionID;
     if ( !sid ) {
