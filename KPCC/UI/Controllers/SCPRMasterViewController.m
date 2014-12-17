@@ -418,9 +418,7 @@ setForOnDemandUI;
     }];
     
     [[UXmanager shared].settings setUserHasViewedOnboarding:YES];
-#ifdef PRODUCTION
     [[UXmanager shared] persist];
-#endif
     
     [self updateDataForUI];
 }
@@ -1315,7 +1313,7 @@ setForOnDemandUI;
         
         
         UIImage *blurry = [self.programImageView.image blurredImageWithRadius:20.0f
-                                                                   iterations:1
+                                                                   iterations:3
                                                                     tintColor:[UIColor clearColor]];
         
         NSLog(@"Image : %1.1f, %1.1f",blurry.size.width,blurry.size.height);

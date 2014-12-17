@@ -74,7 +74,7 @@
                                           self.programBgImage.clipsToBounds = YES;
                                           [self.blurView setNeedsDisplay];
                                           UIImage *blurred = [self.programBgImage.image blurredImageWithRadius:20.0f
-                                                                                                    iterations:1
+                                                                                                    iterations:3
                                                                                                      tintColor:[UIColor clearColor]];
                                           [[DesignManager shared] setCurrentBlurredImage:blurred];
                                           
