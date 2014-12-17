@@ -13,6 +13,7 @@
 #import <AFNetworking.h>
 #import "TritonAd.h"
 #import "Utils.h"
+#import <KSReachability/KSReachability.h>
 
 #define kServerBase @"http://www.scpr.org/api/v3"
 #define kFailoverThreshold 4
@@ -30,29 +31,34 @@ typedef NS_ENUM(NSInteger, NetworkHealth) {
 
 
 @interface NetworkManager : NSObject {
-    Reachability *_networkHealthReachability;
+    
 }
 
 @property NSInteger failoverCount;
 
 + (NetworkManager*)shared;
 
-@property (nonatomic,strong) Reachability *networkHealthReachability;
+@property (nonatomic,strong) KSReachability *anchoredReachability;
+@property (nonatomic,strong) KSReachability *anchoredStaticContentReachability;
+@property (nonatomic,strong) KSReachability *floatingReachability;
+@property (nonatomic,strong) KSReachableOperation *reachableOperation;
+@property (nonatomic,strong) Reachability *basicReachability;
 
 - (NetworkHealth)checkNetworkHealth:(NSString*)server;
 @property (NS_NONATOMIC_IOSONLY, readonly, copy) NSString *networkInformation;
 
+@property BOOL networkDown;
+@property BOOL allowOneFail;
+@property (nonatomic, strong) NSTimer *failTimer;
 
 - (void)fetchAllProgramInformation:(CompletionBlockWithValue)completion;
 - (void)fetchEpisodesForProgram:(NSString*)slug completion:(CompletionBlockWithValue)completion;
 - (void)fetchEditions:(CompletionBlockWithValue)completion;
-
-
-
 - (void)requestFromSCPRWithEndpoint:(NSString *)endpoint completion:(CompletionBlockWithValue)completion;
-
 - (void)fetchTritonAd:(NSString *)params completion:(void (^)(TritonAd* tritonAd))completion;
 - (void)sendImpressionToTriton:(NSString*)impressionURL completion:(void (^)(BOOL success))completion;
-
+- (void)setupReachability;
+- (void)setupFloatingReachabilityWithHost:(NSString*)host;
+- (void)applyNotifiersToReachability:(KSReachability*)reachability;
 
 @end

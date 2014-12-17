@@ -63,6 +63,9 @@ static NSString *kCommentsPlaceholder = @"... Add your comments here";
     [self.authButton.titleLabel proSemiBoldFontize];
     [self.nameTextField setFont:[[DesignManager shared] proLight:self.nameTextField.font.pointSize]];
     [self.emailTextField setFont:[[DesignManager shared] proLight:self.emailTextField.font.pointSize]];
+    
+    self.emailTextField.keyboardType = UIKeyboardTypeEmailAddress;
+    
     [self.versionLabel proLightFontize];
     
     NSMutableAttributedString *nph = [[NSMutableAttributedString alloc] initWithString:@"e.x. Ornette Coleman"
@@ -76,8 +79,8 @@ static NSString *kCommentsPlaceholder = @"... Add your comments here";
     self.descriptionInputView.attributedPlaceholder = dph;
     
     self.nameTextField.returnKeyType = UIReturnKeyNext;
-    self.emailTextField.returnKeyType = UIReturnKeyNext;
-    self.descriptionInputView.returnKeyType = UIReturnKeyDone;
+    self.emailTextField.returnKeyType = UIReturnKeyDone;
+    self.descriptionInputView.returnKeyType = UIReturnKeyNext;
     
     self.splashBlurView.backgroundColor = [UIColor clearColor];
     self.splashView.contentMode = UIViewContentModeScaleAspectFill;
@@ -135,7 +138,13 @@ static NSString *kCommentsPlaceholder = @"... Add your comments here";
     
     if ( sender == self.authButton ) {
         
-        [self continueSubmission];
+        [UIView animateWithDuration:0.25 animations:^{
+            self.authButton.alpha = 0.0;
+            self.nativeSpinner.alpha = 1.0;
+            [self.nativeSpinner startAnimating];
+        } completion:^(BOOL finished) {
+            [self continueSubmission];
+        }];
         
     }
     
@@ -289,7 +298,7 @@ static NSString *kCommentsPlaceholder = @"... Add your comments here";
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    if ( section == 1 ) {
+    if ( section == 2 ) {
         return 2;
     }
     
@@ -297,7 +306,7 @@ static NSString *kCommentsPlaceholder = @"... Add your comments here";
         return 3;
     }
     
-    if ( section == 2 ) {
+    if ( section == 1 ) {
         return 1;
     }
     
@@ -306,7 +315,7 @@ static NSString *kCommentsPlaceholder = @"... Add your comments here";
 }
 
 - (UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    if ( indexPath.section == 1 ) {
+    if ( indexPath.section == 2 ) {
         
         UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1
                                                        reuseIdentifier:@"n"];
@@ -364,7 +373,7 @@ static NSString *kCommentsPlaceholder = @"... Add your comments here";
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    if ( indexPath.section == 0 ) {
+    if ( indexPath.section == 2 ) {
         if ( indexPath.row == 0 ) {
             [self.nameTextField becomeFirstResponder];
         }
@@ -373,7 +382,7 @@ static NSString *kCommentsPlaceholder = @"... Add your comments here";
         }
         return;
     }
-    if ( indexPath.section == 1 ) {
+    if ( indexPath.section == 0 ) {
         self.currentReason = (self.values)[indexPath.row];
         [tableView reloadData];
         return;
@@ -384,7 +393,7 @@ static NSString *kCommentsPlaceholder = @"... Add your comments here";
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    if ( indexPath.section == 2 ) {
+    if ( indexPath.section == 1 ) {
         return self.descriptionCell.frame.size.height;
     }
     
@@ -392,7 +401,7 @@ static NSString *kCommentsPlaceholder = @"... Add your comments here";
 }
 
 - (UIView*)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
-    if ( section == 1 ) {
+    if ( section == 2 ) {
         return [[DesignManager shared] textHeaderWithText:@"YOUR DETAILS"
                                                 textColor:[UIColor kpccOrangeColor]
                                           backgroundColor:[[UIColor virtualBlackColor] translucify:0.25]
@@ -462,10 +471,10 @@ static NSString *kCommentsPlaceholder = @"... Add your comments here";
     NSLog(@"Current offset : %1.1f",self.feedbackTable.contentOffset.y);
     
     if ( textField == self.descriptionInputView ) {
-        [self.feedbackTable setContentOffset:CGPointMake(0.0,240.0)
+        [self.feedbackTable setContentOffset:CGPointMake(0.0,140.0)
                                     animated:YES];
     } else {
-        [self.feedbackTable setContentOffset:CGPointMake(0.0,140.0)
+        [self.feedbackTable setContentOffset:CGPointMake(0.0,160.0)
                                 animated:YES];
     }
     
@@ -486,10 +495,11 @@ static NSString *kCommentsPlaceholder = @"... Add your comments here";
         [self.emailTextField becomeFirstResponder];
     }
     if ( textField == self.emailTextField ) {
-        [self.descriptionInputView becomeFirstResponder];
+        [self.feedbackTable setContentOffset:CGPointMake(0.0, 0.0) animated:YES];
+        [self.emailTextField resignFirstResponder];
     }
     if ( textField == self.descriptionInputView ) {
-        [self.descriptionInputView resignFirstResponder];
+        [self.nameTextField becomeFirstResponder];
     }
     
     return YES;
@@ -512,6 +522,9 @@ static NSString *kCommentsPlaceholder = @"... Add your comments here";
     self.nameTextField.userInteractionEnabled = YES;
     self.emailTextField.userInteractionEnabled = YES;
     self.descriptionInputView.userInteractionEnabled = YES;
+    
+    [self.feedbackTable setContentOffset:CGPointMake(0.0, 0.0) animated:YES];
+    
 }
 
 - (void)didReceiveMemoryWarning

@@ -186,7 +186,7 @@ static const NSString *ItemStatusContext;
     self.bufferMutex = NO;
 #endif
     
-    self.timeObserver = [self.audioPlayer addPeriodicTimeObserverForInterval:CMTimeMake(1, 1)  queue:nil usingBlock:^(CMTime time) {
+    self.timeObserver = [self.audioPlayer addPeriodicTimeObserverForInterval:CMTimeMake(1, 10)  queue:nil usingBlock:^(CMTime time) {
         weakSelf.currentDate = audioPlayer.currentItem.currentDate;
         
         NSArray *seekRange = audioPlayer.currentItem.seekableTimeRanges;
@@ -219,15 +219,6 @@ static const NSString *ItemStatusContext;
             NSLog(@"no seekable time range for current item");
         }
         
-        if ( weakSelf.easeInAudio ) {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                weakSelf.easeInAudio = NO;
-                weakSelf.savedVolume = 1.0;
-                [weakSelf adjustAudioWithValue:0.1 completion:^{
-                    
-                }];
-            });
-        }
     }];
     
 }
@@ -279,7 +270,7 @@ static const NSString *ItemStatusContext;
                     if ( [[SessionManager shared] secondsBehindLive] > 14000 ) {
                         // Try again
                         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.75 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                            NSLog(@"Buffering ...");
+                            NSLog(@"*********** // Buffering ... \\ ************");
                             if ( [self.delegate respondsToSelector:@selector(interfere)] ) {
                                 //[self.delegate interfere];
                             }
@@ -291,6 +282,11 @@ static const NSString *ItemStatusContext;
                         });
                         
                         return;
+                    }
+                    
+                    if ( !failover ) {
+                        NSLog(@"*** Seek to date : SUCCESS : %@",[NSDate stringFromDate:justABitInTheFuture
+                                                                             withFormat:@"hh:mm:ss a"]);
                     }
                     
                     if ( [self.audioPlayer rate] == 0.0 ) {
@@ -465,7 +461,9 @@ static const NSString *ItemStatusContext;
 
 - (void)playerItemDidFinishPlaying:(NSNotification *)notification {
     @try {
-        [[NSNotificationCenter defaultCenter] removeObserver:self.audioPlayer.currentItem forKeyPath:AVPlayerItemDidPlayToEndTimeNotification];
+        [[NSNotificationCenter defaultCenter] removeObserver:self
+         name:AVPlayerItemDidPlayToEndTimeNotification
+                                                      object:nil];
     } @catch (NSException *exception) {
         // Wasn't necessary
         NSLog(@"Exception - failed to remove AVPlayerItemDidPlayToEndTimeNotification");
@@ -536,6 +534,9 @@ static const NSString *ItemStatusContext;
 #pragma mark - Audio Control
 - (void)buildStreamer:(NSString*)urlString local:(BOOL)local {
     NSURL *url;
+    if ( !urlString ) {
+        urlString = self.previousUrl;
+    }
     if ( urlString == nil || SEQ(urlString, kHLSLiveStreamURL) ) {
         url = [NSURL URLWithString:kHLSLiveStreamURL];
         self.currentAudioMode = AudioModeLive;
@@ -551,11 +552,16 @@ static const NSString *ItemStatusContext;
         self.currentAudioMode = AudioModeOnboarding;
     }
     
+    [[NetworkManager shared] setupFloatingReachabilityWithHost:urlString];
+    
     self.audioPlayer = [AVPlayer playerWithURL:url];
     [self.audioPlayer.currentItem addObserver:self forKeyPath:@"status" options:NSKeyValueObservingOptionOld|NSKeyValueObservingOptionNew context:nil];
     [self.audioPlayer.currentItem addObserver:self forKeyPath:@"playbackBufferEmpty" options:NSKeyValueObservingOptionNew context:nil];
     [self.audioPlayer.currentItem addObserver:self forKeyPath:@"playbackLikelyToKeepUp" options:NSKeyValueObservingOptionNew context:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playerItemFailedToPlayToEndTime:) name:AVPlayerItemFailedToPlayToEndTimeNotification object:self.audioPlayer.currentItem];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(playerItemFailedToPlayToEndTime:)
+                                                 name:AVPlayerItemFailedToPlayToEndTimeNotification
+                                               object:nil];
     
     [self.audioPlayer addObserver:self
                        forKeyPath:@"status"
@@ -567,6 +573,7 @@ static const NSString *ItemStatusContext;
                           context:nil];
     
     self.status = StreamStatusStopped;
+    self.previousUrl = urlString;
     
 }
 
@@ -587,6 +594,8 @@ static const NSString *ItemStatusContext;
 
 
 - (void)playAudioWithURL:(NSString *)url {
+    
+    
     [self takedownAudioPlayer];
     [self buildStreamer:url];
     [self startStream];
@@ -613,7 +622,7 @@ static const NSString *ItemStatusContext;
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(playerItemDidFinishPlaying:)
                                                  name:AVPlayerItemDidPlayToEndTimeNotification
-                                               object:self.audioPlayer.currentItem];
+                                               object:nil];
 }
 
 
@@ -802,8 +811,14 @@ static const NSString *ItemStatusContext;
         [self.audioPlayer.currentItem removeObserver:self forKeyPath:@"status"];
         [self.audioPlayer.currentItem removeObserver:self forKeyPath:@"playbackBufferEmpty"];
         [self.audioPlayer.currentItem removeObserver:self forKeyPath:@"playbackLikelyToKeepUp"];
-        [self.audioPlayer.currentItem removeObserver:self forKeyPath:AVPlayerItemDidPlayToEndTimeNotification];
-        [self.audioPlayer.currentItem removeObserver:self forKeyPath:AVPlayerItemFailedToPlayToEndTimeNotification];
+        [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                        name:AVPlayerItemDidPlayToEndTimeNotification
+                                                      object:nil];
+        // AVPlayerItemFailedToPlayToEndTimeNotification
+        [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                        name:AVPlayerItemFailedToPlayToEndTimeNotification
+                                                      object:nil];
+        
     } @catch (NSException *e) {
         // Wasn't necessary
     }
@@ -814,6 +829,7 @@ static const NSString *ItemStatusContext;
         [self.audioPlayer cancelPendingPrerolls];
     }
     
+    self.status = StreamStatusStopped;
     self.audioPlayer = nil;
 }
 
@@ -911,7 +927,7 @@ static const NSString *ItemStatusContext;
             break;
             
         case NetworkHealthNetworkDown:
-            [self localAudioFallback:[[NSBundle mainBundle] pathForResource:kFailedConnectionAudioFile ofType:@"mp3"]];
+            //[self localAudioFallback:[[NSBundle mainBundle] pathForResource:kFailedConnectionAudioFile ofType:@"mp3"]];
             if ([self.delegate respondsToSelector:@selector(handleUIForFailedConnection)]) {
                 [self.delegate handleUIForFailedConnection];
             }
@@ -919,7 +935,7 @@ static const NSString *ItemStatusContext;
             break;
         
         case NetworkHealthServerDown:
-            [self localAudioFallback:[[NSBundle mainBundle] pathForResource:kFailedStreamAudioFile ofType:@"mp3"]];
+            //[self localAudioFallback:[[NSBundle mainBundle] pathForResource:kFailedStreamAudioFile ofType:@"mp3"]];
             if ([self.delegate respondsToSelector:@selector(handleUIForFailedStream)]) {
                 [self.delegate handleUIForFailedStream];
             }

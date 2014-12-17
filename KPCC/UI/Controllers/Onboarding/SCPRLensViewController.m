@@ -78,7 +78,7 @@
     if ( anchorView ) {
         POPSpringAnimation *anchorScale = [POPSpringAnimation animationWithPropertyNamed:kPOPLayerScaleXY];
         anchorScale.fromValue  = [NSValue valueWithCGSize:CGSizeMake(1.0f, 1.0f)];
-        anchorScale.toValue  = [NSValue valueWithCGSize:CGSizeMake(0.88f, 0.88f)];
+        anchorScale.toValue  = [NSValue valueWithCGSize:CGSizeMake(0.94f, 0.94f)];
         anchorScale.springBounciness = 1.0f;
         anchorScale.springSpeed = .5f;
         anchorScale.autoreverses = YES;

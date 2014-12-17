@@ -26,8 +26,12 @@ PODS:
   - FlurrySDK/FlurrySDK (5.4.0)
   - FXBlurView (1.6.3)
   - JDStatusBarNotification (1.4.9)
-  - Mixpanel (2.5.4)
-  - Parse (1.5.0):
+  - Kochava (20141031)
+  - KSReachability (1.4)
+  - Mixpanel (2.6.2):
+    - Mixpanel/MPCategoryHelpers (= 2.6.2)
+  - Mixpanel/MPCategoryHelpers (2.6.2)
+  - Parse (1.6.0):
     - Bolts (~> 1.1.3)
   - pop (1.0.7)
   - TestFlightSDK (3.0.2)
@@ -38,6 +42,8 @@ DEPENDENCIES:
   - FlurrySDK
   - FXBlurView (~> 1.6)
   - JDStatusBarNotification
+  - Kochava
+  - KSReachability
   - Mixpanel
   - Parse
   - pop (~> 1.0)
@@ -50,8 +56,10 @@ SPEC CHECKSUMS:
   FlurrySDK: bed9e5598353f867508d164795a451e3ada92cb6
   FXBlurView: abe1046285813c4f6e9008abbc324fc5ab32af90
   JDStatusBarNotification: 9d833032d343e9a7abe0ec219c415dc115ba67a8
-  Mixpanel: 87167a0b0a74f11f0ee3787f291357494730617c
-  Parse: 7de25b6f70f0b233e5d25835f62eabfa91e4f9d7
+  Kochava: da2acfe55f59121596c40012882bb295448d051a
+  KSReachability: 29c0ec738e487c750a0e46b6554cc50df73f60b1
+  Mixpanel: c075cedebda3328ce1ee29a18429e265ce967cd8
+  Parse: f15dfacd941ee8084a5decbef486da8b223c2810
   pop: 2f14a1ea61339767af9e66741b418c831b3844df
   TestFlightSDK: 0c24c533748d0d84bfe7a3cb6036fa79124d84ee
   XMLDictionary: 735e81b9a043e220b0d24e9d4f16719606f2e0fc

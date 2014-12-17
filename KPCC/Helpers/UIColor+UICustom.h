@@ -18,5 +18,6 @@
 + (UIColor*)virtualWhiteColor;
 + (UIColor*)paleHorseColor;
 + (UIColor*)kpccSlateColor;
++ (UIColor*)kpccAsphaltColor;
 
 @end

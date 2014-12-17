@@ -11,11 +11,13 @@
 #include <mach/mach_time.h>
 #import "AudioManager.h"
 #import "Mixpanel.h"
+#import <Kochava/TrackAndAd.h>
 
 @interface AnalyticsManager : NSObject
 
 @property long lastErrorLoggedTime;
 @property NSString *lastErrorLoggedComments;
+@property (nonatomic, strong) KochavaTracker *kTracker;
 
 + (AnalyticsManager*)shared;
 

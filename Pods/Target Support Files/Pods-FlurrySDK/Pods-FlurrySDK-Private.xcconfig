@@ -1,6 +1,6 @@
 #include "Pods-FlurrySDK.xcconfig"
 GCC_PREPROCESSOR_DEFINITIONS = $(inherited) COCOAPODS=1
-HEADER_SEARCH_PATHS = "${PODS_ROOT}/Headers/Build" "${PODS_ROOT}/Headers/Build/FlurrySDK" "${PODS_ROOT}/Headers/Public" "${PODS_ROOT}/Headers/Public/AFNetworking" "${PODS_ROOT}/Headers/Public/Bolts" "${PODS_ROOT}/Headers/Public/FXBlurView" "${PODS_ROOT}/Headers/Public/FlurrySDK" "${PODS_ROOT}/Headers/Public/JDStatusBarNotification" "${PODS_ROOT}/Headers/Public/Mixpanel" "${PODS_ROOT}/Headers/Public/Parse" "${PODS_ROOT}/Headers/Public/TestFlightSDK" "${PODS_ROOT}/Headers/Public/XMLDictionary" "${PODS_ROOT}/Headers/Public/pop"
+HEADER_SEARCH_PATHS = "${PODS_ROOT}/Headers/Build" "${PODS_ROOT}/Headers/Build/FlurrySDK" "${PODS_ROOT}/Headers/Public" "${PODS_ROOT}/Headers/Public/AFNetworking" "${PODS_ROOT}/Headers/Public/Bolts" "${PODS_ROOT}/Headers/Public/FXBlurView" "${PODS_ROOT}/Headers/Public/FlurrySDK" "${PODS_ROOT}/Headers/Public/JDStatusBarNotification" "${PODS_ROOT}/Headers/Public/KSReachability" "${PODS_ROOT}/Headers/Public/Kochava" "${PODS_ROOT}/Headers/Public/Mixpanel" "${PODS_ROOT}/Headers/Public/Parse" "${PODS_ROOT}/Headers/Public/TestFlightSDK" "${PODS_ROOT}/Headers/Public/XMLDictionary" "${PODS_ROOT}/Headers/Public/pop"
 LIBRARY_SEARCH_PATHS = ${PODS_FLURRYSDK_LIBRARY_SEARCH_PATHS}
 OTHER_LDFLAGS = ${PODS_FLURRYSDK_OTHER_LDFLAGS} -ObjC
 PODS_ROOT = ${SRCROOT}

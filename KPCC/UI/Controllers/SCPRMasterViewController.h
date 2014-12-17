@@ -23,7 +23,7 @@
 #import "SCPRProgressViewController.h"
 #import "SCPRButton.h"
 
-@interface SCPRMasterViewController : UIViewController<SCPRMenuDelegate>
+@interface SCPRMasterViewController : UIViewController<SCPRMenuDelegate,UIAlertViewDelegate>
 
 @property IBOutlet UILabel *programTitleLabel;
 @property IBOutlet UIImageView *programImageView;
@@ -84,6 +84,8 @@
 @property (nonatomic,strong) IBOutlet UIView *liveProgressBarView;
 
 // Pre-Roll
+- (void)handlePreRollControl:(BOOL)paused;
+
 @property (nonatomic,strong) SCPRPreRollViewController *preRollViewController;
 @property BOOL lockPreroll;
 
@@ -98,6 +100,10 @@
 @property BOOL springLock;
 @property BOOL lockPlayback;
 @property BOOL lockAnimationUI;
+@property BOOL promptedAboutFailureAlready;
+@property BOOL recovering;
+@property BOOL uiLocked;
+@property BOOL dirtyFromFailure;
 
 @property NSInteger onDemandGateCount;
 @property NSInteger previousRewindThreshold;
@@ -136,6 +142,7 @@
 - (void)onboarding_beginOutro;
 - (void)onboarding_fin;
 
+@property (nonatomic, strong) IBOutlet NSLayoutConstraint *imageTopConstraint;
 @property BOOL onboardingRewindButtonShown;
 
 - (void)rollInterferenceText;

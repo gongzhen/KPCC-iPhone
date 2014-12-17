@@ -89,6 +89,14 @@
                            alpha:1.0];
 }
 
++ (UIColor*)kpccAsphaltColor {
+    return [UIColor colorWithRed:34.0/255.0
+                           green:38.0/255.0
+                            blue:40.0/255.0
+                           alpha:1.0];
+}
+
+
 + (UIColor*)kpccOrangeColor {
     return [UIColor colorWithHex:0xFF8C26];
 }

@@ -135,10 +135,14 @@
     [UIView animateWithDuration:0.25 animations:^{
         self.onboardingCtrl.brandingView.alpha = 0.0;
         [self.masterCtrl.blurView setNeedsDisplay];
-        
+        self.onboardingCtrl.navbarMask.frame = CGRectMake(self.onboardingCtrl.navbarMask.frame.origin.x,
+                                                          0.0,
+                                                          self.onboardingCtrl.navbarMask.frame.size.width,
+                                                          64.0);
         nav.menuButton.alpha = 0.0;
         
     } completion:^(BOOL finished) {
+        [self.onboardingCtrl.navbarMask.layer removeFromSuperlayer];
         [self.onboardingCtrl.view layoutIfNeeded];
         [self.masterCtrl.view layoutIfNeeded];
         [self.onboardingCtrl.notificationsView layoutIfNeeded];
@@ -149,17 +153,34 @@
 
 - (void)beginAudio {
     
-
+    
     [UIView animateWithDuration:0.66 animations:^{
-        self.masterCtrl.blurView.layer.opacity = 0.0;
+        self.masterCtrl.blurView.alpha = 0.0;
 
-        self.onboardingCtrl.navbarMask.frame = CGRectMake(self.onboardingCtrl.navbarMask.frame.origin.x,
+        /*self.onboardingCtrl.navbarMask.frame = CGRectMake(self.onboardingCtrl.navbarMask.frame.origin.x,
                                                           0.0,
                                                           self.onboardingCtrl.navbarMask.frame.size.width,
-                                                          64.0);
+                                                          64.0);*/
+        
+
         
     } completion:^(BOOL finished) {
-        [self.onboardingCtrl.navbarMask.layer removeFromSuperlayer];
+        
+        [[UIApplication sharedApplication] setStatusBarHidden:NO
+                                                withAnimation:UIStatusBarAnimationSlide];
+        
+        [UIView animateWithDuration:0.15 animations:^{
+            [self.masterCtrl.view setNeedsUpdateConstraints];
+            [self.masterCtrl.liveStreamView setNeedsUpdateConstraints];
+            [self.masterCtrl.liveStreamView setNeedsLayout];
+            [self.masterCtrl.view layoutIfNeeded];
+            [self.masterCtrl.liveStreamView layoutIfNeeded];
+            [self.masterCtrl.programImageView layoutIfNeeded];
+        }];
+        
+        [self.masterCtrl onboarding_beginOnboardingAudio];
+        
+        //[self.onboardingCtrl.navbarMask.layer removeFromSuperlayer];
         self.onboardingCtrl.interactionButton.frame = [self.masterCtrl.view convertRect:self.masterCtrl.playerControlsView.frame
                                                        
                                    toView:self.onboardingCtrl.view];
@@ -173,23 +194,15 @@
                                         forControlEvents:UIControlEventTouchUpInside];
         
         [self.onboardingCtrl.orangeStripView removeFromSuperview];
-        [self.masterCtrl onboarding_beginOnboardingAudio];
-
-        [[UIApplication sharedApplication] setStatusBarHidden:NO
-                                                withAnimation:UIStatusBarAnimationSlide];
         
-        [UIView animateWithDuration:0.15 animations:^{
-            [self.masterCtrl.view setNeedsUpdateConstraints];
-            [self.masterCtrl.liveStreamView setNeedsUpdateConstraints];
-            [self.masterCtrl.liveStreamView setNeedsLayout];
-            [self.masterCtrl.view layoutIfNeeded];
-            [self.masterCtrl.liveStreamView layoutIfNeeded];
-        }];
+
+
 
         
         [self.musicPlayer play];
         [self.lisaPlayer play];
-        self.observerTimer = [NSTimer scheduledTimerWithTimeInterval:1.0
+        
+        self.observerTimer = [NSTimer scheduledTimerWithTimeInterval:0.1
                                                               target:self
                                                             selector:@selector(fireHandler)
                                                             userInfo:nil
@@ -221,7 +234,7 @@
         self.masterCtrl.liveRewindAltButton.alpha = 1.0;
     } completion:^(BOOL finished) {
         CGPoint origin = self.masterCtrl.liveRewindAltButton.frame.origin;
-        [self.onboardingCtrl revealLensWithOrigin:[self.masterCtrl.liveStreamView convertPoint:CGPointMake(origin.x, origin.y)
+        [self.onboardingCtrl revealLensWithOrigin:[self.masterCtrl.liveStreamView convertPoint:CGPointMake(origin.x+5.0, origin.y+3.0)
                                                                                         toView:self.onboardingCtrl.view]];
         
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
@@ -253,7 +266,7 @@
     
     self.listeningForQueues = YES;
     self.keyPoints = [@{
-                        @"7" : @"expandButton",
+                        @"8" : @"expandButton",
                          @"18" : @"activateDropdown",
                          @"21" : @"selectFirstMenuItem",
                          @"25" : @"selectSecondMenuItem",
@@ -331,12 +344,13 @@
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.25 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         [UIView animateWithDuration:0.15 animations:^{
             [nav.menuButton setAlpha:0.0];
+            [self restoreInteractionButton];
         }];
     });
 }
 
 - (void)selectMenuItem:(NSInteger)menuitem {
-    [self.onboardingCtrl revealLensWithOrigin:CGPointMake(4.0+((menuitem-1)*5.0), (64*menuitem)+75.0)];
+    [self.onboardingCtrl revealLensWithOrigin:CGPointMake(10.0, (64*menuitem)+74.0-((menuitem-1)*3.0))];
     [self.masterCtrl.pulldownMenu lightUpCellWithIndex:menuitem];
 }
 
@@ -392,6 +406,8 @@
     
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         if ( !self.suppressBalloon ) {
+            [self.masterCtrl.liveProgressViewController hide];
+            [self.masterCtrl.playerControlsView setAlpha:0.0];
             [self.onboardingCtrl showCalloutWithText:@"Tap \"OK\" to allow us to send you occasional push notifications."
                                      pointerPosition:180.0
                                             position:CGPointMake(self.onboardingCtrl.view.frame.size.width/2.0,
@@ -404,13 +420,18 @@
 - (void)closeOutOnboarding {
     
     [self.onboardingCtrl hideCallout];
+    
     [UIView animateWithDuration:0.33 animations:^{
         [self.masterCtrl.horizDividerLine setAlpha:0.4];
         [self.masterCtrl.blurView.layer setOpacity:0.0];
+        [self.masterCtrl.playerControlsView setAlpha:1.0];
     } completion:^(BOOL finished) {
 
         [[AudioManager shared].audioPlayer play];
         [self.lisaPlayer play];
+        //if ( [self.musicPlayer rate] <= 0.0 ) {
+            [self.musicPlayer play];
+        //}
         
     }];
 

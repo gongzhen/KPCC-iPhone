@@ -42,9 +42,9 @@
     [[AnalyticsManager shared] setup];
     
 #ifndef PRODUCTION
-    //[[UXmanager shared].settings setUserHasViewedOnboarding:YES];
-    //[[UXmanager shared].settings setUserHasViewedOnDemandOnboarding:YES];
-    //[[UXmanager shared] persist];
+    [[UXmanager shared].settings setUserHasViewedOnboarding:YES];
+    [[UXmanager shared].settings setUserHasViewedOnDemandOnboarding:YES];
+    [[UXmanager shared] persist];
 #endif
     
     // Apply application-wide styling
@@ -119,6 +119,7 @@
                           ntohl(tokenBytes[0]), ntohl(tokenBytes[1]), ntohl(tokenBytes[2]),
                           ntohl(tokenBytes[3]), ntohl(tokenBytes[4]), ntohl(tokenBytes[5]),
                           ntohl(tokenBytes[6]), ntohl(tokenBytes[7])];
+    
     [[UXmanager shared].settings setPushTokenData:deviceToken];
     [[UXmanager shared].settings setPushTokenString:hexToken];
 #ifdef PRODUCTION
@@ -130,9 +131,17 @@
 
 - (void)applicationWillResignActive:(UIApplication *)application {
     
-    [[SessionManager shared] disarmProgramUpdater];
-    [[SessionManager shared] setSessionLeftDate:[NSDate date]];
-
+    if ( [[AudioManager shared] currentAudioMode] != AudioModeOnboarding &&
+        [[AudioManager shared] currentAudioMode] != AudioModeNeutral ) {
+        [[SessionManager shared] disarmProgramUpdater];
+        [[SessionManager shared] setSessionLeftDate:[NSDate date]];
+    }
+    
+    if ( [[AudioManager shared] currentAudioMode] == AudioModeOnboarding ) {
+        if ( ![[UXmanager shared] paused] ) {
+            [[UXmanager shared] godPauseOrPlay];
+        }
+    }
     // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
     // Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.
 }
@@ -148,7 +157,11 @@
 
 - (void)applicationWillEnterForeground:(UIApplication *)application {
     
-    [[SessionManager shared] setSessionReturnedDate:[NSDate date]];
+    if ( [[AudioManager shared] currentAudioMode] != AudioModeOnboarding &&
+        [[AudioManager shared] currentAudioMode] != AudioModeNeutral ) {
+        [[SessionManager shared] setSessionReturnedDate:[NSDate date]];
+    }
+    
     // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
 }
 

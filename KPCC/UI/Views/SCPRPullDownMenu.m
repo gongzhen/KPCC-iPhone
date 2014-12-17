@@ -10,6 +10,7 @@
 #import "SCPRMenuCell.h"
 #import "UIColor+UICustom.h"
 #import "AnalyticsManager.h"
+#import "NetworkManager.h"
 
 #define kMenuItemKPCCLive   @"KPCC Live"
 #define kMenuItemPrograms   @"Programs"
@@ -82,6 +83,16 @@
     cellTextColor = [UIColor whiteColor];
     cellSelectionStyle = UITableViewCellSelectionStyleDefault;
     separatorColor = [UIColor colorWithRed:222.f/255.f green:228.f/255.f blue:229.f/255.f alpha:0.3f];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(refresh)
+                                                 name:@"network-status-good"
+                                               object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(refresh)
+                                                 name:@"network-status-fail"
+                                               object:nil];
 
     [menuList setScrollEnabled:NO];
 
@@ -98,6 +109,10 @@
     }
 
     return self;
+}
+
+- (void)refresh {
+    [self.menuList reloadData];
 }
 
 - (void)lightUpCellWithIndex:(NSInteger)index {
@@ -175,20 +190,38 @@
     cell.menuItemLabel.font = [self cellFont];
     [cell.menuItemLabel setText:menuItems[indexPath.item]];
 
-    if ([menuItems[indexPath.item] isEqualToString:kMenuItemKPCCLive]) {
-        [cell.rightChevronImageView setHidden:YES];
-    } else {
-        [cell.rightChevronImageView setHidden:NO];
+    BOOL chevronStatus = NO;
+    if ( [menuItems[indexPath.item] isEqualToString:kMenuItemKPCCLive]) {
+        chevronStatus = YES;
     }
 
+    [cell.rightChevronImageView setHidden:chevronStatus];
+    
     NSString *iconNamed = menuItemsDictionary[menuItems[indexPath.item]];
     if (iconNamed) {
         UIImage *iconImg = [UIImage imageNamed:[NSString stringWithFormat:@"menu-%@", iconNamed]];
         [cell.iconImageView setImage:iconImg];
-        cell.iconImageView.frame = CGRectMake(cell.iconImageView.frame.origin.x, [self cellHeight]/2 - iconImg.size.height/2,
-                                     iconImg.size.width, iconImg.size.height);
+        cell.iconImageView.frame = CGRectMake(8.0, 8.0,
+                                              44.0,
+                                              44.0);
+        
+        cell.iconImageView.contentMode = UIViewContentModeCenter;
     }
 
+#ifndef DISABLE_INTERRUPT
+    if ( [[NetworkManager shared] networkDown] ) {
+        cell.menuItemLabel.alpha = 0.35;
+        cell.iconImageView.alpha = 0.35;
+        cell.userInteractionEnabled = NO;
+        [cell.rightChevronImageView setHidden:YES];
+    } else {
+        cell.menuItemLabel.alpha = 1.0;
+        cell.iconImageView.alpha = 1.0;
+        cell.userInteractionEnabled = YES;
+        [cell.rightChevronImageView setHidden:chevronStatus];
+    }
+#endif
+    
     return cell;
 }
 

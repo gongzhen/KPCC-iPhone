@@ -49,6 +49,12 @@ static AnalyticsManager *singleton = nil;
     [mxp identify:uuid];
     [mxp.people set:@{ @"uuid" : uuid }];
     
+    NSString *kKey = globalConfig[@"Kochava"][@"AppKey"];
+    if ( kKey ) {
+        NSDictionary *kDict = @{ @"myKochavaAppId" : kKey };
+        self.kTracker = [[KochavaTracker alloc] initKochavaWithParams:kDict];
+    }
+    
 }
 
 - (void)trackHeadlinesDismissal {

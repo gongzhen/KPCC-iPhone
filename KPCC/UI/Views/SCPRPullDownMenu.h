@@ -56,5 +56,6 @@
 - (void)closeDropDown:(BOOL)animated;
 - (void)lightUpCellWithIndex:(NSInteger)index;
 - (void)clearMenu;
+- (void)refresh;
 
 @end

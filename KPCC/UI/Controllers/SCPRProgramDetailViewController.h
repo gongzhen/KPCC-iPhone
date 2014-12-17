@@ -17,5 +17,6 @@
 @property (nonatomic,strong) Program *program;
 @property IBOutlet UIImageView *programBgImage;
 @property IBOutlet UITableView *episodesTable;
+@property IBOutlet UIView *curtainView;
 
 @end

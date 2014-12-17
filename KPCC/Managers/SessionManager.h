@@ -54,7 +54,10 @@ typedef NS_ENUM(NSUInteger, OnDemandFinishedReason) {
 @property (NS_NONATOMIC_IOSONLY) BOOL ignoreProgramUpdating;
 @property (NS_NONATOMIC_IOSONLY) BOOL sessionIsExpired;
 @property (NS_NONATOMIC_IOSONLY) BOOL sessionIsBehindLive;
-@property (NS_NONATOMIC_IOSONLY) BOOL sessionIsInRecess;
+@property BOOL sessionIsInBackground;
+
+- (BOOL)sessionIsInRecess;
+- (BOOL)sessionIsInRecess:(BOOL)respectPause;
 
 @property BOOL sessionIsHot;
 @property BOOL rewindSessionIsHot;

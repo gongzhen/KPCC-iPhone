@@ -47,6 +47,9 @@
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
+    
+    [[DesignManager shared] setProtectBlurredImage:NO];
+    
 //    [self.blurView setNeedsDisplay];
 }
 
@@ -57,6 +60,7 @@
     self.blurView.blurRadius = 20.f;
     self.blurView.dynamic = NO;
 
+    /*
     self.genAvatar = [[SCPRGenericAvatarViewController alloc]
                                                initWithNibName:@"SCPRGenericAvatarViewController"
                                                bundle:nil];
@@ -64,12 +68,12 @@
                                            self.genAvatar.view.frame.size.width,
                                            self.genAvatar.view.frame.size.height);
     self.genAvatar.view.alpha = 0.0;
-    [self.view addSubview:self.genAvatar.view];
+    [self.view addSubview:self.genAvatar.view];*/
     
     [[DesignManager shared] loadProgramImage:_currentProgram.program_slug
                                 andImageView:self.programBgImage
                                   completion:^(BOOL status) {
-                                      [self.blurView setNeedsDisplay];
+                                      //[self.blurView setNeedsDisplay];
                                   }];
     
     self.view.backgroundColor = [UIColor clearColor];
