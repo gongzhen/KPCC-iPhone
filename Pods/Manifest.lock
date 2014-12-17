@@ -26,6 +26,7 @@ PODS:
   - FlurrySDK/FlurrySDK (5.4.0)
   - FXBlurView (1.6.3)
   - JDStatusBarNotification (1.4.9)
+  - Kochava (20141031)
   - KSReachability (1.4)
   - Mixpanel (2.6.2):
     - Mixpanel/MPCategoryHelpers (= 2.6.2)
@@ -41,6 +42,7 @@ DEPENDENCIES:
   - FlurrySDK
   - FXBlurView (~> 1.6)
   - JDStatusBarNotification
+  - Kochava
   - KSReachability
   - Mixpanel
   - Parse
@@ -54,6 +56,7 @@ SPEC CHECKSUMS:
   FlurrySDK: bed9e5598353f867508d164795a451e3ada92cb6
   FXBlurView: abe1046285813c4f6e9008abbc324fc5ab32af90
   JDStatusBarNotification: 9d833032d343e9a7abe0ec219c415dc115ba67a8
+  Kochava: da2acfe55f59121596c40012882bb295448d051a
   KSReachability: 29c0ec738e487c750a0e46b6554cc50df73f60b1
   Mixpanel: c075cedebda3328ce1ee29a18429e265ce967cd8
   Parse: f15dfacd941ee8084a5decbef486da8b223c2810

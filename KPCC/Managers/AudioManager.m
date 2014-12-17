@@ -219,16 +219,6 @@ static const NSString *ItemStatusContext;
             NSLog(@"no seekable time range for current item");
         }
         
-       /* if ( weakSelf.easeInAudio ) {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                weakSelf.easeInAudio = NO;
-                weakSelf.savedVolume = 1.0;
-                [weakSelf adjustAudioWithValue:0.1 completion:^{
-                    
-                }];
-            });
-        }*/
-        
     }];
     
 }
@@ -280,7 +270,7 @@ static const NSString *ItemStatusContext;
                     if ( [[SessionManager shared] secondsBehindLive] > 14000 ) {
                         // Try again
                         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.75 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                            NSLog(@"Buffering ...");
+                            NSLog(@"*********** // Buffering ... \\ ************");
                             if ( [self.delegate respondsToSelector:@selector(interfere)] ) {
                                 //[self.delegate interfere];
                             }
@@ -292,6 +282,11 @@ static const NSString *ItemStatusContext;
                         });
                         
                         return;
+                    }
+                    
+                    if ( !failover ) {
+                        NSLog(@"*** Seek to date : SUCCESS : %@",[NSDate stringFromDate:justABitInTheFuture
+                                                                             withFormat:@"hh:mm:ss a"]);
                     }
                     
                     if ( [self.audioPlayer rate] == 0.0 ) {

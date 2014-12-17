@@ -227,7 +227,7 @@ static long kStreamBufferLimit = 4*60*60;
 #pragma mark - Cache
 - (void)resetCache {
     
-  
+  /*
     [[NSURLCache sharedURLCache] removeAllCachedResponses];
     
     NSURLCache *shinyCache = [[NSURLCache alloc] initWithMemoryCapacity:2*1024*1024
@@ -235,7 +235,7 @@ static long kStreamBufferLimit = 4*60*60;
                                                                diskPath:nil];
     
     [NSURLCache setSharedURLCache:shinyCache];
-   
+   */
     
 }
 
@@ -529,9 +529,15 @@ static long kStreamBufferLimit = 4*60*60;
 
 - (BOOL)sessionIsInRecess {
     
+   return [self sessionIsInRecess:YES];
+    
+}
+
+- (BOOL)sessionIsInRecess:(BOOL)respectPause {
     if ( [[AudioManager shared] currentAudioMode] == AudioModeOnDemand ) return NO;
     if ( [[AudioManager shared] currentAudioMode] == AudioModeOnboarding ) return NO;
-    if ( [[AudioManager shared] status] == StreamStatusPaused ) return NO;
+    if ( respectPause )
+        if ( [[AudioManager shared] status] == StreamStatusPaused ) return NO;
     
     Program *cp = self.currentProgram;
     NSDate *soft = cp.soft_starts_at;
@@ -552,7 +558,6 @@ static long kStreamBufferLimit = 4*60*60;
     }
     
     return NO;
-    
 }
 
 - (void)invalidateSession {
@@ -562,13 +567,16 @@ static long kStreamBufferLimit = 4*60*60;
 
 - (void)setSessionLeftDate:(NSDate *)sessionLeftDate {
     _sessionLeftDate = sessionLeftDate;
+    self.sessionIsInBackground = YES;
 }
 
 - (void)setSessionReturnedDate:(NSDate *)sessionReturnedDate {
     _sessionReturnedDate = sessionReturnedDate;
+    self.sessionIsInBackground = NO;
     if ( sessionReturnedDate ) {
         [self handleSessionReactivation];
     }
+    
 }
 
 - (void)processNotification:(UILocalNotification*)programUpdate {

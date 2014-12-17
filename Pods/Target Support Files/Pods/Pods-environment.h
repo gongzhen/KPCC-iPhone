@@ -84,6 +84,12 @@
 #define COCOAPODS_VERSION_MINOR_KSReachability 4
 #define COCOAPODS_VERSION_PATCH_KSReachability 0
 
+// Kochava
+#define COCOAPODS_POD_AVAILABLE_Kochava
+#define COCOAPODS_VERSION_MAJOR_Kochava 20141031
+#define COCOAPODS_VERSION_MINOR_Kochava 0
+#define COCOAPODS_VERSION_PATCH_Kochava 0
+
 // Mixpanel
 #define COCOAPODS_POD_AVAILABLE_Mixpanel
 #define COCOAPODS_VERSION_MAJOR_Mixpanel 2

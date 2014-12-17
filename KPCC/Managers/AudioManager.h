@@ -35,7 +35,8 @@ typedef NS_ENUM(NSUInteger, AudioMode) {
     AudioModeNeutral = 0,
     AudioModeLive,
     AudioModeOnDemand,
-    AudioModeOnboarding
+    AudioModeOnboarding,
+    AudioModePreroll
 };
 
 typedef NS_ENUM(NSUInteger, StreamState) {

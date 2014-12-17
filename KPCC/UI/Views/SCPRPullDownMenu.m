@@ -200,8 +200,11 @@
     if (iconNamed) {
         UIImage *iconImg = [UIImage imageNamed:[NSString stringWithFormat:@"menu-%@", iconNamed]];
         [cell.iconImageView setImage:iconImg];
-        cell.iconImageView.frame = CGRectMake(cell.iconImageView.frame.origin.x, [self cellHeight]/2 - iconImg.size.height/2,
-                                     iconImg.size.width, iconImg.size.height);
+        cell.iconImageView.frame = CGRectMake(8.0, 8.0,
+                                              44.0,
+                                              44.0);
+        
+        cell.iconImageView.contentMode = UIViewContentModeCenter;
     }
 
 #ifdef DISABLE_INTERRUPT

@@ -32,8 +32,7 @@
     return spinner;
 }
 
-+ (void)spinInCenterOfViewController:(UIViewController *)viewController appeared:(CompletionBlock)appeared {
-    
++ (void)spinInCenterOfView:(UIView *)view offset:(CGFloat)yOffset delay:(CGFloat)delay appeared:(CompletionBlock)appeared {
     SCPRSpinnerViewController *spinner = [SCPRSpinnerViewController o];
     
     if ( spinner && spinner.isSpinning ) {
@@ -46,24 +45,46 @@
                                     26.0,
                                     26.0);
     
+    
+    
     spinner.view.alpha = 0.0;
-    [viewController.view addSubview:spinner.view];
+    [view addSubview:spinner.view];
+
+    
+    [view layoutIfNeeded];
+    
     spinner.view.backgroundColor = [UIColor clearColor];
     [spinner generateCircle];
     
-    spinner.view.center = CGPointMake(viewController.view.frame.size.width/2.0,
-                                      viewController.view.frame.size.height/2.0);
+    spinner.view.center = CGPointMake(view.frame.size.width/2.0,
+                                      view.frame.size.height/2.0+yOffset);
     
-    [UIView animateWithDuration:0.33 animations:^{
+    [UIView animateWithDuration:0.13 animations:^{
         [spinner.view setAlpha:1.0];
     } completion:^(BOOL finished) {
         [spinner spin];
         if ( appeared ) {
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delay * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                 appeared();
             });
         }
     }];
+}
+
++ (void)spinInCenterOfView:(UIView *)view offset:(CGFloat)yOffset appeared:(CompletionBlock)appeared {
+    [SCPRSpinnerViewController spinInCenterOfView:view
+                                           offset:yOffset
+                                            delay:1.0
+                                         appeared:appeared];
+}
+
++ (void)spinInCenterOfView:(UIView *)view appeared:(CompletionBlock)appeared {
+    [SCPRSpinnerViewController spinInCenterOfView:view offset:0.0 appeared:appeared];
+}
+
++ (void)spinInCenterOfViewController:(UIViewController *)viewController appeared:(CompletionBlock)appeared {
+    
+    [SCPRSpinnerViewController spinInCenterOfView:viewController.view appeared:appeared];
     
 }
 

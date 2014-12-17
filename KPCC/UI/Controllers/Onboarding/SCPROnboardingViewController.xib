@@ -157,7 +157,7 @@
                     </constraints>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Pzs-hM-WnC" userLabel="textBalloon">
-                    <rect key="frame" x="180" y="410" width="240" height="120"/>
+                    <rect key="frame" x="180" y="380" width="240" height="120"/>
                     <subviews>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Hlz-ac-PvZ">
                             <rect key="frame" x="0.0" y="20" width="240" height="100"/>
@@ -257,7 +257,7 @@
                 <constraint firstItem="OIZ-zB-C1J" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="lxL-iq-GaB"/>
                 <constraint firstAttribute="centerX" secondItem="Qok-s5-TCn" secondAttribute="centerX" id="rBi-58-QBt"/>
                 <constraint firstItem="Qok-s5-TCn" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="132" id="sbJ-hx-aJl"/>
-                <constraint firstAttribute="bottom" secondItem="Pzs-hM-WnC" secondAttribute="bottom" constant="70" id="wTS-Ar-CUQ"/>
+                <constraint firstAttribute="bottom" secondItem="Pzs-hM-WnC" secondAttribute="bottom" constant="100" id="wTS-Ar-CUQ"/>
             </constraints>
             <point key="canvasLocation" x="-207" y="98"/>
         </view>

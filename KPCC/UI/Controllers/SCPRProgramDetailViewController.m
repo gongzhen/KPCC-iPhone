@@ -18,6 +18,7 @@
 #import "Episode.h"
 #import "Segment.h"
 #import "AnalyticsManager.h"
+#import "SCPRSpinnerViewController.h"
 
 @interface SCPRProgramDetailViewController ()
 @property NSMutableArray *episodesList;
@@ -43,52 +44,72 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 
+    self.episodesTable.separatorColor = [UIColor clearColor];
     self.blurView.tintColor = [UIColor clearColor];
     self.blurView.blurRadius = 20.f;
     self.blurView.dynamic = NO;
     self.blurView.alpha = 0.0;
-    
-    [[DesignManager shared] loadProgramImage:_program.program_slug
-                                andImageView:self.programBgImage
-                                  completion:^(BOOL status) {
-                                      self.programBgImage.contentMode = UIViewContentModeCenter;
-                                      [self.blurView setNeedsDisplay];
-                                      UIImage *blurred = [self.programBgImage.image blurredImageWithRadius:20.0f
-                                                                                                iterations:1
-                                                                                                 tintColor:[UIColor clearColor]];
-                                      [[DesignManager shared] setCurrentBlurredImage:blurred];
-                                  }];
+    self.programBgImage.contentMode = UIViewContentModeCenter;
+    self.curtainView.backgroundColor = [UIColor clearColor];
+    [SCPRSpinnerViewController spinInCenterOfView:self.curtainView offset:110.0 delay:0.33 appeared:^{
+        [[DesignManager shared] loadProgramImage:_program.program_slug
+                                    andImageView:self.programBgImage
+                                      completion:^(BOOL status) {
+                                          
+                                    
+                                          
+                                          self.programBgImage.clipsToBounds = YES;
+                                          [self.blurView setNeedsDisplay];
+                                          UIImage *blurred = [self.programBgImage.image blurredImageWithRadius:20.0f
+                                                                                                    iterations:1
+                                                                                                     tintColor:[UIColor clearColor]];
+                                          [[DesignManager shared] setCurrentBlurredImage:blurred];
+                                          
+                                          [[NetworkManager shared] fetchEpisodesForProgram:_program.program_slug
+                                                                                completion:^(id returnedObject) {
+                                                                                    
+                                                                                    NSAssert([returnedObject isKindOfClass:[NSArray class]],@"Expecting an Array here");
+                                                                                    NSArray *content = (NSArray*)returnedObject;
+                                                                                    if ([content count] == 0) {
+                                                                                        return;
+                                                                                    }
+                                                                                    
+                                                                                    NSMutableArray *episodesArray = [@[] mutableCopy];
+                                                                                    for (NSMutableDictionary *episodeDict in content) {
+                                                                                        Episode *episode = [[Episode alloc] initWithDict:episodeDict];
+                                                                                        if (episode.audio != nil) {
+                                                                                            [episodesArray addObject:episode];
+                                                                                        } else {
+                                                                                            if (episode.segments != nil && [episode.segments count] > 0) {
+                                                                                                for (Segment *segment in episode.segments) {
+                                                                                                    if ( segment.audio ) {
+                                                                                                        [episodesArray addObject:segment];
+                                                                                                    }
+                                                                                                }
+                                                                                            }
+                                                                                        }
+                                                                                    }
+                                                                                    
+                                                                                    self.episodesList = episodesArray;
+                                                                                    
+                                                                                    [self.episodesTable reloadData];
+                                                                                    self.episodesTable.separatorColor = [[UIColor virtualWhiteColor] translucify:0.5];
+                                                                                  
+                                                                                    
+                                                                                    [SCPRSpinnerViewController finishSpinning];
+                                                                                    [UIView animateWithDuration:0.25 animations:^{
+                                                                                        self.curtainView.alpha = 0.0;
+                                                                                    } completion:^(BOOL finished) {
+                                                                                        [self.curtainView removeFromSuperview];
+                                                                                    }];
+                                                                                    
+                                                                                }];
+                                          
+                                      }];
+        
 
-    [[NetworkManager shared] fetchEpisodesForProgram:_program.program_slug
-                                          completion:^(id returnedObject) {
-                                              
-                                              NSAssert([returnedObject isKindOfClass:[NSArray class]],@"Expecting an Array here");
-                                              NSArray *content = (NSArray*)returnedObject;
-                                              if ([content count] == 0) {
-                                                  return;
-                                              }
-                                              
-                                              NSMutableArray *episodesArray = [@[] mutableCopy];
-                                              for (NSMutableDictionary *episodeDict in content) {
-                                                  Episode *episode = [[Episode alloc] initWithDict:episodeDict];
-                                                  if (episode.audio != nil) {
-                                                      [episodesArray addObject:episode];
-                                                  } else {
-                                                      if (episode.segments != nil && [episode.segments count] > 0) {
-                                                          for (Segment *segment in episode.segments) {
-                                                              if ( segment.audio ) {
-                                                                  [episodesArray addObject:segment];
-                                                              }
-                                                          }
-                                                      }
-                                                  }
-                                              }
-                                              
-                                              self.episodesList = episodesArray;
-                                              
-                                              [self.episodesTable reloadData];
-                                              
-                                          }];
+    }];
+
     
     //[[NetworkManager shared] fetchEpisodesForProgram:_program.program_slug dispay:self];
 }

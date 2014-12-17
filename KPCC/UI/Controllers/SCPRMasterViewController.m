@@ -94,6 +94,13 @@ setForOnDemandUI;
     
     self.view.backgroundColor = [UIColor blackColor];
     self.horizDividerLine.layer.opacity = 0.0;
+    self.queueBlurView.layer.opacity = 0.0;
+    
+    self.darkBgView.hidden = NO;
+    self.darkBgView.backgroundColor = [[UIColor virtualBlackColor] translucify:0.75];
+    self.darkBgView.layer.opacity = 0.0;
+    self.queueBlurView.alpha = 1.0;
+    self.darkBgView.alpha = 1.0;
     
     //self.initialControlsView.backgroundColor = [UIColor redColor];
     //self.initialPlayButton.backgroundColor = [UIColor blueColor];
@@ -129,7 +136,7 @@ setForOnDemandUI;
     self.liveProgressViewController.currentProgressView = self.currentProgressBarView;
     self.playerControlsView.backgroundColor = [UIColor clearColor];
     
-    self.queueBlurView.contentMode = UIViewContentModeCenter;
+    self.queueBlurView.contentMode = UIViewContentModeScaleAspectFill;
     
     self.liveRewindAltButton.userInteractionEnabled = NO;
     [self.liveRewindAltButton setAlpha:0.0];
@@ -146,7 +153,11 @@ setForOnDemandUI;
     //[self updateDataForUI];
     
     // Observe when the application becomes active again, and update UI if need-be.
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateDataForUI) name:UIApplicationWillEnterForegroundNotification object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(primeManualControlButton)
+                                                 name:UIApplicationWillEnterForegroundNotification
+                                               object:nil];
     
     // Make sure the system follows our playback status - to support the playback when the app enters the background mode.
     [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback error:nil];
@@ -250,7 +261,7 @@ setForOnDemandUI;
     [super viewDidAppear:animated];
     
     
-    [self.blurView setNeedsDisplay];
+    //[self.blurView setNeedsDisplay];
     [self.queueBlurView setNeedsDisplay];
     
     // Once the view has appeared we can register to begin receiving system audio controls.
@@ -303,8 +314,9 @@ setForOnDemandUI;
     SCPRNavigationController *nav = [del masterNavigationController];
     [[UIApplication sharedApplication] setStatusBarHidden:YES];
     
-    //nav.navigationBarHidden = YES;
     
+    //nav.navigationBarHidden = YES;
+    self.liveDescriptionLabel.hidden = YES;
     self.automationMode = YES;
     self.programImageView.image = [UIImage imageNamed:@"onboarding-tile.jpg"];
     self.blurView.layer.opacity = 1.0;
@@ -326,7 +338,7 @@ setForOnDemandUI;
     
     [[SessionManager shared] fetchOnboardingProgramWithSegment:1 completed:^(id returnedObject) {
         [self.blurView setNeedsDisplay];
-        self.programTitleLabel.text = @"Welcome to KPCC";
+        self.programTitleLabel.text = @"";
         [SCPRCloakViewController uncloak];
         [UIView animateWithDuration:0.33 animations:^{
             self.view.alpha = 1.0;
@@ -344,18 +356,24 @@ setForOnDemandUI;
         self.letsGoLabel.alpha = 1.0;
     }];
     
-    POPSpringAnimation *scaleAnimation = [POPSpringAnimation animationWithPropertyNamed:kPOPLayerScaleXY];
+    POPBasicAnimation *scaleAnimation = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerScaleXY];
     scaleAnimation.fromValue  = [NSValue valueWithCGSize:CGSizeMake(0.0f, 0.0f)];
     scaleAnimation.toValue  = [NSValue valueWithCGSize:CGSizeMake(1.0f, 1.0f)];
-    scaleAnimation.springBounciness = 2.0f;
-    scaleAnimation.springSpeed = 1.0f;
+    scaleAnimation.duration = .45f;
+    
+    POPBasicAnimation *fadeIn = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
+    fadeIn.fromValue = @0;
+    fadeIn.toValue = @1;
+    fadeIn.duration = 1.0f;
     
     [self.initialControlsView.layer pop_addAnimation:scaleAnimation forKey:@"revealPlayer"];
-    self.initialControlsView.layer.opacity = 1.0;
+    [self.initialControlsView.layer pop_addAnimation:fadeIn forKey:@"playerFadeIn"];
     
 }
 
 - (void)onboarding_beginOnboardingAudio {
+    
+  
     [self.liveProgressViewController displayWithProgram:[[SessionManager shared] currentProgram]
                                                  onView:self.view
                                        aboveSiblingView:self.playerControlsView];
@@ -365,6 +383,8 @@ setForOnDemandUI;
         self.liveProgressViewController.view.alpha = 1.0;
         self.liveStreamView.alpha = 1.0;
         
+    } completion:^(BOOL finished) {
+        [self.programTitleLabel fadeText:@"Welcome to KPCC"];
     }];
     
     [[AudioManager shared] playOnboardingAudio:1];
@@ -420,7 +440,6 @@ setForOnDemandUI;
 # pragma mark - Actions
 
 - (IBAction)initialPlayTapped:(id)sender {
-    
     if ( ![[UXmanager shared].settings userHasViewedOnboarding] ) {
         [[UXmanager shared] fadeOutBrandingWithCompletion:^{
             [self moveTextIntoPlace:YES];
@@ -430,15 +449,16 @@ setForOnDemandUI;
         return;
     }
     
-
-    
     [UIView animateWithDuration:0.15 animations:^{
         self.liveRewindAltButton.alpha = 0.0;
     } completion:^(BOOL finished) {
         if (self.preRollViewController.tritonAd) {
             [self cloakForPreRoll:YES];
-            [self.preRollViewController showPreRollWithAnimation:YES completion:^(BOOL done) {
-                [self primePlaybackUI:YES];
+            [self.preRollViewController primeUI:^{
+                [self.preRollViewController showPreRollWithAnimation:YES completion:^(BOOL done) {
+                    [self primePlaybackUI:YES];
+                    [self.preRollViewController.prerollPlayer play];
+                }];
             }];
         } else {
             [self primePlaybackUI:YES];
@@ -462,6 +482,11 @@ setForOnDemandUI;
 - (IBAction)playOrPauseTapped:(id)sender {
     if (seekRequested) {
         seekRequested = NO;
+    }
+    
+    if ( [[AudioManager shared] currentAudioMode] == AudioModePreroll ) {
+        [self handlePreRollControl:([self.preRollViewController.prerollPlayer rate] == 0.0)];
+        return;
     }
     
     if (![[AudioManager shared] isStreamPlaying]) {
@@ -615,14 +640,17 @@ setForOnDemandUI;
 
 - (IBAction)showPreRollTapped:(id)sender {
     [self cloakForPreRoll:YES];
-    [self.preRollViewController showPreRollWithAnimation:YES completion:^(BOOL done) {
-        
+    [self.preRollViewController primeUI:^{
+        [self.preRollViewController showPreRollWithAnimation:YES completion:^(BOOL done) {
+            
+        }];
     }];
+
 }
 
 # pragma mark - Audio commands
 - (void)playStream:(BOOL)hard {
-    if ( hard ) {
+    if ( hard && ![[SessionManager shared] sessionIsInBackground] ) {
         [[AudioManager shared] playLiveStream];
     } else {
         [[AudioManager shared] playStream];
@@ -679,8 +707,10 @@ setForOnDemandUI;
         if ( play ) {
             if ( self.initialPlay ) {
                 if ( self.preRollViewController.tritonAd ) {
-                    [self.preRollViewController showPreRollWithAnimation:YES completion:^(BOOL done) {
-                        
+                    [self.preRollViewController primeUI:^{
+                        [self.preRollViewController showPreRollWithAnimation:YES completion:^(BOOL done) {
+                            
+                        }];
                     }];
                 }
                 [[AudioManager shared] playLiveStream];
@@ -702,6 +732,9 @@ setForOnDemandUI;
     
     [UIView animateWithDuration:0.25 animations:^{
         self.liveRewindAltButton.alpha = 0.0;
+        if ( [[AudioManager shared] currentAudioMode] != AudioModeOnboarding ) {
+            self.queueBlurView.layer.opacity = 1.0;
+        }
     }];
     
     self.jogging = YES;
@@ -715,6 +748,7 @@ setForOnDemandUI;
     Program *cProgram = [[SessionManager shared] currentProgram];
     [self.jogShuttle.view setAlpha:1.0];
     
+
     
     BOOL sound = [AudioManager shared].currentAudioMode == AudioModeOnboarding ? NO : YES;
     [self.jogShuttle animateWithSpeed:0.8
@@ -734,6 +768,11 @@ setForOnDemandUI;
                                
                                if ( [[UXmanager shared] userHasSeenOnboarding] ) {
                                    
+                                   if ( [[AudioManager shared] currentAudioMode] != AudioModeOnboarding ) {
+                                       [UIView animateWithDuration:0.25 animations:^{
+                                           self.queueBlurView.layer.opacity = 0.0;
+                                       }];
+                                   }
                                    [[SessionManager shared] invalidateSession];
                                    [[SessionManager shared] setRewindSessionIsHot:YES];
                                    [[AudioManager shared] adjustAudioWithValue:0.1 completion:^{
@@ -746,7 +785,6 @@ setForOnDemandUI;
                                        
                                        [[AudioManager shared] setTemporaryMutex:NO];
                                        [[AudioManager shared] playOnboardingAudio:2];
-                                       [[UXmanager shared] restoreInteractionButton];
                                        
                                    }];
                                    
@@ -801,6 +839,9 @@ setForOnDemandUI;
     
     [UIView animateWithDuration:0.25 animations:^{
         self.liveRewindAltButton.alpha = 0.0;
+        if ( [[AudioManager shared] currentAudioMode] != AudioModeOnboarding ) {
+            self.queueBlurView.layer.opacity = 1.0;
+        }
     }];
     
     self.shuttlingGate = YES;
@@ -822,6 +863,12 @@ setForOnDemandUI;
                                    [[SessionManager shared] setSeekForwardRequested:NO];
                                    [[SessionManager shared] invalidateSession];
                                    
+                                   if ( [[AudioManager shared] currentAudioMode] != AudioModeOnboarding ) {
+                                       [UIView animateWithDuration:0.25 animations:^{
+                                           self.queueBlurView.layer.opacity = 0.0;
+                                       }];
+                                   }
+                                   
                                    [[AudioManager shared] adjustAudioWithValue:0.1 completion:^{
                                        [self.view bringSubviewToFront:self.playerControlsView];
                                    }];
@@ -842,7 +889,15 @@ setForOnDemandUI;
     });
 }
 
-
+- (void)handlePreRollControl:(BOOL)paused {
+    if ( !paused ) {
+        [self.preRollViewController.prerollPlayer pause];
+        [self.playPauseButton fadeImage:[UIImage imageNamed:@"btn_play.png"] duration:0.2];
+    } else {
+        [self.preRollViewController.prerollPlayer play];
+        [self.playPauseButton fadeImage:[UIImage imageNamed:@"btn_pause.png"] duration:0.2];
+    }
+}
 
 # pragma mark - UI control
 - (void)updateDataForUI {
@@ -949,6 +1004,10 @@ setForOnDemandUI;
             if ( [AudioManager shared].currentAudioMode != AudioModeOnboarding )
                 self.liveDescriptionLabel.text = @"ON NOW";
         }
+    }
+    
+    if ( self.liveDescriptionLabel.hidden ) {
+        [self.liveDescriptionLabel setHidden:NO];
     }
     [self primeManualControlButton];
 }
@@ -1136,7 +1195,7 @@ setForOnDemandUI;
                     [weakSelf.navigationController popToRootViewControllerAnimated:YES];
                 }
                 
-                [[QueueManager shared] playItemAtPosition:[[QueueManager shared] currentlyPlayingIndex]];
+                [[QueueManager shared] playItemAtPosition:(int)[[QueueManager shared] currentlyPlayingIndex]];
                 
             }];
         }];
@@ -1153,7 +1212,6 @@ setForOnDemandUI;
                                     andImageView:self.programImageView
                                       completion:^(BOOL status) {
                                           dispatch_async(dispatch_get_main_queue(), ^{
-                                              [self.blurView setNeedsDisplay];
                                               [self.queueBlurView setNeedsDisplay];
                                               [self.programTitleOnDemand setText:[program.title uppercaseString]];
                                               if ( completion ) {
@@ -1217,18 +1275,32 @@ setForOnDemandUI;
 }
 
 - (void)finishUpdatingForProgram {
-    [self.blurView setNeedsDisplay];
+    
     dispatch_async(dispatch_get_main_queue(), ^{
+        
+        
         self.navigationController.navigationBarHidden = NO;
+        
         
         if ( [[UXmanager shared] onboardingEnding] ) {
             [[UXmanager shared] setOnboardingEnding:NO];
         }
         
+
+        
         [self.view layoutIfNeeded];
         [self.liveStreamView layoutIfNeeded];
         [self.initialControlsView layoutIfNeeded];
         [self.liveRewindAltButton layoutIfNeeded];
+        [self.queueBlurView setNeedsDisplay];
+        [self.programImageView layoutIfNeeded];
+        
+        UIImage *blurry = [self.programImageView.image blurredImageWithRadius:20.0f
+                                                                   iterations:1
+                                                                    tintColor:[UIColor clearColor]];
+        self.queueBlurView.image = blurry;
+        self.queueBlurView.contentMode = UIViewContentModeCenter;
+        
         [self setUIContents:YES];
         [self primeManualControlButton];
         
@@ -1424,12 +1496,13 @@ setForOnDemandUI;
     }
     
 
-    if ( [[SessionManager shared] sessionIsInRecess] ) {
-        if ( okToShow )
-            NSLog(@"Rewind Button - Hiding because we're in no-mans-land");
-        okToShow = NO;
+    if ( ![[SessionManager shared] sessionIsBehindLive] ) {
+        if ( [[SessionManager shared] sessionIsInRecess:NO] ) {
+            if ( okToShow )
+                NSLog(@"Rewind Button - Hiding because we're in no-mans-land");
+            okToShow = NO;
+        }
     }
-    
     
     if ( [[UXmanager shared] onboardingEnding] ) {
         if ( okToShow )
@@ -1558,7 +1631,6 @@ setForOnDemandUI;
     
     self.navigationItem.title = @"Menu";
     
-    [self.blurView setNeedsDisplay];
     
     if (animated) {
         [pulldownMenu openDropDown:YES];
@@ -1580,7 +1652,7 @@ setForOnDemandUI;
     blurFadeAnimation.duration = 0.3;
     
     POPBasicAnimation *darkBgFadeAnimation = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
-    darkBgFadeAnimation.toValue = @0.75;
+    darkBgFadeAnimation.toValue = @1.0;
     darkBgFadeAnimation.duration = 0.3;
     
     POPBasicAnimation *controlsFadeAnimation = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
@@ -1591,7 +1663,7 @@ setForOnDemandUI;
     lsFade.toValue = @(0);
     lsFade.duration = 0.3;
     
-    [self.blurView.layer pop_addAnimation:blurFadeAnimation forKey:@"blurViewFadeAnimation"];
+    [self.queueBlurView.layer pop_addAnimation:blurFadeAnimation forKey:@"blurViewFadeAnimation"];
     [self.darkBgView.layer pop_addAnimation:darkBgFadeAnimation forKey:@"darkBgFadeAnimation"];
     [self.playerControlsView.layer pop_addAnimation:controlsFadeAnimation forKey:@"controlsViewFadeAnimation"];
     [self.onDemandPlayerView.layer pop_addAnimation:controlsFadeAnimation forKey:@"onDemandViewFadeAnimation"];
@@ -1622,7 +1694,6 @@ setForOnDemandUI;
         self.navigationItem.title = @"KPCC Live";
     }
     
-    [self.blurView setNeedsDisplay];
     
     if (animated) {
         [pulldownMenu closeDropDown:YES];
@@ -1657,7 +1728,7 @@ setForOnDemandUI;
     cfi.toValue = restoredAlpha;
     cfi.duration = 0.3;
     
-    [self.blurView.layer pop_addAnimation:fadeAnimation forKey:@"blurViewFadeAnimation"];
+    [self.queueBlurView.layer pop_addAnimation:fadeAnimation forKey:@"blurViewFadeAnimation"];
     [self.darkBgView.layer pop_addAnimation:darkBgFadeAnimation forKey:@"darkBgFadeAnimation"];
     [self.playerControlsView.layer pop_addAnimation:controlsFadeIn forKey:@"controlsViewFadeAnimation"];
     [self.onDemandPlayerView.layer pop_addAnimation:controlsFadeIn forKey:@"onDemandViewFadeAnimation"];
@@ -1684,7 +1755,7 @@ setForOnDemandUI;
 }
 
 - (void)removeAllAnimations {
-    [self.blurView.layer pop_removeAllAnimations];
+    [self.queueBlurView.layer pop_removeAllAnimations];
     [self.darkBgView.layer pop_removeAllAnimations];
     [self.playerControlsView.layer pop_removeAllAnimations];
     [self.onDemandPlayerView.layer pop_removeAllAnimations];
@@ -1700,7 +1771,6 @@ setForOnDemandUI;
 
 - (void)cloakForPreRoll:(BOOL)animated {
     [self removeAllAnimations];
-    [self.blurView setNeedsDisplay];
     
     if (setForOnDemandUI){
         POPBasicAnimation *onDemandElementsFade = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
@@ -1725,7 +1795,7 @@ setForOnDemandUI;
     controlsFadeAnimation.duration = 0.3;
     
     
-    [self.blurView.layer pop_addAnimation:blurFadeAnimation forKey:@"blurViewFadeAnimation"];
+    [self.queueBlurView.layer pop_addAnimation:blurFadeAnimation forKey:@"blurViewFadeAnimation"];
     [self.darkBgView.layer pop_addAnimation:darkBgFadeAnimation forKey:@"darkBgFadeAnimation"];
     //[self.playerControlsView.layer pop_addAnimation:controlsFadeAnimation forKey:@"controlsViewFadeAnimation"];
     [self.onDemandPlayerView.layer pop_addAnimation:controlsFadeAnimation forKey:@"onDemandViewFadeAnimation"];
@@ -1742,7 +1812,6 @@ setForOnDemandUI;
 - (void)decloakForPreRoll:(BOOL)animated {
     [self removeAllAnimations];
     
-    [self.blurView setNeedsDisplay];
     
     if (setForOnDemandUI){
         POPBasicAnimation *onDemandElementsFade = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
@@ -1764,7 +1833,7 @@ setForOnDemandUI;
     controlsFadeAnimation.toValue = @1;
     controlsFadeAnimation.duration = 0.3;
     
-    [self.blurView.layer pop_addAnimation:fadeAnimation forKey:@"blurViewFadeAnimation"];
+    [self.queueBlurView.layer pop_addAnimation:fadeAnimation forKey:@"blurViewFadeAnimation"];
     [self.darkBgView.layer pop_addAnimation:darkBgFadeAnimation forKey:@"darkBgFadeAnimation"];
     [self.playerControlsView.layer pop_addAnimation:controlsFadeAnimation forKey:@"controlsViewFadeAnimation"];
     [self.onDemandPlayerView.layer pop_addAnimation:controlsFadeAnimation forKey:@"onDemandViewFadeAnimation"];
@@ -1784,6 +1853,9 @@ setForOnDemandUI;
 }
 
 # pragma mark - SCPRPreRollControllerDelegate
+- (void)preRollStartedPlaying {
+    [self.playPauseButton fadeImage:[UIImage imageNamed:@"btn_pause.png"] duration:0.2];
+}
 
 - (void)preRollCompleted {
     if ( self.lockPreroll ) {
@@ -2048,9 +2120,9 @@ setForOnDemandUI;
     long ct = (long)CMTimeGetSeconds([AudioManager shared].audioPlayer.currentTime);
     if ( program || [AudioManager shared].currentAudioMode == AudioModeOnboarding ) {
         if ( [[AudioManager shared].audioPlayer rate] > 0.0 ) {
-            if ( ct > 0 ) {
+            //if ( ct > 0 ) {
                 [self.liveProgressViewController tick];
-            }
+            //}
         } else {
             NSLog(@"Trying to tick in non-playing state");
             return;

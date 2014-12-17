@@ -14,4 +14,6 @@
 @property (nonatomic,strong) UIImageView* iconImageView;
 @property (nonatomic,strong) UIImageView* rightChevronImageView;
 
+- (void)nudge;
+
 @end

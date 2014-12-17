@@ -44,6 +44,7 @@
     self.brandingView.alpha = 1.0;
     self.notificationsView.alpha = 0.0;
     self.orangeStripView.alpha = 0.0;
+    
     [[DesignManager shared] sculptButton:self.yesToNotificationsButton
                                withStyle:SculptingStylePeriwinkle
                                  andText:@"Yes, I'm interested!"];
@@ -91,25 +92,41 @@
 }
 
 - (void)hideLens {
-    POPSpringAnimation *scaleAnimation = [POPSpringAnimation animationWithPropertyNamed:kPOPLayerScaleXY];
+    POPBasicAnimation *scaleAnimation = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerScaleXY];
     scaleAnimation.fromValue  = [NSValue valueWithCGSize:CGSizeMake(1.0f, 1.0f)];
     scaleAnimation.toValue  = [NSValue valueWithCGSize:CGSizeMake(0.0f, 0.0f)];
-    scaleAnimation.springBounciness = 1.0f;
-    scaleAnimation.springSpeed = .5f;
+    scaleAnimation.duration = 0.15f;
+    //scaleAnimation.springBounciness = 1.0f;
+    //scaleAnimation.springSpeed = .5f;
     [self.lensVC.view.layer pop_addAnimation:scaleAnimation forKey:@"popToInvisible"];
 }
 
 - (void)revealBrandingWithCompletion:(CompletionBlock)completed {
     self.brandingView.clipsToBounds = YES;
+    
+    self.dividerView.layer.transform = CATransform3DMakeScale(0.025f, 1.0f, 1.0f);
+    self.dividerView.layer.opacity = 0.4;
+    POPBasicAnimation *scaleAnimation = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerScaleXY];
+    scaleAnimation.fromValue  = [NSValue valueWithCGSize:CGSizeMake(0.025f, 1.0f)];
+    scaleAnimation.toValue  = [NSValue valueWithCGSize:CGSizeMake(1.0f, 1.0f)];
+    scaleAnimation.duration = 1.0;
+    [self.dividerView.layer pop_addAnimation:scaleAnimation forKey:@"scaleAnimation"];
+    
     [UIView animateWithDuration:0.33f animations:^{
         self.dividerView.alpha = 1.0f;
     } completion:^(BOOL finished) {
+        
+        [UIView animateWithDuration:0.65f delay:0.0 options:UIViewAnimationOptionCurveEaseIn animations:^{
+            self.kpccLogoView.alpha = 1.0f;
+            self.welcomeLabel.alpha = 1.0f;
+        } completion:^(BOOL finished) {
+            
+        }];
+        
         [UIView animateWithDuration:0.45f delay:0.0 options:UIViewAnimationOptionCurveEaseOut animations:^{
             [self.logoTopAnchor setConstant:10.0f];
             [self.sloganTopAnchor setConstant:13.0f];
             [self.brandingView layoutIfNeeded];
-            self.kpccLogoView.alpha = 1.0f;
-            self.welcomeLabel.alpha = 1.0f;
         } completion:^(BOOL finished) {
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                 completed();
@@ -167,7 +184,7 @@
     [self.calloutAnchor setConstant:magicNumber];
     
     
-    [self.textCalloutBalloonCtrl slidePointer:170.0];
+    [self.textCalloutBalloonCtrl slidePointer:156.0];
 
     [self.view layoutIfNeeded];
     [self.textCalloutBalloonCtrl.view layoutIfNeeded];

@@ -89,6 +89,7 @@ static NetworkManager *singleton = nil;
 }
 
 - (void)applyNotifiersToReachability:(KSReachability *)reachability {
+#ifndef DISABLE_INTERRUPT
     __block NetworkManager *weakself_ = self;
     __block KSReachability *weakreach_ = reachability;
     reachability.onReachabilityChanged = ^(KSReachability* reach) {
@@ -114,7 +115,7 @@ static NetworkManager *singleton = nil;
             }
         });
     };
-    
+#endif
 }
 
 - (void)setupFloatingReachabilityWithHost:(NSString *)host {

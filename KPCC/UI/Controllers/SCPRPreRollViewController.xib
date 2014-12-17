@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6250" systemVersion="13F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6254" systemVersion="13F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6244"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6247"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
     </dependencies>
     <customFonts key="customFonts">
         <mutableArray key="FreigSanProBook.otf">
@@ -14,6 +15,7 @@
             <connections>
                 <outlet property="adImageView" destination="Rqc-3l-APX" id="Be1-pK-3NY"/>
                 <outlet property="adProgressView" destination="fPN-Ht-bdS" id="ac7-HV-x0q"/>
+                <outlet property="curtainView" destination="OJy-Vc-EIL" id="xxU-oU-bQi"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
         </placeholder>
@@ -22,26 +24,23 @@
             <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <imageView userInteractionEnabled="NO" contentMode="redraw" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="program_tile_generic.jpg" translatesAutoresizingMaskIntoConstraints="NO" id="Rqc-3l-APX">
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="OJy-Vc-EIL">
+                    <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                </view>
+                <imageView userInteractionEnabled="NO" contentMode="redraw" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Rqc-3l-APX">
                     <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
                     <constraints>
-                        <constraint firstAttribute="height" constant="280" id="Mxn-rM-MyR">
-                            <variation key="heightClass=regular-widthClass=compact" constant="250"/>
-                        </constraint>
-                        <constraint firstAttribute="width" constant="300" id="uAp-sy-AVi">
-                            <variation key="heightClass=regular-widthClass=compact" constant="300"/>
-                        </constraint>
+                        <constraint firstAttribute="width" secondItem="Rqc-3l-APX" secondAttribute="height" multiplier="95:79" id="D4W-jZ-I63"/>
                     </constraints>
                     <variation key="default">
                         <mask key="constraints">
-                            <exclude reference="Mxn-rM-MyR"/>
-                            <exclude reference="uAp-sy-AVi"/>
+                            <exclude reference="D4W-jZ-I63"/>
                         </mask>
                     </variation>
                     <variation key="heightClass=regular-widthClass=compact">
                         <mask key="constraints">
-                            <include reference="Mxn-rM-MyR"/>
-                            <include reference="uAp-sy-AVi"/>
+                            <include reference="D4W-jZ-I63"/>
                         </mask>
                     </variation>
                 </imageView>
@@ -124,12 +123,18 @@
                 <constraint firstItem="fPN-Ht-bdS" firstAttribute="top" secondItem="Rqc-3l-APX" secondAttribute="bottom" id="NHf-ae-UeK">
                     <variation key="heightClass=regular-widthClass=compact" constant="0.0"/>
                 </constraint>
+                <constraint firstItem="OJy-Vc-EIL" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="10" id="QK6-eI-noW"/>
+                <constraint firstItem="OJy-Vc-EIL" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="80" id="RPe-Dr-diq"/>
                 <constraint firstAttribute="centerX" secondItem="Rqc-3l-APX" secondAttribute="centerX" id="TMW-6n-Sde"/>
+                <constraint firstItem="Rqc-3l-APX" firstAttribute="width" secondItem="OJy-Vc-EIL" secondAttribute="width" id="ZDi-v9-8tw"/>
                 <constraint firstAttribute="centerX" secondItem="sZi-bm-aMf" secondAttribute="centerX" id="orE-z6-7Ad"/>
+                <constraint firstAttribute="trailing" secondItem="OJy-Vc-EIL" secondAttribute="trailing" constant="10" id="rML-ry-KqC"/>
                 <constraint firstItem="ueV-HP-VWa" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="8" id="wOd-5s-7Eo"/>
+                <constraint firstItem="Rqc-3l-APX" firstAttribute="height" secondItem="OJy-Vc-EIL" secondAttribute="height" id="xQ3-uZ-XTC"/>
             </constraints>
             <variation key="default">
                 <mask key="subviews">
+                    <exclude reference="OJy-Vc-EIL"/>
                     <exclude reference="Rqc-3l-APX"/>
                     <exclude reference="sZi-bm-aMf"/>
                     <exclude reference="fPN-Ht-bdS"/>
@@ -144,10 +149,16 @@
                     <exclude reference="wOd-5s-7Eo"/>
                     <exclude reference="7re-ao-ty0"/>
                     <exclude reference="TMW-6n-Sde"/>
+                    <exclude reference="ZDi-v9-8tw"/>
+                    <exclude reference="xQ3-uZ-XTC"/>
+                    <exclude reference="QK6-eI-noW"/>
+                    <exclude reference="RPe-Dr-diq"/>
+                    <exclude reference="rML-ry-KqC"/>
                 </mask>
             </variation>
             <variation key="heightClass=regular-widthClass=compact">
                 <mask key="subviews">
+                    <include reference="OJy-Vc-EIL"/>
                     <include reference="Rqc-3l-APX"/>
                     <include reference="sZi-bm-aMf"/>
                     <include reference="fPN-Ht-bdS"/>
@@ -162,11 +173,14 @@
                     <include reference="wOd-5s-7Eo"/>
                     <include reference="7re-ao-ty0"/>
                     <include reference="TMW-6n-Sde"/>
+                    <include reference="ZDi-v9-8tw"/>
+                    <include reference="xQ3-uZ-XTC"/>
+                    <include reference="QK6-eI-noW"/>
+                    <include reference="RPe-Dr-diq"/>
+                    <include reference="rML-ry-KqC"/>
                 </mask>
             </variation>
+            <point key="canvasLocation" x="-404" y="137"/>
         </view>
     </objects>
-    <resources>
-        <image name="program_tile_generic.jpg" width="320" height="508"/>
-    </resources>
 </document>

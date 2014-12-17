@@ -63,6 +63,9 @@ static NSString *kCommentsPlaceholder = @"... Add your comments here";
     [self.authButton.titleLabel proSemiBoldFontize];
     [self.nameTextField setFont:[[DesignManager shared] proLight:self.nameTextField.font.pointSize]];
     [self.emailTextField setFont:[[DesignManager shared] proLight:self.emailTextField.font.pointSize]];
+    
+    self.emailTextField.keyboardType = UIKeyboardTypeEmailAddress;
+    
     [self.versionLabel proLightFontize];
     
     NSMutableAttributedString *nph = [[NSMutableAttributedString alloc] initWithString:@"e.x. Ornette Coleman"
@@ -462,10 +465,10 @@ static NSString *kCommentsPlaceholder = @"... Add your comments here";
     NSLog(@"Current offset : %1.1f",self.feedbackTable.contentOffset.y);
     
     if ( textField == self.descriptionInputView ) {
-        [self.feedbackTable setContentOffset:CGPointMake(0.0,240.0)
+        [self.feedbackTable setContentOffset:CGPointMake(0.0,140.0)
                                     animated:YES];
     } else {
-        [self.feedbackTable setContentOffset:CGPointMake(0.0,140.0)
+        [self.feedbackTable setContentOffset:CGPointMake(0.0,160.0)
                                 animated:YES];
     }
     

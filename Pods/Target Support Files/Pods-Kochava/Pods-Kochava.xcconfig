@@ -1,0 +1,2 @@
+PODS_KOCHAVA_LIBRARY_SEARCH_PATHS = "$(PODS_ROOT)/Kochava"
+PODS_KOCHAVA_OTHER_LDFLAGS = -l"TrackAndAd" -framework "AdSupport" -framework "CoreLocation" -framework "Foundation" -framework "SystemConfiguration" -framework "UIKit" -framework "iAd"

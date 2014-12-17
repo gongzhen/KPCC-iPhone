@@ -84,6 +84,8 @@
 @property (nonatomic,strong) IBOutlet UIView *liveProgressBarView;
 
 // Pre-Roll
+- (void)handlePreRollControl:(BOOL)paused;
+
 @property (nonatomic,strong) SCPRPreRollViewController *preRollViewController;
 @property BOOL lockPreroll;
 
