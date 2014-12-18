@@ -47,6 +47,7 @@ static long kStreamBufferLimit = 4*60*60;
     
     NSString *ct = [NSString stringWithFormat:@"%ld",(long)[[NSDate date] timeIntervalSince1970]];
     NSString *sid = [Utils sha1:ct];
+    self.sessionPausedDate = nil;
     self.liveSessionID = sid;
     @synchronized(self) {
         self.sessionIsHot = YES;
