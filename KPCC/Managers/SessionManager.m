@@ -13,6 +13,7 @@
 #import "AudioChunk.h"
 #import "QueueManager.h"
 #import "UXmanager.h"
+#import "SCPRMasterViewController.h"
 
 static long kStreamBufferLimit = 4*60*60;
 
@@ -83,9 +84,11 @@ static long kStreamBufferLimit = 4*60*60;
     NSLog(@"Logging pause event for Live Stream...");
     
     Program *p = self.currentProgram;
+    NSString *title = p.title ? p.title : @"[UNKNOWN]";
+    
     [[AnalyticsManager shared] logEvent:@"liveStreamPause"
                          withParameters:@{ @"sessionID" : sid,
-                                           @"programTitle" : p.title,
+                                           @"programTitle" : title,
                                            @"sessionLength" : pt,
                                            @"sessionLengthInSeconds" : [NSString stringWithFormat:@"%ld",(long)sessionLength] }];
     self.sessionIsHot = NO;
@@ -114,12 +117,15 @@ static long kStreamBufferLimit = 4*60*60;
     Program *p = self.currentProgram;
     
     NSLog(@"Logging play event for Live Stream...");
-    
+    NSString *title = @"[UNKNOWN]";
+    if ( p.title ) {
+        title = p.title;
+    }
     [[AnalyticsManager shared] logEvent:@"liveStreamPlay"
                          withParameters:@{ @"sessionID" : self.liveSessionID ,
                                            @"behindLiveStatus" : pt,
                                            @"behindLiveSeconds" : literalValue,
-                                           @"programTitle" : p.title }];
+                                           @"programTitle" : title }];
     
 }
 
@@ -136,10 +142,11 @@ static long kStreamBufferLimit = 4*60*60;
     
     NSLog(@"Tracking rewind session...");
     
+    NSString *title = self.currentProgram.title ? self.currentProgram.title : @"[UNKNOWN]";
     [[AnalyticsManager shared] logEvent:@"liveStreamRewound"
                          withParameters:@{ @"behindLiveStatus" : pt,
                                            @"behindLiveSeconds" : [NSString stringWithFormat:@"%ld",(long)seconds],
-                                           @"programTitle" : self.currentProgram.title }];
+                                           @"programTitle" : title }];
 }
 
 - (NSString*)startOnDemandSession {
@@ -189,9 +196,11 @@ static long kStreamBufferLimit = 4*60*60;
             break;
     }
     
+    NSString *title = chunk.audioTitle ? chunk.audioTitle : @"[UNKNOWN]";
+    
     [[AnalyticsManager shared] logEvent:event
                          withParameters:@{ @"sessionID" : sid,
-                                           @"programTitle" : chunk.audioTitle,
+                                           @"programTitle" : title,
                                            @"sessionLength" : pt,
                                            @"sessionLengthInSeconds" : [NSString stringWithFormat:@"%ld",(long)sessionLength] }];
     self.odSessionIsHot = NO;
@@ -216,10 +225,13 @@ static long kStreamBufferLimit = 4*60*60;
     NSInteger dur = [duration intValue];
     NSString *pretty = [NSDate prettyTextFromSeconds:dur];
     
+    AudioChunk *chunk = [[QueueManager shared] currentChunk];
+    NSString *title = chunk.programTitle ? chunk.programTitle : @"[UNKNOWN]";
+    
     [[AnalyticsManager shared] logEvent:@"onDemandEpisodeBegan"
                          withParameters:@{ @"sessionID" : self.odSessionID,
                                            @"programPublishedAt" : pubDateStr,
-                                           @"programTitle" : [[[QueueManager shared] currentChunk] programTitle],
+                                           @"programTitle" : title,
                                            @"programLengthInSeconds" : [NSString stringWithFormat:@"%@",duration],
                                            @"programLength" : pretty
                                            }];
@@ -284,10 +296,10 @@ static long kStreamBufferLimit = 4*60*60;
     NSString *urlString = [NSString stringWithFormat:@"%@/schedule/at?time=%d",kServerBase,(int)[date timeIntervalSince1970]];
     [[NetworkManager shared] requestFromSCPRWithEndpoint:urlString completion:^(id returnedObject) {
         // Create Program and insert into managed object context
-        if ( returnedObject ) {
+        if ( returnedObject && [(NSDictionary*)returnedObject count] > 0 ) {
             dispatch_async(dispatch_get_main_queue(), ^{
                 Program *programObj = [Program insertProgramWithDictionary:returnedObject inManagedObjectContext:[[ContentManager shared] managedObjectContext]];
-            
+                
                 [[ContentManager shared] saveContext];
                 
                 BOOL touch = NO;
@@ -416,9 +428,9 @@ static long kStreamBufferLimit = 4*60*60;
                                                                  userInfo:nil
                                                                   repeats:NO];
 #ifdef DEBUG
-        NSLog(@"Program will check itself again at %@ (Approx %@ from now)",[then prettyTimeString],[NSDate prettyTextFromSeconds:sinceNow]);
+    NSLog(@"Program will check itself again at %@ (Approx %@ from now)",[then prettyTimeString],[NSDate prettyTextFromSeconds:sinceNow]);
     NSLog(@"Current player time is : %@",[NSDate stringFromDate:[[AudioManager shared].audioPlayer.currentItem currentDate]
-                                                     withFormat:@"hh:mm a"]);
+                                                     withFormat:@"hh:mm:ss a"]);
 #endif
    // }
 #else
@@ -518,13 +530,17 @@ static long kStreamBufferLimit = 4*60*60;
     
     if ( [[AudioManager shared] currentAudioMode] == AudioModeOnDemand ) return NO;
     
+#ifdef DEBUG
+    //return YES;
+#endif
+    
     if ( [self sessionPausedDate] ) {
         NSDate *spd = [[SessionManager shared] sessionPausedDate];
         if ( [[NSDate date] timeIntervalSinceDate:spd] > kStreamBufferLimit ) {
             return YES;
         }
     }
-    
+
     return NO;
 }
 
@@ -602,12 +618,15 @@ static long kStreamBufferLimit = 4*60*60;
 
 - (void)handleSessionReactivation {
     if ( !self.sessionLeftDate || !self.sessionReturnedDate ) return;
-    long tiBetween = [[self sessionReturnedDate] timeIntervalSince1970] - [[self sessionLeftDate] timeIntervalSince1970];
-    if ( tiBetween > kStreamBufferLimit ) {
+    //long tiBetween = [[self sessionReturnedDate] timeIntervalSince1970] - [[self sessionLeftDate] timeIntervalSince1970];
+    if ( [self sessionIsExpired] ) {
         [[AudioManager shared] stopStream];
-        [self fetchCurrentProgram:^(id returnedObject) {
+        //[self fetchCurrentProgram:^(id returnedObject) {
             self.sessionReturnedDate = nil;
-        }];
+        //}];
+        SCPRMasterViewController *master = [[Utils del] masterViewController];
+        [master resetUI];
+        
     } else {
         if ( [[AudioManager shared] status] != StreamStatusPaused ) {
             if ( [self sessionIsBehindLive] ) {

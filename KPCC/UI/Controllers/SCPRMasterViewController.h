@@ -93,6 +93,8 @@
 @property (nonatomic,strong) SCPRJogShuttleViewController *jogShuttle;
 @property (nonatomic,strong) IBOutlet UIView *rewindView;
 
+@property (nonatomic,strong) NSMutableDictionary *originalFrames;
+
 @property (nonatomic, strong) IBOutlet NSLayoutConstraint *liveRewindBottomYConstraint;
 @property BOOL shuttlingGate;
 @property BOOL initiateRewind;
@@ -133,6 +135,8 @@
 
 - (void)moveTextIntoPlace:(BOOL)animated;
 - (void)goLive:(BOOL)play;
+
+- (void)resetUI;
 
 // Onboarding methods
 - (void)primeOnboarding;
