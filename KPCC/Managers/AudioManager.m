@@ -595,6 +595,10 @@ static const NSString *ItemStatusContext;
 
 - (void)playAudioWithURL:(NSString *)url {
     
+    if ( [self currentAudioMode] != AudioModePreroll ) {
+        url = [url stringByAppendingString:[NSString stringWithFormat:@"?ua=KPCCiPhone-%@",[Utils urlSafeVersion]]];
+        NSLog(@"Modified URL : %@",url);
+    }
     
     [self takedownAudioPlayer];
     [self buildStreamer:url];
@@ -696,7 +700,6 @@ static const NSString *ItemStatusContext;
     
     self.status = StreamStatusPlaying;
     [self.audioPlayer play];
-    
 }
 
 - (void)pauseStream {
@@ -705,7 +708,11 @@ static const NSString *ItemStatusContext;
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
         if ( self.currentAudioMode == AudioModeLive ) {
-            [[SessionManager shared] setSessionPausedDate:[NSDate date]];
+            if ( [[SessionManager shared] sessionIsBehindLive] ) {
+                [[SessionManager shared] setSessionPausedDate:[[AudioManager shared].audioPlayer.currentItem currentDate]];
+            } else {
+                [[SessionManager shared] setSessionPausedDate:[NSDate date]];
+            }
             [[SessionManager shared] endLiveSession];
         } else {
             [[SessionManager shared] endOnDemandSessionWithReason:OnDemandFinishedReasonEpisodePaused];

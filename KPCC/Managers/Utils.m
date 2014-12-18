@@ -243,6 +243,14 @@ static char *alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz012
             [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"]];
 #endif
 }
+
++ (NSString*)urlSafeVersion {
+    NSString *u = [NSString stringWithFormat:@"%@ %@",[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"],
+            [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"]];
+    u = [u stringByReplacingOccurrencesOfString:@" "
+                                     withString:@"-"];
+    return u;
+}
 /**
  * Date helper functions
  * in Swift

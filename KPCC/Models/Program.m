@@ -244,7 +244,17 @@
     [request setPredicate:[NSPredicate predicateWithFormat:@"program_slug LIKE %@", slug]];
 
     NSError *error = nil;
-    NSArray *result = [context executeFetchRequest:request error:&error];
+    NSArray *result = nil;
+    
+    @try {
+        result = [context executeFetchRequest:request error:&error];
+    }
+    @catch (NSException *exception) {
+        NSLog(@"Problem with coreData");
+    }
+    @finally {
+        
+    }
 
     if (result == nil) {
         NSLog(@"fetch result = nil");

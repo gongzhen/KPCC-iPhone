@@ -43,6 +43,8 @@ static AnalyticsManager *singleton = nil;
     token = @"ProductionToken";
 #endif
     
+    NSLog(@"Mixpanel : %@ : %@",token,globalConfig[@"Mixpanel"][token]);
+    
     [Mixpanel sharedInstanceWithToken:globalConfig[@"Mixpanel"][token]];
     Mixpanel *mxp = [Mixpanel sharedInstance];
     NSString *uuid = [[[UIDevice currentDevice] identifierForVendor] UUIDString];

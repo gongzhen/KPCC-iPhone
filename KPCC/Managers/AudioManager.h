@@ -13,7 +13,8 @@
 #ifdef USE_TEST_STREAM
 #define kHLSLiveStreamURL @"http://vevoplaylist-live.hls.adaptive.level3.net/vevo/ch1/06/prog_index.m3u8"
 #else
-#define kHLSLiveStreamURL @"http://streammachine-hls001.scprdev.org/sg/kpcc-aac.m3u8"
+#define kHLSLiveStreamURL [NSString stringWithFormat:@"%@?ua=KPCCiPhone-%@",@"http://streammachine-hls001.scprdev.org/sg/kpcc-aac.m3u8",[Utils urlSafeVersion]]
+//#define kHLSLiveStreamURL @"http://streammachine-hls001.scprdev.org/sg/kpcc-aac.m3u8?ua=SCPRIPHONE"
 #endif
 
 #define kLiveStreamURL @"http://live.scpr.org/kpcclive"

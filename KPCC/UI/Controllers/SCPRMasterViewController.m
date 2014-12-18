@@ -81,7 +81,11 @@ setForOnDemandUI;
         if (event.subtype == UIEventSubtypeRemoteControlPlay ||
             event.subtype == UIEventSubtypeRemoteControlPause ||
             event.subtype == UIEventSubtypeRemoteControlTogglePlayPause) {
-            //            [self playOrPauseTapped:nil];
+            if ( self.initialPlay ) {
+                [self playOrPauseTapped:nil];
+            } else {
+                [self initialPlayTapped:nil];
+            }
         } else if (event.subtype == UIEventSubtypeRemoteControlPreviousTrack) {
             //            [self nextEpisodeTapped:nil];
         } else if (event.subtype == UIEventSubtypeRemoteControlNextTrack) {
@@ -127,8 +131,6 @@ setForOnDemandUI;
                                                  name:@"network-status-fail"
                                                object:nil];
     
-    
-    
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
     
     self.liveProgressViewController = [[SCPRProgressViewController alloc] init];
@@ -159,6 +161,7 @@ setForOnDemandUI;
                                              selector:@selector(primeManualControlButton)
                                                  name:UIApplicationWillEnterForegroundNotification
                                                object:nil];
+    
     
     // Make sure the system follows our playback status - to support the playback when the app enters the background mode.
     [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback error:nil];
@@ -234,6 +237,11 @@ setForOnDemandUI;
     
     [[NetworkManager shared] setupReachability];
     
+    self.originalFrames = [NSMutableDictionary new];
+    self.originalFrames[@"playerControls"] = @(self.playerControlsBottomYConstraint.constant);
+    self.originalFrames[@"programTitle"] = @(self.programTitleYConstraint.constant);
+    self.originalFrames[@"liveRewind"] = @(self.liveRewindBottomYConstraint.constant);
+    
     [SCPRCloakViewController cloakWithCustomCenteredView:nil cloakAppeared:^{
         if ( [[UXmanager shared] userHasSeenOnboarding] ) {
             [self updateDataForUI];
@@ -305,6 +313,33 @@ setForOnDemandUI;
     
     [self.view addSubview:self.preRollViewController.view];
     [self.preRollViewController didMoveToParentViewController:self];
+}
+
+- (void)resetUI {
+    [SCPRCloakViewController cloakWithCustomCenteredView:nil useSpinner:NO blackout:YES cloakAppeared:^{
+        
+        self.initialPlay = NO;
+        [UIView animateWithDuration:0.25 animations:^{
+            self.playerControlsBottomYConstraint.constant = [self.originalFrames[@"playerControls"] floatValue];
+            self.liveRewindBottomYConstraint.constant = [self.originalFrames[@"liveRewind"] floatValue];
+            self.programTitleYConstraint.constant = [self.originalFrames[@"programTitle"] floatValue];
+            [self.liveProgressViewController hide];
+            self.horizDividerLine.layer.opacity = 0.0;
+            self.initialControlsView.layer.opacity = 1.0;
+        } completion:^(BOOL finished) {
+            
+            [[NetworkManager shared] fetchTritonAd:nil completion:^(TritonAd *tritonAd) {
+                self.preRollViewController.tritonAd = tritonAd;
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.75 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                    [[SessionManager shared] fetchCurrentProgram:^(id returnedObject) {
+                        [SCPRCloakViewController uncloak];
+                    }];
+                });
+            }];
+            
+        }];
+        
+    }];
 }
 
 #pragma mark - Onboarding
@@ -406,7 +441,7 @@ setForOnDemandUI;
     [[AudioManager shared] takedownAudioPlayer];
     
     self.initialPlay = YES;
-    [self addPreRollController];
+    
     
     SCPRAppDelegate *del = (SCPRAppDelegate*)[[UIApplication sharedApplication] delegate];
     
@@ -421,6 +456,7 @@ setForOnDemandUI;
     [[UXmanager shared] persist];
     
     [self updateDataForUI];
+    
 }
 
 - (void)showOnDemandOnboarding {
@@ -915,6 +951,12 @@ setForOnDemandUI;
                     [self primeManualControlButton];
                 });
             }
+            
+            if ( self.audioWasPlaying ) {
+                [self playStream:YES];
+                self.audioWasPlaying = NO;
+            }
+            
         } else {
             
             [self.liveProgressViewController displayWithProgram:(Program*)returnedObject
@@ -922,9 +964,8 @@ setForOnDemandUI;
                                                aboveSiblingView:self.playerControlsView];
             [self.liveProgressViewController hide];
             [self determinePlayState];
-            
-            
             [self lockUI:@1];
+            
         }
     }];
 }
@@ -994,7 +1035,7 @@ setForOnDemandUI;
 }
 
 - (void)determinePlayState {
-    if ( [[AudioManager shared] status] == StreamStatusStopped ) {
+    if ( [[AudioManager shared] status] == StreamStatusStopped || self.dirtyFromFailure ) {
         if ( [[SessionManager shared] sessionIsInRecess] ) {
             self.liveDescriptionLabel.text = @"UP NEXT";
         } else {
@@ -1002,10 +1043,22 @@ setForOnDemandUI;
                 self.liveDescriptionLabel.text = @"ON NOW";
         }
     }
+    if ( [[AudioManager shared] status] == StreamStatusPaused ) {
+        if ( [[SessionManager shared] sessionIsBehindLive] ) {
+            NSDate *ciCurrentDate = [AudioManager shared].audioPlayer.currentItem.currentDate;
+            NSTimeInterval ti = [[NSDate date] timeIntervalSinceDate:ciCurrentDate];
+            [self.liveDescriptionLabel setText:[NSString stringWithFormat:@"%@ BEHIND LIVE", [NSDate prettyTextFromSeconds:ti]]];
+        }
+    }
     
     if ( self.liveDescriptionLabel.hidden ) {
         [self.liveDescriptionLabel setHidden:NO];
     }
+    
+    if ( [[NetworkManager shared] networkDown] ) {
+       self.liveDescriptionLabel.text = @"NO NETWORK";
+    }
+    
     [self primeManualControlButton];
 }
 
@@ -1551,6 +1604,9 @@ setForOnDemandUI;
     if ( self.uiLocked ) return;
     self.uiLocked = YES;
     
+    [self decloakForMenu:YES];
+    [self.navigationController popToRootViewControllerAnimated:YES];
+    
     if ( [[AudioManager shared] currentAudioMode] == AudioModeOnDemand ) {
         self.onDemandPlayerView.alpha = 0.45;
         self.onDemandPlayerView.userInteractionEnabled = NO;
@@ -1560,6 +1616,7 @@ setForOnDemandUI;
     
     if ( self.initialPlay ) {
         if ( [[AudioManager shared] status] == StreamStatusPlaying ) {
+            self.audioWasPlaying = YES;
             [[AudioManager shared] adjustAudioWithValue:-0.1 completion:^{
                 
                 [[AudioManager shared] pauseStream];
@@ -1568,13 +1625,20 @@ setForOnDemandUI;
             }];
         }
     } else {
-        self.initialControlsView.alpha = 0.45;
+        if ( !self.menuOpen ) {
+            self.initialControlsView.alpha = 0.45;
+        }
         self.initialControlsView.userInteractionEnabled = NO;
     }
     
-    self.playerControlsView.alpha = 0.45;
+    if ( !self.menuOpen ) {
+        self.playerControlsView.alpha = 0.45;
+    }
     self.playerControlsView.userInteractionEnabled = NO;
-    self.liveStreamView.alpha = 0.45;
+    if ( !self.menuOpen ) {
+        self.liveStreamView.alpha = 0.45;
+        
+    }
     self.liveDescriptionLabel.text = @"NO NETWORK";
     
     [self.liveProgressViewController hide];
@@ -1610,21 +1674,49 @@ setForOnDemandUI;
     
     if ( [[AudioManager shared] currentAudioMode] == AudioModeOnDemand ) {
         self.onDemandPlayerView.alpha = 1.0;
-        self.onDemandPlayerView.userInteractionEnabled = YES;
+        
         self.timeLabelOnDemand.text = @"";
         self.timeLabelOnDemand.alpha = 1.0;
     }
     
-    if ( self.initialPlay ) {
-        self.playerControlsView.alpha = 1.0;
-        self.playerControlsView.userInteractionEnabled = YES;
-    } else {
-        self.initialControlsView.alpha = 1.0;
-        self.initialControlsView.userInteractionEnabled = YES;
+    if ( !self.menuOpen ) {
+        if ( self.initialPlay ) {
+            self.playerControlsView.alpha = 1.0;
+        } else {
+            self.initialControlsView.alpha = 1.0;
+            self.playerControlsView.alpha = 1.0;
+        }
     }
+    
+    self.onDemandPlayerView.userInteractionEnabled = YES;
+    self.playerControlsView.userInteractionEnabled = YES;
+    self.initialControlsView.userInteractionEnabled = YES;
+    self.playerControlsView.userInteractionEnabled = YES;
     
     self.liveStreamView.alpha = 1.0;
     self.liveStreamView.userInteractionEnabled = YES;
+    
+    if ( self.audioWasPlaying ) {
+        [self playStream:YES];
+        self.audioWasPlaying = NO;
+    }
+    
+    [[NetworkManager shared] fetchAllProgramInformation:^(id returnedObject) {
+        
+        //NSAssert([returnedObject isKindOfClass:[NSArray class]],@"Expecting an Array Here...");
+        NSArray *content = (NSArray*)returnedObject;
+        if ([content count] == 0) {
+            return;
+        }
+        
+        // Process Programs and insert into CoreData.
+        NSLog(@"SCPRv4 returned %ld programs", (unsigned long)[content count]);
+        [Program insertProgramsWithArray:content inManagedObjectContext:[[ContentManager shared] managedObjectContext]];
+        
+        // Save all changes made.
+        [[ContentManager shared] saveContext];
+        
+    }];
     
 }
 
@@ -1702,6 +1794,9 @@ setForOnDemandUI;
 }
 
 - (void)decloakForMenu:(BOOL)animated {
+    
+    if ( !self.menuOpen ) return;
+    
     [self removeAllAnimations];
     
     if (setForOnDemandUI) {
@@ -2138,15 +2233,14 @@ setForOnDemandUI;
     NSAssert([NSThread isMainThread],@"This is not the main thread...");
     
     NSDate *ciCurrentDate = [AudioManager shared].audioPlayer.currentItem.currentDate;
-    NSTimeInterval ti = [[[AudioManager shared] maxSeekableDate] timeIntervalSinceDate:ciCurrentDate];
-    
+    NSTimeInterval ti = [[NSDate date] timeIntervalSinceDate:ciCurrentDate];
+    NSTimeInterval tx = [[[AudioManager shared] maxSeekableDate] timeIntervalSinceDate:ciCurrentDate];
     Program *program = [[SessionManager shared] currentProgram];
-    long ct = (long)CMTimeGetSeconds([AudioManager shared].audioPlayer.currentTime);
     if ( program || [AudioManager shared].currentAudioMode == AudioModeOnboarding ) {
         if ( [[AudioManager shared].audioPlayer rate] > 0.0 ) {
-            //if ( ct > 0 ) {
-                [self.liveProgressViewController tick];
-            //}
+          
+            [self.liveProgressViewController tick];
+   
         } else {
             NSLog(@"Trying to tick in non-playing state");
             return;
@@ -2155,11 +2249,10 @@ setForOnDemandUI;
     
     
     if ( !self.menuOpen ) {
-        if ( ti > 60 && ![[AudioManager shared] isStreamBuffering] ) {
+        if ( tx > 60 ) {
             [self.liveDescriptionLabel setText:[NSString stringWithFormat:@"%@ BEHIND LIVE", [NSDate prettyTextFromSeconds:ti]]];
             self.previousRewindThreshold = [[AudioManager shared].audioPlayer.currentItem.currentDate timeIntervalSince1970];
         } else {
-            //if ( !SEQ(self.liveDescriptionLabel.text,@"LIVE") ) {
             if ( [[SessionManager shared] sessionIsInRecess] ) {
                 [self.liveDescriptionLabel setText:@"UP NEXT"];
             } else {

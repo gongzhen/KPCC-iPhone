@@ -69,6 +69,8 @@
     self.window.rootViewController = navigationController;
     navigationController.navigationBarHidden = YES;
 
+    NSString *ua = kHLSLiveStreamURL;
+    NSLog(@"URL : %@",ua);
     
     // Fetch initial list of Programs from SCPRV4 and store in CoreData for later usage.
     [[NetworkManager shared] fetchAllProgramInformation:^(id returnedObject) {
@@ -129,8 +131,7 @@
 
 - (void)applicationWillResignActive:(UIApplication *)application {
     
-    if ( [[AudioManager shared] currentAudioMode] != AudioModeOnboarding &&
-        [[AudioManager shared] currentAudioMode] != AudioModeNeutral ) {
+    if ( [[AudioManager shared] currentAudioMode] != AudioModeOnboarding ) {
         [[SessionManager shared] disarmProgramUpdater];
         [[SessionManager shared] setSessionLeftDate:[NSDate date]];
     }
@@ -155,9 +156,9 @@
 
 - (void)applicationWillEnterForeground:(UIApplication *)application {
     
-    if ( [[AudioManager shared] currentAudioMode] != AudioModeOnboarding &&
-        [[AudioManager shared] currentAudioMode] != AudioModeNeutral ) {
+    if ( [[AudioManager shared] currentAudioMode] != AudioModeOnboarding ) {
         [[SessionManager shared] setSessionReturnedDate:[NSDate date]];
+        [self.masterViewController determinePlayState];
     }
     
     // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
@@ -166,7 +167,11 @@
 - (void)applicationDidBecomeActive:(UIApplication *)application {
     
     
-    
+    if ( [[AudioManager shared] currentAudioMode] == AudioModeOnboarding ) {
+        if ( [[UXmanager shared] paused] ) {
+            [[UXmanager shared] godPauseOrPlay];
+        }
+    }
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
 }
 

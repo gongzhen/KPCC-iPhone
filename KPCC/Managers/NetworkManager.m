@@ -10,7 +10,9 @@
 #import <XMLDictionary/XMLDictionary.h>
 #import "AudioManager.h"
 
-#define kFailThreshold 2.0
+@import AdSupport;
+
+#define kFailThreshold 1.0
 
 static NetworkManager *singleton = nil;
 
@@ -212,8 +214,10 @@ static NetworkManager *singleton = nil;
 - (void)fetchTritonAd:(NSString *)params completion:(void (^)(TritonAd* tritonAd))completion {
     AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
     manager.responseSerializer = [AFHTTPResponseSerializer serializer];
-    NSString *tritonEndpoint = @"http://cmod.live.streamtheworld.com/ondemand/ars?type=preroll&stid=83153";
-
+    NSString *idfa = [[[ASIdentifierManager sharedManager] advertisingIdentifier] UUIDString];
+    NSString *tritonEndpoint = [NSString stringWithFormat:@"http://cmod.live.streamtheworld.com/ondemand/ars?type=preroll&stid=83153&idfa=%@",idfa];
+    
+    
     [manager GET:tritonEndpoint parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
         NSDictionary *convertedData = [NSDictionary dictionaryWithXMLData:responseObject];
         NSLog(@"convertedData %@", convertedData);
@@ -231,6 +235,7 @@ static NetworkManager *singleton = nil;
 }
 
 - (void)sendImpressionToTriton:(NSString*)impressionURL completion:(void (^)(BOOL success))completion {
+    
     AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
     manager.responseSerializer = [AFHTTPResponseSerializer serializer];
     [manager GET:impressionURL parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {

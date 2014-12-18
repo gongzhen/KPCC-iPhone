@@ -64,6 +64,7 @@ typedef NS_ENUM(NSUInteger, OnDemandFinishedReason) {
 @property BOOL rewindSessionWillBegin;
 @property BOOL odSessionIsHot;
 @property BOOL seekForwardRequested;
+@property BOOL prerollDirty;
 
 - (void)handleSessionReactivation;
 - (void)invalidateSession;
