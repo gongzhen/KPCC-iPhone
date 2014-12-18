@@ -44,5 +44,6 @@
 + (NSString*)prettyVersion;
 + (NSString*)sha1:(NSString*)input;
 + (BOOL)validateEmail:(NSString *)string;
++ (NSString*)urlSafeVersion;
 
 @end

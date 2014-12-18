@@ -15,6 +15,7 @@
 #import "UXmanager.h"
 #import "SCPRMasterViewController.h"
 
+
 static long kStreamBufferLimit = 4*60*60;
 
 @implementation SessionManager
@@ -518,9 +519,14 @@ static long kStreamBufferLimit = 4*60*60;
 - (BOOL)sessionIsBehindLive {
     
     NSDate *currentDate = [[AudioManager shared].audioPlayer.currentItem currentDate];
-    NSDate *live = [[AudioManager shared] maxSeekableDate];
     
-    if ( abs([live timeIntervalSince1970] - [currentDate timeIntervalSince1970]) > 60 ) {
+    NSDate *live = [[AudioManager shared] maxSeekableDate];
+    if ( [[AudioManager shared] status] == StreamStatusPaused ) {
+        live = [NSDate date];
+    }
+    
+    
+    if ( abs([live timeIntervalSince1970] - [currentDate timeIntervalSince1970]) > 70 ) {
         return YES;
     }
     
@@ -537,6 +543,7 @@ static long kStreamBufferLimit = 4*60*60;
     
     if ( [self sessionPausedDate] ) {
         NSDate *spd = [[SessionManager shared] sessionPausedDate];
+
         if ( [[NSDate date] timeIntervalSinceDate:spd] > kStreamBufferLimit ) {
             return YES;
         }
@@ -618,13 +625,14 @@ static long kStreamBufferLimit = 4*60*60;
 }
 
 - (void)handleSessionReactivation {
+    
+    
     if ( !self.sessionLeftDate || !self.sessionReturnedDate ) return;
-    //long tiBetween = [[self sessionReturnedDate] timeIntervalSince1970] - [[self sessionLeftDate] timeIntervalSince1970];
     if ( [self sessionIsExpired] ) {
+        
         [[AudioManager shared] stopStream];
-        //[self fetchCurrentProgram:^(id returnedObject) {
-            self.sessionReturnedDate = nil;
-        //}];
+        self.sessionReturnedDate = nil;
+        
         SCPRMasterViewController *master = [[Utils del] masterViewController];
         [master resetUI];
         

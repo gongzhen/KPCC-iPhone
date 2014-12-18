@@ -106,6 +106,7 @@
 @property BOOL recovering;
 @property BOOL uiLocked;
 @property BOOL dirtyFromFailure;
+@property BOOL audioWasPlaying;
 
 @property NSInteger onDemandGateCount;
 @property NSInteger previousRewindThreshold;

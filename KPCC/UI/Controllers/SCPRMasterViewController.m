@@ -162,6 +162,7 @@ setForOnDemandUI;
                                                  name:UIApplicationWillEnterForegroundNotification
                                                object:nil];
     
+    
     // Make sure the system follows our playback status - to support the playback when the app enters the background mode.
     [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback error:nil];
     [[AVAudioSession sharedInstance] setActive: YES error: nil];
@@ -950,6 +951,12 @@ setForOnDemandUI;
                     [self primeManualControlButton];
                 });
             }
+            
+            if ( self.audioWasPlaying ) {
+                [self playStream:YES];
+                self.audioWasPlaying = NO;
+            }
+            
         } else {
             
             [self.liveProgressViewController displayWithProgram:(Program*)returnedObject
@@ -957,9 +964,8 @@ setForOnDemandUI;
                                                aboveSiblingView:self.playerControlsView];
             [self.liveProgressViewController hide];
             [self determinePlayState];
-            
-            
             [self lockUI:@1];
+            
         }
     }];
 }
@@ -1037,10 +1043,22 @@ setForOnDemandUI;
                 self.liveDescriptionLabel.text = @"ON NOW";
         }
     }
+    if ( [[AudioManager shared] status] == StreamStatusPaused ) {
+        if ( [[SessionManager shared] sessionIsBehindLive] ) {
+            NSDate *ciCurrentDate = [AudioManager shared].audioPlayer.currentItem.currentDate;
+            NSTimeInterval ti = [[NSDate date] timeIntervalSinceDate:ciCurrentDate];
+            [self.liveDescriptionLabel setText:[NSString stringWithFormat:@"%@ BEHIND LIVE", [NSDate prettyTextFromSeconds:ti]]];
+        }
+    }
     
     if ( self.liveDescriptionLabel.hidden ) {
         [self.liveDescriptionLabel setHidden:NO];
     }
+    
+    if ( [[NetworkManager shared] networkDown] ) {
+       self.liveDescriptionLabel.text = @"NO NETWORK";
+    }
+    
     [self primeManualControlButton];
 }
 
@@ -1598,6 +1616,7 @@ setForOnDemandUI;
     
     if ( self.initialPlay ) {
         if ( [[AudioManager shared] status] == StreamStatusPlaying ) {
+            self.audioWasPlaying = YES;
             [[AudioManager shared] adjustAudioWithValue:-0.1 completion:^{
                 
                 [[AudioManager shared] pauseStream];
@@ -1676,6 +1695,11 @@ setForOnDemandUI;
     
     self.liveStreamView.alpha = 1.0;
     self.liveStreamView.userInteractionEnabled = YES;
+    
+    if ( self.audioWasPlaying ) {
+        [self playStream:YES];
+        self.audioWasPlaying = NO;
+    }
     
     [[NetworkManager shared] fetchAllProgramInformation:^(id returnedObject) {
         

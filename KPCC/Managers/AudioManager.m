@@ -595,6 +595,10 @@ static const NSString *ItemStatusContext;
 
 - (void)playAudioWithURL:(NSString *)url {
     
+    if ( [self currentAudioMode] != AudioModePreroll ) {
+        url = [url stringByAppendingString:[NSString stringWithFormat:@"?ua=KPCCiPhone-%@",[Utils urlSafeVersion]]];
+        NSLog(@"Modified URL : %@",url);
+    }
     
     [self takedownAudioPlayer];
     [self buildStreamer:url];
