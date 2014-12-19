@@ -304,6 +304,11 @@ static long kStreamBufferLimit = 4*60*60;
                 
                 [[ContentManager shared] saveContext];
                 
+                if ( self.expiring ) {
+                    self.expiring = NO;
+                    self.sessionPausedDate = nil;
+                }
+                
                 BOOL touch = NO;
                 if ( self.currentProgram ) {
                     if ( !SEQ(self.currentProgram.program_slug,
@@ -348,7 +353,7 @@ static long kStreamBufferLimit = 4*60*60;
 - (void)fetchCurrentProgram:(CompletionBlockWithValue)completed {
     
     NSDate *d2u = [NSDate date];
-    if ( [self sessionIsBehindLive] && ![self seekForwardRequested] ) {
+    if ( [self sessionIsBehindLive] && ![self seekForwardRequested] && !self.expiring ) {
         d2u = [[AudioManager shared].audioPlayer.currentItem currentDate];
         NSLog(@"Adjusted time to fetch program : %@",[NSDate stringFromDate:d2u
                                                                  withFormat:@"hh:mm:ss a"]);
@@ -545,6 +550,7 @@ static long kStreamBufferLimit = 4*60*60;
         NSDate *spd = [[SessionManager shared] sessionPausedDate];
 
         if ( [[NSDate date] timeIntervalSinceDate:spd] > kStreamBufferLimit ) {
+            self.expiring = YES;
             return YES;
         }
     }

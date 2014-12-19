@@ -36,6 +36,7 @@ typedef NS_ENUM(NSUInteger, OnDemandFinishedReason) {
 
 @property BOOL useLocalNotifications;
 @property BOOL onboardingRewound;
+@property BOOL expiring;
 @property (atomic) BOOL userIsViewingHeadlines;
 
 @property (nonatomic, strong) Program *currentProgram;
