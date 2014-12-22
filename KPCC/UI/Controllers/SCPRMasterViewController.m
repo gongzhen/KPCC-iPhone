@@ -328,14 +328,19 @@ setForOnDemandUI;
             self.initialControlsView.layer.opacity = 1.0;
         } completion:^(BOOL finished) {
             
-            [[NetworkManager shared] fetchTritonAd:nil completion:^(TritonAd *tritonAd) {
-                self.preRollViewController.tritonAd = tritonAd;
-                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.75 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                    [[SessionManager shared] fetchCurrentProgram:^(id returnedObject) {
-                        [SCPRCloakViewController uncloak];
-                    }];
-                });
-            }];
+            
+            [self.preRollViewController.view removeFromSuperview];
+            [self.preRollViewController removeFromParentViewController];
+            self.preRollViewController = nil;
+            [self addPreRollController];
+            
+            
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.85 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                [[SessionManager shared] fetchCurrentProgram:^(id returnedObject) {
+                    [SCPRCloakViewController uncloak];
+                }];
+            });
+
             
         }];
         
