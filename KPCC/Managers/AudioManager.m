@@ -254,12 +254,12 @@ static const NSString *ItemStatusContext;
         NSTimeInterval s2d = [date timeIntervalSince1970];
         NSTimeInterval now = [[NSDate date] timeIntervalSince1970];
         BOOL nudge = NO;
-        if ( abs(now - s2d) > 90 ) {
+        if ( abs(now - s2d) > 65 ) {
             nudge = YES;
         }
         
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.15 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            NSDate *justABitInTheFuture = nudge ? [date dateByAddingTimeInterval:2] : [date dateByAddingTimeInterval:-3];
+            NSDate *justABitInTheFuture = nudge ? [date dateByAddingTimeInterval:2] : date;
             [self.audioPlayer.currentItem seekToDate:justABitInTheFuture completionHandler:^(BOOL finished) {
                 if ( !finished ) {
                     NSLog(@" **************** AUDIOPLAYER NOT FINISHED BUFFERING ****************** ");
@@ -377,7 +377,6 @@ static const NSString *ItemStatusContext;
 }
 
 - (void)seekToDate:(NSDate *)date {
-    
     [self seekToDate:date forward:abs([date timeIntervalSinceDate:[NSDate date]] > 60)
             failover:NO];
 }
