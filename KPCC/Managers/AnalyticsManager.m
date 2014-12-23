@@ -30,22 +30,31 @@ static AnalyticsManager *singleton = nil;
 
 - (void)setup {
     
+    
+    NSString *mixPanelToken = @"SandboxToken";
+    NSString *flurryToken = @"DebugKey";
+#ifdef PRODUCTION
+    mixPanelToken = @"ProductionToken";
+    flurryToken = @"ProductionKey";
+#endif
+    
+#ifdef BETA
+    mixPanelToken = @"BetaToken";
+#endif
+    
     NSString *path = [[NSBundle mainBundle] pathForResource:@"Config" ofType:@"plist"];
     NSDictionary *globalConfig = [[NSDictionary alloc] initWithContentsOfFile:path];
     
     [Flurry setCrashReportingEnabled:YES];
     [Flurry setDebugLogEnabled:NO];
-    [Flurry startSession: globalConfig[@"Flurry"][@"DebugKey"] ];
+    [Flurry startSession: globalConfig[@"Flurry"][flurryToken] ];
     [Flurry setBackgroundSessionEnabled:NO];
     
-    NSString *token = @"SandboxToken";
-#ifdef PRODUCTION
-    token = @"ProductionToken";
-#endif
+
     
-    NSLog(@"Mixpanel : %@ : %@",token,globalConfig[@"Mixpanel"][token]);
+    NSLog(@"Mixpanel : %@ : %@",mixPanelToken,globalConfig[@"Mixpanel"][mixPanelToken]);
     
-    [Mixpanel sharedInstanceWithToken:globalConfig[@"Mixpanel"][token]];
+    [Mixpanel sharedInstanceWithToken:globalConfig[@"Mixpanel"][mixPanelToken]];
     Mixpanel *mxp = [Mixpanel sharedInstance];
     NSString *uuid = [[[UIDevice currentDevice] identifierForVendor] UUIDString];
     [mxp identify:uuid];

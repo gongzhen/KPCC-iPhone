@@ -254,7 +254,7 @@ static const NSString *ItemStatusContext;
         NSTimeInterval s2d = [date timeIntervalSince1970];
         NSTimeInterval now = [[NSDate date] timeIntervalSince1970];
         BOOL nudge = NO;
-        if ( abs(now - s2d) > 60 ) {
+        if ( abs(now - s2d) > 90 ) {
             nudge = YES;
         }
         
@@ -861,6 +861,7 @@ static const NSString *ItemStatusContext;
     }
     
     self.status = StreamStatusStopped;
+    self.currentAudioMode = AudioModeNeutral;
     self.audioPlayer = nil;
 }
 
@@ -912,14 +913,6 @@ static const NSString *ItemStatusContext;
             NSLog(@"Player access log : %@",logAsString);
         }
     }
-    
-    /*
-    NSLog(@"currentDate : %@",[self.audioPlayer.currentItem.currentDate prettyTimeString]);
-    NSDate *msd = [self maxSeekableDate];
-    NSLog(@" ******* MAX SEEKABLE DATE : %@ *******",msd);
-    NSDate *minSd = [self minSeekableDate];
-    NSLog(@" ******* MIN SEEKABLE DATE : %@ *******",minSd);
-     */
     
 }
 

@@ -16,6 +16,10 @@ typedef void (^CompletionBlockWithValue)(id returnedObject);
 #define TICK   NSDate *startTime = [NSDate date]
 #define TOCK   NSLog(@"Execution Time: %f  -- [ %s ]=[ Line %d ]", -[startTime timeIntervalSinceNow], __PRETTY_FUNCTION__, __LINE__)
 
+#ifdef PRODUCTION
+#define NSLog //
+#endif
+
 @class SCPRMasterViewController;
 @class SCPRNavigationController;
 @class SCPROnboardingViewController;
