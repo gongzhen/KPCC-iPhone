@@ -80,6 +80,8 @@ typedef NS_ENUM(NSUInteger, OnDemandFinishedReason) {
 - (void)trackOnDemandSession;
 - (BOOL)programDirty:(Program*)p;
 
+- (long)bufferLength;
+
 #ifdef TESTING_PROGRAM_CHANGE
 @property (NS_NONATOMIC_IOSONLY, readonly, strong) Program *fakeProgram;
 @property NSInteger initialProgramRequested;

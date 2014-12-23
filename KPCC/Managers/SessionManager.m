@@ -15,11 +15,7 @@
 #import "UXmanager.h"
 #import "SCPRMasterViewController.h"
 
-#ifdef DEBUG
-static long kStreamBufferLimit = 15*60;
-#else
-static long kStreamBufferLimit = 4*60*60;
-#endif
+
 
 
 @implementation SessionManager
@@ -39,6 +35,8 @@ static long kStreamBufferLimit = 4*60*60;
 #pragma mark - Session Mgmt
 - (NSTimeInterval)secondsBehindLive {
     NSDate *currentTime = [AudioManager shared].audioPlayer.currentItem.currentDate;
+    if ( !currentTime ) return 0;
+    
     NSDate *msd = [NSDate date];
     NSTimeInterval ctTI = [currentTime timeIntervalSince1970];
     NSTimeInterval msdTI = [msd timeIntervalSince1970];
@@ -525,9 +523,27 @@ static long kStreamBufferLimit = 4*60*60;
 }
 
 #pragma mark - State handling
+- (long)bufferLength {
+    long stableDuration = kStreamBufferLimit;
+    for ( NSValue *str in [[[AudioManager shared] audioPlayer] currentItem].seekableTimeRanges ) {
+        CMTimeRange r = [str CMTimeRangeValue];
+        if ( labs(CMTimeGetSeconds(r.duration) > kStreamCorrectionTolerance ) ) {
+            stableDuration = CMTimeGetSeconds(r.duration);
+        }
+    }
+    
+#ifdef SHORTENED_BUFFER
+    return kStreamBufferLimit;
+#else
+    return stableDuration;
+#endif
+    
+}
+
 - (BOOL)sessionIsBehindLive {
     
     NSDate *currentDate = [[AudioManager shared].audioPlayer.currentItem currentDate];
+    if ( !currentDate ) return NO;
     
     NSDate *live = [NSDate date];
     

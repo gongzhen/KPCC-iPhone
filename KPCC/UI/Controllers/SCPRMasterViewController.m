@@ -855,6 +855,11 @@ setForOnDemandUI;
                     if ( self.dirtyFromRewind ) {
                         [[AudioManager shared] specialSeekToDate:cProgram.soft_starts_at];
                     } else {
+#ifdef DEBUG
+                   
+                        //cProgram.starts_at = [[NSDate date] dateByAddingTimeInterval:-1.0*(60*60*5)];
+                        //cProgram.soft_starts_at = [[NSDate date] dateByAddingTimeInterval:-1.0*(60*60*5+(6*60))];
+#endif
                         [[AudioManager shared] seekToDate:cProgram.soft_starts_at forward:NO failover:NO];
                     }
                 }
@@ -1981,23 +1986,17 @@ setForOnDemandUI;
 }
 
 - (void)preRollCompleted {
-    if ( self.lockPreroll ) {
-        self.lockPreroll = NO;
-        return;
-    }
-    
+
     [self.preRollViewController removeFromParentViewController];
     [self.preRollViewController.view removeFromSuperview];
-    
     self.preRollViewController.tritonAd = nil;
-    self.lockPreroll = YES;
+    
     self.initialPlay = YES;
     
     if ( [Utils isThreePointFive] ) {
         POPSpringAnimation *bottomAnim = [POPSpringAnimation animationWithPropertyNamed:kPOPLayoutConstraintConstant];
         bottomAnim.toValue = @(0);
         [self.playerControlsBottomYConstraint pop_addAnimation:bottomAnim forKey:@"animatePlayControlsDown"];
-        
         self.horizDividerLine.layer.opacity = 0.4;
     }
     
@@ -2010,9 +2009,7 @@ setForOnDemandUI;
             [[AudioManager shared] takedownAudioPlayer];
             [self activateRewind:RewindDistanceBeginning];
         } else {
-            if ( [[AudioManager shared].audioPlayer rate] == 0.0 ) {
-                [self playStream:YES];
-            }
+            [self playStream:YES];
         }
         
     });
@@ -2340,9 +2337,11 @@ setForOnDemandUI;
 
 - (void)onSeekCompleted {
     // Make sure UI gets set to "Playing" state after a seek.
-    if ( self.jogging ) {
-        [self.jogShuttle endAnimations];
-    }
+    [[SessionManager shared] fetchCurrentProgram:^(id returnedObject) {
+        if ( self.jogging ) {
+            [self.jogShuttle endAnimations];
+        }
+    }];
 }
 
 - (void)interfere {

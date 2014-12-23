@@ -10,6 +10,14 @@
 #import <AVFoundation/AVFoundation.h>
 #import <MediaPlayer/MediaPlayer.h>
 
+#ifdef SHORTENED_BUFFER
+static long kStreamBufferLimit = 15*60;
+static long kStreamCorrectionTolerance = 60*5;
+#else
+static long kStreamBufferLimit = 4*60*60;
+static long kStreamCorrectionTolerance = 60*5;
+#endif
+
 #ifdef USE_TEST_STREAM
 #define kHLSLiveStreamURL @"http://vevoplaylist-live.hls.adaptive.level3.net/vevo/ch1/06/prog_index.m3u8"
 #else
@@ -153,6 +161,8 @@ typedef NS_ENUM(NSUInteger, StreamStatus) {
 - (void)threadedAdjustWithValue:(CGFloat)increment completion:(void (^)(void))completion;
 - (void)takedownAudioPlayer;
 - (void)resetPlayer;
+
+- (BOOL)verifyPositionAuthenticity;
 
 - (void)cheatPlay;
 
