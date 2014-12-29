@@ -40,6 +40,13 @@ static const NSString *ItemStatusContext;
     return singleton;
 }
 
+- (void)setCurrentAudioMode:(AudioMode)currentAudioMode {
+    _currentAudioMode = currentAudioMode;
+    if ( currentAudioMode == AudioModePreroll ) {
+        [[UXmanager shared] hideMenuButton];
+    }
+}
+
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object
                         change:(NSDictionary *)change context:(void *)context {
     
@@ -660,12 +667,12 @@ static const NSString *ItemStatusContext;
 }
 
 - (void)playOnboardingAudio:(NSInteger)segment {
-    if ( self.temporaryMutex ) {
+    /*if ( self.temporaryMutex ) {
         self.temporaryMutex = NO;
         return;
     }
     
-    self.temporaryMutex = YES;
+    self.temporaryMutex = YES;*/
     
     [self takedownAudioPlayer];
     self.onboardingSegment = segment;

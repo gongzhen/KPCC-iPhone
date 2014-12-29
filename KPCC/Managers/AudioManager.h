@@ -113,7 +113,7 @@ typedef NS_ENUM(NSUInteger, StreamStatus) {
 @property (nonatomic, strong) NSDate *queuedSeekDate;
 
 @property NSInteger onboardingSegment;
-@property AudioMode currentAudioMode;
+@property (nonatomic) AudioMode currentAudioMode;
 
 - (void)playAudioWithURL:(NSString *)url;
 - (void)playQueueItemWithUrl:(NSString *)url;

@@ -389,7 +389,7 @@ setForOnDemandUI;
             self.view.alpha = 1.0;
             [self.blurView.layer setOpacity:1.0];
             self.darkBgView.layer.opacity = 0.0;
-            nav.menuButton.alpha = 0.0;
+            [[UXmanager shared] hideMenuButton];
         } completion:^(BOOL finished) {
             [[UXmanager shared] fadeInBranding];
         }];
@@ -452,12 +452,9 @@ setForOnDemandUI;
     
     self.initialPlay = YES;
     
-    
-    SCPRAppDelegate *del = (SCPRAppDelegate*)[[UIApplication sharedApplication] delegate];
-    
     [UIView animateWithDuration:0.33 animations:^{
         self.liveDescriptionLabel.alpha = 1.0;
-        del.masterNavigationController.menuButton.alpha = 1.0;
+        [[UXmanager shared] showMenuButton];
         [self.darkBgView.layer setOpacity:0.0];
         self.onDemandPlayerView.alpha = 0.0;
     }];
@@ -1737,6 +1734,9 @@ setForOnDemandUI;
 #pragma mark - Menu control
 
 - (void)cloakForMenu:(BOOL)animated {
+    
+    if ( [AudioManager shared].currentAudioMode == AudioModePreroll ) return;
+    
     [self removeAllAnimations];
     
     self.pulldownMenu.alpha = 1.0;
@@ -1804,6 +1804,8 @@ setForOnDemandUI;
 }
 
 - (void)decloakForMenu:(BOOL)animated {
+    
+    if ( [AudioManager shared].currentAudioMode == AudioModePreroll ) return;
     
     if ( !self.menuOpen ) return;
     
@@ -1898,6 +1900,9 @@ setForOnDemandUI;
 # pragma mark - PreRoll Control
 
 - (void)cloakForPreRoll:(BOOL)animated {
+    
+    [[AudioManager shared] setCurrentAudioMode:AudioModePreroll];
+    
     [self removeAllAnimations];
     
     if (setForOnDemandUI){

@@ -550,10 +550,6 @@
     
     if ( [[AudioManager shared] currentAudioMode] == AudioModeOnDemand ) return NO;
     
-#ifdef DEBUG
-    //return YES;
-#endif
-    
     if ( [[AudioManager shared] status] == StreamStatusPaused && [self sessionPausedDate] ) {
         NSDate *spd = [[SessionManager shared] sessionPausedDate];
         NSDate *cit = [[AudioManager shared].audioPlayer.currentItem currentDate];

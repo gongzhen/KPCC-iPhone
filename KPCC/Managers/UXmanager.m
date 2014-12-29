@@ -68,7 +68,8 @@
     [mw addSubview:del.onboardingController.view];
  
     SCPRNavigationController *nav = [del masterNavigationController];
-    nav.menuButton.alpha = 0.0;
+    
+    [self hideMenuButton];
     
     del.onboardingController.view.frame = CGRectMake(0.0,0.0,mw.frame.size.width,
                                                      mw.frame.size.height);
@@ -139,7 +140,7 @@
                                                           0.0,
                                                           self.onboardingCtrl.navbarMask.frame.size.width,
                                                           64.0);
-        nav.menuButton.alpha = 0.0;
+        [self hideMenuButton];
         
     } completion:^(BOOL finished) {
         [self.onboardingCtrl.navbarMask.layer removeFromSuperlayer];
@@ -316,7 +317,7 @@
     SCPRAppDelegate *del = (SCPRAppDelegate*)[[UIApplication sharedApplication] delegate];
     SCPRNavigationController *nav = [del masterNavigationController];
     [UIView animateWithDuration:0.2 animations:^{
-        nav.menuButton.alpha = 1.0;
+        [self showMenuButton];
     } completion:^(BOOL finished) {
         [self.onboardingCtrl revealLensWithOrigin:CGPointMake(8.0, 22.0)];
         
@@ -447,6 +448,7 @@
     
     [UIView animateWithDuration:0.25 animations:^{
         self.masterCtrl.liveProgressViewController.view.alpha = 0.0;
+        [self showMenuButton];
     } completion:^(BOOL finished) {
         [self.masterCtrl onboarding_fin];
     }];
@@ -470,6 +472,18 @@
         });
     }];
     [self.fadeQueue addOperation:block];
+}
+
+- (void)hideMenuButton {
+    SCPRAppDelegate *del = [Utils del];
+    SCPRNavigationController *nav = [del masterNavigationController];
+    nav.menuButton.alpha = 0.0;
+}
+
+- (void)showMenuButton {
+    SCPRAppDelegate *del = [Utils del];
+    SCPRNavigationController *nav = [del masterNavigationController];
+    nav.menuButton.alpha = 1.0;
 }
 
 @end
