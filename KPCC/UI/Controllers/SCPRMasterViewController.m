@@ -302,17 +302,21 @@ setForOnDemandUI;
     self.preRollViewController.delegate = self;
     
     [[NetworkManager shared] fetchTritonAd:nil completion:^(TritonAd *tritonAd) {
-        self.preRollViewController.tritonAd = tritonAd;
+        dispatch_async(dispatch_get_main_queue(), ^{
+            self.preRollViewController.tritonAd = tritonAd;
+            [self addChildViewController:self.preRollViewController];
+            
+            CGRect frame = self.view.bounds;
+            frame.origin.y = (-1)*self.view.bounds.size.height;
+            self.preRollViewController.view.frame = frame;
+            
+            [self.view addSubview:self.preRollViewController.view];
+            [self.preRollViewController didMoveToParentViewController:self];
+        });
+
     }];
     
-    [self addChildViewController:self.preRollViewController];
-    
-    CGRect frame = self.view.bounds;
-    frame.origin.y = (-1)*self.view.bounds.size.height;
-    self.preRollViewController.view.frame = frame;
-    
-    [self.view addSubview:self.preRollViewController.view];
-    [self.preRollViewController didMoveToParentViewController:self];
+
 }
 
 - (void)resetUI {
@@ -328,20 +332,21 @@ setForOnDemandUI;
             self.initialControlsView.layer.opacity = 1.0;
         } completion:^(BOOL finished) {
             
-            
             [self.preRollViewController.view removeFromSuperview];
             [self.preRollViewController removeFromParentViewController];
             self.preRollViewController = nil;
-            [self addPreRollController];
             
+            
+            [self determinePlayState];
             
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.85 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                 [[SessionManager shared] fetchCurrentProgram:^(id returnedObject) {
+                    [self addPreRollController];
                     [SCPRCloakViewController uncloak];
+                    [[SessionManager shared] setExpiring:NO];
+                    [[SessionManager shared] setSessionPausedDate:nil];
                 }];
             });
-
-            
         }];
         
     }];
@@ -384,7 +389,7 @@ setForOnDemandUI;
             self.view.alpha = 1.0;
             [self.blurView.layer setOpacity:1.0];
             self.darkBgView.layer.opacity = 0.0;
-            nav.menuButton.alpha = 0.0;
+            [[UXmanager shared] hideMenuButton];
         } completion:^(BOOL finished) {
             [[UXmanager shared] fadeInBranding];
         }];
@@ -447,12 +452,9 @@ setForOnDemandUI;
     
     self.initialPlay = YES;
     
-    
-    SCPRAppDelegate *del = (SCPRAppDelegate*)[[UIApplication sharedApplication] delegate];
-    
     [UIView animateWithDuration:0.33 animations:^{
         self.liveDescriptionLabel.alpha = 1.0;
-        del.masterNavigationController.menuButton.alpha = 1.0;
+        [[UXmanager shared] showMenuButton];
         [self.darkBgView.layer setOpacity:0.0];
         self.onDemandPlayerView.alpha = 0.0;
     }];
@@ -715,13 +717,22 @@ setForOnDemandUI;
 - (void)goLive:(BOOL)play {
     
     
-    if ( [[AudioManager shared] currentAudioMode] == AudioModeLive ) {
+    if ( [[AudioManager shared] currentAudioMode] == AudioModeLive ||
+        [[AudioManager shared] currentAudioMode] == AudioModeNeutral ) {
         if ( [[AudioManager shared] status] == StreamStatusPaused ) {
-            [self playStream:NO];
+            if ( self.initialPlay ) {
+                [self playStream:NO];
+            } else {
+                [self initialPlayTapped:nil];
+            }
             return;
         }
         if ( [[AudioManager shared] status] == StreamStatusStopped ) {
-            [self playStream:YES];
+            if ( self.initialPlay ) {
+                [self playStream:YES];
+            } else {
+                [self initialPlayTapped:nil];
+            }
             return;
         }
         
@@ -744,14 +755,7 @@ setForOnDemandUI;
         
         if ( play ) {
             if ( self.initialPlay ) {
-                if ( self.preRollViewController.tritonAd ) {
-                    [self.preRollViewController primeUI:^{
-                        [self.preRollViewController showPreRollWithAnimation:YES completion:^(BOOL done) {
-                            
-                        }];
-                    }];
-                }
-                [[AudioManager shared] playLiveStream];
+                [self playStream:YES];
             } else {
                 [self initialPlayTapped:nil];
             }
@@ -785,8 +789,6 @@ setForOnDemandUI;
     
     Program *cProgram = [[SessionManager shared] currentProgram];
     [self.jogShuttle.view setAlpha:1.0];
-    
-
     
     BOOL sound = [AudioManager shared].currentAudioMode == AudioModeOnboarding ? NO : YES;
     [self.jogShuttle animateWithSpeed:0.8
@@ -855,11 +857,6 @@ setForOnDemandUI;
                     if ( self.dirtyFromRewind ) {
                         [[AudioManager shared] specialSeekToDate:cProgram.soft_starts_at];
                     } else {
-#ifdef DEBUG
-                   
-                        //cProgram.starts_at = [[NSDate date] dateByAddingTimeInterval:-1.0*(60*60*5)];
-                        //cProgram.soft_starts_at = [[NSDate date] dateByAddingTimeInterval:-1.0*(60*60*5+(6*60))];
-#endif
                         [[AudioManager shared] seekToDate:cProgram.soft_starts_at forward:NO failover:NO];
                     }
                 }
@@ -1045,7 +1042,7 @@ setForOnDemandUI;
 }
 
 - (void)determinePlayState {
-    if ( [[AudioManager shared] status] == StreamStatusStopped || self.dirtyFromFailure ) {
+    if ( [[AudioManager shared] status] == StreamStatusStopped || self.dirtyFromFailure || [[SessionManager shared] expiring] ) {
         if ( [[SessionManager shared] sessionIsInRecess] ) {
             self.liveDescriptionLabel.text = @"UP NEXT";
         } else {
@@ -1737,6 +1734,9 @@ setForOnDemandUI;
 #pragma mark - Menu control
 
 - (void)cloakForMenu:(BOOL)animated {
+    
+    if ( [AudioManager shared].currentAudioMode == AudioModePreroll ) return;
+    
     [self removeAllAnimations];
     
     self.pulldownMenu.alpha = 1.0;
@@ -1804,6 +1804,8 @@ setForOnDemandUI;
 }
 
 - (void)decloakForMenu:(BOOL)animated {
+    
+    if ( [AudioManager shared].currentAudioMode == AudioModePreroll ) return;
     
     if ( !self.menuOpen ) return;
     
@@ -1898,6 +1900,9 @@ setForOnDemandUI;
 # pragma mark - PreRoll Control
 
 - (void)cloakForPreRoll:(BOOL)animated {
+    
+    [[AudioManager shared] setCurrentAudioMode:AudioModePreroll];
+    
     [self removeAllAnimations];
     
     if (setForOnDemandUI){

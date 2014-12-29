@@ -40,6 +40,13 @@ static const NSString *ItemStatusContext;
     return singleton;
 }
 
+- (void)setCurrentAudioMode:(AudioMode)currentAudioMode {
+    _currentAudioMode = currentAudioMode;
+    if ( currentAudioMode == AudioModePreroll ) {
+        [[UXmanager shared] hideMenuButton];
+    }
+}
+
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object
                         change:(NSDictionary *)change context:(void *)context {
     
@@ -254,12 +261,12 @@ static const NSString *ItemStatusContext;
         NSTimeInterval s2d = [date timeIntervalSince1970];
         NSTimeInterval now = [[NSDate date] timeIntervalSince1970];
         BOOL nudge = NO;
-        if ( abs(now - s2d) > 60 ) {
+        if ( abs(now - s2d) > 65 ) {
             nudge = YES;
         }
         
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.15 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            NSDate *justABitInTheFuture = nudge ? [date dateByAddingTimeInterval:2] : [date dateByAddingTimeInterval:-3];
+            NSDate *justABitInTheFuture = nudge ? [date dateByAddingTimeInterval:2] : date;
             [self.audioPlayer.currentItem seekToDate:justABitInTheFuture completionHandler:^(BOOL finished) {
                 if ( !finished ) {
                     NSLog(@" **************** AUDIOPLAYER NOT FINISHED BUFFERING ****************** ");
@@ -377,7 +384,6 @@ static const NSString *ItemStatusContext;
 }
 
 - (void)seekToDate:(NSDate *)date {
-    
     [self seekToDate:date forward:abs([date timeIntervalSinceDate:[NSDate date]] > 60)
             failover:NO];
 }
@@ -661,12 +667,12 @@ static const NSString *ItemStatusContext;
 }
 
 - (void)playOnboardingAudio:(NSInteger)segment {
-    if ( self.temporaryMutex ) {
+    /*if ( self.temporaryMutex ) {
         self.temporaryMutex = NO;
         return;
     }
     
-    self.temporaryMutex = YES;
+    self.temporaryMutex = YES;*/
     
     [self takedownAudioPlayer];
     self.onboardingSegment = segment;
@@ -861,6 +867,7 @@ static const NSString *ItemStatusContext;
     }
     
     self.status = StreamStatusStopped;
+    self.currentAudioMode = AudioModeNeutral;
     self.audioPlayer = nil;
 }
 
@@ -912,14 +919,6 @@ static const NSString *ItemStatusContext;
             NSLog(@"Player access log : %@",logAsString);
         }
     }
-    
-    /*
-    NSLog(@"currentDate : %@",[self.audioPlayer.currentItem.currentDate prettyTimeString]);
-    NSDate *msd = [self maxSeekableDate];
-    NSLog(@" ******* MAX SEEKABLE DATE : %@ *******",msd);
-    NSDate *minSd = [self minSeekableDate];
-    NSLog(@" ******* MIN SEEKABLE DATE : %@ *******",minSd);
-     */
     
 }
 

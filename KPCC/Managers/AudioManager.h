@@ -11,7 +11,7 @@
 #import <MediaPlayer/MediaPlayer.h>
 
 #ifdef SHORTENED_BUFFER
-static long kStreamBufferLimit = 15*60;
+static long kStreamBufferLimit = 5*60;
 static long kStreamCorrectionTolerance = 60*5;
 #else
 static long kStreamBufferLimit = 4*60*60;
@@ -113,7 +113,7 @@ typedef NS_ENUM(NSUInteger, StreamStatus) {
 @property (nonatomic, strong) NSDate *queuedSeekDate;
 
 @property NSInteger onboardingSegment;
-@property AudioMode currentAudioMode;
+@property (nonatomic) AudioMode currentAudioMode;
 
 - (void)playAudioWithURL:(NSString *)url;
 - (void)playQueueItemWithUrl:(NSString *)url;

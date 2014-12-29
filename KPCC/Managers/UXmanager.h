@@ -55,6 +55,9 @@
 - (void)fadePlayer:(AVAudioPlayer*)player;
 - (void)restoreInteractionButton;
 
+- (void)hideMenuButton;
+- (void)showMenuButton;
+
 - (void)godPauseOrPlay;
 
 @end

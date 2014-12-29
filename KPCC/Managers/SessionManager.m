@@ -306,11 +306,6 @@
                 
                 [[ContentManager shared] saveContext];
                 
-                if ( self.expiring ) {
-                    self.expiring = NO;
-                    self.sessionPausedDate = nil;
-                }
-                
                 BOOL touch = NO;
                 if ( self.currentProgram ) {
                     if ( !SEQ(self.currentProgram.program_slug,
@@ -532,11 +527,7 @@
         }
     }
     
-#ifdef SHORTENED_BUFFER
-    return kStreamBufferLimit;
-#else
     return stableDuration;
-#endif
     
 }
 
@@ -559,17 +550,12 @@
     
     if ( [[AudioManager shared] currentAudioMode] == AudioModeOnDemand ) return NO;
     
-#ifdef DEBUG
-    //return YES;
-#endif
-    
     if ( [[AudioManager shared] status] == StreamStatusPaused && [self sessionPausedDate] ) {
         NSDate *spd = [[SessionManager shared] sessionPausedDate];
         NSDate *cit = [[AudioManager shared].audioPlayer.currentItem currentDate];
         NSDate *aux = [spd earlierDate:cit];
         
         if ( !aux || [[NSDate date] timeIntervalSinceDate:aux] > kStreamBufferLimit ) {
-            self.expiring = YES;
             return YES;
         }
     }
@@ -656,6 +642,10 @@
     if ( [self sessionIsExpired] ) {
     
         self.sessionReturnedDate = nil;
+        self.sessionPausedDate = nil;
+        self.expiring = YES;
+        
+        [[AudioManager shared] takedownAudioPlayer];
         
         SCPRMasterViewController *master = [[Utils del] masterViewController];
         [master resetUI];
