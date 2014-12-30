@@ -12,6 +12,7 @@
 #import "AudioManager.h"
 #import "NetworkManager.h"
 #import "SCPRSpinnerViewController.h"
+#import "UXmanager.h"
 
 #define kDefaultAdPresentationTime 10.0
 
@@ -126,6 +127,7 @@
                                                   object:nil];
     
     [[AudioManager shared] setCurrentAudioMode:AudioModeNeutral];
+    [[UXmanager shared] showMenuButton];
     
     [self dismissTapped:nil];
     
