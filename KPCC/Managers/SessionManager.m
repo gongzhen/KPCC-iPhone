@@ -539,7 +539,7 @@
     NSDate *live = [NSDate date];
     
     
-    if ( abs([live timeIntervalSince1970] - [currentDate timeIntervalSince1970]) > 70 ) {
+    if ( abs([live timeIntervalSince1970] - [currentDate timeIntervalSince1970]) > 120 ) {
         return YES;
     }
     

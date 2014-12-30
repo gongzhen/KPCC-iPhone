@@ -1902,6 +1902,7 @@ setForOnDemandUI;
 - (void)cloakForPreRoll:(BOOL)animated {
     
     [[AudioManager shared] setCurrentAudioMode:AudioModePreroll];
+    [[UXmanager shared] hideMenuButton];
     
     [self removeAllAnimations];
     

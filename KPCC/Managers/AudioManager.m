@@ -42,9 +42,6 @@ static const NSString *ItemStatusContext;
 
 - (void)setCurrentAudioMode:(AudioMode)currentAudioMode {
     _currentAudioMode = currentAudioMode;
-    if ( currentAudioMode == AudioModePreroll ) {
-        [[UXmanager shared] hideMenuButton];
-    }
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object
