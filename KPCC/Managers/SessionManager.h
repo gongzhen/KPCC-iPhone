@@ -37,6 +37,8 @@ typedef NS_ENUM(NSUInteger, OnDemandFinishedReason) {
 @property BOOL useLocalNotifications;
 @property BOOL onboardingRewound;
 @property BOOL expiring;
+@property BOOL userLeavingForClickthrough;
+
 @property (atomic) BOOL userIsViewingHeadlines;
 
 @property (nonatomic, strong) Program *currentProgram;
@@ -69,6 +71,7 @@ typedef NS_ENUM(NSUInteger, OnDemandFinishedReason) {
 
 - (void)handleSessionReactivation;
 - (void)invalidateSession;
+- (void)expireSession;
 
 - (NSString*)startLiveSession;
 - (NSString*)endLiveSession;

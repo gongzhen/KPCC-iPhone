@@ -102,12 +102,16 @@ typedef NS_ENUM(NSUInteger, StreamStatus) {
 
 @property CGFloat savedVolume;
 @property CGFloat savedVolumeFromMute;
+
+@property BOOL seekRequested;
 @property BOOL bufferMutex;
 @property BOOL waitForFirstTick;
 @property BOOL autoMuted;
 @property BOOL temporaryMutex;
 @property BOOL easeInAudio;
 @property BOOL waitForSeek;
+@property BOOL prerollPlaying;
+@property BOOL tryAgain;
 
 @property (nonatomic, copy) NSString *previousUrl;
 @property (nonatomic, strong) NSDate *queuedSeekDate;

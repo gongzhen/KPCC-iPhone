@@ -13,6 +13,7 @@
 #import "NetworkManager.h"
 #import "SCPRSpinnerViewController.h"
 #import "UXmanager.h"
+#import "SessionManager.h"
 
 #define kDefaultAdPresentationTime 10.0
 
@@ -36,6 +37,9 @@
     
     self.curtainView.backgroundColor = [UIColor kpccAsphaltColor];
     self.adImageView.backgroundColor = [UIColor clearColor];
+    self.adImageView.userInteractionEnabled = YES;
+    self.adTapper = [[UITapGestureRecognizer alloc] initWithTarget:self
+                                                            action:@selector(openClickThroughUrl)];
     [self.view layoutIfNeeded];
     
     // Do any additional setup after loading the view from its nib.
@@ -78,6 +82,14 @@
                                                          [self.adImageView.layer addAnimation:transition
                                                                                        forKey:nil];
                                                          
+                                                         dispatch_async(dispatch_get_main_queue(), ^{
+                                                            if ( self.tritonAd.clickthroughUrl ) {
+                                                                [self.adImageView addGestureRecognizer:self.adTapper];
+                                                            }
+                                                             
+                                                         });
+
+                                                         
                                                      } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error) {
                                                          completion(false);
                                                      }];
@@ -98,6 +110,7 @@
                                                      
                                                      
                                                      [SCPRSpinnerViewController finishSpinning];
+                                                     [[AudioManager shared] setPrerollPlaying:YES];
                                                      
                                                      impressionSent = NO;
                                                      dispatch_async(dispatch_get_main_queue(), ^{
@@ -119,7 +132,14 @@
 
 - (void)preRollCompleted {
     
+    [[AudioManager shared] setPrerollPlaying:NO];
+    
     [self.prerollPlayer removeTimeObserver:self.timeObserver];
+    self.timeObserver = nil;
+    [self.prerollPlayer cancelPendingPrerolls];
+    
+    [[SessionManager shared] resetCache];
+    
     self.prerollPlayer = nil;
     
     [[NSNotificationCenter defaultCenter] removeObserver:self
@@ -135,6 +155,13 @@
 
 
 # pragma mark - Actions
+- (void)openClickThroughUrl {
+    NSString *url = self.tritonAd.clickthroughUrl;
+    if ( url && !SEQ(@"",url) ) {
+        [[SessionManager shared] setUserLeavingForClickthrough:YES];
+        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:url]];
+    }
+}
 
 - (IBAction)dismissTapped:(id)sender {
     if (self.tritonAd && !impressionSent) {

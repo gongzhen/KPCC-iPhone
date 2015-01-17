@@ -238,15 +238,17 @@ setForOnDemandUI;
     [[NetworkManager shared] setupReachability];
     
     self.originalFrames = [NSMutableDictionary new];
-    self.originalFrames[@"playerControls"] = @(self.playerControlsBottomYConstraint.constant);
-    self.originalFrames[@"programTitle"] = @(self.programTitleYConstraint.constant);
-    self.originalFrames[@"liveRewind"] = @(self.liveRewindBottomYConstraint.constant);
+
     
     [SCPRCloakViewController cloakWithCustomCenteredView:nil cloakAppeared:^{
         if ( [[UXmanager shared] userHasSeenOnboarding] ) {
             [self updateDataForUI];
             [self.view layoutIfNeeded];
             [self.liveStreamView layoutIfNeeded];
+            self.originalFrames[@"playerControls"] = @(self.playerControlsBottomYConstraint.constant);
+            self.originalFrames[@"programTitle"] = @(self.programTitleYConstraint.constant);
+            self.originalFrames[@"liveRewind"] = @(self.liveRewindBottomYConstraint.constant);
+            
         } else {
             
         }
@@ -294,6 +296,11 @@ setForOnDemandUI;
     [super viewDidDisappear:animated];
 }
 
+- (void)viewDidLayoutSubviews {
+
+
+}
+
 - (void)addPreRollController {
     
     if ( ![[UXmanager shared] userHasSeenOnboarding] ) return;
@@ -323,6 +330,8 @@ setForOnDemandUI;
     [SCPRCloakViewController cloakWithCustomCenteredView:nil useSpinner:NO blackout:YES cloakAppeared:^{
         
         self.initialPlay = NO;
+        [self.jogShuttle endAnimations];
+        
         [UIView animateWithDuration:0.25 animations:^{
             self.playerControlsBottomYConstraint.constant = [self.originalFrames[@"playerControls"] floatValue];
             self.liveRewindBottomYConstraint.constant = [self.originalFrames[@"liveRewind"] floatValue];
@@ -511,7 +520,6 @@ setForOnDemandUI;
 
 - (void)specialRewind {
     self.initiateRewind = YES;
-    self.preRollViewController.tritonAd = nil;
     [UIView animateWithDuration:0.15 animations:^{
         self.liveDescriptionLabel.text = @"";
     }];
@@ -693,8 +701,12 @@ setForOnDemandUI;
     if ( hard && ![[SessionManager shared] sessionIsInBackground] ) {
         [[AudioManager shared] playLiveStream];
     } else {
-        [[AudioManager shared] playStream];
-        [[SessionManager shared] startLiveSession];
+        if ( [[SessionManager shared] userLeavingForClickthrough] ) {
+            [[AudioManager shared] playLiveStream];
+        } else {
+            [[AudioManager shared] playStream];
+            [[SessionManager shared] startLiveSession];
+        }
     }
 }
 
@@ -1459,7 +1471,6 @@ setForOnDemandUI;
                     if ( [[UXmanager shared] userHasSeenOnboarding] ) {
                         self.initialPlay = YES;
                         if ( self.initiateRewind ) {
-                            //self.initiateRewind
                             [self activateRewind:RewindDistanceBeginning];
                         } else {
                             [self playStream:YES];
@@ -1493,8 +1504,14 @@ setForOnDemandUI;
                      ![self jogging] );*/
     
     BOOL okToShow = YES;
+
     if ( [[AudioManager shared] currentAudioMode] == AudioModeOnboarding ) {
         NSLog(@"Rewind Button - Hiding because onboarding");
+        okToShow = NO;
+    }
+    if ( [[AudioManager shared] prerollPlaying] ) {
+        if ( okToShow )
+            NSLog(@"Rewind Button - Hiding because preroll");
         okToShow = NO;
     }
     if ( [[AudioManager shared] status] == StreamStatusStopped && [[AudioManager shared] currentAudioMode] == AudioModeOnDemand ) {
@@ -2012,7 +2029,6 @@ setForOnDemandUI;
         }
 
         if ( self.initiateRewind ) {
-            [[AudioManager shared] takedownAudioPlayer];
             [self activateRewind:RewindDistanceBeginning];
         } else {
             [self playStream:YES];

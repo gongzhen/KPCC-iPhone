@@ -20,5 +20,6 @@
 @property (nonatomic,strong) NSNumber *imageCreativeHeight;
 @property (nonatomic,strong) NSNumber *imageCreativeWidth;
 @property (nonatomic,strong) NSString *creativeTrackingUrl;
+@property (nonatomic,strong) NSString *clickthroughUrl;
 
 @end

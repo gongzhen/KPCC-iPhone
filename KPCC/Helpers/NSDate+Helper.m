@@ -46,6 +46,17 @@
 	return (int)[midnight timeIntervalSinceNow] / (60*60*24) *-1;
 }
 
+- (NSDate*)minuteRoundedUpByThreshold:(NSInteger)minute {
+    NSDateComponents *time = [[NSCalendar currentCalendar]
+                              components:NSHourCalendarUnit | NSMinuteCalendarUnit
+                              fromDate:self];
+    NSInteger minutes = [time minute];
+    float minuteUnit = ceil((float) minutes / (CGFloat)minute*1.0);
+    minutes = minuteUnit * (minute*1.0);
+    [time setMinute: minutes];
+    return [[NSCalendar currentCalendar] dateFromComponents:time];
+}
+
 - (NSString *)stringDaysAgo {
 	return [self stringDaysAgoAgainstMidnight:YES];
 }

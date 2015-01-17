@@ -1724,8 +1724,8 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Ben Hochberg (YM7582VNY5)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Ben Hochberg (YM7582VNY5)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "KPCC/KPCC-Prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -1742,7 +1742,7 @@
 					"$(PROJECT_DIR)/KPCC/ThirdParty/Flurry",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "1e5bb52b-9336-4452-b8d0-4ab0fce41a36";
 				SWIFT_OBJC_BRIDGING_HEADER = "KPCC/UI/Controllers/KPCC-Bridging-Header.h";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;

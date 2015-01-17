@@ -43,4 +43,6 @@
 @property (NS_NONATOMIC_IOSONLY, readonly, copy) NSString *prettyTimeString;
 - (NSString*)iso;
 
+- (NSDate*)minuteRoundedUpByThreshold:(NSInteger)minute;
+
 @end

@@ -352,6 +352,8 @@
     NSDate *d2u = [NSDate date];
     if ( [self sessionIsBehindLive] && ![self seekForwardRequested] && !self.expiring ) {
         d2u = [[AudioManager shared].audioPlayer.currentItem currentDate];
+        d2u = [d2u minuteRoundedUpByThreshold:3];
+        
         NSLog(@"Adjusted time to fetch program : %@",[NSDate stringFromDate:d2u
                                                                  withFormat:@"hh:mm:ss a"]);
     }
@@ -609,7 +611,7 @@
 - (void)setSessionReturnedDate:(NSDate *)sessionReturnedDate {
     _sessionReturnedDate = sessionReturnedDate;
     self.sessionIsInBackground = NO;
-    if ( sessionReturnedDate ) {
+    if ( sessionReturnedDate && self.sessionLeftDate ) {
         [self handleSessionReactivation];
     }
     
@@ -637,18 +639,10 @@
 
 - (void)handleSessionReactivation {
     
-    
     if ( !self.sessionLeftDate || !self.sessionReturnedDate ) return;
     if ( [self sessionIsExpired] ) {
     
-        self.sessionReturnedDate = nil;
-        self.sessionPausedDate = nil;
-        self.expiring = YES;
-        
-        [[AudioManager shared] takedownAudioPlayer];
-        
-        SCPRMasterViewController *master = [[Utils del] masterViewController];
-        [master resetUI];
+        [self expireSession];
         
     } else {
         if ( [[AudioManager shared] status] != StreamStatusPaused ) {
@@ -663,6 +657,20 @@
             }
         }
     }
+}
+
+- (void)expireSession {
+    self.sessionReturnedDate = nil;
+    self.sessionPausedDate = nil;
+    self.expiring = YES;
+    [[AudioManager shared] setWaitForSeek:NO];
+    [[AudioManager shared] setSeekRequested:NO];
+    
+    if ( [[AudioManager shared] audioPlayer] )
+        [[AudioManager shared] takedownAudioPlayer];
+    
+    SCPRMasterViewController *master = [[Utils del] masterViewController];
+    [master resetUI];
 }
 
 
