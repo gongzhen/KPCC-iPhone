@@ -89,6 +89,8 @@
 @property (nonatomic,strong) SCPRPreRollViewController *preRollViewController;
 @property BOOL lockPreroll;
 
+@property BOOL updaterArmed;
+
 // Rewinding UI
 @property (nonatomic,strong) SCPRJogShuttleViewController *jogShuttle;
 @property (nonatomic,strong) IBOutlet UIView *rewindView;

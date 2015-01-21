@@ -331,7 +331,6 @@
                 }
                 completed(programObj);
                 
-                [self armProgramUpdater];
                 
             });
         } else {
@@ -348,7 +347,7 @@
 }
 
 - (void)fetchCurrentProgram:(CompletionBlockWithValue)completed {
-    
+#ifdef LEGACY_TIMER
     NSDate *d2u = [NSDate date];
     if ( [self sessionIsBehindLive] && ![self seekForwardRequested] && !self.expiring ) {
         d2u = [[AudioManager shared].audioPlayer.currentItem currentDate];
@@ -364,13 +363,23 @@
     }
     
     [self fetchProgramAtDate:d2u completed:completed];
+#else
+    NSDate *ct = [[AudioManager shared].audioPlayer.currentItem currentDate];
+    if ( ct ) {
+        [self fetchProgramAtDate:ct completed:completed];
+    } else {
+        [self fetchProgramAtDate:[NSDate date]
+                       completed:completed];
+    }
+#endif
 }
 
 - (void)armProgramUpdater {
     [self disarmProgramUpdater];
     
+
     if ( [self ignoreProgramUpdating] ) return;
-    
+#ifdef LEGACY_TIMER
 #ifndef TESTING_PROGRAM_CHANGE
     NSInteger unit = NSYearCalendarUnit|NSMonthCalendarUnit|NSDayCalendarUnit|NSHourCalendarUnit|NSMinuteCalendarUnit|NSSecondCalendarUnit;
     NSDate *now = [NSDate date];
@@ -420,15 +429,8 @@
     if ( cookDate ) {
         sinceNow = minDiff * 60 + 6;
     }
-/*    if ( [self useLocalNotifications] ) {
-        UILocalNotification *localNote = [[UILocalNotification alloc] init];
-        localNote.fireDate = then;
-        localNote.alertBody = kUpdateProgramKey;
-        [[UIApplication sharedApplication] scheduleLocalNotification:localNote];
-    } else { */
-        
 
-        self.programUpdateTimer = [NSTimer scheduledTimerWithTimeInterval:sinceNow
+    self.programUpdateTimer = [NSTimer scheduledTimerWithTimeInterval:sinceNow
                                                                    target:self
                                                                  selector:@selector(processTimer:)
                                                                  userInfo:nil
@@ -449,10 +451,16 @@
                                                               repeats:NO];
     
 #endif
+#else
+    
+   // [self checkProgramUpdate:NO];
+    
+#endif
     
 }
 
 - (void)disarmProgramUpdater {
+#ifdef LEGACY_TIMER
 /*    if ( [self useLocalNotifications] ) {
         [[UIApplication sharedApplication] cancelAllLocalNotifications];
     } else {*/
@@ -463,6 +471,7 @@
         self.programUpdateTimer = nil;
     }
    // }
+#endif
 }
 
 - (BOOL)ignoreProgramUpdating {
@@ -517,6 +526,39 @@
         return YES;
     }
     return !SEQ(p.program_slug,cp.program_slug);
+}
+
+- (void)checkProgramUpdate:(BOOL)force {
+
+    NSDate *ct = [[AudioManager shared].audioPlayer.currentItem currentDate];
+    if ( ct ) {
+        NSDateComponents *comps = [[NSCalendar currentCalendar] components:NSCalendarUnitMinute|NSCalendarUnitSecond
+                                                                  fromDate:ct];
+        if ( [comps minute] % 15 == 0 || force ) {
+            if ( [self updaterArmed] ) {
+                return;
+            } else {
+                NSLog(@"Checking program : %@ (%ld)",[NSDate stringFromDate:ct
+                                                                 withFormat:@"hh:mm a"],(long)[ct timeIntervalSince1970]);
+                
+                [self processTimer:nil];
+            }
+        } else {
+            [self setUpdaterArmed:NO];
+        }
+        
+    } else {
+        if ( force ) {
+            if ( [self updaterArmed] ) {
+                return;
+            } else {
+                [self processTimer:nil];
+            }
+        } else {
+            [self setUpdaterArmed:NO];
+        }
+    }
+    
 }
 
 #pragma mark - State handling
@@ -632,12 +674,16 @@
     
     if ( [self ignoreProgramUpdating] ) return;
     
+    [self setUpdaterArmed:YES];
     [self fetchCurrentProgram:^(id returnedObject) {
         
     }];
 }
 
 - (void)handleSessionReactivation {
+    
+    if ( [[AudioManager shared] currentAudioMode] == AudioModeOnboarding ) return;
+    if ( ![[UXmanager shared].settings userHasViewedOnboarding] ) return;
     
     if ( !self.sessionLeftDate || !self.sessionReturnedDate ) return;
     if ( [self sessionIsExpired] ) {
@@ -646,6 +692,7 @@
         
     } else {
         if ( [[AudioManager shared] status] != StreamStatusPaused ) {
+#ifdef LEGACY_TIMER
             if ( [self sessionIsBehindLive] ) {
                 [self fetchProgramAtDate:[[AudioManager shared].audioPlayer.currentItem currentDate] completed:^(id returnedObject) {
                     self.sessionReturnedDate = nil;
@@ -655,6 +702,9 @@
                     self.sessionReturnedDate = nil;
                 }];
             }
+#else
+            [self checkProgramUpdate:YES];
+#endif
         }
     }
 }

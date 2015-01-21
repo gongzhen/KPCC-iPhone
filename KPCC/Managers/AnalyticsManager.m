@@ -64,6 +64,7 @@ static AnalyticsManager *singleton = nil;
     if ( kKey ) {
         NSDictionary *kDict = @{ @"myKochavaAppId" : kKey };
         self.kTracker = [[KochavaTracker alloc] initKochavaWithParams:kDict];
+        [self.kTracker trackEvent:@"kochava-install":@"success"];
     }
     
 }
@@ -105,6 +106,7 @@ static AnalyticsManager *singleton = nil;
     
     Mixpanel *mxp = [Mixpanel sharedInstance];
     [mxp track:event properties:parameters];
+    
 }
 
 - (void)failStream:(StreamState)cause comments:(NSString *)comments {

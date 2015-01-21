@@ -38,6 +38,7 @@ typedef NS_ENUM(NSUInteger, OnDemandFinishedReason) {
 @property BOOL onboardingRewound;
 @property BOOL expiring;
 @property BOOL userLeavingForClickthrough;
+@property BOOL updaterArmed;
 
 @property (atomic) BOOL userIsViewingHeadlines;
 
@@ -50,6 +51,7 @@ typedef NS_ENUM(NSUInteger, OnDemandFinishedReason) {
 - (void)armProgramUpdater;
 - (void)disarmProgramUpdater;
 - (void)resetCache;
+- (void)checkProgramUpdate:(BOOL)force;
 
 - (NSTimeInterval)secondsBehindLive;
 

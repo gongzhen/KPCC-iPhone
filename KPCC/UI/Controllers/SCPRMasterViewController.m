@@ -78,14 +78,27 @@ setForOnDemandUI;
 - (void)remoteControlReceivedWithEvent:(UIEvent *)event {
     // Handle remote audio control events.
     if (event.type == UIEventTypeRemoteControl) {
-        if (event.subtype == UIEventSubtypeRemoteControlPlay ||
-            event.subtype == UIEventSubtypeRemoteControlPause ||
-            event.subtype == UIEventSubtypeRemoteControlTogglePlayPause) {
+        if (event.subtype == UIEventSubtypeRemoteControlTogglePlayPause) {
+            
+            NSString *pretty = event.subtype == UIEventSubtypeRemoteControlPlay ? @"Play" : @"Pause";
+            pretty = event.subtype == UIEventSubtypeRemoteControlTogglePlayPause ? @"Toggle" : pretty;
+            NSLog(@"Remote control event : %@",pretty);
+            
+            if ( [[AudioManager shared] currentAudioMode] == AudioModePreroll ) {
+                if ( [self.preRollViewController.prerollPlayer rate] > 0.0 ) {
+                    [self.preRollViewController.prerollPlayer pause];
+                } else {
+                    [self.preRollViewController.prerollPlayer play];
+                }
+                return;
+            }
+            
             if ( self.initialPlay ) {
                 [self playOrPauseTapped:nil];
             } else {
                 [self initialPlayTapped:nil];
             }
+            
         } else if (event.subtype == UIEventSubtypeRemoteControlPreviousTrack) {
             //            [self nextEpisodeTapped:nil];
         } else if (event.subtype == UIEventSubtypeRemoteControlNextTrack) {
@@ -520,6 +533,7 @@ setForOnDemandUI;
 
 - (void)specialRewind {
     self.initiateRewind = YES;
+    self.preRollViewController.tritonAd = nil;
     [UIView animateWithDuration:0.15 animations:^{
         self.liveDescriptionLabel.text = @"";
     }];
@@ -540,11 +554,7 @@ setForOnDemandUI;
     if (![[AudioManager shared] isStreamPlaying]) {
         if ( [[SessionManager shared] sessionIsExpired] ) {
             [[SessionManager shared] fetchCurrentProgram:^(id returnedObject) {
-                if ([[AudioManager shared] isStreamBuffering]) {
-                    [[AudioManager shared] stopAllAudio];
-                } else {
-                    [self playStream:YES];
-                }
+                [self playStream:YES];
             }];
         } else {
 
@@ -566,7 +576,7 @@ setForOnDemandUI;
             
         }
     } else {
-        self.setPlaying = NO;
+ 
         [self pauseStream];
         
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
@@ -668,9 +678,6 @@ setForOnDemandUI;
                                                 initWithActivityItems:@[complete]
                                                 applicationActivities:nil];
         controller.excludedActivityTypes = @[UIActivityTypeAirDrop];
-        
-        
-        
         [controller setCompletionHandler:^(NSString *activityType, BOOL completed) {
             if ( completed ) {
                 [[AnalyticsManager shared] logEvent:[NSString stringWithFormat:@"programEpisodeShared%@",[activityType capitalizedString]]
@@ -678,6 +685,7 @@ setForOnDemandUI;
                                                        @"programTitle" : pt }];
             }
         }];
+        
         [self presentViewController:controller animated:YES completion:^{
             
             [[DesignManager shared] normalizeBar];
@@ -693,7 +701,6 @@ setForOnDemandUI;
             
         }];
     }];
-
 }
 
 # pragma mark - Audio commands
@@ -779,6 +786,8 @@ setForOnDemandUI;
 - (void)activateRewind:(RewindDistance)distance {
     
     self.initiateRewind = NO;
+    self.preRollViewController.tritonAd = nil;
+    
     [self snapJogWheel];
     [self.liveDescriptionLabel pulsate:kRewindingText color:nil];
     

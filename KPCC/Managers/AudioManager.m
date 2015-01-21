@@ -68,8 +68,9 @@ static const NSString *ItemStatusContext;
             } else {
                 if ( self.audioPlayer ) {
                     self.tryAgain = YES;
-                    [self takedownAudioPlayer];
-                    [self buildStreamer:kHLSLiveStreamURL];
+                    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                        [self resetPlayer];
+                    });
                 }
             }
             return;
@@ -77,12 +78,16 @@ static const NSString *ItemStatusContext;
             NSLog(@"AVPlayerItemStatus - ReadyToPlay");
             if ( self.waitForSeek ) {
                 NSLog(@"Delayed seek");
-                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.33 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                    [self.audioPlayer play];
                     [self seekToDate:self.queuedSeekDate forward:NO failover:NO];
                 });
             } else if ( self.tryAgain ) {
+                NSLog(@"Trying again after failure...");
+                
                 self.tryAgain = NO;
                 [self.audioPlayer play];
+                
             }
         } else if ([self.audioPlayer.currentItem status] == AVPlayerItemStatusUnknown) {
             NSLog(@"AVPlayerItemStatus - Unknown");
@@ -212,6 +217,7 @@ static const NSString *ItemStatusContext;
             [[SessionManager shared] trackLiveSession];
             [[SessionManager shared] trackRewindSession];
             [[SessionManager shared] trackOnDemandSession];
+            [[SessionManager shared] checkProgramUpdate:NO];
             
             if ([weakSelf.delegate respondsToSelector:@selector(onTimeChange)]) {
                 if ( weakSelf.waitForFirstTick ) {
@@ -302,14 +308,18 @@ static const NSString *ItemStatusContext;
                                                                              withFormat:@"hh:mm:ss a"]);
                     }
                     
-                 
-                    [self playStream];
+                    if ( self.audioPlayer.rate <= 0.0 ) {
+                        [self playStream];
+                    }
                     
                     self.status = StreamStatusPlaying;
                     self.seekRequested = NO;
+                    
                     if ([self.delegate respondsToSelector:@selector(onSeekCompleted)]) {
                         [self.delegate onSeekCompleted];
                     }
+                } else {
+                    NSLog(@"Stream was not ready to play at the time of the seek request");
                 }
             }];
             
