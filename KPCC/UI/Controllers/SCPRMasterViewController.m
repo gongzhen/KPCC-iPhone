@@ -511,22 +511,26 @@ setForOnDemandUI;
         return;
     }
     
-    [UIView animateWithDuration:0.15 animations:^{
-        self.liveRewindAltButton.alpha = 0.0;
-    } completion:^(BOOL finished) {
-        if (self.preRollViewController.tritonAd) {
-            [self cloakForPreRoll:YES];
-            [self.preRollViewController primeUI:^{
-                [self.preRollViewController showPreRollWithAnimation:YES completion:^(BOOL done) {
-                    [self primePlaybackUI:YES];
-                    [self.preRollViewController.prerollPlayer play];
+    [[SessionManager shared] fetchCurrentProgram:^(id returnedObject) {
+        [UIView animateWithDuration:0.15 animations:^{
+            self.liveRewindAltButton.alpha = 0.0;
+        } completion:^(BOOL finished) {
+            if (self.preRollViewController.tritonAd) {
+                [self cloakForPreRoll:YES];
+                [self.preRollViewController primeUI:^{
+                    [self.preRollViewController showPreRollWithAnimation:YES completion:^(BOOL done) {
+                        [self primePlaybackUI:YES];
+                        [self.preRollViewController.prerollPlayer play];
+                    }];
                 }];
-            }];
-        } else {
-            [self primePlaybackUI:YES];
-            self.initialPlay = YES;
-        }
+            } else {
+                [self primePlaybackUI:YES];
+                self.initialPlay = YES;
+            }
+        }];
     }];
+    
+
     
 }
 

@@ -87,6 +87,7 @@ static const NSString *ItemStatusContext;
                 
                 self.tryAgain = NO;
                 [self.audioPlayer play];
+                [self startObservingTime];
                 
             }
         } else if ([self.audioPlayer.currentItem status] == AVPlayerItemStatusUnknown) {

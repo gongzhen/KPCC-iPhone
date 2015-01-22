@@ -155,6 +155,7 @@
         [[SessionManager shared] setUserLeavingForClickthrough:YES];
     }
     
+    [[AnalyticsManager shared] kTrackSession:@"ended"];
     // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later. 
     // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
 }
@@ -167,6 +168,8 @@
     }
     
     [[SessionManager shared] setUserLeavingForClickthrough:NO];
+    
+    [[AnalyticsManager shared] kTrackSession:@"began"];
     
     // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
 }
@@ -190,7 +193,10 @@
 # pragma mark - Stylesheet
 
 - (void)applyStylesheet {
-    [[UINavigationBar appearance] setBarTintColor:[UIColor colorWithRed:255.0f/255.0f green:126.0f/255.0f blue:20.0f/255.0f alpha:1.0f]];
+    [[UINavigationBar appearance] setBarTintColor:[UIColor colorWithRed:255.0f/255.0f
+                                                                  green:126.0f/255.0f
+                                                                   blue:20.0f/255.0f
+                                                                  alpha:1.0f]];
     [[UINavigationBar appearance] setBarStyle:UIBarStyleBlackTranslucent];
 
     [[UINavigationBar appearance] setTitleTextAttributes:

@@ -25,5 +25,6 @@
 - (void)trackHeadlinesDismissal;
 - (void)logEvent:(NSString *)event withParameters:(NSDictionary *)parameters;
 - (void)failStream:(StreamState)cause comments:(NSString*)comments;
+- (void)kTrackSession:(NSString*)modifier;
 
 @end
