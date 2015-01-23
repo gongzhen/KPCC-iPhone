@@ -65,16 +65,30 @@ static const NSString *ItemStatusContext;
                 if ( [self.delegate respondsToSelector:@selector(onDemandAudioFailed)] ) {
                     [self.delegate onDemandAudioFailed];
                 }
+            } else {
+                if ( self.audioPlayer ) {
+                    self.tryAgain = YES;
+                    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                        [self resetPlayer];
+                    });
+                }
             }
             return;
         } else if ([self.audioPlayer.currentItem status] == AVPlayerItemStatusReadyToPlay) {
             NSLog(@"AVPlayerItemStatus - ReadyToPlay");
             if ( self.waitForSeek ) {
                 NSLog(@"Delayed seek");
-                self.waitForSeek = NO;
-                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.33 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                    [self.audioPlayer play];
                     [self seekToDate:self.queuedSeekDate forward:NO failover:NO];
                 });
+            } else if ( self.tryAgain ) {
+                NSLog(@"Trying again after failure...");
+                
+                self.tryAgain = NO;
+                [self.audioPlayer play];
+                [self startObservingTime];
+                
             }
         } else if ([self.audioPlayer.currentItem status] == AVPlayerItemStatusUnknown) {
             NSLog(@"AVPlayerItemStatus - Unknown");
@@ -204,6 +218,7 @@ static const NSString *ItemStatusContext;
             [[SessionManager shared] trackLiveSession];
             [[SessionManager shared] trackRewindSession];
             [[SessionManager shared] trackOnDemandSession];
+            [[SessionManager shared] checkProgramUpdate:NO];
             
             if ([weakSelf.delegate respondsToSelector:@selector(onTimeChange)]) {
                 if ( weakSelf.waitForFirstTick ) {
@@ -245,15 +260,16 @@ static const NSString *ItemStatusContext;
     }
     
     if (!self.audioPlayer) {
-        [self buildStreamer:kHLSLiveStreamURL];
         self.waitForSeek = YES;
         self.audioPlayer.volume = 0.0;
         self.savedVolume = 1.0;
         self.queuedSeekDate = date;
-        [self.audioPlayer play];
+        [self buildStreamer:kHLSLiveStreamURL];
         return;
     }
     
+    self.waitForSeek = NO;
+    self.seekRequested = YES;
     if ( !failover ) {
         NSTimeInterval s2d = [date timeIntervalSince1970];
         NSTimeInterval now = [[NSDate date] timeIntervalSince1970];
@@ -293,13 +309,18 @@ static const NSString *ItemStatusContext;
                                                                              withFormat:@"hh:mm:ss a"]);
                     }
                     
-                 
-                    [self playStream];
+                    if ( self.audioPlayer.rate <= 0.0 ) {
+                        [self playStream];
+                    }
                     
                     self.status = StreamStatusPlaying;
+                    self.seekRequested = NO;
+                    
                     if ([self.delegate respondsToSelector:@selector(onSeekCompleted)]) {
                         [self.delegate onSeekCompleted];
                     }
+                } else {
+                    NSLog(@"Stream was not ready to play at the time of the seek request");
                 }
             }];
             
@@ -336,6 +357,7 @@ static const NSString *ItemStatusContext;
         if ( start < 0 ) {
             tsn -= start;
         }
+        break;
     }
     
     if ( self.audioPlayer.currentItem.seekableTimeRanges.count == 0 ) {
@@ -353,7 +375,8 @@ static const NSString *ItemStatusContext;
     
     NSLog(@"Seek in seconds : %ld",(long)tsn);
     
-    CMTime seekTime = CMTimeMakeWithSeconds(CMTimeGetSeconds(barometer) - tsn, barometer.timescale);
+    CMTime seekTime = CMTimeMakeWithSeconds(CMTimeGetSeconds(barometer) - tsn + 10.0, barometer.timescale);
+    
     [self.audioPlayer.currentItem seekToTime:seekTime completionHandler:^(BOOL finished) {
         dispatch_async(dispatch_get_main_queue(), ^{
             
@@ -373,6 +396,7 @@ static const NSString *ItemStatusContext;
                 [self playStream];
             }
             self.status = StreamStatusPlaying;
+            self.seekRequested = NO;
             if ([self.delegate respondsToSelector:@selector(onSeekCompleted)]) {
                 [self.delegate onSeekCompleted];
             }

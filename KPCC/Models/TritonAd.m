@@ -69,6 +69,12 @@
                             }
 
                             if (staticResource) {
+                                
+                                // Clickthrough
+                                if ( staticResource[@"CompanionClickThrough"] ) {
+                                    self.clickthroughUrl = staticResource[@"CompanionClickThrough"];
+                                }
+                                
                                 // Image file url
                                 if (staticResource[@"StaticResource"][@"__text"]) {
                                     self.imageCreativeUrl = staticResource[@"StaticResource"][@"__text"];

@@ -25,7 +25,7 @@
 - (void)setAdProgress;
 - (void)primeUI:(CompletionBlock)completed;
 
-
+@property (nonatomic, strong) UITapGestureRecognizer *adTapper;
 @property (nonatomic,weak) id<SCPRPreRollControllerDelegate> delegate;
 @property (nonatomic,strong) TritonAd *tritonAd;
 

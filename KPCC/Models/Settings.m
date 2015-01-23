@@ -15,6 +15,7 @@
     self.userHasViewedOnDemandOnboarding = [aDecoder decodeBoolForKey:@"userHasViewedOnDemandOnboarding"];
     self.pushTokenString = [aDecoder decodeObjectForKey:@"pushTokenString"];
     self.pushTokenData = [aDecoder decodeObjectForKey:@"pushTokenData"];
+    self.userHasConnectedWithKochava = [aDecoder decodeBoolForKey:@"userHasConnectedWithKochava"];
     return self;
 }
 
@@ -27,6 +28,8 @@
                   forKey:@"pushTokenData"];
     [aCoder encodeObject:self.pushTokenString
                   forKey:@"pushTokenString"];
+    [aCoder encodeBool:self.userHasConnectedWithKochava
+                forKey:@"userHasConnectedWithKochava"];
 }
 
 @end

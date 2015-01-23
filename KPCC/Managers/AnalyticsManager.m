@@ -62,26 +62,18 @@ static AnalyticsManager *singleton = nil;
     
     NSString *kKey = globalConfig[@"Kochava"][@"AppKey"];
     if ( kKey ) {
-        NSDictionary *kDict = @{ @"myKochavaAppId" : kKey };
+        NSDictionary *kDict = @{ @"kochavaAppId" : kKey };
         self.kTracker = [[KochavaTracker alloc] initKochavaWithParams:kDict];
     }
     
 }
 
+- (void)kTrackSession:(NSString *)modifier {
+    [self.kTracker trackEvent:@"session"
+                             :modifier];
+}
+
 - (void)trackHeadlinesDismissal {
-    
-    /*NSString *programTitle = @"";
-    if ( [AudioManager shared].status != StreamStatusPlaying ) {
-        programTitle = @"[NO AUDIO]";
-    } else {
-        if ( [AudioManager shared].currentAudioMode == AudioModeLive ) {
-            Program *p = [[SessionManager shared] currentProgram];
-            programTitle = p.title;
-        } else {
-            AudioChunk *c = [[QueueManager shared] currentChunk];
-            programTitle = c.programTitle;
-        }
-    }*/
     
     [self logEvent:@"userClosedHeadlines"
     withParameters:@{ }];
@@ -105,6 +97,7 @@ static AnalyticsManager *singleton = nil;
     
     Mixpanel *mxp = [Mixpanel sharedInstance];
     [mxp track:event properties:parameters];
+    
 }
 
 - (void)failStream:(StreamState)cause comments:(NSString *)comments {
