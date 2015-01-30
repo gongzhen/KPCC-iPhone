@@ -223,6 +223,8 @@ setForOnDemandUI;
     
     if ( ![[UXmanager shared] userHasSeenOnboarding] ) {
         [[UXmanager shared] loadOnboarding];
+    } else {
+        [[UXmanager shared] quietlyAskForNotificationPermissions];
     }
     
     [self.initialPlayButton addTarget:self

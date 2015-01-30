@@ -16,6 +16,7 @@
 #import "SCPROnboardingViewController.h"
 #import "UXmanager.h"
 #import "AnalyticsManager.h"
+#import <Parse/Parse.h>
 
 #ifdef ENABLE_TESTFLIGHT
 #import "TestFlight.h"
@@ -47,6 +48,9 @@
     //[[UXmanager shared] persist];
 #endif
     
+    [Parse setApplicationId:globalConfig[@"Parse"][@"ApplicationId"]
+                  clientKey:globalConfig[@"Parse"][@"ClientKey"]];
+    
     // Apply application-wide styling
     [self applyStylesheet];
     
@@ -72,6 +76,8 @@
     NSString *ua = kHLSLiveStreamURL;
     NSLog(@"URL : %@",ua);
     
+
+
     // Fetch initial list of Programs from SCPRV4 and store in CoreData for later usage.
     [[NetworkManager shared] fetchAllProgramInformation:^(id returnedObject) {
         
@@ -110,9 +116,15 @@
 }
 
 - (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error {
+    NSLog(@"•••• FAILED REGISTERING FOR PUSH ••••");
     if ( ![[UXmanager shared] userHasSeenOnboarding] ) {
         [[UXmanager shared] closeOutOnboarding];
     }
+    
+    [[PFInstallation currentInstallation] removeObject:kPushChannel
+                                                forKey:@"channels"];
+    [[PFInstallation currentInstallation] saveInBackground];
+    
 }
 
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
@@ -124,9 +136,70 @@
     
     [[UXmanager shared].settings setPushTokenData:deviceToken];
     [[UXmanager shared].settings setPushTokenString:hexToken];
-    [[UXmanager shared] persist];
+    
+    PFInstallation *i = [PFInstallation currentInstallation];
+        
+#ifndef PRODUCTION
+    NSLog(@" ••••• Forcing sandbox channel only •••• ");
+    [i removeObject:@"listenLive" forKey:@"channels"];
+    [i saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+        
+        [i setDeviceTokenFromData:deviceToken];
+        [i addUniqueObject:kPushChannel
+                    forKey:@"channels"];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [i saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+                [[UXmanager shared] persist];
+            }];
+        });
+    }];
     
     NSLog(@" ***** REGISTERING PUSH TOKEN : %@ *****", hexToken);
+    
+    return;
+#else
+    NSLog(@" ••••• Got through to PFInstallation creation •••• ");
+    
+
+    [i setDeviceTokenFromData:deviceToken];
+    [i addUniqueObject:kPushChannel
+                                  forKey:@"channels"];
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [i saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+            [[UXmanager shared] persist];
+        }];
+    });
+
+    NSLog(@" ***** REGISTERING PUSH TOKEN : %@ *****", hexToken);
+#endif
+    
+}
+
+- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
+    [self storeNote:userInfo];
+}
+
+- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
+    [self storeNote:userInfo];
+}
+
+- (void)storeNote:(NSDictionary *)userInfo {
+    NSError *jsonError = nil;
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:userInfo
+                                                       options:NSJSONWritingPrettyPrinted
+                                                         error:&jsonError];
+    NSString *jsonStr = [[NSString alloc] initWithData:jsonData
+                                              encoding:NSUTF8StringEncoding];
+    NSLog(@"Push Received : %@",jsonStr);
+    
+    [[UXmanager shared].settings setLatestPushJson:jsonStr];
+    [[UXmanager shared] persist];
+    
+    if ( [[UIApplication sharedApplication] applicationState] == UIApplicationStateActive ) {
+        // Do something if the app is in the foreground
+    }
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application {
@@ -181,6 +254,13 @@
         if ( [[UXmanager shared] paused] ) {
             [[UXmanager shared] godPauseOrPlay];
         }
+    }
+    
+    NSString *push = [[UXmanager shared].settings latestPushJson];
+    if ( push && !SEQ(push,@"") ) {
+        NSLog(@"Push received while app was in background : %@",push);
+        [[UXmanager shared].settings setLatestPushJson:nil];
+        [[UXmanager shared] persist];
     }
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
 }

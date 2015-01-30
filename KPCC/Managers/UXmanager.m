@@ -397,6 +397,15 @@
     }];
 }
 
+- (void)quietlyAskForNotificationPermissions {
+    if ( [[UIApplication sharedApplication] respondsToSelector:@selector(registerUserNotificationSettings:)] ) {
+        [[UIApplication sharedApplication] registerUserNotificationSettings:[UIUserNotificationSettings settingsForTypes:UIUserNotificationTypeAlert|UIRemoteNotificationTypeSound|UIRemoteNotificationTypeBadge
+                                                                                                              categories:nil]];
+    } else {
+        [[UIApplication sharedApplication] registerForRemoteNotificationTypes:UIRemoteNotificationTypeAlert|UIRemoteNotificationTypeBadge|UIRemoteNotificationTypeSound];
+    }
+}
+
 - (void)askSystemForNotificationPermissions {
     if ( [[UIApplication sharedApplication] respondsToSelector:@selector(registerUserNotificationSettings:)] ) {
         [[UIApplication sharedApplication] registerUserNotificationSettings:[UIUserNotificationSettings settingsForTypes:UIUserNotificationTypeAlert|UIRemoteNotificationTypeSound|UIRemoteNotificationTypeBadge
@@ -423,16 +432,16 @@
     [self.onboardingCtrl hideCallout];
     
     [UIView animateWithDuration:0.33 animations:^{
+        
         [self.masterCtrl.horizDividerLine setAlpha:0.4];
         [self.masterCtrl.blurView.layer setOpacity:0.0];
         [self.masterCtrl.playerControlsView setAlpha:1.0];
+        
     } completion:^(BOOL finished) {
 
         [[AudioManager shared].audioPlayer play];
         [self.lisaPlayer play];
-        //if ( [self.musicPlayer rate] <= 0.0 ) {
-            [self.musicPlayer play];
-        //}
+        [self.musicPlayer play];
         
     }];
 

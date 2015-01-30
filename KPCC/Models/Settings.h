@@ -15,5 +15,6 @@
 @property BOOL userHasConnectedWithKochava;
 @property (nonatomic, strong) NSData *pushTokenData;
 @property (nonatomic, strong) NSString *pushTokenString;
+@property (nonatomic, strong) NSString *latestPushJson;
 
 @end

@@ -18,7 +18,12 @@ typedef void (^CompletionBlockWithValue)(id returnedObject);
 
 #ifdef PRODUCTION
 #define NSLog //
+#define kPushChannel @"listenLive"
+#else
+#define kPushChannel @"sandbox_listenLive"
 #endif
+
+
 
 @class SCPRMasterViewController;
 @class SCPRNavigationController;
@@ -30,5 +35,9 @@ typedef void (^CompletionBlockWithValue)(id returnedObject);
 @property (strong, nonatomic) SCPRMasterViewController *masterViewController;
 @property (strong, nonatomic) SCPRNavigationController *masterNavigationController;
 @property (strong, nonatomic) SCPROnboardingViewController *onboardingController;
+
+@property (strong, nonatomic) NSDictionary *latestPush;
+
+- (void)storeNote:(NSDictionary*)userInfo;
 
 @end
