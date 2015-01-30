@@ -2277,7 +2277,14 @@ setForOnDemandUI;
     Program *program = [[SessionManager shared] currentProgram];
     if ( program || [AudioManager shared].currentAudioMode == AudioModeOnboarding ) {
         if ( [[AudioManager shared].audioPlayer rate] > 0.0 ) {
-          
+            
+            if ( !self.menuOpen ) {
+                if ( [self.liveProgressViewController uiHidden] ) {
+                    if ( [[AudioManager shared] currentAudioMode] == AudioModeLive ) {
+                        [self.liveProgressViewController show];
+                    }
+                }
+            }
             [self.liveProgressViewController tick];
    
         } else {
