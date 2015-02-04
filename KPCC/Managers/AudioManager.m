@@ -448,9 +448,20 @@ static const NSString *ItemStatusContext;
     if ( labs([[self maxSeekableDate] timeIntervalSince1970] - [target timeIntervalSince1970] ) <= kStreamCorrectionTolerance ) {
         target = [self maxSeekableDate];
     }
+    
+#ifdef THREE_ZERO_ZERO
     [self seekToDate:target
              forward:YES
             failover:NO];
+#else
+    [self.audioPlayer.currentItem seekToTime:CMTimeMake(MAXFLOAT, 1) completionHandler:^(BOOL finished) {
+        
+        if ( [self.audioPlayer rate] <= 0.0 ) {
+            [self.audioPlayer play];
+        }
+        [self.delegate onSeekCompleted];
+    }];
+#endif
 }
 
 - (void)forwardSeekThirtySeconds {

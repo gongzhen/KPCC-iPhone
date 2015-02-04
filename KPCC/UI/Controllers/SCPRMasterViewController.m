@@ -1378,8 +1378,6 @@ setForOnDemandUI;
             [self.view layoutIfNeeded];
         }];
         
-        
-
         [self.liveStreamView layoutIfNeeded];
         [self.initialControlsView layoutIfNeeded];
         [self.liveRewindAltButton layoutIfNeeded];
@@ -2001,7 +1999,7 @@ setForOnDemandUI;
     
     [self.queueBlurView.layer pop_addAnimation:fadeAnimation forKey:@"blurViewFadeAnimation"];
     [self.darkBgView.layer pop_addAnimation:darkBgFadeAnimation forKey:@"darkBgFadeAnimation"];
-    [self.playerControlsView.layer pop_addAnimation:controlsFadeAnimation forKey:@"controlsViewFadeAnimation"];
+    //[self.playerControlsView.layer pop_addAnimation:controlsFadeAnimation forKey:@"controlsViewFadeAnimation"];
     [self.onDemandPlayerView.layer pop_addAnimation:controlsFadeAnimation forKey:@"onDemandViewFadeAnimation"];
     [self.liveStreamView.layer pop_addAnimation:controlsFadeAnimation forKey:@"liveStreamViewFadeAnimation"];
     [self.programTitleLabel.layer pop_addAnimation:controlsFadeAnimation forKey:@"titleFadeUp"];
@@ -2048,7 +2046,6 @@ setForOnDemandUI;
         } else {
             [self playStream:YES];
         }
-        
     });
     
 }
@@ -2273,16 +2270,25 @@ setForOnDemandUI;
     
     NSDate *ciCurrentDate = [AudioManager shared].audioPlayer.currentItem.currentDate;
     NSTimeInterval ti = [[NSDate date] timeIntervalSinceDate:ciCurrentDate];
+    
+#ifdef THREE_ZERO_ZERO
     NSTimeInterval tx = [[[AudioManager shared] maxSeekableDate] timeIntervalSinceDate:ciCurrentDate];
+#else
+    NSTimeInterval tx = [[NSDate date] timeIntervalSinceDate:ciCurrentDate];
+#endif
     Program *program = [[SessionManager shared] currentProgram];
     if ( program || [AudioManager shared].currentAudioMode == AudioModeOnboarding ) {
         if ( [[AudioManager shared].audioPlayer rate] > 0.0 ) {
-            
             if ( !self.menuOpen ) {
                 if ( [self.liveProgressViewController uiHidden] ) {
                     if ( [[AudioManager shared] currentAudioMode] == AudioModeLive ) {
                         [self.liveProgressViewController show];
                     }
+                } else if ( !self.liveProgressViewController.view.superview ) {
+                    [self.liveProgressViewController displayWithProgram:program
+                                                                 onView:self.view
+                                                       aboveSiblingView:self.playerControlsView];
+                    [self.liveProgressViewController show];
                 }
             }
             [self.liveProgressViewController tick];
