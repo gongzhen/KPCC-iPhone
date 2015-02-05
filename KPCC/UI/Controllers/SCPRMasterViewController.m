@@ -1785,6 +1785,10 @@ setForOnDemandUI;
         if ( [[AudioManager shared] status] == StreamStatusPaused ) {
             [[AudioManager shared] resetPlayer];
             [self resetUI];
+        } else if ( [[SessionManager shared] sessionIsBehindLive] ) {
+            [[AudioManager shared] pauseStream];
+            [[AudioManager shared] resetPlayer];
+            [self resetUI];
         }
     }
 

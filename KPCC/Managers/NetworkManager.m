@@ -28,23 +28,21 @@ static NetworkManager *singleton = nil;
     return singleton;
 }
 
-- (NetworkHealth)checkNetworkHealth:(NSString *)server {
-    
-    if ( [self.anchoredReachability reachable] ) {
+- (NetworkHealth)checkNetworkHealth {
+    if ( [self.floatingReachability reachable] ) {
         if ( [self.anchoredStaticContentReachability reachable] ) {
-            if ( [self.floatingReachability reachable] ) {
+            if ( [self.anchoredReachability reachable] ) {
                 return NetworkHealthAllOK;
             } else {
-                return NetworkHealthServerDown;
+                return NetworkHealthNetworkDown;
             }
         } else {
-            return NetworkHealthServerDown;
+            return NetworkHealthContentServerDown;
         }
-    } else {
-        return NetworkHealthNetworkDown;
     }
     
-    return NetworkHealthNetworkDown;
+    return NetworkHealthStreamingServerDown;
+
 }
 
 - (NSString*)networkInformation {
@@ -74,6 +72,7 @@ static NetworkManager *singleton = nil;
     self.anchoredReachability = [KSReachability reachabilityToLocalNetwork];
     [self applyNotifiersToReachability:self.anchoredReachability];
     [self applyNotifiersToReachability:self.anchoredStaticContentReachability];
+    [self setupFloatingReachabilityWithHost:[[NSURL URLWithString:kHLSLiveStreamURL] host]];
     
     self.basicReachability = [Reachability reachabilityForInternetConnection];
     

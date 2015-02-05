@@ -22,11 +22,12 @@
 
 typedef NS_ENUM(NSInteger, NetworkHealth) {
     NetworkHealthUnknown = 0,
-    NetworkHealthServerOK = 1,
-    NetworkHealthNetworkOK = 2,
-    NetworkHealthServerDown = 3,
-    NetworkHealthNetworkDown = 4,
-    NetworkHealthAllOK = 5
+    NetworkHealthServerOK,
+    NetworkHealthNetworkOK,
+    NetworkHealthContentServerDown,
+    NetworkHealthNetworkDown,
+    NetworkHealthStreamingServerDown,
+    NetworkHealthAllOK
 } ;
 
 
@@ -44,7 +45,7 @@ typedef NS_ENUM(NSInteger, NetworkHealth) {
 @property (nonatomic,strong) KSReachableOperation *reachableOperation;
 @property (nonatomic,strong) Reachability *basicReachability;
 
-- (NetworkHealth)checkNetworkHealth:(NSString*)server;
+- (NetworkHealth)checkNetworkHealth;
 @property (NS_NONATOMIC_IOSONLY, readonly, copy) NSString *networkInformation;
 
 @property BOOL networkDown;
