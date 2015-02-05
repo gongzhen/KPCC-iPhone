@@ -223,6 +223,8 @@ setForOnDemandUI;
     
     if ( ![[UXmanager shared] userHasSeenOnboarding] ) {
         [[UXmanager shared] loadOnboarding];
+    } else {
+        [[UXmanager shared] quietlyAskForNotificationPermissions];
     }
     
     [self.initialPlayButton addTarget:self
@@ -345,6 +347,12 @@ setForOnDemandUI;
         self.initialPlay = NO;
         [self.jogShuttle endAnimations];
         
+        [self setLiveStreamingUI:YES];
+        
+        if ( self.menuOpen ) {
+            [self decloakForMenu:YES];
+        }
+        
         [UIView animateWithDuration:0.25 animations:^{
             self.playerControlsBottomYConstraint.constant = [self.originalFrames[@"playerControls"] floatValue];
             self.liveRewindBottomYConstraint.constant = [self.originalFrames[@"liveRewind"] floatValue];
@@ -352,12 +360,15 @@ setForOnDemandUI;
             [self.liveProgressViewController hide];
             self.horizDividerLine.layer.opacity = 0.0;
             self.initialControlsView.layer.opacity = 1.0;
+            self.initialPlayButton.layer.opacity = 1.0;
+            self.initialPlayButton.alpha = 1.0;
         } completion:^(BOOL finished) {
             
             [self.preRollViewController.view removeFromSuperview];
             [self.preRollViewController removeFromParentViewController];
             self.preRollViewController = nil;
             
+            self.navigationItem.title = @"KPCC Live";
             
             [self determinePlayState];
             
@@ -1376,8 +1387,6 @@ setForOnDemandUI;
             [self.view layoutIfNeeded];
         }];
         
-        
-
         [self.liveStreamView layoutIfNeeded];
         [self.initialControlsView layoutIfNeeded];
         [self.liveRewindAltButton layoutIfNeeded];
@@ -1711,7 +1720,6 @@ setForOnDemandUI;
     
     if ( [[AudioManager shared] currentAudioMode] == AudioModeOnDemand ) {
         self.onDemandPlayerView.alpha = 1.0;
-        
         self.timeLabelOnDemand.text = @"";
         self.timeLabelOnDemand.alpha = 1.0;
     }
@@ -1755,6 +1763,35 @@ setForOnDemandUI;
         
     }];
     
+}
+
+- (void)handleResponseForNotification {
+
+    [self.navigationController popToRootViewControllerAnimated:YES];
+    if ( self.menuOpen ) {
+        [self decloakForMenu:YES];
+    }
+    if ( [[AudioManager shared] currentAudioMode] == AudioModeOnDemand ) {
+        if ( [[AudioManager shared].audioPlayer rate] > 0.0 ) {
+            [[AudioManager shared] adjustAudioWithValue:-1.0 completion:^{
+                [[AudioManager shared] resetPlayer];
+                [self resetUI];
+            }];
+        } else {
+            [[AudioManager shared] resetPlayer];
+            [self resetUI];
+        }
+    } else if ( [[AudioManager shared] currentAudioMode] == AudioModeLive ) {
+        if ( [[AudioManager shared] status] == StreamStatusPaused ) {
+            [[AudioManager shared] resetPlayer];
+            [self resetUI];
+        } else if ( [[SessionManager shared] sessionIsBehindLive] ) {
+            [[AudioManager shared] pauseStream];
+            [[AudioManager shared] resetPlayer];
+            [self resetUI];
+        }
+    }
+
 }
 
 #pragma mark - Util
@@ -1999,7 +2036,7 @@ setForOnDemandUI;
     
     [self.queueBlurView.layer pop_addAnimation:fadeAnimation forKey:@"blurViewFadeAnimation"];
     [self.darkBgView.layer pop_addAnimation:darkBgFadeAnimation forKey:@"darkBgFadeAnimation"];
-    [self.playerControlsView.layer pop_addAnimation:controlsFadeAnimation forKey:@"controlsViewFadeAnimation"];
+    //[self.playerControlsView.layer pop_addAnimation:controlsFadeAnimation forKey:@"controlsViewFadeAnimation"];
     [self.onDemandPlayerView.layer pop_addAnimation:controlsFadeAnimation forKey:@"onDemandViewFadeAnimation"];
     [self.liveStreamView.layer pop_addAnimation:controlsFadeAnimation forKey:@"liveStreamViewFadeAnimation"];
     [self.programTitleLabel.layer pop_addAnimation:controlsFadeAnimation forKey:@"titleFadeUp"];
@@ -2046,7 +2083,6 @@ setForOnDemandUI;
         } else {
             [self playStream:YES];
         }
-        
     });
     
 }
@@ -2271,11 +2307,27 @@ setForOnDemandUI;
     
     NSDate *ciCurrentDate = [AudioManager shared].audioPlayer.currentItem.currentDate;
     NSTimeInterval ti = [[NSDate date] timeIntervalSinceDate:ciCurrentDate];
+    
+#ifdef THREE_ZERO_ZERO
     NSTimeInterval tx = [[[AudioManager shared] maxSeekableDate] timeIntervalSinceDate:ciCurrentDate];
+#else
+    NSTimeInterval tx = [[NSDate date] timeIntervalSinceDate:ciCurrentDate];
+#endif
     Program *program = [[SessionManager shared] currentProgram];
     if ( program || [AudioManager shared].currentAudioMode == AudioModeOnboarding ) {
         if ( [[AudioManager shared].audioPlayer rate] > 0.0 ) {
-          
+            if ( !self.menuOpen ) {
+                if ( [self.liveProgressViewController uiHidden] ) {
+                    if ( [[AudioManager shared] currentAudioMode] == AudioModeLive ) {
+                        [self.liveProgressViewController show];
+                    }
+                } else if ( !self.liveProgressViewController.view.superview ) {
+                    [self.liveProgressViewController displayWithProgram:program
+                                                                 onView:self.view
+                                                       aboveSiblingView:self.playerControlsView];
+                    [self.liveProgressViewController show];
+                }
+            }
             [self.liveProgressViewController tick];
    
         } else {

@@ -128,6 +128,7 @@ static const NSString *ItemStatusContext;
         // Now playing, was stopped.
         if (oldRate == 0.0 && newRate == 1.0) {
             [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
+            self.dumpedOnce = NO;
             [self startObservingTime];
         }
         if ( oldRate == 1.0 && newRate == 0.0 ) {
@@ -219,6 +220,13 @@ static const NSString *ItemStatusContext;
             [[SessionManager shared] trackRewindSession];
             [[SessionManager shared] trackOnDemandSession];
             [[SessionManager shared] checkProgramUpdate:NO];
+            
+#ifdef DEBUG
+            if ( !weakSelf.dumpedOnce ) {
+                weakSelf.dumpedOnce = YES;
+                [weakSelf dump:YES];
+            }
+#endif
             
             if ([weakSelf.delegate respondsToSelector:@selector(onTimeChange)]) {
                 if ( weakSelf.waitForFirstTick ) {
@@ -448,9 +456,20 @@ static const NSString *ItemStatusContext;
     if ( labs([[self maxSeekableDate] timeIntervalSince1970] - [target timeIntervalSince1970] ) <= kStreamCorrectionTolerance ) {
         target = [self maxSeekableDate];
     }
+    
+#ifdef THREE_ZERO_ZERO
     [self seekToDate:target
              forward:YES
             failover:NO];
+#else
+    [self.audioPlayer.currentItem seekToTime:CMTimeMake(MAXFLOAT, 1) completionHandler:^(BOOL finished) {
+        
+        if ( [self.audioPlayer rate] <= 0.0 ) {
+            [self.audioPlayer play];
+        }
+        [self.delegate onSeekCompleted];
+    }];
+#endif
 }
 
 - (void)forwardSeekThirtySeconds {
@@ -962,8 +981,7 @@ static const NSString *ItemStatusContext;
 
 - (void)analyzeStreamError:(NSString *)comments {
 
-    NSURL *liveURL = [NSURL URLWithString:kHLSLiveStreamURL];
-    NetworkHealth netHealth = [[NetworkManager shared] checkNetworkHealth:[liveURL host]];
+    NetworkHealth netHealth = [[NetworkManager shared] checkNetworkHealth];
 
     switch (netHealth) {
         case NetworkHealthAllOK:
@@ -985,14 +1003,19 @@ static const NSString *ItemStatusContext;
             [[AnalyticsManager shared] failStream:StreamStateLostConnectivity comments:comments];
             break;
         
-        case NetworkHealthServerDown:
+        case NetworkHealthContentServerDown:
             //[self localAudioFallback:[[NSBundle mainBundle] pathForResource:kFailedStreamAudioFile ofType:@"mp3"]];
             if ([self.delegate respondsToSelector:@selector(handleUIForFailedStream)]) {
                 [self.delegate handleUIForFailedStream];
             }
             [[AnalyticsManager shared] failStream:StreamStateServerFail comments:comments];
             break;
-            
+        case NetworkHealthStreamingServerDown:
+            if ([self.delegate respondsToSelector:@selector(handleUIForFailedStream)]) {
+                [self.delegate handleUIForFailedStream];
+            }
+            [[AnalyticsManager shared] failStream:StreamStateServerFail comments:comments];
+            break;
         default:
             [[AnalyticsManager shared] failStream:StreamStateUnknown comments:comments];
             break;

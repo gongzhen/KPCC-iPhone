@@ -112,6 +112,7 @@ typedef NS_ENUM(NSUInteger, StreamStatus) {
 @property BOOL waitForSeek;
 @property BOOL prerollPlaying;
 @property BOOL tryAgain;
+@property BOOL dumpedOnce;
 
 @property (nonatomic, copy) NSString *previousUrl;
 @property (nonatomic, strong) NSDate *queuedSeekDate;
