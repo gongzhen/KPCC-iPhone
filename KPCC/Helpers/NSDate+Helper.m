@@ -159,7 +159,7 @@
 
 + (NSString*)prettyTextFromSeconds:(NSInteger)seconds {
     
-    if ( seconds < 60 ) return @"LIVE";
+    if ( seconds < 60 ) return @"LESS THAN A MINUTE";
     
     NSInteger minutes = ceil(seconds/60);
     NSInteger hours = 0;

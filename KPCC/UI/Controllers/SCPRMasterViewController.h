@@ -155,4 +155,6 @@
 - (void)rollInterferenceText;
 - (void)showOnDemandOnboarding;
 
+- (void)handleResponseForNotification;
+
 @end

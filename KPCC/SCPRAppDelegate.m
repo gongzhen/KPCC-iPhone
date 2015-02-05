@@ -182,20 +182,32 @@
 }
 
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
-    [self storeNote:userInfo];
+    if ( completionHandler ) {
+        [self storeNote:userInfo];
+        completionHandler(UIBackgroundFetchResultNoData);
+    } else {
+        [self storeNote:userInfo];
+    }
 }
 
 - (void)storeNote:(NSDictionary *)userInfo {
-    NSError *jsonError = nil;
-    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:userInfo
-                                                       options:NSJSONWritingPrettyPrinted
-                                                         error:&jsonError];
-    NSString *jsonStr = [[NSString alloc] initWithData:jsonData
-                                              encoding:NSUTF8StringEncoding];
-    NSLog(@"Push Received : %@",jsonStr);
     
-    [[UXmanager shared].settings setLatestPushJson:jsonStr];
-    [[UXmanager shared] persist];
+    //if ( [[UIApplication sharedApplication] applicationState] == UIApplicationStateBackground ) {
+        /*NSError *jsonError = nil;
+        NSData *jsonData = [NSJSONSerialization dataWithJSONObject:userInfo
+                                                           options:NSJSONWritingPrettyPrinted
+                                                             error:&jsonError];
+        NSString *jsonStr = [[NSString alloc] initWithData:jsonData
+                                                  encoding:NSUTF8StringEncoding];
+        NSLog(@"Push Received : %@",jsonStr);
+        
+        [[UXmanager shared].settings setLatestPushJson:jsonStr];
+        [[UXmanager shared] persist];*/
+    NSLog(@" ******* ••••••• Handling remote notification •••••• ****** ");
+    [self.masterViewController handleResponseForNotification];
+    //}
+
+
     
     if ( [[UIApplication sharedApplication] applicationState] == UIApplicationStateActive ) {
         // Do something if the app is in the foreground
@@ -262,6 +274,9 @@
         [[UXmanager shared].settings setLatestPushJson:nil];
         [[UXmanager shared] persist];
     }
+    
+    [[UIApplication sharedApplication] setApplicationIconBadgeNumber:0];
+    
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
 }
 

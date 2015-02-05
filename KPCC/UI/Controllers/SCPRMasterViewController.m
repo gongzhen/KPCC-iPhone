@@ -347,6 +347,12 @@ setForOnDemandUI;
         self.initialPlay = NO;
         [self.jogShuttle endAnimations];
         
+        [self setLiveStreamingUI:YES];
+        
+        if ( self.menuOpen ) {
+            [self decloakForMenu:YES];
+        }
+        
         [UIView animateWithDuration:0.25 animations:^{
             self.playerControlsBottomYConstraint.constant = [self.originalFrames[@"playerControls"] floatValue];
             self.liveRewindBottomYConstraint.constant = [self.originalFrames[@"liveRewind"] floatValue];
@@ -354,12 +360,15 @@ setForOnDemandUI;
             [self.liveProgressViewController hide];
             self.horizDividerLine.layer.opacity = 0.0;
             self.initialControlsView.layer.opacity = 1.0;
+            self.initialPlayButton.layer.opacity = 1.0;
+            self.initialPlayButton.alpha = 1.0;
         } completion:^(BOOL finished) {
             
             [self.preRollViewController.view removeFromSuperview];
             [self.preRollViewController removeFromParentViewController];
             self.preRollViewController = nil;
             
+            self.navigationItem.title = @"KPCC Live";
             
             [self determinePlayState];
             
@@ -1711,7 +1720,6 @@ setForOnDemandUI;
     
     if ( [[AudioManager shared] currentAudioMode] == AudioModeOnDemand ) {
         self.onDemandPlayerView.alpha = 1.0;
-        
         self.timeLabelOnDemand.text = @"";
         self.timeLabelOnDemand.alpha = 1.0;
     }
@@ -1755,6 +1763,31 @@ setForOnDemandUI;
         
     }];
     
+}
+
+- (void)handleResponseForNotification {
+
+    [self.navigationController popToRootViewControllerAnimated:YES];
+    if ( self.menuOpen ) {
+        [self decloakForMenu:YES];
+    }
+    if ( [[AudioManager shared] currentAudioMode] == AudioModeOnDemand ) {
+        if ( [[AudioManager shared].audioPlayer rate] > 0.0 ) {
+            [[AudioManager shared] adjustAudioWithValue:-1.0 completion:^{
+                [[AudioManager shared] resetPlayer];
+                [self resetUI];
+            }];
+        } else {
+            [[AudioManager shared] resetPlayer];
+            [self resetUI];
+        }
+    } else if ( [[AudioManager shared] currentAudioMode] == AudioModeLive ) {
+        if ( [[AudioManager shared] status] == StreamStatusPaused ) {
+            [[AudioManager shared] resetPlayer];
+            [self resetUI];
+        }
+    }
+
 }
 
 #pragma mark - Util
