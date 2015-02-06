@@ -17,6 +17,12 @@
 
 static AnalyticsManager *singleton = nil;
 
+@interface AnalyticsManager ()
+
+- (NSString*)stringForInterruptionCause:(NetworkHealth)cause;
+
+@end
+
 @implementation AnalyticsManager
 
 + (AnalyticsManager*)shared {
@@ -50,8 +56,6 @@ static AnalyticsManager *singleton = nil;
     [Flurry startSession: globalConfig[@"Flurry"][flurryToken] ];
     [Flurry setBackgroundSessionEnabled:NO];
     
-
-    
     NSLog(@"Mixpanel : %@ : %@",mixPanelToken,globalConfig[@"Mixpanel"][mixPanelToken]);
     
     [Mixpanel sharedInstanceWithToken:globalConfig[@"Mixpanel"][mixPanelToken]];
@@ -82,6 +86,12 @@ static AnalyticsManager *singleton = nil;
 
 - (void)logEvent:(NSString *)event withParameters:(NSDictionary *)parameters {
     NSMutableDictionary *userInfo = [[NSMutableDictionary alloc] init];
+    //userInfo[@"deviceIdentifier"] = [[[UIDevice currentDevice] identifierForVendor] UUIDString];
+    
+    NSString *playerSession = [[AudioManager shared] avPlayerSessionString];
+    if ( playerSession && [playerSession length] > 0 ) {
+        userInfo[@"avPlayerSessionId"] = playerSession;
+    }
     
     if ( ![[UXmanager shared].settings userHasViewedOnboarding] ) return;
     
@@ -90,17 +100,17 @@ static AnalyticsManager *singleton = nil;
     }
     
 #ifdef DEBUG
-    NSLog(@"Logging to Flurry now - %@ - with params %@", event, parameters);
+    NSLog(@"Logging to Analytics now - %@ - with params %@", event, userInfo);
 #endif
     
     [Flurry logEvent:event withParameters:userInfo timed:YES];
     
     Mixpanel *mxp = [Mixpanel sharedInstance];
-    [mxp track:event properties:parameters];
+    [mxp track:event properties:userInfo];
     
 }
 
-- (void)failStream:(StreamState)cause comments:(NSString *)comments {
+- (void)failStream:(NetworkHealth)cause comments:(NSString *)comments {
     
     // Only send a failure report once every 5 seconds.
     long currentTimeSeconds = [[NSDate date] timeIntervalSince1970];
@@ -116,27 +126,45 @@ static AnalyticsManager *singleton = nil;
                                     @"timeDropped"  : [NSDate stringFromDate:[NSDate date]
                                                                   withFormat:@"YYYY-MM-dd hh:mm:ss"],
                                     @"details" : comments,
-                                    @"NetworkInfo" : [[NetworkManager shared] networkInformation],
-                                    @"LastPrerollPlayedSecondsAgo" : [NSString stringWithFormat:@"%ld", currentTimeSeconds - [[AudioManager shared] lastPreRoll]]};
+                                    @"networkInfo" : [[NetworkManager shared] networkInformation],
+                                    @"lastPrerollPlayedSecondsAgo" : [NSString stringWithFormat:@"%ld", currentTimeSeconds - [[AudioManager shared] lastPreRoll]],
+                                    
+                                    
+                                    };
         
-        NSLog(@"Sending stream failure report to Flurry");
+        if ( [[SessionManager shared] liveSessionID] && !SEQ([[SessionManager shared] liveSessionID],@"") ) {
+            NSMutableDictionary *mD = [analysis mutableCopy];
+            mD[@"kpccSessionId"] = [[SessionManager shared] liveSessionID];
+            analysis = mD;
+        } else if ( [[SessionManager shared] odSessionID] && !SEQ([[SessionManager shared] odSessionID],@"") ) {
+            NSMutableDictionary *mD = [analysis mutableCopy];
+            mD[@"kpccSessionId"] = [[SessionManager shared] odSessionID];
+            analysis = mD;
+        }
+        
+        NSLog(@"Sending stream failure report to analytics");
         [self logEvent:@"streamFailure" withParameters:analysis];
     }
+    
 }
 
-- (NSString*)stringForInterruptionCause:(StreamState)cause {
+- (NSString*)stringForInterruptionCause:(NetworkHealth)cause {
     NSString *english = @"";
     switch (cause) {
-        case StreamStateLostConnectivity:
-            english = @"Device lost connectivity";
+        case NetworkHealthStreamingServerDown:
+            english = [NSString stringWithFormat:@"Device could not communicate with streaming server : %@",kHLSLiveStreamURL];
             break;
-        case StreamStateServerFail:
-            english = [NSString stringWithFormat:@"Device could not communicate with : %@",kLiveStreamURL];
+        case NetworkHealthContentServerDown:
+            english = [NSString stringWithFormat:@"Device could not communicate with content server : %@",kServerBase];
             break;
-        case StreamStateHealthy:
-        case StreamStateUnknown:
-            english = @"Stream failed for unknown reason";
+        case NetworkHealthNetworkDown:
+            english = @"Internet connectivity is non-existent";
+        case NetworkHealthAllOK:
+        case NetworkHealthNetworkOK:
+        case NetworkHealthServerOK:
+        case NetworkHealthUnknown:
         default:
+            english = @"Cause of this is unknown";
             break;
     }
     

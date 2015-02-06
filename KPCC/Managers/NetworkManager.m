@@ -48,18 +48,19 @@ static NetworkManager *singleton = nil;
 - (NSString*)networkInformation {
     
     NetworkStatus remoteHostStatus = [self.basicReachability currentReachabilityStatus];
-    
+    NSString *nInfo = @"";
     if ( remoteHostStatus == ReachableViaWiFi ) {
-        return @"Wi-Fi";
-    }
-    if ( remoteHostStatus == ReachableViaWWAN ) {
+        nInfo = @"Wi-Fi";
+    } else if ( remoteHostStatus == ReachableViaWWAN ) {
         CTTelephonyNetworkInfo *netinfo = [[CTTelephonyNetworkInfo alloc] init];
         CTCarrier *carrier = [netinfo subscriberCellularProvider];
         NSString *carrierName = [carrier carrierName];
-        return carrierName;
+        nInfo = carrierName;
+    } else {
+        nInfo = @"No Connection";
     }
     
-    return @"No Connection";
+    return nInfo;
 }
 
 - (void)setupReachability {
@@ -75,17 +76,6 @@ static NetworkManager *singleton = nil;
     [self setupFloatingReachabilityWithHost:[[NSURL URLWithString:kHLSLiveStreamURL] host]];
     
     self.basicReachability = [Reachability reachabilityForInternetConnection];
-    
-    /*
-    self.reachableOperation = [KSReachableOperation operationWithHost:contentServer
-                                                            allowWWAN:YES
-                                               onReachabilityAchieved:^{
-                                                   
-                                                   [[NSNotificationCenter defaultCenter] postNotificationName:@"network-status-good"
-                                                                                                       object:nil];
-                                                   
-                                               }];*/
-    
     
 }
 

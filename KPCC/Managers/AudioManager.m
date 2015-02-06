@@ -86,8 +86,20 @@ static const NSString *ItemStatusContext;
                 NSLog(@"Trying again after failure...");
                 
                 self.tryAgain = NO;
-                [self.audioPlayer play];
-                [self startObservingTime];
+                
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.33 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                    [self.audioPlayer play];
+                    [self startObservingTime];
+                });
+                
+            } else {
+                
+                if ( self.recoveryGateOpen ) {
+                    if ( [self.audioPlayer rate] <= 0.0 ) {
+                        [self.audioPlayer play];
+                        self.recoveryGateOpen = NO;
+                    }
+                }
                 
             }
         } else if ([self.audioPlayer.currentItem status] == AVPlayerItemStatusUnknown) {
@@ -97,13 +109,19 @@ static const NSString *ItemStatusContext;
     
     // Monitoring AVPlayer->currentItem with empty playback buffer.
     if (object == self.audioPlayer.currentItem && [keyPath isEqualToString:@"playbackBufferEmpty"]) {
-        [self analyzeStreamError:nil];
+        if ( [change[@"new"] intValue] == 1 ) {
+            [self analyzeStreamError:nil];
+            [self.audioPlayer pause];
+            self.recoveryGateOpen = YES;
+        }
     }
     
     if (object == self.audioPlayer.currentItem && [keyPath isEqualToString:@"playbackLikelyToKeepUp"]) {
         if ( [change[@"new"] intValue] == 0 ) {
             NSLog(@"Stream not likely to keep up...");
             [self analyzeStreamError:nil];
+            [self.audioPlayer pause];
+            self.recoveryGateOpen = YES;
         }
     }
     
@@ -601,6 +619,54 @@ static const NSString *ItemStatusContext;
     return [self.audioPlayer observedMinBitrate];
 }
 
+- (NSString*)avPlayerSessionString {
+    NSString *rv = nil;
+    if ( self.audioPlayer ) {
+        if ( self.audioPlayer.currentItem ) {
+            AVPlayerItemErrorLog *errorLog = [self.audioPlayer.currentItem errorLog];
+            NSString *logAsString = [[NSString alloc] initWithData:[errorLog extendedLogData]
+                                                encoding:[errorLog extendedLogDataStringEncoding]];
+            if ( logAsString && [logAsString length] > 0 ) {
+                
+                NSString *pattern = @"[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}";
+                NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:pattern
+                                                                                       options:0 error:NULL];
+                NSTextCheckingResult *match = [regex firstMatchInString:logAsString options:0 range:NSMakeRange(0, [logAsString length])];
+                if ( match ) {
+                    
+                    NSRange r1 = [match rangeAtIndex:0];
+                    rv = [logAsString substringWithRange:r1];
+                    
+                }
+
+            } else {
+                AVPlayerItemAccessLog *accessLog = [self.audioPlayer.currentItem accessLog];
+                logAsString = [[NSString alloc] initWithData:[accessLog extendedLogData]
+                                                              encoding:[accessLog extendedLogDataStringEncoding]];
+                
+                if ( logAsString && [logAsString length] > 0 ) {
+                    
+                    NSString *pattern = @"[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{12}";
+                    NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:pattern
+                                                                                           options:0 error:NULL];
+                    NSTextCheckingResult *match = [regex firstMatchInString:logAsString options:0 range:NSMakeRange(0, [logAsString length])];
+                    if ( match ) {
+                        
+                        NSRange r1 = [match rangeAtIndex:0];
+                        rv = [logAsString substringWithRange:r1];
+                        
+                    }
+                    
+                }
+                
+            }
+            // [0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}
+        }
+    }
+    
+    return rv;
+}
+
 #pragma mark - Audio Control
 - (void)buildStreamer:(NSString*)urlString local:(BOOL)local {
     NSURL *url;
@@ -957,7 +1023,13 @@ static const NSString *ItemStatusContext;
                                             encoding:[accessLog extendedLogDataStringEncoding]];
         if ( [logAsString length] > 0 ) {
             NSLog(@"Player access log : %@",logAsString);
+
         }
+    }
+    
+    NSString *sid = [self avPlayerSessionString];
+    if ( sid ) {
+        NSLog(@"Session ID : %@",sid);
     }
     
 }
@@ -1000,7 +1072,7 @@ static const NSString *ItemStatusContext;
             if ([self.delegate respondsToSelector:@selector(handleUIForFailedConnection)]) {
                 [self.delegate handleUIForFailedConnection];
             }
-            [[AnalyticsManager shared] failStream:StreamStateLostConnectivity comments:comments];
+            [[AnalyticsManager shared] failStream:NetworkHealthNetworkDown comments:comments];
             break;
         
         case NetworkHealthContentServerDown:
@@ -1008,16 +1080,16 @@ static const NSString *ItemStatusContext;
             if ([self.delegate respondsToSelector:@selector(handleUIForFailedStream)]) {
                 [self.delegate handleUIForFailedStream];
             }
-            [[AnalyticsManager shared] failStream:StreamStateServerFail comments:comments];
+            [[AnalyticsManager shared] failStream:NetworkHealthContentServerDown comments:comments];
             break;
         case NetworkHealthStreamingServerDown:
             if ([self.delegate respondsToSelector:@selector(handleUIForFailedStream)]) {
                 [self.delegate handleUIForFailedStream];
             }
-            [[AnalyticsManager shared] failStream:StreamStateServerFail comments:comments];
+            [[AnalyticsManager shared] failStream:NetworkHealthStreamingServerDown comments:comments];
             break;
         default:
-            [[AnalyticsManager shared] failStream:StreamStateUnknown comments:comments];
+            [[AnalyticsManager shared] failStream:NetworkHealthUnknown comments:comments];
             break;
     }
 }

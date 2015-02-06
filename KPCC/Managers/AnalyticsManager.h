@@ -12,6 +12,7 @@
 #import "AudioManager.h"
 #import "Mixpanel.h"
 #import <Kochava/TrackAndAd.h>
+#import "NetworkManager.h"
 
 @interface AnalyticsManager : NSObject
 
@@ -24,7 +25,7 @@
 - (void)setup;
 - (void)trackHeadlinesDismissal;
 - (void)logEvent:(NSString *)event withParameters:(NSDictionary *)parameters;
-- (void)failStream:(StreamState)cause comments:(NSString*)comments;
+- (void)failStream:(NetworkHealth)cause comments:(NSString*)comments;
 - (void)kTrackSession:(NSString*)modifier;
 
 @end
