@@ -537,9 +537,15 @@
         NSDateComponents *comps = [[NSCalendar currentCalendar] components:NSCalendarUnitMinute|NSCalendarUnitSecond
                                                                   fromDate:ct];
         if ( [comps minute] % 15 == 0 || force ) {
+            
+            if ( [comps minute] == self.prevCheckedMinute ) return;
+            self.prevCheckedMinute = [comps minute];
+            
             if ( [self updaterArmed] ) {
                 return;
             } else {
+                
+                self.prevCheckedMinute = [comps minute];
                 NSLog(@"Checking program : %@ (%ld)",[NSDate stringFromDate:ct
                                                                  withFormat:@"hh:mm a"],(long)[ct timeIntervalSince1970]);
                 

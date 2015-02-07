@@ -54,6 +54,7 @@
 		259E450F1A1D583A00F5CD65 /* onboarding2.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 259E450D1A1D583A00F5CD65 /* onboarding2.mp3 */; };
 		25B59A5619FEF93700D4885C /* SCPRShortListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 25B59A5419FEF93700D4885C /* SCPRShortListViewController.m */; };
 		25B59A5719FEF93700D4885C /* SCPRShortListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 25B59A5519FEF93700D4885C /* SCPRShortListViewController.xib */; };
+		25BBCD6E1A85867F0015071E /* NSError+PrettyAnalytics.m in Sources */ = {isa = PBXBuildFile; fileRef = 25BBCD6D1A85867F0015071E /* NSError+PrettyAnalytics.m */; };
 		25C409B01A437B9400ADBFFE /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 25C409AF1A437B9400ADBFFE /* AdSupport.framework */; };
 		25F2BC7E1A3B9B4D00108F73 /* SCPRGenericAvatarViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 25F2BC7C1A3B9B4D00108F73 /* SCPRGenericAvatarViewController.m */; };
 		25F2BC7F1A3B9B4D00108F73 /* SCPRGenericAvatarViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 25F2BC7D1A3B9B4D00108F73 /* SCPRGenericAvatarViewController.xib */; };
@@ -319,6 +320,8 @@
 		25B59A5319FEF93700D4885C /* SCPRShortListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCPRShortListViewController.h; path = Headlines/SCPRShortListViewController.h; sourceTree = "<group>"; };
 		25B59A5419FEF93700D4885C /* SCPRShortListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SCPRShortListViewController.m; path = Headlines/SCPRShortListViewController.m; sourceTree = "<group>"; };
 		25B59A5519FEF93700D4885C /* SCPRShortListViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = SCPRShortListViewController.xib; path = Headlines/SCPRShortListViewController.xib; sourceTree = "<group>"; };
+		25BBCD6C1A85867F0015071E /* NSError+PrettyAnalytics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSError+PrettyAnalytics.h"; sourceTree = "<group>"; };
+		25BBCD6D1A85867F0015071E /* NSError+PrettyAnalytics.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSError+PrettyAnalytics.m"; sourceTree = "<group>"; };
 		25C409AF1A437B9400ADBFFE /* AdSupport.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AdSupport.framework; path = System/Library/Frameworks/AdSupport.framework; sourceTree = SDKROOT; };
 		25F2BC7B1A3B9B4D00108F73 /* SCPRGenericAvatarViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCPRGenericAvatarViewController.h; sourceTree = "<group>"; };
 		25F2BC7C1A3B9B4D00108F73 /* SCPRGenericAvatarViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SCPRGenericAvatarViewController.m; sourceTree = "<group>"; };
@@ -832,6 +835,8 @@
 				25F2BC7B1A3B9B4D00108F73 /* SCPRGenericAvatarViewController.h */,
 				25F2BC7C1A3B9B4D00108F73 /* SCPRGenericAvatarViewController.m */,
 				25F2BC7D1A3B9B4D00108F73 /* SCPRGenericAvatarViewController.xib */,
+				25BBCD6C1A85867F0015071E /* NSError+PrettyAnalytics.h */,
+				25BBCD6D1A85867F0015071E /* NSError+PrettyAnalytics.m */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -1461,6 +1466,7 @@
 				525C6CA419F701FA0076C13B /* TritonAd.m in Sources */,
 				76A3090418C93C880065D4B1 /* AudioManager.m in Sources */,
 				258E8E0A1A16AC5B00675E68 /* NSData+JSONAdditions.m in Sources */,
+				25BBCD6E1A85867F0015071E /* NSError+PrettyAnalytics.m in Sources */,
 				258FC47B1A018F3D00282D59 /* SCPRSpinnerViewController.m in Sources */,
 				258E8E0F1A16AE0400675E68 /* SCPRFeedbackViewController.m in Sources */,
 				259E44FE1A1D2CD300F5CD65 /* SCPROnboardingViewController.m in Sources */,

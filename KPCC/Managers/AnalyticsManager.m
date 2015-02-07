@@ -86,12 +86,8 @@ static AnalyticsManager *singleton = nil;
 
 - (void)logEvent:(NSString *)event withParameters:(NSDictionary *)parameters {
     NSMutableDictionary *userInfo = [[NSMutableDictionary alloc] init];
-    //userInfo[@"deviceIdentifier"] = [[[UIDevice currentDevice] identifierForVendor] UUIDString];
-    
-    NSString *playerSession = [[AudioManager shared] avPlayerSessionString];
-    if ( playerSession && [playerSession length] > 0 ) {
-        userInfo[@"avPlayerSessionId"] = playerSession;
-    }
+
+    parameters = [self logifiedParamsList:parameters];
     
     if ( ![[UXmanager shared].settings userHasViewedOnboarding] ) return;
     
@@ -106,46 +102,132 @@ static AnalyticsManager *singleton = nil;
     [Flurry logEvent:event withParameters:userInfo timed:YES];
     
     Mixpanel *mxp = [Mixpanel sharedInstance];
-    [mxp track:event properties:userInfo];
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+        [mxp track:event properties:userInfo];
+    });
+    
     
 }
 
 - (void)failStream:(NetworkHealth)cause comments:(NSString *)comments {
+    [self failStream:cause comments:comments force:NO];
+}
+
+- (void)failStream:(NetworkHealth)cause comments:(NSString *)comments force:(BOOL)force {
     
-    // Only send a failure report once every 5 seconds.
-    long currentTimeSeconds = [[NSDate date] timeIntervalSince1970];
-    if (self.lastErrorLoggedTime < (currentTimeSeconds - 5) || (self.lastErrorLoggedComments && comments != self.lastErrorLoggedComments)) {
-        self.lastErrorLoggedTime = currentTimeSeconds;
-        
-        if ( !comments ) {
-            comments = @"";
-        }
-        self.lastErrorLoggedComments = comments;
-        
-        NSDictionary *analysis = @{ @"cause" : [self stringForInterruptionCause:cause],
-                                    @"timeDropped"  : [NSDate stringFromDate:[NSDate date]
-                                                                  withFormat:@"YYYY-MM-dd hh:mm:ss"],
-                                    @"details" : comments,
-                                    @"networkInfo" : [[NetworkManager shared] networkInformation],
-                                    @"lastPrerollPlayedSecondsAgo" : [NSString stringWithFormat:@"%ld", currentTimeSeconds - [[AudioManager shared] lastPreRoll]],
-                                    
-                                    
-                                    };
-        
-        if ( [[SessionManager shared] liveSessionID] && !SEQ([[SessionManager shared] liveSessionID],@"") ) {
-            NSMutableDictionary *mD = [analysis mutableCopy];
-            mD[@"kpccSessionId"] = [[SessionManager shared] liveSessionID];
-            analysis = mD;
-        } else if ( [[SessionManager shared] odSessionID] && !SEQ([[SessionManager shared] odSessionID],@"") ) {
-            NSMutableDictionary *mD = [analysis mutableCopy];
-            mD[@"kpccSessionId"] = [[SessionManager shared] odSessionID];
-            analysis = mD;
-        }
-        
-        NSLog(@"Sending stream failure report to analytics");
-        [self logEvent:@"streamFailure" withParameters:analysis];
+    if ( !comments ) {
+        comments = @"";
     }
     
+    if ( !force ) {
+        if ( !self.accessLog && !self.errorLog ) {
+            
+            if ( ![[AudioManager shared].audioPlayer.currentItem accessLog] && ![[AudioManager shared].audioPlayer.currentItem errorLog] ) {
+                [[AudioManager shared] setLoggingGateOpen:YES];
+                self.analyticsSuspensionTimer = [NSTimer scheduledTimerWithTimeInterval:5.0
+                                                                             target:self
+                                                                           selector:@selector(forceAnalysis:)
+                                                                           userInfo:@{ @"cause" : @(cause),
+                                                                                       @"comments" : comments } repeats:NO];
+                return;
+            } else {
+                self.accessLog = [[AudioManager shared].audioPlayer.currentItem accessLog];
+                self.errorLog = [[AudioManager shared].audioPlayer.currentItem errorLog];
+            }
+        }
+    }
+
+    if ( self.analyticsSuspensionTimer ) {
+        if ( [self.analyticsSuspensionTimer isValid] ) {
+            [self.analyticsSuspensionTimer invalidate];
+        }
+        self.analyticsSuspensionTimer = nil;
+    }
+    
+    self.lastErrorLoggedComments = comments;
+    
+    NSMutableDictionary *analysis = [@{ @"cause" : [self stringForInterruptionCause:cause],
+                                @"timeDropped"  : [NSDate stringFromDate:[NSDate date]
+                                                              withFormat:@"YYYY-MM-dd hh:mm:ss"],
+                                @"details" : comments,
+                                @"networkInfo" : [[NetworkManager shared] networkInformation]
+                                
+                                } mutableCopy];
+    
+    if ( [[SessionManager shared] liveSessionID] && !SEQ([[SessionManager shared] liveSessionID],@"") ) {
+        NSMutableDictionary *mD = [analysis mutableCopy];
+        mD[@"kpccSessionId"] = [[SessionManager shared] liveSessionID];
+        analysis = mD;
+    } else if ( [[SessionManager shared] odSessionID] && !SEQ([[SessionManager shared] odSessionID],@"") ) {
+        NSMutableDictionary *mD = [analysis mutableCopy];
+        mD[@"kpccSessionId"] = [[SessionManager shared] odSessionID];
+        analysis = mD;
+    }
+        
+    analysis[@"audioSurvivedException"] = [[AudioManager shared].audioPlayer rate] > 0.0 ? [NSNumber numberWithBool:YES] : [NSNumber numberWithBool:NO];
+    
+    NSLog(@"Sending stream failure report to analytics");
+    [self logEvent:@"streamException" withParameters:analysis];
+ 
+    
+}
+
+- (void)forceAnalysis:(NSTimer*)timer {
+    NSDictionary *ui = [timer userInfo];
+    [[AudioManager shared] setLoggingGateOpen:NO];
+    [self failStream:(NetworkHealth)[ui[@"cause"] intValue]
+            comments:ui[@"comments"]];
+}
+
+- (NSDictionary*)logifiedParamsList:(NSDictionary *)originalParams {
+    
+    NSMutableDictionary *nParams = [originalParams mutableCopy];
+    if ( self.errorLog ) {
+        if ( self.errorLog.events && self.errorLog.events.count > 0 ) {
+            AVPlayerItemErrorLogEvent *event = self.errorLog.events.firstObject;
+            if ( event.playbackSessionID ) {
+                nParams[@"avPlayerSessionId"] = event.playbackSessionID;
+            }
+            nParams[@"errorStatusCode"] = @(event.errorStatusCode);
+            if ( event.errorDomain ) {
+                nParams[@"errorDomain"] = event.errorDomain;
+            }
+        } else if ( self.accessLog ) {
+            if ( self.accessLog.events && self.accessLog.events.count > 0 ) {
+                AVPlayerItemAccessLogEvent *event = self.accessLog.events.firstObject;
+                if ( event.playbackSessionID ) {
+                    nParams[@"avPlayerSessionId"] = event.playbackSessionID;
+                }
+             
+                nParams[@"numberOfStalls"] = @(event.numberOfStalls);
+                nParams[@"numberOfDroppedFrames"] = @(event.numberOfDroppedVideoFrames);
+                nParams[@"switchBitrate"] = @(event.switchBitrate);
+                nParams[@"bitrateDeviation"] = @(event.observedBitrateStandardDeviation);
+                nParams[@"downloadOverdue"] = @(event.downloadOverdue);
+                nParams[@"transferDuration"] = @(event.transferDuration);
+                if ( event.URI ) {
+                    nParams[@"uri"] = event.URI;
+                }
+            }
+        }
+    }
+    
+    if ( !nParams[@"avPlayerSessionId"] ) {
+        NSString *avpid = [[AudioManager shared] avPlayerSessionString];
+        if ( avpid ) {
+            nParams[@"avPlayerSessionId"] = avpid;
+        }
+    }
+    
+    
+    
+    self.errorLog = nil;
+    self.accessLog = nil;
+    [[AudioManager shared] setLoggingGateOpen:NO];
+    
+    NSLog(@" •••••••• FINISHED LOGGIFYING ANALYTICS ••••••• ");
+    
+    return nParams;
 }
 
 - (NSString*)stringForInterruptionCause:(NetworkHealth)cause {

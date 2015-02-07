@@ -12,7 +12,7 @@
 
 @import AdSupport;
 
-#define kFailThreshold 1.0
+#define kFailThreshold 2.0
 
 static NetworkManager *singleton = nil;
 
@@ -97,6 +97,9 @@ static NetworkManager *singleton = nil;
                 [[NSNotificationCenter defaultCenter] postNotificationName:@"network-status-good"
                                                                 object:nil];
             } else {
+                
+                
+                
                 weakself_.networkDown = YES;
                 weakself_.failTimer = [NSTimer scheduledTimerWithTimeInterval:kFailThreshold
                                                                        target:weakself_
@@ -121,6 +124,8 @@ static NetworkManager *singleton = nil;
 
 - (void)trueFail {
     self.networkDown = YES;
+    [[AudioManager shared] setLoggingGateOpen:YES];
+    
     [[NSNotificationCenter defaultCenter] postNotificationName:@"network-status-fail"
                                                         object:nil];
 }

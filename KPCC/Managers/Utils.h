@@ -13,6 +13,7 @@
 #import "NSDate+Helper.h"
 #import "UIButton+Additions.h"
 #import "NSData+JSONAdditions.h"
+@import AVFoundation;
 
 //@class SCPRMasterViewController;
 
@@ -21,6 +22,8 @@
 #define kUpdateProgramKey @":UPDATE-PROGRAM:"
 #define SEQ(a,b) [a isEqualToString:b]
 #define kFadeDuration 0.5
+
+static NSString *kPotentialElements = @"date time uri cs-guid s-ip s-ip-changes sc-count c-duration-downloaded c-start-time c-duration-watched bytes c-observed-bitrate sc-indicated-bitrate c-stalls c-frames-dropped c-startup-time c-overdue c-reason c-observed-min-bitrate c-observed-max-bitrate c-observed-bitrate-sd s-playback-type sc-wwan-count c-switch-bitrate";
 
 @interface Utils : NSObject
 
@@ -45,5 +48,8 @@
 + (NSString*)sha1:(NSString*)input;
 + (BOOL)validateEmail:(NSString *)string;
 + (NSString*)urlSafeVersion;
++ (NSDictionary*)accessLogToDictionary:(AVPlayerItemAccessLog*)accessLog;
++ (NSDictionary*)errorLogToDictionary:(AVPlayerItemErrorLog*)errorLog;
++ (NSArray*)reversedArrayFromArray:(NSArray*)inOrder;
 
 @end

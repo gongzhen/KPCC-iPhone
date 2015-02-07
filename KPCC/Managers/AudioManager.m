@@ -61,6 +61,8 @@ static const NSString *ItemStatusContext;
         if ([self.audioPlayer.currentItem status] == AVPlayerItemStatusFailed) {
             NSError *error = [self.audioPlayer.currentItem error];
             NSLog(@"AVPlayerItemStatus ERROR! --- %@", error);
+            [self analyzeStreamError:[error prettyAnalytics]];
+            
             if ( [self currentAudioMode] == AudioModeOnDemand ) {
                 if ( [self.delegate respondsToSelector:@selector(onDemandAudioFailed)] ) {
                     [self.delegate onDemandAudioFailed];
@@ -68,12 +70,13 @@ static const NSString *ItemStatusContext;
             } else {
                 if ( self.audioPlayer ) {
                     self.tryAgain = YES;
-                    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.33 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                         [self resetPlayer];
                     });
                 }
             }
             return;
+            
         } else if ([self.audioPlayer.currentItem status] == AVPlayerItemStatusReadyToPlay) {
             NSLog(@"AVPlayerItemStatus - ReadyToPlay");
             if ( self.waitForSeek ) {
@@ -88,17 +91,18 @@ static const NSString *ItemStatusContext;
                 self.tryAgain = NO;
                 
                 dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.33 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                    [self.audioPlayer play];
+                    [self playStream];
                     [self startObservingTime];
                 });
                 
             } else {
                 
                 if ( self.recoveryGateOpen ) {
-                    if ( [self.audioPlayer rate] <= 0.0 ) {
-                        [self.audioPlayer play];
-                        self.recoveryGateOpen = NO;
+                    if ( [self.audioPlayer rate] <= 0.0 && !self.seekRequested ) {
+                        [self playStream];
+                        [self startObservingTime];
                     }
+                    self.recoveryGateOpen = NO;
                 }
                 
             }
@@ -107,9 +111,35 @@ static const NSString *ItemStatusContext;
         }
     }
     
+    if ( object == self.audioPlayer.currentItem && [keyPath isEqualToString:AVPlayerItemPlaybackStalledNotification] ) {
+        if ( [change[@"new"] intValue] == 1 ) {
+            NSLog(@"Playback stalled ...");
+            [self analyzeStreamError:nil];
+            if ( [self.audioPlayer rate] == 0.0 ) {
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.33 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                    [self playStream];
+                });
+            }
+        }
+    }
+    
+    if ( object == self.audioPlayer.currentItem && [keyPath isEqualToString:AVPlayerItemNewAccessLogEntryNotification] ) {
+        if ( self.loggingGateOpen ) {
+            [[AnalyticsManager shared] setAccessLog:self.audioPlayer.currentItem.accessLog];
+            [self analyzeStreamError:nil];
+            self.loggingGateOpen = NO;
+        }
+    }
+    
+    if ( object == self.audioPlayer.currentItem && [keyPath isEqualToString:AVPlayerItemNewErrorLogEntryNotification] ) {
+        [[AnalyticsManager shared] setErrorLog:self.audioPlayer.currentItem.errorLog];
+        [self analyzeStreamError:nil];
+    }
+
     // Monitoring AVPlayer->currentItem with empty playback buffer.
     if (object == self.audioPlayer.currentItem && [keyPath isEqualToString:@"playbackBufferEmpty"]) {
         if ( [change[@"new"] intValue] == 1 ) {
+            NSLog(@"Buffer is empty...");
             [self analyzeStreamError:nil];
             [self.audioPlayer pause];
             self.recoveryGateOpen = YES;
@@ -119,8 +149,7 @@ static const NSString *ItemStatusContext;
     if (object == self.audioPlayer.currentItem && [keyPath isEqualToString:@"playbackLikelyToKeepUp"]) {
         if ( [change[@"new"] intValue] == 0 ) {
             NSLog(@"Stream not likely to keep up...");
-            [self analyzeStreamError:nil];
-            [self.audioPlayer pause];
+            [self analyzeStreamError:@"Stream not likely to keep up..."];
             self.recoveryGateOpen = YES;
         }
     }
@@ -161,7 +190,21 @@ static const NSString *ItemStatusContext;
 }
 
 
+- (void)logReceived:(NSNotification*)note {
+    
+    if ( SEQ([note name],AVPlayerItemNewErrorLogEntryNotification) ) {
+        [[AnalyticsManager shared] setErrorLog:self.audioPlayer.currentItem.errorLog];
+        [self analyzeStreamError:nil];
+    }
+    if ( SEQ([note name],AVPlayerItemNewAccessLogEntryNotification) ) {
+        if ( self.loggingGateOpen ) {
+            self.loggingGateOpen = NO;
+            [[AnalyticsManager shared] setAccessLog:self.audioPlayer.currentItem.accessLog];
+            [self analyzeStreamError:nil];
+        }
+    }
 
+}
 
 - (void)updateNowPlayingInfoWithAudio:(id)audio {
     if (!audio) {
@@ -624,11 +667,12 @@ static const NSString *ItemStatusContext;
     if ( self.audioPlayer ) {
         if ( self.audioPlayer.currentItem ) {
             AVPlayerItemErrorLog *errorLog = [self.audioPlayer.currentItem errorLog];
+            
             NSString *logAsString = [[NSString alloc] initWithData:[errorLog extendedLogData]
                                                 encoding:[errorLog extendedLogDataStringEncoding]];
             if ( logAsString && [logAsString length] > 0 ) {
                 
-                NSString *pattern = @"[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}";
+                NSString *pattern = @"[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{12}";
                 NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:pattern
                                                                                        options:0 error:NULL];
                 NSTextCheckingResult *match = [regex firstMatchInString:logAsString options:0 range:NSMakeRange(0, [logAsString length])];
@@ -641,30 +685,30 @@ static const NSString *ItemStatusContext;
 
             } else {
                 AVPlayerItemAccessLog *accessLog = [self.audioPlayer.currentItem accessLog];
-                logAsString = [[NSString alloc] initWithData:[accessLog extendedLogData]
+               logAsString = [[NSString alloc] initWithData:[accessLog extendedLogData]
                                                               encoding:[accessLog extendedLogDataStringEncoding]];
                 
-                if ( logAsString && [logAsString length] > 0 ) {
+                NSString *pattern = @"[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{12}";
+                NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:pattern
+                                                                                       options:0 error:NULL];
+                NSTextCheckingResult *match = [regex firstMatchInString:logAsString options:0 range:NSMakeRange(0, [logAsString length])];
+                if ( match ) {
                     
-                    NSString *pattern = @"[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{12}";
-                    NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:pattern
-                                                                                           options:0 error:NULL];
-                    NSTextCheckingResult *match = [regex firstMatchInString:logAsString options:0 range:NSMakeRange(0, [logAsString length])];
-                    if ( match ) {
-                        
-                        NSRange r1 = [match rangeAtIndex:0];
-                        rv = [logAsString substringWithRange:r1];
-                        
-                    }
+                    NSRange r1 = [match rangeAtIndex:0];
+                    rv = [logAsString substringWithRange:r1];
                     
                 }
                 
             }
-            // [0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}
         }
+            // [0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{12}
     }
     
+    if ( rv ) {
+        NSLog(@"Playback Session ID : %@",rv);
+    }
     return rv;
+
 }
 
 #pragma mark - Audio Control
@@ -694,6 +738,22 @@ static const NSString *ItemStatusContext;
     [self.audioPlayer.currentItem addObserver:self forKeyPath:@"status" options:NSKeyValueObservingOptionOld|NSKeyValueObservingOptionNew context:nil];
     [self.audioPlayer.currentItem addObserver:self forKeyPath:@"playbackBufferEmpty" options:NSKeyValueObservingOptionNew context:nil];
     [self.audioPlayer.currentItem addObserver:self forKeyPath:@"playbackLikelyToKeepUp" options:NSKeyValueObservingOptionNew context:nil];
+    
+    [self.audioPlayer.currentItem addObserver:self forKeyPath:AVPlayerItemPlaybackStalledNotification options:NSKeyValueObservingOptionNew context:nil];
+    //[self.audioPlayer.currentItem addObserver:self forKeyPath:AVPlayerItemNewAccessLogEntryNotification options:NSKeyValueObservingOptionNew context:nil];
+    //[self.audioPlayer.currentItem addObserver:self forKeyPath:AVPlayerItemNewErrorLogEntryNotification options:NSKeyValueObservingOptionNew context:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(logReceived:)
+                                                 name:AVPlayerItemNewAccessLogEntryNotification
+                                               object:nil];
+    
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(logReceived:)
+                                                 name:AVPlayerItemNewErrorLogEntryNotification
+                                               object:nil];
+    
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(playerItemFailedToPlayToEndTime:)
                                                  name:AVPlayerItemFailedToPlayToEndTimeNotification
@@ -954,12 +1014,24 @@ static const NSString *ItemStatusContext;
         [self.audioPlayer.currentItem removeObserver:self forKeyPath:@"status"];
         [self.audioPlayer.currentItem removeObserver:self forKeyPath:@"playbackBufferEmpty"];
         [self.audioPlayer.currentItem removeObserver:self forKeyPath:@"playbackLikelyToKeepUp"];
+        //[self.audioPlayer.currentItem removeObserver:self forKeyPath:AVPlayerItemNewAccessLogEntryNotification];
+        //[self.audioPlayer.currentItem removeObserver:self forKeyPath:AVPlayerItemNewErrorLogEntryNotification];
+        [self.audioPlayer.currentItem removeObserver:self forKeyPath:AVPlayerItemPlaybackStalledNotification];
+        
         [[NSNotificationCenter defaultCenter] removeObserver:self
                                                         name:AVPlayerItemDidPlayToEndTimeNotification
                                                       object:nil];
         // AVPlayerItemFailedToPlayToEndTimeNotification
         [[NSNotificationCenter defaultCenter] removeObserver:self
                                                         name:AVPlayerItemFailedToPlayToEndTimeNotification
+                                                      object:nil];
+        
+        [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                        name:AVPlayerItemNewErrorLogEntryNotification
+                                                      object:nil];
+        
+        [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                        name:AVPlayerItemNewAccessLogEntryNotification
                                                       object:nil];
         
     } @catch (NSException *e) {
@@ -1054,7 +1126,6 @@ static const NSString *ItemStatusContext;
 - (void)analyzeStreamError:(NSString *)comments {
 
     NetworkHealth netHealth = [[NetworkManager shared] checkNetworkHealth];
-
     switch (netHealth) {
         case NetworkHealthAllOK:
             // If recovering from stream failure, cancel playing of local audio file
@@ -1062,8 +1133,13 @@ static const NSString *ItemStatusContext;
                 [self.localAudioPlayer stop];
                 
                 if ([self.delegate respondsToSelector:@selector(handleUIForRecoveredStream)]) {
-                    [self.delegate handleUIForRecoveredStream];
+                    //[self.delegate handleUIForRecoveredStream];
                 }
+                
+          
+                [[AnalyticsManager shared] failStream:NetworkHealthUnknown
+                                                 comments:comments];
+                
             }
             break;
             

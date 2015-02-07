@@ -19,6 +19,9 @@
 @property long lastErrorLoggedTime;
 @property NSString *lastErrorLoggedComments;
 @property (nonatomic, strong) KochavaTracker *kTracker;
+@property (nonatomic, strong) NSTimer *analyticsSuspensionTimer;
+@property (nonatomic, strong) AVPlayerItemAccessLog *accessLog;
+@property (nonatomic, strong) AVPlayerItemErrorLog *errorLog;
 
 + (AnalyticsManager*)shared;
 
@@ -26,6 +29,8 @@
 - (void)trackHeadlinesDismissal;
 - (void)logEvent:(NSString *)event withParameters:(NSDictionary *)parameters;
 - (void)failStream:(NetworkHealth)cause comments:(NSString*)comments;
+- (void)failStream:(NetworkHealth)cause comments:(NSString *)comments force:(BOOL)force;
 - (void)kTrackSession:(NSString*)modifier;
+- (NSDictionary*)logifiedParamsList:(NSDictionary*)originalParams;
 
 @end
