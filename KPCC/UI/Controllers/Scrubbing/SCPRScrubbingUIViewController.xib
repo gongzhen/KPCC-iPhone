@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6254" systemVersion="14C109" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6247"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="SCPRScrubbingUIViewController">
+            <connections>
+                <outlet property="blurredImageView" destination="Tw1-zF-Zdr" id="5KB-vi-Gg1"/>
+                <outlet property="captionLabel" destination="oJG-HA-5jV" id="aH1-IC-f4c"/>
+                <outlet property="closeButton" destination="a7u-YT-NTk" id="tM6-Xk-9sH"/>
+                <outlet property="darkeningView" destination="bst-KM-MFM" id="YmZ-Uc-YG2"/>
+                <outlet property="fw30Button" destination="J68-ly-0GQ" id="nTB-Pc-KEM"/>
+                <outlet property="playPauseButton" destination="EkD-bJ-7WF" id="5nW-3p-GD4"/>
+                <outlet property="rw30Button" destination="PIS-xP-UvG" id="SPb-Vi-Ryp"/>
+                <outlet property="scrubberSeatView" destination="47F-9f-wSS" id="3G1-31-mFY"/>
+                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Tw1-zF-Zdr" userLabel="blurredImageView">
+                    <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                </imageView>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bst-KM-MFM" userLabel="cloakView">
+                    <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                    <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.78000000000000003" colorSpace="calibratedRGB"/>
+                </view>
+                <button opaque="NO" contentMode="center" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="a7u-YT-NTk">
+                    <rect key="frame" x="536" y="20" width="40" height="44"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="40" id="UiY-Qk-SOT"/>
+                        <constraint firstAttribute="height" constant="44" id="W4n-mc-R76"/>
+                    </constraints>
+                    <state key="normal" image="btn_close.png">
+                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                    </state>
+                </button>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="H. Jon Benjamin and Jessica Walter are on this episode of Bullseye" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="oJG-HA-5jV">
+                    <rect key="frame" x="25" y="106" width="551" height="90"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="90" id="WaW-xc-D4x"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" type="system" pointSize="24"/>
+                    <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="47F-9f-wSS" userLabel="ScrubberSeatView">
+                    <rect key="frame" x="10" y="249" width="580" height="140"/>
+                    <color key="backgroundColor" red="0.82853929924242431" green="0.82853929924242431" blue="0.82853929924242431" alpha="1" colorSpace="calibratedRGB"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="140" id="yqD-bm-UoJ"/>
+                    </constraints>
+                </view>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="EkD-bJ-7WF" userLabel="PlayPauseButton" customClass="SCPRButton">
+                    <rect key="frame" x="256" y="404" width="88" height="88"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="88" id="G8Z-nh-917"/>
+                        <constraint firstAttribute="height" constant="88" id="Rau-Lx-Xvd"/>
+                    </constraints>
+                    <state key="normal" image="btn_play.png">
+                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                    </state>
+                </button>
+                <button opaque="NO" contentMode="center" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="PIS-xP-UvG">
+                    <rect key="frame" x="177" y="425" width="46" height="45"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="45" id="TrT-RL-qEW"/>
+                        <constraint firstAttribute="width" constant="46" id="y7i-fJ-6pQ"/>
+                    </constraints>
+                    <state key="normal" image="btn_back_30.png">
+                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                    </state>
+                </button>
+                <button opaque="NO" contentMode="center" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="J68-ly-0GQ">
+                    <rect key="frame" x="377" y="425" width="46" height="45"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="45" id="CuI-KV-zza"/>
+                        <constraint firstAttribute="width" constant="46" id="sTc-Ga-tiX"/>
+                    </constraints>
+                    <state key="normal" image="btn_forward_30.png">
+                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                    </state>
+                </button>
+            </subviews>
+            <color key="backgroundColor" red="1" green="1" blue="1" alpha="0.0" colorSpace="calibratedRGB"/>
+            <constraints>
+                <constraint firstItem="EkD-bJ-7WF" firstAttribute="leading" secondItem="PIS-xP-UvG" secondAttribute="trailing" constant="33" id="2xU-pa-4d1"/>
+                <constraint firstItem="J68-ly-0GQ" firstAttribute="leading" secondItem="EkD-bJ-7WF" secondAttribute="trailing" constant="33" id="3Jc-HI-G7L"/>
+                <constraint firstAttribute="bottom" secondItem="Tw1-zF-Zdr" secondAttribute="bottom" id="6dV-cj-75d"/>
+                <constraint firstItem="Tw1-zF-Zdr" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="9bB-dE-4hF"/>
+                <constraint firstItem="EkD-bJ-7WF" firstAttribute="centerY" secondItem="PIS-xP-UvG" secondAttribute="centerY" constant="0.5" id="AXv-Kv-l3z"/>
+                <constraint firstItem="oJG-HA-5jV" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="25" id="F5G-wC-yi7"/>
+                <constraint firstItem="EkD-bJ-7WF" firstAttribute="centerY" secondItem="J68-ly-0GQ" secondAttribute="centerY" constant="0.5" id="MQk-aS-qsW"/>
+                <constraint firstItem="a7u-YT-NTk" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="20" id="NQt-db-hb8"/>
+                <constraint firstAttribute="bottom" secondItem="bst-KM-MFM" secondAttribute="bottom" id="NbL-K1-Z4e"/>
+                <constraint firstAttribute="trailing" secondItem="oJG-HA-5jV" secondAttribute="trailing" constant="24" id="SDQ-RJ-hKL"/>
+                <constraint firstItem="47F-9f-wSS" firstAttribute="top" secondItem="oJG-HA-5jV" secondAttribute="bottom" constant="53" id="SIl-vD-5FC"/>
+                <constraint firstItem="47F-9f-wSS" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="10" id="SR8-4h-U5i"/>
+                <constraint firstItem="bst-KM-MFM" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="U8h-ZE-XzV"/>
+                <constraint firstAttribute="trailing" secondItem="a7u-YT-NTk" secondAttribute="trailing" constant="24" id="YL3-G2-fVk"/>
+                <constraint firstAttribute="trailing" secondItem="47F-9f-wSS" secondAttribute="trailing" constant="10" id="afG-bY-t74"/>
+                <constraint firstItem="EkD-bJ-7WF" firstAttribute="top" secondItem="47F-9f-wSS" secondAttribute="bottom" constant="15" id="bOi-hY-1Tz"/>
+                <constraint firstItem="oJG-HA-5jV" firstAttribute="top" secondItem="a7u-YT-NTk" secondAttribute="bottom" constant="42" id="dUt-Ve-JRZ"/>
+                <constraint firstItem="bst-KM-MFM" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="fqy-HM-cij"/>
+                <constraint firstAttribute="trailing" secondItem="bst-KM-MFM" secondAttribute="trailing" id="hUn-XX-FlE"/>
+                <constraint firstAttribute="centerX" secondItem="EkD-bJ-7WF" secondAttribute="centerX" id="k6k-Me-7dr"/>
+                <constraint firstItem="Tw1-zF-Zdr" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="sd5-Yv-fhP"/>
+                <constraint firstAttribute="trailing" secondItem="Tw1-zF-Zdr" secondAttribute="trailing" id="u1r-rP-HBm"/>
+            </constraints>
+            <nil key="simulatedStatusBarMetrics"/>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <point key="canvasLocation" x="513" y="421"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="btn_back_30.png" width="33" height="30"/>
+        <image name="btn_close.png" width="18" height="19"/>
+        <image name="btn_forward_30.png" width="33" height="30"/>
+        <image name="btn_play.png" width="88" height="88"/>
+    </resources>
+    <simulatedMetricsContainer key="defaultSimulatedMetrics">
+        <simulatedStatusBarMetrics key="statusBar"/>
+        <simulatedOrientationMetrics key="orientation"/>
+        <simulatedScreenMetrics key="destination" type="retina4"/>
+    </simulatedMetricsContainer>
+</document>

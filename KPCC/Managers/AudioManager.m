@@ -282,12 +282,6 @@ static const NSString *ItemStatusContext;
             [[SessionManager shared] trackOnDemandSession];
             [[SessionManager shared] checkProgramUpdate:NO];
             
-#ifdef DEBUG
-            if ( !weakSelf.dumpedOnce ) {
-                weakSelf.dumpedOnce = YES;
-                [weakSelf dump:YES];
-            }
-#endif
             
             if ([weakSelf.delegate respondsToSelector:@selector(onTimeChange)]) {
                 if ( weakSelf.waitForFirstTick ) {

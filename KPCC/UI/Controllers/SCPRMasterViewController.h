@@ -22,6 +22,7 @@
 #import "SCPRPreRollViewController.h"
 #import "SCPRProgressViewController.h"
 #import "SCPRButton.h"
+#import "SCPRScrubbingUIViewController.h"
 
 @interface SCPRMasterViewController : UIViewController<SCPRMenuDelegate,UIAlertViewDelegate>
 
@@ -48,6 +49,8 @@
 @property IBOutlet UIView *queueDarkBgView;
 @property (nonatomic,strong) NSTimer *queueScrollTimer;
 @property (nonatomic,strong) NSArray *queueContents;
+@property (nonatomic,strong) UIView *scrubbingTriggerView;
+
 
 // Major holder views for different playback states.
 @property IBOutlet UIView *liveStreamView;
@@ -109,6 +112,7 @@
 @property BOOL uiLocked;
 @property BOOL dirtyFromFailure;
 @property BOOL audioWasPlaying;
+@property BOOL scrubberLoadingGate;
 
 @property NSInteger onDemandGateCount;
 @property NSInteger previousRewindThreshold;
@@ -121,6 +125,12 @@
 - (void)activateFastForward;
 - (void)snapJogWheel;
 - (void)specialRewind;
+
+// Scrubbing
+- (void)bringUpScrubber;
+- (void)cloakForScrubber;
+- (void)decloakForScrubber;
+@property (nonatomic, strong) SCPRScrubbingUIViewController *scrubbingUI;
 
 @property (NS_NONATOMIC_IOSONLY, readonly) BOOL uiIsJogging;
 @property (NS_NONATOMIC_IOSONLY, readonly) NSTimeInterval rewindAgainstStreamDelta;

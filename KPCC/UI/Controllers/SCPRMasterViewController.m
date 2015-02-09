@@ -23,6 +23,7 @@
 #import "AnalyticsManager.h"
 #import "SCPROnboardingViewController.h"
 #import "UIView+PrintDimensions.h"
+#import "SCPRScrubbingUIViewController.h"
 
 @import MessageUI;
 
@@ -978,6 +979,71 @@ setForOnDemandUI;
     }
 }
 
+#pragma mark - Scrubbing
+- (void)bringUpScrubber {
+    
+    if ( !self.scrubberLoadingGate ) {
+        self.scrubberLoadingGate = YES;
+        SCPRScrubbingUIViewController *sUI = [[SCPRScrubbingUIViewController alloc]
+                                              initWithNibName:@"SCPRScrubbingUIViewController"
+                                              bundle:nil];
+        
+        [UIView animateWithDuration:0.25 animations:^{
+            [self.navigationController setNavigationBarHidden:YES animated:NO];
+            [self cloakForScrubber];
+        } completion:^(BOOL finished) {
+            self.view.clipsToBounds = YES;
+            sUI.view.alpha = 0.0;
+            sUI.view.frame = CGRectMake(0.0, 0.0, self.view.frame.size.width,
+                                        self.view.frame.size.height);
+            
+            [[DesignManager shared] snapView:sUI.view
+                                 toContainer:self.view
+                               withTopOffset:0.0
+                                  fullscreen:YES];
+            
+            sUI.view.frame = CGRectMake(0.0, 0.0, self.view.frame.size.width,
+                                        self.view.frame.size.height);
+            
+            [sUI.view setNeedsLayout];
+            [sUI.view setNeedsUpdateConstraints];
+            [sUI setupWithProgram:@{ @"text" : self.programTitleLabel.text }
+                     blurredImage:self.queueBlurView.image];
+            
+            sUI.parentControlView = self;
+            
+            
+            [sUI.view printDimensionsWithIdentifier:@"Scrubber Container"];
+            
+        }];
+        
+    }
+    
+}
+
+- (void)cloakForScrubber {
+    self.scrubbingTriggerView.alpha = 0.0;
+    self.timeLabelOnDemand.alpha = 0.0;
+    self.progressView.alpha = 0.0;
+    self.queueBlurView.alpha = 1.0;
+    self.onDemandPlayerView.alpha = 0.0;
+    self.horizDividerLine.alpha = 0.0;
+    self.playPauseButton.alpha = 0.0;
+    self.programTitleLabel.alpha = 0.0;
+}
+
+- (void)decloakForScrubber {
+    self.scrubbingTriggerView.alpha = 1.0;
+    self.timeLabelOnDemand.alpha = 1.0;
+    self.progressView.alpha = 1.0;
+    self.queueBlurView.alpha = 0.0;
+    self.onDemandPlayerView.alpha = 1.0;
+    self.horizDividerLine.alpha = 1.0;
+    self.playPauseButton.alpha = 1.0;
+    self.programTitleLabel.alpha = 1.0;
+}
+
+
 # pragma mark - UI control
 - (void)updateDataForUI {
     [[SessionManager shared] fetchCurrentProgram:^(id returnedObject) {
@@ -1184,9 +1250,26 @@ setForOnDemandUI;
     
 }
 
+
 - (void)setOnDemandUI:(BOOL)animated forProgram:(Program*)program withAudio:(NSArray*)array atCurrentIndex:(int)index {
     
     [self snapJogWheel];
+    
+    if ( self.scrubbingTriggerView ) {
+        [self.scrubbingTriggerView removeFromSuperview];
+    }
+    self.scrubbingTriggerView = [[UIView alloc] initWithFrame:CGRectMake(0.0,0.0,self.view.frame.size.width,
+                                                                         80.0)];
+    self.scrubbingTriggerView.backgroundColor = [[UIColor virtualWhiteColor] translucify:0.25];
+    UILongPressGestureRecognizer *lpgr = [[UILongPressGestureRecognizer alloc] initWithTarget:self
+                                                                                       action:@selector(bringUpScrubber)];
+    lpgr.minimumPressDuration = 2.0;
+    [self.scrubbingTriggerView addGestureRecognizer:lpgr];
+    self.scrubbingTriggerView.frame = CGRectMake(0.0, self.progressView.frame.origin.y-self.scrubbingTriggerView.frame.size.height/2.0,
+                                                 self.scrubbingTriggerView.frame.size.width,
+                                                 self.scrubbingTriggerView.frame.size.height);
+    
+    [self.view addSubview:self.scrubbingTriggerView];
     
     self.onDemandGateCount = 0;
     self.queueBlurView.alpha = 1.0;

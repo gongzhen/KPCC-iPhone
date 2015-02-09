@@ -55,6 +55,18 @@
 		25B59A5619FEF93700D4885C /* SCPRShortListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 25B59A5419FEF93700D4885C /* SCPRShortListViewController.m */; };
 		25B59A5719FEF93700D4885C /* SCPRShortListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 25B59A5519FEF93700D4885C /* SCPRShortListViewController.xib */; };
 		25BBCD6E1A85867F0015071E /* NSError+PrettyAnalytics.m in Sources */ = {isa = PBXBuildFile; fileRef = 25BBCD6D1A85867F0015071E /* NSError+PrettyAnalytics.m */; };
+		25BBCD771A892D730015071E /* SCPRScrubbingUIViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 25BBCD751A892D730015071E /* SCPRScrubbingUIViewController.m */; };
+		25BBCD781A892D730015071E /* SCPRScrubbingUIViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 25BBCD761A892D730015071E /* SCPRScrubbingUIViewController.xib */; };
+		25BBCD7D1A892DA30015071E /* SCPRScrubberViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 25BBCD7B1A892DA20015071E /* SCPRScrubberViewController.m */; };
+		25BBCD7E1A892DA30015071E /* SCPRScrubberViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 25BBCD7C1A892DA30015071E /* SCPRScrubberViewController.xib */; };
+		25BBCD871A893C350015071E /* btn_back_30.png in Resources */ = {isa = PBXBuildFile; fileRef = 25BBCD7F1A893C350015071E /* btn_back_30.png */; };
+		25BBCD881A893C350015071E /* btn_back_30@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 25BBCD801A893C350015071E /* btn_back_30@2x.png */; };
+		25BBCD891A893C350015071E /* btn_close.png in Resources */ = {isa = PBXBuildFile; fileRef = 25BBCD811A893C350015071E /* btn_close.png */; };
+		25BBCD8A1A893C350015071E /* btn_close@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 25BBCD821A893C350015071E /* btn_close@2x.png */; };
+		25BBCD8B1A893C350015071E /* btn_forward_30.png in Resources */ = {isa = PBXBuildFile; fileRef = 25BBCD831A893C350015071E /* btn_forward_30.png */; };
+		25BBCD8C1A893C350015071E /* btn_forward_30@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 25BBCD841A893C350015071E /* btn_forward_30@2x.png */; };
+		25BBCD8D1A893C350015071E /* onboarding-scrubber.png in Resources */ = {isa = PBXBuildFile; fileRef = 25BBCD851A893C350015071E /* onboarding-scrubber.png */; };
+		25BBCD8E1A893C350015071E /* onboarding-scrubber@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 25BBCD861A893C350015071E /* onboarding-scrubber@2x.png */; };
 		25C409B01A437B9400ADBFFE /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 25C409AF1A437B9400ADBFFE /* AdSupport.framework */; };
 		25F2BC7E1A3B9B4D00108F73 /* SCPRGenericAvatarViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 25F2BC7C1A3B9B4D00108F73 /* SCPRGenericAvatarViewController.m */; };
 		25F2BC7F1A3B9B4D00108F73 /* SCPRGenericAvatarViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 25F2BC7D1A3B9B4D00108F73 /* SCPRGenericAvatarViewController.xib */; };
@@ -322,6 +334,20 @@
 		25B59A5519FEF93700D4885C /* SCPRShortListViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = SCPRShortListViewController.xib; path = Headlines/SCPRShortListViewController.xib; sourceTree = "<group>"; };
 		25BBCD6C1A85867F0015071E /* NSError+PrettyAnalytics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSError+PrettyAnalytics.h"; sourceTree = "<group>"; };
 		25BBCD6D1A85867F0015071E /* NSError+PrettyAnalytics.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSError+PrettyAnalytics.m"; sourceTree = "<group>"; };
+		25BBCD741A892D730015071E /* SCPRScrubbingUIViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCPRScrubbingUIViewController.h; path = Scrubbing/SCPRScrubbingUIViewController.h; sourceTree = "<group>"; };
+		25BBCD751A892D730015071E /* SCPRScrubbingUIViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SCPRScrubbingUIViewController.m; path = Scrubbing/SCPRScrubbingUIViewController.m; sourceTree = "<group>"; };
+		25BBCD761A892D730015071E /* SCPRScrubbingUIViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = SCPRScrubbingUIViewController.xib; path = Scrubbing/SCPRScrubbingUIViewController.xib; sourceTree = "<group>"; };
+		25BBCD7A1A892DA20015071E /* SCPRScrubberViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCPRScrubberViewController.h; path = Scrubbing/SCPRScrubberViewController.h; sourceTree = "<group>"; };
+		25BBCD7B1A892DA20015071E /* SCPRScrubberViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SCPRScrubberViewController.m; path = Scrubbing/SCPRScrubberViewController.m; sourceTree = "<group>"; };
+		25BBCD7C1A892DA30015071E /* SCPRScrubberViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = SCPRScrubberViewController.xib; path = Scrubbing/SCPRScrubberViewController.xib; sourceTree = "<group>"; };
+		25BBCD7F1A893C350015071E /* btn_back_30.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = btn_back_30.png; sourceTree = "<group>"; };
+		25BBCD801A893C350015071E /* btn_back_30@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "btn_back_30@2x.png"; sourceTree = "<group>"; };
+		25BBCD811A893C350015071E /* btn_close.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = btn_close.png; sourceTree = "<group>"; };
+		25BBCD821A893C350015071E /* btn_close@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "btn_close@2x.png"; sourceTree = "<group>"; };
+		25BBCD831A893C350015071E /* btn_forward_30.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = btn_forward_30.png; sourceTree = "<group>"; };
+		25BBCD841A893C350015071E /* btn_forward_30@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "btn_forward_30@2x.png"; sourceTree = "<group>"; };
+		25BBCD851A893C350015071E /* onboarding-scrubber.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "onboarding-scrubber.png"; sourceTree = "<group>"; };
+		25BBCD861A893C350015071E /* onboarding-scrubber@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "onboarding-scrubber@2x.png"; sourceTree = "<group>"; };
 		25C409AF1A437B9400ADBFFE /* AdSupport.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AdSupport.framework; path = System/Library/Frameworks/AdSupport.framework; sourceTree = SDKROOT; };
 		25F2BC7B1A3B9B4D00108F73 /* SCPRGenericAvatarViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCPRGenericAvatarViewController.h; sourceTree = "<group>"; };
 		25F2BC7C1A3B9B4D00108F73 /* SCPRGenericAvatarViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SCPRGenericAvatarViewController.m; sourceTree = "<group>"; };
@@ -658,6 +684,19 @@
 			name = "Short List / Headlines";
 			sourceTree = "<group>";
 		};
+		25BBCD791A892D790015071E /* Scrubbing */ = {
+			isa = PBXGroup;
+			children = (
+				25BBCD7A1A892DA20015071E /* SCPRScrubberViewController.h */,
+				25BBCD7B1A892DA20015071E /* SCPRScrubberViewController.m */,
+				25BBCD7C1A892DA30015071E /* SCPRScrubberViewController.xib */,
+				25BBCD741A892D730015071E /* SCPRScrubbingUIViewController.h */,
+				25BBCD751A892D730015071E /* SCPRScrubbingUIViewController.m */,
+				25BBCD761A892D730015071E /* SCPRScrubbingUIViewController.xib */,
+			);
+			name = Scrubbing;
+			sourceTree = "<group>";
+		};
 		5257E9C919E349F70055733F /* Transitions */ = {
 			isa = PBXGroup;
 			children = (
@@ -855,6 +894,7 @@
 		76658ABC18E0AF8500026176 /* View Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				25BBCD791A892D790015071E /* Scrubbing */,
 				259E44FA1A1D2C0A00F5CD65 /* Onboarding */,
 				258E8E0B1A16ADD800675E68 /* Feedback */,
 				25B59A5219FEF73300D4885C /* Short List / Headlines */,
@@ -914,6 +954,14 @@
 		7685BD57194BBCB90075BB16 /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				25BBCD7F1A893C350015071E /* btn_back_30.png */,
+				25BBCD801A893C350015071E /* btn_back_30@2x.png */,
+				25BBCD811A893C350015071E /* btn_close.png */,
+				25BBCD821A893C350015071E /* btn_close@2x.png */,
+				25BBCD831A893C350015071E /* btn_forward_30.png */,
+				25BBCD841A893C350015071E /* btn_forward_30@2x.png */,
+				25BBCD851A893C350015071E /* onboarding-scrubber.png */,
+				25BBCD861A893C350015071E /* onboarding-scrubber@2x.png */,
 				254CC68F1A23A77B00560805 /* Onboarding */,
 				2557BA7F1A1A9BB800B0CAED /* btn_back_to_live_xtra-small.png */,
 				2557BA801A1A9BB800B0CAED /* btn_back_to_live_xtra-small@2x.png */,
@@ -1219,6 +1267,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				25BBCD7E1A892DA30015071E /* SCPRScrubberViewController.xib in Resources */,
 				52EFF85E19C368C00059A0E3 /* program_avatar_wait-wait-dont-tell-me.png in Resources */,
 				52EFF82819C368C00059A0E3 /* program_avatar_moth-radio-hour@2x.png in Resources */,
 				52EFF86019C368C00059A0E3 /* program_avatar_wait-wait-dont-tell-me@2x.png in Resources */,
@@ -1227,8 +1276,10 @@
 				2557BA841A1A9BB800B0CAED /* btn_back_to_live_xtra-small@2x.png in Resources */,
 				76B9A9AE18EF59FD007A6D8C /* SCPRUserReportViewController.xib in Resources */,
 				52EFF81619C368C00059A0E3 /* program_avatar_loh-life.png in Resources */,
+				25BBCD8D1A893C350015071E /* onboarding-scrubber.png in Resources */,
 				52EFF83619C368C00059A0E3 /* program_avatar_prairie-home-companion.png in Resources */,
 				52EFF80C19C368C00059A0E3 /* program_avatar_fresh-air@2x.png in Resources */,
+				25BBCD871A893C350015071E /* btn_back_30.png in Resources */,
 				768C067D199590CC00F829EB /* FreigSanProLigIt.otf in Resources */,
 				52EFF81419C368C00059A0E3 /* program_avatar_loh-down-on-science@2x.png in Resources */,
 				52EFF78B19C3688D0059A0E3 /* menu-clock.png in Resources */,
@@ -1250,6 +1301,7 @@
 				258E8E071A16AA4200675E68 /* desk_template.json in Resources */,
 				768C067F199590CC00F829EB /* FreigSanProMed.otf in Resources */,
 				52EFF84619C368C00059A0E3 /* program_avatar_splendid-table.png in Resources */,
+				25BBCD881A893C350015071E /* btn_back_30@2x.png in Resources */,
 				52EFF83C19C368C00059A0E3 /* program_avatar_radiolab@2x.png in Resources */,
 				52EFF84E19C368C00059A0E3 /* program_avatar_tavis-smiley-show.png in Resources */,
 				52EFF80219C368C00059A0E3 /* program_avatar_dinner-party-download.png in Resources */,
@@ -1308,12 +1360,14 @@
 				52EFF85419C368C00059A0E3 /* program_avatar_ted-radio-hour@2x.png in Resources */,
 				52EFF81019C368C00059A0E3 /* program_avatar_latino-usa@2x.png in Resources */,
 				52EFF82219C368C00059A0E3 /* program_avatar_morning-edition.png in Resources */,
+				25BBCD8C1A893C350015071E /* btn_forward_30@2x.png in Resources */,
 				768C0673199590CC00F829EB /* FreigSanProBold.otf in Resources */,
 				768C0677199590CC00F829EB /* FreigSanProBook.otf in Resources */,
 				259E450E1A1D583A00F5CD65 /* onboarding1.mp3 in Resources */,
 				768C067B199590CC00F829EB /* FreigSanProLig.otf in Resources */,
 				52EFF80619C368C00059A0E3 /* program_avatar_filmweek.png in Resources */,
 				52EFF82019C368C00059A0E3 /* program_avatar_marketplace@2x.png in Resources */,
+				25BBCD8A1A893C350015071E /* btn_close@2x.png in Resources */,
 				258E8E021A16AA3900675E68 /* rewind_beat.mp3 in Resources */,
 				768C068C1995911600F829EB /* program_tile_generic@2x.jpg in Resources */,
 				52EFF81C19C368C00059A0E3 /* program_avatar_marketplace-morning-report@2x.png in Resources */,
@@ -1329,6 +1383,8 @@
 				768C06581995905D00F829EB /* btn_pause@2x.png in Resources */,
 				254CC6991A23A7A600560805 /* onboarding-push-icon@2x.png in Resources */,
 				52EFF86C19C368C00059A0E3 /* program_avatar_wits@2x.png in Resources */,
+				25BBCD891A893C350015071E /* btn_close.png in Resources */,
+				25BBCD8B1A893C350015071E /* btn_forward_30.png in Resources */,
 				2557BA861A1A9BB800B0CAED /* btn_live_rewind_xtra-small@2x.png in Resources */,
 				52EFF7EE19C368C00059A0E3 /* program_avatar_ask-me-another.png in Resources */,
 				768C06541995905D00F829EB /* btn_live_rewind_small@2x.png in Resources */,
@@ -1339,6 +1395,7 @@
 				52EFF82619C368C00059A0E3 /* program_avatar_moth-radio-hour.png in Resources */,
 				76EF5E8A193E8D6B00568A9D /* Storyboard.storyboard in Resources */,
 				254CC69B1A23A7A600560805 /* onboarding-tile@2x.jpg in Resources */,
+				25BBCD781A892D730015071E /* SCPRScrubbingUIViewController.xib in Resources */,
 				769B907A19C0D5C300E812C7 /* Config.plist in Resources */,
 				52EFF7E619C368C00059A0E3 /* program_avatar_airtalk.png in Resources */,
 				52EFF7F019C368C00059A0E3 /* program_avatar_ask-me-another@2x.png in Resources */,
@@ -1351,6 +1408,7 @@
 				52EFF83419C368C00059A0E3 /* program_avatar_on-the-media@2x.png in Resources */,
 				256DE7271A16B9D90022EB84 /* menu-feedback.png in Resources */,
 				52EFF78F19C3688D0059A0E3 /* menu-glasses.png in Resources */,
+				25BBCD8E1A893C350015071E /* onboarding-scrubber@2x.png in Resources */,
 				52E68B8419B8F2D10028F8AE /* SCPRNavigationController.xib in Resources */,
 				2557BA831A1A9BB800B0CAED /* btn_back_to_live_xtra-small.png in Resources */,
 				52EFF85819C368C00059A0E3 /* program_avatar_world@2x.png in Resources */,
@@ -1444,6 +1502,8 @@
 				254E177019F863960022BF6B /* UILabel+Additions.m in Sources */,
 				52EFF87819C37D350059A0E3 /* SCPRMenuCell.m in Sources */,
 				2594B53F1A30F8410013B93A /* SCPRKeyboardToolbar.m in Sources */,
+				25BBCD7D1A892DA30015071E /* SCPRScrubberViewController.m in Sources */,
+				25BBCD771A892D730015071E /* SCPRScrubbingUIViewController.m in Sources */,
 				25F2BC7E1A3B9B4D00108F73 /* SCPRGenericAvatarViewController.m in Sources */,
 				5248858E19CBA180005F59CC /* EpisodeAudio.m in Sources */,
 				523E86D019C8A292006FC366 /* SCPRProgramDetailViewController.m in Sources */,
