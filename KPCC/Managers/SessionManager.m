@@ -91,7 +91,7 @@
     NSString *title = p.title ? p.title : @"[UNKNOWN]";
     
     [[AnalyticsManager shared] logEvent:@"liveStreamPause"
-                         withParameters:@{ @"sessionID" : sid,
+                         withParameters:@{ @"kpccSessionId" : sid,
                                            @"programTitle" : title,
                                            @"sessionLength" : pt,
                                            @"sessionLengthInSeconds" : [NSString stringWithFormat:@"%ld",(long)sessionLength] }];
@@ -126,7 +126,7 @@
         title = p.title;
     }
     [[AnalyticsManager shared] logEvent:@"liveStreamPlay"
-                         withParameters:@{ @"sessionID" : self.liveSessionID ,
+                         withParameters:@{ @"kpccSessionId" : self.liveSessionID ,
                                            @"behindLiveStatus" : pt,
                                            @"behindLiveSeconds" : literalValue,
                                            @"programTitle" : title }];
@@ -203,7 +203,7 @@
     NSString *title = chunk.audioTitle ? chunk.audioTitle : @"[UNKNOWN]";
     
     [[AnalyticsManager shared] logEvent:event
-                         withParameters:@{ @"sessionID" : sid,
+                         withParameters:@{ @"kpccSessionId" : sid,
                                            @"programTitle" : title,
                                            @"sessionLength" : pt,
                                            @"sessionLengthInSeconds" : [NSString stringWithFormat:@"%ld",(long)sessionLength] }];
@@ -233,7 +233,7 @@
     NSString *title = chunk.programTitle ? chunk.programTitle : @"[UNKNOWN]";
     
     [[AnalyticsManager shared] logEvent:@"onDemandEpisodeBegan"
-                         withParameters:@{ @"sessionID" : self.odSessionID,
+                         withParameters:@{ @"kpccSessionId" : self.odSessionID,
                                            @"programPublishedAt" : pubDateStr,
                                            @"programTitle" : title,
                                            @"programLengthInSeconds" : [NSString stringWithFormat:@"%@",duration],
@@ -530,14 +530,22 @@
 
 - (void)checkProgramUpdate:(BOOL)force {
 
+    if ( [[AudioManager shared] currentAudioMode] == AudioModeOnDemand ) return;
+    
     NSDate *ct = [[AudioManager shared].audioPlayer.currentItem currentDate];
     if ( ct ) {
         NSDateComponents *comps = [[NSCalendar currentCalendar] components:NSCalendarUnitMinute|NSCalendarUnitSecond
                                                                   fromDate:ct];
         if ( [comps minute] % 15 == 0 || force ) {
+            
+            if ( [comps minute] == self.prevCheckedMinute ) return;
+            self.prevCheckedMinute = [comps minute];
+            
             if ( [self updaterArmed] ) {
                 return;
             } else {
+                
+                self.prevCheckedMinute = [comps minute];
                 NSLog(@"Checking program : %@ (%ld)",[NSDate stringFromDate:ct
                                                                  withFormat:@"hh:mm a"],(long)[ct timeIntervalSince1970]);
                 

@@ -352,6 +352,9 @@ setForOnDemandUI;
         if ( self.menuOpen ) {
             [self decloakForMenu:YES];
         }
+        if ( self.preRollOpen ) {
+            [self decloakForPreRoll:NO];
+        }
         
         [UIView animateWithDuration:0.25 animations:^{
             self.playerControlsBottomYConstraint.constant = [self.originalFrames[@"playerControls"] floatValue];
@@ -1651,6 +1654,10 @@ setForOnDemandUI;
     self.uiLocked = YES;
     
     [self decloakForMenu:YES];
+    if ( self.preRollOpen ) {
+        [self decloakForPreRoll:NO];
+    }
+    
     [self.navigationController popToRootViewControllerAnimated:YES];
     
     if ( [[AudioManager shared] currentAudioMode] == AudioModeOnDemand ) {
@@ -1710,7 +1717,16 @@ setForOnDemandUI;
     self.uiLocked = NO;
     self.dirtyFromFailure = YES;
     
+    [[AnalyticsManager shared] failStream:NetworkHealthNetworkDown
+                                 comments:@""];
+    
     self.promptedAboutFailureAlready = NO;
+    self.preRollViewController.tritonAd = nil;
+    
+    if ( self.preRollOpen ) {
+        [self decloakForPreRoll:NO];
+    }
+    
     if ( [[AudioManager shared] currentAudioMode] != AudioModeOnDemand ) {
         if ( ![[SessionManager shared] currentProgram] ) {
             [self updateDataForUI];
@@ -2383,10 +2399,10 @@ setForOnDemandUI;
             if ( !self.menuOpen ) {
                 if ( !self.preRollOpen ) {
                     if ( ![[UXmanager shared] userHasSeenOnboarding] ) {
-                        [self.liveProgressViewController show];
+                        //[self.liveProgressViewController show];
                     }
                     if ( self.initialPlay ) {
-                        [self.liveProgressViewController show];
+                        //[self.liveProgressViewController show];
                     }
                 }
             }

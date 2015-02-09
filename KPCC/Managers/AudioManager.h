@@ -113,6 +113,9 @@ typedef NS_ENUM(NSUInteger, StreamStatus) {
 @property BOOL prerollPlaying;
 @property BOOL tryAgain;
 @property BOOL dumpedOnce;
+@property BOOL recoveryGateOpen;
+@property BOOL loggingGateOpen;
+
 
 @property (nonatomic, copy) NSString *previousUrl;
 @property (nonatomic, strong) NSDate *queuedSeekDate;
@@ -170,6 +173,8 @@ typedef NS_ENUM(NSUInteger, StreamStatus) {
 - (BOOL)verifyPositionAuthenticity;
 
 - (void)cheatPlay;
+
+- (NSString*)avPlayerSessionString;
 
 - (NSDate*)cookDateForActualSchedule:(NSDate*)date;
 

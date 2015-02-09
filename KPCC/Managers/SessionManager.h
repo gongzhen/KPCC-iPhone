@@ -29,6 +29,8 @@ typedef NS_ENUM(NSUInteger, OnDemandFinishedReason) {
 @property (nonatomic, strong) NSTimer *programUpdateTimer;
 @property (nonatomic,strong) NSDictionary *onboardingAudio;
 
+@property NSInteger prevCheckedMinute;
+
 @property int64_t liveStreamSessionBegan;
 @property int64_t liveStreamSessionEnded;
 @property int64_t onDemandSessionBegan;
