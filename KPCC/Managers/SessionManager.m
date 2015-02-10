@@ -536,7 +536,7 @@
     if ( ct ) {
         NSDateComponents *comps = [[NSCalendar currentCalendar] components:NSCalendarUnitMinute|NSCalendarUnitSecond
                                                                   fromDate:ct];
-        if ( [comps minute] % 15 == 0 || force ) {
+        if ( [comps minute] % 5 == 0 || force ) {
             
             if ( [comps minute] == self.prevCheckedMinute ) return;
             self.prevCheckedMinute = [comps minute];
@@ -570,6 +570,18 @@
 }
 
 #pragma mark - State handling
+- (void)setLastKnownBitrate:(double)lastKnownBitrate {
+    double replacedBitrate = _lastKnownBitrate;
+    _lastKnownBitrate = lastKnownBitrate;
+    if ( replacedBitrate > 0.0 ) {
+        if ( fabs(replacedBitrate - _lastKnownBitrate) > 10000.0 ) {
+            [[AnalyticsManager shared] logEvent:@"bitRateSwitching"
+                                 withParameters:@{}];
+        }
+    }
+    
+}
+
 - (long)bufferLength {
     long stableDuration = kStreamBufferLimit;
     for ( NSValue *str in [[[AudioManager shared] audioPlayer] currentItem].seekableTimeRanges ) {
@@ -591,7 +603,7 @@
     NSDate *live = [NSDate date];
     
     
-    if ( abs([live timeIntervalSince1970] - [currentDate timeIntervalSince1970]) > 120 ) {
+    if ( abs([live timeIntervalSince1970] - [currentDate timeIntervalSince1970]) > kStreamIsLiveTolerance ) {
         return YES;
     }
     

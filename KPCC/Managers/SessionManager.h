@@ -16,6 +16,8 @@ typedef NS_ENUM(NSUInteger, OnDemandFinishedReason) {
     OnDemandFinishedReasonEpisodePaused
 };
 
+static NSInteger kStreamIsLiveTolerance = 100;
+
 @interface SessionManager : NSObject
 
 + (SessionManager*)shared;
@@ -41,6 +43,7 @@ typedef NS_ENUM(NSUInteger, OnDemandFinishedReason) {
 @property BOOL expiring;
 @property BOOL userLeavingForClickthrough;
 @property BOOL updaterArmed;
+@property (nonatomic) double lastKnownBitrate;
 
 @property (atomic) BOOL userIsViewingHeadlines;
 

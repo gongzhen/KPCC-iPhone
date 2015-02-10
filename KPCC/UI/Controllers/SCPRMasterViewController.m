@@ -31,6 +31,7 @@ static NSString *kRewindingText = @"REWINDING...";
 static NSString *kForwardingText = @"GOING LIVE...";
 static NSString *kBufferingText = @"BUFFERING";
 
+
 @interface SCPRMasterViewController () <AudioManagerDelegate, UINavigationControllerDelegate, UIViewControllerTransitioningDelegate, SCPRPreRollControllerDelegate, UIScrollViewDelegate>
 
 @property BOOL initialPlay;
@@ -1159,7 +1160,11 @@ setForOnDemandUI;
         if ( [[SessionManager shared] sessionIsBehindLive] ) {
             NSDate *ciCurrentDate = [AudioManager shared].audioPlayer.currentItem.currentDate;
             NSTimeInterval ti = [[NSDate date] timeIntervalSinceDate:ciCurrentDate];
-            [self.liveDescriptionLabel setText:[NSString stringWithFormat:@"%@ BEHIND LIVE", [NSDate prettyTextFromSeconds:ti]]];
+            if ( ti > kStreamIsLiveTolerance ) {
+                [self.liveDescriptionLabel setText:[NSString stringWithFormat:@"%@ BEHIND LIVE", [NSDate prettyTextFromSeconds:ti]]];
+            } else {
+                [self.liveDescriptionLabel setText:[NSString stringWithFormat:@"LIVE"]];
+            }
         }
     }
     
@@ -2437,7 +2442,7 @@ setForOnDemandUI;
     
     
     if ( !self.menuOpen ) {
-        if ( tx > 60 ) {
+        if ( tx > kStreamIsLiveTolerance ) {
             [self.liveDescriptionLabel setText:[NSString stringWithFormat:@"%@ BEHIND LIVE", [NSDate prettyTextFromSeconds:ti]]];
             self.previousRewindThreshold = [[AudioManager shared].audioPlayer.currentItem.currentDate timeIntervalSince1970];
         } else {
