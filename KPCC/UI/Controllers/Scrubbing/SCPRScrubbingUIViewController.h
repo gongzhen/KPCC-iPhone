@@ -10,8 +10,9 @@
 #import "SCPRScrubberViewController.h"
 #import "Program.h"
 #import "AudioChunk.h"
+#import "AudioManager.h"
 
-@interface SCPRScrubbingUIViewController : UIViewController
+@interface SCPRScrubbingUIViewController : UIViewController<AudioManagerDelegate>
 
 @property (nonatomic,strong) IBOutlet UIButton *closeButton;
 @property (nonatomic,strong) IBOutlet UILabel *captionLabel;
@@ -24,7 +25,7 @@
 @property (nonatomic,strong) SCPRScrubberViewController *scrubberController;
 @property (nonatomic,weak) id parentControlView;
 
-- (void)setupWithProgram:(NSDictionary*)program blurredImage:(UIImage*)image;
+- (void)setupWithProgram:(NSDictionary*)program blurredImage:(UIImage*)image parent:(id)parent;
 - (void)cutDisplayHole;
 
 @end

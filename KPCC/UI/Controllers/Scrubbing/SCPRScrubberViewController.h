@@ -16,5 +16,6 @@
 @property (nonatomic, strong) IBOutlet UIView *scrubbingContainerView;
 
 - (void)setup;
+- (void)tick;
 
 @end

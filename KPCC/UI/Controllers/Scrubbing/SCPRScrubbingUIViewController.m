@@ -18,6 +18,8 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    self.darkeningView.backgroundColor = [[UIColor virtualBlackColor] translucify:0.35];
     // Do any additional setup after loading the view from its nib.
 }
 
@@ -27,8 +29,8 @@
 }
 
 - (void)viewDidLayoutSubviews {
-    [self cutDisplayHole];
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+    //[self cutDisplayHole];
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.25 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         [UIView animateWithDuration:0.25 animations:^{
             self.view.alpha = 1.0;
         }];
@@ -36,11 +38,16 @@
 
 }
 
-- (void)setupWithProgram:(NSDictionary *)program blurredImage:(UIImage *)image {
+- (void)setupWithProgram:(NSDictionary *)program blurredImage:(UIImage *)image parent:(id)parent {
+    self.parentControlView = parent;
     self.blurredImageView.image = image;
+    AudioChunk *ac = program[@"chunk"];
     
+    self.captionLabel.text = ac.audioTitle;
     self.blurredImageView.alpha = 0.0;
-    self.captionLabel.font = [[DesignManager shared] proBook:self.captionLabel.font.pointSize];
+    
+
+    self.captionLabel.font = [[DesignManager shared] proLight:self.captionLabel.font.pointSize];
     
     [self.closeButton addTarget:self
                          action:@selector(closeScrubber)
@@ -52,7 +59,7 @@
     SCPRMasterViewController *mvc = (SCPRMasterViewController*)self.parentControlView;
     [UIView animateWithDuration:0.25 animations:^{
         [mvc decloakForScrubber];
-        [mvc.navigationController setNavigationBarHidden:NO];
+        [[DesignManager shared] fauxRevealNavigationBar];
         self.view.alpha = 0.0;
     } completion:^(BOOL finished) {
         [self.view removeFromSuperview];
@@ -85,7 +92,18 @@
     
 }
 
+#pragma mark - AudioManager
+- (void)onRateChange {
+    if ([[AudioManager shared] isStreamPlaying] || [[AudioManager shared] isStreamBuffering]) {
+        [self.playPauseButton fadeImage:[UIImage imageNamed:@"btn_pause.png"] duration:0.2];
+    } else {
+        [self.playPauseButton fadeImage:[UIImage imageNamed:@"btn_play.png"] duration:0.2];
+    }
+}
 
+- (void)onTimeChange {
+    
+}
 /*
 #pragma mark - Navigation
 

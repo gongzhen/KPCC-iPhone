@@ -14,4 +14,7 @@
 - (void)setAudioChunk:(AudioChunk *)audioChunk;
 - (void)setAudioTitle:(NSString *)audioTitle;
 
+@property (nonatomic,strong) UILabel *audioTitleLabel;
+@property (nonatomic,strong) UILabel *audioDateLabel;
+
 @end

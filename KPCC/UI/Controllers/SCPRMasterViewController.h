@@ -131,6 +131,7 @@
 - (void)cloakForScrubber;
 - (void)decloakForScrubber;
 @property (nonatomic, strong) SCPRScrubbingUIViewController *scrubbingUI;
+@property BOOL scrubbing;
 
 @property (NS_NONATOMIC_IOSONLY, readonly) BOOL uiIsJogging;
 @property (NS_NONATOMIC_IOSONLY, readonly) NSTimeInterval rewindAgainstStreamDelta;

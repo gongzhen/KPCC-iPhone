@@ -43,6 +43,8 @@ typedef NS_ENUM(NSInteger, SculptingStyle) {
 
 - (void)normalizeBar;
 - (void)treatBar;
+- (void)fauxHideNavigationBar:(UIViewController*)root;
+- (void)fauxRevealNavigationBar;
 
 @property BOOL displayingStockPhoto;
 @property BOOL barNormalized;
@@ -50,6 +52,8 @@ typedef NS_ENUM(NSInteger, SculptingStyle) {
 
 @property (nonatomic, strong) UIImage *currentBlurredImage;
 @property (nonatomic, strong) NSDictionary *attributes;
+@property (nonatomic, strong) UIView *navbarMask;
+
 
 #ifdef TEST_PROGRAM_IMAGE
 @property (nonatomic,strong) NSString *currentSlug;

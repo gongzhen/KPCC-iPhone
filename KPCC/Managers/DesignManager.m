@@ -221,6 +221,28 @@ static DesignManager *singleton = nil;
     
 }
 
+- (void)fauxHideNavigationBar:(UIViewController *)root {
+    
+    self.navbarMask = [[UIView alloc] initWithFrame:CGRectMake(0.0,0.0,[[UIScreen mainScreen] bounds].size.width,64.0)];
+    self.navbarMask.backgroundColor = [UIColor blackColor];
+    
+    UINavigationBar *bar = [root.navigationController navigationBar];
+    bar.layer.mask = self.navbarMask.layer;
+    [UIView animateWithDuration:0.25 animations:^{
+        self.navbarMask.frame = CGRectMake(0.0, 0.0, self.navbarMask.frame.size.width,
+                                           0.0);
+    }];
+    
+}
+
+- (void)fauxRevealNavigationBar {
+    [UIView animateWithDuration:0.25 animations:^{
+        self.navbarMask.frame = CGRectMake(0.0, 0.0, self.navbarMask.frame.size.width,
+                                           64.0);
+    } completion:^(BOOL finished) {
+        [self.navbarMask.layer removeFromSuperlayer];
+    }];
+}
 
 #pragma mark - View Factory
 - (UIView*)textHeaderWithText:(NSString *)text textColor:(UIColor*)color backgroundColor:(UIColor*)backgroundColor {

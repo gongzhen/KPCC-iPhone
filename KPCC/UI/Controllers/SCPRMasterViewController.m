@@ -990,31 +990,29 @@ setForOnDemandUI;
                                               bundle:nil];
         
         [UIView animateWithDuration:0.25 animations:^{
-            [self.navigationController setNavigationBarHidden:YES animated:NO];
+            [[DesignManager shared] fauxHideNavigationBar:self];
             [self cloakForScrubber];
+            
         } completion:^(BOOL finished) {
+
             self.view.clipsToBounds = YES;
-            sUI.view.alpha = 0.0;
-            sUI.view.frame = CGRectMake(0.0, 0.0, self.view.frame.size.width,
-                                        self.view.frame.size.height);
+            sUI.view.frame = sUI.view.frame;
+
             
             [[DesignManager shared] snapView:sUI.view
                                  toContainer:self.view
                                withTopOffset:0.0
                                   fullscreen:YES];
+            sUI.view.alpha = 0.0;
+
             
-            sUI.view.frame = CGRectMake(0.0, 0.0, self.view.frame.size.width,
-                                        self.view.frame.size.height);
+            [sUI setupWithProgram:@{ @"chunk" : self.queueContents[self.queueCurrentPage]  }
+                     blurredImage:self.queueBlurView.image
+             parent:self];
             
-            [sUI.view setNeedsLayout];
-            [sUI.view setNeedsUpdateConstraints];
-            [sUI setupWithProgram:@{ @"text" : self.programTitleLabel.text }
-                     blurredImage:self.queueBlurView.image];
-            
-            sUI.parentControlView = self;
-            
-            
+            self.scrubbingUI = sUI;
             [sUI.view printDimensionsWithIdentifier:@"Scrubber Container"];
+            
             
         }];
         
@@ -1023,6 +1021,8 @@ setForOnDemandUI;
 }
 
 - (void)cloakForScrubber {
+    
+    self.queueScrollView.alpha = 0.0;
     self.scrubbingTriggerView.alpha = 0.0;
     self.timeLabelOnDemand.alpha = 0.0;
     self.progressView.alpha = 0.0;
@@ -1031,9 +1031,12 @@ setForOnDemandUI;
     self.horizDividerLine.alpha = 0.0;
     self.playPauseButton.alpha = 0.0;
     self.programTitleLabel.alpha = 0.0;
+    self.scrubbing = YES;
 }
 
 - (void)decloakForScrubber {
+    
+    self.queueScrollView.alpha = 1.0;
     self.scrubbingTriggerView.alpha = 1.0;
     self.timeLabelOnDemand.alpha = 1.0;
     self.progressView.alpha = 1.0;
@@ -1042,6 +1045,7 @@ setForOnDemandUI;
     self.horizDividerLine.alpha = 1.0;
     self.playPauseButton.alpha = 1.0;
     self.programTitleLabel.alpha = 1.0;
+    self.scrubbing = NO;
 }
 
 
@@ -1265,7 +1269,7 @@ setForOnDemandUI;
     }
     self.scrubbingTriggerView = [[UIView alloc] initWithFrame:CGRectMake(0.0,0.0,self.view.frame.size.width,
                                                                          80.0)];
-    self.scrubbingTriggerView.backgroundColor = [[UIColor virtualWhiteColor] translucify:0.25];
+    self.scrubbingTriggerView.backgroundColor = [UIColor clearColor];
     UILongPressGestureRecognizer *lpgr = [[UILongPressGestureRecognizer alloc] initWithTarget:self
                                                                                        action:@selector(bringUpScrubber)];
     lpgr.minimumPressDuration = 2.0;
@@ -2499,7 +2503,7 @@ setForOnDemandUI;
     
     // NOTE: basically used instead of observing player rate change to know when actual playback starts
     // .. for decloaking queue blur
-    if ( [AudioManager shared].currentAudioMode == AudioModeOnDemand && self.queueLoading) {
+    if ( [AudioManager shared].currentAudioMode == AudioModeOnDemand && self.queueLoading && !self.scrubbing ) {
         CMTime t = [AudioManager shared].audioPlayer.currentItem.currentTime;
         NSInteger s = CMTimeGetSeconds(t);
         if ( s > 0 || self.onDemandGateCount >= 2 ) {
@@ -2521,6 +2525,11 @@ setForOnDemandUI;
             }];
         } else {
             self.onDemandGateCount++;
+
+        }
+    } else {
+        if ( self.scrubbing ) {
+            [self cloakForScrubber];
         }
     }
     
