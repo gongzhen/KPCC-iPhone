@@ -72,6 +72,20 @@ static AnalyticsManager *singleton = nil;
     
 }
 
+- (void)setAccessLog:(AVPlayerItemAccessLog *)accessLog {
+    _accessLog = accessLog;
+    if ( accessLog ) {
+        self.accessLogReceivedAt = [NSDate date];
+    }
+}
+
+- (void)setErrorLog:(AVPlayerItemErrorLog *)errorLog {
+    _errorLog = errorLog;
+    if ( errorLog ) {
+        self.errorLogReceivedAt = [NSDate date];
+    }
+}
+
 - (void)kTrackSession:(NSString *)modifier {
     [self.kTracker trackEvent:@"session"
                              :modifier];
@@ -96,7 +110,11 @@ static AnalyticsManager *singleton = nil;
     }
     
 #ifdef DEBUG
+#ifdef VERBOSE_LOGGING
     NSLog(@"Logging to Analytics now - %@ - with params %@", event, userInfo);
+#else
+    NSLog(@"Logging to Analytics now - %@", event);
+#endif
 #endif
     
     [Flurry logEvent:event withParameters:userInfo timed:YES];
@@ -115,9 +133,18 @@ static AnalyticsManager *singleton = nil;
 
 - (void)failStream:(NetworkHealth)cause comments:(NSString *)comments force:(BOOL)force {
     
-    if ( !comments ) {
-        comments = @"";
+    if ( !comments || SEQ(comments,@"") ) return;
+    
+    if ( [[NSDate date] timeIntervalSinceDate:self.lastStreamException] > kExceptionInterval ) {
+        self.allowedExceptions = 0;
+        self.lastStreamException = [NSDate date];
+    } else {
+        self.allowedExceptions++;
+        if ( self.allowedExceptions > kMaxAllowedExceptionsPerInterval ) {
+            return;
+        }
     }
+    
     
     if ( !force ) {
         if ( !self.accessLog && !self.errorLog ) {
@@ -163,11 +190,13 @@ static AnalyticsManager *singleton = nil;
         mD[@"kpccSessionId"] = [[SessionManager shared] odSessionID];
         analysis = mD;
     }
-        
+    
+    /*
     analysis[@"audioSurvivedException"] = [[AudioManager shared].audioPlayer rate] > 0.0 ? @(YES) : @(NO);
     if ( [[AudioManager shared] tryAgain] ) {
         analysis[@"audioSurvivedException"] = @(NO);
-    }
+    }*/
+    
     NSLog(@"Sending stream failure report to analytics");
     [self logEvent:@"streamException" withParameters:analysis];
  
@@ -194,6 +223,9 @@ static AnalyticsManager *singleton = nil;
             if ( event.errorDomain ) {
                 nParams[@"errorDomain"] = event.errorDomain;
             }
+            if ( self.errorLogReceivedAt ) {
+                nParams[@"errorLogPostedAt"] = [NSDate prettyTextFromSeconds:[[NSDate date] timeIntervalSinceDate:self.errorLogReceivedAt]];
+            }
         }
     }
     if ( self.accessLog ) {
@@ -204,14 +236,47 @@ static AnalyticsManager *singleton = nil;
             }
          
             nParams[@"numberOfStalls"] = @(event.numberOfStalls);
-            nParams[@"numberOfDroppedFrames"] = @(event.numberOfDroppedVideoFrames);
+            //nParams[@"numberOfDroppedFrames"] = @(event.numberOfDroppedVideoFrames);
             nParams[@"switchBitrate"] = @(event.switchBitrate);
             
-            [[SessionManager shared] setLastKnownBitrate:event.switchBitrate];
+            [[SessionManager shared] setLastKnownBitrate:event.observedBitrate];
             
-            nParams[@"bitrateDeviation"] = @(event.observedBitrateStandardDeviation);
-            nParams[@"downloadOverdue"] = @(event.downloadOverdue);
-            nParams[@"transferDuration"] = @(event.transferDuration);
+#ifdef PRODUCTION
+            if ( event.observedBitrateStandardDeviation >= 0.0 ) {
+#endif
+                nParams[@"bitrateDeviation"] = @(event.observedBitrateStandardDeviation);
+#ifdef PRODUCTION
+            }
+#endif
+#ifdef PRODUCTION
+            if ( event.downloadOverdue > 0 ) {
+#endif
+                nParams[@"downloadOverdue"] = @(event.downloadOverdue);
+#ifdef PRODUCTION
+            }
+#endif    
+#ifdef PRODUCTION
+            if ( event.transferDuration >= 0 ) {
+#endif
+                nParams[@"transferDuration"] = @(event.transferDuration);
+#ifdef PRODUCTION
+            }
+#endif
+            nParams[@"indicatedBitrate"] = @(event.indicatedBitrate);
+            nParams[@"observedBitrate"] = @(event.observedBitrate);
+            if ( event.observedMaxBitrate != event.observedBitrate ) {
+                nParams[@"observedMaxBitrate"] = @(event.observedMaxBitrate);
+            }
+            if ( event.observedMinBitrate != event.observedBitrate ) {
+                nParams[@"observedMinBitrate"] = @(event.observedMinBitrate);
+            }
+            
+            nParams[@"bytesTransferred"] = @(event.numberOfBytesTransferred);
+            
+            if ( self.accessLogReceivedAt ) {
+                nParams[@"accessLogPostedAt"] = [NSDate prettyTextFromSeconds:[[NSDate date] timeIntervalSinceDate:self.accessLogReceivedAt]];
+            }
+            
             if ( event.URI ) {
                 nParams[@"uri"] = event.URI;
             }
@@ -225,7 +290,6 @@ static AnalyticsManager *singleton = nil;
         }
     }
     
-    [[AudioManager shared] setLoggingGateOpen:NO];
     
     NSLog(@" •••••••• FINISHED LOGGIFYING ANALYTICS ••••••• ");
     

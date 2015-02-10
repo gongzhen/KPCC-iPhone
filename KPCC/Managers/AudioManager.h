@@ -11,7 +11,7 @@
 #import <MediaPlayer/MediaPlayer.h>
 
 #ifdef SHORTENED_BUFFER
-static long kStreamBufferLimit = 5*60;
+static long kStreamBufferLimit = 1*60;
 static long kStreamCorrectionTolerance = 60*5;
 #else
 static long kStreamBufferLimit = 4*60*60;
@@ -115,7 +115,9 @@ typedef NS_ENUM(NSUInteger, StreamStatus) {
 @property BOOL dumpedOnce;
 @property BOOL recoveryGateOpen;
 @property BOOL loggingGateOpen;
+@property BOOL reactivate;
 
+@property NSInteger failoverCount;
 
 @property (nonatomic, copy) NSString *previousUrl;
 @property (nonatomic, strong) NSDate *queuedSeekDate;
@@ -137,7 +139,7 @@ typedef NS_ENUM(NSUInteger, StreamStatus) {
 - (void)unmuteAudio;
 - (void)buildStreamer:(NSString*)urlString;
 - (void)buildStreamer:(NSString*)urlString local:(BOOL)local;
-
+- (void)printStatus;
 - (void)playOnboardingAudio:(NSInteger)segment;
 - (void)sanitizeFromOnboarding;
 

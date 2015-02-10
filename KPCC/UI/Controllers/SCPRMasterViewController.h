@@ -113,6 +113,8 @@
 @property BOOL dirtyFromFailure;
 @property BOOL audioWasPlaying;
 @property BOOL scrubberLoadingGate;
+@property BOOL playStateGate;
+
 
 @property NSInteger onDemandGateCount;
 @property NSInteger previousRewindThreshold;
