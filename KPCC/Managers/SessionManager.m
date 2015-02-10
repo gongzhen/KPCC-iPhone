@@ -28,6 +28,7 @@
 #ifdef TESTING_PROGRAM_CHANGE
         mgr.initialProgramRequested = 0;
 #endif
+        mgr.prevCheckedMinute = -1;
     });
     return mgr;
 }

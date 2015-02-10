@@ -983,15 +983,18 @@ setForOnDemandUI;
 - (void)updateDataForUI {
     [[SessionManager shared] fetchCurrentProgram:^(id returnedObject) {
         if ( returnedObject ) {
+            
+            [[NetworkManager shared] setNetworkDown:NO];
+            
             [self.liveProgressViewController displayWithProgram:(Program*)returnedObject
                                                          onView:self.view
                                                aboveSiblingView:self.playerControlsView];
             [self.liveProgressViewController hide];
             [self determinePlayState];
             
-            if ( self.uiLocked ) {
-                [self unlockUI:@1];
-            }
+        
+            [self unlockUI:@1];
+            
             
             if ( [[UXmanager shared] onboardingEnding] ) {
                 dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.25 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
@@ -1656,7 +1659,7 @@ setForOnDemandUI;
 #endif
     
     if ( self.uiLocked ) return;
-    self.uiLocked = YES;
+    
     
     [self decloakForMenu:YES];
     if ( self.preRollOpen ) {
@@ -1703,11 +1706,12 @@ setForOnDemandUI;
     
     if ( note && !self.promptedAboutFailureAlready ) {
         self.promptedAboutFailureAlready = YES;
+        self.uiLocked = YES;
         [[[UIAlertView alloc] initWithTitle:@"Network Availability"
                                 message:@"It looks like your connection has dropped. Please connect to Wi-Fi or retry once your signal has improved"
                                delegate:self
-                      cancelButtonTitle:@"Cancel"
-                      otherButtonTitles:@"Retry", nil] show];
+                      cancelButtonTitle:@"Retry"
+                      otherButtonTitles:nil] show];
     }
     
 }
@@ -1719,12 +1723,8 @@ setForOnDemandUI;
 #endif
     
     if ( !self.uiLocked ) return;
-    self.uiLocked = NO;
+    
     self.dirtyFromFailure = YES;
-    
-    [[AnalyticsManager shared] failStream:NetworkHealthNetworkDown
-                                 comments:@""];
-    
     self.promptedAboutFailureAlready = NO;
     self.preRollViewController.tritonAd = nil;
     
@@ -2098,7 +2098,6 @@ setForOnDemandUI;
         if (self.preRollOpen) {
             [self decloakForPreRoll:YES];
         }
-
         if ( self.initiateRewind ) {
             [self activateRewind:RewindDistanceBeginning];
         } else {
@@ -2311,6 +2310,7 @@ setForOnDemandUI;
 
 - (void)onRateChange {
     
+    self.playStateGate = YES;
     if ( !self.initiateRewind || self.preRollViewController.tritonAd ) {
         [self.liveProgressViewController setFreezeBit:YES];
         [self updateControlsAndUI:YES];
@@ -2322,6 +2322,11 @@ setForOnDemandUI;
     
     if ( self.jogging ) {
         return;
+    }
+    
+    if ( self.playStateGate ) {
+        self.playStateGate = NO;
+        [self primeManualControlButton];
     }
     
     NSAssert([NSThread isMainThread],@"This is not the main thread...");
@@ -2580,10 +2585,9 @@ setForOnDemandUI;
 #pragma mark - UIAlertView
 - (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex {
     self.promptedAboutFailureAlready = NO;
-    if ( buttonIndex == 1 ) {
+    if ( buttonIndex == 0 ) {
+        self.uiLocked = NO;
         [self updateDataForUI];
-    } else {
-        [self lockUI:nil];
     }
     
 }

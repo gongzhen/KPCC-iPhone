@@ -14,6 +14,9 @@
 #import <Kochava/TrackAndAd.h>
 #import "NetworkManager.h"
 
+static NSInteger kMaxAllowedExceptionsPerInterval = 5;
+static NSInteger kExceptionInterval = 60;
+
 @interface AnalyticsManager : NSObject
 
 @property long lastErrorLoggedTime;
@@ -22,6 +25,11 @@
 @property (nonatomic, strong) NSTimer *analyticsSuspensionTimer;
 @property (nonatomic, strong) AVPlayerItemAccessLog *accessLog;
 @property (nonatomic, strong) AVPlayerItemErrorLog *errorLog;
+
+@property (nonatomic, strong) NSDate *errorLogReceivedAt;
+@property (nonatomic, strong) NSDate *accessLogReceivedAt;
+@property (nonatomic, strong) NSDate *lastStreamException;
+@property NSInteger allowedExceptions;
 
 + (AnalyticsManager*)shared;
 

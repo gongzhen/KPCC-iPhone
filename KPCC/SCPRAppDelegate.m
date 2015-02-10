@@ -76,7 +76,7 @@
     NSString *ua = kHLSLiveStreamURL;
     NSLog(@"URL : %@",ua);
     
-
+    [[AnalyticsManager shared] kTrackSession:@"began"];
 
     // Fetch initial list of Programs from SCPRV4 and store in CoreData for later usage.
     [[NetworkManager shared] fetchAllProgramInformation:^(id returnedObject) {
@@ -216,11 +216,6 @@
 
 - (void)applicationWillResignActive:(UIApplication *)application {
     
-    if ( [[AudioManager shared] currentAudioMode] != AudioModeOnboarding ) {
-        [[SessionManager shared] disarmProgramUpdater];
-        [[SessionManager shared] setSessionLeftDate:[NSDate date]];
-    }
-    
     if ( [[AudioManager shared] currentAudioMode] == AudioModeOnboarding ) {
         if ( ![[UXmanager shared] paused] ) {
             [[UXmanager shared] godPauseOrPlay];
@@ -234,6 +229,13 @@
     
     if ( [[SessionManager shared] userIsViewingHeadlines] ) {
         //[[AnalyticsManager shared] trackHeadlinesDismissal];
+    }
+    
+    if ( [[AudioManager shared] currentAudioMode] != AudioModeOnboarding ) {
+        if ( ![[SessionManager shared] sessionLeftDate] ) {
+            [[SessionManager shared] disarmProgramUpdater];
+            [[SessionManager shared] setSessionLeftDate:[NSDate date]];
+        }
     }
     
     if ( [[AudioManager shared] currentAudioMode] == AudioModePreroll ) {
@@ -252,17 +254,6 @@
         [self.masterViewController determinePlayState];
     }
     
-    [[SessionManager shared] setUserLeavingForClickthrough:NO];
-
-
-    [[AnalyticsManager shared] kTrackSession:@"began"];
-    
-    // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
-}
-
-- (void)applicationDidBecomeActive:(UIApplication *)application {
-    
-    
     if ( [[AudioManager shared] currentAudioMode] == AudioModeOnboarding ) {
         if ( [[UXmanager shared] paused] ) {
             [[UXmanager shared] godPauseOrPlay];
@@ -276,8 +267,17 @@
         [[UXmanager shared] persist];
     }
     
-    [[UIApplication sharedApplication] setApplicationIconBadgeNumber:0];
+    [[AnalyticsManager shared] kTrackSession:@"began"];
+    [[SessionManager shared] setUserLeavingForClickthrough:NO];
+
     
+    // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
+}
+
+- (void)applicationDidBecomeActive:(UIApplication *)application {
+    
+    
+    [[UIApplication sharedApplication] setApplicationIconBadgeNumber:0];
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
 }
 

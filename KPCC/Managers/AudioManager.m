@@ -35,9 +35,84 @@ static const NSString *ItemStatusContext;
             singleton.status = StreamStatusStopped;
             singleton.savedVolumeFromMute = -1.0;
             singleton.currentAudioMode = AudioModeNeutral;
+            
+            if ( [Utils isIOS8] ) {
+                [[NSNotificationCenter defaultCenter] addObserver:singleton
+                                                         selector:@selector(handleInterruption:)
+                                                             name:AVAudioSessionInterruptionNotification
+                                                           object:nil];
+            }
         }
     }
     return singleton;
+}
+
+- (void)handleInterruption:(NSNotification*)note {
+    int interruptionType = [note.userInfo[AVAudioSessionInterruptionTypeKey] intValue];
+    
+    if ( self.currentAudioMode == AudioModeOnboarding ) {
+
+        [[UXmanager shared] godPauseOrPlay];
+        
+    } else if ( self.currentAudioMode == AudioModePreroll ) {
+        
+        SCPRMasterViewController *mvc = [[Utils del] masterViewController];
+        if ( mvc.preRollViewController ) {
+            if ( interruptionType == AVAudioSessionInterruptionTypeBegan ) {
+                if ( [mvc.preRollViewController.prerollPlayer rate] > 0.0 ) {
+                    self.reactivate = YES;
+                    [mvc.preRollViewController.prerollPlayer pause];
+                } else {
+                    self.reactivate = NO;
+                }
+            } else if ( interruptionType == AVAudioSessionInterruptionTypeEnded ) {
+                if ( [mvc.preRollViewController.prerollPlayer rate] <= 0.0 && self.reactivate ) {
+                    [mvc.preRollViewController.prerollPlayer play];
+                    self.reactivate = NO;
+                } else {
+                    self.reactivate = NO;
+                }
+            }
+        }
+        
+    } else {
+        if (interruptionType == AVAudioSessionInterruptionTypeBegan) {
+            if ( self.audioPlayer ) {
+                if ( self.audioPlayer.rate > 0.0 ) {
+                    self.reactivate = YES;
+                    [self pauseStream];
+                } else {
+                    self.reactivate = NO;
+                }
+            }
+        } else if (interruptionType == AVAudioSessionInterruptionTypeEnded) {
+            if ( self.audioPlayer ) {
+                if ( self.audioPlayer.rate <= 0.0 && self.reactivate ) {
+                    [self playStream];
+                } else {
+                    self.reactivate = NO;
+                }
+            }
+        }
+    }
+    
+    [self printStatus];
+}
+
+- (void)printStatus {
+    switch (self.status) {
+        case StreamStatusPaused:
+            NSLog(@"CurrentStatus - Stream is paused");
+            break;
+        case StreamStatusPlaying:
+            NSLog(@"CurrentStatus - Stream is playing");
+            break;
+        case StreamStatusStopped:
+            NSLog(@"CurrentStatus - Stream is stopped");
+            break;
+        default:
+            break;
+    }
 }
 
 - (void)setCurrentAudioMode:(AudioMode)currentAudioMode {
@@ -48,20 +123,13 @@ static const NSString *ItemStatusContext;
                         change:(NSDictionary *)change context:(void *)context {
     
     // Monitoring AVPlayer->currentItem status.
-    if (object == self.audioPlayer.currentItem && [keyPath isEqualToString:@"status"]) {
-#ifdef DEBUG
-        NSNumber *old = (NSNumber*)change[@"old"];
-        NSNumber *new = (NSNumber*)change[@"new"];
 
-        if ( [old intValue] == [new intValue] ) {
-            int x = 1;
-            x++;
-        }
-#endif
+    NSLog(@"Event received for : %@",[object description]);
+    if (object == self.audioPlayer.currentItem && [keyPath isEqualToString:@"status"]) {
+
         if ([self.audioPlayer.currentItem status] == AVPlayerItemStatusFailed) {
             NSError *error = [self.audioPlayer.currentItem error];
             NSLog(@"AVPlayerItemStatus ERROR! --- %@", error);
-            
             
             if ( [self currentAudioMode] == AudioModeOnDemand ) {
                 if ( [self.delegate respondsToSelector:@selector(onDemandAudioFailed)] ) {
@@ -70,18 +138,29 @@ static const NSString *ItemStatusContext;
             } else {
                 if ( self.audioPlayer ) {
                     
-                    self.tryAgain = YES;
-                    [self analyzeStreamError:[error prettyAnalytics]];
+                    self.failoverCount++;
+                    if ( self.failoverCount > kFailoverThreshold ) {
+                        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.15 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                            [self analyzeStreamError:[error prettyAnalytics]];
+                            [self resetPlayer];
+                        });
+                    } else {
                     
-                    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.15 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                        [self resetPlayer];
-                    });
+                        self.tryAgain = YES;  
+                        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.15 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                            [self resetPlayer];
+                        });
+                        
+                    }
+
                 }
             }
             return;
             
         } else if ([self.audioPlayer.currentItem status] == AVPlayerItemStatusReadyToPlay) {
             NSLog(@"AVPlayerItemStatus - ReadyToPlay");
+            self.failoverCount = 0;
+            
             if ( self.waitForSeek ) {
                 NSLog(@"Delayed seek");
                 dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.15 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
@@ -125,7 +204,7 @@ static const NSString *ItemStatusContext;
     if (object == self.audioPlayer.currentItem && [keyPath isEqualToString:@"playbackBufferEmpty"]) {
         if ( [change[@"new"] intValue] == 1 ) {
             NSLog(@"Buffer is empty...");
-            [self analyzeStreamError:@"Buffer is Empty"];
+            //[self analyzeStreamError:@"Buffer is Empty"];
         }
     }
     
@@ -186,7 +265,7 @@ static const NSString *ItemStatusContext;
         [[AnalyticsManager shared] setAccessLog:self.audioPlayer.currentItem.accessLog];
         
         NSDictionary *params = [[AnalyticsManager shared] logifiedParamsList:@{}];
-        NSLog(@"Access Log Received : %@",params);
+        //NSLog(@"Access Log Received : %@",params);
         
 #ifndef PRODUCTION
         [[AnalyticsManager shared] logEvent:@"accessLogReceived"
@@ -272,6 +351,8 @@ static const NSString *ItemStatusContext;
             [[SessionManager shared] trackRewindSession];
             [[SessionManager shared] trackOnDemandSession];
             [[SessionManager shared] checkProgramUpdate:NO];
+            
+            //[weakSelf printStatus];
             
 #ifdef DEBUG
             if ( !weakSelf.dumpedOnce ) {
@@ -887,6 +968,7 @@ static const NSString *ItemStatusContext;
     
     self.status = StreamStatusPlaying;
     [self.audioPlayer play];
+    
 }
 
 - (void)pauseStream {
@@ -1122,16 +1204,14 @@ static const NSString *ItemStatusContext;
             // If recovering from stream failure, cancel playing of local audio file
             if (self.localAudioPlayer && self.localAudioPlayer.isPlaying) {
                 [self.localAudioPlayer stop];
-                
                 if ([self.delegate respondsToSelector:@selector(handleUIForRecoveredStream)]) {
                     //[self.delegate handleUIForRecoveredStream];
                 }
-                
-          
-                [[AnalyticsManager shared] failStream:NetworkHealthUnknown
-                                                 comments:comments];
-                
             }
+            
+            [[AnalyticsManager shared] failStream:NetworkHealthUnknown
+                                         comments:comments];
+            
             break;
             
         case NetworkHealthNetworkDown:

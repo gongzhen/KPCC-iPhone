@@ -16,7 +16,7 @@
 #import <KSReachability/KSReachability.h>
 
 #define kServerBase @"http://www.scpr.org/api/v3"
-#define kFailoverThreshold 4
+#define kFailoverThreshold 10
 
 
 
