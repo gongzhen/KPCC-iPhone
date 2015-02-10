@@ -233,7 +233,7 @@
 - (void)applicationDidEnterBackground:(UIApplication *)application {
     
     if ( [[SessionManager shared] userIsViewingHeadlines] ) {
-        [[AnalyticsManager shared] trackHeadlinesDismissal];
+        //[[AnalyticsManager shared] trackHeadlinesDismissal];
     }
     
     if ( [[AudioManager shared] currentAudioMode] == AudioModePreroll ) {
@@ -253,6 +253,7 @@
     }
     
     [[SessionManager shared] setUserLeavingForClickthrough:NO];
+
 
     [[AnalyticsManager shared] kTrackSession:@"began"];
     

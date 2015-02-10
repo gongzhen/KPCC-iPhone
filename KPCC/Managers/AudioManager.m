@@ -61,7 +61,7 @@ static const NSString *ItemStatusContext;
         if ([self.audioPlayer.currentItem status] == AVPlayerItemStatusFailed) {
             NSError *error = [self.audioPlayer.currentItem error];
             NSLog(@"AVPlayerItemStatus ERROR! --- %@", error);
-            [self analyzeStreamError:[error prettyAnalytics]];
+            
             
             if ( [self currentAudioMode] == AudioModeOnDemand ) {
                 if ( [self.delegate respondsToSelector:@selector(onDemandAudioFailed)] ) {
@@ -69,8 +69,11 @@ static const NSString *ItemStatusContext;
                 }
             } else {
                 if ( self.audioPlayer ) {
+                    
                     self.tryAgain = YES;
-                    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.33 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                    [self analyzeStreamError:[error prettyAnalytics]];
+                    
+                    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.15 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                         [self resetPlayer];
                     });
                 }
@@ -81,7 +84,7 @@ static const NSString *ItemStatusContext;
             NSLog(@"AVPlayerItemStatus - ReadyToPlay");
             if ( self.waitForSeek ) {
                 NSLog(@"Delayed seek");
-                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.33 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.15 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                     [self.audioPlayer play];
                     [self seekToDate:self.queuedSeekDate forward:NO failover:NO];
                 });
@@ -90,22 +93,16 @@ static const NSString *ItemStatusContext;
                 
                 self.tryAgain = NO;
                 
-                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.33 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.15 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                     [self playStream];
                     [self startObservingTime];
                 });
                 
             } else {
                 
-                if ( self.recoveryGateOpen ) {
-                    if ( [self.audioPlayer rate] <= 0.0 && !self.seekRequested ) {
-                        [self playStream];
-                        [self startObservingTime];
-                    }
-                    self.recoveryGateOpen = NO;
-                }
                 
             }
+            
         } else if ([self.audioPlayer.currentItem status] == AVPlayerItemStatusUnknown) {
             NSLog(@"AVPlayerItemStatus - Unknown");
         }
@@ -114,35 +111,21 @@ static const NSString *ItemStatusContext;
     if ( object == self.audioPlayer.currentItem && [keyPath isEqualToString:AVPlayerItemPlaybackStalledNotification] ) {
         if ( [change[@"new"] intValue] == 1 ) {
             NSLog(@"Playback stalled ...");
-            [self analyzeStreamError:nil];
+            [self analyzeStreamError:@"Player received stall"];
             if ( [self.audioPlayer rate] == 0.0 ) {
                 dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.33 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                     [self playStream];
+                    [self startObservingTime];
                 });
             }
         }
     }
     
-    if ( object == self.audioPlayer.currentItem && [keyPath isEqualToString:AVPlayerItemNewAccessLogEntryNotification] ) {
-        if ( self.loggingGateOpen ) {
-            [[AnalyticsManager shared] setAccessLog:self.audioPlayer.currentItem.accessLog];
-            [self analyzeStreamError:nil];
-            self.loggingGateOpen = NO;
-        }
-    }
-    
-    if ( object == self.audioPlayer.currentItem && [keyPath isEqualToString:AVPlayerItemNewErrorLogEntryNotification] ) {
-        [[AnalyticsManager shared] setErrorLog:self.audioPlayer.currentItem.errorLog];
-        [self analyzeStreamError:nil];
-    }
-
     // Monitoring AVPlayer->currentItem with empty playback buffer.
     if (object == self.audioPlayer.currentItem && [keyPath isEqualToString:@"playbackBufferEmpty"]) {
         if ( [change[@"new"] intValue] == 1 ) {
             NSLog(@"Buffer is empty...");
-            [self analyzeStreamError:nil];
-            [self.audioPlayer pause];
-            self.recoveryGateOpen = YES;
+            [self analyzeStreamError:@"Buffer is Empty"];
         }
     }
     
@@ -150,7 +133,6 @@ static const NSString *ItemStatusContext;
         if ( [change[@"new"] intValue] == 0 ) {
             NSLog(@"Stream not likely to keep up...");
             [self analyzeStreamError:@"Stream not likely to keep up..."];
-            self.recoveryGateOpen = YES;
         }
     }
     
@@ -178,8 +160,11 @@ static const NSString *ItemStatusContext;
             self.dumpedOnce = NO;
             [self startObservingTime];
         }
+        
         if ( oldRate == 1.0 && newRate == 0.0 ) {
+
             self.status = StreamStatusPaused;
+      
         }
         
         if ([self.delegate respondsToSelector:@selector(onRateChange)]) {
@@ -197,11 +182,17 @@ static const NSString *ItemStatusContext;
         [self analyzeStreamError:nil];
     }
     if ( SEQ([note name],AVPlayerItemNewAccessLogEntryNotification) ) {
-        if ( self.loggingGateOpen ) {
-            self.loggingGateOpen = NO;
-            [[AnalyticsManager shared] setAccessLog:self.audioPlayer.currentItem.accessLog];
-            [self analyzeStreamError:nil];
-        }
+
+        [[AnalyticsManager shared] setAccessLog:self.audioPlayer.currentItem.accessLog];
+        
+        NSDictionary *params = [[AnalyticsManager shared] logifiedParamsList:@{}];
+        NSLog(@"Access Log Received : %@",params);
+        
+#ifndef PRODUCTION
+        [[AnalyticsManager shared] logEvent:@"accessLogReceived"
+                             withParameters:@{}];
+#endif
+        
     }
 
 }

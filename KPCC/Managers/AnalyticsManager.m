@@ -164,8 +164,10 @@ static AnalyticsManager *singleton = nil;
         analysis = mD;
     }
         
-    analysis[@"audioSurvivedException"] = [[AudioManager shared].audioPlayer rate] > 0.0 ? [NSNumber numberWithBool:YES] : [NSNumber numberWithBool:NO];
-    
+    analysis[@"audioSurvivedException"] = [[AudioManager shared].audioPlayer rate] > 0.0 ? @(YES) : @(NO);
+    if ( [[AudioManager shared] tryAgain] ) {
+        analysis[@"audioSurvivedException"] = @(NO);
+    }
     NSLog(@"Sending stream failure report to analytics");
     [self logEvent:@"streamException" withParameters:analysis];
  
@@ -192,22 +194,26 @@ static AnalyticsManager *singleton = nil;
             if ( event.errorDomain ) {
                 nParams[@"errorDomain"] = event.errorDomain;
             }
-        } else if ( self.accessLog ) {
-            if ( self.accessLog.events && self.accessLog.events.count > 0 ) {
-                AVPlayerItemAccessLogEvent *event = self.accessLog.events.firstObject;
-                if ( event.playbackSessionID ) {
-                    nParams[@"avPlayerSessionId"] = event.playbackSessionID;
-                }
-             
-                nParams[@"numberOfStalls"] = @(event.numberOfStalls);
-                nParams[@"numberOfDroppedFrames"] = @(event.numberOfDroppedVideoFrames);
-                nParams[@"switchBitrate"] = @(event.switchBitrate);
-                nParams[@"bitrateDeviation"] = @(event.observedBitrateStandardDeviation);
-                nParams[@"downloadOverdue"] = @(event.downloadOverdue);
-                nParams[@"transferDuration"] = @(event.transferDuration);
-                if ( event.URI ) {
-                    nParams[@"uri"] = event.URI;
-                }
+        }
+    }
+    if ( self.accessLog ) {
+        if ( self.accessLog.events && self.accessLog.events.count > 0 ) {
+            AVPlayerItemAccessLogEvent *event = self.accessLog.events.firstObject;
+            if ( event.playbackSessionID ) {
+                nParams[@"avPlayerSessionId"] = event.playbackSessionID;
+            }
+         
+            nParams[@"numberOfStalls"] = @(event.numberOfStalls);
+            nParams[@"numberOfDroppedFrames"] = @(event.numberOfDroppedVideoFrames);
+            nParams[@"switchBitrate"] = @(event.switchBitrate);
+            
+            [[SessionManager shared] setLastKnownBitrate:event.switchBitrate];
+            
+            nParams[@"bitrateDeviation"] = @(event.observedBitrateStandardDeviation);
+            nParams[@"downloadOverdue"] = @(event.downloadOverdue);
+            nParams[@"transferDuration"] = @(event.transferDuration);
+            if ( event.URI ) {
+                nParams[@"uri"] = event.URI;
             }
         }
     }
@@ -219,10 +225,6 @@ static AnalyticsManager *singleton = nil;
         }
     }
     
-    
-    
-    self.errorLog = nil;
-    self.accessLog = nil;
     [[AudioManager shared] setLoggingGateOpen:NO];
     
     NSLog(@" •••••••• FINISHED LOGGIFYING ANALYTICS ••••••• ");
@@ -246,7 +248,7 @@ static AnalyticsManager *singleton = nil;
         case NetworkHealthServerOK:
         case NetworkHealthUnknown:
         default:
-            english = @"Cause of this is unknown";
+            english = @"Network was reachable at time of failure";
             break;
     }
     
