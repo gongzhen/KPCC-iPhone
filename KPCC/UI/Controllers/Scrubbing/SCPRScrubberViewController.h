@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "SCPRTouchableScrubberView.h"
 
 @import AVFoundation;
 
@@ -21,6 +22,7 @@
 @property (nonatomic,strong) CAShapeLayer *liveBarLine;
 @property (nonatomic,strong) CAShapeLayer *currentBarLine;
 @property (nonatomic,strong) UIPanGestureRecognizer *scrubPanner;
+@property (nonatomic,strong) SCPRTouchableScrubberView *viewAsTouchableScrubberView;
 
 @property (nonatomic, strong) UIView *cloak;
 @property BOOL expanded;
@@ -29,9 +31,17 @@
 @property NSTimer *trulyFinishedTimer;
 
 - (void)setup;
+
 - (void)unmask;
+- (void)applyMask;
+
 - (void)tick;
 - (void)expand;
 - (void)pointedSeek;
+
+- (void)userTouched:(NSSet*)touches event:(UIEvent*)event;
+- (void)userPanned:(NSSet*)touches event:(UIEvent*)event;
+- (void)userLifted:(NSSet*)touches event:(UIEvent*)event;
+- (void)trackForPoint:(CGPoint)touchPoint;
 
 @end

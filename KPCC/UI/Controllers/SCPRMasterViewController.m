@@ -989,13 +989,33 @@ setForOnDemandUI;
     
     [[AudioManager shared] setDelegate:self.scrubbingUI];
     
-    [UIView animateWithDuration:0.25 animations:^{
+    if ( [Utils isThreePointFive] ) {
+        self.topYScrubbingAnchor.constant = [self.topYScrubbingAnchor constant]-43.0;
+        self.playerControlsBottomYConstraint.constant = [self.playerControlsBottomYConstraint constant]+43.0;
+        [self.scrubbingUI.view layoutIfNeeded];
+    }
+    
+    [UIView animateWithDuration:0.25 delay:0.0 options:UIViewAnimationOptionCurveEaseOut animations:^{
         [[DesignManager shared] fauxHideNavigationBar:self];
         [self cloakForScrubber];
+        
+        if ( [Utils isThreePointFive] ) {
+            [self.view updateConstraintsIfNeeded];
+            [self.view layoutIfNeeded];
+        }
+        
         self.scrubbingUI.view.alpha = 1.0;
         [self.scrubbingUI.scrubberController unmask];
     } completion:^(BOOL finished) {
 
+        //[self.queueDarkBgView fillHole];
+        
+        /*CGRect raw = self.scrubberControlView.frame;
+        CGRect cooked = [self.scrubbingUIView convertRect:raw
+                                                   toView:self.queueDarkBgView];
+        [self.queueDarkBgView cutAHole:cooked];*/
+        
+        [self addCloseButton];
         
     }];
     
@@ -1018,12 +1038,13 @@ setForOnDemandUI;
     
     self.scrubbingUI.scrubberController = sCtrl;
     self.scrubbingUI.scrubberController.scrubberTimeLabel = self.scrubberTimeLabel;
+    self.scrubbingUI.scrubberController.viewAsTouchableScrubberView = self.touchableScrubberView;
     
     if ( self.scrubbingTriggerView ) {
         [self.scrubbingTriggerView removeFromSuperview];
     }
     self.scrubbingTriggerView = [[UIView alloc] initWithFrame:CGRectMake(0.0,0.0,self.view.frame.size.width,
-                                                                         80.0)];
+                                                                         30.0)];
     self.scrubbingTriggerView.backgroundColor = [UIColor clearColor];
     UILongPressGestureRecognizer *lpgr = [[UILongPressGestureRecognizer alloc] initWithTarget:self
                                                                                        action:@selector(bringUpScrubber)];
@@ -1035,16 +1056,20 @@ setForOnDemandUI;
     
     [self.view addSubview:self.scrubbingTriggerView];
     
-    CGRect raw = self.scrubberControlView.frame;
-    CGRect cooked = [self.scrubbingUIView convertRect:raw
-                                               toView:self.queueDarkBgView];
-    [self.queueDarkBgView cutAHole:cooked];
+
+    self.scrubbingUI.parentControlView = self;
     
     sUI.view.alpha = 0.0;
     self.scrubbingTriggerView.alpha = 0.0;
     
     [self.scrubbingUI prerender];
     
+
+    /*
+    CGRect raw = self.scrubberControlView.frame;
+    CGRect cooked = [self.scrubbingUIView convertRect:raw
+                                               toView:self.queueDarkBgView];
+    [self.queueDarkBgView cutAHole:cooked];*/
 }
 
 
@@ -1061,6 +1086,8 @@ setForOnDemandUI;
     self.horizDividerLine.alpha = 0.0;
     self.programTitleLabel.alpha = 0.0;
     self.queueDarkBgView.alpha = 0.45;
+    self.queueScrollView.userInteractionEnabled = NO;
+    
     self.scrubbing = YES;
     
 }
@@ -1078,10 +1105,78 @@ setForOnDemandUI;
     self.horizDividerLine.alpha = 1.0;
     self.programTitleLabel.alpha = 1.0;
     self.queueDarkBgView.alpha = 0.0;
+    self.queueScrollView.userInteractionEnabled = YES;
     
     self.scrubbing = NO;
 }
 
+- (void)addCloseButton {
+    if ( self.scrubberCloseButton ) {
+        [self.scrubberCloseButton removeFromSuperview];
+    }
+    
+    self.scrubberCloseButton = [SCPRButton buttonWithType:UIButtonTypeCustom];
+    
+    [self.scrubberCloseButton setImage:[UIImage imageNamed:@"btn_close.png"]
+                              forState:UIControlStateNormal];
+    [self.scrubberCloseButton setImage:[UIImage imageNamed:@"btn_close.png"]
+                              forState:UIControlStateHighlighted];
+    
+    [self.scrubbingUI setCloseButton:self.scrubberCloseButton];
+    
+    [self.view addSubview:self.scrubberCloseButton];
+    
+    self.scrubberCloseButton.contentMode = UIViewContentModeCenter;
+    
+    self.scrubberCloseButton.alpha = 0.0;
+    
+    [self.scrubberCloseButton setTranslatesAutoresizingMaskIntoConstraints:NO];
+    
+    NSArray *hConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:[button(36.0)]-20-|"
+                                                                                options:0
+                                                                                metrics:nil
+                                                                                  views:@{ @"button" : self.scrubberCloseButton }];
+    NSArray *vConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-64-[button(36.0)]"
+                                                                    options:0
+                                                                    metrics:nil
+                                                                      views:@{ @"button" : self.scrubberCloseButton }];
+    [self.view addConstraints:hConstraints];
+    [self.view addConstraints:vConstraints];
+    
+    [UIView animateWithDuration:0.25 animations:^{
+        self.scrubberCloseButton.alpha = 1.0;
+    }];
+    
+}
+
+- (void)killCloseButton {
+
+    [UIView animateWithDuration:0.25 animations:^{
+        [self.scrubberCloseButton setAlpha:0.0];
+    } completion:^(BOOL finished) {
+        [self.scrubberCloseButton removeFromSuperview];
+    }];
+    
+}
+
+- (void)finishedWithScrubber {
+    [UIView animateWithDuration:0.25 animations:^{
+        if ( [Utils isThreePointFive] ) {
+            self.topYScrubbingAnchor.constant = [self.topYScrubbingAnchor constant]+43.0;
+            self.playerControlsBottomYConstraint.constant = [self.playerControlsBottomYConstraint constant]-43.0;
+            [self.scrubbingUI.view layoutIfNeeded];
+            [self.view layoutIfNeeded];
+        }
+        
+        [self.scrubbingUI takedown];
+        SCPRQueueScrollableView *cqsv = self.queueUIContents[self.queueCurrentPage];
+        cqsv.audioTitleLabel.alpha = 1.0;
+        self.scrubberLoadingGate = NO;
+        
+    } completion:^(BOOL finished) {
+        [[AudioManager shared] setDelegate:self];
+    }];
+}
 
 # pragma mark - UI control
 - (void)updateDataForUI {

@@ -223,24 +223,27 @@ static DesignManager *singleton = nil;
 
 - (void)fauxHideNavigationBar:(UIViewController *)root {
     
-    self.navbarMask = [[UIView alloc] initWithFrame:CGRectMake(0.0,0.0,[[UIScreen mainScreen] bounds].size.width,64.0)];
+    self.navbarMask = [[UIView alloc] initWithFrame:CGRectMake(0.0,-20.0,[[UIScreen mainScreen] bounds].size.width,84.0)];
     self.navbarMask.backgroundColor = [UIColor blackColor];
     
     UINavigationBar *bar = [root.navigationController navigationBar];
     bar.layer.mask = self.navbarMask.layer;
     [UIView animateWithDuration:0.25 animations:^{
-        self.navbarMask.frame = CGRectMake(0.0, 0.0, self.navbarMask.frame.size.width,
+        self.navbarMask.frame = CGRectMake(0.0, -20.0, self.navbarMask.frame.size.width,
                                            0.0);
+    } completion:^(BOOL finished) {
+        self.hiddenNavBar = bar;
     }];
     
 }
 
 - (void)fauxRevealNavigationBar {
     [UIView animateWithDuration:0.25 animations:^{
-        self.navbarMask.frame = CGRectMake(0.0, 0.0, self.navbarMask.frame.size.width,
-                                           64.0);
+        self.navbarMask.frame = CGRectMake(0.0, -20.0, self.navbarMask.frame.size.width,
+                                           84.0);
     } completion:^(BOOL finished) {
         [self.navbarMask.layer removeFromSuperlayer];
+        self.hiddenNavBar = nil;
     }];
 }
 

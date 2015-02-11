@@ -58,10 +58,8 @@
     self.cloak.backgroundColor = [UIColor blackColor];
     [self.view.layer setMask:self.cloak.layer];
     
-    self.scrubPanner = [[UIPanGestureRecognizer alloc] initWithTarget:self
-                                                               action:@selector(handlePan:)];
     self.view.userInteractionEnabled = YES;
-    [self.view addGestureRecognizer:self.scrubPanner];
+    self.viewAsTouchableScrubberView.parentScrubberController = self;
     
 }
 
@@ -72,6 +70,13 @@
     
 }
 
+- (void)applyMask {
+    
+    self.cloak.frame = CGRectMake(0.0, self.view.frame.size.height-1.0, self.view.frame.size.width,
+                                  1.0);
+}
+
+#ifdef USE_PAN_GESTURE
 - (void)handlePan:(UIPanGestureRecognizer*)panner {
     if ( panner.state == UIGestureRecognizerStateEnded ) {
         self.firstTouch = CGPointZero;
@@ -101,6 +106,43 @@
         [self.scrubberTimeLabel fadeText:pretty];
         
     }
+}
+#endif
+
+- (void)userTouched:(NSSet *)touches event:(UIEvent *)event {
+    self.firstTouch = [(UITouch*)[touches anyObject] locationInView:self.view];
+    [self trackForPoint:self.firstTouch];
+    self.panning = YES;
+}
+
+- (void)userPanned:(NSSet *)touches event:(UIEvent *)event {
+    
+    CGPoint deltaPoint = [(UITouch*)[touches anyObject] locationInView:self.view];
+    [self trackForPoint:deltaPoint];
+    
+}
+
+- (void)userLifted:(NSSet *)touches event:(UIEvent *)event {
+    self.firstTouch = CGPointZero;
+    self.trulyFinishedTimer = [NSTimer scheduledTimerWithTimeInterval:0.15
+                                                               target:self
+                                                             selector:@selector(doTheSeek)
+                                                             userInfo:nil
+                                                              repeats:NO];
+}
+
+- (void)trackForPoint:(CGPoint)touchPoint {
+    CGFloat dX = touchPoint.x;
+    
+    double se = ( dX / self.view.frame.size.width )*1.0f;
+    self.currentBarLine.strokeEnd = se;
+    
+    CMTime total = [[[[AudioManager shared].audioPlayer currentItem] asset] duration];
+    double duration = CMTimeGetSeconds(total);
+    
+    NSString *pretty = [Utils elapsedTimeStringWithPosition:duration*se
+                                                andDuration:duration];
+    [self.scrubberTimeLabel fadeText:pretty];
 }
 
 - (void)doTheSeek {

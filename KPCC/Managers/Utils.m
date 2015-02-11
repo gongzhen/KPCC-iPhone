@@ -84,11 +84,11 @@ static char *alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz012
 
     NSString *positionHr, *positionMin, *positionSec, *durationHr, *durationMin , *durationSec;
 
-    positionHr  = positionHours > 9 ? [NSString stringWithFormat:@"%d",positionHours] : [NSString stringWithFormat:@"0%d",positionHours];
+    positionHr  = positionHours > 9 ? [NSString stringWithFormat:@"%d",positionHours] : [NSString stringWithFormat:@"%d",positionHours];
     positionMin = positionMinutes > 9 ? [NSString stringWithFormat:@"%d",positionMinutes] : [NSString stringWithFormat:@"0%d",positionMinutes];
     positionSec = positionSeconds > 9 ? [NSString stringWithFormat:@"%d",positionSeconds] : [NSString stringWithFormat:@"0%d",positionSeconds];
 
-    durationHr  = durationHours > 9 ? [NSString stringWithFormat:@"%d",durationHours] : [NSString stringWithFormat:@"0%d",durationHours];
+    durationHr  = durationHours > 9 ? [NSString stringWithFormat:@"%d",durationHours] : [NSString stringWithFormat:@"%d",durationHours];
     durationMin = durationMintues > 9 ? [NSString stringWithFormat:@"%d",durationMintues] : [NSString stringWithFormat:@"0%d",durationMintues];
     durationSec = durationSeconds > 9 ? [NSString stringWithFormat:@"%d",durationSeconds] : [NSString stringWithFormat:@"0%d",durationSeconds];
 

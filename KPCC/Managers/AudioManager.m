@@ -212,6 +212,16 @@ static const NSString *ItemStatusContext;
         if ( [change[@"new"] intValue] == 0 ) {
             NSLog(@"Stream not likely to keep up...");
             [self analyzeStreamError:@"Stream not likely to keep up..."];
+            [self.audioPlayer pause];
+        } else {
+            NSLog(@"Stream likely to return...");
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                if ( [[AudioManager shared] currentAudioMode] == AudioModeLive ) {
+                    if ( [self.audioPlayer rate] <= 0.0 ) {
+                        [self.audioPlayer play];
+                    }
+                }
+            });
         }
     }
     

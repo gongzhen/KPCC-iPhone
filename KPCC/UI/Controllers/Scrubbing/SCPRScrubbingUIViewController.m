@@ -80,16 +80,30 @@
 - (void)closeScrubber {
     SCPRMasterViewController *mvc = (SCPRMasterViewController*)self.parentControlView;
     [UIView animateWithDuration:0.25 animations:^{
+        [mvc killCloseButton];
         [mvc decloakForScrubber];
+        [self.scrubberController applyMask];
         [[DesignManager shared] fauxRevealNavigationBar];
         self.view.alpha = 0.0;
     } completion:^(BOOL finished) {
-        [self.view removeFromSuperview];
+        [mvc finishedWithScrubber];
     }];
-    
-    
 }
 
+- (void)setCloseButton:(UIButton *)closeButton {
+    _closeButton = closeButton;
+    if ( closeButton ) {
+        [closeButton addTarget:self
+                        action:@selector(closeScrubber)
+              forControlEvents:UIControlEventTouchUpInside];
+    }
+}
+
+- (void)takedown {
+    
+    self.scrubberController.panning = NO;
+    
+}
 
 #pragma mark - AudioManager
 - (void)onRateChange {

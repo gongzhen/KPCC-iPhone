@@ -141,6 +141,32 @@
                                     <constraint firstAttribute="bottom" secondItem="ao2-yr-kyf" secondAttribute="bottom" constant="338" id="ufq-sa-p64"/>
                                 </constraints>
                             </view>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="LET'S GO!" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yse-EI-1wa">
+                                <rect key="frame" x="90" y="419" width="140" height="21"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="140" id="OIa-6Y-gNE"/>
+                                    <constraint firstAttribute="height" constant="21" id="pnT-OU-4KY"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                                <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3WP-os-1RZ" userLabel="InitialControlView">
+                                <rect key="frame" x="90" y="285" width="140" height="122"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="G5B-oE-ab2" userLabel="InitialPlayButton" customClass="SCPRButton">
+                                        <rect key="frame" x="9" y="0.0" width="122" height="122"/>
+                                        <state key="normal" image="btn_play_large.png">
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                    </button>
+                                </subviews>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="122" id="0xG-RV-ufh"/>
+                                    <constraint firstAttribute="width" constant="140" id="4nh-Fh-zxK"/>
+                                </constraints>
+                            </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="GPc-Sk-C7l" userLabel="ScrubbingView">
                                 <rect key="frame" x="0.0" y="236" width="320" height="263"/>
                                 <subviews>
@@ -164,7 +190,7 @@
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
                                     </button>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="tCd-bL-d4d" userLabel="ScrubbingUIView">
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="tCd-bL-d4d" userLabel="ScrubbingUIView" customClass="SCPRTouchableScrubberView">
                                         <rect key="frame" x="5" y="58" width="310" height="90"/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <constraints>
@@ -172,7 +198,7 @@
                                         </constraints>
                                     </view>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="10:32 / 26:30" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="EHS-IB-VJt">
-                                        <rect key="frame" x="48" y="8" width="225" height="42"/>
+                                        <rect key="frame" x="10" y="8" width="300" height="42"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="42" id="n2T-Sh-1Nd"/>
                                         </constraints>
@@ -189,11 +215,11 @@
                                     <constraint firstItem="tCd-bL-d4d" firstAttribute="top" secondItem="EHS-IB-VJt" secondAttribute="bottom" constant="8" id="DF4-Hj-MOi"/>
                                     <constraint firstItem="tCd-bL-d4d" firstAttribute="leading" secondItem="GPc-Sk-C7l" secondAttribute="leading" constant="5" id="EnX-g0-MA6"/>
                                     <constraint firstAttribute="trailing" secondItem="3MS-4t-3kF" secondAttribute="trailing" constant="28" id="EqX-64-hYy"/>
-                                    <constraint firstItem="EHS-IB-VJt" firstAttribute="leading" secondItem="GPc-Sk-C7l" secondAttribute="leading" constant="48" id="YHG-3f-8y2"/>
+                                    <constraint firstItem="EHS-IB-VJt" firstAttribute="leading" secondItem="GPc-Sk-C7l" secondAttribute="leading" constant="10" id="YHG-3f-8y2"/>
                                     <constraint firstItem="EHS-IB-VJt" firstAttribute="top" secondItem="GPc-Sk-C7l" secondAttribute="top" constant="8" id="gkK-CW-TZH"/>
                                     <constraint firstAttribute="height" constant="263" id="m79-4N-BGb"/>
                                     <constraint firstItem="vgV-P3-0W0" firstAttribute="top" secondItem="tCd-bL-d4d" secondAttribute="bottom" constant="40" id="qVW-Cb-d3A"/>
-                                    <constraint firstAttribute="trailing" secondItem="EHS-IB-VJt" secondAttribute="trailing" constant="47" id="xRj-nW-hRJ"/>
+                                    <constraint firstAttribute="trailing" secondItem="EHS-IB-VJt" secondAttribute="trailing" constant="10" id="xRj-nW-hRJ"/>
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Qkn-sg-4PL" userLabel="PlayerControlsView">
@@ -226,32 +252,6 @@
                                     <constraint firstAttribute="centerY" secondItem="qlH-0y-1td" secondAttribute="centerY" id="bhg-t3-qfb"/>
                                     <constraint firstAttribute="width" constant="140" id="nd9-jq-7Sr"/>
                                     <constraint firstAttribute="centerX" secondItem="pSM-s0-r5H" secondAttribute="centerX" id="rVP-Xb-bhm"/>
-                                </constraints>
-                            </view>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="LET'S GO!" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yse-EI-1wa">
-                                <rect key="frame" x="90" y="419" width="140" height="21"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="140" id="OIa-6Y-gNE"/>
-                                    <constraint firstAttribute="height" constant="21" id="pnT-OU-4KY"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" type="system" pointSize="18"/>
-                                <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3WP-os-1RZ" userLabel="InitialControlView">
-                                <rect key="frame" x="90" y="285" width="140" height="122"/>
-                                <subviews>
-                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="G5B-oE-ab2" userLabel="InitialPlayButton" customClass="SCPRButton">
-                                        <rect key="frame" x="9" y="0.0" width="122" height="122"/>
-                                        <state key="normal" image="btn_play_large.png">
-                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                        </state>
-                                    </button>
-                                </subviews>
-                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="122" id="0xG-RV-ufh"/>
-                                    <constraint firstAttribute="width" constant="140" id="4nh-Fh-zxK"/>
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Duc-cQ-dAe" userLabel="DividerView">
@@ -402,6 +402,8 @@
                         <outlet property="scrubbingUIView" destination="GPc-Sk-C7l" id="Tj9-fk-675"/>
                         <outlet property="shareButton" destination="Daw-6l-gOy" id="6Vw-bg-NxE"/>
                         <outlet property="timeLabelOnDemand" destination="Q1h-II-U3Q" id="19n-gX-I7H"/>
+                        <outlet property="topYScrubbingAnchor" destination="2Jc-o2-Juz" id="lna-aR-frw"/>
+                        <outlet property="touchableScrubberView" destination="tCd-bL-d4d" id="zHe-bY-6SW"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Tsp-6Z-muj" userLabel="First Responder" sceneMemberID="firstResponder"/>

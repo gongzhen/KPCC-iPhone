@@ -54,6 +54,7 @@ typedef NS_ENUM(NSInteger, SculptingStyle) {
 @property (nonatomic, strong) NSDictionary *attributes;
 @property (nonatomic, strong) UIView *navbarMask;
 
+@property (nonatomic, weak) UINavigationBar *hiddenNavBar;
 
 #ifdef TEST_PROGRAM_IMAGE
 @property (nonatomic,strong) NSString *currentSlug;

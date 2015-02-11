@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		25263A881A32669E00BD5FF9 /* onboarding3.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 25263A871A32669E00BD5FF9 /* onboarding3.mp3 */; };
+		2537D8BD1A8BD7B700481CF8 /* SCPRTouchableScrubberView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2537D8BC1A8BD7B700481CF8 /* SCPRTouchableScrubberView.m */; };
 		254831C11A41555700963078 /* UIView+PrintDimensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 254831C01A41555700963078 /* UIView+PrintDimensions.m */; };
 		254CC6961A23A7A600560805 /* onboarding-logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 254CC6901A23A7A600560805 /* onboarding-logo.png */; };
 		254CC6971A23A7A600560805 /* onboarding-logo@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 254CC6911A23A7A600560805 /* onboarding-logo@2x.png */; };
@@ -264,6 +265,8 @@
 
 /* Begin PBXFileReference section */
 		25263A871A32669E00BD5FF9 /* onboarding3.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = onboarding3.mp3; path = Audio/onboarding3.mp3; sourceTree = "<group>"; };
+		2537D8BB1A8BD7B700481CF8 /* SCPRTouchableScrubberView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCPRTouchableScrubberView.h; path = Scrubbing/SCPRTouchableScrubberView.h; sourceTree = "<group>"; };
+		2537D8BC1A8BD7B700481CF8 /* SCPRTouchableScrubberView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SCPRTouchableScrubberView.m; path = Scrubbing/SCPRTouchableScrubberView.m; sourceTree = "<group>"; };
 		254831BF1A41555700963078 /* UIView+PrintDimensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIView+PrintDimensions.h"; path = "KPCC/Helpers/UIView+PrintDimensions.h"; sourceTree = SOURCE_ROOT; };
 		254831C01A41555700963078 /* UIView+PrintDimensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIView+PrintDimensions.m"; path = "KPCC/Helpers/UIView+PrintDimensions.m"; sourceTree = SOURCE_ROOT; };
 		254CC6901A23A7A600560805 /* onboarding-logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "onboarding-logo.png"; sourceTree = "<group>"; };
@@ -693,6 +696,8 @@
 				25BBCD741A892D730015071E /* SCPRScrubbingUIViewController.h */,
 				25BBCD751A892D730015071E /* SCPRScrubbingUIViewController.m */,
 				25BBCD761A892D730015071E /* SCPRScrubbingUIViewController.xib */,
+				2537D8BB1A8BD7B700481CF8 /* SCPRTouchableScrubberView.h */,
+				2537D8BC1A8BD7B700481CF8 /* SCPRTouchableScrubberView.m */,
 			);
 			name = Scrubbing;
 			sourceTree = "<group>";
@@ -1503,6 +1508,7 @@
 				52EFF87819C37D350059A0E3 /* SCPRMenuCell.m in Sources */,
 				2594B53F1A30F8410013B93A /* SCPRKeyboardToolbar.m in Sources */,
 				25BBCD7D1A892DA30015071E /* SCPRScrubberViewController.m in Sources */,
+				2537D8BD1A8BD7B700481CF8 /* SCPRTouchableScrubberView.m in Sources */,
 				25BBCD771A892D730015071E /* SCPRScrubbingUIViewController.m in Sources */,
 				25F2BC7E1A3B9B4D00108F73 /* SCPRGenericAvatarViewController.m in Sources */,
 				5248858E19CBA180005F59CC /* EpisodeAudio.m in Sources */,
