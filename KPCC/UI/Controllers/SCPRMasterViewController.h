@@ -49,6 +49,7 @@
 @property IBOutlet UIView *queueDarkBgView;
 @property (nonatomic,strong) NSTimer *queueScrollTimer;
 @property (nonatomic,strong) NSArray *queueContents;
+@property (nonatomic,strong) NSMutableArray *queueUIContents;
 @property (nonatomic,strong) UIView *scrubbingTriggerView;
 
 
@@ -132,7 +133,16 @@
 - (void)bringUpScrubber;
 - (void)cloakForScrubber;
 - (void)decloakForScrubber;
+- (void)primeScrubber;
+
 @property (nonatomic, strong) SCPRScrubbingUIViewController *scrubbingUI;
+
+@property (nonatomic, strong) IBOutlet UIView *scrubbingUIView;
+@property (nonatomic, strong) IBOutlet UIButton *back30Button;
+@property (nonatomic, strong) IBOutlet UIButton *fwd30Button;
+@property (nonatomic, strong) IBOutlet UIView *scrubberControlView;
+@property (nonatomic, strong) IBOutlet UILabel *scrubberTimeLabel;
+
 @property BOOL scrubbing;
 
 @property (NS_NONATOMIC_IOSONLY, readonly) BOOL uiIsJogging;

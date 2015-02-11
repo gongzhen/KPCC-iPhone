@@ -259,12 +259,14 @@ setForOnDemandUI;
     
     [SCPRCloakViewController cloakWithCustomCenteredView:nil cloakAppeared:^{
         if ( [[UXmanager shared] userHasSeenOnboarding] ) {
+            
             [self updateDataForUI];
             [self.view layoutIfNeeded];
             [self.liveStreamView layoutIfNeeded];
             self.originalFrames[@"playerControls"] = @(self.playerControlsBottomYConstraint.constant);
             self.originalFrames[@"programTitle"] = @(self.programTitleYConstraint.constant);
             self.originalFrames[@"liveRewind"] = @(self.liveRewindBottomYConstraint.constant);
+            [self primeScrubber];
             
         } else {
             
@@ -287,13 +289,10 @@ setForOnDemandUI;
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-    
-    
-    //[self.blurView setNeedsDisplay];
     [self.queueBlurView setNeedsDisplay];
     
     // Once the view has appeared we can register to begin receiving system audio controls.
-    [[UIApplication sharedApplication] beginReceivingRemoteControlEvents];
+
     [self becomeFirstResponder];
     
     if ( ![[UXmanager shared] userHasSeenOnboarding] ) {
@@ -983,68 +982,103 @@ setForOnDemandUI;
 #pragma mark - Scrubbing
 - (void)bringUpScrubber {
     
-    if ( !self.scrubberLoadingGate ) {
-        self.scrubberLoadingGate = YES;
-        SCPRScrubbingUIViewController *sUI = [[SCPRScrubbingUIViewController alloc]
-                                              initWithNibName:@"SCPRScrubbingUIViewController"
-                                              bundle:nil];
+    if ( self.scrubberLoadingGate ) return;
+    
+    self.scrubberLoadingGate = YES;
+    self.scrubbingUI.playPauseButton = self.playPauseButton;
+    
+    [[AudioManager shared] setDelegate:self.scrubbingUI];
+    
+    [UIView animateWithDuration:0.25 animations:^{
+        [[DesignManager shared] fauxHideNavigationBar:self];
+        [self cloakForScrubber];
+        self.scrubbingUI.view.alpha = 1.0;
+        [self.scrubbingUI.scrubberController unmask];
+    } completion:^(BOOL finished) {
+
         
-        [UIView animateWithDuration:0.25 animations:^{
-            [[DesignManager shared] fauxHideNavigationBar:self];
-            [self cloakForScrubber];
-            
-        } completion:^(BOOL finished) {
-
-            self.view.clipsToBounds = YES;
-            sUI.view.frame = sUI.view.frame;
-
-            
-            [[DesignManager shared] snapView:sUI.view
-                                 toContainer:self.view
-                               withTopOffset:0.0
-                                  fullscreen:YES];
-            sUI.view.alpha = 0.0;
-
-            
-            [sUI setupWithProgram:@{ @"chunk" : self.queueContents[self.queueCurrentPage]  }
-                     blurredImage:self.queueBlurView.image
-             parent:self];
-            
-            self.scrubbingUI = sUI;
-            [sUI.view printDimensionsWithIdentifier:@"Scrubber Container"];
-            
-            
-        }];
-        
-    }
+    }];
     
 }
 
-- (void)cloakForScrubber {
+- (void)primeScrubber {
     
-    self.queueScrollView.alpha = 0.0;
+    SCPRScrubbingUIViewController *sUI = [[SCPRScrubbingUIViewController alloc]
+                                          init];
+    sUI.view = self.scrubbingUIView;
+    
+    self.scrubbingUI = sUI;
+    self.scrubbingUI.rw30Button = self.back30Button;
+    self.scrubbingUI.fw30Button = self.fwd30Button;
+
+    
+    SCPRScrubberViewController *sCtrl = [[SCPRScrubberViewController alloc]
+                                         init];
+    sCtrl.view = self.scrubberControlView;
+    
+    self.scrubbingUI.scrubberController = sCtrl;
+    self.scrubbingUI.scrubberController.scrubberTimeLabel = self.scrubberTimeLabel;
+    
+    if ( self.scrubbingTriggerView ) {
+        [self.scrubbingTriggerView removeFromSuperview];
+    }
+    self.scrubbingTriggerView = [[UIView alloc] initWithFrame:CGRectMake(0.0,0.0,self.view.frame.size.width,
+                                                                         80.0)];
+    self.scrubbingTriggerView.backgroundColor = [UIColor clearColor];
+    UILongPressGestureRecognizer *lpgr = [[UILongPressGestureRecognizer alloc] initWithTarget:self
+                                                                                       action:@selector(bringUpScrubber)];
+    lpgr.minimumPressDuration = 1.33;
+    [self.scrubbingTriggerView addGestureRecognizer:lpgr];
+    self.scrubbingTriggerView.frame = CGRectMake(0.0, self.progressView.frame.origin.y-self.scrubbingTriggerView.frame.size.height/2.0,
+                                                 self.scrubbingTriggerView.frame.size.width,
+                                                 self.scrubbingTriggerView.frame.size.height);
+    
+    [self.view addSubview:self.scrubbingTriggerView];
+    
+    CGRect raw = self.scrubberControlView.frame;
+    CGRect cooked = [self.scrubbingUIView convertRect:raw
+                                               toView:self.queueDarkBgView];
+    [self.queueDarkBgView cutAHole:cooked];
+    
+    sUI.view.alpha = 0.0;
+    self.scrubbingTriggerView.alpha = 0.0;
+    
+    [self.scrubbingUI prerender];
+    
+}
+
+
+- (void)cloakForScrubber {
+
+    SCPRQueueScrollableView *cv = self.queueUIContents[self.queueCurrentPage];
+    cv.audioTitleLabel.alpha = 0.6;
+
     self.scrubbingTriggerView.alpha = 0.0;
     self.timeLabelOnDemand.alpha = 0.0;
     self.progressView.alpha = 0.0;
     self.queueBlurView.alpha = 1.0;
     self.onDemandPlayerView.alpha = 0.0;
     self.horizDividerLine.alpha = 0.0;
-    self.playPauseButton.alpha = 0.0;
     self.programTitleLabel.alpha = 0.0;
+    self.queueDarkBgView.alpha = 0.45;
     self.scrubbing = YES;
+    
 }
 
 - (void)decloakForScrubber {
     
-    self.queueScrollView.alpha = 1.0;
+    SCPRQueueScrollableView *cv = self.queueUIContents[self.queueCurrentPage];
+    cv.audioTitleLabel.alpha = 1.0;
+    
     self.scrubbingTriggerView.alpha = 1.0;
     self.timeLabelOnDemand.alpha = 1.0;
     self.progressView.alpha = 1.0;
     self.queueBlurView.alpha = 0.0;
     self.onDemandPlayerView.alpha = 1.0;
     self.horizDividerLine.alpha = 1.0;
-    self.playPauseButton.alpha = 1.0;
     self.programTitleLabel.alpha = 1.0;
+    self.queueDarkBgView.alpha = 0.0;
+    
     self.scrubbing = NO;
 }
 
@@ -1267,21 +1301,7 @@ setForOnDemandUI;
     
     [self snapJogWheel];
     
-    if ( self.scrubbingTriggerView ) {
-        [self.scrubbingTriggerView removeFromSuperview];
-    }
-    self.scrubbingTriggerView = [[UIView alloc] initWithFrame:CGRectMake(0.0,0.0,self.view.frame.size.width,
-                                                                         80.0)];
-    self.scrubbingTriggerView.backgroundColor = [UIColor clearColor];
-    UILongPressGestureRecognizer *lpgr = [[UILongPressGestureRecognizer alloc] initWithTarget:self
-                                                                                       action:@selector(bringUpScrubber)];
-    lpgr.minimumPressDuration = 2.0;
-    [self.scrubbingTriggerView addGestureRecognizer:lpgr];
-    self.scrubbingTriggerView.frame = CGRectMake(0.0, self.progressView.frame.origin.y-self.scrubbingTriggerView.frame.size.height/2.0,
-                                                 self.scrubbingTriggerView.frame.size.width,
-                                                 self.scrubbingTriggerView.frame.size.height);
-    
-    [self.view addSubview:self.scrubbingTriggerView];
+
     
     self.onDemandGateCount = 0;
     self.queueBlurView.alpha = 1.0;
@@ -1316,6 +1336,7 @@ setForOnDemandUI;
         self.jogShuttle.view.alpha = 1.0;
         self.timeLabelOnDemand.alpha = 1.0;
         self.queueBlurView.layer.opacity = 1.0;
+        self.scrubbingTriggerView.alpha = 1.0;
     } completion:^(BOOL finished) {
         
         [self.jogShuttle animateIndefinitelyWithViewToHide:self.playPauseButton completion:^{
@@ -1360,6 +1381,7 @@ setForOnDemandUI;
         }
         
         self.queueContents = array;
+        self.queueUIContents = [NSMutableArray new];
         for (int i = 0; i < [array count]; i++) {
             CGRect frame;
             frame.origin.x = self.queueScrollView.frame.size.width * i;
@@ -1369,6 +1391,7 @@ setForOnDemandUI;
             SCPRQueueScrollableView *queueSubView = [[SCPRQueueScrollableView alloc] initWithFrame:frame];
             [queueSubView setAudioChunk:array[i]];
             
+            [self.queueUIContents addObject:queueSubView];
             [self.queueScrollView addSubview:queueSubView];
         }
         
@@ -1495,6 +1518,8 @@ setForOnDemandUI;
         [self primeManualControlButton];
         
         self.view.alpha = 1.0;
+        self.scrubbingUI.view.alpha = 0.0;
+        
         if ( [SCPRCloakViewController cloakInUse] ) {
             [SCPRCloakViewController uncloak];
         }
@@ -2303,6 +2328,10 @@ setForOnDemandUI;
             self.progressView.alpha = 1.0;
             self.shareButton.alpha = 1.0;
             self.timeLabelOnDemand.alpha = 1.0;
+            SCPRQueueScrollableView *cv = self.queueUIContents[self.queueCurrentPage];
+            if ( self.scrubbing ) {
+                cv.audioTitleLabel.alpha = 0.6;
+            }
             
         } completion:^(BOOL finished) {
             self.queueBlurShown = NO;
@@ -2534,7 +2563,7 @@ setForOnDemandUI;
         }
     } else {
         if ( self.scrubbing ) {
-            [self cloakForScrubber];
+            //[self cloakForScrubber];
         }
     }
     

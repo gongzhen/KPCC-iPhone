@@ -20,6 +20,8 @@
     [super viewDidLoad];
     
     self.darkeningView.backgroundColor = [[UIColor virtualBlackColor] translucify:0.35];
+    
+
     // Do any additional setup after loading the view from its nib.
 }
 
@@ -29,13 +31,33 @@
 }
 
 - (void)viewDidLayoutSubviews {
-    //[self cutDisplayHole];
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.25 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        [UIView animateWithDuration:0.25 animations:^{
-            self.view.alpha = 1.0;
-        }];
-    });
+    
+}
 
+- (void)prerender {
+    self.scrubberController.view.backgroundColor = [[UIColor virtualWhiteColor] translucify:0.2];
+    [self.scrubberController setup];
+    
+    [self.fw30Button addTarget:self
+                        action:@selector(forward30)
+              forControlEvents:UIControlEventTouchUpInside];
+    
+    [self.rw30Button addTarget:self
+                        action:@selector(rewind30)
+              forControlEvents:UIControlEventTouchUpInside];
+
+}
+
+- (void)forward30 {
+    CMTime ct = [[AudioManager shared].audioPlayer.currentItem currentTime];
+    ct.value += (30.0*ct.timescale);
+    [[AudioManager shared].audioPlayer.currentItem seekToTime:ct];
+}
+
+- (void)rewind30 {
+    CMTime ct = [[AudioManager shared].audioPlayer.currentItem currentTime];
+    ct.value -= (30.0*ct.timescale);
+    [[AudioManager shared].audioPlayer.currentItem seekToTime:ct];
 }
 
 - (void)setupWithProgram:(NSDictionary *)program blurredImage:(UIImage *)image parent:(id)parent {
@@ -68,29 +90,6 @@
     
 }
 
-- (void)cutDisplayHole {
-    
-    self.darkeningView.backgroundColor = [[UIColor virtualBlackColor] translucify:0.45];
-    
-    CAShapeLayer *box = [CAShapeLayer layer];
-    box.path = CGPathCreateWithRect(self.darkeningView.frame, nil);
-    box.fillRule = kCAFillRuleEvenOdd;
-    box.fillColor = [UIColor blackColor].CGColor;
-    box.opacity = 1.0;
-    
-
-    CAShapeLayer *fillLayer = [CAShapeLayer layer];
-    fillLayer.path = CGPathCreateWithRect(self.scrubberSeatView.frame, nil);;
-    fillLayer.fillRule = kCAFillRuleEvenOdd;
-    fillLayer.opacity = 1.0;
-    fillLayer.frame = self.scrubberSeatView.frame;
-    
-    [box addSublayer:fillLayer];
-    [self.darkeningView.layer setMask:box];
-    
-    self.scrubberSeatView.alpha = 0.0;
-    
-}
 
 #pragma mark - AudioManager
 - (void)onRateChange {
@@ -102,6 +101,8 @@
 }
 
 - (void)onTimeChange {
+    
+    [self.scrubberController tick];
     
 }
 /*

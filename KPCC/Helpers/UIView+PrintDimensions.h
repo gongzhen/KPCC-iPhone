@@ -12,6 +12,7 @@
 
 - (void)printDimensions;
 - (void)printDimensionsWithIdentifier:(NSString*)identifier;
-
+- (void)cutAHole:(CGRect)holeDimensions;
+- (void)fillHole;
 
 @end

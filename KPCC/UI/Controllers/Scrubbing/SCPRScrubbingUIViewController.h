@@ -11,21 +11,22 @@
 #import "Program.h"
 #import "AudioChunk.h"
 #import "AudioManager.h"
+#import "SCPRButton.h"
 
 @interface SCPRScrubbingUIViewController : UIViewController<AudioManagerDelegate>
 
 @property (nonatomic,strong) IBOutlet UIButton *closeButton;
 @property (nonatomic,strong) IBOutlet UILabel *captionLabel;
 @property (nonatomic,strong) IBOutlet UIView *scrubberSeatView;
-@property (nonatomic,strong) IBOutlet UIButton *rw30Button;
+@property (nonatomic,strong) IBOutlet SCPRButton *rw30Button;
 @property (nonatomic,strong) IBOutlet UIButton *playPauseButton;
-@property (nonatomic,strong) IBOutlet UIButton *fw30Button;
+@property (nonatomic,strong) IBOutlet SCPRButton *fw30Button;
 @property (nonatomic,strong) IBOutlet UIImageView *blurredImageView;
 @property (nonatomic,strong) IBOutlet UIView *darkeningView;
 @property (nonatomic,strong) SCPRScrubberViewController *scrubberController;
 @property (nonatomic,weak) id parentControlView;
 
+- (void)prerender;
 - (void)setupWithProgram:(NSDictionary*)program blurredImage:(UIImage*)image parent:(id)parent;
-- (void)cutDisplayHole;
 
 @end

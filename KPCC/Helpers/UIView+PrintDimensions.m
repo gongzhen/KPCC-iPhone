@@ -21,4 +21,26 @@
           self.frame.size.height);
 }
 
+- (void)cutAHole:(CGRect)holeDimensions {
+    CGRect r = self.bounds;
+    CGRect r2 = holeDimensions; // adjust this as desired!
+    UIGraphicsBeginImageContextWithOptions(r.size, NO, 0);
+    CGContextRef c = UIGraphicsGetCurrentContext();
+    CGContextAddRect(c, r2);
+    CGContextAddRect(c, r);
+    CGContextEOClip(c);
+    CGContextSetFillColorWithColor(c, [UIColor blackColor].CGColor);
+    CGContextFillRect(c, r);
+    UIImage* maskim = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    CALayer* mask = [CALayer layer];
+    mask.frame = r;
+    mask.contents = (id)maskim.CGImage;
+    self.layer.mask = mask;
+}
+
+- (void)fillHole {
+    self.layer.mask = nil;
+}
+
 @end
