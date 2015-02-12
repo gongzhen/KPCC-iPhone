@@ -112,8 +112,6 @@ static AnalyticsManager *singleton = nil;
 #ifdef DEBUG
 #ifdef VERBOSE_LOGGING
     NSLog(@"Logging to Analytics now - %@ - with params %@", event, userInfo);
-#else
-    NSLog(@"Logging to Analytics now - %@", event);
 #endif
 #endif
     
@@ -291,7 +289,7 @@ static AnalyticsManager *singleton = nil;
     }
     
     
-    NSLog(@" •••••••• FINISHED LOGGIFYING ANALYTICS ••••••• ");
+    //NSLog(@" •••••••• FINISHED LOGGIFYING ANALYTICS ••••••• ");
     
     return nParams;
 }

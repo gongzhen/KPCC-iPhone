@@ -116,6 +116,8 @@ typedef NS_ENUM(NSUInteger, StreamStatus) {
 @property BOOL recoveryGateOpen;
 @property BOOL loggingGateOpen;
 @property BOOL reactivate;
+@property BOOL dropoutOccurred;
+@property BOOL seekWillEffectBuffer;
 
 @property NSInteger failoverCount;
 
@@ -142,6 +144,7 @@ typedef NS_ENUM(NSUInteger, StreamStatus) {
 - (void)printStatus;
 - (void)playOnboardingAudio:(NSInteger)segment;
 - (void)sanitizeFromOnboarding;
+- (void)attemptToRecover;
 
 @property (NS_NONATOMIC_IOSONLY, getter=isStreamPlaying, readonly) BOOL streamPlaying;
 @property (NS_NONATOMIC_IOSONLY, getter=isStreamBuffering, readonly) BOOL streamBuffering;

@@ -1562,7 +1562,12 @@ setForOnDemandUI;
             NSLog(@"Rewind Button - Hiding because Audio Mode is onDemand");
         okToShow = NO;
     }
-    if ( [self jogging] ) {
+    if ( [[AudioManager shared] dropoutOccurred] ) {
+        if ( okToShow )
+            NSLog(@"Rewind Button - Hiding because a dropout has occurred");
+        okToShow = NO;
+    }
+    if ( [self jogging] || [[AudioManager shared] seekWillEffectBuffer] ) {
         if ( okToShow )
             NSLog(@"Rewind Button - Hiding because of the UI is jogging");
         okToShow = NO;
@@ -2409,10 +2414,10 @@ setForOnDemandUI;
             if ( !self.menuOpen ) {
                 if ( !self.preRollOpen ) {
                     if ( ![[UXmanager shared] userHasSeenOnboarding] ) {
-                        //[self.liveProgressViewController show];
+                        [self.liveProgressViewController show];
                     }
                     if ( self.initialPlay ) {
-                        //[self.liveProgressViewController show];
+                        [self.liveProgressViewController show];
                     }
                 }
             }
