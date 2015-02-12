@@ -1769,7 +1769,12 @@ setForOnDemandUI;
             NSLog(@"Rewind Button - Hiding because Audio Mode is onDemand");
         okToShow = NO;
     }
-    if ( [self jogging] ) {
+    if ( [[AudioManager shared] dropoutOccurred] ) {
+        if ( okToShow )
+            NSLog(@"Rewind Button - Hiding because a dropout has occurred");
+        okToShow = NO;
+    }
+    if ( [self jogging] || [[AudioManager shared] seekWillEffectBuffer] ) {
         if ( okToShow )
             NSLog(@"Rewind Button - Hiding because of the UI is jogging");
         okToShow = NO;
@@ -1883,14 +1888,8 @@ setForOnDemandUI;
     }
     
     if ( self.initialPlay ) {
-        if ( [[AudioManager shared] status] == StreamStatusPlaying ) {
-            self.audioWasPlaying = YES;
-            [[AudioManager shared] adjustAudioWithValue:-0.1 completion:^{
-                
-                [[AudioManager shared] pauseStream];
-                [[AudioManager shared] takedownAudioPlayer];
-                
-            }];
+        if ( [[NetworkManager shared] audioWillBeInterrupted] ) {
+            [[AudioManager shared] pauseStream];
         }
     } else {
         if ( !self.menuOpen ) {
@@ -1907,8 +1906,8 @@ setForOnDemandUI;
         self.liveStreamView.alpha = 0.45;
         
     }
-    self.liveDescriptionLabel.text = @"NO NETWORK";
     
+    self.liveDescriptionLabel.text = @"NO NETWORK";
     [self.liveProgressViewController hide];
     
     if ( note && !self.promptedAboutFailureAlready ) {
@@ -1969,9 +1968,10 @@ setForOnDemandUI;
     self.liveStreamView.alpha = 1.0;
     self.liveStreamView.userInteractionEnabled = YES;
     
-    if ( self.audioWasPlaying ) {
-        [self playStream:YES];
-        self.audioWasPlaying = NO;
+    if ( [[NetworkManager shared] audioWillBeInterrupted] ) {
+        if ( [[AudioManager shared] status] == StreamStatusPaused ) {
+            [self playStream:NO];
+        }
     }
     
     [[NetworkManager shared] fetchAllProgramInformation:^(id returnedObject) {
@@ -2540,6 +2540,11 @@ setForOnDemandUI;
         [self primeManualControlButton];
     }
     
+    
+    if ( [[NetworkManager shared] audioWillBeInterrupted] ) {
+        [[NetworkManager shared] setAudioWillBeInterrupted:NO];
+    }
+    
     NSAssert([NSThread isMainThread],@"This is not the main thread...");
     
     NSDate *ciCurrentDate = [AudioManager shared].audioPlayer.currentItem.currentDate;
@@ -2620,10 +2625,10 @@ setForOnDemandUI;
             if ( !self.menuOpen ) {
                 if ( !self.preRollOpen ) {
                     if ( ![[UXmanager shared] userHasSeenOnboarding] ) {
-                        //[self.liveProgressViewController show];
+                        [self.liveProgressViewController show];
                     }
                     if ( self.initialPlay ) {
-                        //[self.liveProgressViewController show];
+                        [self.liveProgressViewController show];
                     }
                 }
             }
@@ -2670,6 +2675,10 @@ setForOnDemandUI;
         if ( self.jogging ) {
             [self.jogShuttle endAnimations];
         }
+        
+        self.playStateGate = YES;
+        [[AudioManager shared] setSeekWillEffectBuffer:NO];
+        
     }];
 }
 

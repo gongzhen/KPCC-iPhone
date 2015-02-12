@@ -1644,7 +1644,6 @@
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(inherited)",
 					"COCOAPODS=1",
-					ENABLE_TESTFLIGHT,
 					"BETA=1",
 				);
 				INFOPLIST_FILE = "KPCC/KPCC-Info.plist";
@@ -1730,7 +1729,6 @@
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(inherited)",
 					"COCOAPODS=1",
-					ENABLE_TESTFLIGHT,
 					"PRODUCTION=1",
 				);
 				INFOPLIST_FILE = "KPCC/KPCC-Info.plist";
@@ -1856,10 +1854,7 @@
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
-					ENABLE_TESTFLIGHT,
 					"VERBOSE_STREAM_LOGGING=1",
-					"SHORTENED_BUFFER=1",
-					"TESTING_SCRUBBER=1",
 				);
 				INFOPLIST_FILE = "KPCC/KPCC-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
@@ -1893,7 +1888,6 @@
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(inherited)",
 					"COCOAPODS=1",
-					ENABLE_TESTFLIGHT,
 				);
 				INFOPLIST_FILE = "KPCC/KPCC-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
