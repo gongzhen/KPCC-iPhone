@@ -93,12 +93,11 @@ static NetworkManager *singleton = nil;
             }
             
             if ( [weakreach_ reachable] ) {
+                
                 weakself_.networkDown = NO;
                 [[NSNotificationCenter defaultCenter] postNotificationName:@"network-status-good"
                                                                 object:nil];
             } else {
-                
-                
                 
                 weakself_.networkDown = YES;
                 weakself_.failTimer = [NSTimer scheduledTimerWithTimeInterval:kFailThreshold
@@ -106,6 +105,7 @@ static NetworkManager *singleton = nil;
                                                                      selector:@selector(trueFail)
                                                                      userInfo:nil
                                                                       repeats:NO];
+                
             }
         });
     };
@@ -123,9 +123,16 @@ static NetworkManager *singleton = nil;
 }
 
 - (void)trueFail {
-    self.networkDown = YES;
-    [[AudioManager shared] setLoggingGateOpen:YES];
     
+    NSAssert([NSThread isMainThread],@"Preferrably we're on the main queue");
+    if ( [[AudioManager shared].audioPlayer rate] > 0.0 ) {
+        @synchronized(self) {
+            // Use this as a secondary measurement of a failure
+            self.audioWillBeInterrupted = YES;
+        }
+    }
+    
+    self.networkDown = YES;
     [[NSNotificationCenter defaultCenter] postNotificationName:@"network-status-fail"
                                                         object:nil];
 }

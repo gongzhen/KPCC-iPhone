@@ -39,6 +39,7 @@ static NSInteger kExceptionInterval = 60;
 - (void)failStream:(NetworkHealth)cause comments:(NSString*)comments;
 - (void)failStream:(NetworkHealth)cause comments:(NSString *)comments force:(BOOL)force;
 - (void)kTrackSession:(NSString*)modifier;
+- (void)clearLogs;
 - (NSDictionary*)logifiedParamsList:(NSDictionary*)originalParams;
 
 @end

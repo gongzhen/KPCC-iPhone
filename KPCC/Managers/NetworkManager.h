@@ -50,6 +50,8 @@ typedef NS_ENUM(NSInteger, NetworkHealth) {
 
 @property BOOL networkDown;
 @property BOOL allowOneFail;
+@property BOOL audioWillBeInterrupted;
+
 @property (nonatomic, strong) NSTimer *failTimer;
 
 - (void)fetchAllProgramInformation:(CompletionBlockWithValue)completion;

@@ -132,7 +132,8 @@ static AnalyticsManager *singleton = nil;
 - (void)failStream:(NetworkHealth)cause comments:(NSString *)comments force:(BOOL)force {
     
     if ( !comments || SEQ(comments,@"") ) return;
-    
+ 
+#ifdef MICRO_MANAGE_EXCEPTIONS
     if ( [[NSDate date] timeIntervalSinceDate:self.lastStreamException] > kExceptionInterval ) {
         self.allowedExceptions = 0;
         self.lastStreamException = [NSDate date];
@@ -142,25 +143,10 @@ static AnalyticsManager *singleton = nil;
             return;
         }
     }
+#endif
     
-    
-    if ( !force ) {
-        if ( !self.accessLog && !self.errorLog ) {
-            
-            if ( ![[AudioManager shared].audioPlayer.currentItem accessLog] && ![[AudioManager shared].audioPlayer.currentItem errorLog] ) {
-                [[AudioManager shared] setLoggingGateOpen:YES];
-                self.analyticsSuspensionTimer = [NSTimer scheduledTimerWithTimeInterval:5.0
-                                                                             target:self
-                                                                           selector:@selector(forceAnalysis:)
-                                                                           userInfo:@{ @"cause" : @(cause),
-                                                                                       @"comments" : comments } repeats:NO];
-                return;
-            } else {
-                self.accessLog = [[AudioManager shared].audioPlayer.currentItem accessLog];
-                self.errorLog = [[AudioManager shared].audioPlayer.currentItem errorLog];
-            }
-        }
-    }
+    self.accessLog = [[AudioManager shared].audioPlayer.currentItem accessLog];
+    self.errorLog = [[AudioManager shared].audioPlayer.currentItem errorLog];
 
     if ( self.analyticsSuspensionTimer ) {
         if ( [self.analyticsSuspensionTimer isValid] ) {
@@ -172,11 +158,8 @@ static AnalyticsManager *singleton = nil;
     self.lastErrorLoggedComments = comments;
     
     NSMutableDictionary *analysis = [@{ @"cause" : [self stringForInterruptionCause:cause],
-                                @"timeDropped"  : [NSDate stringFromDate:[NSDate date]
-                                                              withFormat:@"YYYY-MM-dd hh:mm:ss"],
                                 @"details" : comments,
                                 @"networkInfo" : [[NetworkManager shared] networkInformation]
-                                
                                 } mutableCopy];
     
     if ( [[SessionManager shared] liveSessionID] && !SEQ([[SessionManager shared] liveSessionID],@"") ) {
@@ -234,32 +217,22 @@ static AnalyticsManager *singleton = nil;
             }
          
             nParams[@"numberOfStalls"] = @(event.numberOfStalls);
-            //nParams[@"numberOfDroppedFrames"] = @(event.numberOfDroppedVideoFrames);
             nParams[@"switchBitrate"] = @(event.switchBitrate);
             
             [[SessionManager shared] setLastKnownBitrate:event.observedBitrate];
             
-#ifdef PRODUCTION
             if ( event.observedBitrateStandardDeviation >= 0.0 ) {
-#endif
                 nParams[@"bitrateDeviation"] = @(event.observedBitrateStandardDeviation);
-#ifdef PRODUCTION
             }
-#endif
-#ifdef PRODUCTION
+
             if ( event.downloadOverdue > 0 ) {
-#endif
                 nParams[@"downloadOverdue"] = @(event.downloadOverdue);
-#ifdef PRODUCTION
             }
-#endif    
-#ifdef PRODUCTION
+
             if ( event.transferDuration >= 0 ) {
-#endif
                 nParams[@"transferDuration"] = @(event.transferDuration);
-#ifdef PRODUCTION
             }
-#endif
+
             nParams[@"indicatedBitrate"] = @(event.indicatedBitrate);
             nParams[@"observedBitrate"] = @(event.observedBitrate);
             if ( event.observedMaxBitrate != event.observedBitrate ) {
@@ -294,6 +267,15 @@ static AnalyticsManager *singleton = nil;
     return nParams;
 }
 
+- (void)clearLogs {
+    if ( [self.accessLogReceivedAt timeIntervalSinceNow] > 120 ) {
+        self.accessLog = nil;
+    }
+    if ( [self.errorLogReceivedAt timeIntervalSinceNow] > 120 ) {
+        self.errorLog = nil;
+    }
+}
+
 - (NSString*)stringForInterruptionCause:(NetworkHealth)cause {
     NSString *english = @"";
     switch (cause) {
@@ -305,6 +287,7 @@ static AnalyticsManager *singleton = nil;
             break;
         case NetworkHealthNetworkDown:
             english = @"Internet connectivity is non-existent";
+            break;
         case NetworkHealthAllOK:
         case NetworkHealthNetworkOK:
         case NetworkHealthServerOK:

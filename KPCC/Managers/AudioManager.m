@@ -124,7 +124,10 @@ static const NSString *ItemStatusContext;
     
     // Monitoring AVPlayer->currentItem status.
 
+#ifdef VERBOSE_LOGGING
     NSLog(@"Event received for : %@",[object description]);
+#endif
+    
     if ( object == self.audioPlayer.currentItem && [keyPath isEqualToString:@"status"] ) {
 
         if ([self.audioPlayer.currentItem status] == AVPlayerItemStatusFailed) {
@@ -207,9 +210,11 @@ static const NSString *ItemStatusContext;
                 [self analyzeStreamError:@"Stream not likely to keep up..."];
                 
                 self.dropoutOccurred = YES;
-                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.15 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                    [self pauseStream];
-                });
+                //if ( [[UIApplication sharedApplication] applicationState] != UIApplicationStateBackground ) {
+                    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.15 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                        [self pauseStream];
+                    });
+                //}
             }
          
         } else {
@@ -276,6 +281,7 @@ static const NSString *ItemStatusContext;
         if ( [self.audioPlayer rate] <= 0.0 ) {
             [self playStream];
         }
+        [[AnalyticsManager shared] clearLogs];
         [[AnalyticsManager shared] logEvent:@"streamReturned"
                              withParameters:@{}];
     });
@@ -291,9 +297,6 @@ static const NSString *ItemStatusContext;
     if ( SEQ([note name],AVPlayerItemNewAccessLogEntryNotification) ) {
 
         [[AnalyticsManager shared] setAccessLog:self.audioPlayer.currentItem.accessLog];
-        
-        NSDictionary *params = [[AnalyticsManager shared] logifiedParamsList:@{}];
-        //NSLog(@"Access Log Received : %@",params);
         
 #ifndef PRODUCTION
         [[AnalyticsManager shared] logEvent:@"accessLogReceived"
@@ -380,9 +383,7 @@ static const NSString *ItemStatusContext;
             [[SessionManager shared] trackOnDemandSession];
             [[SessionManager shared] checkProgramUpdate:NO];
             
-            if ( weakSelf.seekWillEffectBuffer ) {
-                weakSelf.seekWillEffectBuffer = NO;
-            }
+            
             
 #ifdef DEBUG
             if ( !weakSelf.dumpedOnce ) {
@@ -408,6 +409,8 @@ static const NSString *ItemStatusContext;
         } else {
             NSLog(@"no seekable time range for current item");
         }
+        
+        
         
     }];
     
@@ -627,6 +630,8 @@ static const NSString *ItemStatusContext;
              forward:YES
             failover:NO];
 #else
+    
+    self.seekWillEffectBuffer = YES;
     [self.audioPlayer.currentItem seekToTime:CMTimeMake(MAXFLOAT, 1) completionHandler:^(BOOL finished) {
         
         if ( [self.audioPlayer rate] <= 0.0 ) {
@@ -634,6 +639,7 @@ static const NSString *ItemStatusContext;
         }
         [self.delegate onSeekCompleted];
     }];
+    
 #endif
 }
 
