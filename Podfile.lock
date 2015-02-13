@@ -21,9 +21,9 @@ PODS:
     - AFNetworking/NSURLConnection
     - AFNetworking/NSURLSession
   - Bolts (1.1.3)
-  - FlurrySDK (5.4.0):
-    - FlurrySDK/FlurrySDK (= 5.4.0)
-  - FlurrySDK/FlurrySDK (5.4.0)
+  - FlurrySDK (6.0.0):
+    - FlurrySDK/FlurrySDK (= 6.0.0)
+  - FlurrySDK/FlurrySDK (6.0.0)
   - FXBlurView (1.6.3)
   - JDStatusBarNotification (1.5.1)
   - Kochava (20150116)
@@ -53,7 +53,7 @@ DEPENDENCIES:
 SPEC CHECKSUMS:
   AFNetworking: 8bee59492a6ff15d69130efa4d0dc67e0094a52a
   Bolts: 3db0a875235e0c9042b013af13af0f00f79b102c
-  FlurrySDK: bed9e5598353f867508d164795a451e3ada92cb6
+  FlurrySDK: c10e4bda3373f6c3282fd62fc55bde83b15f190f
   FXBlurView: abe1046285813c4f6e9008abbc324fc5ab32af90
   JDStatusBarNotification: 46965cc93efa668fa9f1c31cb223df5c84b421d5
   Kochava: 033f0bf159aa5003f389d8eb270074c3958d3b9a

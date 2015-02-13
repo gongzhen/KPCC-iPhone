@@ -119,6 +119,8 @@ typedef NS_ENUM(NSUInteger, StreamStatus) {
 @property BOOL dropoutOccurred;
 @property BOOL seekWillEffectBuffer;
 
+@property UIBackgroundTaskIdentifier rescueTask;
+
 @property NSInteger failoverCount;
 
 @property (nonatomic, copy) NSString *previousUrl;

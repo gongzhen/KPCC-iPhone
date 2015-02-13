@@ -123,7 +123,8 @@ static const NSString *ItemStatusContext;
                         change:(NSDictionary *)change context:(void *)context {
     
     // Monitoring AVPlayer->currentItem status.
-
+    
+    NSAssert([NSThread isMainThread],@"not the main queue...");
 #ifdef VERBOSE_LOGGING
     NSLog(@"Event received for : %@",[object description]);
 #endif
@@ -209,11 +210,16 @@ static const NSString *ItemStatusContext;
                 [self analyzeStreamError:@"Stream not likely to keep up..."];
                 
                 self.dropoutOccurred = YES;
-                //if ( [[UIApplication sharedApplication] applicationState] != UIApplicationStateBackground ) {
-                    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.15 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                        [self pauseStream];
-                    });
-                //}
+                if ( [[UIApplication sharedApplication] applicationState] == UIApplicationStateBackground ) {
+                    self.rescueTask = [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:^{
+                        
+                    }];
+                }
+                
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.15 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                    //[self pauseStream];
+                });
+
             }
          
         } else {
@@ -249,6 +255,7 @@ static const NSString *ItemStatusContext;
     // Monitoring AVPlayer rate.
     if (object == self.audioPlayer && [keyPath isEqualToString:@"rate"]) {
         
+        NSLog(@"AVPlayerItem - Rate Changed...");
         CGFloat oldRate = [change[@"old"] floatValue];
         CGFloat newRate = [change[@"new"] floatValue];
         
@@ -275,14 +282,21 @@ static const NSString *ItemStatusContext;
         self.dropoutOccurred = NO;
     }
     
+    if ( [[UIApplication sharedApplication] applicationState] == UIApplicationStateBackground ) {
+        
+        [[UIApplication sharedApplication] endBackgroundTask:self.rescueTask];
+        self.rescueTask = 0;
+    }
+    
     NSLog(@"AVPlayerItem - Stream likely to return after interrupt...");
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.75 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(.15 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         if ( [self.audioPlayer rate] <= 0.0 ) {
+            NSLog(@"Determined a 0.0 play rate");
             [self playStream];
         }
         [[AnalyticsManager shared] clearLogs];
-        [[AnalyticsManager shared] logEvent:@"streamReturned"
-                             withParameters:@{}];
+        /*[[AnalyticsManager shared] logEvent:@"streamReturned"
+                             withParameters:@{}];*/
     });
     
 }
@@ -1019,6 +1033,10 @@ static const NSString *ItemStatusContext;
     [self.audioPlayer pause];
     self.status = StreamStatusPaused;
     
+    if ( self.dropoutOccurred ) {
+        return;
+    }
+    
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
         if ( self.currentAudioMode == AudioModeLive ) {
             if ( [[SessionManager shared] sessionIsBehindLive] ) {
@@ -1031,7 +1049,7 @@ static const NSString *ItemStatusContext;
             [[SessionManager shared] endOnDemandSessionWithReason:OnDemandFinishedReasonEpisodePaused];
         }
     });
-
+     
 }
 
 - (void)stopStream {
