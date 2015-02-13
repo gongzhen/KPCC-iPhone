@@ -51,6 +51,7 @@ static AnalyticsManager *singleton = nil;
     NSString *path = [[NSBundle mainBundle] pathForResource:@"Config" ofType:@"plist"];
     NSDictionary *globalConfig = [[NSDictionary alloc] initWithContentsOfFile:path];
     
+#ifndef TURN_OFF_SANDBOX_CONFIG
     [Flurry setCrashReportingEnabled:YES];
     [Flurry setDebugLogEnabled:NO];
     [Flurry startSession: globalConfig[@"Flurry"][flurryToken] ];
@@ -69,6 +70,7 @@ static AnalyticsManager *singleton = nil;
         NSDictionary *kDict = @{ @"kochavaAppId" : kKey };
         self.kTracker = [[KochavaTracker alloc] initKochavaWithParams:kDict];
     }
+#endif
     
 }
 

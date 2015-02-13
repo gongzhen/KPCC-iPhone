@@ -115,6 +115,7 @@ setForOnDemandUI;
     self.view.backgroundColor = [UIColor blackColor];
     self.horizDividerLine.layer.opacity = 0.0;
     self.queueBlurView.layer.opacity = 0.0;
+    self.scrubbingUIView.alpha = 0.0;
     
     self.darkBgView.hidden = NO;
     self.darkBgView.backgroundColor = [[UIColor virtualBlackColor] translucify:0.7];
@@ -507,6 +508,13 @@ setForOnDemandUI;
     if ( ![UXmanager shared].settings.userHasViewedOnDemandOnboarding ) {
         SCPRAppDelegate *del = [Utils del];
         [del.onboardingController ondemandMode];
+        [del.window bringSubviewToFront:del.onboardingController.view];
+        [UIView animateWithDuration:0.25 animations:^{
+            del.onboardingController.view.alpha = 1.0;
+        }];
+    } else if ( ![UXmanager shared].settings.userHasViewedScrubbingOnboarding ) {
+        SCPRAppDelegate *del = [Utils del];
+        [del.onboardingController scrubbingMode];
         [del.window bringSubviewToFront:del.onboardingController.view];
         [UIView animateWithDuration:0.25 animations:^{
             del.onboardingController.view.alpha = 1.0;
@@ -1004,6 +1012,7 @@ setForOnDemandUI;
             [self.view layoutIfNeeded];
         }
         
+        [self.scrubbingUI scrubberWillAppear];
         self.scrubbingUI.view.alpha = 1.0;
         [self.scrubbingUI.scrubberController unmask];
     } completion:^(BOOL finished) {
@@ -1046,11 +1055,12 @@ setForOnDemandUI;
     self.scrubbingTriggerView = [[UIView alloc] initWithFrame:CGRectMake(0.0,0.0,self.view.frame.size.width,
                                                                          30.0)];
     self.scrubbingTriggerView.backgroundColor = [UIColor clearColor];
+    
     UILongPressGestureRecognizer *lpgr = [[UILongPressGestureRecognizer alloc] initWithTarget:self
                                                                                        action:@selector(bringUpScrubber)];
-    lpgr.minimumPressDuration = 1.33;
+    lpgr.minimumPressDuration = 1.0;
     [self.scrubbingTriggerView addGestureRecognizer:lpgr];
-    self.scrubbingTriggerView.frame = CGRectMake(0.0, self.progressView.frame.origin.y-self.scrubbingTriggerView.frame.size.height/2.0,
+    self.scrubbingTriggerView.frame = CGRectMake(0.0, self.progressView.frame.origin.y-self.scrubbingTriggerView.frame.size.height/2.0+6.0,
                                                  self.scrubbingTriggerView.frame.size.width,
                                                  self.scrubbingTriggerView.frame.size.height);
     
@@ -1102,7 +1112,7 @@ setForOnDemandUI;
     self.progressView.alpha = 1.0;
     self.queueBlurView.alpha = 0.0;
     self.onDemandPlayerView.alpha = 1.0;
-    self.horizDividerLine.alpha = 1.0;
+    self.horizDividerLine.alpha = 0.4;
     self.programTitleLabel.alpha = 1.0;
     self.queueDarkBgView.alpha = 0.0;
     self.queueScrollView.userInteractionEnabled = YES;
@@ -1175,6 +1185,9 @@ setForOnDemandUI;
         
     } completion:^(BOOL finished) {
         [[AudioManager shared] setDelegate:self];
+        if ( [[AudioManager shared].audioPlayer rate] <= 0.0 ) {
+            [self tickOnDemand];
+        }
     }];
 }
 
@@ -1348,6 +1361,9 @@ setForOnDemandUI;
     
     setForOnDemandUI = NO;
     setForLiveStreamUI = YES;
+    
+    self.scrubbingUIView.alpha = 0.0;
+    self.scrubbingTriggerView.alpha = 0.0;
     
     [[NSNotificationCenter defaultCenter] removeObserver:self
                                                     name:@"audio_player_began_playing"
@@ -2535,12 +2551,6 @@ setForOnDemandUI;
         return;
     }
     
-    if ( self.playStateGate ) {
-        self.playStateGate = NO;
-        [self primeManualControlButton];
-    }
-    
-    
     if ( [[NetworkManager shared] audioWillBeInterrupted] ) {
         [[NetworkManager shared] setAudioWillBeInterrupted:NO];
     }
@@ -2555,6 +2565,7 @@ setForOnDemandUI;
 #else
     NSTimeInterval tx = [[NSDate date] timeIntervalSinceDate:ciCurrentDate];
 #endif
+    
     Program *program = [[SessionManager shared] currentProgram];
     if ( program || [AudioManager shared].currentAudioMode == AudioModeOnboarding ) {
         if ( [[AudioManager shared].audioPlayer rate] > 0.0 ) {
@@ -2606,18 +2617,7 @@ setForOnDemandUI;
     
     if (setForOnDemandUI) {
         [self.progressView pop_removeAllAnimations];
-        
-        if (CMTimeGetSeconds([[[[AudioManager shared].audioPlayer currentItem] asset] duration]) > 0) {
-            double currentTime = CMTimeGetSeconds([[[AudioManager shared].audioPlayer currentItem] currentTime]);
-            double duration = CMTimeGetSeconds([[[[AudioManager shared].audioPlayer currentItem] asset] duration]);
-            
-            [self.timeLabelOnDemand setText:[Utils elapsedTimeStringWithPosition:currentTime
-                                                                     andDuration:duration]];
-            
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [self.progressView setProgress:(currentTime / duration) animated:YES];
-            });
-        }
+        [self tickOnDemand];
     } else {
         
         if ( [[AudioManager shared] currentAudioMode] == AudioModeLive ||
@@ -2659,7 +2659,6 @@ setForOnDemandUI;
             }];
         } else {
             self.onDemandGateCount++;
-
         }
     } else {
         if ( self.scrubbing ) {
@@ -2667,16 +2666,36 @@ setForOnDemandUI;
         }
     }
     
+    if ( [AudioManager shared].currentAudioMode == AudioModeLive ) {
+        if ( self.liveRewindAltButton.alpha == 1.0 )
+            [self primeManualControlButton];
+    }
+    
+}
+
+- (void)tickOnDemand {
+    if (CMTimeGetSeconds([[[[AudioManager shared].audioPlayer currentItem] asset] duration]) > 0) {
+        double currentTime = CMTimeGetSeconds([[[AudioManager shared].audioPlayer currentItem] currentTime]);
+        double duration = CMTimeGetSeconds([[[[AudioManager shared].audioPlayer currentItem] asset] duration]);
+        
+        [self.timeLabelOnDemand setText:[Utils elapsedTimeStringWithPosition:currentTime
+                                                                 andDuration:duration]];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.progressView setProgress:(currentTime / duration) animated:YES];
+        });
+    }
 }
 
 - (void)onSeekCompleted {
     // Make sure UI gets set to "Playing" state after a seek.
+    self.playStateGate = YES;
     [[SessionManager shared] fetchCurrentProgram:^(id returnedObject) {
         if ( self.jogging ) {
             [self.jogShuttle endAnimations];
         }
         
-        self.playStateGate = YES;
+        
         [[AudioManager shared] setSeekWillEffectBuffer:NO];
         
     }];

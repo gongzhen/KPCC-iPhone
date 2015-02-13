@@ -138,6 +138,7 @@
 - (void)addCloseButton;
 - (void)killCloseButton;
 - (void)finishedWithScrubber;
+- (void)tickOnDemand;
 
 @property (nonatomic, strong) SCPRScrubbingUIViewController *scrubbingUI;
 @property (nonatomic, strong) SCPRButton *scrubberCloseButton;

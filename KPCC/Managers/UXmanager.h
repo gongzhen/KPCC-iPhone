@@ -35,7 +35,10 @@
 - (void)persist;
 
 - (void)freezeProgressBar;
+
 - (BOOL)userHasSeenOnboarding;
+- (BOOL)userHasSeenScrubbingOnboarding;
+
 - (void)loadOnboarding;
 - (void)beginOnboarding:(SCPRMasterViewController*)masterCtrl;
 - (void)fadeInBranding;

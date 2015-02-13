@@ -173,7 +173,6 @@ static const NSString *ItemStatusContext;
                 });
             } else if ( self.tryAgain ) {
                 NSLog(@"Trying again after failure...");
-                
                 self.tryAgain = NO;
                 dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.15 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                     [self playStream];
@@ -374,23 +373,6 @@ static const NSString *ItemStatusContext;
         if (seekRange && [seekRange count] > 0) {
             CMTimeRange range = [seekRange[0] CMTimeRangeValue];
 
-            weakSelf.minSeekableDate = [NSDate dateWithTimeInterval:( -1 * (CMTimeGetSeconds(time) - CMTimeGetSeconds(range.start))) sinceDate:weakSelf.currentDate];
-            weakSelf.maxSeekableDate = [NSDate dateWithTimeInterval:(CMTimeGetSeconds(CMTimeRangeGetEnd(range)) - CMTimeGetSeconds(time)) sinceDate:weakSelf.currentDate];
-            weakSelf.latencyCorrection = [[NSDate date] timeIntervalSince1970] - [weakSelf.maxSeekableDate timeIntervalSince1970];
-            
-            [[SessionManager shared] trackLiveSession];
-            [[SessionManager shared] trackRewindSession];
-            [[SessionManager shared] trackOnDemandSession];
-            [[SessionManager shared] checkProgramUpdate:NO];
-            
-#ifdef DEBUG
-            if ( !weakSelf.dumpedOnce ) {
-                weakSelf.dumpedOnce = YES;
-                [weakSelf dump:YES];
-            }
-#endif
-
-            
             if ([weakSelf.delegate respondsToSelector:@selector(onTimeChange)]) {
                 if ( weakSelf.waitForFirstTick ) {
                     weakSelf.waitForFirstTick = NO;
@@ -404,6 +386,28 @@ static const NSString *ItemStatusContext;
                 }
                 [weakSelf.delegate onTimeChange];
             }
+            
+            weakSelf.seekRequested = NO;
+            weakSelf.minSeekableDate = [NSDate dateWithTimeInterval:( -1 * (CMTimeGetSeconds(time) - CMTimeGetSeconds(range.start))) sinceDate:weakSelf.currentDate];
+            weakSelf.maxSeekableDate = [NSDate dateWithTimeInterval:(CMTimeGetSeconds(CMTimeRangeGetEnd(range)) - CMTimeGetSeconds(time)) sinceDate:weakSelf.currentDate];
+            weakSelf.latencyCorrection = [[NSDate date] timeIntervalSince1970] - [weakSelf.maxSeekableDate timeIntervalSince1970];
+            
+            [[SessionManager shared] trackLiveSession];
+            [[SessionManager shared] trackRewindSession];
+            [[SessionManager shared] trackOnDemandSession];
+            [[SessionManager shared] checkProgramUpdate:NO];
+            
+            
+            
+#ifdef DEBUG
+            if ( !weakSelf.dumpedOnce ) {
+                weakSelf.dumpedOnce = YES;
+                [weakSelf dump:YES];
+            }
+#endif
+
+            
+
             
         } else {
             NSLog(@"no seekable time range for current item");
@@ -432,6 +436,9 @@ static const NSString *ItemStatusContext;
         NSLog(@" ******* PLAYER ITEM NOT READY TO PLAY BEFORE SEEKING ******* ");
     }
     
+    NSLog(@"Requesting a seek to : %@",[NSDate stringFromDate:date
+                                                   withFormat:@"hh:mm:ss a"]);
+    
     if (!self.audioPlayer) {
         self.waitForSeek = YES;
         self.audioPlayer.volume = 0.0;
@@ -454,7 +461,7 @@ static const NSString *ItemStatusContext;
         }
         
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.15 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            NSDate *justABitInTheFuture = nudge ? [date dateByAddingTimeInterval:2] : date;
+            NSDate *justABitInTheFuture = /*nudge ? [date dateByAddingTimeInterval:2] : */date;
             [self.audioPlayer.currentItem seekToDate:justABitInTheFuture completionHandler:^(BOOL finished) {
                 if ( !finished ) {
                     NSLog(@" **************** AUDIOPLAYER NOT FINISHED BUFFERING ****************** ");
@@ -480,20 +487,20 @@ static const NSString *ItemStatusContext;
                     }
                     
                     if ( !failover ) {
-                        NSLog(@"*** Seek to date : SUCCESS : %@",[NSDate stringFromDate:justABitInTheFuture
+                        NSLog(@"*** Seek to date : SUCCESS : %@",[NSDate stringFromDate:self.audioPlayer.currentItem.currentDate
                                                                              withFormat:@"hh:mm:ss a"]);
                     }
                     
-                    if ( self.audioPlayer.rate <= 0.0 ) {
+                    if ( self.audioPlayer.rate <= 0.0 || self.status != StreamStatusPlaying ) {
                         [self playStream];
                     }
                     
-                    self.status = StreamStatusPlaying;
-                    self.seekRequested = NO;
+                    
                     
                     if ([self.delegate respondsToSelector:@selector(onSeekCompleted)]) {
                         [self.delegate onSeekCompleted];
                     }
+                    
                 } else {
                     NSLog(@"Stream was not ready to play at the time of the seek request");
                 }

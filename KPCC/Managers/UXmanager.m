@@ -53,6 +53,10 @@
     return self.settings.userHasViewedOnboarding;
 }
 
+- (BOOL)userHasSeenScrubbingOnboarding {
+    return self.settings.userHasViewedScrubbingOnboarding;
+}
+
 - (void)freezeProgressBar {
     self.masterCtrl.liveProgressViewController.freezeBit = YES;
 }

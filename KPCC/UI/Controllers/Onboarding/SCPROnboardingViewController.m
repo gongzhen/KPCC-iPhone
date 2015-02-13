@@ -219,8 +219,15 @@
     self.textCalloutBalloonCtrl.view.alpha = 0.0;
     self.lensVC.view.alpha = 0.0;
     self.view.backgroundColor = [[UIColor virtualBlackColor] translucify:0.75];
-    self.swiper = [[UISwipeGestureRecognizer alloc] initWithTarget:self
+    
+    if ( [[UXmanager shared] userHasSeenScrubbingOnboarding] ) {
+        self.swiper = [[UISwipeGestureRecognizer alloc] initWithTarget:self
                                                             action:@selector(dismissOnDemand)];
+    } else {
+        self.swiper = [[UISwipeGestureRecognizer alloc] initWithTarget:self
+                                                                action:@selector(finishOnDemandAndGoToScrubbing)];
+    }
+    
     self.swiper.direction = UISwipeGestureRecognizerDirectionLeft|UISwipeGestureRecognizerDirectionRight;
     [self.view addGestureRecognizer:self.swiper];
     
@@ -238,10 +245,18 @@
         [del.window addSubview:self.view];
     }
     
-    [self.gotItButton addTarget:self
-                         action:@selector(dismissOnDemand)
-               forControlEvents:UIControlEventTouchUpInside
-                        special:YES];
+    if ( [[UXmanager shared] userHasSeenScrubbingOnboarding] ) {
+        [self.gotItButton addTarget:self
+                             action:@selector(dismissOnDemand)
+                   forControlEvents:UIControlEventTouchUpInside
+                            special:YES];
+    } else {
+        [self.gotItButton addTarget:self
+                             action:@selector(finishOnDemandAndGoToScrubbing)
+                   forControlEvents:UIControlEventTouchUpInside];
+    }
+    
+
     
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.25 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         [UIView animateWithDuration:0.25 animations:^{
@@ -250,13 +265,119 @@
     });
 }
 
+- (void)finishOnDemandAndGoToScrubbing {
+    [[UXmanager shared].settings setUserHasViewedOnDemandOnboarding:YES];
+    [[UXmanager shared] persist];
+    self.dontFade = YES;
+    [self scrubbingMode];
+}
+
+- (void)scrubbingMode {
+    
+    if ( !self.dontFade ) {
+        self.view.alpha = 0.0;
+    }
+    
+    [UIView animateWithDuration:0.25 animations:^{
+        self.onDemandContainerView.alpha = 0.0;
+    } completion:^(BOOL finished) {
+        
+        self.scrubbingContainerView.alpha = 0.0;
+        [self.view addSubview:self.scrubbingContainerView];
+        
+        self.scrubbingContainerView.translatesAutoresizingMaskIntoConstraints = NO;
+        
+
+        
+        self.notificationsView.alpha = 0.0;
+        self.brandingView.alpha = 0.0;
+        self.textCalloutBalloonCtrl.view.alpha = 0.0;
+        self.lensVC.view.alpha = 0.0;
+        self.view.backgroundColor = [[UIColor virtualBlackColor] translucify:0.75];
+        
+        self.scrubbingSwiper = [[UISwipeGestureRecognizer alloc] initWithTarget:self
+                                                                action:@selector(dismissOnDemand)];
+        self.scrubbingSwiper.direction = UISwipeGestureRecognizerDirectionLeft|UISwipeGestureRecognizerDirectionRight;
+        
+        if ( self.swiper ) {
+            [self.view removeGestureRecognizer:self.swiper];
+            self.swiper = nil;
+        }
+        
+        [self.view addGestureRecognizer:self.scrubbingSwiper];
+        
+        [self.scrubbingSwipeToSkipLabel proBookFontize];
+        
+        [self.scrubbingGotItButton.titleLabel proSemiBoldFontize];
+        [self.scrubbingGotItButton setTitleColor:[UIColor kpccPeriwinkleColor]
+                               forState:UIControlStateNormal];
+        [self.scrubbingGotItButton setTitleColor:[UIColor kpccPeriwinkleColor]
+                               forState:UIControlStateHighlighted];
+        
+        BOOL fadeUpScrubbingView = NO;
+        if ( !self.view.superview ) {
+            
+            self.view.alpha = 0.0;
+            SCPRAppDelegate *del = [Utils del];
+            self.view.frame = CGRectMake(0.0,0.0,del.window.frame.size.width,
+                                         del.window.frame.size.height);
+            [del.window addSubview:self.view];
+            self.scrubbingContainerView.alpha = 1.0;
+        } else {
+            self.scrubbingContainerView.alpha = 0.0;
+            fadeUpScrubbingView = YES;
+        }
+        
+        self.scrubbingContainerView.backgroundColor = [UIColor clearColor];
+        
+        NSLayoutConstraint *hCenter = [NSLayoutConstraint constraintWithItem:self.scrubbingContainerView
+                                                                   attribute:NSLayoutAttributeCenterX
+                                                                   relatedBy:NSLayoutRelationEqual
+                                                                      toItem:self.view
+                                                                   attribute:NSLayoutAttributeCenterX
+                                                                  multiplier:1.0
+                                                                    constant:0.0];
+        
+        NSLayoutConstraint *yCenter = [NSLayoutConstraint constraintWithItem:self.scrubbingContainerView
+                                                                   attribute:NSLayoutAttributeCenterY
+                                                                   relatedBy:NSLayoutRelationEqual
+                                                                      toItem:self.view
+                                                                   attribute:NSLayoutAttributeCenterY
+                                                                  multiplier:1.0
+                                                                    constant:100.0];
+        
+        [self.view addConstraints:@[hCenter,yCenter]];
+        
+        
+        [self.scrubbingGotItButton addTarget:self
+                             action:@selector(dismissOnDemand)
+                   forControlEvents:UIControlEventTouchUpInside
+                            special:YES];
+        
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.25 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            [UIView animateWithDuration:0.25 animations:^{
+                self.view.alpha = 1.0;
+                if ( fadeUpScrubbingView ) {
+                    self.scrubbingContainerView.alpha = 1.0;
+                }
+            }];
+        });
+    }];
+    
+
+
+}
+
 - (void)dismissOnDemand {
     [UIView animateWithDuration:0.25 animations:^{
         self.onDemandContainerView.alpha = 0.0;
         self.view.alpha = 0.0;
     } completion:^(BOOL finished) {
         [UXmanager shared].settings.userHasViewedOnDemandOnboarding = YES;
+        [UXmanager shared].settings.userHasViewedScrubbingOnboarding = YES;
+#ifndef TESTING_SCRUBBER
         [[UXmanager shared] persist];
+#endif
     }];
 }
 
