@@ -94,7 +94,6 @@ static AnalyticsManager *singleton = nil;
 }
 
 - (void)trackHeadlinesDismissal {
-    
     [self logEvent:@"userClosedHeadlines"
     withParameters:@{ }];
 }
@@ -173,12 +172,6 @@ static AnalyticsManager *singleton = nil;
         mD[@"kpccSessionId"] = [[SessionManager shared] odSessionID];
         analysis = mD;
     }
-    
-    /*
-    analysis[@"audioSurvivedException"] = [[AudioManager shared].audioPlayer rate] > 0.0 ? @(YES) : @(NO);
-    if ( [[AudioManager shared] tryAgain] ) {
-        analysis[@"audioSurvivedException"] = @(NO);
-    }*/
     
     NSLog(@"Sending stream failure report to analytics");
     [self logEvent:@"streamException" withParameters:analysis];

@@ -19,10 +19,19 @@ static long kStreamCorrectionTolerance = 60*5;
 #endif
 
 #ifdef USE_TEST_STREAM
-#define kHLSLiveStreamURL @"http://vevoplaylist-live.hls.adaptive.level3.net/vevo/ch1/06/prog_index.m3u8"
+#define kHLSLiveStreamURL @"http://hls.kqed.org/hls/smil:itunes.smil/playlist.m3u8"
+#else
+#ifdef BETA
+#define kHLSLiveStreamURLBase @"http://streammachine-test.scprdev.org:8020/sg/test.m3u8"
+#define kHLSLiveStreamURL [NSString stringWithFormat:@"%@?ua=KPCCiPhone-%@",kHLSLiveStreamURLBase,[Utils urlSafeVersion]]
+#else
+#ifdef FORCE_TEST_STREAM
+#define kHLSLiveStreamURLBase @"http://streammachine-test.scprdev.org:8020/sg/test.m3u8"
+#define kHLSLiveStreamURL [NSString stringWithFormat:@"%@?ua=KPCCiPhone-%@",kHLSLiveStreamURLBase,[Utils urlSafeVersion]]
 #else
 #define kHLSLiveStreamURL [NSString stringWithFormat:@"%@?ua=KPCCiPhone-%@",@"http://streammachine-hls001.scprdev.org/sg/kpcc-aac.m3u8",[Utils urlSafeVersion]]
-//#define kHLSLiveStreamURL @"http://streammachine-hls001.scprdev.org/sg/kpcc-aac.m3u8?ua=SCPRIPHONE"
+#endif
+#endif
 #endif
 
 #define kLiveStreamURL @"http://live.scpr.org/kpcclive"

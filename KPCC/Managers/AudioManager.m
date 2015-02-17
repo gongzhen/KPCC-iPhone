@@ -145,8 +145,10 @@ static const NSString *ItemStatusContext;
                     self.failoverCount++;
                     if ( self.failoverCount > kFailoverThreshold ) {
                         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.15 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                            self.tryAgain = NO;
+                            self.failoverCount = 0;
                             [self analyzeStreamError:[error prettyAnalytics]];
-                            [self resetPlayer];
+                            [self takedownAudioPlayer];
                         });
                     } else {
                     
@@ -164,7 +166,6 @@ static const NSString *ItemStatusContext;
         } else if ([self.audioPlayer.currentItem status] == AVPlayerItemStatusReadyToPlay) {
             
             NSLog(@"AVPlayerItemStatus - ReadyToPlay");
-            self.failoverCount = 0;
             
             if ( self.waitForSeek ) {
                 NSLog(@"Delayed seek");
@@ -294,6 +295,8 @@ static const NSString *ItemStatusContext;
             NSLog(@"Determined a 0.0 play rate");
             [self playStream];
         }
+        
+        [self.audioPlayer.currentItem setPreferredPeakBitRate:self.audioPlayer.observedMinBitrate];
         [[AnalyticsManager shared] clearLogs];
         /*[[AnalyticsManager shared] logEvent:@"streamReturned"
                              withParameters:@{}];*/

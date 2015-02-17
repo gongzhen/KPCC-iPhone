@@ -34,20 +34,18 @@ PODS:
   - Parse (1.6.2):
     - Bolts (~> 1.1)
   - pop (1.0.7)
-  - TestFlightSDK (3.0.2)
   - XMLDictionary (1.4)
 
 DEPENDENCIES:
   - AFNetworking (~> 2.0)
-  - FlurrySDK
+  - FlurrySDK (~> 6.0)
   - FXBlurView (~> 1.6)
   - JDStatusBarNotification
   - Kochava
   - KSReachability
-  - Mixpanel
-  - Parse
+  - Mixpanel (~> 2.7)
+  - Parse (~> 1.6)
   - pop (~> 1.0)
-  - TestFlightSDK
   - XMLDictionary (~> 1.4)
 
 SPEC CHECKSUMS:
@@ -61,7 +59,6 @@ SPEC CHECKSUMS:
   Mixpanel: def38b9e600f101686b8d647e05660a72c089c65
   Parse: 60d65108fe39da77ec16c9e51d74b4d296b21424
   pop: 2f14a1ea61339767af9e66741b418c831b3844df
-  TestFlightSDK: 0c24c533748d0d84bfe7a3cb6036fa79124d84ee
   XMLDictionary: 735e81b9a043e220b0d24e9d4f16719606f2e0fc
 
 COCOAPODS: 0.35.0
