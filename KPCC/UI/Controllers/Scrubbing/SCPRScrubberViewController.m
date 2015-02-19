@@ -103,7 +103,7 @@
 
         NSString *pretty = [Utils elapsedTimeStringWithPosition:duration*se
                                                     andDuration:duration];
-        [self.scrubberTimeLabel fadeText:pretty];
+        [self.scrubberTimeLabel setText:pretty];
         
     }
 }
@@ -142,7 +142,7 @@
     
     NSString *pretty = [Utils elapsedTimeStringWithPosition:duration*se
                                                 andDuration:duration];
-    [self.scrubberTimeLabel fadeText:pretty];
+    [self.scrubberTimeLabel setText:pretty];
 }
 
 - (void)doTheSeek {

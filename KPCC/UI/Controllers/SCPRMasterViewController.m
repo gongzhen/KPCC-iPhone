@@ -30,7 +30,7 @@
 static NSString *kRewindingText = @"REWINDING...";
 static NSString *kForwardingText = @"GOING LIVE...";
 static NSString *kBufferingText = @"BUFFERING";
-
+static CGFloat kScrubbingThreeFiveSlip = 36.0;
 
 @interface SCPRMasterViewController () <AudioManagerDelegate, UINavigationControllerDelegate, UIViewControllerTransitioningDelegate, SCPRPreRollControllerDelegate, UIScrollViewDelegate>
 
@@ -115,6 +115,7 @@ setForOnDemandUI;
     self.view.backgroundColor = [UIColor blackColor];
     self.horizDividerLine.layer.opacity = 0.0;
     self.queueBlurView.layer.opacity = 0.0;
+    self.scrubbingUIView.alpha = 0.0;
     
     self.darkBgView.hidden = NO;
     self.darkBgView.backgroundColor = [[UIColor virtualBlackColor] translucify:0.7];
@@ -990,8 +991,11 @@ setForOnDemandUI;
     [[AudioManager shared] setDelegate:self.scrubbingUI];
     
     if ( [Utils isThreePointFive] ) {
-        self.topYScrubbingAnchor.constant = [self.topYScrubbingAnchor constant]-43.0;
-        self.playerControlsBottomYConstraint.constant = [self.playerControlsBottomYConstraint constant]+43.0;
+        self.topYScrubbingAnchor.constant = [self.topYScrubbingAnchor constant]-kScrubbingThreeFiveSlip;
+        self.playerControlsBottomYConstraint.constant = [self.playerControlsBottomYConstraint constant]+kScrubbingThreeFiveSlip;
+        
+
+        
         [self.scrubbingUI.view layoutIfNeeded];
     }
     
@@ -1014,6 +1018,14 @@ setForOnDemandUI;
         CGRect cooked = [self.scrubbingUIView convertRect:raw
                                                    toView:self.queueDarkBgView];
         [self.queueDarkBgView cutAHole:cooked];*/
+        
+        if ( [Utils isThreePointFive] ) {
+            POPSpringAnimation *scaleAnimation = [POPSpringAnimation animationWithPropertyNamed:kPOPLayerScaleXY];
+            scaleAnimation.toValue  = [NSValue valueWithCGSize:CGSizeMake(0.8f, 0.8f)];
+            scaleAnimation.springBounciness = 2.0f;
+            scaleAnimation.springSpeed = 1.0f;
+            [self.playPauseButton.layer pop_addAnimation:scaleAnimation forKey:@"squeeze-play-button"];
+        }
         
         [self addCloseButton];
         
@@ -1044,19 +1056,20 @@ setForOnDemandUI;
         [self.scrubbingTriggerView removeFromSuperview];
     }
     self.scrubbingTriggerView = [[UIView alloc] initWithFrame:CGRectMake(0.0,0.0,self.view.frame.size.width,
-                                                                         30.0)];
-    self.scrubbingTriggerView.backgroundColor = [UIColor clearColor];
+                                                                         40.0)];
+    self.scrubbingTriggerView.backgroundColor = [UIColor clearColor]/*[[UIColor purpleColor] translucify:0.25]*/;
     UILongPressGestureRecognizer *lpgr = [[UILongPressGestureRecognizer alloc] initWithTarget:self
                                                                                        action:@selector(bringUpScrubber)];
-    lpgr.minimumPressDuration = 1.33;
+    lpgr.minimumPressDuration = 0.5;
     [self.scrubbingTriggerView addGestureRecognizer:lpgr];
-    self.scrubbingTriggerView.frame = CGRectMake(0.0, self.progressView.frame.origin.y-self.scrubbingTriggerView.frame.size.height/2.0,
+    self.scrubbingTriggerView.frame = CGRectMake(0.0, self.progressView.frame.origin.y-self.scrubbingTriggerView.frame.size.height+20.0,
                                                  self.scrubbingTriggerView.frame.size.width,
                                                  self.scrubbingTriggerView.frame.size.height);
     
     [self.view addSubview:self.scrubbingTriggerView];
     
-
+    self.back30VerticalAnchor.constant = [Utils isThreePointFive] ? 28.0 : 40.0;
+    self.fwd30VerticalAnchor.constant = [Utils isThreePointFive] ? 28.0 : 40.0;
     self.scrubbingUI.parentControlView = self;
     
     sUI.view.alpha = 0.0;
@@ -1102,7 +1115,7 @@ setForOnDemandUI;
     self.progressView.alpha = 1.0;
     self.queueBlurView.alpha = 0.0;
     self.onDemandPlayerView.alpha = 1.0;
-    self.horizDividerLine.alpha = 1.0;
+    self.horizDividerLine.alpha = 0.4;
     self.programTitleLabel.alpha = 1.0;
     self.queueDarkBgView.alpha = 0.0;
     self.queueScrollView.userInteractionEnabled = YES;
@@ -1132,15 +1145,27 @@ setForOnDemandUI;
     
     [self.scrubberCloseButton setTranslatesAutoresizingMaskIntoConstraints:NO];
     
-    NSArray *hConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:[button(36.0)]-20-|"
+    /*NSArray *hConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:[button(40.0)]-20-|"
                                                                                 options:0
                                                                                 metrics:nil
-                                                                                  views:@{ @"button" : self.scrubberCloseButton }];
-    NSArray *vConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-64-[button(36.0)]"
+                                                                                  views:@{ @"button" : self.scrubberCloseButton }];*/
+    
+    NSLayoutConstraint *centerAnchor = [NSLayoutConstraint constraintWithItem:self.scrubberCloseButton
+                                                                    attribute:NSLayoutAttributeCenterX
+                                                                    relatedBy:NSLayoutRelationEqual
+                                                                       toItem:self.view
+                                                                    attribute:NSLayoutAttributeCenterX
+                                                                   multiplier:1.0
+                                                                     constant:0.0];
+    
+    CGFloat btnSize = [Utils isThreePointFive] ? 32.0 : 40.0;
+    CGFloat bottomAnchorConstant = [Utils isThreePointFive] ? 8.0 : 14.0;
+    
+    NSArray *vConstraints = [NSLayoutConstraint constraintsWithVisualFormat:[NSString stringWithFormat:@"V:[button(%1.1f)]-%1.1f-|",btnSize,bottomAnchorConstant]
                                                                     options:0
                                                                     metrics:nil
                                                                       views:@{ @"button" : self.scrubberCloseButton }];
-    [self.view addConstraints:hConstraints];
+    [self.view addConstraint:centerAnchor];
     [self.view addConstraints:vConstraints];
     
     [UIView animateWithDuration:0.25 animations:^{
@@ -1162,8 +1187,9 @@ setForOnDemandUI;
 - (void)finishedWithScrubber {
     [UIView animateWithDuration:0.25 animations:^{
         if ( [Utils isThreePointFive] ) {
-            self.topYScrubbingAnchor.constant = [self.topYScrubbingAnchor constant]+43.0;
-            self.playerControlsBottomYConstraint.constant = [self.playerControlsBottomYConstraint constant]-43.0;
+            self.topYScrubbingAnchor.constant = [self.topYScrubbingAnchor constant]+kScrubbingThreeFiveSlip;
+            self.playerControlsBottomYConstraint.constant = [self.playerControlsBottomYConstraint constant]-kScrubbingThreeFiveSlip;
+            
             [self.scrubbingUI.view layoutIfNeeded];
             [self.view layoutIfNeeded];
         }
@@ -1174,6 +1200,13 @@ setForOnDemandUI;
         self.scrubberLoadingGate = NO;
         
     } completion:^(BOOL finished) {
+        
+        if ( [Utils isThreePointFive] ) {
+            POPSpringAnimation *scaleAnimation = [POPSpringAnimation animationWithPropertyNamed:kPOPLayerScaleXY];
+            scaleAnimation.toValue  = [NSValue valueWithCGSize:CGSizeMake(1.0f, 1.0f)];
+            [self.playPauseButton.layer pop_addAnimation:scaleAnimation forKey:@"squeeze-play-button"];
+        }
+        
         [[AudioManager shared] setDelegate:self];
     }];
 }

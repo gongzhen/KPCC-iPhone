@@ -196,7 +196,13 @@ static AnalyticsManager *singleton = nil;
     NSMutableDictionary *nParams = [originalParams mutableCopy];
     if ( self.errorLog ) {
         if ( self.errorLog.events && self.errorLog.events.count > 0 ) {
-            AVPlayerItemErrorLogEvent *event = self.errorLog.events.firstObject;
+            
+            if ( self.accessLog.events.count > 1 ) {
+                AVPlayerItemAccessLogEvent *secondEvent = self.accessLog.events.firstObject;
+                nParams[@"secondEventObservedBitrate"] = @(secondEvent.observedBitrate);
+            }
+            
+            AVPlayerItemErrorLogEvent *event = self.errorLog.events.lastObject;
             if ( event.playbackSessionID ) {
                 nParams[@"avPlayerSessionId"] = event.playbackSessionID;
             }
@@ -205,17 +211,26 @@ static AnalyticsManager *singleton = nil;
                 nParams[@"errorDomain"] = event.errorDomain;
             }
             if ( self.errorLogReceivedAt ) {
-                nParams[@"errorLogPostedAt"] = [NSDate prettyTextFromSeconds:[[NSDate date] timeIntervalSinceDate:self.errorLogReceivedAt]];
+                nParams[@"errorLogPostedAt"] = self.errorLogReceivedAt;
             }
         }
     }
     if ( self.accessLog ) {
         if ( self.accessLog.events && self.accessLog.events.count > 0 ) {
-            AVPlayerItemAccessLogEvent *event = self.accessLog.events.firstObject;
+            
+            NSLog(@"AVPlayerItem Access Log Contained : %ld objects",(long)self.accessLog.events.count);
+            
+            AVPlayerItemAccessLogEvent *event = self.accessLog.events.lastObject;
+            
+            if ( self.accessLog.events.count > 1 ) {
+                AVPlayerItemAccessLogEvent *secondEvent = self.accessLog.events.firstObject;
+                nParams[@"secondEventObservedBitrate"] = @(secondEvent.observedBitrate);
+            }
+            
             if ( event.playbackSessionID ) {
                 nParams[@"avPlayerSessionId"] = event.playbackSessionID;
             }
-         
+            
             nParams[@"numberOfStalls"] = @(event.numberOfStalls);
             nParams[@"switchBitrate"] = @(event.switchBitrate);
             
@@ -224,28 +239,31 @@ static AnalyticsManager *singleton = nil;
             if ( event.observedBitrateStandardDeviation >= 0.0 ) {
                 nParams[@"bitrateDeviation"] = @(event.observedBitrateStandardDeviation);
             }
-
+            
             if ( event.downloadOverdue > 0 ) {
                 nParams[@"downloadOverdue"] = @(event.downloadOverdue);
             }
-
+            
             if ( event.transferDuration >= 0 ) {
                 nParams[@"transferDuration"] = @(event.transferDuration);
             }
-
-            nParams[@"indicatedBitrate"] = @(event.indicatedBitrate);
-            nParams[@"observedBitrate"] = @(event.observedBitrate);
+            
+            nParams[@"indicatedBitrate"] = [NSString stringWithFormat:@"%1.1f",event.indicatedBitrate];
+            nParams[@"observedBitrate"] =  [NSString stringWithFormat:@"%1.1f",event.observedBitrate];
+            
+            NSLog(@"iBR : %1.1f, oBR : %1.1f",event.indicatedBitrate,event.observedBitrate);
+            
             if ( event.observedMaxBitrate != event.observedBitrate ) {
-                nParams[@"observedMaxBitrate"] = @(event.observedMaxBitrate);
+                nParams[@"observedMaxBitrate"] = [NSString stringWithFormat:@"%1.1f",event.observedMaxBitrate];
             }
             if ( event.observedMinBitrate != event.observedBitrate ) {
-                nParams[@"observedMinBitrate"] = @(event.observedMinBitrate);
+                nParams[@"observedMinBitrate"] = [NSString stringWithFormat:@"%1.1f",event.observedMinBitrate];
             }
             
             nParams[@"bytesTransferred"] = @(event.numberOfBytesTransferred);
             
             if ( self.accessLogReceivedAt ) {
-                nParams[@"accessLogPostedAt"] = [NSDate prettyTextFromSeconds:[[NSDate date] timeIntervalSinceDate:self.accessLogReceivedAt]];
+                nParams[@"accessLogPostedAt"] = self.accessLogReceivedAt;
             }
             
             if ( event.URI ) {
@@ -260,7 +278,6 @@ static AnalyticsManager *singleton = nil;
             nParams[@"avPlayerSessionId"] = avpid;
         }
     }
-    
     
     //NSLog(@" •••••••• FINISHED LOGGIFYING ANALYTICS ••••••• ");
     

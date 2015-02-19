@@ -1654,7 +1654,7 @@
 					"$(PROJECT_DIR)/KPCC/ThirdParty/TestFlight",
 					"$(PROJECT_DIR)/KPCC/ThirdParty/Flurry",
 				);
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = "$(TARGET_NAME) Beta";
 				PROVISIONING_PROFILE = "7de88d41-fd13-4035-a8ee-18dabe63e82c";
 				SWIFT_OBJC_BRIDGING_HEADER = "KPCC/UI/Controllers/KPCC-Bridging-Header.h";
 				TARGETED_DEVICE_FAMILY = 1;
@@ -1855,6 +1855,7 @@
 					"DEBUG=1",
 					"$(inherited)",
 					"VERBOSE_STREAM_LOGGING=1",
+					"FORCE_TEST_STREAM=1",
 				);
 				INFOPLIST_FILE = "KPCC/KPCC-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;

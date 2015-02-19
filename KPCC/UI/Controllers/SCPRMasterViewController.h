@@ -148,6 +148,9 @@
 @property (nonatomic, strong) IBOutlet UILabel *scrubberTimeLabel;
 @property (nonatomic, strong) IBOutlet SCPRTouchableScrubberView *touchableScrubberView;
 @property (nonatomic,strong) IBOutlet NSLayoutConstraint *topYScrubbingAnchor;
+@property (nonatomic, strong) IBOutlet NSLayoutConstraint *back30VerticalAnchor;
+@property (nonatomic, strong) IBOutlet NSLayoutConstraint *fwd30VerticalAnchor;
+
 @property BOOL scrubbing;
 
 @property (NS_NONATOMIC_IOSONLY, readonly) BOOL uiIsJogging;

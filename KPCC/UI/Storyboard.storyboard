@@ -365,11 +365,13 @@
                     <simulatedOrientationMetrics key="simulatedOrientationMetrics"/>
                     <connections>
                         <outlet property="back30Button" destination="vgV-P3-0W0" id="JSx-0k-Xyj"/>
+                        <outlet property="back30VerticalAnchor" destination="qVW-Cb-d3A" id="645-c4-nRa"/>
                         <outlet property="blurView" destination="LAZ-J2-lj5" id="MOo-Zb-mB0"/>
                         <outlet property="currentProgressBarView" destination="alx-1P-Yo8" id="ovX-oD-G78"/>
                         <outlet property="darkBgView" destination="sYL-12-Hgi" id="tPF-W9-NAM"/>
                         <outlet property="dividerOnDemand" destination="J5U-kb-6Je" id="5tr-af-9iL"/>
                         <outlet property="fwd30Button" destination="3MS-4t-3kF" id="CGt-TQ-9Ys"/>
+                        <outlet property="fwd30VerticalAnchor" destination="9kl-YN-blq" id="gPU-cM-BkA"/>
                         <outlet property="horizDividerLine" destination="Duc-cQ-dAe" id="3ce-uV-F9v"/>
                         <outlet property="imageTopConstraint" destination="F6W-KB-uW8" id="1Yz-rI-QzN"/>
                         <outlet property="initialControlsView" destination="3WP-os-1RZ" id="UZk-6c-p4n"/>

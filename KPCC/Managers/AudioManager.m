@@ -145,7 +145,8 @@ static const NSString *ItemStatusContext;
                     if ( self.failoverCount > kFailoverThreshold ) {
                         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.15 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                             [self analyzeStreamError:[error prettyAnalytics]];
-                            [self resetPlayer];
+                            self.tryAgain = NO;
+                            [self takedownAudioPlayer];
                         });
                     } else {
                     

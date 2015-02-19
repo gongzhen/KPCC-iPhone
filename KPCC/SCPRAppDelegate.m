@@ -43,9 +43,9 @@
     [[AnalyticsManager shared] setup];
     
 #ifndef PRODUCTION
-    //[[UXmanager shared].settings setUserHasViewedOnboarding:YES];
-    //[[UXmanager shared].settings setUserHasViewedOnDemandOnboarding:YES];
-    //[[UXmanager shared] persist];
+    [[UXmanager shared].settings setUserHasViewedOnboarding:YES];
+    [[UXmanager shared].settings setUserHasViewedOnDemandOnboarding:YES];
+    [[UXmanager shared] persist];
 #endif
     
     [Parse setApplicationId:globalConfig[@"Parse"][@"ApplicationId"]

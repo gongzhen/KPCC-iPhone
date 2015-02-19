@@ -12,7 +12,7 @@
 
 @import AdSupport;
 
-#define kFailThreshold 2.0
+#define kFailThreshold 5.0
 
 static NetworkManager *singleton = nil;
 
@@ -99,7 +99,6 @@ static NetworkManager *singleton = nil;
                                                                 object:nil];
             } else {
                 
-                weakself_.networkDown = YES;
                 weakself_.failTimer = [NSTimer scheduledTimerWithTimeInterval:kFailThreshold
                                                                        target:weakself_
                                                                      selector:@selector(trueFail)
