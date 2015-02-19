@@ -55,10 +55,14 @@ static NSString *kCommentsPlaceholder = @"... Add your comments here";
     
     NSString *versionText = [NSString stringWithFormat:@"KPCC iPhone v%@",[Utils prettyVersion]];
     
-#ifdef BETA
+#ifndef PRODUCTION
     NSURL *url = [NSURL URLWithString:kHLSLiveStreamURL];
     NSString *server = [url host];
+#ifdef BETA
     NSString *beta = [NSString stringWithFormat:@" BETA : %@",server];
+#else
+    NSString *beta = [NSString stringWithFormat:@" : %@",server];
+#endif
     versionText = [versionText stringByAppendingString:beta];
 #endif
     

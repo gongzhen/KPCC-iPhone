@@ -16,7 +16,12 @@ typedef NS_ENUM(NSUInteger, OnDemandFinishedReason) {
     OnDemandFinishedReasonEpisodePaused
 };
 
-static NSInteger kStreamIsLiveTolerance = 100;
+static NSInteger kStreamIsLiveTolerance = 120;
+#ifndef PRODUCTION
+static NSInteger kProgramPollingPressure = 30;
+#else
+static NSInteger kProgramPollingPressure = 15;
+#endif
 
 @interface SessionManager : NSObject
 

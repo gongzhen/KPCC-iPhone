@@ -1655,7 +1655,7 @@
 					"$(PROJECT_DIR)/KPCC/ThirdParty/Flurry",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME) Beta";
-				PROVISIONING_PROFILE = "7de88d41-fd13-4035-a8ee-18dabe63e82c";
+				PROVISIONING_PROFILE = "d6545178-9d31-44a5-bdf1-e8b2ca01aaf3";
 				SWIFT_OBJC_BRIDGING_HEADER = "KPCC/UI/Controllers/KPCC-Bridging-Header.h";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
@@ -1665,7 +1665,7 @@
 		25CF47711A897EB90017BD0C /* Beta */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/KPCC.app/KPCC";
+				BUNDLE_LOADER = "$(TEST_HOST)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
@@ -1675,7 +1675,7 @@
 				GCC_PREFIX_HEADER = "KPCC/KPCC-Prefix.pch";
 				INFOPLIST_FILE = "KPCCTests/KPCCTests-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUNDLE_LOADER)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/KPCC.app/KPCC";
 				WRAPPER_EXTENSION = xctest;
 			};
 			name = Beta;
@@ -1750,7 +1750,7 @@
 		25D70C311A43676400E41BD8 /* Production */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/KPCC.app/KPCC";
+				BUNDLE_LOADER = "$(TEST_HOST)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
@@ -1760,7 +1760,7 @@
 				GCC_PREFIX_HEADER = "KPCC/KPCC-Prefix.pch";
 				INFOPLIST_FILE = "KPCCTests/KPCCTests-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUNDLE_LOADER)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/KPCC.app/KPCC";
 				WRAPPER_EXTENSION = xctest;
 			};
 			name = Production;
@@ -1843,17 +1843,18 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = F9D194612962C66D8F109726 /* Pods.debug.xcconfig */;
 			buildSettings = {
-				APP_UID = org.scpr.iphone.KPCC;
+				APP_UID = org.americanpublicmedia.KPCCRadio;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Jason Georges (K7Q582A4SU)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Jason Georges (K7Q582A4SU)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Reed DeLapp (2L3CQSAF79)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Reed DeLapp (2L3CQSAF79)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "KPCC/KPCC-Prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
+					"SUPPRESS_NETWORK_LOGGING=1",
 					"FORCE_TEST_STREAM=1",
 				);
 				INFOPLIST_FILE = "KPCC/KPCC-Info.plist";
@@ -1865,7 +1866,7 @@
 					"$(PROJECT_DIR)/KPCC/ThirdParty/Flurry",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "244c59ff-7099-4c90-8b51-1679b604ad5d";
+				PROVISIONING_PROFILE = "d6545178-9d31-44a5-bdf1-e8b2ca01aaf3";
 				SWIFT_OBJC_BRIDGING_HEADER = "KPCC/UI/Controllers/KPCC-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				TARGETED_DEVICE_FAMILY = 1;
@@ -1908,7 +1909,7 @@
 		76A308FF18C8FB950065D4B1 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/KPCC.app/KPCC";
+				BUNDLE_LOADER = "$(TEST_HOST)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
@@ -1922,7 +1923,7 @@
 				);
 				INFOPLIST_FILE = "KPCCTests/KPCCTests-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUNDLE_LOADER)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/KPCC.app/KPCC";
 				WRAPPER_EXTENSION = xctest;
 			};
 			name = Debug;
@@ -1930,7 +1931,7 @@
 		76A3090018C8FB950065D4B1 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/KPCC.app/KPCC";
+				BUNDLE_LOADER = "$(TEST_HOST)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
@@ -1940,7 +1941,7 @@
 				GCC_PREFIX_HEADER = "KPCC/KPCC-Prefix.pch";
 				INFOPLIST_FILE = "KPCCTests/KPCCTests-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUNDLE_LOADER)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/KPCC.app/KPCC";
 				WRAPPER_EXTENSION = xctest;
 			};
 			name = Release;

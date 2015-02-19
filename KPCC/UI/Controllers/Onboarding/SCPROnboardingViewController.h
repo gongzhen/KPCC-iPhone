@@ -61,6 +61,9 @@
 @property (nonatomic,strong) UISwipeGestureRecognizer *scrubbingSwiper;
 @property BOOL dontFade;
 
+// Backdoor
+@property (nonatomic,strong) UISwipeGestureRecognizer *backdoorSkipSwiper;
+
 - (void)prepare;
 - (void)revealLensWithOrigin:(CGPoint)origin;
 - (void)revealBrandingWithCompletion:(CompletionBlock)completed;

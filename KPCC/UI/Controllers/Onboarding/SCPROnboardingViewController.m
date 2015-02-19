@@ -45,6 +45,14 @@
     self.notificationsView.alpha = 0.0;
     self.orangeStripView.alpha = 0.0;
     
+    
+#ifdef SKIPPABLE_ONBOARDING
+    self.backdoorSkipSwiper = [[UISwipeGestureRecognizer alloc] initWithTarget:self
+                                                                        action:@selector(killSelf)];
+    self.backdoorSkipSwiper.numberOfTouchesRequired = 4;
+    [self.view addGestureRecognizer:self.backdoorSkipSwiper];
+#endif
+    
     [[DesignManager shared] sculptButton:self.yesToNotificationsButton
                                withStyle:SculptingStylePeriwinkle
                                  andText:@"Yes, I'm interested!"];
@@ -70,6 +78,11 @@
         [self.buttonAnchor setConstant:325.0];
     }
     
+}
+
+- (void)killSelf {
+    [[UXmanager shared] godPauseOrPlay];
+    [[UXmanager shared] endOnboarding];
 }
 
 - (void)revealLensWithOrigin:(CGPoint)origin {

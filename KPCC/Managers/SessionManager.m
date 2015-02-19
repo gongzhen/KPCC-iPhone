@@ -537,7 +537,7 @@
     if ( ct ) {
         NSDateComponents *comps = [[NSCalendar currentCalendar] components:NSCalendarUnitMinute|NSCalendarUnitSecond
                                                                   fromDate:ct];
-        if ( [comps minute] % 5 == 0 || [comps minute] % 6 == 0 || force ) {
+        if ( [comps minute] == 6 || [comps minute] % kProgramPollingPressure == 0 || force ) {
             
             if ( [comps minute] == self.prevCheckedMinute ) return;
             self.prevCheckedMinute = [comps minute];
@@ -549,8 +549,8 @@
                 self.prevCheckedMinute = [comps minute];
                 NSLog(@"Checking program : %@ (%ld)",[NSDate stringFromDate:ct
                                                                  withFormat:@"hh:mm a"],(long)[ct timeIntervalSince1970]);
-                
                 [self processTimer:nil];
+                
             }
         } else {
             [self setUpdaterArmed:NO];

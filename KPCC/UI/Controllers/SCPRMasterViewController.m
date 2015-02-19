@@ -525,6 +525,14 @@ setForOnDemandUI;
 # pragma mark - Actions
 
 - (IBAction)initialPlayTapped:(id)sender {
+    
+#ifdef FORCE_TEST_STREAM
+    self.preRollViewController.tritonAd = nil;
+#endif
+#ifdef BETA
+    self.preRollViewController.tritonAd = nil;
+#endif
+    
     if ( ![[UXmanager shared].settings userHasViewedOnboarding] ) {
         [[UXmanager shared] fadeOutBrandingWithCompletion:^{
             [self moveTextIntoPlace:YES];
@@ -762,6 +770,8 @@ setForOnDemandUI;
 
 - (void)goLive:(BOOL)play {
     
+    self.liveStreamView.userInteractionEnabled = YES;
+    self.playerControlsView.userInteractionEnabled = YES;
     
     if ( [[AudioManager shared] currentAudioMode] == AudioModeLive ||
         [[AudioManager shared] currentAudioMode] == AudioModeNeutral ) {
@@ -1203,10 +1213,7 @@ setForOnDemandUI;
                                                aboveSiblingView:self.playerControlsView];
             [self.liveProgressViewController hide];
             [self determinePlayState];
-            
-        
             [self unlockUI:@1];
-            
             
             if ( [[UXmanager shared] onboardingEnding] ) {
                 dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.25 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
@@ -1411,8 +1418,6 @@ setForOnDemandUI;
 - (void)setOnDemandUI:(BOOL)animated forProgram:(Program*)program withAudio:(NSArray*)array atCurrentIndex:(int)index {
     
     [self snapJogWheel];
-    
-
     
     self.onDemandGateCount = 0;
     self.queueBlurView.alpha = 1.0;
@@ -1944,7 +1949,7 @@ setForOnDemandUI;
     return;
 #endif
     
-    if ( !self.uiLocked ) return;
+    if ( !self.initialPlay ) return;
     
     self.dirtyFromFailure = YES;
     self.promptedAboutFailureAlready = NO;
