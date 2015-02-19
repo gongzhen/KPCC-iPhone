@@ -250,12 +250,17 @@ static NSString *kCommentsPlaceholder = @"... Add your comments here";
     [UIView animateWithDuration:0.22 animations:^{
         self.authButton.alpha = 1.0;
         self.nativeSpinner.alpha = 0.0;
+
     } completion:^(BOOL finished) {
+        
+        [self.navigationController popToRootViewControllerAnimated:YES];
+        
         [[[UIAlertView alloc] initWithTitle:@"Thank You"
                                     message:@"Thank you for your feedback."
                                    delegate:nil
                           cancelButtonTitle:@"You're welcome"
                           otherButtonTitles:nil] show];
+        
     }];
 }
 

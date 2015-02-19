@@ -31,5 +31,6 @@
 - (void)prerender;
 - (void)setupWithProgram:(NSDictionary*)program blurredImage:(UIImage*)image parent:(id)parent;
 - (void)takedown;
+- (void)scrubberWillAppear;
 
 @end

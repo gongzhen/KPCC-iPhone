@@ -53,6 +53,17 @@
 @property (nonatomic,strong) IBOutlet UIView *onDemandContainerView;
 @property (nonatomic,strong) UISwipeGestureRecognizer *swiper;
 
+// Scrubbing
+@property (nonatomic,strong) IBOutlet UIImageView *scrubbingSwipeImageView;
+@property (nonatomic,strong) IBOutlet UILabel *scrubbingSwipeToSkipLabel;
+@property (nonatomic,strong) IBOutlet SCPRButton *scrubbingGotItButton;
+@property (nonatomic,strong) IBOutlet UIView *scrubbingContainerView;
+@property (nonatomic,strong) UISwipeGestureRecognizer *scrubbingSwiper;
+@property BOOL dontFade;
+
+// Backdoor
+@property (nonatomic,strong) UISwipeGestureRecognizer *backdoorSkipSwiper;
+
 - (void)prepare;
 - (void)revealLensWithOrigin:(CGPoint)origin;
 - (void)revealBrandingWithCompletion:(CompletionBlock)completed;
@@ -62,6 +73,7 @@
 - (void)showCalloutWithText:(NSString*)text pointerPosition:(CGFloat)pointer position:(CGPoint)position;
 - (void)hideCallout;
 - (void)ondemandMode;
+- (void)scrubbingMode;
 - (void)dismissOnDemand;
 - (void)repurposeButton;
 

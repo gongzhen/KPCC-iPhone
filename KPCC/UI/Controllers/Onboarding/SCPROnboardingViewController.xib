@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6254" systemVersion="13F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6254" systemVersion="14C109" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6247"/>
@@ -24,6 +24,10 @@
                 <outlet property="onDemandContainerView" destination="Qok-s5-TCn" id="5BL-J6-ZgQ"/>
                 <outlet property="onDemandSwipeImageView" destination="e4x-BH-4jP" id="66p-4U-eTT"/>
                 <outlet property="radioIconImage" destination="7cl-9Q-Ahk" id="Nni-8V-57b"/>
+                <outlet property="scrubbingContainerView" destination="NOv-ZW-7Kr" id="raR-kf-jOM"/>
+                <outlet property="scrubbingGotItButton" destination="zbm-7o-Ncb" id="3iu-1C-TCS"/>
+                <outlet property="scrubbingSwipeImageView" destination="O8b-Zr-HC6" id="uV6-AN-aW1"/>
+                <outlet property="scrubbingSwipeToSkipLabel" destination="8aU-dv-VsH" id="qc2-Uq-gTN"/>
                 <outlet property="sloganTopAnchor" destination="UFB-bS-uZZ" id="EG1-1V-yvX"/>
                 <outlet property="swipeToSkipLabel" destination="boP-gT-EsI" id="tcV-Qf-7Bj"/>
                 <outlet property="textCalloutBalloonCtrl" destination="eO6-rQ-D6u" id="dr6-C6-Ekh"/>
@@ -280,10 +284,58 @@
             </connections>
             <point key="canvasLocation" x="-250" y="767"/>
         </viewController>
+        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="NOv-ZW-7Kr" userLabel="scrubbing">
+            <rect key="frame" x="0.0" y="0.0" width="300" height="380"/>
+            <subviews>
+                <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="onboarding-scrubber.png" translatesAutoresizingMaskIntoConstraints="NO" id="O8b-Zr-HC6">
+                    <rect key="frame" x="10" y="177" width="280" height="80"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="80" id="CEC-ZL-KVw"/>
+                    </constraints>
+                </imageView>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zbm-7o-Ncb" customClass="SCPRButton">
+                    <rect key="frame" x="10" y="290" width="280" height="57"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="57" id="VPF-wm-82b"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                    <state key="normal" title="GOT IT">
+                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                    </state>
+                </button>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Press and hold to seek back or forward within an episode" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8aU-dv-VsH">
+                    <rect key="frame" x="36" y="8" width="228" height="102"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="102" id="DQe-Pb-Cyy"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" type="system" pointSize="24"/>
+                    <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
+                    <nil key="highlightedColor"/>
+                </label>
+            </subviews>
+            <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.77000000000000002" colorSpace="calibratedRGB"/>
+            <constraints>
+                <constraint firstItem="zbm-7o-Ncb" firstAttribute="top" secondItem="O8b-Zr-HC6" secondAttribute="bottom" constant="33" id="0ls-nW-jvT"/>
+                <constraint firstItem="8aU-dv-VsH" firstAttribute="top" secondItem="NOv-ZW-7Kr" secondAttribute="top" constant="8" id="4L4-bo-yjD"/>
+                <constraint firstItem="O8b-Zr-HC6" firstAttribute="top" secondItem="8aU-dv-VsH" secondAttribute="bottom" constant="67" id="9ZY-s1-9Uy"/>
+                <constraint firstAttribute="trailing" secondItem="O8b-Zr-HC6" secondAttribute="trailing" constant="10" id="RKd-d4-jsw"/>
+                <constraint firstAttribute="height" constant="380" id="TmE-1u-wve"/>
+                <constraint firstItem="zbm-7o-Ncb" firstAttribute="leading" secondItem="NOv-ZW-7Kr" secondAttribute="leading" constant="10" id="Wnr-dx-YJL"/>
+                <constraint firstAttribute="trailing" secondItem="8aU-dv-VsH" secondAttribute="trailing" constant="36" id="e2Y-o8-jmB"/>
+                <constraint firstAttribute="width" constant="300" id="gO4-pW-YRY"/>
+                <constraint firstItem="8aU-dv-VsH" firstAttribute="leading" secondItem="NOv-ZW-7Kr" secondAttribute="leading" constant="36" id="iVK-OT-6wx"/>
+                <constraint firstItem="O8b-Zr-HC6" firstAttribute="leading" secondItem="NOv-ZW-7Kr" secondAttribute="leading" constant="10" id="jqg-9a-yER"/>
+                <constraint firstAttribute="trailing" secondItem="zbm-7o-Ncb" secondAttribute="trailing" constant="10" id="otF-Ua-FSt"/>
+            </constraints>
+            <nil key="simulatedStatusBarMetrics"/>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <point key="canvasLocation" x="-89" y="-607"/>
+        </view>
     </objects>
     <resources>
         <image name="onboarding-episode-swipe.png" width="83" height="56"/>
         <image name="onboarding-logo.png" width="158" height="23"/>
         <image name="onboarding-push-icon.png" width="48" height="55"/>
+        <image name="onboarding-scrubber.png" width="42" height="71"/>
     </resources>
 </document>

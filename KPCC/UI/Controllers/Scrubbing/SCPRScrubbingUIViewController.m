@@ -102,6 +102,7 @@
 - (void)takedown {
     
     self.scrubberController.panning = NO;
+    self.scrubberController.currentBarLine.strokeEnd = 0.0;
     
 }
 
@@ -118,6 +119,15 @@
     
     [self.scrubberController tick];
     
+}
+
+- (void)scrubberWillAppear {
+    StreamStatus s = [[AudioManager shared] status];
+    if ( s == StreamStatusPlaying ) {
+        self.scrubberController.currentBarLine.strokeEnd = 0.0;
+    } else {
+        [self.scrubberController tick];
+    }
 }
 /*
 #pragma mark - Navigation

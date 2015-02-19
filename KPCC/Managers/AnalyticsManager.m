@@ -51,6 +51,7 @@ static AnalyticsManager *singleton = nil;
     NSString *path = [[NSBundle mainBundle] pathForResource:@"Config" ofType:@"plist"];
     NSDictionary *globalConfig = [[NSDictionary alloc] initWithContentsOfFile:path];
     
+#ifndef TURN_OFF_SANDBOX_CONFIG
     [Flurry setCrashReportingEnabled:YES];
     [Flurry setDebugLogEnabled:NO];
     [Flurry startSession: globalConfig[@"Flurry"][flurryToken] ];
@@ -69,6 +70,7 @@ static AnalyticsManager *singleton = nil;
         NSDictionary *kDict = @{ @"kochavaAppId" : kKey };
         self.kTracker = [[KochavaTracker alloc] initKochavaWithParams:kDict];
     }
+#endif
     
 }
 
@@ -92,7 +94,6 @@ static AnalyticsManager *singleton = nil;
 }
 
 - (void)trackHeadlinesDismissal {
-    
     [self logEvent:@"userClosedHeadlines"
     withParameters:@{ }];
 }
@@ -115,13 +116,35 @@ static AnalyticsManager *singleton = nil;
 #endif
 #endif
     
-    [Flurry logEvent:event withParameters:userInfo timed:YES];
+#ifdef SUPPRESS_NETWORK_LOGGING
+    NSLog(@"%@",userInfo);
+#else
     
     Mixpanel *mxp = [Mixpanel sharedInstance];
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
         [mxp track:event properties:userInfo];
     });
     
+    if ( [userInfo count] >= 10 ) {
+        if ( userInfo[@"numberOfStalls"] ) {
+            [userInfo removeObjectForKey:@"numberOfStalls"];
+        }
+        if ( userInfo[@"observedMaxBitrate"] ) {
+            [userInfo removeObjectForKey:@"observedMaxBitrate"];
+        }
+        if ( userInfo[@"observedMinBitrate"] ) {
+            [userInfo removeObjectForKey:@"observedMinBitrate"];
+        }
+        if ( userInfo[@"bytesTransferred"] ) {
+            [userInfo removeObjectForKey:@"bytesTransferred"];
+        }
+        if ( userInfo[@"accessLogPostedAt"] ) {
+            [userInfo removeObjectForKey:@"accessLogPostedAt"];
+        }
+    }
+    
+    [Flurry logEvent:event withParameters:userInfo timed:YES];
+#endif
     
 }
 
@@ -171,12 +194,6 @@ static AnalyticsManager *singleton = nil;
         mD[@"kpccSessionId"] = [[SessionManager shared] odSessionID];
         analysis = mD;
     }
-    
-    /*
-    analysis[@"audioSurvivedException"] = [[AudioManager shared].audioPlayer rate] > 0.0 ? @(YES) : @(NO);
-    if ( [[AudioManager shared] tryAgain] ) {
-        analysis[@"audioSurvivedException"] = @(NO);
-    }*/
     
     NSLog(@"Sending stream failure report to analytics");
     [self logEvent:@"streamException" withParameters:analysis];
@@ -247,7 +264,7 @@ static AnalyticsManager *singleton = nil;
             if ( event.transferDuration >= 0 ) {
                 nParams[@"transferDuration"] = @(event.transferDuration);
             }
-            
+
             nParams[@"indicatedBitrate"] = [NSString stringWithFormat:@"%1.1f",event.indicatedBitrate];
             nParams[@"observedBitrate"] =  [NSString stringWithFormat:@"%1.1f",event.observedBitrate];
             

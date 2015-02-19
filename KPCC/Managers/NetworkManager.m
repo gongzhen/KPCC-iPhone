@@ -85,6 +85,7 @@ static NetworkManager *singleton = nil;
     __block KSReachability *weakreach_ = reachability;
     reachability.onReachabilityChanged = ^(KSReachability* reach) {
         dispatch_async(dispatch_get_main_queue(), ^{
+            
             if ( weakself_.failTimer ) {
                 if ( [weakself_.failTimer isValid] ) {
                     [weakself_.failTimer invalidate];

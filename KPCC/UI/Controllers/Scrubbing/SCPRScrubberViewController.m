@@ -161,8 +161,7 @@
     
     if ( self.panning ) return;
     
-    NSInteger cS = CMTimeGetSeconds([[AudioManager shared].audioPlayer.currentItem currentTime]);
-    NSInteger tS = CMTimeGetSeconds([[AudioManager shared].audioPlayer.currentItem.asset duration]);
+
     
     dispatch_async(dispatch_get_main_queue(), ^{
         if (CMTimeGetSeconds([[[[AudioManager shared].audioPlayer currentItem] asset] duration]) > 0) {
@@ -177,9 +176,15 @@
             }
             
         }
-        double se = (cS*1.0f / tS*1.0f)*1.0f;
+        double se = [self strokeEndForCurrentTime];
         self.currentBarLine.strokeEnd = se;
     });
+}
+
+- (double)strokeEndForCurrentTime {
+    NSInteger cS = CMTimeGetSeconds([[AudioManager shared].audioPlayer.currentItem currentTime]);
+    NSInteger tS = CMTimeGetSeconds([[AudioManager shared].audioPlayer.currentItem.asset duration]);
+    return (cS*1.0f / tS*1.0f)*1.0f;
 }
 
 - (void)expand {

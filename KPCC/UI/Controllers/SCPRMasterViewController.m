@@ -512,12 +512,27 @@ setForOnDemandUI;
         [UIView animateWithDuration:0.25 animations:^{
             del.onboardingController.view.alpha = 1.0;
         }];
+    } else if ( ![UXmanager shared].settings.userHasViewedScrubbingOnboarding ) {
+        SCPRAppDelegate *del = [Utils del];
+        [del.onboardingController scrubbingMode];
+        [del.window bringSubviewToFront:del.onboardingController.view];
+        [UIView animateWithDuration:0.25 animations:^{
+            del.onboardingController.view.alpha = 1.0;
+        }];
     }
 }
 
 # pragma mark - Actions
 
 - (IBAction)initialPlayTapped:(id)sender {
+    
+#ifdef FORCE_TEST_STREAM
+    self.preRollViewController.tritonAd = nil;
+#endif
+#ifdef BETA
+    self.preRollViewController.tritonAd = nil;
+#endif
+    
     if ( ![[UXmanager shared].settings userHasViewedOnboarding] ) {
         [[UXmanager shared] fadeOutBrandingWithCompletion:^{
             [self moveTextIntoPlace:YES];
@@ -755,6 +770,8 @@ setForOnDemandUI;
 
 - (void)goLive:(BOOL)play {
     
+    self.liveStreamView.userInteractionEnabled = YES;
+    self.playerControlsView.userInteractionEnabled = YES;
     
     if ( [[AudioManager shared] currentAudioMode] == AudioModeLive ||
         [[AudioManager shared] currentAudioMode] == AudioModeNeutral ) {
@@ -1008,6 +1025,7 @@ setForOnDemandUI;
             [self.view layoutIfNeeded];
         }
         
+        [self.scrubbingUI scrubberWillAppear];
         self.scrubbingUI.view.alpha = 1.0;
         [self.scrubbingUI.scrubberController unmask];
     } completion:^(BOOL finished) {
@@ -1056,7 +1074,7 @@ setForOnDemandUI;
         [self.scrubbingTriggerView removeFromSuperview];
     }
     self.scrubbingTriggerView = [[UIView alloc] initWithFrame:CGRectMake(0.0,0.0,self.view.frame.size.width,
-                                                                         40.0)];
+                                                            40.0)];
     self.scrubbingTriggerView.backgroundColor = [UIColor clearColor]/*[[UIColor purpleColor] translucify:0.25]*/;
     UILongPressGestureRecognizer *lpgr = [[UILongPressGestureRecognizer alloc] initWithTarget:self
                                                                                        action:@selector(bringUpScrubber)];
@@ -1208,6 +1226,9 @@ setForOnDemandUI;
         }
         
         [[AudioManager shared] setDelegate:self];
+        if ( [[AudioManager shared].audioPlayer rate] <= 0.0 ) {
+            [self tickOnDemand];
+        }
     }];
 }
 
@@ -1223,10 +1244,7 @@ setForOnDemandUI;
                                                aboveSiblingView:self.playerControlsView];
             [self.liveProgressViewController hide];
             [self determinePlayState];
-            
-        
             [self unlockUI:@1];
-            
             
             if ( [[UXmanager shared] onboardingEnding] ) {
                 dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.25 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
@@ -1382,6 +1400,9 @@ setForOnDemandUI;
     setForOnDemandUI = NO;
     setForLiveStreamUI = YES;
     
+    self.scrubbingUIView.alpha = 0.0;
+    self.scrubbingTriggerView.alpha = 0.0;
+    
     [[NSNotificationCenter defaultCenter] removeObserver:self
                                                     name:@"audio_player_began_playing"
                                                   object:nil];
@@ -1428,8 +1449,6 @@ setForOnDemandUI;
 - (void)setOnDemandUI:(BOOL)animated forProgram:(Program*)program withAudio:(NSArray*)array atCurrentIndex:(int)index {
     
     [self snapJogWheel];
-    
-
     
     self.onDemandGateCount = 0;
     self.queueBlurView.alpha = 1.0;
@@ -1961,7 +1980,7 @@ setForOnDemandUI;
     return;
 #endif
     
-    if ( !self.uiLocked ) return;
+    if ( !self.initialPlay ) return;
     
     self.dirtyFromFailure = YES;
     self.promptedAboutFailureAlready = NO;
@@ -2568,12 +2587,6 @@ setForOnDemandUI;
         return;
     }
     
-    if ( self.playStateGate ) {
-        self.playStateGate = NO;
-        [self primeManualControlButton];
-    }
-    
-    
     if ( [[NetworkManager shared] audioWillBeInterrupted] ) {
         [[NetworkManager shared] setAudioWillBeInterrupted:NO];
     }
@@ -2588,6 +2601,7 @@ setForOnDemandUI;
 #else
     NSTimeInterval tx = [[NSDate date] timeIntervalSinceDate:ciCurrentDate];
 #endif
+    
     Program *program = [[SessionManager shared] currentProgram];
     if ( program || [AudioManager shared].currentAudioMode == AudioModeOnboarding ) {
         if ( [[AudioManager shared].audioPlayer rate] > 0.0 ) {
@@ -2639,18 +2653,7 @@ setForOnDemandUI;
     
     if (setForOnDemandUI) {
         [self.progressView pop_removeAllAnimations];
-        
-        if (CMTimeGetSeconds([[[[AudioManager shared].audioPlayer currentItem] asset] duration]) > 0) {
-            double currentTime = CMTimeGetSeconds([[[AudioManager shared].audioPlayer currentItem] currentTime]);
-            double duration = CMTimeGetSeconds([[[[AudioManager shared].audioPlayer currentItem] asset] duration]);
-            
-            [self.timeLabelOnDemand setText:[Utils elapsedTimeStringWithPosition:currentTime
-                                                                     andDuration:duration]];
-            
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [self.progressView setProgress:(currentTime / duration) animated:YES];
-            });
-        }
+        [self tickOnDemand];
     } else {
         
         if ( [[AudioManager shared] currentAudioMode] == AudioModeLive ||
@@ -2692,7 +2695,6 @@ setForOnDemandUI;
             }];
         } else {
             self.onDemandGateCount++;
-
         }
     } else {
         if ( self.scrubbing ) {
@@ -2700,16 +2702,36 @@ setForOnDemandUI;
         }
     }
     
+    if ( [AudioManager shared].currentAudioMode == AudioModeLive ) {
+        if ( self.liveRewindAltButton.alpha == 1.0 )
+            [self primeManualControlButton];
+    }
+    
+}
+
+- (void)tickOnDemand {
+    if (CMTimeGetSeconds([[[[AudioManager shared].audioPlayer currentItem] asset] duration]) > 0) {
+        double currentTime = CMTimeGetSeconds([[[AudioManager shared].audioPlayer currentItem] currentTime]);
+        double duration = CMTimeGetSeconds([[[[AudioManager shared].audioPlayer currentItem] asset] duration]);
+        
+        [self.timeLabelOnDemand setText:[Utils elapsedTimeStringWithPosition:currentTime
+                                                                 andDuration:duration]];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.progressView setProgress:(currentTime / duration) animated:YES];
+        });
+    }
 }
 
 - (void)onSeekCompleted {
     // Make sure UI gets set to "Playing" state after a seek.
+    self.playStateGate = YES;
     [[SessionManager shared] fetchCurrentProgram:^(id returnedObject) {
         if ( self.jogging ) {
             [self.jogShuttle endAnimations];
         }
         
-        self.playStateGate = YES;
+        
         [[AudioManager shared] setSeekWillEffectBuffer:NO];
         
     }];

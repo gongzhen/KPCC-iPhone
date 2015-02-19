@@ -128,6 +128,9 @@ typedef NS_ENUM(NSUInteger, StreamStatus) {
 @property BOOL reactivate;
 @property BOOL dropoutOccurred;
 @property BOOL seekWillEffectBuffer;
+@property BOOL streamStabilized;
+
+@property UIBackgroundTaskIdentifier rescueTask;
 
 @property NSInteger failoverCount;
 

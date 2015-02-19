@@ -44,4 +44,6 @@
 - (void)userLifted:(NSSet*)touches event:(UIEvent*)event;
 - (void)trackForPoint:(CGPoint)touchPoint;
 
+- (double)strokeEndForCurrentTime;
+
 @end

@@ -48,8 +48,15 @@
     [[UXmanager shared] persist];
 #endif
     
+#ifndef TURN_OFF_SANDBOX_CONFIG
     [Parse setApplicationId:globalConfig[@"Parse"][@"ApplicationId"]
                   clientKey:globalConfig[@"Parse"][@"ClientKey"]];
+#endif
+    
+#ifdef TESTING_SCRUBBER
+    [[UXmanager shared].settings setUserHasViewedScrubbingOnboarding:NO];
+    [[UXmanager shared] persist];
+#endif
     
     // Apply application-wide styling
     [self applyStylesheet];
@@ -121,9 +128,11 @@
         [[UXmanager shared] closeOutOnboarding];
     }
     
+#ifndef TURN_OFF_SANDBOX_CONFIG
     [[PFInstallation currentInstallation] removeObject:kPushChannel
                                                 forKey:@"channels"];
     [[PFInstallation currentInstallation] saveInBackground];
+#endif
     
 }
 
@@ -137,6 +146,7 @@
     [[UXmanager shared].settings setPushTokenData:deviceToken];
     [[UXmanager shared].settings setPushTokenString:hexToken];
     
+#ifndef TURN_OFF_SANDBOX_CONFIG
     PFInstallation *i = [PFInstallation currentInstallation];
         
 #ifndef PRODUCTION
@@ -173,6 +183,7 @@
     });
 
     NSLog(@" ***** REGISTERING PUSH TOKEN : %@ *****", hexToken);
+#endif
 #endif
     
 }
