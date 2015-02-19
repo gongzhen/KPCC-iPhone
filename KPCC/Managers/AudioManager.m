@@ -421,7 +421,10 @@ static const NSString *ItemStatusContext;
             weakSelf.minSeekableDate = [NSDate dateWithTimeInterval:( -1 * (CMTimeGetSeconds(time) - CMTimeGetSeconds(range.start))) sinceDate:weakSelf.currentDate];
             weakSelf.maxSeekableDate = [NSDate dateWithTimeInterval:(CMTimeGetSeconds(CMTimeRangeGetEnd(range)) - CMTimeGetSeconds(time)) sinceDate:weakSelf.currentDate];
             weakSelf.latencyCorrection = [[NSDate date] timeIntervalSince1970] - [weakSelf.maxSeekableDate timeIntervalSince1970];
-            [weakSelf.audioPlayer.currentItem setPreferredPeakBitRate:64000.00];
+            
+            if ( [Utils isIOS8] ) {
+                [weakSelf.audioPlayer.currentItem setPreferredPeakBitRate:64000.00];
+            }
             
             [[SessionManager shared] trackLiveSession];
             [[SessionManager shared] trackRewindSession];
