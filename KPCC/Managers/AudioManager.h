@@ -18,6 +18,8 @@ static long kStreamBufferLimit = 4*60*60;
 static long kStreamCorrectionTolerance = 60*5;
 #endif
 
+#define kHLSPeakBitRatePressure 64000.0
+
 #ifdef USE_TEST_STREAM
 #define kHLSLiveStreamURL @"http://hls.kqed.org/hls/smil:itunes.smil/playlist.m3u8"
 #else

@@ -37,6 +37,7 @@
 - (void)prerender {
     self.scrubberController.view.backgroundColor = [[UIColor virtualWhiteColor] translucify:0.2];
     [self.scrubberController setup];
+    self.scrubberController.parentUIController = self;
     
     [self.fw30Button addTarget:self
                         action:@selector(forward30)
@@ -106,6 +107,66 @@
     
 }
 
+#pragma mark - Seeking
+- (void)audioWillSeek {
+    
+    self.seekLatencyTimer = [NSTimer scheduledTimerWithTimeInterval:1.5
+                                                             target:self
+                                                           selector:@selector(muteUI)
+                                                           userInfo:nil
+                                                            repeats:NO];
+    
+}
+
+- (void)killLatencyTimer {
+    if ( self.seekLatencyTimer ) {
+        if ( [self.seekLatencyTimer isValid] ) {
+            [self.seekLatencyTimer invalidate];
+        }
+        self.seekLatencyTimer = nil;
+    }
+}
+
+- (void)muteUI {
+    self.uiIsMutedForSeek = YES;
+    
+    [UIView animateWithDuration:0.26 animations:^{
+        self.fw30Button.alpha = 0.25;
+        self.rw30Button.alpha = 0.25;
+        self.scrubberController.view.alpha = 0.25;
+
+    } completion:^(BOOL finished) {
+        
+        self.fw30Button.userInteractionEnabled = NO;
+        self.rw30Button.userInteractionEnabled = NO;
+        self.scrubberController.view.userInteractionEnabled = NO;
+        
+        [[AudioManager shared] muteAudio];
+        [(SCPRMasterViewController*)self.parentControlView beginScrubbingWaitMode];
+    }];
+
+}
+
+- (void)unmuteUI {
+    [self killLatencyTimer];
+    if ( self.uiIsMutedForSeek ) {
+        [UIView animateWithDuration:0.26 animations:^{
+            self.fw30Button.alpha = 1.0;
+            self.rw30Button.alpha = 1.0;
+            self.scrubberController.view.alpha = 1.0;
+        } completion:^(BOOL finished) {
+            
+            self.fw30Button.userInteractionEnabled = YES;
+            self.rw30Button.userInteractionEnabled = YES;
+            self.scrubberController.view.userInteractionEnabled = YES;
+
+            [(SCPRMasterViewController*)self.parentControlView endScrubbingWaitMode];
+            [[AudioManager shared] unmuteAudio];
+            self.uiIsMutedForSeek = NO;
+        }];
+    }
+}
+
 #pragma mark - AudioManager
 - (void)onRateChange {
     if ([[AudioManager shared] isStreamPlaying] || [[AudioManager shared] isStreamBuffering]) {
@@ -116,9 +177,11 @@
 }
 
 - (void)onTimeChange {
-    
     [self.scrubberController tick];
-    
+}
+
+- (void)onSeekCompleted {
+    [self unmuteUI];
 }
 
 - (void)scrubberWillAppear {

@@ -7,6 +7,7 @@
 //
 
 #import "SCPRScrubberViewController.h"
+#import "SCPRScrubbingUIViewController.h"
 #import "DesignManager.h"
 #import "AudioManager.h"
 #import "Utils.h"
@@ -147,21 +148,29 @@
 
 - (void)doTheSeek {
     
-    double multiplier = self.currentBarLine.strokeEnd;
-    CMTime total = [[[[AudioManager shared].audioPlayer currentItem] asset] duration];
-    CMTime seek = CMTimeMake(total.value*multiplier, total.timescale);
+    [(SCPRScrubbingUIViewController*)self.parentUIController audioWillSeek];
+    
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.25 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        double multiplier = self.currentBarLine.strokeEnd;
+        CMTime total = [[[[AudioManager shared].audioPlayer currentItem] asset] duration];
+        CMTime seek = CMTimeMake(total.value*multiplier, total.timescale);
+        
+        [[AudioManager shared].audioPlayer.currentItem seekToTime:seek completionHandler:^(BOOL finished) {
+            self.panning = NO;
+            [(SCPRScrubbingUIViewController*)self.parentUIController onSeekCompleted];
+        }];
+    });
 
-    [[AudioManager shared].audioPlayer.currentItem seekToTime:seek completionHandler:^(BOOL finished) {
-        self.panning = NO;
-    }];
 
+}
+
+- (void)handleSeekCompleted {
+    // Do any specific cleanup here
 }
 
 - (void)tick {
     
     if ( self.panning ) return;
-    
-
     
     dispatch_async(dispatch_get_main_queue(), ^{
         if (CMTimeGetSeconds([[[[AudioManager shared].audioPlayer currentItem] asset] duration]) > 0) {

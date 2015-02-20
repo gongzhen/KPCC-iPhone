@@ -23,7 +23,7 @@
 @property (nonatomic,strong) IBOutlet SCPRButton *fw30Button;
 @property (nonatomic,strong) IBOutlet UIImageView *blurredImageView;
 @property (nonatomic,strong) IBOutlet UIView *darkeningView;
-
+@property NSTimer *seekLatencyTimer;
 
 @property (nonatomic,strong) SCPRScrubberViewController *scrubberController;
 @property (nonatomic,weak) id parentControlView;
@@ -32,5 +32,14 @@
 - (void)setupWithProgram:(NSDictionary*)program blurredImage:(UIImage*)image parent:(id)parent;
 - (void)takedown;
 - (void)scrubberWillAppear;
+
+
+
+// Seeking
+- (void)muteUI;
+- (void)unmuteUI;
+- (void)killLatencyTimer;
+- (void)audioWillSeek;
+@property BOOL uiIsMutedForSeek;
 
 @end

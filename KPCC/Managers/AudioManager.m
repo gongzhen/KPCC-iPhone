@@ -212,6 +212,9 @@ static const NSString *ItemStatusContext;
                 [self analyzeStreamError:@"Stream not likely to keep up..."];
                 
                 self.dropoutOccurred = YES;
+                
+                [self.audioPlayer.currentItem setPreferredPeakBitRate:kHLSPeakBitRatePressure];
+                
                 if ( [[UIApplication sharedApplication] applicationState] == UIApplicationStateBackground ) {
                     self.rescueTask = [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:^{
                         
@@ -422,8 +425,11 @@ static const NSString *ItemStatusContext;
             weakSelf.maxSeekableDate = [NSDate dateWithTimeInterval:(CMTimeGetSeconds(CMTimeRangeGetEnd(range)) - CMTimeGetSeconds(time)) sinceDate:weakSelf.currentDate];
             weakSelf.latencyCorrection = [[NSDate date] timeIntervalSince1970] - [weakSelf.maxSeekableDate timeIntervalSince1970];
             
+            
             if ( [Utils isIOS8] ) {
-                [weakSelf.audioPlayer.currentItem setPreferredPeakBitRate:64000.00];
+                //if ( ![[NetworkManager shared] wifi] ) {
+                    [weakSelf.audioPlayer.currentItem setPreferredPeakBitRate:kHLSPeakBitRatePressure];
+                //}
             }
             
             [[SessionManager shared] trackLiveSession];
@@ -1047,10 +1053,6 @@ static const NSString *ItemStatusContext;
 
 - (void)pauseStream {
     
-    /*if ( [Utils isIOS8] ) {
-        self.audioPlayer.currentItem.preferredPeakBitRate = 0.0;
-    }*/
-    
     [self.audioPlayer pause];
     self.status = StreamStatusPaused;
     
@@ -1142,7 +1144,8 @@ static const NSString *ItemStatusContext;
 
 - (void)muteAudio {
     self.savedVolumeFromMute = self.audioPlayer.volume;
-    if ( self.savedVolumeFromMute == 0.0 ) self.savedVolumeFromMute = 1.0;
+    if ( self.savedVolumeFromMute <= 0.0 ) self.savedVolumeFromMute = 1.0;
+    self.audioPlayer.volume = 0.0;
 }
 
 - (void)unmuteAudio {

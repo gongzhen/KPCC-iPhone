@@ -293,7 +293,7 @@ setForOnDemandUI;
     [self.queueBlurView setNeedsDisplay];
     
     // Once the view has appeared we can register to begin receiving system audio controls.
-
+    [[UIApplication sharedApplication] beginReceivingRemoteControlEvents];
     [self becomeFirstResponder];
     
     if ( ![[UXmanager shared] userHasSeenOnboarding] ) {
@@ -587,6 +587,12 @@ setForOnDemandUI;
     }
     
     if (![[AudioManager shared] isStreamPlaying]) {
+        
+        if ( [[AudioManager shared] currentAudioMode] == AudioModeOnDemand ) {
+            [self playStream:NO];
+            return;
+        }
+        
         if ( [[SessionManager shared] sessionIsExpired] ) {
             [[SessionManager shared] fetchCurrentProgram:^(id returnedObject) {
                 [self playStream:YES];
@@ -1232,6 +1238,16 @@ setForOnDemandUI;
     }];
 }
 
+- (void)beginScrubbingWaitMode {
+    [self.jogShuttle animateIndefinitelyWithViewToHide:self.playPauseButton completion:^{
+        self.playPauseButton.enabled = YES;
+    }];
+}
+
+- (void)endScrubbingWaitMode {
+    [self.jogShuttle endAnimations];
+}
+
 # pragma mark - UI control
 - (void)updateDataForUI {
     [[SessionManager shared] fetchCurrentProgram:^(id returnedObject) {
@@ -1811,7 +1827,7 @@ setForOnDemandUI;
             NSLog(@"Rewind Button - Hiding because onboarding initial state");
         okToShow = NO;
     }
-    if ( [[AudioManager shared] status] == StreamStatusPlaying ) {
+    if ( [[AudioManager shared] status] == StreamStatusPlaying || [[AudioManager shared].audioPlayer rate] > 0.0 ) {
         if ( okToShow )
             NSLog(@"Rewind Button - Hiding because audio is playing");
         okToShow = NO;
@@ -1941,7 +1957,7 @@ setForOnDemandUI;
     
     if ( self.initialPlay ) {
         if ( [[NetworkManager shared] audioWillBeInterrupted] ) {
-            [[AudioManager shared] pauseStream];
+            //[[AudioManager shared] pauseStream];
         }
     } else {
         if ( !self.menuOpen ) {
@@ -1964,13 +1980,9 @@ setForOnDemandUI;
     
     if ( note && !self.promptedAboutFailureAlready ) {
         self.promptedAboutFailureAlready = YES;
-        self.uiLocked = YES;
-        [[[UIAlertView alloc] initWithTitle:@"Network Availability"
-                                message:@"It looks like your connection has dropped. Please connect to Wi-Fi or retry once your signal has improved"
-                               delegate:self
-                      cancelButtonTitle:@"Retry"
-                      otherButtonTitles:nil] show];
     }
+    
+    self.uiLocked = YES;
     
 }
 
@@ -2020,11 +2032,14 @@ setForOnDemandUI;
     self.liveStreamView.alpha = 1.0;
     self.liveStreamView.userInteractionEnabled = YES;
     
+    /*
     if ( [[NetworkManager shared] audioWillBeInterrupted] ) {
         if ( [[AudioManager shared] status] == StreamStatusPaused ) {
+            [[NetworkManager shared] setAudioWillBeInterrupted:NO];
             [self playStream:NO];
         }
     }
+    */
     
     [[NetworkManager shared] fetchAllProgramInformation:^(id returnedObject) {
         
@@ -2703,7 +2718,7 @@ setForOnDemandUI;
     }
     
     if ( [AudioManager shared].currentAudioMode == AudioModeLive ) {
-        if ( self.liveRewindAltButton.alpha == 1.0 )
+        if ( self.liveRewindAltButton.alpha == 1.0 || self.liveRewindAltButton.layer.opacity == 1.0 )
             [self primeManualControlButton];
     }
     

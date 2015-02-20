@@ -79,6 +79,15 @@ static NetworkManager *singleton = nil;
     
 }
 
+- (BOOL)wifi {
+    NetworkStatus remoteHostStatus = [self.basicReachability currentReachabilityStatus];
+    if ( remoteHostStatus == ReachableViaWiFi ) {
+        return YES;
+    }
+    
+    return NO;
+}
+
 - (void)applyNotifiersToReachability:(KSReachability *)reachability {
 #ifndef DISABLE_INTERRUPT
     __block NetworkManager *weakself_ = self;

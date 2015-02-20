@@ -1637,7 +1637,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Southern California Public Radio";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Southern California Public Radio";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "KPCC/KPCC-Prefix.pch";
@@ -1655,7 +1655,7 @@
 					"$(PROJECT_DIR)/KPCC/ThirdParty/Flurry",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME) Beta";
-				PROVISIONING_PROFILE = "d6545178-9d31-44a5-bdf1-e8b2ca01aaf3";
+				PROVISIONING_PROFILE = "7de88d41-fd13-4035-a8ee-18dabe63e82c";
 				SWIFT_OBJC_BRIDGING_HEADER = "KPCC/UI/Controllers/KPCC-Bridging-Header.h";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;

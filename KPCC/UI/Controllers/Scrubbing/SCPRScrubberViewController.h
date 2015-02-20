@@ -23,12 +23,15 @@
 @property (nonatomic,strong) CAShapeLayer *currentBarLine;
 @property (nonatomic,strong) UIPanGestureRecognizer *scrubPanner;
 @property (nonatomic,strong) SCPRTouchableScrubberView *viewAsTouchableScrubberView;
+@property (nonatomic,weak) id parentUIController;
 
 @property (nonatomic, strong) UIView *cloak;
 @property BOOL expanded;
 @property BOOL panning;
+@property BOOL restoreFromSeekGate;
 @property CGPoint firstTouch;
 @property NSTimer *trulyFinishedTimer;
+
 
 - (void)setup;
 
@@ -38,11 +41,14 @@
 - (void)tick;
 - (void)expand;
 - (void)pointedSeek;
+- (void)handleSeekCompleted;
 
 - (void)userTouched:(NSSet*)touches event:(UIEvent*)event;
 - (void)userPanned:(NSSet*)touches event:(UIEvent*)event;
 - (void)userLifted:(NSSet*)touches event:(UIEvent*)event;
 - (void)trackForPoint:(CGPoint)touchPoint;
+
+- (void)killLatencyTimer;
 
 - (double)strokeEndForCurrentTime;
 
