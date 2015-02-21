@@ -116,7 +116,8 @@
 @property BOOL audioWasPlaying;
 @property BOOL scrubberLoadingGate;
 @property BOOL playStateGate;
-
+@property BOOL onDemandPanning;
+@property BOOL onDemandFailing;
 
 @property NSInteger onDemandGateCount;
 @property NSInteger previousRewindThreshold;
@@ -172,6 +173,8 @@
 
 - (void)moveTextIntoPlace:(BOOL)animated;
 - (void)goLive:(BOOL)play;
+- (void)goLive:(BOOL)play smooth:(BOOL)smooth;
+- (void)warnUserOfOnDemandFailures;
 
 - (void)resetUI;
 

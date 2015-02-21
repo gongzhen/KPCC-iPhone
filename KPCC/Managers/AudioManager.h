@@ -131,6 +131,7 @@ typedef NS_ENUM(NSUInteger, StreamStatus) {
 @property BOOL dropoutOccurred;
 @property BOOL seekWillEffectBuffer;
 @property BOOL streamStabilized;
+@property BOOL smooth;
 
 @property UIBackgroundTaskIdentifier rescueTask;
 

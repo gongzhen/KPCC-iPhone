@@ -13,6 +13,7 @@
 - (id)initWithCoder:(NSCoder *)aDecoder {
     self.userHasViewedOnboarding = [aDecoder decodeBoolForKey:@"userHasViewedOnboarding"];
     self.userHasViewedOnDemandOnboarding = [aDecoder decodeBoolForKey:@"userHasViewedOnDemandOnboarding"];
+    self.userHasViewedScrubbingOnboarding = [aDecoder decodeBoolForKey:@"userHasViewedScrubbingOnboarding"];
     self.pushTokenString = [aDecoder decodeObjectForKey:@"pushTokenString"];
     self.pushTokenData = [aDecoder decodeObjectForKey:@"pushTokenData"];
     self.userHasConnectedWithKochava = [aDecoder decodeBoolForKey:@"userHasConnectedWithKochava"];
@@ -30,6 +31,8 @@
                   forKey:@"pushTokenString"];
     [aCoder encodeBool:self.userHasConnectedWithKochava
                 forKey:@"userHasConnectedWithKochava"];
+    [aCoder encodeBool:self.userHasViewedScrubbingOnboarding
+                forKey:@"userHasViewedScrubbingOnboarding"];
 }
 
 @end

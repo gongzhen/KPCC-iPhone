@@ -186,7 +186,10 @@
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
 
     
-    NSArray *audioChunks = [[QueueManager shared] enqueueEpisodes:self.episodesList withCurrentIndex:indexPath.row];
+    NSArray *audioChunks = [[QueueManager shared] enqueueEpisodes:self.episodesList
+                                                 withCurrentIndex:indexPath.row
+                                                  playImmediately:NO];
+    
     [[[Utils del] masterViewController] setOnDemandUI:YES
                                            forProgram:self.program
                                             withAudio:audioChunks

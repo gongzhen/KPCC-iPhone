@@ -111,6 +111,9 @@
 }
 
 - (void)beginOnboarding:(SCPRMasterViewController*)masterCtrl {
+    
+    [[AudioManager shared] setCurrentAudioMode:AudioModeOnboarding];
+    
     self.masterCtrl = masterCtrl;
     self.onboardingCtrl.view.alpha = 1.0;
     [self.masterCtrl primeOnboarding];
@@ -360,8 +363,6 @@
 }
 
 - (void)askForPushNotifications {
-
-    
     self.listeningForQueues = NO;
     if ( self.observerTimer ) {
         if ( [self.observerTimer isValid] ) {
@@ -369,6 +370,8 @@
         }
         self.observerTimer = nil;
     }
+    
+
     
     [UIView animateWithDuration:0.5 animations:^{
         [self.masterCtrl.blurView.layer setOpacity:1.0];
@@ -380,6 +383,7 @@
         [self.masterCtrl.liveProgressViewController.view setAlpha:0.0];
     } completion:^(BOOL finished) {
         [self.onboardingCtrl revealNotificationsPrompt];
+        self.notificationsPromptDisplaying = YES;
         [[AudioManager shared].audioPlayer pause];
         [self.lisaPlayer pause];
     }];
@@ -393,6 +397,8 @@
         [self.masterCtrl.liveStreamView setAlpha:1.0];
         [self.masterCtrl.liveProgressViewController.view setAlpha:1.0];
     } completion:^(BOOL finished) {
+        
+        self.notificationsPromptDisplaying = NO;
         if ( prompt ) {
             [self askSystemForNotificationPermissions];
         } else {

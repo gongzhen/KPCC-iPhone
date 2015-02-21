@@ -23,6 +23,7 @@
 @property BOOL suppressBalloon;
 @property BOOL onboardingEnding;
 @property BOOL paused;
+@property BOOL notificationsPromptDisplaying;
 @property (nonatomic,strong) NSDictionary *keyPoints;
 @property (nonatomic,strong) NSTimer *observerTimer;
 @property (nonatomic,strong) AVAudioPlayer *musicPlayer;

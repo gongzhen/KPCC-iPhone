@@ -399,6 +399,7 @@ static const NSString *ItemStatusContext;
     self.bufferMutex = NO;
 #endif
     
+    
     self.timeObserver = [self.audioPlayer addPeriodicTimeObserverForInterval:CMTimeMake(1, 10)  queue:nil usingBlock:^(CMTime time) {
         weakSelf.currentDate = audioPlayer.currentItem.currentDate;
         
@@ -406,18 +407,16 @@ static const NSString *ItemStatusContext;
         if (seekRange && [seekRange count] > 0) {
             CMTimeRange range = [seekRange[0] CMTimeRangeValue];
 
+            
             if ([weakSelf.delegate respondsToSelector:@selector(onTimeChange)]) {
-                if ( weakSelf.waitForFirstTick ) {
-                    weakSelf.waitForFirstTick = NO;
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        
-                        [[NSNotificationCenter defaultCenter] postNotificationName:@"audio_player_began_playing"
-                                                                            object:nil];
-                        
-                        
-                    });
-                }
                 [weakSelf.delegate onTimeChange];
+            }
+            
+
+            if ( weakSelf.smooth ) {
+                [weakSelf adjustAudioWithValue:0.0015 completion:^{
+                    weakSelf.smooth = NO;
+                }];
             }
             
             weakSelf.seekRequested = NO;
@@ -1028,7 +1027,7 @@ static const NSString *ItemStatusContext;
     if ( self.currentAudioMode == AudioModeOnboarding ) {
         self.audioPlayer.volume = 0.0;
     }
-    [self.audioPlayer play];
+    [self playStream];
     
     if ( self.currentAudioMode == AudioModeLive ) {
         [[SessionManager shared] startLiveSession];
@@ -1047,6 +1046,15 @@ static const NSString *ItemStatusContext;
     }
     
     self.status = StreamStatusPlaying;
+    
+    if ( self.smooth ) {
+        self.savedVolume = self.audioPlayer.volume;
+        if ( self.savedVolume <= 0.0 ) {
+            self.savedVolume = 1.0;
+        }
+        self.audioPlayer.volume = 0.0;
+    }
+    
     [self.audioPlayer play];
     
 }
@@ -1096,14 +1104,14 @@ static const NSString *ItemStatusContext;
 }
 
 - (void)adjustAudioWithValue:(CGFloat)increment completion:(void (^)(void))completion {
-    if ( increment < 0.0 ) {
-        if ( self.savedVolumeFromMute >= 0.0 ) {
+    if ( increment < 0.0000f ) {
+        if ( self.savedVolumeFromMute >= 0.0000f ) {
             self.savedVolume = self.savedVolumeFromMute;
         } else {
             self.savedVolume = self.audioPlayer.volume;
         }
     } else {
-        if ( self.savedVolumeFromMute >= 0.0 ) {
+        if ( self.savedVolumeFromMute >= 0.0000f ) {
             self.savedVolume = self.savedVolumeFromMute;
         }
         self.savedVolumeFromMute = -1.0;
@@ -1112,9 +1120,12 @@ static const NSString *ItemStatusContext;
 }
 
 - (void)threadedAdjustWithValue:(CGFloat)increment completion:(void (^)(void))completion {
+    
+    NSLog(@"Fading in audio : %1.2f",self.audioPlayer.volume);
+    
     BOOL basecase = NO;
     BOOL increasing = NO;
-    if ( increment < 0.0 ) {
+    if ( increment < 0.0000f ) {
         basecase = self.audioPlayer.volume <= 0.0;
     } else {
         basecase = self.audioPlayer.volume >= self.savedVolume;
@@ -1133,7 +1144,7 @@ static const NSString *ItemStatusContext;
         }
     } else {
         NSBlockOperation *block = [NSBlockOperation blockOperationWithBlock:^{
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.05 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                 [self.audioPlayer setVolume:self.audioPlayer.volume+increment];
                 [self threadedAdjustWithValue:increment completion:completion];
             });
