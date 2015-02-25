@@ -153,7 +153,7 @@
     self.spinning = YES;
     if ( !self.soundPlayedBit ) {
         self.soundPlayedBit = YES;
-        [[AudioManager shared] adjustAudioWithValue:-0.1 completion:^{
+        [[AudioManager shared] adjustAudioWithValue:-0.5 completion:^{
             if ( !self.muteSound ) {
                 [self.rewindTriggerPlayer play];
             }

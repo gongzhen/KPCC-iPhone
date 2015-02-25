@@ -11,6 +11,7 @@
 #import "AudioManager.h"
 #import "SessionManager.h"
 #import <pop/POP.h>
+#import "SCPRMasterViewController.h"
 
 @interface SCPRProgressViewController ()
 
@@ -44,8 +45,10 @@
 - (void)displayWithProgram:(Program*)program onView:(UIView *)view aboveSiblingView:(UIView *)anchorView {
     
     [self setupProgressBarsWithProgram:program];
-    if ( self.liveBarLine || self.currentBarLine ) {
-        return;
+    if ( self.view.superview ) {
+        if ( self.liveBarLine || self.currentBarLine ) {
+            return;
+        }
     }
     
     self.view.clipsToBounds = YES;
@@ -93,6 +96,7 @@
     
     [self.liveProgressView layoutIfNeeded];
     [self.currentProgressView layoutIfNeeded];
+    [self hide];
     
     //self.currentProgressView.backgroundColor = [UIColor greenColor];
     //self.liveProgressView.backgroundColor = [UIColor blueColor];
@@ -128,28 +132,48 @@
 }
 
 - (void)show {
+    [self show:NO];
+}
+
+- (void)show:(BOOL)force {
     
-    if ( !self.uiHidden ) return;
+    if ( !force ) {
+        if ( !self.uiHidden ) return;
+    }
+    
+    
     if ( [[AudioManager shared] status] == StreamStatusStopped ) return;
     if ( [[AudioManager shared] currentAudioMode] == AudioModeOnDemand ) return;
     
-    @synchronized(self) {
-        self.uiHidden = NO;
+    // An ugly and absurd opacity check that at this point seems necessary
+    if ( self.view.alpha == 1.0 &&
+        self.view.layer.opacity == 1.0 &&
+        self.liveProgressView.alpha == 1.0 &&
+        self.liveProgressView.layer.opacity == 1.0 &&
+        self.currentProgressView.alpha == 1.0 &&
+        self.currentProgressView.layer.opacity == 1.0 ) {
+        return;
     }
+  
+    self.uiHidden = NO;
     
-    [UIView animateWithDuration:0.25 animations:^{
-        [self.view setAlpha:1.0];
-    } completion:^(BOOL finished) {
-        [UIView animateWithDuration:0.5 animations:^{
-            self.liveProgressView.alpha = 1.0;
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [UIView animateWithDuration:0.25 animations:^{
+            self.view.layer.opacity = 1.0;
+            [self.view setAlpha:1.0];
         } completion:^(BOOL finished) {
-            [UIView animateWithDuration:0.5 animations:^{
-                self.currentProgressView.alpha = 1.0;
+            [UIView animateWithDuration:0.25 animations:^{
+                self.liveProgressView.alpha = 1.0;
             } completion:^(BOOL finished) {
-                
+                [UIView animateWithDuration:0.25 animations:^{
+                    self.currentProgressView.alpha = 1.0;
+                } completion:^(BOOL finished) {
+                    
+                }];
             }];
         }];
-    }];
+    });
+
 
 
 }
@@ -159,7 +183,6 @@
     @synchronized(self) {
         self.shuttling = YES;
     }
-    
     
 #ifdef DONT_USE_LATENCY_CORRECTION
     CGFloat vBeginning = 0.1;
@@ -172,7 +195,6 @@
     [CATransaction begin]; {
         [CATransaction setCompletionBlock:^{
             self.lastCurrentValue = vBeginning;
-            
             self.currentBarLine.strokeEnd = vBeginning;
             [self.currentBarLine removeAllAnimations];
             self.shuttling = NO;
@@ -220,6 +242,7 @@
         [self.currentBarLine addAnimation:currentAnim forKey:@"forwardCurrent"];
     }
     [CATransaction commit];
+    
 }
 
 
@@ -227,6 +250,20 @@
     
     if ( self.shuttling ) return;
     if ( self.mutex ) return;
+    
+    if ( [[AudioManager shared] currentAudioMode] != AudioModeOnboarding ) {
+        self.throttle++;
+        if ( self.throttle % kThrottlingValue != 0 ) {
+            return;
+        } else {
+            self.throttle = 1;
+        }
+    }
+    
+    if ( [[AudioManager shared] currentAudioMode] == AudioModeOnDemand ) {
+        [self hide];
+        return;
+    }
     
     NSDictionary *p = [[SessionManager shared] onboardingAudio];
     Program *program = [[SessionManager shared] currentProgram];
@@ -236,6 +273,7 @@
     if ( [[AudioManager shared] currentAudioMode] == AudioModeOnboarding ) {
         beginning = 0;
     }
+    
     NSTimeInterval end = [program.ends_at timeIntervalSince1970];
     if ( [[AudioManager shared] currentAudioMode] == AudioModeOnboarding ) {
         end = beginning + [p[@"duration"] intValue];
@@ -245,15 +283,22 @@
     if ( [[AudioManager shared] currentAudioMode] == AudioModeOnboarding ) {
         duration = [p[@"duration"] intValue];
     }
-    NSTimeInterval live = [[AudioManager shared].maxSeekableDate timeIntervalSince1970];
+    
+    NSTimeInterval live = [[NSDate date] timeIntervalSince1970];
+    if ( [[SessionManager shared] secondsBehindLive] < 120 ) {
+        live -= [[SessionManager shared] secondsBehindLive];
+    }
+    
     if ( [[AudioManager shared] currentAudioMode] == AudioModeOnboarding ) {
         live = CMTimeGetSeconds([AudioManager shared].audioPlayer.currentItem.currentTime);
      
     }
+    
     NSTimeInterval current = [currentDate timeIntervalSince1970];
     if ( [[AudioManager shared] currentAudioMode] == AudioModeOnboarding ) {
         current = live;
     }
+    
     NSTimeInterval liveDiff = ( live - beginning );
     NSTimeInterval currentDiff = ( current - beginning );
     

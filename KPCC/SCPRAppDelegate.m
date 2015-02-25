@@ -279,6 +279,7 @@
         [[UXmanager shared] persist];
     }
     
+    [[AudioManager shared] interruptAutorecovery];
     [[AnalyticsManager shared] kTrackSession:@"began"];
     [[SessionManager shared] setUserLeavingForClickthrough:NO];
 

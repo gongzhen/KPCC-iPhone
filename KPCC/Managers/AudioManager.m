@@ -220,10 +220,6 @@ static const NSString *ItemStatusContext;
                         
                     }];
                 }
-                
-                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.15 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                    //[self pauseStream];
-                });
 
             }
          
@@ -235,6 +231,14 @@ static const NSString *ItemStatusContext;
     if (object == self.audioPlayer.currentItem && [keyPath isEqualToString:@"playbackLikelyToKeepUp"]) {
         if ( [change[@"new"] intValue] == 0 ) {
             NSLog(@"AVPlayerItem - Stream not likely to keep up...");
+            
+            [self interruptAutorecovery];
+            self.kickstartTimer = [NSTimer scheduledTimerWithTimeInterval:8.0
+                                                                   target:self
+                                                                 selector:@selector(kickstart)
+                                                                 userInfo:nil
+                                                                  repeats:NO];
+            
         } else {
             if ( self.dropoutOccurred ) {
                 [self attemptToRecover];
@@ -268,10 +272,7 @@ static const NSString *ItemStatusContext;
         if (oldRate == 0.0 && newRate == 1.0) {
             [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
             self.dumpedOnce = NO;
-            
-            
             [self startObservingTime];
-            
         }
         
         if ( oldRate == 1.0 && newRate == 0.0 ) {
@@ -285,13 +286,35 @@ static const NSString *ItemStatusContext;
     }
 }
 
+- (void)kickstart {
+    if ( self.dropoutOccurred ) {
+        if ( [[UIApplication sharedApplication] applicationState] == UIApplicationStateBackground ) {
+            [self pauseStream];
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3.75 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                [self playStream];
+            });
+        }
+    }
+}
+
+- (void)interruptAutorecovery {
+    if ( self.kickstartTimer ) {
+        if ( [self.kickstartTimer isValid] ) {
+            [self.kickstartTimer invalidate];
+        }
+        self.kickstartTimer = nil;
+    }
+}
+
+
 - (void)attemptToRecover {
     @synchronized(self) {
         self.dropoutOccurred = NO;
     }
     
+    [self interruptAutorecovery];
+    
     if ( [[UIApplication sharedApplication] applicationState] == UIApplicationStateBackground ) {
-        
         [[UIApplication sharedApplication] endBackgroundTask:self.rescueTask];
         self.rescueTask = 0;
     }
@@ -319,11 +342,6 @@ static const NSString *ItemStatusContext;
     if ( SEQ([note name],AVPlayerItemNewAccessLogEntryNotification) ) {
 
         [[AnalyticsManager shared] setAccessLog:self.audioPlayer.currentItem.accessLog];
-        
-        if ( self.audioPlayer.currentItem.accessLog.events.count >= 2 ) {
-            self.streamStabilized = YES;
-        }
-        
 #ifndef PRODUCTION
         [[AnalyticsManager shared] logEvent:@"accessLogReceived"
                              withParameters:@{}];
@@ -331,12 +349,6 @@ static const NSString *ItemStatusContext;
         
     }
 
-    AVPlayerItem *item = self.audioPlayer.currentItem;
-    NSArray *tracks = [item tracks];
-    if ( tracks.count > 0 ) {
-        AVPlayerItemTrack *track = [tracks firstObject];
-        NSLog(@"Player Track Present : %1.1f",[[track assetTrack] estimatedDataRate]);
-    }
 }
 
 - (void)updateNowPlayingInfoWithAudio:(id)audio {
@@ -414,9 +426,16 @@ static const NSString *ItemStatusContext;
             
 
             if ( weakSelf.smooth ) {
-                [weakSelf adjustAudioWithValue:0.0015 completion:^{
+                [weakSelf adjustAudioWithValue:0.0045 completion:^{
                     weakSelf.smooth = NO;
                 }];
+            }
+            
+            if ( weakSelf.kickstartTimer ) {
+                if ( [weakSelf.kickstartTimer isValid] ) {
+                    [weakSelf.kickstartTimer invalidate];
+                }
+                weakSelf.kickstartTimer = nil;
             }
             
             weakSelf.seekRequested = NO;
@@ -426,9 +445,9 @@ static const NSString *ItemStatusContext;
             
             
             if ( [Utils isIOS8] ) {
-                //if ( ![[NetworkManager shared] wifi] ) {
+                if ( ![[NetworkManager shared] wifi] ) {
                     [weakSelf.audioPlayer.currentItem setPreferredPeakBitRate:kHLSPeakBitRatePressure];
-                //}
+                }
             }
             
             [[SessionManager shared] trackLiveSession];
@@ -493,7 +512,7 @@ static const NSString *ItemStatusContext;
         }
         
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.15 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            NSDate *justABitInTheFuture = /*nudge ? [date dateByAddingTimeInterval:2] : */date;
+            NSDate *justABitInTheFuture = nudge ? [date dateByAddingTimeInterval:ceilf([[SessionManager shared] secondsBehindLive] / 2.0)] : date;
             [self.audioPlayer.currentItem seekToDate:justABitInTheFuture completionHandler:^(BOOL finished) {
                 if ( !finished ) {
                     NSLog(@" **************** AUDIOPLAYER NOT FINISHED BUFFERING ****************** ");
@@ -526,8 +545,6 @@ static const NSString *ItemStatusContext;
                     if ( self.audioPlayer.rate <= 0.0 || self.status != StreamStatusPlaying ) {
                         [self playStream];
                     }
-                    
-                    
                     
                     if ([self.delegate respondsToSelector:@selector(onSeekCompleted)]) {
                         [self.delegate onSeekCompleted];
@@ -888,8 +905,8 @@ static const NSString *ItemStatusContext;
     [self.audioPlayer.currentItem addObserver:self forKeyPath:@"status" options:NSKeyValueObservingOptionOld|NSKeyValueObservingOptionNew context:nil];
     [self.audioPlayer.currentItem addObserver:self forKeyPath:@"playbackBufferEmpty" options:NSKeyValueObservingOptionNew context:nil];
     [self.audioPlayer.currentItem addObserver:self forKeyPath:@"playbackLikelyToKeepUp" options:NSKeyValueObservingOptionNew context:nil];
-    
     [self.audioPlayer.currentItem addObserver:self forKeyPath:AVPlayerItemPlaybackStalledNotification options:NSKeyValueObservingOptionNew context:nil];
+    
     //[self.audioPlayer.currentItem addObserver:self forKeyPath:AVPlayerItemNewAccessLogEntryNotification options:NSKeyValueObservingOptionNew context:nil];
     //[self.audioPlayer.currentItem addObserver:self forKeyPath:AVPlayerItemNewErrorLogEntryNotification options:NSKeyValueObservingOptionNew context:nil];
     
@@ -984,13 +1001,7 @@ static const NSString *ItemStatusContext;
 }
 
 - (void)playOnboardingAudio:(NSInteger)segment {
-    /*if ( self.temporaryMutex ) {
-        self.temporaryMutex = NO;
-        return;
-    }
-    
-    self.temporaryMutex = YES;*/
-    
+
     [self takedownAudioPlayer];
     self.onboardingSegment = segment;
     NSString *file = [NSString stringWithFormat:@"onboarding%ld",(long)segment];
@@ -1121,7 +1132,7 @@ static const NSString *ItemStatusContext;
 
 - (void)threadedAdjustWithValue:(CGFloat)increment completion:(void (^)(void))completion {
     
-    NSLog(@"Fading in audio : %1.2f",self.audioPlayer.volume);
+    //NSLog(@"Fading in audio : %1.2f",self.audioPlayer.volume);
     
     BOOL basecase = NO;
     BOOL increasing = NO;

@@ -363,6 +363,7 @@
 }
 
 - (void)askForPushNotifications {
+    self.notificationsPromptDisplaying = YES;
     self.listeningForQueues = NO;
     if ( self.observerTimer ) {
         if ( [self.observerTimer isValid] ) {
@@ -383,7 +384,7 @@
         [self.masterCtrl.liveProgressViewController.view setAlpha:0.0];
     } completion:^(BOOL finished) {
         [self.onboardingCtrl revealNotificationsPrompt];
-        self.notificationsPromptDisplaying = YES;
+        
         [[AudioManager shared].audioPlayer pause];
         [self.lisaPlayer pause];
     }];

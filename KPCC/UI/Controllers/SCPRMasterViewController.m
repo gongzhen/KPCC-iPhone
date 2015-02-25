@@ -256,7 +256,7 @@ setForOnDemandUI;
     [[NetworkManager shared] setupReachability];
     
     self.originalFrames = [NSMutableDictionary new];
-
+    [self primeScrubber];
     
     [SCPRCloakViewController cloakWithCustomCenteredView:nil cloakAppeared:^{
         if ( [[UXmanager shared] userHasSeenOnboarding] ) {
@@ -267,7 +267,7 @@ setForOnDemandUI;
             self.originalFrames[@"playerControls"] = @(self.playerControlsBottomYConstraint.constant);
             self.originalFrames[@"programTitle"] = @(self.programTitleYConstraint.constant);
             self.originalFrames[@"liveRewind"] = @(self.liveRewindBottomYConstraint.constant);
-            [self primeScrubber];
+            
             
         } else {
             
@@ -720,6 +720,7 @@ setForOnDemandUI;
         UIActivityViewController *controller = [[UIActivityViewController alloc]
                                                 initWithActivityItems:@[complete]
                                                 applicationActivities:nil];
+        
         controller.excludedActivityTypes = @[UIActivityTypeAirDrop];
         [controller setCompletionHandler:^(NSString *activityType, BOOL completed) {
             if ( completed ) {
@@ -748,6 +749,7 @@ setForOnDemandUI;
 
 # pragma mark - Audio commands
 - (void)playStream:(BOOL)hard {
+    
     if ( hard && ![[SessionManager shared] sessionIsInBackground] ) {
         [[AudioManager shared] playLiveStream];
     } else {
@@ -781,6 +783,7 @@ setForOnDemandUI;
 - (void)goLive:(BOOL)play smooth:(BOOL)smooth {
     
     [[AudioManager shared] setSmooth:smooth];
+    [self.liveProgressViewController hide];
     
     if ( [[AudioManager shared] currentAudioMode] == AudioModeLive ||
         [[AudioManager shared] currentAudioMode] == AudioModeNeutral ) {
@@ -808,10 +811,8 @@ setForOnDemandUI;
     
     self.liveStreamView.userInteractionEnabled = YES;
     self.playerControlsView.userInteractionEnabled = YES;
-    
-
-    
     [[AudioManager shared] setCurrentAudioMode:AudioModeLive];
+    
     self.lockPlayback = !play;
     
     [[NSNotificationCenter defaultCenter] removeObserver:self
@@ -824,7 +825,6 @@ setForOnDemandUI;
         
         [self setLiveStreamingUI:YES];
         [self treatUIforProgram];
-        
         
         if ( play ) {
             if ( self.initialPlay ) {
@@ -842,9 +842,7 @@ setForOnDemandUI;
     
     self.initiateRewind = NO;
     self.preRollViewController.tritonAd = nil;
-    
     [self snapJogWheel];
-    [self.liveDescriptionLabel pulsate:kRewindingText color:nil];
     
     self.jogShuttle.forceSingleRotation = YES;
     
@@ -858,11 +856,6 @@ setForOnDemandUI;
     self.jogging = YES;
     self.shuttlingGate = YES;
     
-    // Disable this until the stream separates from the beginning
-    // of the program a litle bit
-    // self.liveRewindAltButton.userInteractionEnabled = NO;
-    // [self.liveRewindAltButton setAlpha:kDisabledAlpha];
-    
     Program *cProgram = [[SessionManager shared] currentProgram];
     [self.jogShuttle.view setAlpha:1.0];
     
@@ -872,8 +865,6 @@ setForOnDemandUI;
                             direction:SpinDirectionBackward
                             withSound:sound
                            completion:^{
-                               
-                               [self.liveDescriptionLabel stopPulsating];
                                
                                self.dirtyFromRewind = YES;
                                self.initiateRewind = NO;
@@ -929,7 +920,6 @@ setForOnDemandUI;
             case RewindDistanceBeginning:
             default:
                 if (cProgram) {
-                    
                     if ( self.dirtyFromRewind ) {
                         [[AudioManager shared] specialSeekToDate:cProgram.soft_starts_at];
                     } else {
@@ -1287,10 +1277,6 @@ setForOnDemandUI;
             
         } else {
             
-            [self.liveProgressViewController displayWithProgram:(Program*)returnedObject
-                                                         onView:self.view
-                                               aboveSiblingView:self.playerControlsView];
-            [self.liveProgressViewController hide];
             [self determinePlayState];
             [self lockUI:@1];
             
@@ -2649,30 +2635,6 @@ setForOnDemandUI;
     NSTimeInterval tx = [[NSDate date] timeIntervalSinceDate:ciCurrentDate];
 #endif
     
-    /*
-    Program *program = [[SessionManager shared] currentProgram];
-    if ( program || [AudioManager shared].currentAudioMode == AudioModeOnboarding ) {
-        if ( [[AudioManager shared].audioPlayer rate] > 0.0 ) {
-            if ( !self.menuOpen ) {
-                if ( [self.liveProgressViewController uiHidden] ) {
-                    if ( [[AudioManager shared] currentAudioMode] == AudioModeLive ) {
-                        [self.liveProgressViewController show];
-                    }
-                } else if ( !self.liveProgressViewController.view.superview ) {
-                    [self.liveProgressViewController displayWithProgram:program
-                                                                 onView:self.view
-                                                       aboveSiblingView:self.playerControlsView];
-                    [self.liveProgressViewController show];
-                }
-            }
-            [self.liveProgressViewController tick];
-   
-        } else {
-            NSLog(@"Trying to tick in non-playing state");
-            return;
-        }
-    }
-    */
     
     if ( !self.menuOpen ) {
         if ( tx > kStreamIsLiveTolerance ) {
@@ -2709,50 +2671,30 @@ setForOnDemandUI;
             if ( !self.menuOpen && ![[UXmanager shared] notificationsPromptDisplaying] ) {
                 if ( !self.preRollOpen ) {
                     if ( ![[UXmanager shared] userHasSeenOnboarding] ) {
-                        [self.liveProgressViewController show];
-                    }
-                    if ( self.initialPlay ) {
-                        [self.liveProgressViewController show];
+                        if ( ![[UXmanager shared] notificationsPromptDisplaying] ) {
+                            [self.liveProgressViewController show];
+                        }
+                    } else {
+                        if ( self.initialPlay ) {
+                            [self.liveProgressViewController show:YES];
+                        }
                     }
                 }
             }
         }
     }
     
-    // NOTE: basically used instead of observing player rate change to know when actual playback starts
-    // .. for decloaking queue blur
-    /*if ( [AudioManager shared].currentAudioMode == AudioModeOnDemand && self.queueLoading && !self.scrubbing ) {
-        CMTime t = [AudioManager shared].audioPlayer.currentItem.currentTime;
-        NSInteger s = CMTimeGetSeconds(t);
-        if ( s > 0 || self.onDemandGateCount >= 2 ) {
-            self.onDemandGateCount = 0;
-            [self.queueBlurView setNeedsDisplay];
-            [self.progressView setProgress:0.0 animated:NO];
-            [UIView animateWithDuration:0.3 delay:0. options:UIViewAnimationOptionCurveLinear animations:^{
-                self.queueBlurView.alpha = 0.0;
-                self.queueDarkBgView.alpha = 0.0;
-                self.progressView.alpha = 1.0;
-                self.shareButton.alpha = 1.0;
-                self.onDemandPlayerView.alpha = 1.0;
-            } completion:^(BOOL finished) {
-                self.queueBlurShown = NO;
-                self.queueLoading = NO;
-                if ( [[AudioManager shared].audioPlayer rate] == 1.0 ) {
-                    [self.jogShuttle endAnimations];
-                }
-            }];
-        } else {
-            self.onDemandGateCount++;
-        }
-    } else {
-        if ( self.scrubbing ) {
-            //[self cloakForScrubber];
-        }
-    }*/
+
     
     if ( [AudioManager shared].currentAudioMode == AudioModeLive ) {
         if ( self.liveRewindAltButton.alpha == 1.0 || self.liveRewindAltButton.layer.opacity == 1.0 )
             [self primeManualControlButton];
+        
+        if ( [self.liveProgressViewController uiHidden] ) {
+            if ( !self.menuOpen ) {
+                [self.liveProgressViewController show];
+            }
+        }
     }
     
     [self.liveProgressViewController tick];

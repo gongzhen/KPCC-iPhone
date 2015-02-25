@@ -18,14 +18,14 @@ static long kStreamBufferLimit = 4*60*60;
 static long kStreamCorrectionTolerance = 60*5;
 #endif
 
-#define kHLSPeakBitRatePressure 64000.0
+#define kHLSPeakBitRatePressure 48000.0
 
 #ifdef USE_TEST_STREAM
 #define kHLSLiveStreamURL @"http://hls.kqed.org/hls/smil:itunes.smil/playlist.m3u8"
 #else
 #ifdef BETA
-//#define kHLSLiveStreamURLBase @"http://streammachine-test.scprdev.org:8020/sg/test.m3u8"
-#define kHLSLiveStreamURLBase @"http://streammachine-hls001.scprdev.org/sg/kpcc-aac.m3u8"
+#define kHLSLiveStreamURLBase @"http://streammachine-test.scprdev.org:8020/sg/test.m3u8"
+//#define kHLSLiveStreamURLBase @"http://streammachine-hls001.scprdev.org/sg/kpcc-aac.m3u8"
 #define kHLSLiveStreamURL [NSString stringWithFormat:@"%@?ua=KPCCiPhone-%@",kHLSLiveStreamURLBase,[Utils urlSafeVersion]]
 #else
 #ifdef FORCE_TEST_STREAM
@@ -161,6 +161,7 @@ typedef NS_ENUM(NSUInteger, StreamStatus) {
 - (void)playOnboardingAudio:(NSInteger)segment;
 - (void)sanitizeFromOnboarding;
 - (void)attemptToRecover;
+- (void)interruptAutorecovery;
 
 @property (NS_NONATOMIC_IOSONLY, getter=isStreamPlaying, readonly) BOOL streamPlaying;
 @property (NS_NONATOMIC_IOSONLY, getter=isStreamBuffering, readonly) BOOL streamBuffering;
@@ -171,6 +172,8 @@ typedef NS_ENUM(NSUInteger, StreamStatus) {
 @property (NS_NONATOMIC_IOSONLY, readonly, copy) NSString *currentDateTimeString;
 
 @property BOOL audioCheating;
+
+@property (nonatomic, strong) NSTimer *kickstartTimer;
 
 - (void)updateNowPlayingInfoWithAudio:(id)audio;
 

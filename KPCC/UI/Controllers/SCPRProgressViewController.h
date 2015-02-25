@@ -9,6 +9,8 @@
 #import <UIKit/UIKit.h>
 #import "Program.h"
 
+static NSInteger kThrottlingValue = 5;
+
 @interface SCPRProgressViewController : UIViewController
 
 + (SCPRProgressViewController*)o;
@@ -16,6 +18,8 @@
 - (void)tick;
 - (void)hide;
 - (void)show;
+- (void)show:(BOOL)force;
+
 - (void)rewind;
 - (void)forward;
 - (void)reset;
@@ -36,6 +40,8 @@
 @property CGFloat barWidth;
 @property CGFloat lastLiveValue;
 @property CGFloat lastCurrentValue;
+
+@property NSInteger throttle;
 
 @property BOOL shuttling;
 @property BOOL expanded;
