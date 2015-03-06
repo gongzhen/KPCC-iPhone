@@ -82,7 +82,7 @@ typedef NS_ENUM(NSUInteger, StreamStatus) {
 - (void)onDemandAudioFailed;
 @end
 
-#define kPreferredPeakBitRateTolerance 48000
+#define kPreferredPeakBitRateTolerance 1000
 #define kImpatientWaitingTolerance 10.0
 
 @interface AudioManager : NSObject

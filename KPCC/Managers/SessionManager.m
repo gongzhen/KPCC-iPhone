@@ -412,7 +412,6 @@
 - (void)armProgramUpdater {
     [self disarmProgramUpdater];
     
-
     if ( [self ignoreProgramUpdating] ) return;
 #ifdef LEGACY_TIMER
 #ifndef TESTING_PROGRAM_CHANGE

@@ -177,7 +177,6 @@ static const NSString *ItemStatusContext;
                 self.tryAgain = NO;
                 dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.15 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                     [self playStream];
-                    //[self startObservingTime];
                 });
             } else {
 #ifndef SUPPRESS_BITRATE_THROTTLING
@@ -335,12 +334,12 @@ static const NSString *ItemStatusContext;
                                    userInfo:nil
                                     repeats:YES];
 #endif
-    
     if ( [[UIApplication sharedApplication] applicationState] == UIApplicationStateBackground ) {
         self.rescueTask = [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:^{
             [self stopWaiting];
-            self.userPause = YES;
-            [self pauseStream];
+            [self takedownAudioPlayer];
+            SCPRMasterViewController *master = (SCPRMasterViewController*)[[Utils del] masterViewController];
+            [master resetUI];
         }];
     }
 }
@@ -395,6 +394,7 @@ static const NSString *ItemStatusContext;
     if ( [note userInfo] ) {
         NSLog(@"%@",[[note userInfo] description]);
     }
+    
 }
 
 - (void)localSample:(CMTime)time {
@@ -582,7 +582,6 @@ static const NSString *ItemStatusContext;
         }
         
         
-        
     }];
     
 }
@@ -703,7 +702,6 @@ static const NSString *ItemStatusContext;
             barometer = r.duration;
         }
         
-        
         tsn = [date timeIntervalSinceDate:[NSDate date]];
         tsmsd = [date timeIntervalSinceDate:[self maxSeekableDate]];
         NSInteger diff = [[self maxSeekableDate] timeIntervalSinceDate:[NSDate date]];
@@ -734,7 +732,6 @@ static const NSString *ItemStatusContext;
         });
         return;
     }
-    
     
     NSLog(@"Seek in seconds : %ld",(long)tsn);
     
@@ -924,7 +921,6 @@ static const NSString *ItemStatusContext;
 }
 
 - (void)onboardingSegmentCompleted {
-
     if ( self.onboardingSegment == 1 ) {
         [[UXmanager shared] presentLensOverRewindButton];
     }

@@ -31,6 +31,7 @@ PODS:
   - Mixpanel (2.7.2):
     - Mixpanel/MPCategoryHelpers (= 2.7.2)
   - Mixpanel/MPCategoryHelpers (2.7.2)
+  - NewRelicAgent (4.186)
   - Parse (1.6.2):
     - Bolts (~> 1.1)
   - pop (1.0.7)
@@ -44,6 +45,7 @@ DEPENDENCIES:
   - Kochava
   - KSReachability
   - Mixpanel (~> 2.7)
+  - NewRelicAgent
   - Parse (~> 1.6)
   - pop (~> 1.0)
   - XMLDictionary (~> 1.4)
@@ -57,6 +59,7 @@ SPEC CHECKSUMS:
   Kochava: 033f0bf159aa5003f389d8eb270074c3958d3b9a
   KSReachability: 29c0ec738e487c750a0e46b6554cc50df73f60b1
   Mixpanel: def38b9e600f101686b8d647e05660a72c089c65
+  NewRelicAgent: 3ad10d9fe34dc0bffa1f2a1d50793d607b62823a
   Parse: 60d65108fe39da77ec16c9e51d74b4d296b21424
   pop: 2f14a1ea61339767af9e66741b418c831b3844df
   XMLDictionary: 735e81b9a043e220b0d24e9d4f16719606f2e0fc

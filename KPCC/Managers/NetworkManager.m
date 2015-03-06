@@ -12,7 +12,7 @@
 
 @import AdSupport;
 
-#define kFailThreshold 5.0
+#define kFailThreshold 3.5
 
 static NetworkManager *singleton = nil;
 
@@ -124,7 +124,6 @@ static NetworkManager *singleton = nil;
 
 - (void)setupFloatingReachabilityWithHost:(NSString *)host {
 
-    
     NSURL *url = [NSURL URLWithString:host];
 
     self.floatingReachability = [KSReachability reachabilityToHost:[url host]];
@@ -133,8 +132,6 @@ static NetworkManager *singleton = nil;
 }
 
 - (void)trueFail {
-    
-    
     [[NSNotificationCenter defaultCenter] postNotificationName:@"network-status-fail"
                                                         object:nil];
 }

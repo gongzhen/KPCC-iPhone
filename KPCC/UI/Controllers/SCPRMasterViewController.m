@@ -1673,7 +1673,6 @@ setForOnDemandUI;
         [self.liveRewindAltButton layoutIfNeeded];
         [self.queueBlurView setNeedsDisplay];
         [self.programImageView layoutIfNeeded];
-        
         [self setUIContents:YES];
         [self primeManualControlButton];
         
@@ -1683,11 +1682,9 @@ setForOnDemandUI;
         if ( [SCPRCloakViewController cloakInUse] ) {
             [SCPRCloakViewController uncloak];
         }
-        
 
         [self.programImageView printDimensionsWithIdentifier:@"programImage"];
         [self.queueBlurView printDimensionsWithIdentifier:@"queueBlurImage"];
-        
         
         UIImage *blurry = [self.programImageView.image blurredImageWithRadius:20.0f
                                                                    iterations:3
@@ -2046,7 +2043,7 @@ setForOnDemandUI;
     
     self.liveStreamView.alpha = 1.0;
     self.liveStreamView.userInteractionEnabled = YES;
-    
+    self.programTitleLabel.alpha = 1.0;
     
 
 }
