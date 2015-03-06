@@ -17,6 +17,7 @@ typedef NS_ENUM(NSUInteger, OnDemandFinishedReason) {
 };
 
 static NSInteger kStreamIsLiveTolerance = 120;
+
 #ifndef PRODUCTION
 static NSInteger kProgramPollingPressure = 30;
 #else
@@ -49,7 +50,7 @@ static NSInteger kProgramPollingPressure = 15;
 @property BOOL userLeavingForClickthrough;
 @property BOOL updaterArmed;
 @property (nonatomic) double lastKnownBitrate;
-
+@property NSInteger latestDriftValue;
 @property (atomic) BOOL userIsViewingHeadlines;
 
 @property (nonatomic, strong) Program *currentProgram;
@@ -63,13 +64,19 @@ static NSInteger kProgramPollingPressure = 15;
 - (void)resetCache;
 - (void)checkProgramUpdate:(BOOL)force;
 
+- (BOOL)sessionIsInBackground;
+
+// Drift
+- (NSDate*)vLive;
+- (NSInteger)calculatedDriftValue;
+
 - (NSTimeInterval)secondsBehindLive;
 
 - (void)processNotification:(UILocalNotification*)programUpdate;
 @property (NS_NONATOMIC_IOSONLY) BOOL ignoreProgramUpdating;
 @property (NS_NONATOMIC_IOSONLY) BOOL sessionIsExpired;
 @property (NS_NONATOMIC_IOSONLY) BOOL sessionIsBehindLive;
-@property BOOL sessionIsInBackground;
+
 
 - (BOOL)sessionIsInRecess;
 - (BOOL)sessionIsInRecess:(BOOL)respectPause;
@@ -94,6 +101,8 @@ static NSInteger kProgramPollingPressure = 15;
 - (NSString*)endOnDemandSessionWithReason:(OnDemandFinishedReason)reason;
 - (void)trackOnDemandSession;
 - (BOOL)programDirty:(Program*)p;
+
+- (NSDate*)pushDateToNearestTenMinutes:(NSDate*)date;
 
 - (long)bufferLength;
 

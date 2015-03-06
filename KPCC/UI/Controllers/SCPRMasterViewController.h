@@ -183,7 +183,7 @@
 
 - (void)rollInterferenceText;
 - (void)showOnDemandOnboarding;
-
+- (void)prettifyBehindLiveStatus;
 - (void)handleResponseForNotification;
 
 @end

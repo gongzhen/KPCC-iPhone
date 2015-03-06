@@ -79,6 +79,15 @@ static NetworkManager *singleton = nil;
     
 }
 
+- (BOOL)wifi {
+    NetworkStatus remoteHostStatus = [self.basicReachability currentReachabilityStatus];
+    if ( remoteHostStatus == ReachableViaWiFi ) {
+        return YES;
+    }
+    
+    return NO;
+}
+
 - (void)applyNotifiersToReachability:(KSReachability *)reachability {
 #ifndef DISABLE_INTERRUPT
     __block NetworkManager *weakself_ = self;
@@ -100,7 +109,7 @@ static NetworkManager *singleton = nil;
                                                                 object:nil];
             } else {
                 
-       
+                weakself_.networkDown = YES;
                 weakself_.failTimer = [NSTimer scheduledTimerWithTimeInterval:kFailThreshold
                                                                        target:weakself_
                                                                      selector:@selector(trueFail)
@@ -125,15 +134,7 @@ static NetworkManager *singleton = nil;
 
 - (void)trueFail {
     
-    NSAssert([NSThread isMainThread],@"Preferrably we're on the main queue");
-    if ( [[AudioManager shared].audioPlayer rate] > 0.0 ) {
-        @synchronized(self) {
-            // Use this as a secondary measurement of a failure
-            self.audioWillBeInterrupted = YES;
-        }
-    }
     
-    self.networkDown = YES;
     [[NSNotificationCenter defaultCenter] postNotificationName:@"network-status-fail"
                                                         object:nil];
 }
