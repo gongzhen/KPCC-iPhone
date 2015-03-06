@@ -70,6 +70,9 @@ static AnalyticsManager *singleton = nil;
         NSDictionary *kDict = @{ @"kochavaAppId" : kKey };
         self.kTracker = [[KochavaTracker alloc] initKochavaWithParams:kDict];
     }
+    
+    [NewRelicAgent startWithApplicationToken:@"AA04eae1ca71c7b69963c9495552336ff578454833"];
+    
 #endif
     
 }

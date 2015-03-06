@@ -1196,6 +1196,7 @@
 				76A308C018C8FB940065D4B1 /* Frameworks */,
 				76A308C118C8FB940065D4B1 /* Resources */,
 				9E4DCD001A0847218C219F40 /* Copy Pods Resources */,
+				25A653471AAA64E700ABAAD6 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -1456,6 +1457,19 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		25A653471AAA64E700ABAAD6 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "SCRIPT=`/usr/bin/find \"${SRCROOT}\" -name newrelic_postbuild.sh | head -n 1`\n\n/bin/sh \"${SCRIPT}\" \"AA04eae1ca71c7b69963c9495552336ff578454833\"";
+		};
 		2E850504DBEA4BBA8459FA23 /* Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
