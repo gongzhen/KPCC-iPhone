@@ -85,6 +85,9 @@ typedef NS_ENUM(NSUInteger, StreamStatus) {
 - (void)onDemandAudioFailed;
 @end
 
+#define kPreferredPeakBitRateTolerance 1000
+#define kImpatientWaitingTolerance 10.0
+
 @interface AudioManager : NSObject
 
 + (AudioManager*)shared;
@@ -132,6 +135,9 @@ typedef NS_ENUM(NSUInteger, StreamStatus) {
 @property BOOL seekWillEffectBuffer;
 @property BOOL streamStabilized;
 @property BOOL smooth;
+@property BOOL userPause;
+
+@property (nonatomic, strong) NSMutableDictionary *localBufferSample;
 
 @property UIBackgroundTaskIdentifier rescueTask;
 
@@ -160,8 +166,13 @@ typedef NS_ENUM(NSUInteger, StreamStatus) {
 - (void)printStatus;
 - (void)playOnboardingAudio:(NSInteger)segment;
 - (void)sanitizeFromOnboarding;
+
+// Recovery
+- (void)waitPatiently;
 - (void)attemptToRecover;
 - (void)interruptAutorecovery;
+- (void)stopWaiting;
+- (void)localSample:(CMTime)time;
 
 @property (NS_NONATOMIC_IOSONLY, getter=isStreamPlaying, readonly) BOOL streamPlaying;
 @property (NS_NONATOMIC_IOSONLY, getter=isStreamBuffering, readonly) BOOL streamBuffering;
@@ -170,6 +181,8 @@ typedef NS_ENUM(NSUInteger, StreamStatus) {
 @property (NS_NONATOMIC_IOSONLY, readonly) double observedMaxBitrate;
 @property (NS_NONATOMIC_IOSONLY, readonly) double observedMinBitrate;
 @property (NS_NONATOMIC_IOSONLY, readonly, copy) NSString *currentDateTimeString;
+
+@property NSInteger frameCount;
 
 @property BOOL audioCheating;
 
@@ -207,6 +220,8 @@ typedef NS_ENUM(NSUInteger, StreamStatus) {
 @property (nonatomic,strong) NSDate *previousCD;
 - (void)dump:(BOOL)superVerbose;
 - (void)streamFrame;
+@property (nonatomic, strong) NSTimer *multipurposeTimer;
+
 #endif
 
 @end

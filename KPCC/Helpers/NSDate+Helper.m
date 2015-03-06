@@ -193,6 +193,18 @@
     
 }
 
+- (BOOL)isWithinReasonableframeOfDate:(NSDate *)date {
+    return [self isWithinTimeFrame:60*30 ofDate:date];
+}
+
+- (BOOL)isWithinTimeFrame:(NSInteger)seconds ofDate:(NSDate *)date {
+    if ( abs([date timeIntervalSince1970] - [self timeIntervalSince1970]) <= seconds ) {
+        return YES;
+    }
+    
+    return NO;
+}
+
 - (NSString*)prettyTimeString {
     return [NSDate stringFromDate:self
                        withFormat:[NSDate dbFormatString]];

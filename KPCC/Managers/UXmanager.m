@@ -41,7 +41,7 @@
 
 - (void)persist {
     if ( self.settings ) {
-    
+        
         NSData *data = [NSKeyedArchiver archivedDataWithRootObject:self.settings];
         [[NSUserDefaults standardUserDefaults] setObject:data forKey:@"settings"];
         [[NSUserDefaults standardUserDefaults] synchronize];
@@ -70,7 +70,7 @@
     SCPRAppDelegate *del = (SCPRAppDelegate*)[[UIApplication sharedApplication] delegate];
     UIWindow *mw = [del window];
     [mw addSubview:del.onboardingController.view];
- 
+    
     SCPRNavigationController *nav = [del masterNavigationController];
     
     [self hideMenuButton];
@@ -107,7 +107,7 @@
     
     //self.lisaPlayer.volume = 1.0;
     //self.musicPlayer.volume = 0.2;
-
+    
 }
 
 - (void)beginOnboarding:(SCPRMasterViewController*)masterCtrl {
@@ -139,7 +139,7 @@
     
     SCPRAppDelegate *del = (SCPRAppDelegate*)[[UIApplication sharedApplication] delegate];
     SCPRNavigationController *nav = del.masterNavigationController;
-
+    
     [UIView animateWithDuration:0.25 animations:^{
         self.onboardingCtrl.brandingView.alpha = 0.0;
         [self.masterCtrl.blurView setNeedsDisplay];
@@ -164,13 +164,13 @@
     
     [UIView animateWithDuration:0.66 animations:^{
         self.masterCtrl.blurView.alpha = 0.0;
-
-        /*self.onboardingCtrl.navbarMask.frame = CGRectMake(self.onboardingCtrl.navbarMask.frame.origin.x,
-                                                          0.0,
-                                                          self.onboardingCtrl.navbarMask.frame.size.width,
-                                                          64.0);*/
         
-
+        /*self.onboardingCtrl.navbarMask.frame = CGRectMake(self.onboardingCtrl.navbarMask.frame.origin.x,
+         0.0,
+         self.onboardingCtrl.navbarMask.frame.size.width,
+         64.0);*/
+        
+        
         
     } completion:^(BOOL finished) {
         
@@ -191,7 +191,7 @@
         //[self.onboardingCtrl.navbarMask.layer removeFromSuperlayer];
         self.onboardingCtrl.interactionButton.frame = [self.masterCtrl.view convertRect:self.masterCtrl.playerControlsView.frame
                                                        
-                                   toView:self.onboardingCtrl.view];
+                                                                                 toView:self.onboardingCtrl.view];
         
         [self.onboardingCtrl.interactionButton removeTarget:nil
                                                      action:nil
@@ -203,9 +203,9 @@
         
         [self.onboardingCtrl.orangeStripView removeFromSuperview];
         
-
-
-
+        
+        
+        
         
         [self.musicPlayer play];
         [self.lisaPlayer play];
@@ -218,8 +218,8 @@
         
         
     }];
-
-
+    
+    
 }
 
 - (void)godPauseOrPlay {
@@ -257,7 +257,7 @@
             
         });
     }];
-
+    
 }
 
 - (void)restoreInteractionButton {
@@ -267,7 +267,7 @@
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
-
+    
 }
 
 - (void)listenForQueues {
@@ -275,11 +275,11 @@
     self.listeningForQueues = YES;
     self.keyPoints = [@{
                         @"8" : @"expandButton",
-                         @"18" : @"activateDropdown",
-                         @"21" : @"selectFirstMenuItem",
-                         @"25" : @"selectSecondMenuItem",
-                         @"29" : @"closeMenu",
-                         @"34" : @"askForNotifications" } mutableCopy];
+                        @"18" : @"activateDropdown",
+                        @"21" : @"selectFirstMenuItem",
+                        @"25" : @"selectSecondMenuItem",
+                        @"29" : @"closeMenu",
+                        @"34" : @"askForNotifications" } mutableCopy];
     
 }
 
@@ -338,7 +338,7 @@
             
         });
     }];
-
+    
 }
 
 - (void)closeMenu {
@@ -371,8 +371,6 @@
         }
         self.observerTimer = nil;
     }
-    
-
     
     [UIView animateWithDuration:0.5 animations:^{
         [self.masterCtrl.blurView.layer setOpacity:1.0];
@@ -449,17 +447,17 @@
         [self.masterCtrl.playerControlsView setAlpha:1.0];
         
     } completion:^(BOOL finished) {
-
+        
         [[AudioManager shared].audioPlayer play];
         [self.lisaPlayer play];
         [self.musicPlayer play];
         
     }];
-
+    
 }
 
 - (void)endOnboarding {
-
+    
     self.onboardingEnding = YES;
     self.fadeQueue = [[NSOperationQueue alloc] init];
     [[AudioManager shared] setRelativeFauxDate:nil];

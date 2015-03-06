@@ -282,7 +282,7 @@
     [[AudioManager shared] interruptAutorecovery];
     [[AnalyticsManager shared] kTrackSession:@"began"];
     [[SessionManager shared] setUserLeavingForClickthrough:NO];
-
+    [[AudioManager shared] stopWaiting];
     
     // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
 }
@@ -291,7 +291,6 @@
     
     
     [[UIApplication sharedApplication] setApplicationIconBadgeNumber:0];
-    
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
 }
 

@@ -45,4 +45,8 @@
 
 - (NSDate*)minuteRoundedUpByThreshold:(NSInteger)minute;
 
+- (BOOL)isWithinReasonableframeOfDate:(NSDate*)date;
+- (BOOL)isWithinTimeFrame:(NSInteger)seconds ofDate:(NSDate*)date;
+
+
 @end

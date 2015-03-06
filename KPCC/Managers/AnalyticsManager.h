@@ -13,6 +13,7 @@
 #import "Mixpanel.h"
 #import <Kochava/TrackAndAd.h>
 #import "NetworkManager.h"
+#import <NewRelicAgent/NewRelic.h>
 
 static NSInteger kMaxAllowedExceptionsPerInterval = 5;
 static NSInteger kExceptionInterval = 60;

@@ -12,7 +12,7 @@
 
 @import AdSupport;
 
-#define kFailThreshold 5.0
+#define kFailThreshold 3.5
 
 static NetworkManager *singleton = nil;
 
@@ -109,6 +109,8 @@ static NetworkManager *singleton = nil;
                                                                 object:nil];
             } else {
                 
+
+                weakself_.networkDown = YES;
                 weakself_.failTimer = [NSTimer scheduledTimerWithTimeInterval:kFailThreshold
                                                                        target:weakself_
                                                                      selector:@selector(trueFail)
@@ -122,26 +124,13 @@ static NetworkManager *singleton = nil;
 }
 
 - (void)setupFloatingReachabilityWithHost:(NSString *)host {
-
-    
     NSURL *url = [NSURL URLWithString:host];
-
     self.floatingReachability = [KSReachability reachabilityToHost:[url host]];
     [self applyNotifiersToReachability:self.floatingReachability];
     
 }
 
 - (void)trueFail {
-    
-    NSAssert([NSThread isMainThread],@"Preferrably we're on the main queue");
-    if ( [[AudioManager shared].audioPlayer rate] > 0.0 ) {
-        @synchronized(self) {
-            // Use this as a secondary measurement of a failure
-            self.audioWillBeInterrupted = YES;
-        }
-    }
-    
-    self.networkDown = YES;
     [[NSNotificationCenter defaultCenter] postNotificationName:@"network-status-fail"
                                                         object:nil];
 }

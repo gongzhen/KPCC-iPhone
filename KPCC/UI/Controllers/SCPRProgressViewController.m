@@ -55,7 +55,7 @@
     
     self.view.backgroundColor = [UIColor clearColor];
     //self.view.backgroundColor = [UIColor redColor];
-
+    
     CGFloat width = self.view.frame.size.width;
     
     self.barWidth = width;
@@ -157,6 +157,7 @@
   
     self.uiHidden = NO;
     
+
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         [UIView animateWithDuration:0.25 animations:^{
             self.view.layer.opacity = 1.0;
@@ -174,12 +175,10 @@
         }];
     });
 
-
-
 }
 
 - (void)rewind {
-
+    
     @synchronized(self) {
         self.shuttling = YES;
     }
@@ -211,7 +210,7 @@
 }
 
 - (void)forward {
-
+    
     @synchronized(self) {
         self.shuttling = YES;
     }
@@ -267,7 +266,7 @@
     
     NSDictionary *p = [[SessionManager shared] onboardingAudio];
     Program *program = [[SessionManager shared] currentProgram];
-
+    
     NSDate *currentDate = [AudioManager shared].audioPlayer.currentItem.currentDate;
     NSTimeInterval beginning = [program.soft_starts_at timeIntervalSince1970];
     if ( [[AudioManager shared] currentAudioMode] == AudioModeOnboarding ) {
@@ -284,14 +283,20 @@
         duration = [p[@"duration"] intValue];
     }
     
+
+#ifndef SUPPRESS_V_LIVE
+    NSTimeInterval live = [[[SessionManager shared] vLive] timeIntervalSince1970];
+#else
     NSTimeInterval live = [[NSDate date] timeIntervalSince1970];
+#endif
+
     if ( [[SessionManager shared] secondsBehindLive] < 120 ) {
         live -= [[SessionManager shared] secondsBehindLive];
     }
     
     if ( [[AudioManager shared] currentAudioMode] == AudioModeOnboarding ) {
         live = CMTimeGetSeconds([AudioManager shared].audioPlayer.currentItem.currentTime);
-     
+        
     }
     
     NSTimeInterval current = [currentDate timeIntervalSince1970];
@@ -306,7 +311,7 @@
         self.currentBarLine.strokeEnd = (currentDiff / duration)*1.0f;
         self.liveBarLine.strokeEnd = (liveDiff / duration)*1.0f;
     });
-
+    
     
 }
 

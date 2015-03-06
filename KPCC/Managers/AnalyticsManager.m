@@ -70,6 +70,9 @@ static AnalyticsManager *singleton = nil;
         NSDictionary *kDict = @{ @"kochavaAppId" : kKey };
         self.kTracker = [[KochavaTracker alloc] initKochavaWithParams:kDict];
     }
+    
+    [NewRelicAgent startWithApplicationToken:@"AA04eae1ca71c7b69963c9495552336ff578454833"];
+    
 #endif
     
 }
@@ -101,7 +104,7 @@ static AnalyticsManager *singleton = nil;
 
 - (void)logEvent:(NSString *)event withParameters:(NSDictionary *)parameters {
     NSMutableDictionary *userInfo = [[NSMutableDictionary alloc] init];
-
+    
     parameters = [self logifiedParamsList:parameters];
     
     if ( ![[UXmanager shared].settings userHasViewedOnboarding] ) return;
@@ -143,7 +146,7 @@ static AnalyticsManager *singleton = nil;
         }
     }
     
-    [Flurry logEvent:event withParameters:userInfo timed:YES];
+    //[Flurry logEvent:event withParameters:userInfo timed:YES];
 #endif
     
 }
@@ -155,7 +158,7 @@ static AnalyticsManager *singleton = nil;
 - (void)failStream:(NetworkHealth)cause comments:(NSString *)comments force:(BOOL)force {
     
     if ( !comments || SEQ(comments,@"") ) return;
- 
+    
 #ifdef MICRO_MANAGE_EXCEPTIONS
     if ( [[NSDate date] timeIntervalSinceDate:self.lastStreamException] > kExceptionInterval ) {
         self.allowedExceptions = 0;
@@ -170,7 +173,7 @@ static AnalyticsManager *singleton = nil;
     
     self.accessLog = [[AudioManager shared].audioPlayer.currentItem accessLog];
     self.errorLog = [[AudioManager shared].audioPlayer.currentItem errorLog];
-
+    
     if ( self.analyticsSuspensionTimer ) {
         if ( [self.analyticsSuspensionTimer isValid] ) {
             [self.analyticsSuspensionTimer invalidate];
@@ -181,9 +184,9 @@ static AnalyticsManager *singleton = nil;
     self.lastErrorLoggedComments = comments;
     
     NSMutableDictionary *analysis = [@{ @"cause" : [self stringForInterruptionCause:cause],
-                                @"details" : comments,
-                                @"networkInfo" : [[NetworkManager shared] networkInformation]
-                                } mutableCopy];
+                                        @"details" : comments,
+                                        @"networkInfo" : [[NetworkManager shared] networkInformation]
+                                        } mutableCopy];
     
     if ( [[SessionManager shared] liveSessionID] && !SEQ([[SessionManager shared] liveSessionID],@"") ) {
         NSMutableDictionary *mD = [analysis mutableCopy];
@@ -197,7 +200,7 @@ static AnalyticsManager *singleton = nil;
     
     NSLog(@"Sending stream failure report to analytics");
     [self logEvent:@"streamException" withParameters:analysis];
- 
+    
     
 }
 
@@ -213,11 +216,6 @@ static AnalyticsManager *singleton = nil;
     NSMutableDictionary *nParams = [originalParams mutableCopy];
     if ( self.errorLog ) {
         if ( self.errorLog.events && self.errorLog.events.count > 0 ) {
-            
-            if ( self.accessLog.events.count > 1 ) {
-                AVPlayerItemAccessLogEvent *secondEvent = self.accessLog.events.firstObject;
-                nParams[@"secondEventObservedBitrate"] = @(secondEvent.observedBitrate);
-            }
             
             AVPlayerItemErrorLogEvent *event = self.errorLog.events.lastObject;
             if ( event.playbackSessionID ) {
@@ -238,18 +236,11 @@ static AnalyticsManager *singleton = nil;
             NSLog(@"AVPlayerItem Access Log Contained : %ld objects",(long)self.accessLog.events.count);
             
             AVPlayerItemAccessLogEvent *event = self.accessLog.events.lastObject;
-            
-            if ( self.accessLog.events.count > 1 ) {
-                AVPlayerItemAccessLogEvent *secondEvent = self.accessLog.events.firstObject;
-                nParams[@"secondEventObservedBitrate"] = @(secondEvent.observedBitrate);
-            }
-            
             if ( event.playbackSessionID ) {
                 nParams[@"avPlayerSessionId"] = event.playbackSessionID;
             }
             
             nParams[@"numberOfStalls"] = @(event.numberOfStalls);
-            nParams[@"switchBitrate"] = @(event.switchBitrate);
             
             [[SessionManager shared] setLastKnownBitrate:event.observedBitrate];
             
@@ -257,25 +248,10 @@ static AnalyticsManager *singleton = nil;
                 nParams[@"bitrateDeviation"] = @(event.observedBitrateStandardDeviation);
             }
             
-            if ( event.downloadOverdue > 0 ) {
-                nParams[@"downloadOverdue"] = @(event.downloadOverdue);
-            }
-            
-            if ( event.transferDuration >= 0 ) {
-                nParams[@"transferDuration"] = @(event.transferDuration);
-            }
-
             nParams[@"indicatedBitrate"] = [NSString stringWithFormat:@"%1.1f",event.indicatedBitrate];
             nParams[@"observedBitrate"] =  [NSString stringWithFormat:@"%1.1f",event.observedBitrate];
             
             NSLog(@"iBR : %1.1f, oBR : %1.1f",event.indicatedBitrate,event.observedBitrate);
-            
-            if ( event.observedMaxBitrate != event.observedBitrate ) {
-                nParams[@"observedMaxBitrate"] = [NSString stringWithFormat:@"%1.1f",event.observedMaxBitrate];
-            }
-            if ( event.observedMinBitrate != event.observedBitrate ) {
-                nParams[@"observedMinBitrate"] = [NSString stringWithFormat:@"%1.1f",event.observedMinBitrate];
-            }
             
             nParams[@"bytesTransferred"] = @(event.numberOfBytesTransferred);
             
