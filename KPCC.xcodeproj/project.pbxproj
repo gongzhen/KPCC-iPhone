@@ -332,6 +332,7 @@
 		259E45041A1D2CF700F5CD65 /* SCPRTextCalloutViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SCPRTextCalloutViewController.m; path = Onboarding/SCPRTextCalloutViewController.m; sourceTree = "<group>"; };
 		259E450C1A1D583A00F5CD65 /* onboarding1.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = onboarding1.mp3; path = Audio/onboarding1.mp3; sourceTree = "<group>"; };
 		259E450D1A1D583A00F5CD65 /* onboarding2.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = onboarding2.mp3; path = Audio/onboarding2.mp3; sourceTree = "<group>"; };
+		25A653481AAA7CFC00ABAAD6 /* KPCC-Proprietary-301.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "KPCC-Proprietary-301.xcdatamodel"; sourceTree = "<group>"; };
 		25B59A5319FEF93700D4885C /* SCPRShortListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCPRShortListViewController.h; path = Headlines/SCPRShortListViewController.h; sourceTree = "<group>"; };
 		25B59A5419FEF93700D4885C /* SCPRShortListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SCPRShortListViewController.m; path = Headlines/SCPRShortListViewController.m; sourceTree = "<group>"; };
 		25B59A5519FEF93700D4885C /* SCPRShortListViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = SCPRShortListViewController.xib; path = Headlines/SCPRShortListViewController.xib; sourceTree = "<group>"; };
@@ -2003,10 +2004,11 @@
 		258E239C1A13FA84009F8F97 /* DataModel.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				25A653481AAA7CFC00ABAAD6 /* KPCC-Proprietary-301.xcdatamodel */,
 				258E239D1A13FA84009F8F97 /* DataModel.xcdatamodel */,
 				258E239E1A13FA84009F8F97 /* KPCC-Proprietary-1.xcdatamodel */,
 			);
-			currentVersion = 258E239E1A13FA84009F8F97 /* KPCC-Proprietary-1.xcdatamodel */;
+			currentVersion = 25A653481AAA7CFC00ABAAD6 /* KPCC-Proprietary-301.xcdatamodel */;
 			path = DataModel.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;
