@@ -53,6 +53,7 @@
 		259E45051A1D2CF700F5CD65 /* SCPRTextCalloutViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 259E45041A1D2CF700F5CD65 /* SCPRTextCalloutViewController.m */; };
 		259E450E1A1D583A00F5CD65 /* onboarding1.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 259E450C1A1D583A00F5CD65 /* onboarding1.mp3 */; };
 		259E450F1A1D583A00F5CD65 /* onboarding2.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 259E450D1A1D583A00F5CD65 /* onboarding2.mp3 */; };
+		25A6534B1AAE2BA300ABAAD6 /* Bookmark.m in Sources */ = {isa = PBXBuildFile; fileRef = 25A6534A1AAE2BA300ABAAD6 /* Bookmark.m */; };
 		25B59A5619FEF93700D4885C /* SCPRShortListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 25B59A5419FEF93700D4885C /* SCPRShortListViewController.m */; };
 		25B59A5719FEF93700D4885C /* SCPRShortListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 25B59A5519FEF93700D4885C /* SCPRShortListViewController.xib */; };
 		25BBCD6E1A85867F0015071E /* NSError+PrettyAnalytics.m in Sources */ = {isa = PBXBuildFile; fileRef = 25BBCD6D1A85867F0015071E /* NSError+PrettyAnalytics.m */; };
@@ -333,6 +334,8 @@
 		259E450C1A1D583A00F5CD65 /* onboarding1.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = onboarding1.mp3; path = Audio/onboarding1.mp3; sourceTree = "<group>"; };
 		259E450D1A1D583A00F5CD65 /* onboarding2.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = onboarding2.mp3; path = Audio/onboarding2.mp3; sourceTree = "<group>"; };
 		25A653481AAA7CFC00ABAAD6 /* KPCC-Proprietary-301.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "KPCC-Proprietary-301.xcdatamodel"; sourceTree = "<group>"; };
+		25A653491AAE2BA300ABAAD6 /* Bookmark.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Bookmark.h; sourceTree = "<group>"; };
+		25A6534A1AAE2BA300ABAAD6 /* Bookmark.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Bookmark.m; sourceTree = "<group>"; };
 		25B59A5319FEF93700D4885C /* SCPRShortListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCPRShortListViewController.h; path = Headlines/SCPRShortListViewController.h; sourceTree = "<group>"; };
 		25B59A5419FEF93700D4885C /* SCPRShortListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SCPRShortListViewController.m; path = Headlines/SCPRShortListViewController.m; sourceTree = "<group>"; };
 		25B59A5519FEF93700D4885C /* SCPRShortListViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = SCPRShortListViewController.xib; path = Headlines/SCPRShortListViewController.xib; sourceTree = "<group>"; };
@@ -822,6 +825,8 @@
 		760E3C45194FB4F700D86D91 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				25A653491AAE2BA300ABAAD6 /* Bookmark.h */,
+				25A6534A1AAE2BA300ABAAD6 /* Bookmark.m */,
 				258BB03C1A1C083B00B8FCFE /* Settings.h */,
 				258BB03D1A1C083B00B8FCFE /* Settings.m */,
 				258E239C1A13FA84009F8F97 /* DataModel.xcdatamodeld */,
@@ -1541,6 +1546,7 @@
 				523126A719EDB78C008A47A7 /* SCPRPreRollViewController.m in Sources */,
 				52E68B8219B8F2D10028F8AE /* SCPRNavigationController.m in Sources */,
 				76A308D318C8FB940065D4B1 /* main.m in Sources */,
+				25A6534B1AAE2BA300ABAAD6 /* Bookmark.m in Sources */,
 				255943EA19F1A7620007294D /* SCPRJogShuttleViewController.m in Sources */,
 				52CC6D6219D100DE00C67322 /* SCPRProgramTableViewCell.m in Sources */,
 				52D6B2001A02EEB90068B19A /* SCPRQueueScrollableView.m in Sources */,
@@ -1871,7 +1877,7 @@
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
-					"SUPPRESS_AGGRESSIVE_KICKSTART=1",
+					"SUPPRESS_DIMENSION_PRINTING=1",
 				);
 				INFOPLIST_FILE = "KPCC/KPCC-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;

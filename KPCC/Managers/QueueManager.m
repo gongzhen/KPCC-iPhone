@@ -66,7 +66,7 @@ static QueueManager *singleton = nil;
             self.currentChunk = chunk;
             self.currentlyPlayingIndex = index;
             if ( playImmediately ) {
-                [[AudioManager shared] playQueueItemWithUrl:chunk.audioUrl];
+                [[AudioManager shared] playQueueItem:chunk];
             }
             
         }
@@ -74,6 +74,18 @@ static QueueManager *singleton = nil;
 
     NSArray *audioChunks = self.queue;
     return audioChunks;
+}
+
+- (void)setCurrentBookmark:(Bookmark *)currentBookmark {
+    Bookmark *replacedBookmark = self.currentBookmark;
+    _currentBookmark = currentBookmark;
+    
+    if ( replacedBookmark ) {
+        if ( [replacedBookmark.resumeTimeInSeconds floatValue] < kBookmarkingTolerance ) {
+            [[ContentManager shared] destroyBookmark:replacedBookmark];
+        }
+    }
+    
 }
 
 - (void)playNext {
@@ -84,7 +96,7 @@ static QueueManager *singleton = nil;
         if (self.currentlyPlayingIndex + 1 < [self.queue count]) {
             AudioChunk *chunk = (self.queue)[self.currentlyPlayingIndex + 1];
             self.currentChunk = chunk;
-            [[AudioManager shared] playQueueItemWithUrl:chunk.audioUrl];
+            [[AudioManager shared] playQueueItem:chunk];
             self.currentlyPlayingIndex += 1;
             [[[Utils del] masterViewController] setPositionForQueue:(int)self.currentlyPlayingIndex animated:YES];
         }
@@ -96,7 +108,7 @@ static QueueManager *singleton = nil;
         if (self.currentlyPlayingIndex > 0) {
             AudioChunk *chunk = (self.queue)[self.currentlyPlayingIndex - 1];
             self.currentChunk = chunk;
-            [[AudioManager shared] playQueueItemWithUrl:chunk.audioUrl];
+            [[AudioManager shared] playQueueItem:chunk];
             self.currentlyPlayingIndex -= 1;
             [[[Utils del] masterViewController] setPositionForQueue:(int)self.currentlyPlayingIndex animated:YES];
         }
@@ -104,11 +116,13 @@ static QueueManager *singleton = nil;
 }
 
 - (void)playItemAtPosition:(int)index {
+    [[AudioManager shared] invalidateTimeObserver];
+    
     if (![self isQueueEmpty]) {
         if (index >= 0 && index < [self.queue count]) {
             AudioChunk *chunk = (self.queue)[index];
             self.currentChunk = chunk;
-            [[AudioManager shared] playQueueItemWithUrl:chunk.audioUrl];
+            [[AudioManager shared] playQueueItem:chunk];
             self.currentlyPlayingIndex = index;
         }
     }
@@ -117,14 +131,14 @@ static QueueManager *singleton = nil;
 - (void)dequeueForPlayback {
     AudioChunk *chunk = [self dequeue];
     if (chunk) {
-        [[AudioManager shared] playQueueItemWithUrl:chunk.audioUrl];
+        [[AudioManager shared] playQueueItem:chunk];
         self.currentChunk = chunk;
     }
 }
 
 
-#pragma mark - Queue internal
 
+#pragma mark - Queue internal
 - (void)enqueue:(AudioChunk *)audio {
     [self.queue addObject:audio];
 }
@@ -141,7 +155,9 @@ static QueueManager *singleton = nil;
 }
 
 - (BOOL)isQueueEmpty {
-    return ([self.queue lastObject] == nil);
+    if ( !self.queue ) return YES;
+    if ( self.queue.count == 0 ) return YES;
+    return NO;
 }
 
 - (void)clearQueue {

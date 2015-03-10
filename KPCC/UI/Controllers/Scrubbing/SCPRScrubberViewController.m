@@ -12,6 +12,7 @@
 #import "AudioManager.h"
 #import "Utils.h"
 #import "POP.h"
+#import "QueueManager.h"
 
 @interface SCPRScrubberViewController ()
 
@@ -154,7 +155,6 @@
         double multiplier = self.currentBarLine.strokeEnd;
         CMTime total = [[[[AudioManager shared].audioPlayer currentItem] asset] duration];
         CMTime seek = CMTimeMake(total.value*multiplier, total.timescale);
-        
         [[AudioManager shared].audioPlayer.currentItem seekToTime:seek completionHandler:^(BOOL finished) {
             self.panning = NO;
             [(SCPRScrubbingUIViewController*)self.parentUIController onSeekCompleted];

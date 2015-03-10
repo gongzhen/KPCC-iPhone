@@ -9,6 +9,9 @@
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
 
+@class Bookmark;
+@class AudioChunk;
+
 @interface ContentManager : NSObject
 
 + (ContentManager*)shared;
@@ -19,5 +22,10 @@
 
 @property (NS_NONATOMIC_IOSONLY, readonly, copy) NSString *modelBase;
 - (void)saveContext;
+
+- (Bookmark*)bookmarkForUrl:(NSString*)url;
+- (Bookmark*)bookmarkForAudioChunk:(AudioChunk*)chunk;
+- (Bookmark*)findBookmarkBySha:(NSString*)shaUrl;
+- (void)destroyBookmark:(Bookmark*)b;
 
 @end

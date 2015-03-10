@@ -7,6 +7,8 @@
 //
 
 #import "ContentManager.h"
+#import "Bookmark.h"
+#import "AudioChunk.h"
 
 static ContentManager *singleton = nil;
 
@@ -44,6 +46,52 @@ static ContentManager *singleton = nil;
             abort();
         }
     }
+}
+
+#pragma mark - Bookmark
+- (void)destroyBookmark:(Bookmark *)bookmark {
+    [self.managedObjectContext deleteObject:bookmark];
+}
+
+- (Bookmark*)bookmarkForAudioChunk:(AudioChunk *)chunk {
+    NSString *url = chunk.audioUrl;
+    return [self bookmarkForUrl:url];
+}
+
+- (Bookmark*)bookmarkForUrl:(NSString *)url {
+    NSString *sha = [Utils sha1:url];
+    Bookmark *b = [self findBookmarkBySha:sha];
+    b.urlPlain = url;
+    return b;
+}
+
+- (Bookmark*)findBookmarkBySha:(NSString *)shaUrl {
+    NSEntityDescription *entityDescription = [NSEntityDescription
+                                              entityForName:@"Bookmark" inManagedObjectContext:self.managedObjectContext];
+    NSFetchRequest *request = [[NSFetchRequest alloc] init];
+    [request setEntity:entityDescription];
+    
+    // Set example predicate and sort orderings...
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:
+                              @"urlSha = %@", shaUrl];
+    [request setPredicate:predicate];
+    NSError *error = nil;
+    NSArray *array = [self.managedObjectContext executeFetchRequest:request error:&error];
+    if ( !array || [array count] == 0)
+    {
+        
+        Bookmark *b = (Bookmark*)[NSEntityDescription insertNewObjectForEntityForName:@"Bookmark"
+                                                               inManagedObjectContext:self.managedObjectContext];
+        b.urlSha = shaUrl;
+        b.createdAt = [NSDate date];
+        return b;
+        
+    } else {
+        Bookmark *b = array[0];
+        NSLog(@"Bookmark : %@ with resume time of %1.1f",b.audioTitle,[b.resumeTimeInSeconds floatValue]);
+    }
+    
+    return array[0];
 }
 
 /**

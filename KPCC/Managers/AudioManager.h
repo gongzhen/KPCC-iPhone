@@ -10,6 +10,7 @@
 #import <AVFoundation/AVFoundation.h>
 #import <MediaPlayer/MediaPlayer.h>
 
+
 #ifdef SHORTENED_BUFFER
 static long kStreamBufferLimit = 1*60;
 static long kStreamCorrectionTolerance = 60*5;
@@ -52,6 +53,8 @@ static long kStreamCorrectionTolerance = 60*5;
 #	define SCPRDebugLog(...)
 #endif
 
+@class AudioChunk;
+
 typedef NS_ENUM(NSUInteger, AudioMode) {
     AudioModeNeutral = 0,
     AudioModeLive,
@@ -87,6 +90,7 @@ typedef NS_ENUM(NSUInteger, StreamStatus) {
 
 #define kPreferredPeakBitRateTolerance 1000
 #define kImpatientWaitingTolerance 10.0
+#define kBookmarkingTolerance 10
 
 @interface AudioManager : NSObject
 
@@ -111,12 +115,16 @@ typedef NS_ENUM(NSUInteger, StreamStatus) {
 
 @property long latencyCorrection;
 
+
 @property (strong,nonatomic) NSDateFormatter *dateFormatter;
 @property (nonatomic,strong) NSOperationQueue *fadeQueue;
+
+
 @property long bufferObservationCount;
 
 @property CGFloat savedVolume;
 @property CGFloat savedVolumeFromMute;
+@property Float64 onDemandSeekPosition;
 
 @property BOOL seekRequested;
 @property BOOL bufferMutex;
@@ -125,6 +133,7 @@ typedef NS_ENUM(NSUInteger, StreamStatus) {
 @property BOOL temporaryMutex;
 @property BOOL easeInAudio;
 @property BOOL waitForSeek;
+@property BOOL waitForOnDemandSeek;
 @property BOOL prerollPlaying;
 @property BOOL tryAgain;
 @property BOOL dumpedOnce;
@@ -149,14 +158,15 @@ typedef NS_ENUM(NSUInteger, StreamStatus) {
 @property NSInteger onboardingSegment;
 @property (nonatomic) AudioMode currentAudioMode;
 
-- (void)playAudioWithURL:(NSString *)url;
+- (void)playAudioWithURL:(NSString *)url ondemand:(BOOL)ondemand;
 - (void)playQueueItemWithUrl:(NSString *)url;
+- (void)playQueueItem:(AudioChunk*)chunk;
 - (void)playLiveStream;
 
 @property (NS_NONATOMIC_IOSONLY, readonly, copy) NSString *liveStreamURL;
 - (void)startStream;
-- (void)playStream;
-- (void)pauseStream;
+- (void)playAudio;
+- (void)pauseAudio;
 - (void)stopStream;
 - (void)stopAllAudio;
 - (void)muteAudio;
@@ -208,7 +218,7 @@ typedef NS_ENUM(NSUInteger, StreamStatus) {
 - (void)resetPlayer;
 
 - (BOOL)verifyPositionAuthenticity;
-
+- (void)invalidateTimeObserver;
 - (void)cheatPlay;
 
 - (NSString*)avPlayerSessionString;

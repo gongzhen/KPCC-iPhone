@@ -233,8 +233,6 @@ static AnalyticsManager *singleton = nil;
     if ( self.accessLog ) {
         if ( self.accessLog.events && self.accessLog.events.count > 0 ) {
             
-            NSLog(@"AVPlayerItem Access Log Contained : %ld objects",(long)self.accessLog.events.count);
-            
             AVPlayerItemAccessLogEvent *event = self.accessLog.events.lastObject;
             if ( event.playbackSessionID ) {
                 nParams[@"avPlayerSessionId"] = event.playbackSessionID;

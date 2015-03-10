@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "AudioManager.h"
 #import "AudioChunk.h"
+#import "Bookmark.h"
 
 @protocol QueueManagerDelegate <NSObject>
 
@@ -22,6 +23,7 @@
 @property (nonatomic,strong) NSMutableArray *queue;
 @property (nonatomic) NSInteger currentlyPlayingIndex;
 @property (nonatomic,strong) AudioChunk *currentChunk;
+@property (nonatomic,strong) Bookmark *currentBookmark;
 
 // Playback actions
 - (void)enqueueEpisode:(Episode *)episode;
@@ -32,6 +34,7 @@
 - (void)playItemAtPosition:(int)index;
 - (void)dequeueForPlayback;
 
+- (void)destroyBookmark:(Bookmark*)bookmark;
 
 // Internal queue
 - (void)enqueue:(AudioChunk*)audio;

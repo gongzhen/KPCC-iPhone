@@ -30,6 +30,7 @@
 @property (nonatomic,strong) AVAudioPlayer *lisaPlayer;
 @property (nonatomic,strong) NSOperationQueue *fadeQueue;
 @property (nonatomic,strong) NSMutableDictionary *committedActions;
+@property (nonatomic,strong) NSDate *operationBeganDate;
 
 + (instancetype)shared;
 - (void)load;
@@ -64,5 +65,8 @@
 - (void)showMenuButton;
 
 - (void)godPauseOrPlay;
+- (void)killAudio;
+- (void)timeBegin;
+- (void)timeEnd:(NSString*)operationName;
 
 @end

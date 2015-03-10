@@ -21,6 +21,12 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(killAudio)
+                                                 name:@"panic"
+                                               object:nil];
+    
     // Do any additional setup after loading the view from its nib.
 }
 
@@ -85,6 +91,10 @@
     [[UXmanager shared] endOnboarding];
 }
 
+- (void)killAudio {
+    [[UXmanager shared] killAudio];
+}
+
 - (void)revealLensWithOrigin:(CGPoint)origin {
     
     CGFloat modifier = [Utils isIOS8] ? 0.0 : 20.0;
@@ -97,9 +107,7 @@
     scaleAnimation.springBounciness = 1.0f;
     scaleAnimation.springSpeed = .5f;
 
-    
     self.lensVC.view.layer.opacity = 1.0;
-    
     [self.lensVC.view.layer pop_addAnimation:scaleAnimation forKey:@"popToVisible"];
     
 }
@@ -109,8 +117,6 @@
     scaleAnimation.fromValue  = [NSValue valueWithCGSize:CGSizeMake(1.0f, 1.0f)];
     scaleAnimation.toValue  = [NSValue valueWithCGSize:CGSizeMake(0.0f, 0.0f)];
     scaleAnimation.duration = 0.15f;
-    //scaleAnimation.springBounciness = 1.0f;
-    //scaleAnimation.springSpeed = .5f;
     [self.lensVC.view.layer pop_addAnimation:scaleAnimation forKey:@"popToInvisible"];
 }
 

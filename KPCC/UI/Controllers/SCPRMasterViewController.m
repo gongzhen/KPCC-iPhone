@@ -51,7 +51,7 @@ static CGFloat kScrubbingThreeFiveSlip = 36.0;
 @property IBOutlet NSLayoutConstraint *rewindHeightContraint;
 @property IBOutlet NSLayoutConstraint *programTitleYConstraint;
 
-- (void)playStream:(BOOL)hard;
+- (void)playAudio:(BOOL)hard;
 - (void)setDataForOnDemand:(Program *)program andAudioChunk:(AudioChunk*)audioChunk;
 - (void)setDataForOnDemand:(Program *)program andAudioChunk:(AudioChunk*)audioChunk completion:(CompletionBlock)completion;
 - (void)lockUI:(id)note;
@@ -572,7 +572,6 @@ setForOnDemandUI;
     
 }
 
-
 - (void)specialRewind {
     self.initiateRewind = YES;
     self.preRollViewController.tritonAd = nil;
@@ -596,13 +595,13 @@ setForOnDemandUI;
     if (![[AudioManager shared] isStreamPlaying]) {
         
         if ( [[AudioManager shared] currentAudioMode] == AudioModeOnDemand ) {
-            [self playStream:NO];
+            [self playAudio:NO];
             return;
         }
         
         if ( [[SessionManager shared] sessionIsExpired] ) {
             [[SessionManager shared] fetchCurrentProgram:^(id returnedObject) {
-                [self playStream:YES];
+                [self playAudio:YES];
             }];
         } else {
 
@@ -611,11 +610,11 @@ setForOnDemandUI;
                 if ( [[AudioManager shared] currentAudioMode] == AudioModeOnDemand ) {
                     [[QueueManager shared] playItemAtPosition:(int)[[QueueManager shared] currentlyPlayingIndex]];
                 } else {
-                    [self playStream:YES];
+                    [self playAudio:YES];
                 }
             } else {
                 BOOL hard = [[AudioManager shared] status] == StreamStatusStopped ? YES : NO;
-                [self playStream:hard];
+                [self playAudio:hard];
             }
             
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
@@ -626,7 +625,22 @@ setForOnDemandUI;
     } else {
  
         [[AudioManager shared] setUserPause:YES];
-        [self pauseStream];
+        
+#ifndef SUPPRESS_AGGRESSIVE_KICKSTART
+        if ( [[AudioManager shared] currentAudioMode] == AudioModeLive ) {
+            if ( [[AudioManager shared] dropoutOccurred] ) {
+                [[AudioManager shared] stopAllAudio];
+                [[AudioManager shared] takedownAudioPlayer];
+                [[AudioManager shared] buildStreamer:kHLSLiveStreamURL];
+            } else {
+                [self pauseAudio];
+            }
+        } else {
+            [self pauseAudio];
+        }
+#else
+        [self pauseAudio];
+#endif
         
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             [[SessionManager shared] disarmProgramUpdater];
@@ -658,7 +672,7 @@ setForOnDemandUI;
  */
 - (void)pauseTapped:(id)sender {
     if ([[AudioManager shared] isStreamPlaying]) {
-        [self pauseStream];
+        [self pauseAudio];
     }
 }
 - (void)playTapped:(id)sender {
@@ -666,7 +680,7 @@ setForOnDemandUI;
         if ([[AudioManager shared] isStreamBuffering]) {
             [[AudioManager shared] stopAllAudio];
         }
-        [self playStream:YES];
+        [self playAudio:YES];
     }
 }
 
@@ -754,22 +768,22 @@ setForOnDemandUI;
 }
 
 # pragma mark - Audio commands
-- (void)playStream:(BOOL)hard {
+- (void)playAudio:(BOOL)hard {
     
     if ( hard && ![[SessionManager shared] sessionIsInBackground] ) {
-        [[AudioManager shared] playLiveStream];
+        [[AudioManager shared] playAudio];
     } else {
         if ( [[SessionManager shared] userLeavingForClickthrough] ) {
-            [[AudioManager shared] playLiveStream];
+            [[AudioManager shared] playAudio];
         } else {
-            [[AudioManager shared] playStream];
+            [[AudioManager shared] playAudio];
             [[SessionManager shared] startLiveSession];
         }
     }
 }
 
-- (void)pauseStream {
-    [[AudioManager shared] pauseStream];
+- (void)pauseAudio {
+    [[AudioManager shared] pauseAudio];
 }
 
 - (void)rewindFifteen {
@@ -795,7 +809,7 @@ setForOnDemandUI;
         [[AudioManager shared] currentAudioMode] == AudioModeNeutral ) {
         if ( [[AudioManager shared] status] == StreamStatusPaused ) {
             if ( self.initialPlay ) {
-                [self playStream:NO];
+                [self playAudio:NO];
             } else {
                 [self initialPlayTapped:nil];
             }
@@ -803,7 +817,7 @@ setForOnDemandUI;
         }
         if ( [[AudioManager shared] status] == StreamStatusStopped ) {
             if ( self.initialPlay ) {
-                [self playStream:YES];
+                [self playAudio:YES];
             } else {
                 [self initialPlayTapped:nil];
             }
@@ -834,7 +848,7 @@ setForOnDemandUI;
         
         if ( play ) {
             if ( self.initialPlay ) {
-                [self playStream:YES];
+                [self playAudio:YES];
             } else {
                 [self initialPlayTapped:nil];
             }
@@ -1313,7 +1327,7 @@ setForOnDemandUI;
             }
             
             if ( self.audioWasPlaying ) {
-                [self playStream:YES];
+                [self playAudio:YES];
                 self.audioWasPlaying = NO;
             }
             
@@ -1836,7 +1850,7 @@ setForOnDemandUI;
                         if ( self.initiateRewind ) {
                             [self activateRewind:RewindDistanceBeginning];
                         } else {
-                            [self playStream:YES];
+                            [self playAudio:YES];
                         }
                         
                     } else {
@@ -2019,7 +2033,7 @@ setForOnDemandUI;
     
     if ( self.initialPlay ) {
         if ( [[NetworkManager shared] audioWillBeInterrupted] ) {
-            //[[AudioManager shared] pauseStream];
+            //[[AudioManager shared] pauseAudio];
         }
     } else {
         if ( !self.menuOpen ) {
@@ -2132,7 +2146,7 @@ setForOnDemandUI;
             [[AudioManager shared] resetPlayer];
             [self resetUI];
         } else if ( [[SessionManager shared] sessionIsBehindLive] ) {
-            [[AudioManager shared] pauseStream];
+            [[AudioManager shared] pauseAudio];
             [[AudioManager shared] resetPlayer];
             [self resetUI];
         }
@@ -2432,7 +2446,7 @@ setForOnDemandUI;
         if ( self.initiateRewind ) {
             [self activateRewind:RewindDistanceBeginning];
         } else {
-            [self playStream:YES];
+            [self playAudio:YES];
         }
     });
     
@@ -2508,6 +2522,8 @@ setForOnDemandUI;
 
 - (void)queueScrollEnded {
     
+    [[AudioManager shared] invalidateTimeObserver];
+    
     self.onDemandPanning = NO;
     
     [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationOptionCurveLinear animations:^{
@@ -2532,8 +2548,11 @@ setForOnDemandUI;
         self.timeLabelOnDemand.text = @"LOADING...";
         self.queueLoading = YES;
         
-        [[QueueManager shared] playItemAtPosition:newPage];
-        self.queueCurrentPage = newPage;
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.25 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            [[QueueManager shared] playItemAtPosition:newPage];
+            self.queueCurrentPage = newPage;
+        });
+
         
     } else {
         [self.jogShuttle endAnimations];

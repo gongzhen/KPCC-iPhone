@@ -15,10 +15,12 @@
 }
 
 - (void)printDimensionsWithIdentifier:(NSString *)identifier {
+#ifndef SUPPRESS_DIMENSION_PRINTING
     NSLog(@"%@ {%@} : oX: %1.1f, oY: %1.1f, W: %1.1f, H: %1.1f",identifier,[[self class] description],self.frame.origin.x,
           self.frame.origin.y,
           self.frame.size.width,
           self.frame.size.height);
+#endif
 }
 
 - (void)cutAHole:(CGRect)holeDimensions {
