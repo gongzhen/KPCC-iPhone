@@ -28,16 +28,58 @@
 #ifdef TESTING_PROGRAM_CHANGE
         mgr.initialProgramRequested = 0;
 #endif
+        mgr.prevCheckedMinute = -1;
     });
     return mgr;
 }
 
+- (void)startAudioSession {
+    if ( [[AudioManager shared] currentAudioMode] == AudioModeLive ) {
+        [self startLiveSession];
+    } else if ( [[AudioManager shared] currentAudioMode] == AudioModeOnDemand ) {
+        [self startOnDemandSession];
+    }
+}
+
 #pragma mark - Session Mgmt
+- (NSDate*)vLive {
+    NSDate *live = [NSDate date];
+
+    if ( [AudioManager shared].audioPlayer.currentItem ) {
+        NSDate *msd = [[AudioManager shared] maxSeekableDate];
+        if ( msd ) {
+            if ( [msd isWithinReasonableframeOfDate:[NSDate date]] ) {
+                if ( abs([live timeIntervalSinceDate:msd]) > kStreamIsLiveTolerance ) {
+                    live = msd;
+                    self.latestDriftValue = abs([live timeIntervalSinceDate:msd]);
+                }
+            }
+        } else {
+            // AVPlayer has yet to acquire a max seekable date, so return some identifiably large value
+            return [[NSDate date] dateByAddingTimeInterval:60*60*24*10];
+        }
+    }
+    
+    return live;
+}
+
+- (NSInteger)calculatedDriftValue {
+    /*NSInteger vDrift = abs([[NSDate date] timeIntervalSinceDate:[[AudioManager shared] maxSeekableDate]]);
+    NSLog(@"Current Drift Value : %ld",(long)vDrift);
+    return vDrift / 2.0 < kStreamIsLiveTolerance ? vDrift / 2.0 : kStreamIsLiveTolerance;*/
+    return 2;
+}
+
 - (NSTimeInterval)secondsBehindLive {
     NSDate *currentTime = [AudioManager shared].audioPlayer.currentItem.currentDate;
     if ( !currentTime ) return 0;
     
+#ifndef SUPPRESS_V_LIVE
+    NSDate *msd = [self vLive];
+#else
     NSDate *msd = [NSDate date];
+#endif
+    
     NSTimeInterval ctTI = [currentTime timeIntervalSince1970];
     NSTimeInterval msdTI = [msd timeIntervalSince1970];
     NSTimeInterval seconds = abs(ctTI - msdTI);
@@ -207,6 +249,7 @@
                                            @"programTitle" : title,
                                            @"sessionLength" : pt,
                                            @"sessionLengthInSeconds" : [NSString stringWithFormat:@"%ld",(long)sessionLength] }];
+    
     self.odSessionIsHot = NO;
     self.odSessionID = nil;
     return sid;
@@ -240,6 +283,7 @@
                                            @"programLength" : pretty
                                            }];
 }
+
 
 #pragma mark - Cache
 - (void)resetCache {
@@ -302,7 +346,8 @@
         // Create Program and insert into managed object context
         if ( returnedObject && [(NSDictionary*)returnedObject count] > 0 ) {
             dispatch_async(dispatch_get_main_queue(), ^{
-                Program *programObj = [Program insertProgramWithDictionary:returnedObject inManagedObjectContext:[[ContentManager shared] managedObjectContext]];
+                Program *programObj = [Program insertProgramWithDictionary:returnedObject
+                                                    inManagedObjectContext:[[ContentManager shared] managedObjectContext]];
                 
                 [[ContentManager shared] saveContext];
                 
@@ -321,6 +366,11 @@
 #endif
                 if ( touch ) {
                     touch = ![self ignoreProgramUpdating];
+                }
+                
+                if ( self.genericImageForProgram && programObj ) {
+                    touch = YES;
+                    self.genericImageForProgram = NO;
                 }
                 
                 self.currentProgram = programObj;
@@ -352,7 +402,6 @@
     if ( [self sessionIsBehindLive] && ![self seekForwardRequested] && !self.expiring ) {
         d2u = [[AudioManager shared].audioPlayer.currentItem currentDate];
         d2u = [d2u minuteRoundedUpByThreshold:3];
-        
         NSLog(@"Adjusted time to fetch program : %@",[NSDate stringFromDate:d2u
                                                                  withFormat:@"hh:mm:ss a"]);
     }
@@ -377,7 +426,6 @@
 - (void)armProgramUpdater {
     [self disarmProgramUpdater];
     
-
     if ( [self ignoreProgramUpdating] ) return;
 #ifdef LEGACY_TIMER
 #ifndef TESTING_PROGRAM_CHANGE
@@ -461,16 +509,12 @@
 
 - (void)disarmProgramUpdater {
 #ifdef LEGACY_TIMER
-/*    if ( [self useLocalNotifications] ) {
-        [[UIApplication sharedApplication] cancelAllLocalNotifications];
-    } else {*/
     if ( self.programUpdateTimer ) {
         if ( [self.programUpdateTimer isValid] ) {
             [self.programUpdateTimer invalidate];
         }
         self.programUpdateTimer = nil;
     }
-   // }
 #endif
 }
 
@@ -536,7 +580,7 @@
     if ( ct ) {
         NSDateComponents *comps = [[NSCalendar currentCalendar] components:NSCalendarUnitMinute|NSCalendarUnitSecond
                                                                   fromDate:ct];
-        if ( [comps minute] % 15 == 0 || force ) {
+        if ( [comps minute] == 6 || [comps minute] % kProgramPollingPressure == 0 || force ) {
             
             if ( [comps minute] == self.prevCheckedMinute ) return;
             self.prevCheckedMinute = [comps minute];
@@ -548,9 +592,10 @@
                 self.prevCheckedMinute = [comps minute];
                 NSLog(@"Checking program : %@ (%ld)",[NSDate stringFromDate:ct
                                                                  withFormat:@"hh:mm a"],(long)[ct timeIntervalSince1970]);
-                
                 [self processTimer:nil];
+                
             }
+            
         } else {
             [self setUpdaterArmed:NO];
         }
@@ -570,6 +615,19 @@
 }
 
 #pragma mark - State handling
+- (void)setLastKnownBitrate:(double)lastKnownBitrate {
+    double replacedBitrate = _lastKnownBitrate;
+    _lastKnownBitrate = lastKnownBitrate;
+    if ( replacedBitrate > 0.0 ) {
+        if ( fabs(replacedBitrate - _lastKnownBitrate) > 10000.0 ) {
+            [[AnalyticsManager shared] logEvent:@"bitRateSwitching"
+                                 withParameters:@{ @"lastLoggedBitRate" : @(replacedBitrate),
+                                                   @"newBitRate" : @(lastKnownBitrate) }];
+        }
+    }
+    
+}
+
 - (long)bufferLength {
     long stableDuration = kStreamBufferLimit;
     for ( NSValue *str in [[[AudioManager shared] audioPlayer] currentItem].seekableTimeRanges ) {
@@ -588,10 +646,12 @@
     NSDate *currentDate = [[AudioManager shared].audioPlayer.currentItem currentDate];
     if ( !currentDate ) return NO;
     
+#ifndef SUPPRESS_V_LIVE
+    NSDate *live = [self vLive];
+#else
     NSDate *live = [NSDate date];
-    
-    
-    if ( abs([live timeIntervalSince1970] - [currentDate timeIntervalSince1970]) > 120 ) {
+#endif
+    if ( abs([live timeIntervalSince1970] - [currentDate timeIntervalSince1970]) > kStreamIsLiveTolerance ) {
         return YES;
     }
     
@@ -601,12 +661,22 @@
 - (BOOL)sessionIsExpired {
     
     if ( [[AudioManager shared] currentAudioMode] == AudioModeOnDemand ) return NO;
-    
-    if ( [[AudioManager shared] status] == StreamStatusPaused && [self sessionPausedDate] ) {
+    if ( [[AudioManager shared] status] == StreamStatusPaused ||
+            [[AudioManager shared] status] == StreamStatusStopped ) {
         NSDate *spd = [[SessionManager shared] sessionPausedDate];
-        NSDate *cit = [[AudioManager shared].audioPlayer.currentItem currentDate];
-        NSDate *aux = [spd earlierDate:cit];
+        if ( !spd ) {
+            spd = [[SessionManager shared] sessionLeftDate];
+        }
         
+        NSDate *cit = [[AudioManager shared].audioPlayer.currentItem currentDate];
+        if ( [[AudioManager shared] status] != StreamStatusStopped ) {
+            if ( !cit ) {
+                // Some kind of audio abnormality, so expire this sessions
+                return YES;
+            }
+        }
+        
+        NSDate *aux = cit ? [spd earlierDate:cit] : spd;
         if ( !aux || [[NSDate date] timeIntervalSinceDate:aux] > kStreamBufferLimit ) {
             return YES;
         }
@@ -630,7 +700,12 @@
     Program *cp = self.currentProgram;
     NSDate *soft = cp.soft_starts_at;
     NSDate *hard = cp.starts_at;
+    
+#ifndef SUPPRESS_V_LIVE
+    NSDate *now = [self vLive];
+#else
     NSDate *now = [NSDate date];
+#endif
     
     if ( [[AudioManager shared] status] != StreamStatusStopped ) {
         if ( [self sessionIsBehindLive] ) {
@@ -655,12 +730,10 @@
 
 - (void)setSessionLeftDate:(NSDate *)sessionLeftDate {
     _sessionLeftDate = sessionLeftDate;
-    self.sessionIsInBackground = YES;
 }
 
 - (void)setSessionReturnedDate:(NSDate *)sessionReturnedDate {
     _sessionReturnedDate = sessionReturnedDate;
-    self.sessionIsInBackground = NO;
     if ( sessionReturnedDate && self.sessionLeftDate ) {
         [self handleSessionReactivation];
     }
@@ -692,7 +765,6 @@
     
     if ( [[AudioManager shared] currentAudioMode] == AudioModeOnboarding ) return;
     if ( ![[UXmanager shared].settings userHasViewedOnboarding] ) return;
-    
     if ( !self.sessionLeftDate || !self.sessionReturnedDate ) return;
     if ( [self sessionIsExpired] ) {
     
@@ -731,6 +803,8 @@
     [master resetUI];
 }
 
-
+- (BOOL)sessionIsInBackground {
+    return [[UIApplication sharedApplication] applicationState] == UIApplicationStateBackground;
+}
 
 @end

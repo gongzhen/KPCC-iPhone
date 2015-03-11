@@ -23,12 +23,14 @@
 #import "AnalyticsManager.h"
 #import "SCPROnboardingViewController.h"
 #import "UIView+PrintDimensions.h"
+#import "SCPRScrubbingUIViewController.h"
 
 @import MessageUI;
 
 static NSString *kRewindingText = @"REWINDING...";
 static NSString *kForwardingText = @"GOING LIVE...";
 static NSString *kBufferingText = @"BUFFERING";
+static CGFloat kScrubbingThreeFiveSlip = 36.0;
 
 @interface SCPRMasterViewController () <AudioManagerDelegate, UINavigationControllerDelegate, UIViewControllerTransitioningDelegate, SCPRPreRollControllerDelegate, UIScrollViewDelegate>
 
@@ -49,7 +51,7 @@ static NSString *kBufferingText = @"BUFFERING";
 @property IBOutlet NSLayoutConstraint *rewindHeightContraint;
 @property IBOutlet NSLayoutConstraint *programTitleYConstraint;
 
-- (void)playStream:(BOOL)hard;
+- (void)playAudio:(BOOL)hard;
 - (void)setDataForOnDemand:(Program *)program andAudioChunk:(AudioChunk*)audioChunk;
 - (void)setDataForOnDemand:(Program *)program andAudioChunk:(AudioChunk*)audioChunk completion:(CompletionBlock)completion;
 - (void)lockUI:(id)note;
@@ -113,6 +115,7 @@ setForOnDemandUI;
     self.view.backgroundColor = [UIColor blackColor];
     self.horizDividerLine.layer.opacity = 0.0;
     self.queueBlurView.layer.opacity = 0.0;
+    self.scrubbingUIView.alpha = 0.0;
     
     self.darkBgView.hidden = NO;
     self.darkBgView.backgroundColor = [[UIColor virtualBlackColor] translucify:0.7];
@@ -134,10 +137,7 @@ setForOnDemandUI;
         }
     }
     
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(unlockUI:)
-                                                 name:@"network-status-good"
-                                               object:nil];
+
     
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(lockUI:)
@@ -151,6 +151,8 @@ setForOnDemandUI;
     self.liveProgressViewController.liveProgressView = self.liveProgressBarView;
     self.liveProgressViewController.currentProgressView = self.currentProgressBarView;
     self.playerControlsView.backgroundColor = [UIColor clearColor];
+    self.progressView.alpha = 0.0;
+    self.liveProgressView.alpha = 0.0;
     
     self.queueBlurView.contentMode = UIViewContentModeScaleAspectFill;
     
@@ -254,15 +256,18 @@ setForOnDemandUI;
     
     self.originalFrames = [NSMutableDictionary new];
 
+    [self primeScrubber];
     
     [SCPRCloakViewController cloakWithCustomCenteredView:nil cloakAppeared:^{
         if ( [[UXmanager shared] userHasSeenOnboarding] ) {
+            
             [self updateDataForUI];
             [self.view layoutIfNeeded];
             [self.liveStreamView layoutIfNeeded];
             self.originalFrames[@"playerControls"] = @(self.playerControlsBottomYConstraint.constant);
             self.originalFrames[@"programTitle"] = @(self.programTitleYConstraint.constant);
             self.originalFrames[@"liveRewind"] = @(self.liveRewindBottomYConstraint.constant);
+            
             
         } else {
             
@@ -285,10 +290,12 @@ setForOnDemandUI;
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-    
-    
-    //[self.blurView setNeedsDisplay];
     [self.queueBlurView setNeedsDisplay];
+    
+    if ( [[NetworkManager shared] networkDown] ) {
+        self.initialPlayButton.userInteractionEnabled = NO;
+        self.initialPlayButton.alpha = 0.4;
+    }
     
     // Once the view has appeared we can register to begin receiving system audio controls.
     [[UIApplication sharedApplication] beginReceivingRemoteControlEvents];
@@ -510,12 +517,27 @@ setForOnDemandUI;
         [UIView animateWithDuration:0.25 animations:^{
             del.onboardingController.view.alpha = 1.0;
         }];
+    } else if ( ![UXmanager shared].settings.userHasViewedScrubbingOnboarding ) {
+        SCPRAppDelegate *del = [Utils del];
+        [del.onboardingController scrubbingMode];
+        [del.window bringSubviewToFront:del.onboardingController.view];
+        [UIView animateWithDuration:0.25 animations:^{
+            del.onboardingController.view.alpha = 1.0;
+        }];
     }
 }
 
 # pragma mark - Actions
 
 - (IBAction)initialPlayTapped:(id)sender {
+    
+#ifdef FORCE_TEST_STREAM
+    self.preRollViewController.tritonAd = nil;
+#endif
+#ifdef BETA
+    self.preRollViewController.tritonAd = nil;
+#endif
+    
     if ( ![[UXmanager shared].settings userHasViewedOnboarding] ) {
         [[UXmanager shared] fadeOutBrandingWithCompletion:^{
             [self moveTextIntoPlace:YES];
@@ -524,8 +546,8 @@ setForOnDemandUI;
         }];
         return;
     }
-    
-    [[SessionManager shared] fetchCurrentProgram:^(id returnedObject) {
+    [[AudioManager shared] setSmooth:YES];
+    //[[SessionManager shared] fetchCurrentProgram:^(id returnedObject) {
         [UIView animateWithDuration:0.15 animations:^{
             self.liveRewindAltButton.alpha = 0.0;
         } completion:^(BOOL finished) {
@@ -538,16 +560,17 @@ setForOnDemandUI;
                     }];
                 }];
             } else {
+                
+                
                 [self primePlaybackUI:YES];
                 self.initialPlay = YES;
             }
         }];
-    }];
+    //}];
     
 
     
 }
-
 
 - (void)specialRewind {
     self.initiateRewind = YES;
@@ -570,9 +593,15 @@ setForOnDemandUI;
     }
     
     if (![[AudioManager shared] isStreamPlaying]) {
+        
+        if ( [[AudioManager shared] currentAudioMode] == AudioModeOnDemand ) {
+            [self playAudio:NO];
+            return;
+        }
+        
         if ( [[SessionManager shared] sessionIsExpired] ) {
             [[SessionManager shared] fetchCurrentProgram:^(id returnedObject) {
-                [self playStream:YES];
+                [self playAudio:YES];
             }];
         } else {
 
@@ -581,11 +610,11 @@ setForOnDemandUI;
                 if ( [[AudioManager shared] currentAudioMode] == AudioModeOnDemand ) {
                     [[QueueManager shared] playItemAtPosition:(int)[[QueueManager shared] currentlyPlayingIndex]];
                 } else {
-                    [self playStream:YES];
+                    [self playAudio:YES];
                 }
             } else {
                 BOOL hard = [[AudioManager shared] status] == StreamStatusStopped ? YES : NO;
-                [self playStream:hard];
+                [self playAudio:hard];
             }
             
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
@@ -595,7 +624,23 @@ setForOnDemandUI;
         }
     } else {
  
-        [self pauseStream];
+        [[AudioManager shared] setUserPause:YES];
+        
+#ifndef SUPPRESS_AGGRESSIVE_KICKSTART
+        if ( [[AudioManager shared] currentAudioMode] == AudioModeLive ) {
+            if ( [[AudioManager shared] dropoutOccurred] ) {
+                [[AudioManager shared] stopAllAudio];
+                [[AudioManager shared] takedownAudioPlayer];
+                [[AudioManager shared] buildStreamer:kHLSLiveStreamURL];
+            } else {
+                [self pauseAudio];
+            }
+        } else {
+            [self pauseAudio];
+        }
+#else
+        [self pauseAudio];
+#endif
         
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             [[SessionManager shared] disarmProgramUpdater];
@@ -627,7 +672,7 @@ setForOnDemandUI;
  */
 - (void)pauseTapped:(id)sender {
     if ([[AudioManager shared] isStreamPlaying]) {
-        [self pauseStream];
+        [self pauseAudio];
     }
 }
 - (void)playTapped:(id)sender {
@@ -635,7 +680,7 @@ setForOnDemandUI;
         if ([[AudioManager shared] isStreamBuffering]) {
             [[AudioManager shared] stopAllAudio];
         }
-        [self playStream:YES];
+        [self playAudio:YES];
     }
 }
 
@@ -695,6 +740,7 @@ setForOnDemandUI;
         UIActivityViewController *controller = [[UIActivityViewController alloc]
                                                 initWithActivityItems:@[complete]
                                                 applicationActivities:nil];
+        
         controller.excludedActivityTypes = @[UIActivityTypeAirDrop];
         [controller setCompletionHandler:^(NSString *activityType, BOOL completed) {
             if ( completed ) {
@@ -722,21 +768,22 @@ setForOnDemandUI;
 }
 
 # pragma mark - Audio commands
-- (void)playStream:(BOOL)hard {
+- (void)playAudio:(BOOL)hard {
+    
     if ( hard && ![[SessionManager shared] sessionIsInBackground] ) {
-        [[AudioManager shared] playLiveStream];
+        [[AudioManager shared] playAudio];
     } else {
         if ( [[SessionManager shared] userLeavingForClickthrough] ) {
-            [[AudioManager shared] playLiveStream];
+            [[AudioManager shared] playAudio];
         } else {
-            [[AudioManager shared] playStream];
+            [[AudioManager shared] playAudio];
             [[SessionManager shared] startLiveSession];
         }
     }
 }
 
-- (void)pauseStream {
-    [[AudioManager shared] pauseStream];
+- (void)pauseAudio {
+    [[AudioManager shared] pauseAudio];
 }
 
 - (void)rewindFifteen {
@@ -749,16 +796,20 @@ setForOnDemandUI;
     [[AudioManager shared] forwardSeekFifteenSeconds];
 }
 
-
-
 - (void)goLive:(BOOL)play {
+    [self goLive:play smooth:YES];
+}
+
+- (void)goLive:(BOOL)play smooth:(BOOL)smooth {
     
+    [[AudioManager shared] setSmooth:smooth];
+    [self.liveProgressViewController hide];
     
     if ( [[AudioManager shared] currentAudioMode] == AudioModeLive ||
         [[AudioManager shared] currentAudioMode] == AudioModeNeutral ) {
         if ( [[AudioManager shared] status] == StreamStatusPaused ) {
             if ( self.initialPlay ) {
-                [self playStream:NO];
+                [self playAudio:NO];
             } else {
                 [self initialPlayTapped:nil];
             }
@@ -766,7 +817,7 @@ setForOnDemandUI;
         }
         if ( [[AudioManager shared] status] == StreamStatusStopped ) {
             if ( self.initialPlay ) {
-                [self playStream:YES];
+                [self playAudio:YES];
             } else {
                 [self initialPlayTapped:nil];
             }
@@ -776,7 +827,12 @@ setForOnDemandUI;
         return;
     }
     
+    [[AudioManager shared] takedownAudioPlayer];
+    
+    self.liveStreamView.userInteractionEnabled = YES;
+    self.playerControlsView.userInteractionEnabled = YES;
     [[AudioManager shared] setCurrentAudioMode:AudioModeLive];
+    
     self.lockPlayback = !play;
     
     [[NSNotificationCenter defaultCenter] removeObserver:self
@@ -792,11 +848,12 @@ setForOnDemandUI;
         
         if ( play ) {
             if ( self.initialPlay ) {
-                [self playStream:YES];
+                [self playAudio:YES];
             } else {
                 [self initialPlayTapped:nil];
             }
         }
+        
     }];
     
 }
@@ -805,9 +862,7 @@ setForOnDemandUI;
     
     self.initiateRewind = NO;
     self.preRollViewController.tritonAd = nil;
-    
     [self snapJogWheel];
-    [self.liveDescriptionLabel pulsate:kRewindingText color:nil];
     
     self.jogShuttle.forceSingleRotation = YES;
     
@@ -821,11 +876,6 @@ setForOnDemandUI;
     self.jogging = YES;
     self.shuttlingGate = YES;
     
-    // Disable this until the stream separates from the beginning
-    // of the program a litle bit
-    // self.liveRewindAltButton.userInteractionEnabled = NO;
-    // [self.liveRewindAltButton setAlpha:kDisabledAlpha];
-    
     Program *cProgram = [[SessionManager shared] currentProgram];
     [self.jogShuttle.view setAlpha:1.0];
     
@@ -836,14 +886,10 @@ setForOnDemandUI;
                             withSound:sound
                            completion:^{
                                
-                               [self.liveDescriptionLabel stopPulsating];
-                               
                                self.dirtyFromRewind = YES;
                                self.initiateRewind = NO;
                                self.jogging = NO;
                                [self updateControlsAndUI:YES];
-                               
-                               seekRequested = NO;
                                
                                if ( [[UXmanager shared] userHasSeenOnboarding] ) {
                                    
@@ -892,7 +938,6 @@ setForOnDemandUI;
             case RewindDistanceBeginning:
             default:
                 if (cProgram) {
-                    
                     if ( self.dirtyFromRewind ) {
                         [[AudioManager shared] specialSeekToDate:cProgram.soft_starts_at];
                     } else {
@@ -978,19 +1023,307 @@ setForOnDemandUI;
     }
 }
 
+#pragma mark - Scrubbing
+- (void)bringUpScrubber {
+    
+    if ( self.scrubberLoadingGate ) return;
+    
+    self.scrubberLoadingGate = YES;
+    self.scrubbingUI.playPauseButton = self.playPauseButton;
+    
+    [[AudioManager shared] setDelegate:self.scrubbingUI];
+    
+    if ( [Utils isThreePointFive] ) {
+        self.topYScrubbingAnchor.constant = [self.topYScrubbingAnchor constant]-kScrubbingThreeFiveSlip;
+        self.playerControlsBottomYConstraint.constant = [self.playerControlsBottomYConstraint constant]+kScrubbingThreeFiveSlip;
+        
+
+        
+        [self.scrubbingUI.view layoutIfNeeded];
+    }
+    
+    [UIView animateWithDuration:0.25 delay:0.0 options:UIViewAnimationOptionCurveEaseOut animations:^{
+        [[DesignManager shared] fauxHideNavigationBar:self];
+        [self cloakForScrubber];
+        
+        if ( [Utils isThreePointFive] ) {
+            [self.view updateConstraintsIfNeeded];
+            [self.view layoutIfNeeded];
+        }
+        
+        [self.scrubbingUI scrubberWillAppear];
+        self.scrubbingUI.view.alpha = 1.0;
+        [self.scrubbingUI.scrubberController unmask];
+    } completion:^(BOOL finished) {
+
+        //[self.queueDarkBgView fillHole];
+        
+        /*CGRect raw = self.scrubberControlView.frame;
+        CGRect cooked = [self.scrubbingUIView convertRect:raw
+                                                   toView:self.queueDarkBgView];
+        [self.queueDarkBgView cutAHole:cooked];*/
+        
+        if ( [Utils isThreePointFive] ) {
+            POPSpringAnimation *scaleAnimation = [POPSpringAnimation animationWithPropertyNamed:kPOPLayerScaleXY];
+            scaleAnimation.toValue  = [NSValue valueWithCGSize:CGSizeMake(0.8f, 0.8f)];
+            scaleAnimation.springBounciness = 2.0f;
+            scaleAnimation.springSpeed = 1.0f;
+            [self.playPauseButton.layer pop_addAnimation:scaleAnimation forKey:@"squeeze-play-button"];
+        }
+        
+        [self addCloseButton];
+        
+    }];
+    
+}
+
+- (void)primeScrubber {
+    
+    SCPRScrubbingUIViewController *sUI = [[SCPRScrubbingUIViewController alloc]
+                                          init];
+    sUI.view = self.scrubbingUIView;
+    
+    self.scrubbingUI = sUI;
+    self.scrubbingUI.rw30Button = self.back30Button;
+    self.scrubbingUI.fw30Button = self.fwd30Button;
+
+    
+    SCPRScrubberViewController *sCtrl = [[SCPRScrubberViewController alloc]
+                                         init];
+    sCtrl.view = self.scrubberControlView;
+    
+    self.scrubbingUI.scrubberController = sCtrl;
+    self.scrubbingUI.scrubberController.scrubberTimeLabel = self.scrubberTimeLabel;
+    self.scrubbingUI.scrubberController.viewAsTouchableScrubberView = self.touchableScrubberView;
+    
+    if ( self.scrubbingTriggerView ) {
+        [self.scrubbingTriggerView removeFromSuperview];
+    }
+    self.scrubbingTriggerView = [[UIView alloc] initWithFrame:CGRectMake(0.0,0.0,self.view.frame.size.width,
+                                                            40.0)];
+    self.scrubbingTriggerView.backgroundColor = [UIColor clearColor]/*[[UIColor purpleColor] translucify:0.25]*/;
+    UILongPressGestureRecognizer *lpgr = [[UILongPressGestureRecognizer alloc] initWithTarget:self
+                                                                                       action:@selector(bringUpScrubber)];
+    lpgr.minimumPressDuration = 0.5;
+    [self.scrubbingTriggerView addGestureRecognizer:lpgr];
+    self.scrubbingTriggerView.frame = CGRectMake(0.0, self.progressView.frame.origin.y-self.scrubbingTriggerView.frame.size.height+20.0,
+                                                 self.scrubbingTriggerView.frame.size.width,
+                                                 self.scrubbingTriggerView.frame.size.height);
+    
+    [self.view addSubview:self.scrubbingTriggerView];
+    
+    self.back30VerticalAnchor.constant = [Utils isThreePointFive] ? 28.0 : 40.0;
+    self.fwd30VerticalAnchor.constant = [Utils isThreePointFive] ? 28.0 : 40.0;
+    self.scrubbingUI.parentControlView = self;
+    
+    sUI.view.alpha = 0.0;
+    self.scrubbingTriggerView.alpha = 0.0;
+    
+    [self.scrubbingUI prerender];
+    
+
+    /*
+    CGRect raw = self.scrubberControlView.frame;
+    CGRect cooked = [self.scrubbingUIView convertRect:raw
+                                               toView:self.queueDarkBgView];
+    [self.queueDarkBgView cutAHole:cooked];*/
+}
+
+
+- (void)cloakForScrubber {
+
+    SCPRQueueScrollableView *cv = self.queueUIContents[self.queueCurrentPage];
+    cv.audioTitleLabel.alpha = 0.6;
+
+    self.scrubbingTriggerView.alpha = 0.0;
+    self.timeLabelOnDemand.alpha = 0.0;
+    self.progressView.alpha = 0.0;
+    self.queueBlurView.alpha = 1.0;
+    self.onDemandPlayerView.alpha = 0.0;
+    self.horizDividerLine.alpha = 0.0;
+    self.programTitleLabel.alpha = 0.0;
+    self.queueDarkBgView.alpha = 0.45;
+    self.queueScrollView.userInteractionEnabled = NO;
+    
+    self.scrubbing = YES;
+    
+}
+
+- (void)decloakForScrubber {
+    
+    SCPRQueueScrollableView *cv = self.queueUIContents[self.queueCurrentPage];
+    cv.audioTitleLabel.alpha = 1.0;
+    
+    self.scrubbingTriggerView.alpha = 1.0;
+    self.timeLabelOnDemand.alpha = 1.0;
+    self.progressView.alpha = 1.0;
+    self.queueBlurView.alpha = 0.0;
+    self.onDemandPlayerView.alpha = 1.0;
+    self.horizDividerLine.alpha = 0.4;
+    self.programTitleLabel.alpha = 1.0;
+    self.queueDarkBgView.alpha = 0.0;
+    self.queueScrollView.userInteractionEnabled = YES;
+    
+    self.scrubbing = NO;
+}
+
+- (void)addCloseButton {
+    if ( self.scrubberCloseButton ) {
+        [self.scrubberCloseButton removeFromSuperview];
+    }
+    
+    self.scrubberCloseButton = [SCPRButton buttonWithType:UIButtonTypeCustom];
+    
+    [self.scrubberCloseButton setImage:[UIImage imageNamed:@"btn_close.png"]
+                              forState:UIControlStateNormal];
+    [self.scrubberCloseButton setImage:[UIImage imageNamed:@"btn_close.png"]
+                              forState:UIControlStateHighlighted];
+    
+    [self.scrubbingUI setCloseButton:self.scrubberCloseButton];
+    
+    [self.view addSubview:self.scrubberCloseButton];
+    
+    self.scrubberCloseButton.contentMode = UIViewContentModeCenter;
+    
+    self.scrubberCloseButton.alpha = 0.0;
+    
+    [self.scrubberCloseButton setTranslatesAutoresizingMaskIntoConstraints:NO];
+    
+    /*NSArray *hConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:[button(40.0)]-20-|"
+                                                                                options:0
+                                                                                metrics:nil
+                                                                                  views:@{ @"button" : self.scrubberCloseButton }];*/
+    
+    NSLayoutConstraint *centerAnchor = [NSLayoutConstraint constraintWithItem:self.scrubberCloseButton
+                                                                    attribute:NSLayoutAttributeCenterX
+                                                                    relatedBy:NSLayoutRelationEqual
+                                                                       toItem:self.view
+                                                                    attribute:NSLayoutAttributeCenterX
+                                                                   multiplier:1.0
+                                                                     constant:0.0];
+    
+    CGFloat btnSize = [Utils isThreePointFive] ? 32.0 : 40.0;
+    CGFloat bottomAnchorConstant = [Utils isThreePointFive] ? 8.0 : 14.0;
+    
+    NSArray *vConstraints = [NSLayoutConstraint constraintsWithVisualFormat:[NSString stringWithFormat:@"V:[button(%1.1f)]-%1.1f-|",btnSize,bottomAnchorConstant]
+                                                                    options:0
+                                                                    metrics:nil
+                                                                      views:@{ @"button" : self.scrubberCloseButton }];
+    [self.view addConstraint:centerAnchor];
+    [self.view addConstraints:vConstraints];
+    
+    [UIView animateWithDuration:0.25 animations:^{
+        self.scrubberCloseButton.alpha = 1.0;
+    }];
+    
+}
+
+- (void)killCloseButton {
+
+    [UIView animateWithDuration:0.25 animations:^{
+        [self.scrubberCloseButton setAlpha:0.0];
+    } completion:^(BOOL finished) {
+        [self.scrubberCloseButton removeFromSuperview];
+    }];
+    
+}
+
+- (void)finishedWithScrubber {
+    [UIView animateWithDuration:0.25 animations:^{
+        if ( [Utils isThreePointFive] ) {
+            self.topYScrubbingAnchor.constant = [self.topYScrubbingAnchor constant]+kScrubbingThreeFiveSlip;
+            self.playerControlsBottomYConstraint.constant = [self.playerControlsBottomYConstraint constant]-kScrubbingThreeFiveSlip;
+            
+            [self.scrubbingUI.view layoutIfNeeded];
+            [self.view layoutIfNeeded];
+        }
+        
+        [self.scrubbingUI takedown];
+        SCPRQueueScrollableView *cqsv = self.queueUIContents[self.queueCurrentPage];
+        cqsv.audioTitleLabel.alpha = 1.0;
+        self.scrubberLoadingGate = NO;
+        
+    } completion:^(BOOL finished) {
+        
+        if ( [Utils isThreePointFive] ) {
+            POPSpringAnimation *scaleAnimation = [POPSpringAnimation animationWithPropertyNamed:kPOPLayerScaleXY];
+            scaleAnimation.toValue  = [NSValue valueWithCGSize:CGSizeMake(1.0f, 1.0f)];
+            [self.playPauseButton.layer pop_addAnimation:scaleAnimation forKey:@"squeeze-play-button"];
+        }
+        
+        [[AudioManager shared] setDelegate:self];
+        if ( [[AudioManager shared].audioPlayer rate] <= 0.0 ) {
+            [self tickOnDemand];
+        }
+    }];
+}
+
+- (void)beginScrubbingWaitMode {
+    if ( ![self.jogShuttle spinning] ) {
+        [self.jogShuttle animateIndefinitelyWithViewToHide:self.playPauseButton completion:^{
+            self.playPauseButton.enabled = YES;
+        }];
+    }
+}
+
+- (void)endScrubbingWaitMode {
+    [self.jogShuttle endAnimations];
+}
+
 # pragma mark - UI control
+- (void)prettifyBehindLiveStatus {
+    
+    NSDate *ciCurrentDate = [AudioManager shared].audioPlayer.currentItem.currentDate;
+    if ( !ciCurrentDate ) {
+        self.liveDescriptionLabel.text = @"";
+        return;
+    }
+#ifndef SUPPRESS_V_LIVE
+    NSTimeInterval ti = [[[SessionManager shared] vLive] timeIntervalSinceDate:ciCurrentDate];
+#else
+    NSTimeInterval ti = [[NSDate date] timeIntervalSinceDate:ciCurrentDate];
+#endif
+    
+#ifndef SUPPRESS_V_LIVE
+    if ( ti > 60*60*24 ) {
+        if ( [[SessionManager shared] sessionIsInRecess] ) {
+            [self.liveDescriptionLabel setText:@"UP NEXT"];
+        } else {
+            [self.liveDescriptionLabel setText:@"LIVE"];
+            self.dirtyFromRewind = NO;
+        }
+        return;
+    }
+#endif
+    
+    if ( [[NetworkManager shared] networkDown] ) {
+        [self.liveDescriptionLabel setText:@"NO NETWORK"];
+        return;
+    }
+    
+    if ( ti > kStreamIsLiveTolerance ) {
+        [self.liveDescriptionLabel setText:[NSString stringWithFormat:@"%@ BEHIND LIVE", [NSDate prettyTextFromSeconds:ti]]];
+        self.previousRewindThreshold = [[AudioManager shared].audioPlayer.currentItem.currentDate timeIntervalSince1970];
+    } else {
+        if ( [[SessionManager shared] sessionIsInRecess] ) {
+            [self.liveDescriptionLabel setText:@"UP NEXT"];
+        } else {
+            [self.liveDescriptionLabel setText:@"LIVE"];
+            self.dirtyFromRewind = NO;
+        }
+    }
+}
+
 - (void)updateDataForUI {
     [[SessionManager shared] fetchCurrentProgram:^(id returnedObject) {
         if ( returnedObject ) {
+            
             [self.liveProgressViewController displayWithProgram:(Program*)returnedObject
                                                          onView:self.view
                                                aboveSiblingView:self.playerControlsView];
             [self.liveProgressViewController hide];
             [self determinePlayState];
-            
-            if ( self.uiLocked ) {
-                [self unlockUI:@1];
-            }
+
             
             if ( [[UXmanager shared] onboardingEnding] ) {
                 dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.25 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
@@ -999,18 +1332,13 @@ setForOnDemandUI;
             }
             
             if ( self.audioWasPlaying ) {
-                [self playStream:YES];
+                [self playAudio:YES];
                 self.audioWasPlaying = NO;
             }
             
         } else {
             
-            [self.liveProgressViewController displayWithProgram:(Program*)returnedObject
-                                                         onView:self.view
-                                               aboveSiblingView:self.playerControlsView];
-            [self.liveProgressViewController hide];
             [self determinePlayState];
-            [self lockUI:@1];
             
         }
     }];
@@ -1055,7 +1383,8 @@ setForOnDemandUI;
     if (animated) {
         [UIView animateWithDuration:0.1 animations:^{
             
-            self.liveDescriptionLabel.alpha = 1.0;
+            if ( !self.menuOpen && ![[UXmanager shared] notificationsPromptDisplaying] )
+                self.liveDescriptionLabel.alpha = 1.0;
             
         } completion:^(BOOL finished) {
             if ([[AudioManager shared] isStreamPlaying] || [[AudioManager shared] isStreamBuffering]) {
@@ -1069,7 +1398,6 @@ setForOnDemandUI;
                 if ( [AudioManager shared].currentAudioMode != AudioModeOnDemand ) {
                     [self.playPauseButton setAlpha:1.0];
                 }
-                [self.jogShuttle.view setAlpha:0.0];
             }];
             
         }];
@@ -1081,6 +1409,9 @@ setForOnDemandUI;
 }
 
 - (void)determinePlayState {
+    
+    if ( [[AudioManager shared] seekRequested] ) return;
+    
     if ( [[AudioManager shared] status] == StreamStatusStopped || self.dirtyFromFailure || [[SessionManager shared] expiring] ) {
         if ( [[SessionManager shared] sessionIsInRecess] ) {
             self.liveDescriptionLabel.text = @"UP NEXT";
@@ -1091,9 +1422,17 @@ setForOnDemandUI;
     }
     if ( [[AudioManager shared] status] == StreamStatusPaused ) {
         if ( [[SessionManager shared] sessionIsBehindLive] ) {
+#ifndef SUPPRESS_V_LIVE
+            [self prettifyBehindLiveStatus];
+#else
             NSDate *ciCurrentDate = [AudioManager shared].audioPlayer.currentItem.currentDate;
             NSTimeInterval ti = [[NSDate date] timeIntervalSinceDate:ciCurrentDate];
-            [self.liveDescriptionLabel setText:[NSString stringWithFormat:@"%@ BEHIND LIVE", [NSDate prettyTextFromSeconds:ti]]];
+            if ( ti > kStreamIsLiveTolerance ) {
+                [self.liveDescriptionLabel setText:[NSString stringWithFormat:@"%@ BEHIND LIVE", [NSDate prettyTextFromSeconds:ti]]];
+            } else {
+                [self.liveDescriptionLabel setText:[NSString stringWithFormat:@"LIVE"]];
+            }
+#endif
         }
     }
     
@@ -1141,6 +1480,10 @@ setForOnDemandUI;
     
     setForOnDemandUI = NO;
     setForLiveStreamUI = YES;
+    self.onDemandFailing = NO;
+    self.scrubbingUIView.alpha = 0.0;
+    self.scrubbingTriggerView.alpha = 0.0;
+    self.queueBlurShown = NO;
     
     [[NSNotificationCenter defaultCenter] removeObserver:self
                                                     name:@"audio_player_began_playing"
@@ -1184,7 +1527,19 @@ setForOnDemandUI;
     
 }
 
+
 - (void)setOnDemandUI:(BOOL)animated forProgram:(Program*)program withAudio:(NSArray*)array atCurrentIndex:(int)index {
+    
+    [[AudioManager shared] invalidateTimeObserver];
+    
+    if ( self.preRollViewController.tritonAd )
+        self.preRollViewController.tritonAd = nil;
+    
+    self.queueBlurShown = NO;
+    
+    if ( [[AudioManager shared].audioPlayer rate] > 0.0 ) {
+        self.onDemandPanning = YES;
+    }
     
     [self snapJogWheel];
     
@@ -1221,17 +1576,18 @@ setForOnDemandUI;
         self.jogShuttle.view.alpha = 1.0;
         self.timeLabelOnDemand.alpha = 1.0;
         self.queueBlurView.layer.opacity = 1.0;
+        self.scrubbingTriggerView.alpha = 1.0;
+        [self.liveProgressViewController hide];
     } completion:^(BOOL finished) {
         
         [self.jogShuttle animateIndefinitelyWithViewToHide:self.playPauseButton completion:^{
             self.playPauseButton.enabled = YES;
-            [self setUIContents:YES];
+            if ( !self.onDemandFailing ) {
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.25 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                    [self setUIContents:YES];
+                });
+            }
         }];
-        
-        [[NSNotificationCenter defaultCenter] addObserver:self
-                                                 selector:@selector(rebootOnDemandUI)
-                                                     name:@"audio_player_began_playing"
-                                                   object:nil];
         
         setForOnDemandUI = YES;
         setForLiveStreamUI = NO;
@@ -1265,6 +1621,7 @@ setForOnDemandUI;
         }
         
         self.queueContents = array;
+        self.queueUIContents = [NSMutableArray new];
         for (int i = 0; i < [array count]; i++) {
             CGRect frame;
             frame.origin.x = self.queueScrollView.frame.size.width * i;
@@ -1274,9 +1631,11 @@ setForOnDemandUI;
             SCPRQueueScrollableView *queueSubView = [[SCPRQueueScrollableView alloc] initWithFrame:frame];
             [queueSubView setAudioChunk:array[i]];
             
+            [self.queueUIContents addObject:queueSubView];
             [self.queueScrollView addSubview:queueSubView];
         }
         
+     
         self.queueScrollView.contentSize = CGSizeMake(self.queueScrollView.frame.size.width * [array count], self.queueScrollView.frame.size.height);
         [self setPositionForQueue:index animated:NO];
         [self.queueScrollView setHidden:NO];
@@ -1284,18 +1643,22 @@ setForOnDemandUI;
         __block SCPRMasterViewController *weakSelf = self;
         [self setDataForOnDemand:program andAudioChunk:array[index] completion:^{
             [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationOptionCurveLinear animations:^{
-                weakSelf.timeLabelOnDemand.alpha = 0.0;
                 weakSelf.progressView.alpha = 0.0;
                 weakSelf.shareButton.alpha = 0.0;
             } completion:^(BOOL finished){
                 
-                if (!weakSelf.queueBlurShown) {
-                    [[AudioManager shared] setCurrentAudioMode:AudioModeOnDemand];
-                    [weakSelf.navigationController popToRootViewControllerAnimated:YES];
-                }
+                weakSelf.queueBlurShown = YES;
                 
-                [[QueueManager shared] playItemAtPosition:(int)[[QueueManager shared] currentlyPlayingIndex]];
+                [[AudioManager shared] setCurrentAudioMode:AudioModeOnDemand];
+                [weakSelf.navigationController popToRootViewControllerAnimated:YES];
+                
+                
                 [[DesignManager shared] setProtectBlurredImage:NO];
+                
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                    [[QueueManager shared] playItemAtPosition:index];
+                    weakSelf.onDemandPanning = NO;
+                });
                 
             }];
         }];
@@ -1329,6 +1692,12 @@ setForOnDemandUI;
 }
 
 - (void)setPositionForQueue:(int)index animated:(BOOL)animated {
+    if ( !self.jogShuttle.spinning ) {
+        [self.jogShuttle animateIndefinitelyWithViewToHide:self.playPauseButton completion:^{
+            self.playPauseButton.enabled = YES;
+            [self updateControlsAndUI:YES];
+        }];
+    }
     if (index >= 0 && index < [self.queueScrollView.subviews count]) {
         if (animated) {
             [UIView animateWithDuration:0.4 delay:0.0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
@@ -1342,6 +1711,10 @@ setForOnDemandUI;
         }
     }
     [self.queueScrollView layoutIfNeeded];
+    
+    if ( self.scrubbing ) {
+        [self.scrubbingUI muteUI];
+    }
 }
 
 - (void)treatUIforProgram {
@@ -1351,6 +1724,7 @@ setForOnDemandUI;
         
         if ( !programObj ) {
             [self updateUIWithProgram:nil];
+            [[SessionManager shared] setGenericImageForProgram:YES];
             self.programImageView.image = [UIImage imageNamed:@"program_tile_generic.jpg"];
             [self finishUpdatingForProgram];
             return;
@@ -1395,19 +1769,18 @@ setForOnDemandUI;
         [self.liveRewindAltButton layoutIfNeeded];
         [self.queueBlurView setNeedsDisplay];
         [self.programImageView layoutIfNeeded];
-        
         [self setUIContents:YES];
         [self primeManualControlButton];
         
         self.view.alpha = 1.0;
+        self.scrubbingUI.view.alpha = 0.0;
+        
         if ( [SCPRCloakViewController cloakInUse] ) {
             [SCPRCloakViewController uncloak];
         }
-        
 
         [self.programImageView printDimensionsWithIdentifier:@"programImage"];
         [self.queueBlurView printDimensionsWithIdentifier:@"queueBlurImage"];
-        
         
         UIImage *blurry = [self.programImageView.image blurredImageWithRadius:20.0f
                                                                    iterations:3
@@ -1498,7 +1871,7 @@ setForOnDemandUI;
                         if ( self.initiateRewind ) {
                             [self activateRewind:RewindDistanceBeginning];
                         } else {
-                            [self playStream:YES];
+                            [self playAudio:YES];
                         }
                         
                     } else {
@@ -1544,7 +1917,7 @@ setForOnDemandUI;
             NSLog(@"Rewind Button - Hiding because onboarding initial state");
         okToShow = NO;
     }
-    if ( [[AudioManager shared] status] == StreamStatusPlaying ) {
+    if ( [[AudioManager shared] status] == StreamStatusPlaying || [[AudioManager shared].audioPlayer rate] > 0.0 ) {
         if ( okToShow )
             NSLog(@"Rewind Button - Hiding because audio is playing");
         okToShow = NO;
@@ -1554,7 +1927,12 @@ setForOnDemandUI;
             NSLog(@"Rewind Button - Hiding because Audio Mode is onDemand");
         okToShow = NO;
     }
-    if ( [self jogging] ) {
+    if ( [[AudioManager shared] dropoutOccurred] ) {
+        if ( okToShow )
+            NSLog(@"Rewind Button - Hiding because a dropout has occurred");
+        okToShow = NO;
+    }
+    if ( [self jogging] || [[AudioManager shared] seekWillEffectBuffer] ) {
         if ( okToShow )
             NSLog(@"Rewind Button - Hiding because of the UI is jogging");
         okToShow = NO;
@@ -1650,8 +2028,13 @@ setForOnDemandUI;
     return;
 #endif
     
-    if ( self.uiLocked ) return;
-    self.uiLocked = YES;
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(unlockUI:)
+                                                 name:@"network-status-good"
+                                               object:nil];
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"network-status-fail"
+                                                  object:nil];
     
     [self decloakForMenu:YES];
     if ( self.preRollOpen ) {
@@ -1663,23 +2046,16 @@ setForOnDemandUI;
     if ( [[AudioManager shared] currentAudioMode] == AudioModeOnDemand ) {
         self.onDemandPlayerView.alpha = 0.45;
         self.onDemandPlayerView.userInteractionEnabled = NO;
-        self.timeLabelOnDemand.text = @"";
         self.timeLabelOnDemand.alpha = 0.0;
     }
     
     if ( self.initialPlay ) {
-        if ( [[AudioManager shared] status] == StreamStatusPlaying ) {
-            self.audioWasPlaying = YES;
-            [[AudioManager shared] adjustAudioWithValue:-0.1 completion:^{
-                
-                [[AudioManager shared] pauseStream];
-                [[AudioManager shared] takedownAudioPlayer];
-                
-            }];
+        if ( [[NetworkManager shared] audioWillBeInterrupted] ) {
+            //[[AudioManager shared] pauseAudio];
         }
     } else {
         if ( !self.menuOpen ) {
-            self.initialControlsView.alpha = 0.45;
+            self.initialPlayButton.alpha = 0.4;
         }
         self.initialControlsView.userInteractionEnabled = NO;
     }
@@ -1688,22 +2064,18 @@ setForOnDemandUI;
         self.playerControlsView.alpha = 0.45;
     }
     self.playerControlsView.userInteractionEnabled = NO;
-    if ( !self.menuOpen ) {
-        self.liveStreamView.alpha = 0.45;
-        
-    }
-    self.liveDescriptionLabel.text = @"NO NETWORK";
+    [self.liveProgressViewController hide];
+    self.programTitleLabel.alpha = 0.4;
     
+    self.liveDescriptionLabel.text = @"NO NETWORK";
     [self.liveProgressViewController hide];
     
     if ( note && !self.promptedAboutFailureAlready ) {
         self.promptedAboutFailureAlready = YES;
-        [[[UIAlertView alloc] initWithTitle:@"Network Availability"
-                                message:@"It looks like your connection has dropped. Please connect to Wi-Fi or retry once your signal has improved"
-                               delegate:self
-                      cancelButtonTitle:@"Cancel"
-                      otherButtonTitles:@"Retry", nil] show];
     }
+    
+    [self determinePlayState];
+
     
 }
 
@@ -1713,39 +2085,49 @@ setForOnDemandUI;
     return;
 #endif
     
-    if ( !self.uiLocked ) return;
-    self.uiLocked = NO;
+
+    NSLog(@" ||||||||||| UNLOCKING UI FROM NETWORK GAP |||||||||||| ");
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(lockUI:)
+                                                 name:@"network-status-fail"
+                                               object:nil];
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:@"network-status-good"
+                                                  object:nil];
+    
     self.dirtyFromFailure = YES;
-    
-    [[AnalyticsManager shared] failStream:NetworkHealthNetworkDown
-                                 comments:@""];
-    
     self.promptedAboutFailureAlready = NO;
     self.preRollViewController.tritonAd = nil;
+    self.initialPlayButton.alpha = 1.0;
+    self.initialPlayButton.userInteractionEnabled = YES;
     
     if ( self.preRollOpen ) {
         [self decloakForPreRoll:NO];
     }
     
+
     if ( [[AudioManager shared] currentAudioMode] != AudioModeOnDemand ) {
-        if ( ![[SessionManager shared] currentProgram] ) {
-            [self updateDataForUI];
-        }
+        [self updateDataForUI];
         [self determinePlayState];
     }
     
     if ( [[AudioManager shared] currentAudioMode] == AudioModeOnDemand ) {
         self.onDemandPlayerView.alpha = 1.0;
-        self.timeLabelOnDemand.text = @"";
         self.timeLabelOnDemand.alpha = 1.0;
     }
     
     if ( !self.menuOpen ) {
         if ( self.initialPlay ) {
             self.playerControlsView.alpha = 1.0;
+            self.programTitleLabel.alpha = 1.0;
+            [self.liveProgressViewController show];
         } else {
             self.initialControlsView.alpha = 1.0;
             self.playerControlsView.alpha = 1.0;
+            self.initialPlayButton.alpha = 1.0;
+            self.initialPlayButton.userInteractionEnabled = YES;
         }
     }
     
@@ -1756,28 +2138,7 @@ setForOnDemandUI;
     
     self.liveStreamView.alpha = 1.0;
     self.liveStreamView.userInteractionEnabled = YES;
-    
-    if ( self.audioWasPlaying ) {
-        [self playStream:YES];
-        self.audioWasPlaying = NO;
-    }
-    
-    [[NetworkManager shared] fetchAllProgramInformation:^(id returnedObject) {
-        
-        //NSAssert([returnedObject isKindOfClass:[NSArray class]],@"Expecting an Array Here...");
-        NSArray *content = (NSArray*)returnedObject;
-        if ([content count] == 0) {
-            return;
-        }
-        
-        // Process Programs and insert into CoreData.
-        NSLog(@"SCPRv4 returned %ld programs", (unsigned long)[content count]);
-        [Program insertProgramsWithArray:content inManagedObjectContext:[[ContentManager shared] managedObjectContext]];
-        
-        // Save all changes made.
-        [[ContentManager shared] saveContext];
-        
-    }];
+    self.programTitleLabel.alpha = 1.0;
     
 }
 
@@ -1802,7 +2163,7 @@ setForOnDemandUI;
             [[AudioManager shared] resetPlayer];
             [self resetUI];
         } else if ( [[SessionManager shared] sessionIsBehindLive] ) {
-            [[AudioManager shared] pauseStream];
+            [[AudioManager shared] pauseAudio];
             [[AudioManager shared] resetPlayer];
             [self resetUI];
         }
@@ -1820,15 +2181,14 @@ setForOnDemandUI;
     
     if ( [AudioManager shared].currentAudioMode == AudioModePreroll ) return;
     
+    self.menuOpen = YES;
+    
     [self removeAllAnimations];
     
     self.pulldownMenu.alpha = 1.0;
-    
     [self.liveProgressViewController hide];
     
     self.navigationItem.title = @"Menu";
-    
-    
     if (animated) {
         [pulldownMenu openDropDown:YES];
     } else {
@@ -1883,7 +2243,7 @@ setForOnDemandUI;
     [self.horizDividerLine.layer pop_addAnimation:dividerFadeAnim forKey:@"horizDividerOutFadeAnimation"];
     
     
-    self.menuOpen = YES;
+
 }
 
 - (void)decloakForMenu:(BOOL)animated {
@@ -1891,6 +2251,8 @@ setForOnDemandUI;
     if ( [AudioManager shared].currentAudioMode == AudioModePreroll ) return;
     
     if ( !self.menuOpen ) return;
+    
+    self.menuOpen = NO;
     
     [self removeAllAnimations];
     
@@ -1927,7 +2289,7 @@ setForOnDemandUI;
     darkBgFadeAnimation.duration = 0.3;
     
     POPBasicAnimation *controlsFadeIn = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
-    controlsFadeIn.toValue = restoredAlpha;
+    controlsFadeIn.toValue = @1.0;
     controlsFadeIn.duration = 0.3;
     
     POPBasicAnimation *cfi = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
@@ -1962,9 +2324,14 @@ setForOnDemandUI;
         [self.liveProgressViewController show];
     }
     
+    if ( [[NetworkManager shared] networkDown] ) {
+        self.initialPlayButton.alpha = 0.4;
+        self.playPauseButton.alpha = 0.4;
+    }
+    
     [self primeManualControlButton];
     
-    self.menuOpen = NO;
+    
 }
 
 - (void)removeAllAnimations {
@@ -2093,11 +2460,10 @@ setForOnDemandUI;
         if (self.preRollOpen) {
             [self decloakForPreRoll:YES];
         }
-
         if ( self.initiateRewind ) {
             [self activateRewind:RewindDistanceBeginning];
         } else {
-            [self playStream:YES];
+            [self playAudio:YES];
         }
     });
     
@@ -2107,6 +2473,8 @@ setForOnDemandUI;
 #pragma mark - UIScrollViewDelegate for audio queue
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
     NSLog(@"Will begin dragging ... ");
+    
+    self.onDemandPanning = YES;
     [self onDemandFadeDown];
 }
 
@@ -2151,7 +2519,7 @@ setForOnDemandUI;
 #pragma mark - On demand loading transitions
 - (void)onDemandFadeDown {
     [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationOptionCurveLinear animations:^{
-        self.timeLabelOnDemand.alpha = 0.0;
+        //self.timeLabelOnDemand.alpha = 0.0;
         self.progressView.alpha = 0.0;
         self.shareButton.alpha = 0.0;
     } completion:^(BOOL finished){
@@ -2171,6 +2539,10 @@ setForOnDemandUI;
 
 - (void)queueScrollEnded {
     
+    [[AudioManager shared] invalidateTimeObserver];
+    
+    self.onDemandPanning = NO;
+    
     [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationOptionCurveLinear animations:^{
         self.timeLabelOnDemand.alpha = 1.0;
     } completion:nil];
@@ -2185,6 +2557,7 @@ setForOnDemandUI;
     }
     
     if (self.queueCurrentPage != newPage) {
+        
         [self.jogShuttle animateIndefinitelyWithViewToHide:self.playPauseButton completion:^{
             self.playPauseButton.enabled = YES;
             [self updateControlsAndUI:YES];
@@ -2192,8 +2565,11 @@ setForOnDemandUI;
         self.timeLabelOnDemand.text = @"LOADING...";
         self.queueLoading = YES;
         
-        [[QueueManager shared] playItemAtPosition:newPage];
-        self.queueCurrentPage = newPage;
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.25 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            [[QueueManager shared] playItemAtPosition:newPage];
+            self.queueCurrentPage = newPage;
+        });
+        
         
     } else {
         [self.jogShuttle endAnimations];
@@ -2212,11 +2588,18 @@ setForOnDemandUI;
             self.progressView.alpha = 1.0;
             self.shareButton.alpha = 1.0;
             self.timeLabelOnDemand.alpha = 1.0;
+            SCPRQueueScrollableView *cv = self.queueUIContents[self.queueCurrentPage];
+            if ( self.scrubbing ) {
+                cv.audioTitleLabel.alpha = 0.6;
+            }
             
         } completion:^(BOOL finished) {
             self.queueBlurShown = NO;
+            [self.jogShuttle endAnimations];
         }];
         
+    } else {
+        [self.jogShuttle endAnimations];
     }
     
     self.playPauseButton.userInteractionEnabled = YES;
@@ -2306,6 +2689,7 @@ setForOnDemandUI;
 
 - (void)onRateChange {
     
+    self.playStateGate = YES;
     if ( !self.initiateRewind || self.preRollViewController.tritonAd ) {
         [self.liveProgressViewController setFreezeBit:YES];
         [self updateControlsAndUI:YES];
@@ -2321,130 +2705,122 @@ setForOnDemandUI;
     
     NSAssert([NSThread isMainThread],@"This is not the main thread...");
     
+    
     NSDate *ciCurrentDate = [AudioManager shared].audioPlayer.currentItem.currentDate;
+    
+#ifndef SUPPRESS_V_LIVE
+    NSTimeInterval ti = [[[SessionManager shared] vLive] timeIntervalSinceDate:ciCurrentDate];
+#else
     NSTimeInterval ti = [[NSDate date] timeIntervalSinceDate:ciCurrentDate];
+#endif
     
 #ifdef THREE_ZERO_ZERO
     NSTimeInterval tx = [[[AudioManager shared] maxSeekableDate] timeIntervalSinceDate:ciCurrentDate];
 #else
+#ifndef SUPPRESS_V_LIVE
+    NSTimeInterval tx = [[[SessionManager shared] vLive] timeIntervalSinceDate:ciCurrentDate];
+#else
     NSTimeInterval tx = [[NSDate date] timeIntervalSinceDate:ciCurrentDate];
 #endif
-    Program *program = [[SessionManager shared] currentProgram];
-    if ( program || [AudioManager shared].currentAudioMode == AudioModeOnboarding ) {
-        if ( [[AudioManager shared].audioPlayer rate] > 0.0 ) {
-            if ( !self.menuOpen ) {
-                if ( [self.liveProgressViewController uiHidden] ) {
-                    if ( [[AudioManager shared] currentAudioMode] == AudioModeLive ) {
-                        [self.liveProgressViewController show];
-                    }
-                } else if ( !self.liveProgressViewController.view.superview ) {
-                    [self.liveProgressViewController displayWithProgram:program
-                                                                 onView:self.view
-                                                       aboveSiblingView:self.playerControlsView];
-                    [self.liveProgressViewController show];
-                }
-            }
-            [self.liveProgressViewController tick];
-   
-        } else {
-            NSLog(@"Trying to tick in non-playing state");
-            return;
-        }
-    }
+#endif
     
-    
-    if ( !self.menuOpen ) {
-        if ( tx > 60 ) {
-            [self.liveDescriptionLabel setText:[NSString stringWithFormat:@"%@ BEHIND LIVE", [NSDate prettyTextFromSeconds:ti]]];
-            self.previousRewindThreshold = [[AudioManager shared].audioPlayer.currentItem.currentDate timeIntervalSince1970];
-        } else {
-            if ( [[SessionManager shared] sessionIsInRecess] ) {
-                [self.liveDescriptionLabel setText:@"UP NEXT"];
-            } else {
-                [self.liveDescriptionLabel setText:@"LIVE"];
-                self.dirtyFromRewind = NO;
-            }
-        }
-    }
-    
-    if ( [AudioManager shared].currentAudioMode == AudioModeLive ) {
+    if ( [[AudioManager shared] frameCount] % 10 == 0 ) {
         if ( !self.menuOpen ) {
-            if ( self.liveStreamView.layer.opacity < 1.0 ) {
-                [UIView animateWithDuration:0.25 animations:^{
-                    NSLog(@"Opacity was affected");
-                    self.liveStreamView.layer.opacity = 1.0;
-                }];
+#ifndef SUPPRESS_V_LIVE
+            [self prettifyBehindLiveStatus];
+#else
+            if ( tx > kStreamIsLiveTolerance ) {
+                [self.liveDescriptionLabel setText:[NSString stringWithFormat:@"%@ BEHIND LIVE", [NSDate prettyTextFromSeconds:ti]]];
+                self.previousRewindThreshold = [[AudioManager shared].audioPlayer.currentItem.currentDate timeIntervalSince1970];
+            } else {
+                if ( [[SessionManager shared] sessionIsInRecess] ) {
+                    [self.liveDescriptionLabel setText:@"UP NEXT"];
+                } else {
+                    [self.liveDescriptionLabel setText:@"LIVE"];
+                    self.dirtyFromRewind = NO;
+                }
             }
+#endif
         }
-    }
-    
-    if (setForOnDemandUI) {
-        [self.progressView pop_removeAllAnimations];
         
-        if (CMTimeGetSeconds([[[[AudioManager shared].audioPlayer currentItem] asset] duration]) > 0) {
-            double currentTime = CMTimeGetSeconds([[[AudioManager shared].audioPlayer currentItem] currentTime]);
-            double duration = CMTimeGetSeconds([[[[AudioManager shared].audioPlayer currentItem] asset] duration]);
-            
-            [self.timeLabelOnDemand setText:[Utils elapsedTimeStringWithPosition:currentTime
-                                                                     andDuration:duration]];
-            
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [self.progressView setProgress:(currentTime / duration) animated:YES];
-            });
-        }
-    } else {
-        
-        if ( [[AudioManager shared] currentAudioMode] == AudioModeLive ||
-            [[AudioManager shared] currentAudioMode] == AudioModeOnboarding ) {
+        if ( [AudioManager shared].currentAudioMode == AudioModeLive ) {
             if ( !self.menuOpen ) {
-                if ( !self.preRollOpen ) {
-                    if ( ![[UXmanager shared] userHasSeenOnboarding] ) {
-                        //[self.liveProgressViewController show];
-                    }
-                    if ( self.initialPlay ) {
-                        //[self.liveProgressViewController show];
+                if ( self.liveStreamView.layer.opacity < 1.0 ) {
+                    [UIView animateWithDuration:0.25 animations:^{
+                        NSLog(@"Opacity was affected");
+                        self.liveStreamView.layer.opacity = 1.0;
+                    }];
+                }
+            }
+        }
+        
+        if (setForOnDemandUI) {
+            [self.progressView pop_removeAllAnimations];
+        } else {
+            
+            if ( [[AudioManager shared] currentAudioMode] == AudioModeLive ||
+                [[AudioManager shared] currentAudioMode] == AudioModeOnboarding ) {
+                if ( !self.menuOpen && ![[UXmanager shared] notificationsPromptDisplaying] ) {
+                    if ( !self.preRollOpen ) {
+                        if ( ![[UXmanager shared] userHasSeenOnboarding] ) {
+                            if ( ![[UXmanager shared] notificationsPromptDisplaying] ) {
+                                [self.liveProgressViewController show];
+                            }
+                        } else {
+                            if ( self.initialPlay ) {
+                                [self.liveProgressViewController show:YES];
+                            }
+                        }
                     }
                 }
             }
         }
-    }
-    
-    // NOTE: basically used instead of observing player rate change to know when actual playback starts
-    // .. for decloaking queue blur
-    if ( [AudioManager shared].currentAudioMode == AudioModeOnDemand && self.queueLoading) {
-        CMTime t = [AudioManager shared].audioPlayer.currentItem.currentTime;
-        NSInteger s = CMTimeGetSeconds(t);
-        if ( s > 0 || self.onDemandGateCount >= 2 ) {
-            self.onDemandGateCount = 0;
-            [self.queueBlurView setNeedsDisplay];
-            [self.progressView setProgress:0.0 animated:NO];
-            [UIView animateWithDuration:0.3 delay:0. options:UIViewAnimationOptionCurveLinear animations:^{
-                self.queueBlurView.alpha = 0.0;
-                self.queueDarkBgView.alpha = 0.0;
-                self.progressView.alpha = 1.0;
-                self.shareButton.alpha = 1.0;
-                self.onDemandPlayerView.alpha = 1.0;
-            } completion:^(BOOL finished) {
-                self.queueBlurShown = NO;
-                self.queueLoading = NO;
-                if ( [[AudioManager shared].audioPlayer rate] == 1.0 ) {
-                    [self.jogShuttle endAnimations];
-                }
-            }];
-        } else {
-            self.onDemandGateCount++;
+        
+        
+        if ( [AudioManager shared].currentAudioMode == AudioModeLive ) {
+            if ( self.liveRewindAltButton.alpha == 1.0 || self.liveRewindAltButton.layer.opacity == 1.0 )
+                [self primeManualControlButton];
         }
     }
+    
+    [self.liveProgressViewController tick];
+    [self tickOnDemand];
+    
+}
+
+
+
+- (void)tickOnDemand {
+ 
+    if ( !self.onDemandPanning )
+        [self rebootOnDemandUI];
+    
+    if (CMTimeGetSeconds([[[[AudioManager shared].audioPlayer currentItem] asset] duration]) > 0) {
+        double currentTime = CMTimeGetSeconds([[[AudioManager shared].audioPlayer currentItem] currentTime]);
+        double duration = CMTimeGetSeconds([[[[AudioManager shared].audioPlayer currentItem] asset] duration]);
+        
+        [self.timeLabelOnDemand setText:[Utils elapsedTimeStringWithPosition:currentTime
+                                                                 andDuration:duration]];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.progressView setProgress:(currentTime / duration) animated:YES];
+        });
+    }
+    [[QueueManager shared] handleBookmarkingActivity];
     
 }
 
 - (void)onSeekCompleted {
     // Make sure UI gets set to "Playing" state after a seek.
     [[SessionManager shared] fetchCurrentProgram:^(id returnedObject) {
-        if ( self.jogging ) {
-            [self.jogShuttle endAnimations];
-        }
+        [self.jogShuttle endAnimations];
+        [[AudioManager shared] setSeekWillEffectBuffer:NO];
     }];
+}
+
+- (void)onDemandSeekCompleted {
+    [self.jogShuttle endAnimations];
+    [[AudioManager shared] setSeekWillEffectBuffer:NO];
 }
 
 - (void)interfere {
@@ -2469,23 +2845,29 @@ setForOnDemandUI;
 }
 
 - (void)onDemandAudioFailed {
-    [self.jogShuttle endAnimations];
     self.timeLabelOnDemand.text = @"FAILED TO LOAD";
+    self.onDemandFailing = YES;
     
+    if ( ![[QueueManager shared]isQueueEmpty] ) {
+        if ( self.queueCurrentPage < [self.queueContents count]-1 ) {
+            [[QueueManager shared] playNext];
+        } else {
+            [self warnUserOfOnDemandFailures];
+            [self goLive:YES];
+        }
+    } else {
+        [self warnUserOfOnDemandFailures];
+        [self goLive:YES];
+    }
     
-    
-    [[[UIAlertView alloc] initWithTitle:@"Oops.."
-                                message:@"We had some trouble loading that audio. Try again later or try a different show. Sorry."
+}
+
+- (void)warnUserOfOnDemandFailures {
+    [[[UIAlertView alloc] initWithTitle:@"That show is unavailable"
+                                message:@"Unfortunately there seems to be some trouble loading episodes from that program. Please try again later. In the meantime, please enjoy the live stream of KPCC"
                                delegate:nil
-                      cancelButtonTitle:@"OK"
+                      cancelButtonTitle:@"Got It"
                       otherButtonTitles:nil] show];
-    
-    [UIView animateWithDuration:0.15 animations:^{
-        self.playPauseButton.transform = CGAffineTransformMakeScale(1.0f, 1.0f);
-    } completion:^(BOOL finished) {
-        [self goLive:NO];
-    }];
-    
 }
 
 #pragma mark - ContentProcessor
@@ -2575,10 +2957,9 @@ setForOnDemandUI;
 #pragma mark - UIAlertView
 - (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex {
     self.promptedAboutFailureAlready = NO;
-    if ( buttonIndex == 1 ) {
+    if ( buttonIndex == 0 ) {
+        self.uiLocked = NO;
         [self updateDataForUI];
-    } else {
-        [self lockUI:nil];
     }
     
 }

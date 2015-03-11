@@ -12,7 +12,7 @@
 
 @import AdSupport;
 
-#define kFailThreshold 2.0
+#define kFailThreshold 3.5
 
 static NetworkManager *singleton = nil;
 
@@ -79,12 +79,22 @@ static NetworkManager *singleton = nil;
     
 }
 
+- (BOOL)wifi {
+    NetworkStatus remoteHostStatus = [self.basicReachability currentReachabilityStatus];
+    if ( remoteHostStatus == ReachableViaWiFi ) {
+        return YES;
+    }
+    
+    return NO;
+}
+
 - (void)applyNotifiersToReachability:(KSReachability *)reachability {
 #ifndef DISABLE_INTERRUPT
     __block NetworkManager *weakself_ = self;
     __block KSReachability *weakreach_ = reachability;
     reachability.onReachabilityChanged = ^(KSReachability* reach) {
         dispatch_async(dispatch_get_main_queue(), ^{
+            
             if ( weakself_.failTimer ) {
                 if ( [weakself_.failTimer isValid] ) {
                     [weakself_.failTimer invalidate];
@@ -93,19 +103,20 @@ static NetworkManager *singleton = nil;
             }
             
             if ( [weakreach_ reachable] ) {
+                
                 weakself_.networkDown = NO;
                 [[NSNotificationCenter defaultCenter] postNotificationName:@"network-status-good"
                                                                 object:nil];
             } else {
                 
-                
-                
+
                 weakself_.networkDown = YES;
                 weakself_.failTimer = [NSTimer scheduledTimerWithTimeInterval:kFailThreshold
                                                                        target:weakself_
                                                                      selector:@selector(trueFail)
                                                                      userInfo:nil
                                                                       repeats:NO];
+                
             }
         });
     };
@@ -113,19 +124,13 @@ static NetworkManager *singleton = nil;
 }
 
 - (void)setupFloatingReachabilityWithHost:(NSString *)host {
-
-    
     NSURL *url = [NSURL URLWithString:host];
-
     self.floatingReachability = [KSReachability reachabilityToHost:[url host]];
     [self applyNotifiersToReachability:self.floatingReachability];
     
 }
 
 - (void)trueFail {
-    self.networkDown = YES;
-    [[AudioManager shared] setLoggingGateOpen:YES];
-    
     [[NSNotificationCenter defaultCenter] postNotificationName:@"network-status-fail"
                                                         object:nil];
 }

@@ -16,7 +16,7 @@
 #import <KSReachability/KSReachability.h>
 
 #define kServerBase @"http://www.scpr.org/api/v3"
-#define kFailoverThreshold 4
+#define kFailoverThreshold 10
 
 
 
@@ -50,6 +50,10 @@ typedef NS_ENUM(NSInteger, NetworkHealth) {
 
 @property BOOL networkDown;
 @property BOOL allowOneFail;
+@property BOOL audioWillBeInterrupted;
+
+- (BOOL)wifi;
+
 @property (nonatomic, strong) NSTimer *failTimer;
 
 - (void)fetchAllProgramInformation:(CompletionBlockWithValue)completion;
@@ -61,5 +65,7 @@ typedef NS_ENUM(NSInteger, NetworkHealth) {
 - (void)setupReachability;
 - (void)setupFloatingReachabilityWithHost:(NSString*)host;
 - (void)applyNotifiersToReachability:(KSReachability*)reachability;
+
+- (BOOL)wifi;
 
 @end

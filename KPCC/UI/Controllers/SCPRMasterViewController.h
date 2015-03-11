@@ -22,6 +22,8 @@
 #import "SCPRPreRollViewController.h"
 #import "SCPRProgressViewController.h"
 #import "SCPRButton.h"
+#import "SCPRScrubbingUIViewController.h"
+#import "SCPRTouchableScrubberView.h"
 
 @interface SCPRMasterViewController : UIViewController<SCPRMenuDelegate,UIAlertViewDelegate>
 
@@ -48,6 +50,9 @@
 @property IBOutlet UIView *queueDarkBgView;
 @property (nonatomic,strong) NSTimer *queueScrollTimer;
 @property (nonatomic,strong) NSArray *queueContents;
+@property (nonatomic,strong) NSMutableArray *queueUIContents;
+@property (nonatomic,strong) UIView *scrubbingTriggerView;
+
 
 // Major holder views for different playback states.
 @property IBOutlet UIView *liveStreamView;
@@ -109,6 +114,10 @@
 @property BOOL uiLocked;
 @property BOOL dirtyFromFailure;
 @property BOOL audioWasPlaying;
+@property BOOL scrubberLoadingGate;
+@property BOOL playStateGate;
+@property BOOL onDemandPanning;
+@property BOOL onDemandFailing;
 
 @property NSInteger onDemandGateCount;
 @property NSInteger previousRewindThreshold;
@@ -121,6 +130,32 @@
 - (void)activateFastForward;
 - (void)snapJogWheel;
 - (void)specialRewind;
+
+// Scrubbing
+- (void)bringUpScrubber;
+- (void)cloakForScrubber;
+- (void)decloakForScrubber;
+- (void)primeScrubber;
+- (void)addCloseButton;
+- (void)killCloseButton;
+- (void)finishedWithScrubber;
+- (void)tickOnDemand;
+- (void)beginScrubbingWaitMode;
+- (void)endScrubbingWaitMode;
+
+@property (nonatomic, strong) SCPRScrubbingUIViewController *scrubbingUI;
+@property (nonatomic, strong) SCPRButton *scrubberCloseButton;
+@property (nonatomic, strong) IBOutlet UIView *scrubbingUIView;
+@property (nonatomic, strong) IBOutlet SCPRButton *back30Button;
+@property (nonatomic, strong) IBOutlet SCPRButton *fwd30Button;
+@property (nonatomic, strong) IBOutlet UIView *scrubberControlView;
+@property (nonatomic, strong) IBOutlet UILabel *scrubberTimeLabel;
+@property (nonatomic, strong) IBOutlet SCPRTouchableScrubberView *touchableScrubberView;
+@property (nonatomic,strong) IBOutlet NSLayoutConstraint *topYScrubbingAnchor;
+@property (nonatomic, strong) IBOutlet NSLayoutConstraint *back30VerticalAnchor;
+@property (nonatomic, strong) IBOutlet NSLayoutConstraint *fwd30VerticalAnchor;
+
+@property BOOL scrubbing;
 
 @property (NS_NONATOMIC_IOSONLY, readonly) BOOL uiIsJogging;
 @property (NS_NONATOMIC_IOSONLY, readonly) NSTimeInterval rewindAgainstStreamDelta;
@@ -138,6 +173,8 @@
 
 - (void)moveTextIntoPlace:(BOOL)animated;
 - (void)goLive:(BOOL)play;
+- (void)goLive:(BOOL)play smooth:(BOOL)smooth;
+- (void)warnUserOfOnDemandFailures;
 
 - (void)resetUI;
 
@@ -150,11 +187,13 @@
 - (void)onboarding_fin;
 
 @property (nonatomic, strong) IBOutlet NSLayoutConstraint *imageTopConstraint;
+
+@property BOOL genericImageForProgram;
 @property BOOL onboardingRewindButtonShown;
 
 - (void)rollInterferenceText;
 - (void)showOnDemandOnboarding;
-
+- (void)prettifyBehindLiveStatus;
 - (void)handleResponseForNotification;
 
 @end

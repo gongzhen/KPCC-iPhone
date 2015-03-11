@@ -117,6 +117,14 @@
 
 - (void)animateIndefinitelyWithViewToHide:(UIView *)hideableView completion:(void (^)(void))completion {
     
+    if ( self.spinning ) {
+        [self endAnimations];
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.7 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            [self animateIndefinitelyWithViewToHide:hideableView completion:completion];
+        });
+        return;
+    }
+    
     self.tension = 0.75;
     self.strokeColor = [UIColor whiteColor];
     self.strokeWidth = 1.5f;
@@ -145,7 +153,7 @@
     self.spinning = YES;
     if ( !self.soundPlayedBit ) {
         self.soundPlayedBit = YES;
-        [[AudioManager shared] adjustAudioWithValue:-0.1 completion:^{
+        [[AudioManager shared] adjustAudioWithValue:-0.5 completion:^{
             if ( !self.muteSound ) {
                 [self.rewindTriggerPlayer play];
             }

@@ -15,10 +15,34 @@
 }
 
 - (void)printDimensionsWithIdentifier:(NSString *)identifier {
+#ifndef SUPPRESS_DIMENSION_PRINTING
     NSLog(@"%@ {%@} : oX: %1.1f, oY: %1.1f, W: %1.1f, H: %1.1f",identifier,[[self class] description],self.frame.origin.x,
           self.frame.origin.y,
           self.frame.size.width,
           self.frame.size.height);
+#endif
+}
+
+- (void)cutAHole:(CGRect)holeDimensions {
+    CGRect r = self.bounds;
+    CGRect r2 = holeDimensions; // adjust this as desired!
+    UIGraphicsBeginImageContextWithOptions(r.size, NO, 0);
+    CGContextRef c = UIGraphicsGetCurrentContext();
+    CGContextAddRect(c, r2);
+    CGContextAddRect(c, r);
+    CGContextEOClip(c);
+    CGContextSetFillColorWithColor(c, [UIColor blackColor].CGColor);
+    CGContextFillRect(c, r);
+    UIImage* maskim = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    CALayer* mask = [CALayer layer];
+    mask.frame = r;
+    mask.contents = (id)maskim.CGImage;
+    self.layer.mask = mask;
+}
+
+- (void)fillHole {
+    self.layer.mask = nil;
 }
 
 @end

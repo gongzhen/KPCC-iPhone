@@ -10,8 +10,6 @@
 #import "Program.h"
 
 
-typedef void (^CompletionBlock)(void);
-typedef void (^CompletionBlockWithValue)(id returnedObject);
 
 #define TICK   NSDate *startTime = [NSDate date]
 #define TOCK   NSLog(@"Execution Time: %f  -- [ %s ]=[ Line %d ]", -[startTime timeIntervalSinceNow], __PRETTY_FUNCTION__, __LINE__)

@@ -16,6 +16,14 @@ typedef NS_ENUM(NSUInteger, OnDemandFinishedReason) {
     OnDemandFinishedReasonEpisodePaused
 };
 
+static NSInteger kStreamIsLiveTolerance = 120;
+
+#ifndef PRODUCTION
+static NSInteger kProgramPollingPressure = 5;
+#else
+static NSInteger kProgramPollingPressure = 15;
+#endif
+
 @interface SessionManager : NSObject
 
 + (SessionManager*)shared;
@@ -24,6 +32,7 @@ typedef NS_ENUM(NSUInteger, OnDemandFinishedReason) {
 @property (nonatomic, copy) NSDate *sessionReturnedDate;
 @property (nonatomic, copy) NSDate *sessionPausedDate;
 @property (nonatomic, copy) NSDate *lastProgramUpdate;
+
 @property (nonatomic, copy) NSString *liveSessionID;
 @property (nonatomic, copy) NSString *odSessionID;
 @property (nonatomic, strong) NSTimer *programUpdateTimer;
@@ -41,7 +50,8 @@ typedef NS_ENUM(NSUInteger, OnDemandFinishedReason) {
 @property BOOL expiring;
 @property BOOL userLeavingForClickthrough;
 @property BOOL updaterArmed;
-
+@property (nonatomic) double lastKnownBitrate;
+@property NSInteger latestDriftValue;
 @property (atomic) BOOL userIsViewingHeadlines;
 
 @property (nonatomic, strong) Program *currentProgram;
@@ -55,13 +65,19 @@ typedef NS_ENUM(NSUInteger, OnDemandFinishedReason) {
 - (void)resetCache;
 - (void)checkProgramUpdate:(BOOL)force;
 
+- (BOOL)sessionIsInBackground;
+
+// Drift
+- (NSDate*)vLive;
+- (NSInteger)calculatedDriftValue;
+
 - (NSTimeInterval)secondsBehindLive;
 
 - (void)processNotification:(UILocalNotification*)programUpdate;
 @property (NS_NONATOMIC_IOSONLY) BOOL ignoreProgramUpdating;
 @property (NS_NONATOMIC_IOSONLY) BOOL sessionIsExpired;
 @property (NS_NONATOMIC_IOSONLY) BOOL sessionIsBehindLive;
-@property BOOL sessionIsInBackground;
+
 
 - (BOOL)sessionIsInRecess;
 - (BOOL)sessionIsInRecess:(BOOL)respectPause;
@@ -72,10 +88,13 @@ typedef NS_ENUM(NSUInteger, OnDemandFinishedReason) {
 @property BOOL odSessionIsHot;
 @property BOOL seekForwardRequested;
 @property BOOL prerollDirty;
+@property BOOL genericImageForProgram;
 
 - (void)handleSessionReactivation;
 - (void)invalidateSession;
 - (void)expireSession;
+
+- (void)startAudioSession;
 
 - (NSString*)startLiveSession;
 - (NSString*)endLiveSession;
@@ -86,6 +105,8 @@ typedef NS_ENUM(NSUInteger, OnDemandFinishedReason) {
 - (NSString*)endOnDemandSessionWithReason:(OnDemandFinishedReason)reason;
 - (void)trackOnDemandSession;
 - (BOOL)programDirty:(Program*)p;
+
+- (NSDate*)pushDateToNearestTenMinutes:(NSDate*)date;
 
 - (long)bufferLength;
 

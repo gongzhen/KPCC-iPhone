@@ -13,6 +13,10 @@
 #import "Mixpanel.h"
 #import <Kochava/TrackAndAd.h>
 #import "NetworkManager.h"
+#import <NewRelicAgent/NewRelic.h>
+
+static NSInteger kMaxAllowedExceptionsPerInterval = 5;
+static NSInteger kExceptionInterval = 60;
 
 @interface AnalyticsManager : NSObject
 
@@ -23,6 +27,11 @@
 @property (nonatomic, strong) AVPlayerItemAccessLog *accessLog;
 @property (nonatomic, strong) AVPlayerItemErrorLog *errorLog;
 
+@property (nonatomic, strong) NSDate *errorLogReceivedAt;
+@property (nonatomic, strong) NSDate *accessLogReceivedAt;
+@property (nonatomic, strong) NSDate *lastStreamException;
+@property NSInteger allowedExceptions;
+
 + (AnalyticsManager*)shared;
 
 - (void)setup;
@@ -31,6 +40,7 @@
 - (void)failStream:(NetworkHealth)cause comments:(NSString*)comments;
 - (void)failStream:(NetworkHealth)cause comments:(NSString *)comments force:(BOOL)force;
 - (void)kTrackSession:(NSString*)modifier;
+- (void)clearLogs;
 - (NSDictionary*)logifiedParamsList:(NSDictionary*)originalParams;
 
 @end

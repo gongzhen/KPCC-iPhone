@@ -8,7 +8,7 @@
 
 #import "SCPRFeedbackViewController.h"
 #import "DesignManager.h"
-
+#import "AudioManager.h"
 
 static NSString *kCommentsPlaceholder = @"... Add your comments here";
 
@@ -54,6 +54,18 @@ static NSString *kCommentsPlaceholder = @"... Add your comments here";
                                                          blue:229.f/255.f alpha:0.3f];
     
     NSString *versionText = [NSString stringWithFormat:@"KPCC iPhone v%@",[Utils prettyVersion]];
+    
+#ifndef PRODUCTION
+    NSURL *url = [NSURL URLWithString:kHLSLiveStreamURL];
+    NSString *server = [url host];
+#ifdef BETA
+    NSString *beta = [NSString stringWithFormat:@" BETA : %@",server];
+#else
+    NSString *beta = [NSString stringWithFormat:@" : %@",server];
+#endif
+    versionText = [versionText stringByAppendingString:beta];
+#endif
+    
     self.versionLabel.text = versionText;
     self.versionLabel.textColor = [UIColor darkGrayColor];
 
@@ -238,12 +250,17 @@ static NSString *kCommentsPlaceholder = @"... Add your comments here";
     [UIView animateWithDuration:0.22 animations:^{
         self.authButton.alpha = 1.0;
         self.nativeSpinner.alpha = 0.0;
+
     } completion:^(BOOL finished) {
+        
+        [self.navigationController popToRootViewControllerAnimated:YES];
+        
         [[[UIAlertView alloc] initWithTitle:@"Thank You"
                                     message:@"Thank you for your feedback."
                                    delegate:nil
                           cancelButtonTitle:@"You're welcome"
                           otherButtonTitles:nil] show];
+        
     }];
 }
 

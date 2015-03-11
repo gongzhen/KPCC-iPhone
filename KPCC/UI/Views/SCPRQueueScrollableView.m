@@ -12,8 +12,7 @@
 @interface SCPRQueueScrollableView ()
 
 @property (nonatomic,strong) AudioChunk *audioChunk;
-@property (nonatomic,strong) UILabel *audioTitleLabel;
-@property (nonatomic,strong) UILabel *audioDateLabel;
+
 
 @end
 

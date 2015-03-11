@@ -94,10 +94,9 @@
                     </state>
                 </button>
                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Dgh-rz-JFI">
-                    <rect key="frame" x="11" y="77" width="140" height="21"/>
+                    <rect key="frame" x="11" y="77" width="298" height="21"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="21" id="FO1-Nc-Pek"/>
-                        <constraint firstAttribute="width" constant="140" id="G7x-Bq-UX6"/>
                     </constraints>
                     <fontDescription key="fontDescription" type="system" pointSize="12"/>
                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
@@ -112,11 +111,13 @@
                 <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="Dgh-rz-JFI" secondAttribute="bottom" constant="10" id="B5E-fi-oQi"/>
                 <constraint firstItem="38" firstAttribute="top" secondItem="37" secondAttribute="top" constant="13" id="TaM-mv-QIa"/>
                 <constraint firstAttribute="trailing" secondItem="38" secondAttribute="trailing" constant="11" id="V9g-yB-TCk"/>
+                <constraint firstAttribute="trailing" secondItem="Dgh-rz-JFI" secondAttribute="trailing" constant="11" id="XfX-rt-7Ls"/>
                 <constraint firstItem="FZ6-FH-lQR" firstAttribute="top" secondItem="37" secondAttribute="top" constant="25" id="vsY-UJ-zHa"/>
                 <constraint firstItem="Dgh-rz-JFI" firstAttribute="top" secondItem="38" secondAttribute="bottom" constant="20" id="zUv-nr-aNc"/>
             </constraints>
             <nil key="simulatedStatusBarMetrics"/>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <point key="canvasLocation" x="146" y="532.5"/>
         </view>
         <tableViewCell contentMode="scaleToFill" selectionStyle="blue" indentationWidth="10" rowHeight="50" id="44">
             <rect key="frame" x="0.0" y="0.0" width="328" height="50"/>

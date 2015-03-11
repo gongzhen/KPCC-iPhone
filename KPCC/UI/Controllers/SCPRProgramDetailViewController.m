@@ -69,8 +69,6 @@
                                     andImageView:self.programBgImage
                                       completion:^(BOOL status) {
                                           
-                                          
-                                          
                                           self.programBgImage.clipsToBounds = YES;
                                           [self.blurView setNeedsDisplay];
                                           UIImage *blurred = [self.programBgImage.image blurredImageWithRadius:20.0f
@@ -186,7 +184,10 @@
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
 
     
-    NSArray *audioChunks = [[QueueManager shared] enqueueEpisodes:self.episodesList withCurrentIndex:indexPath.row];
+    NSArray *audioChunks = [[QueueManager shared] enqueueEpisodes:self.episodesList
+                                                 withCurrentIndex:indexPath.row
+                                                  playImmediately:NO];
+    
     [[[Utils del] masterViewController] setOnDemandUI:YES
                                            forProgram:self.program
                                             withAudio:audioChunks

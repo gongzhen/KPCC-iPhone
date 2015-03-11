@@ -24,6 +24,16 @@
     return shared;
 }
 
+- (void)timeBegin {
+    self.operationBeganDate = [NSDate date];
+}
+
+- (void)timeEnd:(NSString*)operationName {
+    NSDate *now = [NSDate date];
+    NSTimeInterval execution = [now timeIntervalSinceDate:self.operationBeganDate];
+    NSLog(@"%@ Running Time : %f",operationName,execution);
+}
+
 - (void)load {
     if ( self.settings ) {
         self.settings = nil;
@@ -41,7 +51,7 @@
 
 - (void)persist {
     if ( self.settings ) {
-    
+        
         NSData *data = [NSKeyedArchiver archivedDataWithRootObject:self.settings];
         [[NSUserDefaults standardUserDefaults] setObject:data forKey:@"settings"];
         [[NSUserDefaults standardUserDefaults] synchronize];
@@ -51,6 +61,10 @@
 
 - (BOOL)userHasSeenOnboarding {
     return self.settings.userHasViewedOnboarding;
+}
+
+- (BOOL)userHasSeenScrubbingOnboarding {
+    return self.settings.userHasViewedScrubbingOnboarding;
 }
 
 - (void)freezeProgressBar {
@@ -66,7 +80,7 @@
     SCPRAppDelegate *del = (SCPRAppDelegate*)[[UIApplication sharedApplication] delegate];
     UIWindow *mw = [del window];
     [mw addSubview:del.onboardingController.view];
- 
+    
     SCPRNavigationController *nav = [del masterNavigationController];
     
     [self hideMenuButton];
@@ -103,10 +117,13 @@
     
     //self.lisaPlayer.volume = 1.0;
     //self.musicPlayer.volume = 0.2;
-
+    
 }
 
 - (void)beginOnboarding:(SCPRMasterViewController*)masterCtrl {
+    
+    [[AudioManager shared] setCurrentAudioMode:AudioModeOnboarding];
+    
     self.masterCtrl = masterCtrl;
     self.onboardingCtrl.view.alpha = 1.0;
     [self.masterCtrl primeOnboarding];
@@ -130,9 +147,7 @@
 
 - (void)fadeOutBrandingWithCompletion:(CompletionBlock)completed {
     
-    SCPRAppDelegate *del = (SCPRAppDelegate*)[[UIApplication sharedApplication] delegate];
-    SCPRNavigationController *nav = del.masterNavigationController;
-
+    
     [UIView animateWithDuration:0.25 animations:^{
         self.onboardingCtrl.brandingView.alpha = 0.0;
         [self.masterCtrl.blurView setNeedsDisplay];
@@ -157,14 +172,6 @@
     
     [UIView animateWithDuration:0.66 animations:^{
         self.masterCtrl.blurView.alpha = 0.0;
-
-        /*self.onboardingCtrl.navbarMask.frame = CGRectMake(self.onboardingCtrl.navbarMask.frame.origin.x,
-                                                          0.0,
-                                                          self.onboardingCtrl.navbarMask.frame.size.width,
-                                                          64.0);*/
-        
-
-        
     } completion:^(BOOL finished) {
         
         [[UIApplication sharedApplication] setStatusBarHidden:NO
@@ -181,10 +188,10 @@
         
         [self.masterCtrl onboarding_beginOnboardingAudio];
         
-        //[self.onboardingCtrl.navbarMask.layer removeFromSuperlayer];
+
         self.onboardingCtrl.interactionButton.frame = [self.masterCtrl.view convertRect:self.masterCtrl.playerControlsView.frame
                                                        
-                                   toView:self.onboardingCtrl.view];
+                                                                                 toView:self.onboardingCtrl.view];
         
         [self.onboardingCtrl.interactionButton removeTarget:nil
                                                      action:nil
@@ -196,9 +203,6 @@
         
         [self.onboardingCtrl.orangeStripView removeFromSuperview];
         
-
-
-
         
         [self.musicPlayer play];
         [self.lisaPlayer play];
@@ -211,8 +215,8 @@
         
         
     }];
-
-
+    
+    
 }
 
 - (void)godPauseOrPlay {
@@ -227,6 +231,12 @@
         [[AudioManager shared].audioPlayer pause];
         self.paused = YES;
     }
+}
+
+- (void)killAudio {
+    [self.lisaPlayer stop];
+    [self.musicPlayer stop];
+    [[AudioManager shared] takedownAudioPlayer];
 }
 
 - (void)presentLensOverRewindButton {
@@ -250,7 +260,7 @@
             
         });
     }];
-
+    
 }
 
 - (void)restoreInteractionButton {
@@ -260,7 +270,7 @@
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
-
+    
 }
 
 - (void)listenForQueues {
@@ -268,11 +278,11 @@
     self.listeningForQueues = YES;
     self.keyPoints = [@{
                         @"8" : @"expandButton",
-                         @"18" : @"activateDropdown",
-                         @"21" : @"selectFirstMenuItem",
-                         @"25" : @"selectSecondMenuItem",
-                         @"29" : @"closeMenu",
-                         @"34" : @"askForNotifications" } mutableCopy];
+                        @"18" : @"activateDropdown",
+                        @"21" : @"selectFirstMenuItem",
+                        @"25" : @"selectSecondMenuItem",
+                        @"29" : @"closeMenu",
+                        @"34" : @"askForNotifications" } mutableCopy];
     
 }
 
@@ -331,7 +341,7 @@
             
         });
     }];
-
+    
 }
 
 - (void)closeMenu {
@@ -356,8 +366,7 @@
 }
 
 - (void)askForPushNotifications {
-
-    
+    self.notificationsPromptDisplaying = YES;
     self.listeningForQueues = NO;
     if ( self.observerTimer ) {
         if ( [self.observerTimer isValid] ) {
@@ -376,6 +385,7 @@
         [self.masterCtrl.liveProgressViewController.view setAlpha:0.0];
     } completion:^(BOOL finished) {
         [self.onboardingCtrl revealNotificationsPrompt];
+        
         [[AudioManager shared].audioPlayer pause];
         [self.lisaPlayer pause];
     }];
@@ -389,6 +399,8 @@
         [self.masterCtrl.liveStreamView setAlpha:1.0];
         [self.masterCtrl.liveProgressViewController.view setAlpha:1.0];
     } completion:^(BOOL finished) {
+        
+        self.notificationsPromptDisplaying = NO;
         if ( prompt ) {
             [self askSystemForNotificationPermissions];
         } else {
@@ -438,17 +450,17 @@
         [self.masterCtrl.playerControlsView setAlpha:1.0];
         
     } completion:^(BOOL finished) {
-
+        
         [[AudioManager shared].audioPlayer play];
         [self.lisaPlayer play];
         [self.musicPlayer play];
         
     }];
-
+    
 }
 
 - (void)endOnboarding {
-
+    
     self.onboardingEnding = YES;
     self.fadeQueue = [[NSOperationQueue alloc] init];
     [[AudioManager shared] setRelativeFauxDate:nil];

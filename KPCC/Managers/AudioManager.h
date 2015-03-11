@@ -10,8 +10,9 @@
 #import <AVFoundation/AVFoundation.h>
 #import <MediaPlayer/MediaPlayer.h>
 
+
 #ifdef SHORTENED_BUFFER
-static long kStreamBufferLimit = 5*60;
+static long kStreamBufferLimit = 1*60;
 static long kStreamCorrectionTolerance = 60*5;
 #else
 static long kStreamBufferLimit = 4*60*60;
@@ -19,10 +20,20 @@ static long kStreamCorrectionTolerance = 60*5;
 #endif
 
 #ifdef USE_TEST_STREAM
-#define kHLSLiveStreamURL @"http://vevoplaylist-live.hls.adaptive.level3.net/vevo/ch1/06/prog_index.m3u8"
+#define kHLSLiveStreamURL @"http://hls.kqed.org/hls/smil:itunes.smil/playlist.m3u8"
+#else
+#ifdef BETA
+#define kHLSLiveStreamURLBase @"http://streammachine-test.scprdev.org:8020/sg/test.m3u8"
+//#define kHLSLiveStreamURLBase @"http://streammachine-hls001.scprdev.org/sg/kpcc-aac.m3u8"
+#define kHLSLiveStreamURL [NSString stringWithFormat:@"%@?ua=KPCCiPhone-%@",kHLSLiveStreamURLBase,[Utils urlSafeVersion]]
+#else
+#ifdef FORCE_TEST_STREAM
+#define kHLSLiveStreamURLBase @"http://streammachine-test.scprdev.org:8020/sg/test.m3u8"
+#define kHLSLiveStreamURL [NSString stringWithFormat:@"%@?ua=KPCCiPhone-%@",kHLSLiveStreamURLBase,[Utils urlSafeVersion]]
 #else
 #define kHLSLiveStreamURL [NSString stringWithFormat:@"%@?ua=KPCCiPhone-%@",@"http://streammachine-hls001.scprdev.org/sg/kpcc-aac.m3u8",[Utils urlSafeVersion]]
-//#define kHLSLiveStreamURL @"http://streammachine-hls001.scprdev.org/sg/kpcc-aac.m3u8?ua=SCPRIPHONE"
+#endif
+#endif
 #endif
 
 #define kLiveStreamURL @"http://live.scpr.org/kpcclive"
@@ -39,6 +50,8 @@ static long kStreamCorrectionTolerance = 60*5;
 #else
 #	define SCPRDebugLog(...)
 #endif
+
+@class AudioChunk;
 
 typedef NS_ENUM(NSUInteger, AudioMode) {
     AudioModeNeutral = 0,
@@ -71,7 +84,12 @@ typedef NS_ENUM(NSUInteger, StreamStatus) {
 - (void)onSeekCompleted;
 - (void)interfere;
 - (void)onDemandAudioFailed;
+- (void)onDemandSeekCompleted;
 @end
+
+#define kPreferredPeakBitRateTolerance 1000
+#define kImpatientWaitingTolerance 10.0
+#define kBookmarkingTolerance 10
 
 @interface AudioManager : NSObject
 
@@ -96,12 +114,16 @@ typedef NS_ENUM(NSUInteger, StreamStatus) {
 
 @property long latencyCorrection;
 
+
 @property (strong,nonatomic) NSDateFormatter *dateFormatter;
 @property (nonatomic,strong) NSOperationQueue *fadeQueue;
+
+
 @property long bufferObservationCount;
 
 @property CGFloat savedVolume;
 @property CGFloat savedVolumeFromMute;
+@property Float64 onDemandSeekPosition;
 
 @property BOOL seekRequested;
 @property BOOL bufferMutex;
@@ -110,12 +132,24 @@ typedef NS_ENUM(NSUInteger, StreamStatus) {
 @property BOOL temporaryMutex;
 @property BOOL easeInAudio;
 @property BOOL waitForSeek;
+@property BOOL waitForOnDemandSeek;
 @property BOOL prerollPlaying;
 @property BOOL tryAgain;
 @property BOOL dumpedOnce;
 @property BOOL recoveryGateOpen;
 @property BOOL loggingGateOpen;
+@property BOOL reactivate;
+@property BOOL dropoutOccurred;
+@property BOOL seekWillEffectBuffer;
+@property BOOL streamStabilized;
+@property BOOL smooth;
+@property BOOL userPause;
 
+@property (nonatomic, strong) NSMutableDictionary *localBufferSample;
+
+@property UIBackgroundTaskIdentifier rescueTask;
+
+@property NSInteger failoverCount;
 
 @property (nonatomic, copy) NSString *previousUrl;
 @property (nonatomic, strong) NSDate *queuedSeekDate;
@@ -123,23 +157,31 @@ typedef NS_ENUM(NSUInteger, StreamStatus) {
 @property NSInteger onboardingSegment;
 @property (nonatomic) AudioMode currentAudioMode;
 
-- (void)playAudioWithURL:(NSString *)url;
+- (void)playAudioWithURL:(NSString *)url ondemand:(BOOL)ondemand;
 - (void)playQueueItemWithUrl:(NSString *)url;
+- (void)playQueueItem:(AudioChunk*)chunk;
 - (void)playLiveStream;
 
 @property (NS_NONATOMIC_IOSONLY, readonly, copy) NSString *liveStreamURL;
 - (void)startStream;
-- (void)playStream;
-- (void)pauseStream;
+- (void)playAudio;
+- (void)pauseAudio;
 - (void)stopStream;
 - (void)stopAllAudio;
 - (void)muteAudio;
 - (void)unmuteAudio;
 - (void)buildStreamer:(NSString*)urlString;
 - (void)buildStreamer:(NSString*)urlString local:(BOOL)local;
-
+- (void)printStatus;
 - (void)playOnboardingAudio:(NSInteger)segment;
 - (void)sanitizeFromOnboarding;
+
+// Recovery
+- (void)waitPatiently;
+- (void)attemptToRecover;
+- (void)interruptAutorecovery;
+- (void)stopWaiting;
+- (void)localSample:(CMTime)time;
 
 @property (NS_NONATOMIC_IOSONLY, getter=isStreamPlaying, readonly) BOOL streamPlaying;
 @property (NS_NONATOMIC_IOSONLY, getter=isStreamBuffering, readonly) BOOL streamBuffering;
@@ -149,7 +191,11 @@ typedef NS_ENUM(NSUInteger, StreamStatus) {
 @property (NS_NONATOMIC_IOSONLY, readonly) double observedMinBitrate;
 @property (NS_NONATOMIC_IOSONLY, readonly, copy) NSString *currentDateTimeString;
 
+@property NSInteger frameCount;
+
 @property BOOL audioCheating;
+
+@property (nonatomic, strong) NSTimer *kickstartTimer;
 
 - (void)updateNowPlayingInfoWithAudio:(id)audio;
 
@@ -171,7 +217,7 @@ typedef NS_ENUM(NSUInteger, StreamStatus) {
 - (void)resetPlayer;
 
 - (BOOL)verifyPositionAuthenticity;
-
+- (void)invalidateTimeObserver;
 - (void)cheatPlay;
 
 - (NSString*)avPlayerSessionString;
@@ -183,6 +229,8 @@ typedef NS_ENUM(NSUInteger, StreamStatus) {
 @property (nonatomic,strong) NSDate *previousCD;
 - (void)dump:(BOOL)superVerbose;
 - (void)streamFrame;
+@property (nonatomic, strong) NSTimer *multipurposeTimer;
+
 #endif
 
 @end

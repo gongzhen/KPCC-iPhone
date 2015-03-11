@@ -23,19 +23,24 @@
 @property BOOL suppressBalloon;
 @property BOOL onboardingEnding;
 @property BOOL paused;
+@property BOOL notificationsPromptDisplaying;
 @property (nonatomic,strong) NSDictionary *keyPoints;
 @property (nonatomic,strong) NSTimer *observerTimer;
 @property (nonatomic,strong) AVAudioPlayer *musicPlayer;
 @property (nonatomic,strong) AVAudioPlayer *lisaPlayer;
 @property (nonatomic,strong) NSOperationQueue *fadeQueue;
 @property (nonatomic,strong) NSMutableDictionary *committedActions;
+@property (nonatomic,strong) NSDate *operationBeganDate;
 
 + (instancetype)shared;
 - (void)load;
 - (void)persist;
 
 - (void)freezeProgressBar;
+
 - (BOOL)userHasSeenOnboarding;
+- (BOOL)userHasSeenScrubbingOnboarding;
+
 - (void)loadOnboarding;
 - (void)beginOnboarding:(SCPRMasterViewController*)masterCtrl;
 - (void)fadeInBranding;
@@ -60,5 +65,8 @@
 - (void)showMenuButton;
 
 - (void)godPauseOrPlay;
+- (void)killAudio;
+- (void)timeBegin;
+- (void)timeEnd:(NSString*)operationName;
 
 @end
