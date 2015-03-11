@@ -7,6 +7,7 @@
 //
 
 #import "SCPRProgramTableViewCell.h"
+#import "SCPRGenericAvatarViewController.h"
 
 @implementation SCPRProgramTableViewCell
 
@@ -28,17 +29,24 @@
     return self;
 }
 
+- (instancetype)initWithCoder:(NSCoder *)aDecoder {
+    self = [super initWithCoder:aDecoder];
+    [self.programLabel setFont:[UIFont fontWithName:@"FreightSansProLight-Regular" size:18.0f]];
+    [self.programLabel setTextColor:[UIColor whiteColor]];
+    self.rightChevronImageView.image = [UIImage imageNamed:@"item-chevron-right"];
+    return self;
+}
+
+
 - (void)prepareForReuse {
-    UIView *v = [self.contentView viewWithTag:11111];
-    if ( v ) {
-        [v removeFromSuperview];
-    }
-    self.gav = nil;
     self.iconImageView.alpha = 0.0;
+    self.gav.view.alpha = 0.0;
 }
 
 - (void)awakeFromNib {
-    // Initialization code
+    [self.programLabel setFont:[UIFont fontWithName:@"FreightSansProLight-Regular" size:18.0f]];
+    [self.programLabel setTextColor:[UIColor whiteColor]];
+    self.rightChevronImageView.image = [UIImage imageNamed:@"item-chevron-right"];
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {

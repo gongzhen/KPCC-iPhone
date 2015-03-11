@@ -59,6 +59,8 @@
 @property (nonatomic,strong) IBOutlet SCPRButton *scrubbingGotItButton;
 @property (nonatomic,strong) IBOutlet UIView *scrubbingContainerView;
 @property (nonatomic,strong) UISwipeGestureRecognizer *scrubbingSwiper;
+@property (nonatomic,strong) IBOutlet UIView *fakeScrubberView;
+@property (nonatomic,strong) IBOutlet NSLayoutConstraint *topAnchorScrubbingConstraint;
 @property BOOL dontFade;
 
 // Backdoor

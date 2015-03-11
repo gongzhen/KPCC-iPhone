@@ -121,7 +121,10 @@
 
     SCPRProgramTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"programTableCell"];
     if (cell == nil) {
-        cell = [[SCPRProgramTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"programTableCell"];
+        NSArray *obj = [[NSBundle mainBundle] loadNibNamed:@"SCPRProgramTableViewCell"
+                                                     owner:nil
+                                                   options:nil];
+        cell = (SCPRProgramTableViewCell*)obj[0];
     }
 
     cell.backgroundColor = [UIColor clearColor];
@@ -137,25 +140,15 @@
     if (iconNamed) {
         UIImage *iconImg = [UIImage imageNamed:[NSString stringWithFormat:@"program_avatar_%@", iconNamed]];
         if ( !iconImg ) {
-            SCPRGenericAvatarViewController *av = [[SCPRGenericAvatarViewController alloc]
-                                                   initWithNibName:@"SCPRGenericAvatarViewController"
-                                                   bundle:nil];
-            av.view.frame = CGRectMake(0.0, 0.0,
-                                       32.0, 32.0);
-            av.view.center = CGPointMake(cell.iconImageView.center.x,cell.contentView.frame.size.height/2.0);
-            av.view.tag = 11111;
-         
-            
-            cell.gav = av;
-            [cell.contentView addSubview:av.view];
-            [av.view layoutIfNeeded];
-        
+            [cell.gav setupWithProgram:self.programsList[indexPath.row]];
+            cell.gav.view.alpha = 1.0;
+            cell.iconImageView.alpha = 0.0;
         } else {
         
             [cell.iconImageView setImage:iconImg];
-            cell.iconImageView.frame = CGRectMake(cell.iconImageView.frame.origin.x, 31 - iconImg.size.height/2,
-                                              iconImg.size.width, iconImg.size.height);
+            cell.gav.view.alpha = 0.0;
             cell.iconImageView.alpha = 1.0;
+            
         }
     }
 
@@ -189,11 +182,6 @@
     SCPRProgramTableViewCell *tCell = (SCPRProgramTableViewCell*)cell;
     [tCell.contentView layoutIfNeeded];
     
-    
-    if ( tCell.gav ) {
-        [tCell.gav.view layoutIfNeeded];
-        [tCell.gav setupWithProgram:self.programsList[indexPath.row]];
-    }
 }
 
 - (void)didReceiveMemoryWarning {

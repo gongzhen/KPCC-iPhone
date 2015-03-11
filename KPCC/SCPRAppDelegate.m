@@ -45,6 +45,9 @@
 #ifndef PRODUCTION
     [[UXmanager shared].settings setUserHasViewedOnboarding:YES];
     [[UXmanager shared].settings setUserHasViewedOnDemandOnboarding:YES];
+#ifdef TESTING_SCRUBBER
+    [[UXmanager shared].settings setUserHasViewedScrubbingOnboarding:NO];
+#endif
     [[UXmanager shared] persist];
 #endif
     
@@ -301,6 +304,10 @@
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application {
+    
+    if ( [[QueueManager shared] currentBookmark] ) {
+        [[ContentManager shared] saveContext];
+    }
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
 }
 

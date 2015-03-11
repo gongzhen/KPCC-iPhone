@@ -20,10 +20,10 @@ PODS:
   - AFNetworking/UIKit (2.5.1):
     - AFNetworking/NSURLConnection
     - AFNetworking/NSURLSession
-  - Bolts (1.1.3)
-  - FlurrySDK (6.0.0):
-    - FlurrySDK/FlurrySDK (= 6.0.0)
-  - FlurrySDK/FlurrySDK (6.0.0)
+  - Bolts (1.1.4)
+  - FlurrySDK (6.2.0):
+    - FlurrySDK/FlurrySDK (= 6.2.0)
+  - FlurrySDK/FlurrySDK (6.2.0)
   - FXBlurView (1.6.3)
   - JDStatusBarNotification (1.5.1)
   - Kochava (20150116)
@@ -32,7 +32,7 @@ PODS:
     - Mixpanel/MPCategoryHelpers (= 2.7.2)
   - Mixpanel/MPCategoryHelpers (2.7.2)
   - NewRelicAgent (4.186)
-  - Parse (1.6.2):
+  - Parse (1.6.4):
     - Bolts (~> 1.1)
   - pop (1.0.7)
   - XMLDictionary (1.4)
@@ -52,15 +52,15 @@ DEPENDENCIES:
 
 SPEC CHECKSUMS:
   AFNetworking: 8bee59492a6ff15d69130efa4d0dc67e0094a52a
-  Bolts: 3db0a875235e0c9042b013af13af0f00f79b102c
-  FlurrySDK: c10e4bda3373f6c3282fd62fc55bde83b15f190f
+  Bolts: dd9fb8433d67f5acc3b6b4d1379bbc5513d716c1
+  FlurrySDK: 710642d1de75c220eeb48a387a80a943fe1c3371
   FXBlurView: abe1046285813c4f6e9008abbc324fc5ab32af90
   JDStatusBarNotification: 46965cc93efa668fa9f1c31cb223df5c84b421d5
   Kochava: 033f0bf159aa5003f389d8eb270074c3958d3b9a
   KSReachability: 29c0ec738e487c750a0e46b6554cc50df73f60b1
   Mixpanel: def38b9e600f101686b8d647e05660a72c089c65
   NewRelicAgent: 3ad10d9fe34dc0bffa1f2a1d50793d607b62823a
-  Parse: 60d65108fe39da77ec16c9e51d74b4d296b21424
+  Parse: c2610f7a12ad0defc974803b819c4efe7746e6db
   pop: 2f14a1ea61339767af9e66741b418c831b3844df
   XMLDictionary: 735e81b9a043e220b0d24e9d4f16719606f2e0fc
 

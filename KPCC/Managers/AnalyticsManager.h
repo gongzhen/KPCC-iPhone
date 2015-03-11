@@ -7,9 +7,9 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "Flurry.h"
 #include <mach/mach_time.h>
 #import "AudioManager.h"
+#import "Flurry.h"
 #import "Mixpanel.h"
 #import <Kochava/TrackAndAd.h>
 #import "NetworkManager.h"
