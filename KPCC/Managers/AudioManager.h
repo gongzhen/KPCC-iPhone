@@ -86,6 +86,7 @@ typedef NS_ENUM(NSUInteger, StreamStatus) {
 - (void)onSeekCompleted;
 - (void)interfere;
 - (void)onDemandAudioFailed;
+- (void)onDemandSeekCompleted;
 @end
 
 #define kPreferredPeakBitRateTolerance 1000

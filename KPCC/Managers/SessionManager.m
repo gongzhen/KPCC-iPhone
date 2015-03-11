@@ -33,6 +33,14 @@
     return mgr;
 }
 
+- (void)startAudioSession {
+    if ( [[AudioManager shared] currentAudioMode] == AudioModeLive ) {
+        [self startLiveSession];
+    } else if ( [[AudioManager shared] currentAudioMode] == AudioModeOnDemand ) {
+        [self startOnDemandSession];
+    }
+}
+
 #pragma mark - Session Mgmt
 - (NSDate*)vLive {
     NSDate *live = [NSDate date];
@@ -651,9 +659,19 @@
 - (BOOL)sessionIsExpired {
     
     if ( [[AudioManager shared] currentAudioMode] == AudioModeOnDemand ) return NO;
-    if ( [[AudioManager shared] status] == StreamStatusPaused && [self sessionPausedDate] ) {
+    if ( [[AudioManager shared] status] == StreamStatusPaused ||
+            [[AudioManager shared] status] == StreamStatusStopped ) {
         NSDate *spd = [[SessionManager shared] sessionPausedDate];
+        if ( !spd ) {
+            spd = [[SessionManager shared] sessionLeftDate];
+        }
+        
         NSDate *cit = [[AudioManager shared].audioPlayer.currentItem currentDate];
+        if ( !cit ) {
+            // Some kind of audio abnormality, so expire this sessions
+            return YES;
+        }
+        
         NSDate *aux = [spd earlierDate:cit];
         if ( !aux || [[NSDate date] timeIntervalSinceDate:aux] > kStreamBufferLimit ) {
             return YES;

@@ -35,6 +35,7 @@
 - (void)dequeueForPlayback;
 
 - (void)destroyBookmark:(Bookmark*)bookmark;
+- (void)handleBookmarkingActivity;
 
 // Internal queue
 - (void)enqueue:(AudioChunk*)audio;

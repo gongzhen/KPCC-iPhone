@@ -17,6 +17,7 @@
     self.pushTokenString = [aDecoder decodeObjectForKey:@"pushTokenString"];
     self.pushTokenData = [aDecoder decodeObjectForKey:@"pushTokenData"];
     self.userHasConnectedWithKochava = [aDecoder decodeBoolForKey:@"userHasConnectedWithKochava"];
+    self.lastBookmarkSweep = [aDecoder decodeObjectForKey:@"lastBookmarkSweep"];
     return self;
 }
 
@@ -33,6 +34,8 @@
                 forKey:@"userHasConnectedWithKochava"];
     [aCoder encodeBool:self.userHasViewedScrubbingOnboarding
                 forKey:@"userHasViewedScrubbingOnboarding"];
+    [aCoder encodeObject:self.lastBookmarkSweep
+                  forKey:@"lastBookmarkSweep"];
 }
 
 @end

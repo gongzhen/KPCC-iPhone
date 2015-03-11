@@ -69,8 +69,6 @@
                                     andImageView:self.programBgImage
                                       completion:^(BOOL status) {
                                           
-                                          
-                                          
                                           self.programBgImage.clipsToBounds = YES;
                                           [self.blurView setNeedsDisplay];
                                           UIImage *blurred = [self.programBgImage.image blurredImageWithRadius:20.0f

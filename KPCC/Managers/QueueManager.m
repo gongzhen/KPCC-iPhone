@@ -29,7 +29,7 @@ static QueueManager *singleton = nil;
 #pragma mark - Playback actions
 
 - (void)enqueueEpisode:(Episode *)episode {
-
+    
     if (episode.audio) {
         AudioChunk *chunk = [[AudioChunk alloc] initWithEpisode:episode];
         [self enqueue:chunk];
@@ -45,13 +45,13 @@ static QueueManager *singleton = nil;
 
 - (NSArray*)enqueueEpisodes:(NSArray *)episodes withCurrentIndex:(NSInteger)index {
     return [self enqueueEpisodes:episodes
-         withCurrentIndex:index
-          playImmediately:NO];
+                withCurrentIndex:index
+                 playImmediately:NO];
 }
 
 - (NSArray*)enqueueEpisodes:(NSArray *)episodes withCurrentIndex:(NSInteger)index playImmediately:(BOOL)playImmediately {
     [self clearQueue];
-
+    
     for (int i = 0; i < [episodes count]; i++) {
         AudioChunk *chunk;
         if ([episodes[i] class] == [Episode class]) {
@@ -60,7 +60,7 @@ static QueueManager *singleton = nil;
             chunk = [[AudioChunk alloc] initWithSegment:episodes[i]];
         }
         [self enqueue:chunk];
-
+        
         if (i == index && chunk != nil) {
             
             self.currentChunk = chunk;
@@ -71,21 +71,29 @@ static QueueManager *singleton = nil;
             
         }
     }
-
+    
     NSArray *audioChunks = self.queue;
     return audioChunks;
 }
 
-- (void)setCurrentBookmark:(Bookmark *)currentBookmark {
-    Bookmark *replacedBookmark = self.currentBookmark;
-    _currentBookmark = currentBookmark;
-    
-    if ( replacedBookmark ) {
-        if ( [replacedBookmark.resumeTimeInSeconds floatValue] < kBookmarkingTolerance ) {
-            [[ContentManager shared] destroyBookmark:replacedBookmark];
+- (void)handleBookmarkingActivity {
+    if ( [[AudioManager shared] currentAudioMode] != AudioModeOnDemand ) return;
+    CMTime currentTime = [[AudioManager shared].audioPlayer.currentItem currentTime];
+    NSInteger seconds = CMTimeGetSeconds(currentTime);
+    if ( seconds > kBookmarkingTolerance ) {
+        if ( !self.currentBookmark ) {
+            Bookmark *b = [[ContentManager shared] bookmarkForAudioChunk:self.currentChunk];
+            if ( !b ) {
+                b = [[ContentManager shared] createBookmarkFromAudioChunk:self.currentChunk];
+            }
+            
+            b.resumeTimeInSeconds = @(seconds);
+            self.currentBookmark = b;
+            
+        } else {
+            self.currentBookmark.resumeTimeInSeconds = @(seconds);
         }
     }
-    
 }
 
 - (void)playNext {
@@ -96,9 +104,9 @@ static QueueManager *singleton = nil;
         if (self.currentlyPlayingIndex + 1 < [self.queue count]) {
             AudioChunk *chunk = (self.queue)[self.currentlyPlayingIndex + 1];
             self.currentChunk = chunk;
-            [[AudioManager shared] playQueueItem:chunk];
             self.currentlyPlayingIndex += 1;
             [[[Utils del] masterViewController] setPositionForQueue:(int)self.currentlyPlayingIndex animated:YES];
+            [[AudioManager shared] playQueueItem:chunk];
         }
     }
 }
@@ -108,9 +116,9 @@ static QueueManager *singleton = nil;
         if (self.currentlyPlayingIndex > 0) {
             AudioChunk *chunk = (self.queue)[self.currentlyPlayingIndex - 1];
             self.currentChunk = chunk;
-            [[AudioManager shared] playQueueItem:chunk];
             self.currentlyPlayingIndex -= 1;
             [[[Utils del] masterViewController] setPositionForQueue:(int)self.currentlyPlayingIndex animated:YES];
+            [[AudioManager shared] playQueueItem:chunk];
         }
     }
 }
@@ -145,12 +153,12 @@ static QueueManager *singleton = nil;
 
 - (AudioChunk*)dequeue {
     id toDequeue = nil;
-
+    
     if ([self.queue lastObject]) {
         toDequeue = (self.queue)[0];
         [self.queue removeObjectAtIndex:0];
     }
-
+    
     return toDequeue;
 }
 

@@ -19,7 +19,7 @@ typedef NS_ENUM(NSUInteger, OnDemandFinishedReason) {
 static NSInteger kStreamIsLiveTolerance = 120;
 
 #ifndef PRODUCTION
-static NSInteger kProgramPollingPressure = 30;
+static NSInteger kProgramPollingPressure = 5;
 #else
 static NSInteger kProgramPollingPressure = 15;
 #endif
@@ -32,6 +32,7 @@ static NSInteger kProgramPollingPressure = 15;
 @property (nonatomic, copy) NSDate *sessionReturnedDate;
 @property (nonatomic, copy) NSDate *sessionPausedDate;
 @property (nonatomic, copy) NSDate *lastProgramUpdate;
+
 @property (nonatomic, copy) NSString *liveSessionID;
 @property (nonatomic, copy) NSString *odSessionID;
 @property (nonatomic, strong) NSTimer *programUpdateTimer;
@@ -91,6 +92,8 @@ static NSInteger kProgramPollingPressure = 15;
 - (void)handleSessionReactivation;
 - (void)invalidateSession;
 - (void)expireSession;
+
+- (void)startAudioSession;
 
 - (NSString*)startLiveSession;
 - (NSString*)endLiveSession;

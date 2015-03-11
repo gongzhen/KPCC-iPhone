@@ -9,6 +9,7 @@
 #import "ContentManager.h"
 #import "Bookmark.h"
 #import "AudioChunk.h"
+#import "UXmanager.h"
 
 static ContentManager *singleton = nil;
 
@@ -80,11 +81,7 @@ static ContentManager *singleton = nil;
     if ( !array || [array count] == 0)
     {
         
-        Bookmark *b = (Bookmark*)[NSEntityDescription insertNewObjectForEntityForName:@"Bookmark"
-                                                               inManagedObjectContext:self.managedObjectContext];
-        b.urlSha = shaUrl;
-        b.createdAt = [NSDate date];
-        return b;
+        return nil;
         
     } else {
         Bookmark *b = array[0];
@@ -92,6 +89,84 @@ static ContentManager *singleton = nil;
     }
     
     return array[0];
+}
+
+- (Bookmark*)createBookmarkFromAudioChunk:(AudioChunk *)chunk {
+    
+    Bookmark *b = [NSEntityDescription insertNewObjectForEntityForName:@"Bookmark"
+                                                inManagedObjectContext:self.managedObjectContext];
+
+    b.programTitle = chunk.programTitle;
+    b.duration = chunk.audioDuration;
+    b.audioTitle = chunk.audioTitle;
+    b.createdAt = [NSDate date];
+    b.urlPlain = chunk.audioUrl;
+    b.urlSha = [Utils sha1:b.urlPlain];
+    
+    [self saveContext];
+    
+    return b;
+}
+
+- (NSArray*)allBookmarks {
+    NSEntityDescription *entityDescription = [NSEntityDescription
+                                              entityForName:@"Bookmark" inManagedObjectContext:self.managedObjectContext];
+    NSFetchRequest *request = [[NSFetchRequest alloc] init];
+    [request setEntity:entityDescription];
+    
+    NSError *error = nil;
+    NSArray *array = [self.managedObjectContext executeFetchRequest:request error:&error];
+    if ( !array || [array count] == 0)
+    {
+        
+        return @[];
+        
+    }
+    
+    NSLog(@" >>>>> Found %ld bookmarks ",(long)array.count);
+    
+    return array;
+}
+
+- (void)sweepBookmarks {
+    
+    NSDate *lastSweep = [[UXmanager shared].settings lastBookmarkSweep];
+    if ( !lastSweep || [lastSweep isOlderThanInSeconds:kBookmarkCleaningFrequency] ) {
+        
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+            
+            [self sweepTaskWithCompletion:^(id returnedObject) {
+                
+                NSArray *expired = (NSArray*)returnedObject;
+                NSLog(@"Found %ld expired bookmarks",(long)[expired count]);
+                
+                for ( Bookmark *b in expired ) {
+                    [self destroyBookmark:b];
+                }
+                [[UXmanager shared].settings setLastBookmarkSweep:[NSDate date]];
+                [[UXmanager shared] persist];
+                [[ContentManager shared] saveContext];
+                
+            }];
+            
+        });
+    }
+}
+
+- (void)sweepTaskWithCompletion:(CompletionBlockWithValue)completion {
+    NSArray *bookmarks = [self allBookmarks];
+    NSMutableArray *expired = [[bookmarks filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
+        Bookmark *b = (Bookmark*)evaluatedObject;
+        if ( [[b createdAt] isOlderThanInSeconds:kBookmarkPreservationTolerance] ) {
+            return YES;
+        }
+        
+        return NO;
+    }]] mutableCopy];
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        completion(expired);
+    });
 }
 
 /**

@@ -156,8 +156,7 @@
         CMTime total = [[[[AudioManager shared].audioPlayer currentItem] asset] duration];
         CMTime seek = CMTimeMake(total.value*multiplier, total.timescale);
         [[AudioManager shared].audioPlayer.currentItem seekToTime:seek completionHandler:^(BOOL finished) {
-            self.panning = NO;
-            [(SCPRScrubbingUIViewController*)self.parentUIController onSeekCompleted];
+            [self handleSeekCompleted];
         }];
     });
 
@@ -166,6 +165,8 @@
 
 - (void)handleSeekCompleted {
     // Do any specific cleanup here
+    self.panning = NO;
+    [(SCPRScrubbingUIViewController*)self.parentUIController onDemandSeekCompleted];
 }
 
 - (void)tick {

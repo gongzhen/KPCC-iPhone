@@ -547,7 +547,7 @@ setForOnDemandUI;
         return;
     }
     [[AudioManager shared] setSmooth:YES];
-    [[SessionManager shared] fetchCurrentProgram:^(id returnedObject) {
+    //[[SessionManager shared] fetchCurrentProgram:^(id returnedObject) {
         [UIView animateWithDuration:0.15 animations:^{
             self.liveRewindAltButton.alpha = 0.0;
         } completion:^(BOOL finished) {
@@ -566,7 +566,7 @@ setForOnDemandUI;
                 self.initialPlay = YES;
             }
         }];
-    }];
+    //}];
     
 
     
@@ -1259,9 +1259,11 @@ setForOnDemandUI;
 }
 
 - (void)beginScrubbingWaitMode {
-    [self.jogShuttle animateIndefinitelyWithViewToHide:self.playPauseButton completion:^{
-        self.playPauseButton.enabled = YES;
-    }];
+    if ( ![self.jogShuttle spinning] ) {
+        [self.jogShuttle animateIndefinitelyWithViewToHide:self.playPauseButton completion:^{
+            self.playPauseButton.enabled = YES;
+        }];
+    }
 }
 
 - (void)endScrubbingWaitMode {
@@ -1393,7 +1395,6 @@ setForOnDemandUI;
                 if ( [AudioManager shared].currentAudioMode != AudioModeOnDemand ) {
                     [self.playPauseButton setAlpha:1.0];
                 }
-                //[self.jogShuttle.view setAlpha:0.0];
             }];
             
         }];
@@ -1526,6 +1527,11 @@ setForOnDemandUI;
 
 - (void)setOnDemandUI:(BOOL)animated forProgram:(Program*)program withAudio:(NSArray*)array atCurrentIndex:(int)index {
     
+    [[AudioManager shared] invalidateTimeObserver];
+    
+    if ( self.preRollViewController.tritonAd )
+        self.preRollViewController.tritonAd = nil;
+    
     self.queueBlurShown = NO;
     
     if ( [[AudioManager shared].audioPlayer rate] > 0.0 ) {
@@ -1568,6 +1574,7 @@ setForOnDemandUI;
         self.timeLabelOnDemand.alpha = 1.0;
         self.queueBlurView.layer.opacity = 1.0;
         self.scrubbingTriggerView.alpha = 1.0;
+        [self.liveProgressViewController hide];
     } completion:^(BOOL finished) {
         
         [self.jogShuttle animateIndefinitelyWithViewToHide:self.playPauseButton completion:^{
@@ -1646,7 +1653,7 @@ setForOnDemandUI;
                 [[DesignManager shared] setProtectBlurredImage:NO];
                 
                 dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                    [[QueueManager shared] playItemAtPosition:(int)[[QueueManager shared] currentlyPlayingIndex]];
+                    [[QueueManager shared] playItemAtPosition:index];
                     weakSelf.onDemandPanning = NO;
                 });
                 
@@ -1682,6 +1689,12 @@ setForOnDemandUI;
 }
 
 - (void)setPositionForQueue:(int)index animated:(BOOL)animated {
+    if ( !self.jogShuttle.spinning ) {
+        [self.jogShuttle animateIndefinitelyWithViewToHide:self.playPauseButton completion:^{
+            self.playPauseButton.enabled = YES;
+            [self updateControlsAndUI:YES];
+        }];
+    }
     if (index >= 0 && index < [self.queueScrollView.subviews count]) {
         if (animated) {
             [UIView animateWithDuration:0.4 delay:0.0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
@@ -1695,6 +1708,10 @@ setForOnDemandUI;
         }
     }
     [self.queueScrollView layoutIfNeeded];
+    
+    if ( self.scrubbing ) {
+        [self.scrubbingUI muteUI];
+    }
 }
 
 - (void)treatUIforProgram {
@@ -2540,7 +2557,7 @@ setForOnDemandUI;
     }
     
     if (self.queueCurrentPage != newPage) {
-
+        
         [self.jogShuttle animateIndefinitelyWithViewToHide:self.playPauseButton completion:^{
             self.playPauseButton.enabled = YES;
             [self updateControlsAndUI:YES];
@@ -2552,7 +2569,7 @@ setForOnDemandUI;
             [[QueueManager shared] playItemAtPosition:newPage];
             self.queueCurrentPage = newPage;
         });
-
+        
         
     } else {
         [self.jogShuttle endAnimations];
@@ -2581,6 +2598,8 @@ setForOnDemandUI;
             [self.jogShuttle endAnimations];
         }];
         
+    } else {
+        [self.jogShuttle endAnimations];
     }
     
     self.playPauseButton.userInteractionEnabled = YES;
@@ -2787,20 +2806,21 @@ setForOnDemandUI;
             [self.progressView setProgress:(currentTime / duration) animated:YES];
         });
     }
+    [[QueueManager shared] handleBookmarkingActivity];
+    
 }
 
 - (void)onSeekCompleted {
     // Make sure UI gets set to "Playing" state after a seek.
-    self.playStateGate = YES;
     [[SessionManager shared] fetchCurrentProgram:^(id returnedObject) {
-        if ( self.jogging ) {
-            [self.jogShuttle endAnimations];
-        }
-        
-        
+        [self.jogShuttle endAnimations];
         [[AudioManager shared] setSeekWillEffectBuffer:NO];
-        
     }];
+}
+
+- (void)onDemandSeekCompleted {
+    [self.jogShuttle endAnimations];
+    [[AudioManager shared] setSeekWillEffectBuffer:NO];
 }
 
 - (void)interfere {

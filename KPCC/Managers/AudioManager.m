@@ -87,6 +87,9 @@ static const NSString *ItemStatusContext;
                     self.reactivate = NO;
                 }
             }
+            
+            [[ContentManager shared] saveContext];
+            
         } else if (interruptionType == AVAudioSessionInterruptionTypeEnded) {
             if ( self.audioPlayer ) {
                 if ( self.audioPlayer.rate <= 0.0 && self.reactivate ) {
@@ -594,14 +597,7 @@ static const NSString *ItemStatusContext;
 #endif
                 
                 if ( weakSelf.currentAudioMode == AudioModeOnDemand ) {
-                    Bookmark *b = [[QueueManager shared] currentBookmark];
-                    CMTime ct = weakSelf.audioPlayer.currentItem.currentTime;
-                    NSInteger time = CMTimeGetSeconds(ct);
-                    if ( b ) {
-                        if ( time <= [b.duration intValue] && time >= kBookmarkingTolerance ) {
-                            b.resumeTimeInSeconds = @(CMTimeGetSeconds(ct));
-                        }
-                    }
+                    [[QueueManager shared] handleBookmarkingActivity];
                 }
                 
                 weakSelf.userPause = NO;
@@ -958,7 +954,9 @@ static const NSString *ItemStatusContext;
 
     if ( [[QueueManager shared] currentBookmark] ) {
         [[ContentManager shared] destroyBookmark:[[QueueManager shared] currentBookmark]];
+        [[QueueManager shared] setCurrentBookmark:nil];
     }
+    
     if ( ![[QueueManager shared]isQueueEmpty] ) {
         [[SessionManager shared] endOnDemandSessionWithReason:OnDemandFinishedReasonEpisodeEnd];
         [[QueueManager shared] playNext];
@@ -1226,16 +1224,8 @@ static const NSString *ItemStatusContext;
 }
 
 - (void)playQueueItem:(AudioChunk*)chunk {
-
-    [[UXmanager shared] timeBegin];
     Bookmark *b = [[ContentManager shared] bookmarkForAudioChunk:chunk];
-    [[UXmanager shared] timeEnd:@"Bookmarking..."];
-    
-    b.programTitle = chunk.programTitle;
-    b.duration = chunk.audioDuration;
-    b.audioTitle = chunk.audioTitle;
     [[QueueManager shared] setCurrentBookmark:b];
-    
     [self playQueueItemWithUrl:chunk.audioUrl];
 }
 
@@ -1264,6 +1254,8 @@ static const NSString *ItemStatusContext;
 
 
 - (void)playLiveStream {
+    [[QueueManager shared] setCurrentBookmark:nil];
+    
     [self stopAllAudio];
     [self buildStreamer:kHLSLiveStreamURL];
     [self playAudio];
@@ -1306,9 +1298,8 @@ static const NSString *ItemStatusContext;
     if ( [self currentAudioMode] == AudioModeOnboarding ) {
         self.audioPlayer.volume = 0.0;
     }
-    if ( self.currentAudioMode == AudioModeLive ) {
-        [[SessionManager shared] startLiveSession];
-    }
+    
+    [[SessionManager shared] startAudioSession];
     
     [[SessionManager shared] setSessionPausedDate:nil];
     self.status = StreamStatusPlaying;
@@ -1323,19 +1314,24 @@ static const NSString *ItemStatusContext;
     
     if ( self.currentAudioMode == AudioModeOnDemand ) {
         if ( [self.audioPlayer currentItem] ) {
-            Bookmark *b = [[QueueManager shared] currentBookmark];
-            Float64 resumeTime = [b.resumeTimeInSeconds floatValue];
-            Float64 duration = [b.duration floatValue];
-            if ( fabs(duration - resumeTime) <= 1.0 ) {
-                b.resumeTimeInSeconds = @(0);
-            }
-            if ( b && b.resumeTimeInSeconds > 0 ) {
-                if ( resumeTime >= duration ) {
-                    b.resumeTimeInSeconds = @(0);
-                } else {
-                    self.onDemandSeekPosition = resumeTime;
-                    self.waitForOnDemandSeek = YES;
-                    return;
+            if ( CMTimeGetSeconds( self.audioPlayer.currentItem.currentTime ) == 0 ) {
+                Bookmark *b = [[QueueManager shared] currentBookmark];
+                if ( b ) {
+                    Float64 resumeTime = [b.resumeTimeInSeconds floatValue];
+                    Float64 duration = [b.duration floatValue];
+                    if ( fabs(duration - resumeTime) <= 1.0 ) {
+                        b.resumeTimeInSeconds = @(0);
+                    }
+                    if ( b && b.resumeTimeInSeconds > 0 ) {
+                        if ( resumeTime >= duration ) {
+                            b.resumeTimeInSeconds = @(0);
+                        } else {
+                            self.onDemandSeekPosition = resumeTime;
+                            self.waitForOnDemandSeek = YES;
+                            return;
+                        }
+                    }
+                    
                 }
             }
         }

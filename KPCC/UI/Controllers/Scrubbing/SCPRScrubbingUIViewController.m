@@ -9,6 +9,7 @@
 #import "SCPRScrubbingUIViewController.h"
 #import "DesignManager.h"
 #import "SCPRMasterViewController.h"
+#import "SCPRJogShuttleViewController.h"
 
 @interface SCPRScrubbingUIViewController ()
 
@@ -50,15 +51,25 @@
 }
 
 - (void)forward30 {
+    
+    [[AudioManager shared] setSeekWillEffectBuffer:YES];
+    
     CMTime ct = [[AudioManager shared].audioPlayer.currentItem currentTime];
     ct.value += (30.0*ct.timescale);
-    [[AudioManager shared].audioPlayer.currentItem seekToTime:ct];
+    [[AudioManager shared].audioPlayer.currentItem seekToTime:ct completionHandler:^(BOOL finished) {
+        [self onDemandSeekCompleted];
+    }];
 }
 
 - (void)rewind30 {
+    
+    [[AudioManager shared] setSeekWillEffectBuffer:YES];
+    
     CMTime ct = [[AudioManager shared].audioPlayer.currentItem currentTime];
     ct.value -= (30.0*ct.timescale);
-    [[AudioManager shared].audioPlayer.currentItem seekToTime:ct];
+    [[AudioManager shared].audioPlayer.currentItem seekToTime:ct completionHandler:^(BOOL finished) {
+        [self onDemandSeekCompleted];
+    }];
 }
 
 - (void)setupWithProgram:(NSDictionary *)program blurredImage:(UIImage *)image parent:(id)parent {
@@ -134,7 +145,6 @@
         self.fw30Button.alpha = 0.25;
         self.rw30Button.alpha = 0.25;
         self.scrubberController.view.alpha = 0.25;
-
     } completion:^(BOOL finished) {
         
         self.fw30Button.userInteractionEnabled = NO;
@@ -178,10 +188,15 @@
 
 - (void)onTimeChange {
     [self.scrubberController tick];
+    [self unmuteUI];
 }
 
 - (void)onSeekCompleted {
-    [self unmuteUI];
+    // No-op
+}
+
+- (void)onDemandSeekCompleted {
+    [(id<AudioManagerDelegate>)self.parentControlView onDemandSeekCompleted];
 }
 
 - (void)scrubberWillAppear {
