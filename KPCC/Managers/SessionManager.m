@@ -55,6 +55,7 @@
                 }
             }
         } else {
+            // AVPlayer has yet to acquire a max seekable date, so return some identifiably large value
             return [[NSDate date] dateByAddingTimeInterval:60*60*24*10];
         }
     }
@@ -345,7 +346,8 @@
         // Create Program and insert into managed object context
         if ( returnedObject && [(NSDictionary*)returnedObject count] > 0 ) {
             dispatch_async(dispatch_get_main_queue(), ^{
-                Program *programObj = [Program insertProgramWithDictionary:returnedObject inManagedObjectContext:[[ContentManager shared] managedObjectContext]];
+                Program *programObj = [Program insertProgramWithDictionary:returnedObject
+                                                    inManagedObjectContext:[[ContentManager shared] managedObjectContext]];
                 
                 [[ContentManager shared] saveContext];
                 
@@ -364,6 +366,11 @@
 #endif
                 if ( touch ) {
                     touch = ![self ignoreProgramUpdating];
+                }
+                
+                if ( self.genericImageForProgram && programObj ) {
+                    touch = YES;
+                    self.genericImageForProgram = NO;
                 }
                 
                 self.currentProgram = programObj;
@@ -395,7 +402,6 @@
     if ( [self sessionIsBehindLive] && ![self seekForwardRequested] && !self.expiring ) {
         d2u = [[AudioManager shared].audioPlayer.currentItem currentDate];
         d2u = [d2u minuteRoundedUpByThreshold:3];
-        
         NSLog(@"Adjusted time to fetch program : %@",[NSDate stringFromDate:d2u
                                                                  withFormat:@"hh:mm:ss a"]);
     }
@@ -503,16 +509,12 @@
 
 - (void)disarmProgramUpdater {
 #ifdef LEGACY_TIMER
-/*    if ( [self useLocalNotifications] ) {
-        [[UIApplication sharedApplication] cancelAllLocalNotifications];
-    } else {*/
     if ( self.programUpdateTimer ) {
         if ( [self.programUpdateTimer isValid] ) {
             [self.programUpdateTimer invalidate];
         }
         self.programUpdateTimer = nil;
     }
-   // }
 #endif
 }
 
@@ -667,12 +669,14 @@
         }
         
         NSDate *cit = [[AudioManager shared].audioPlayer.currentItem currentDate];
-        if ( !cit ) {
-            // Some kind of audio abnormality, so expire this sessions
-            return YES;
+        if ( [[AudioManager shared] status] != StreamStatusStopped ) {
+            if ( !cit ) {
+                // Some kind of audio abnormality, so expire this sessions
+                return YES;
+            }
         }
         
-        NSDate *aux = [spd earlierDate:cit];
+        NSDate *aux = cit ? [spd earlierDate:cit] : spd;
         if ( !aux || [[NSDate date] timeIntervalSinceDate:aux] > kStreamBufferLimit ) {
             return YES;
         }

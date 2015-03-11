@@ -1274,17 +1274,15 @@ setForOnDemandUI;
 - (void)prettifyBehindLiveStatus {
     
     NSDate *ciCurrentDate = [AudioManager shared].audioPlayer.currentItem.currentDate;
-    
+    if ( !ciCurrentDate ) {
+        self.liveDescriptionLabel.text = @"";
+        return;
+    }
 #ifndef SUPPRESS_V_LIVE
     NSTimeInterval ti = [[[SessionManager shared] vLive] timeIntervalSinceDate:ciCurrentDate];
 #else
     NSTimeInterval ti = [[NSDate date] timeIntervalSinceDate:ciCurrentDate];
 #endif
-    
-    if ( [[NetworkManager shared] networkDown] ) {
-        [self.liveDescriptionLabel setText:@"NO NETWORK"];
-        return;
-    }
     
 #ifndef SUPPRESS_V_LIVE
     if ( ti > 60*60*24 ) {
@@ -1297,6 +1295,11 @@ setForOnDemandUI;
         return;
     }
 #endif
+    
+    if ( [[NetworkManager shared] networkDown] ) {
+        [self.liveDescriptionLabel setText:@"NO NETWORK"];
+        return;
+    }
     
     if ( ti > kStreamIsLiveTolerance ) {
         [self.liveDescriptionLabel setText:[NSString stringWithFormat:@"%@ BEHIND LIVE", [NSDate prettyTextFromSeconds:ti]]];
@@ -1721,6 +1724,7 @@ setForOnDemandUI;
         
         if ( !programObj ) {
             [self updateUIWithProgram:nil];
+            [[SessionManager shared] setGenericImageForProgram:YES];
             self.programImageView.image = [UIImage imageNamed:@"program_tile_generic.jpg"];
             [self finishUpdatingForProgram];
             return;
@@ -2024,8 +2028,6 @@ setForOnDemandUI;
     return;
 #endif
     
-    NSLog(@" ||||||||||| LOCKING UI FROM NETWORK GAP |||||||||||| ");
-    
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(unlockUI:)
                                                  name:@"network-status-good"
@@ -2033,7 +2035,6 @@ setForOnDemandUI;
     
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"network-status-fail"
                                                   object:nil];
-    
     
     [self decloakForMenu:YES];
     if ( self.preRollOpen ) {
@@ -2073,7 +2074,6 @@ setForOnDemandUI;
         self.promptedAboutFailureAlready = YES;
     }
     
-
     [self determinePlayState];
 
     

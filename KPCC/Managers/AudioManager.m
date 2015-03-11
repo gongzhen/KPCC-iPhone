@@ -242,8 +242,6 @@ static const NSString *ItemStatusContext;
 #ifndef SUPPRESS_LOCAL_SAMPLING
                 [self invalidateTimeObserver];
 #endif
-                
-                
 #ifndef SUPPRESS_AGGRESSIVE_KICKSTART
                 self.kickstartTimer = [NSTimer scheduledTimerWithTimeInterval:kImpatientWaitingTolerance
                                                                            target:self
@@ -327,7 +325,6 @@ static const NSString *ItemStatusContext;
         self.dropoutOccurred = NO;
     }
     
-
 #ifndef SUPPRESS_AGGRESSIVE_KICKSTART
     if ( self.kickstartTimer ) {
         if ( [self.kickstartTimer isValid] ) {
@@ -1145,9 +1142,7 @@ static const NSString *ItemStatusContext;
     
     self.temporaryMutex = NO;
     if ( self.audioPlayer ) {
-        
         [self.audioPlayer pause];
-        
     }
     
     [self invalidateTimeObserver];
@@ -1163,7 +1158,7 @@ static const NSString *ItemStatusContext;
         [[NSNotificationCenter defaultCenter] removeObserver:self
                                                         name:AVPlayerItemDidPlayToEndTimeNotification
                                                       object:nil];
-        // AVPlayerItemFailedToPlayToEndTimeNotification
+        
         [[NSNotificationCenter defaultCenter] removeObserver:self
                                                         name:AVPlayerItemFailedToPlayToEndTimeNotification
                                                       object:nil];
@@ -1186,6 +1181,8 @@ static const NSString *ItemStatusContext;
         [self.audioPlayer cancelPendingPrerolls];
     }
     
+    self.maxSeekableDate = nil;
+    self.minSeekableDate = nil;
     self.status = StreamStatusStopped;
     self.currentAudioMode = AudioModeNeutral;
     self.audioPlayer = nil;

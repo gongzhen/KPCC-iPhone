@@ -187,6 +187,8 @@
 - (void)onboarding_fin;
 
 @property (nonatomic, strong) IBOutlet NSLayoutConstraint *imageTopConstraint;
+
+@property BOOL genericImageForProgram;
 @property BOOL onboardingRewindButtonShown;
 
 - (void)rollInterferenceText;

@@ -88,6 +88,7 @@ static NSInteger kProgramPollingPressure = 15;
 @property BOOL odSessionIsHot;
 @property BOOL seekForwardRequested;
 @property BOOL prerollDirty;
+@property BOOL genericImageForProgram;
 
 - (void)handleSessionReactivation;
 - (void)invalidateSession;
