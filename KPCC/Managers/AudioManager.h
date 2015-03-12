@@ -88,7 +88,7 @@ typedef NS_ENUM(NSUInteger, StreamStatus) {
 @end
 
 #define kPreferredPeakBitRateTolerance 1000
-#define kImpatientWaitingTolerance 10.0
+#define kImpatientWaitingTolerance 15.0
 #define kBookmarkingTolerance 10
 
 @interface AudioManager : NSObject
@@ -144,6 +144,7 @@ typedef NS_ENUM(NSUInteger, StreamStatus) {
 @property BOOL streamStabilized;
 @property BOOL smooth;
 @property BOOL userPause;
+@property BOOL waitingForRecovery;
 
 @property (nonatomic, strong) NSMutableDictionary *localBufferSample;
 

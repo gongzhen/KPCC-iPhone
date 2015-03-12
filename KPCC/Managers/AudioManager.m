@@ -205,6 +205,13 @@ static const NSString *ItemStatusContext;
                     @finally {
                         
                     }
+                } else {
+                    if ( self.dropoutOccurred ) {
+                        [self.audioPlayer pause];
+                    }
+                    if ( self.audioPlayer.rate == 0.0 ) {
+                        [self.audioPlayer play];
+                    }
                 }
             }
             
@@ -242,6 +249,7 @@ static const NSString *ItemStatusContext;
 #ifndef SUPPRESS_LOCAL_SAMPLING
                 [self invalidateTimeObserver];
 #endif
+                
 #ifndef SUPPRESS_AGGRESSIVE_KICKSTART
                 self.kickstartTimer = [NSTimer scheduledTimerWithTimeInterval:kImpatientWaitingTolerance
                                                                            target:self
@@ -255,7 +263,6 @@ static const NSString *ItemStatusContext;
             if ( self.dropoutOccurred ) {
                 NSLog(@"AVPlayerItem - Stream likely to return after failure...");
                 [self attemptToRecover];
-                
             }
         }
     }
@@ -298,17 +305,6 @@ static const NSString *ItemStatusContext;
     }
 }
 
-- (void)kickstart {
-    if ( self.dropoutOccurred ) {
-        if ( [[UIApplication sharedApplication] applicationState] == UIApplicationStateBackground ) {
-            [self pauseAudio];
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3.75 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                [self playAudio];
-            });
-        }
-    }
-}
-
 - (void)interruptAutorecovery {
     if ( self.kickstartTimer ) {
         if ( [self.kickstartTimer isValid] ) {
@@ -321,10 +317,6 @@ static const NSString *ItemStatusContext;
 
 #pragma mark - Recovery / Logging / Stalls
 - (void)attemptToRecover {
-    @synchronized(self) {
-        self.dropoutOccurred = NO;
-    }
-    
 #ifndef SUPPRESS_AGGRESSIVE_KICKSTART
     if ( self.kickstartTimer ) {
         if ( [self.kickstartTimer isValid] ) {
@@ -352,7 +344,7 @@ static const NSString *ItemStatusContext;
 
 - (void)impatientRestart {
 #ifndef SUPPRESS_AGGRESSIVE_KICKSTART
-    if ( [self.audioPlayer rate] > 0.0 ) {
+    if ( [self.audioPlayer rate] > 0.0 && self.dropoutOccurred ) {
         [self takedownAudioPlayer];
         [self buildStreamer:kHLSLiveStreamURL];
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
@@ -371,7 +363,9 @@ static const NSString *ItemStatusContext;
 #endif
     if ( [[UIApplication sharedApplication] applicationState] == UIApplicationStateBackground ) {
         self.rescueTask = [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:^{
+            self.dropoutOccurred = NO;
             [self stopWaiting];
+            [self stopAllAudio];
             [self takedownAudioPlayer];
             SCPRMasterViewController *master = (SCPRMasterViewController*)[[Utils del] masterViewController];
             [master resetUI];
@@ -1334,7 +1328,9 @@ static const NSString *ItemStatusContext;
         }
     }
     
-    [self.audioPlayer play];
+    if ( self.audioPlayer.currentItem.status == AVPlayerItemStatusReadyToPlay ) {
+        [self.audioPlayer play];
+    }
 
 }
 
