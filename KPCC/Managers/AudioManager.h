@@ -144,6 +144,7 @@ typedef NS_ENUM(NSUInteger, StreamStatus) {
 @property BOOL streamStabilized;
 @property BOOL smooth;
 @property BOOL userPause;
+@property BOOL waitingForRecovery;
 
 @property (nonatomic, strong) NSMutableDictionary *localBufferSample;
 
