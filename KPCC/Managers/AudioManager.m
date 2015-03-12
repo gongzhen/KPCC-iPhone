@@ -205,6 +205,13 @@ static const NSString *ItemStatusContext;
                     @finally {
                         
                     }
+                } else {
+                    if ( self.dropoutOccurred ) {
+                        [self.audioPlayer pause];
+                    }
+                    if ( self.audioPlayer.rate == 0.0 ) {
+                        [self.audioPlayer play];
+                    }
                 }
             }
             
@@ -310,10 +317,6 @@ static const NSString *ItemStatusContext;
 
 #pragma mark - Recovery / Logging / Stalls
 - (void)attemptToRecover {
-    @synchronized(self) {
-        self.dropoutOccurred = NO;
-    }
-    
 #ifndef SUPPRESS_AGGRESSIVE_KICKSTART
     if ( self.kickstartTimer ) {
         if ( [self.kickstartTimer isValid] ) {
@@ -1325,7 +1328,9 @@ static const NSString *ItemStatusContext;
         }
     }
     
-    [self.audioPlayer play];
+    if ( self.audioPlayer.currentItem.status == AVPlayerItemStatusReadyToPlay ) {
+        [self.audioPlayer play];
+    }
 
 }
 
