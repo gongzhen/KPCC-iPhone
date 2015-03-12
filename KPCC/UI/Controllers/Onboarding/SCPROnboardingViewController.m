@@ -27,6 +27,8 @@
                                                  name:@"panic"
                                                object:nil];
     
+    self.fakeScrubberView.alpha = 0.0;
+    
     // Do any additional setup after loading the view from its nib.
 }
 
@@ -306,16 +308,17 @@
         
         self.scrubbingContainerView.translatesAutoresizingMaskIntoConstraints = NO;
         
-
         
+        self.fakeScrubberView.alpha = 1.0;
+        self.fakeScrubberView.backgroundColor = [UIColor kpccOrangeColor];
         self.notificationsView.alpha = 0.0;
         self.brandingView.alpha = 0.0;
         self.textCalloutBalloonCtrl.view.alpha = 0.0;
         self.lensVC.view.alpha = 0.0;
-        self.view.backgroundColor = [[UIColor virtualBlackColor] translucify:0.75];
+        self.view.backgroundColor = [[UIColor virtualBlackColor] translucify:0.88];
         
         self.scrubbingSwiper = [[UISwipeGestureRecognizer alloc] initWithTarget:self
-                                                                action:@selector(dismissOnDemand)];
+                                                                         action:@selector(dismissOnDemand)];
         self.scrubbingSwiper.direction = UISwipeGestureRecognizerDirectionLeft|UISwipeGestureRecognizerDirectionRight;
         
         if ( self.swiper ) {
@@ -323,15 +326,15 @@
             self.swiper = nil;
         }
         
-        [self.view addGestureRecognizer:self.scrubbingSwiper];
+        //[self.view addGestureRecognizer:self.scrubbingSwiper];
         
         [self.scrubbingSwipeToSkipLabel proBookFontize];
         
         [self.scrubbingGotItButton.titleLabel proSemiBoldFontize];
         [self.scrubbingGotItButton setTitleColor:[UIColor kpccPeriwinkleColor]
-                               forState:UIControlStateNormal];
+                                        forState:UIControlStateNormal];
         [self.scrubbingGotItButton setTitleColor:[UIColor kpccPeriwinkleColor]
-                               forState:UIControlStateHighlighted];
+                                        forState:UIControlStateHighlighted];
         
         BOOL fadeUpScrubbingView = NO;
         if ( !self.view.superview ) {
@@ -357,21 +360,29 @@
                                                                   multiplier:1.0
                                                                     constant:0.0];
         
+        CGFloat push = [Utils isThreePointFive] ? 54.0 : 97.0;
         NSLayoutConstraint *yCenter = [NSLayoutConstraint constraintWithItem:self.scrubbingContainerView
                                                                    attribute:NSLayoutAttributeCenterY
                                                                    relatedBy:NSLayoutRelationEqual
                                                                       toItem:self.view
                                                                    attribute:NSLayoutAttributeCenterY
                                                                   multiplier:1.0
-                                                                    constant:100.0];
+                                                                    constant:push];
         
         [self.view addConstraints:@[hCenter,yCenter]];
         
+        NSMutableAttributedString *s = [[NSMutableAttributedString alloc] initWithString:@"Press and hold to seek back or forward within an episode"
+                                                                              attributes:@{ NSFontAttributeName : self.scrubbingSwipeToSkipLabel.font }];
+        NSRange r = [[s string] rangeOfString:@"Press and hold"];
+        NSDictionary *attributes = @{ NSForegroundColorAttributeName : [UIColor kpccOrangeColor] };
+        [s setAttributes:attributes
+                   range:r];
+        self.scrubbingSwipeToSkipLabel.attributedText = s;
         
         [self.scrubbingGotItButton addTarget:self
-                             action:@selector(dismissOnDemand)
-                   forControlEvents:UIControlEventTouchUpInside
-                            special:YES];
+                                      action:@selector(dismissOnDemand)
+                            forControlEvents:UIControlEventTouchUpInside
+                                     special:YES];
         
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.25 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             [UIView animateWithDuration:0.25 animations:^{
@@ -382,7 +393,6 @@
             }];
         });
     }];
-    
 
 
 }

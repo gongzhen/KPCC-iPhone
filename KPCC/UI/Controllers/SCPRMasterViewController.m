@@ -1101,12 +1101,24 @@ setForOnDemandUI;
     }
     self.scrubbingTriggerView = [[UIView alloc] initWithFrame:CGRectMake(0.0,0.0,self.view.frame.size.width,
                                                             40.0)];
-    self.scrubbingTriggerView.backgroundColor = [UIColor clearColor]/*[[UIColor purpleColor] translucify:0.25]*/;
+#ifdef TESTING_SCRUBBER
+    self.scrubbingTriggerView.backgroundColor = [[UIColor purpleColor] translucify:0.33];
+#else
+    self.scrubbingTriggerView.backgroundColor = [UIColor clearColor];
+#endif
+    
+    UIPanGestureRecognizer *pgr = [[UIPanGestureRecognizer alloc] initWithTarget:self
+                                                                          action:@selector(bringUpScrubber)];
+
+    [self.scrubbingTriggerView addGestureRecognizer:pgr];
+    
     UILongPressGestureRecognizer *lpgr = [[UILongPressGestureRecognizer alloc] initWithTarget:self
                                                                                        action:@selector(bringUpScrubber)];
-    lpgr.minimumPressDuration = 0.5;
+    lpgr.minimumPressDuration = 0.25;
     [self.scrubbingTriggerView addGestureRecognizer:lpgr];
-    self.scrubbingTriggerView.frame = CGRectMake(0.0, self.progressView.frame.origin.y-self.scrubbingTriggerView.frame.size.height+20.0,
+    
+    CGFloat adjustment = [Utils isThreePointFive] ? 90.0 : 0.0;
+    self.scrubbingTriggerView.frame = CGRectMake(0.0, self.progressView.frame.origin.y-self.scrubbingTriggerView.frame.size.height+20.0-adjustment,
                                                  self.scrubbingTriggerView.frame.size.width,
                                                  self.scrubbingTriggerView.frame.size.height);
     
@@ -1600,8 +1612,8 @@ setForOnDemandUI;
         [self.liveProgressViewController hide];
         
         self.navigationItem.title = @"Programs";
-
         [self.progressView setProgress:0.0 animated:YES];
+        
         self.progressView.alpha = 1.0;
         self.queueScrollView.alpha = 1.0;
         self.onDemandPlayerView.alpha = 1.0;
@@ -1635,7 +1647,6 @@ setForOnDemandUI;
             [self.queueScrollView addSubview:queueSubView];
         }
         
-     
         self.queueScrollView.contentSize = CGSizeMake(self.queueScrollView.frame.size.width * [array count], self.queueScrollView.frame.size.height);
         [self setPositionForQueue:index animated:NO];
         [self.queueScrollView setHidden:NO];

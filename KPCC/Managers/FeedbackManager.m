@@ -285,6 +285,7 @@ static FeedbackManager *singleton = nil;
                                }
                                
                                dispatch_async(dispatch_get_main_queue(), ^{
+                                   
                                    NSString *s = [[NSString alloc] initWithData:d encoding:NSUTF8StringEncoding];
                                    if ( [Utils pureNil:s] ) {
                                        [self fail];

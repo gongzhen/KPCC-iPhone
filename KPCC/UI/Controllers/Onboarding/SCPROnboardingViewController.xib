@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6254" systemVersion="14C109" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6254" systemVersion="14C1510" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6247"/>
@@ -11,6 +11,7 @@
                 <outlet property="buttonAnchor" destination="HFP-E5-eKn" id="UOJ-LM-eX5"/>
                 <outlet property="calloutAnchor" destination="wTS-Ar-CUQ" id="Lho-Ub-B8f"/>
                 <outlet property="dividerView" destination="h2N-Bf-oxo" id="NQ7-hq-bbi"/>
+                <outlet property="fakeScrubberView" destination="d9S-QB-iOW" id="uoa-sB-KTx"/>
                 <outlet property="gotItButton" destination="idU-cI-SgA" id="Uws-tL-Eqy"/>
                 <outlet property="kpccLogoView" destination="ky3-rC-tNp" id="fqS-Br-P8f"/>
                 <outlet property="lensTopConstraint" destination="lxL-iq-GaB" id="pdc-dh-Wor"/>
@@ -31,6 +32,7 @@
                 <outlet property="sloganTopAnchor" destination="UFB-bS-uZZ" id="EG1-1V-yvX"/>
                 <outlet property="swipeToSkipLabel" destination="boP-gT-EsI" id="tcV-Qf-7Bj"/>
                 <outlet property="textCalloutBalloonCtrl" destination="eO6-rQ-D6u" id="dr6-C6-Ekh"/>
+                <outlet property="topAnchorScrubbingConstraint" destination="4L4-bo-yjD" id="9W2-Vc-dLI"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
                 <outlet property="welcomeLabel" destination="BF9-6O-t4a" id="cyR-cO-m4p"/>
                 <outlet property="yesToNotificationsButton" destination="U8I-Zz-2MD" id="whc-F0-POI"/>
@@ -287,6 +289,13 @@
         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="NOv-ZW-7Kr" userLabel="scrubbing">
             <rect key="frame" x="0.0" y="0.0" width="300" height="380"/>
             <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="d9S-QB-iOW" userLabel="fakeScrubberView">
+                    <rect key="frame" x="4" y="190" width="292" height="4"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="4" id="KUU-Qn-on4"/>
+                    </constraints>
+                </view>
                 <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="onboarding-scrubber.png" translatesAutoresizingMaskIntoConstraints="NO" id="O8b-Zr-HC6">
                     <rect key="frame" x="10" y="177" width="280" height="80"/>
                     <constraints>
@@ -317,15 +326,18 @@
             <constraints>
                 <constraint firstItem="zbm-7o-Ncb" firstAttribute="top" secondItem="O8b-Zr-HC6" secondAttribute="bottom" constant="33" id="0ls-nW-jvT"/>
                 <constraint firstItem="8aU-dv-VsH" firstAttribute="top" secondItem="NOv-ZW-7Kr" secondAttribute="top" constant="8" id="4L4-bo-yjD"/>
+                <constraint firstAttribute="trailing" secondItem="d9S-QB-iOW" secondAttribute="trailing" constant="4" id="8VX-lb-YAH"/>
                 <constraint firstItem="O8b-Zr-HC6" firstAttribute="top" secondItem="8aU-dv-VsH" secondAttribute="bottom" constant="67" id="9ZY-s1-9Uy"/>
+                <constraint firstItem="O8b-Zr-HC6" firstAttribute="top" secondItem="d9S-QB-iOW" secondAttribute="bottom" constant="-17" id="B9N-Ev-5LV"/>
+                <constraint firstAttribute="height" constant="380" id="QB7-Aj-RF9"/>
                 <constraint firstAttribute="trailing" secondItem="O8b-Zr-HC6" secondAttribute="trailing" constant="10" id="RKd-d4-jsw"/>
-                <constraint firstAttribute="height" constant="380" id="TmE-1u-wve"/>
                 <constraint firstItem="zbm-7o-Ncb" firstAttribute="leading" secondItem="NOv-ZW-7Kr" secondAttribute="leading" constant="10" id="Wnr-dx-YJL"/>
                 <constraint firstAttribute="trailing" secondItem="8aU-dv-VsH" secondAttribute="trailing" constant="36" id="e2Y-o8-jmB"/>
-                <constraint firstAttribute="width" constant="300" id="gO4-pW-YRY"/>
                 <constraint firstItem="8aU-dv-VsH" firstAttribute="leading" secondItem="NOv-ZW-7Kr" secondAttribute="leading" constant="36" id="iVK-OT-6wx"/>
                 <constraint firstItem="O8b-Zr-HC6" firstAttribute="leading" secondItem="NOv-ZW-7Kr" secondAttribute="leading" constant="10" id="jqg-9a-yER"/>
                 <constraint firstAttribute="trailing" secondItem="zbm-7o-Ncb" secondAttribute="trailing" constant="10" id="otF-Ua-FSt"/>
+                <constraint firstItem="d9S-QB-iOW" firstAttribute="leading" secondItem="NOv-ZW-7Kr" secondAttribute="leading" constant="4" id="r6o-iU-mqK"/>
+                <constraint firstAttribute="width" constant="300" id="scz-tf-aNg"/>
             </constraints>
             <nil key="simulatedStatusBarMetrics"/>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>

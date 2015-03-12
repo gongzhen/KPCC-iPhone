@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		25263A881A32669E00BD5FF9 /* onboarding3.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 25263A871A32669E00BD5FF9 /* onboarding3.mp3 */; };
 		2537D8BD1A8BD7B700481CF8 /* SCPRTouchableScrubberView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2537D8BC1A8BD7B700481CF8 /* SCPRTouchableScrubberView.m */; };
+		2546AF6F1AB0CB6800E11D5B /* SCPRProgramTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2546AF6E1AB0CB6800E11D5B /* SCPRProgramTableViewCell.xib */; };
 		254831C11A41555700963078 /* UIView+PrintDimensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 254831C01A41555700963078 /* UIView+PrintDimensions.m */; };
 		254CC6961A23A7A600560805 /* onboarding-logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 254CC6901A23A7A600560805 /* onboarding-logo.png */; };
 		254CC6971A23A7A600560805 /* onboarding-logo@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 254CC6911A23A7A600560805 /* onboarding-logo@2x.png */; };
@@ -268,6 +269,7 @@
 		25263A871A32669E00BD5FF9 /* onboarding3.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = onboarding3.mp3; path = Audio/onboarding3.mp3; sourceTree = "<group>"; };
 		2537D8BB1A8BD7B700481CF8 /* SCPRTouchableScrubberView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCPRTouchableScrubberView.h; path = Scrubbing/SCPRTouchableScrubberView.h; sourceTree = "<group>"; };
 		2537D8BC1A8BD7B700481CF8 /* SCPRTouchableScrubberView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SCPRTouchableScrubberView.m; path = Scrubbing/SCPRTouchableScrubberView.m; sourceTree = "<group>"; };
+		2546AF6E1AB0CB6800E11D5B /* SCPRProgramTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SCPRProgramTableViewCell.xib; sourceTree = "<group>"; };
 		254831BF1A41555700963078 /* UIView+PrintDimensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIView+PrintDimensions.h"; path = "KPCC/Helpers/UIView+PrintDimensions.h"; sourceTree = SOURCE_ROOT; };
 		254831C01A41555700963078 /* UIView+PrintDimensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIView+PrintDimensions.m"; path = "KPCC/Helpers/UIView+PrintDimensions.m"; sourceTree = SOURCE_ROOT; };
 		254CC6901A23A7A600560805 /* onboarding-logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "onboarding-logo.png"; sourceTree = "<group>"; };
@@ -950,6 +952,7 @@
 				52EFF87719C37D350059A0E3 /* SCPRMenuCell.m */,
 				52CC6D6019D100DE00C67322 /* SCPRProgramTableViewCell.h */,
 				52CC6D6119D100DE00C67322 /* SCPRProgramTableViewCell.m */,
+				2546AF6E1AB0CB6800E11D5B /* SCPRProgramTableViewCell.xib */,
 				52D0FC1A19D1F24F009AECEE /* SCPRProgramDetailHeaderView.h */,
 				52D0FC1B19D1F24F009AECEE /* SCPRProgramDetailHeaderView.m */,
 				52D0FC1E19D1FC0C009AECEE /* SCPRProgramDetailTableViewCell.h */,
@@ -1285,6 +1288,7 @@
 				52EFF86019C368C00059A0E3 /* program_avatar_wait-wait-dont-tell-me@2x.png in Resources */,
 				768C065C1995905D00F829EB /* btn_play_large@2x.png in Resources */,
 				52EFF85219C368C00059A0E3 /* program_avatar_ted-radio-hour.png in Resources */,
+				2546AF6F1AB0CB6800E11D5B /* SCPRProgramTableViewCell.xib in Resources */,
 				2557BA841A1A9BB800B0CAED /* btn_back_to_live_xtra-small@2x.png in Resources */,
 				76B9A9AE18EF59FD007A6D8C /* SCPRUserReportViewController.xib in Resources */,
 				52EFF81619C368C00059A0E3 /* program_avatar_loh-life.png in Resources */,
@@ -1753,6 +1757,7 @@
 					"$(inherited)",
 					"COCOAPODS=1",
 					"PRODUCTION=1",
+					"SUPPRESS_DIMENSION_PRINTING=1",
 				);
 				INFOPLIST_FILE = "KPCC/KPCC-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;

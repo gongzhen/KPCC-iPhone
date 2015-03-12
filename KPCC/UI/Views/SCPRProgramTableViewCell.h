@@ -12,9 +12,9 @@
 
 @interface SCPRProgramTableViewCell : UITableViewCell
 
-@property (nonatomic,strong) UILabel* programLabel;
-@property (nonatomic,strong) UIImageView* iconImageView;
-@property (nonatomic,strong) UIImageView* rightChevronImageView;
-@property (nonatomic,strong) SCPRGenericAvatarViewController *gav;
+@property (nonatomic,strong) IBOutlet UILabel* programLabel;
+@property (nonatomic,strong) IBOutlet UIImageView* iconImageView;
+@property (nonatomic,strong) IBOutlet UIImageView* rightChevronImageView;
+@property (nonatomic,strong) IBOutlet SCPRGenericAvatarViewController *gav;
 
 @end
