@@ -155,6 +155,9 @@
 #ifndef PRODUCTION
     NSLog(@" ••••• Forcing sandbox channel only •••• ");
     [i removeObject:@"listenLive" forKey:@"channels"];
+#ifdef RELEASE
+    [i removeObject:@"sandbox_listenLive" forKey:@"channels"];
+#endif
     [i saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
         
         [i setDeviceTokenFromData:deviceToken];
@@ -192,40 +195,26 @@
 }
 
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
-    [self storeNote:userInfo];
+    [self actOnNotification:userInfo];
 }
 
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
-    if ( completionHandler ) {
-        [self storeNote:userInfo];
-        completionHandler(UIBackgroundFetchResultNoData);
-    } else {
-        [self storeNote:userInfo];
+
+    if ( [[UIApplication sharedApplication] applicationState] == UIApplicationStateInactive ) {
+        self.userRespondedToPushWhileClosed = YES;
+        NSLog(@" >>>>> WAITING FOR UI TO RENDER BEFORE PLAYING <<<<< ");
+    } else if ( [[UIApplication sharedApplication] applicationState] == UIApplicationStateBackground ) {
+        NSLog(@" >>>>> ACTING ON PUSH NOW <<<<< ");
+        [self actOnNotification:userInfo];
     }
+    
+    completionHandler(UIBackgroundFetchResultNoData);
+
 }
 
-- (void)storeNote:(NSDictionary *)userInfo {
-    
-    //if ( [[UIApplication sharedApplication] applicationState] == UIApplicationStateBackground ) {
-        /*NSError *jsonError = nil;
-        NSData *jsonData = [NSJSONSerialization dataWithJSONObject:userInfo
-                                                           options:NSJSONWritingPrettyPrinted
-                                                             error:&jsonError];
-        NSString *jsonStr = [[NSString alloc] initWithData:jsonData
-                                                  encoding:NSUTF8StringEncoding];
-        NSLog(@"Push Received : %@",jsonStr);
-        
-        [[UXmanager shared].settings setLatestPushJson:jsonStr];
-        [[UXmanager shared] persist];*/
-    NSLog(@" ******* ••••••• Handling remote notification •••••• ****** ");
+- (void)actOnNotification:(NSDictionary *)userInfo {
+    [[AudioManager shared] setUserPause:NO]; // Override the user's pause request
     [self.masterViewController handleResponseForNotification];
-    //}
-
-
-    
-    if ( [[UIApplication sharedApplication] applicationState] == UIApplicationStateActive ) {
-        // Do something if the app is in the foreground
-    }
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application {
@@ -298,8 +287,8 @@
 
 - (void)applicationDidBecomeActive:(UIApplication *)application {
     
-    
     [[UIApplication sharedApplication] setApplicationIconBadgeNumber:0];
+    
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
 }
 

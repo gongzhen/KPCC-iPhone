@@ -19,7 +19,7 @@
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         shared = [UXmanager new];
-        [shared load];
+        [shared load];  
     });
     return shared;
 }
