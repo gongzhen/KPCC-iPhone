@@ -209,8 +209,10 @@ static const NSString *ItemStatusContext;
                     if ( self.dropoutOccurred ) {
                         [self.audioPlayer pause];
                     }
-                    if ( self.audioPlayer.rate == 0.0 ) {
-                        [self.audioPlayer play];
+                    if ( (self.audioPlayer.rate == 0.0 && self.beginNormally) || (self.audioPlayer.rate == 0.0 && self.dropoutOccurred) ) {
+                        if ( !self.userPause ) {
+                            [self.audioPlayer play];
+                        }
                     }
                 }
             }
@@ -225,7 +227,7 @@ static const NSString *ItemStatusContext;
     if (object == self.audioPlayer.currentItem && [keyPath isEqualToString:@"playbackBufferEmpty"]) {
         if ( [change[@"new"] intValue] == 1 ) {
             if ( !self.seekWillEffectBuffer ) {
-                self.dropoutOccurred = YES;
+                self.bufferEmpty = YES;
 #ifndef SUPPRESS_BITRATE_THROTTLING
                 if ( [Utils isIOS8] ) {
                     [self.audioPlayer.currentItem setPreferredPeakBitRate:kPreferredPeakBitRateTolerance];
@@ -244,12 +246,13 @@ static const NSString *ItemStatusContext;
             NSLog(@"AVPlayerItem - Stream not likely to keep up...");
             
             if ( !self.seekWillEffectBuffer ) {
+                if ( self.bufferEmpty ) {
+                    self.dropoutOccurred = YES;
+                }
                 [self analyzeStreamError:@"Stream not likely to keep up..."];
-                
 #ifndef SUPPRESS_LOCAL_SAMPLING
                 [self invalidateTimeObserver];
 #endif
-                
 #ifndef SUPPRESS_AGGRESSIVE_KICKSTART
                 self.kickstartTimer = [NSTimer scheduledTimerWithTimeInterval:kImpatientWaitingTolerance
                                                                            target:self
@@ -331,7 +334,9 @@ static const NSString *ItemStatusContext;
 #endif
     
     [self stopWaiting];
+    
     self.localBufferSample = nil;
+    self.dropoutOccurred = NO;
     
     NSLog(@"AVPlayerItem - Stream likely to return after interrupt (preferred BR : %1.6f...)",self.audioPlayer.currentItem.preferredPeakBitRate);
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
@@ -532,33 +537,25 @@ static const NSString *ItemStatusContext;
 
     [self invalidateTimeObserver];
     
-
     self.timeObserver = nil;
     self.waitForFirstTick = YES;
     self.frameCount = 0;
-    self.timeObserver = [self.audioPlayer addPeriodicTimeObserverForInterval:CMTimeMake(1, 10) queue:NULL
-                                                                  usingBlock:^(CMTime time) {
-        
-        if ( weakSelf.frameCount % 10 == 0 ) {
-            weakSelf.currentDate = audioPlayer.currentItem.currentDate;
-        }
+    self.timeObserver = [self.audioPlayer addPeriodicTimeObserverForInterval:CMTimeMake(1, 10) queue:NULL usingBlock:^(CMTime time) {
                                                                       
-        weakSelf.dropoutOccurred = NO;
+          if ( weakSelf.frameCount % 10 == 0 ) {
+              weakSelf.currentDate = audioPlayer.currentItem.currentDate;
+          }
+          weakSelf.dropoutOccurred = NO;
+          weakSelf.bufferEmpty = NO;
+          weakSelf.beginNormally = NO;
+        
         NSArray *seekRange = audioPlayer.currentItem.seekableTimeRanges;
         if (seekRange && [seekRange count] > 0) {
             CMTimeRange range = [seekRange[0] CMTimeRangeValue];
             if ([weakSelf.delegate respondsToSelector:@selector(onTimeChange)]) {
-                if ( weakSelf.waitForFirstTick ) {
-                    weakSelf.waitForFirstTick = NO;
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        [[NSNotificationCenter defaultCenter] postNotificationName:@"audio_player_began_playing"
-                                                                            object:nil];
-                    });
-                }
                 [weakSelf.delegate onTimeChange];
             }
             
-
             if ( weakSelf.smooth ) {
                 [weakSelf adjustAudioWithValue:0.0045 completion:^{
                     weakSelf.smooth = NO;
@@ -576,17 +573,12 @@ static const NSString *ItemStatusContext;
 
             if ( weakSelf.frameCount % 10 == 0 ) {
                 
-                NSArray *tmd = weakSelf.audioPlayer.currentItem.timedMetadata;
-                for ( NSObject *obj in tmd ) {
-                    NSLog(@"MD : %@",[obj description]);
-                }
                 
 #ifndef SUPPRESS_LOCAL_SAMPLING
                 if ( weakSelf.currentAudioMode == AudioModeLive ) {
                     [weakSelf localSample:time];
                 }
 #endif
-                
                 if ( weakSelf.currentAudioMode == AudioModeOnDemand ) {
                     [[QueueManager shared] handleBookmarkingActivity];
                 }
@@ -953,7 +945,7 @@ static const NSString *ItemStatusContext;
         [[QueueManager shared] playNext];
     } else {
         [self takedownAudioPlayer];
-        [self buildStreamer:kHLSLiveStreamURL];
+        //[self buildStreamer:kHLSLiveStreamURL];
         [self playAudio];
     }
 }
@@ -1248,7 +1240,7 @@ static const NSString *ItemStatusContext;
     [[QueueManager shared] setCurrentBookmark:nil];
     
     [self stopAllAudio];
-    [self buildStreamer:kHLSLiveStreamURL];
+    //[self buildStreamer:kHLSLiveStreamURL];
     [self playAudio];
 }
 
@@ -1282,6 +1274,7 @@ static const NSString *ItemStatusContext;
     
     [[ContentManager shared] saveContext];
     
+    self.beginNormally = YES;
     if (!self.audioPlayer) {
         [self buildStreamer:kHLSLiveStreamURL];
     }
@@ -1362,13 +1355,6 @@ static const NSString *ItemStatusContext;
 - (void)stopAudio {
     [self takedownAudioPlayer];
     self.status = StreamStatusStopped;
-}
-
-- (void)cheatPlay {
-    [self buildStreamer:kHLSLiveStreamURL];
-    [self.audioPlayer setVolume:0.0];
-    self.audioCheating = YES;
-    [self.audioPlayer play];
 }
 
 - (void)stopAllAudio {

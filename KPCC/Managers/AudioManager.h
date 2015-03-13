@@ -85,6 +85,8 @@ typedef NS_ENUM(NSUInteger, StreamStatus) {
 - (void)interfere;
 - (void)onDemandAudioFailed;
 - (void)onDemandSeekCompleted;
+- (void)restoreUIIfNeeded;
+
 @end
 
 #define kPreferredPeakBitRateTolerance 1000
@@ -145,6 +147,8 @@ typedef NS_ENUM(NSUInteger, StreamStatus) {
 @property BOOL smooth;
 @property BOOL userPause;
 @property BOOL waitingForRecovery;
+@property BOOL beginNormally;
+@property BOOL bufferEmpty;
 
 @property (nonatomic, strong) NSMutableDictionary *localBufferSample;
 
@@ -219,7 +223,6 @@ typedef NS_ENUM(NSUInteger, StreamStatus) {
 
 - (BOOL)verifyPositionAuthenticity;
 - (void)invalidateTimeObserver;
-- (void)cheatPlay;
 
 - (NSString*)avPlayerSessionString;
 

@@ -18,9 +18,12 @@
 #define NSLog //
 #define kPushChannel @"listenLive"
 #else
+#ifdef RELEASE
+#define kPushChannel @"private_listenLive"
+#else
 #define kPushChannel @"sandbox_listenLive"
 #endif
-
+#endif
 
 
 @class SCPRMasterViewController;
@@ -33,9 +36,10 @@
 @property (strong, nonatomic) SCPRMasterViewController *masterViewController;
 @property (strong, nonatomic) SCPRNavigationController *masterNavigationController;
 @property (strong, nonatomic) SCPROnboardingViewController *onboardingController;
+@property BOOL userRespondedToPushWhileClosed;
 
 @property (strong, nonatomic) NSDictionary *latestPush;
 
-- (void)storeNote:(NSDictionary*)userInfo;
+- (void)actOnNotification:(NSDictionary*)userInfo;
 
 @end

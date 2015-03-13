@@ -95,6 +95,8 @@ setForOnDemandUI;
                 return;
             }
             
+            [[AudioManager shared] setUserPause:NO];
+            
             if ( self.initialPlay ) {
                 [self playOrPauseTapped:nil];
             } else {
@@ -136,8 +138,6 @@ setForOnDemandUI;
             [self.programTitleYConstraint setConstant:278.0];
         }
     }
-    
-
     
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(lockUI:)
@@ -264,6 +264,7 @@ setForOnDemandUI;
             [self updateDataForUI];
             [self.view layoutIfNeeded];
             [self.liveStreamView layoutIfNeeded];
+            
             self.originalFrames[@"playerControls"] = @(self.playerControlsBottomYConstraint.constant);
             self.originalFrames[@"programTitle"] = @(self.programTitleYConstraint.constant);
             self.originalFrames[@"liveRewind"] = @(self.liveRewindBottomYConstraint.constant);
@@ -835,9 +836,6 @@ setForOnDemandUI;
     
     self.lockPlayback = !play;
     
-    [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                    name:@"audio_player_began_playing"
-                                                  object:nil];
     [self.jogShuttle endAnimations];
     
     
@@ -1335,17 +1333,19 @@ setForOnDemandUI;
                                                aboveSiblingView:self.playerControlsView];
             [self.liveProgressViewController hide];
             [self determinePlayState];
-
+            
+            if ( [[Utils del] userRespondedToPushWhileClosed] ) {
+                [[Utils del] setUserRespondedToPushWhileClosed:NO];
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                    NSLog(@" >>>>> READY TO PLAY STREAM <<<<< ");
+                    [self handleResponseForNotification];
+                });
+            }
             
             if ( [[UXmanager shared] onboardingEnding] ) {
                 dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.25 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                     [self primeManualControlButton];
                 });
-            }
-            
-            if ( self.audioWasPlaying ) {
-                [self playAudio:YES];
-                self.audioWasPlaying = NO;
             }
             
         } else {
@@ -1496,10 +1496,6 @@ setForOnDemandUI;
     self.scrubbingUIView.alpha = 0.0;
     self.scrubbingTriggerView.alpha = 0.0;
     self.queueBlurShown = NO;
-    
-    [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                    name:@"audio_player_began_playing"
-                                                  object:nil];
     
     self.navigationItem.title = @"KPCC Live";
     [self primeRemoteCommandCenter:YES];
@@ -2163,21 +2159,27 @@ setForOnDemandUI;
         if ( [[AudioManager shared].audioPlayer rate] > 0.0 ) {
             [[AudioManager shared] adjustAudioWithValue:-1.0 completion:^{
                 [[AudioManager shared] resetPlayer];
-                [self resetUI];
             }];
         } else {
             [[AudioManager shared] resetPlayer];
-            [self resetUI];
         }
     } else if ( [[AudioManager shared] currentAudioMode] == AudioModeLive ) {
         if ( [[AudioManager shared] status] == StreamStatusPaused ) {
             [[AudioManager shared] resetPlayer];
-            [self resetUI];
         } else if ( [[SessionManager shared] sessionIsBehindLive] ) {
             [[AudioManager shared] pauseAudio];
             [[AudioManager shared] resetPlayer];
-            [self resetUI];
         }
+    }
+    
+    if ( self.preRollViewController.tritonAd ) {
+        self.preRollViewController.tritonAd = nil;
+    }
+    
+    if ( self.initialPlay ) {
+        [self playOrPauseTapped:nil];
+    } else {
+        [self initialPlayTapped:nil];
     }
 
 }
@@ -2875,10 +2877,15 @@ setForOnDemandUI;
 
 - (void)warnUserOfOnDemandFailures {
     [[[UIAlertView alloc] initWithTitle:@"That show is unavailable"
-                                message:@"Unfortunately there seems to be some trouble loading episodes from that program. Please try again later. In the meantime, please enjoy the live stream of KPCC"
+                                message:@"Unfortunately there seems to be some trouble loading episodes from that program. Please try again later. In the meantime, please enjoy the live stream from KPCC"
                                delegate:nil
                       cancelButtonTitle:@"Got It"
                       otherButtonTitles:nil] show];
+}
+
+- (void)restoreUIIfNeeded {
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"network-status-good"
+                                                        object:nil];
 }
 
 #pragma mark - ContentProcessor
