@@ -21,7 +21,7 @@ static NSInteger kStreamIsLiveTolerance = 120;
 #ifndef PRODUCTION
 static NSInteger kProgramPollingPressure = 5;
 #else
-static NSInteger kProgramPollingPressure = 15;
+static NSInteger kProgramPollingPressure = 5;
 #endif
 
 @interface SessionManager : NSObject

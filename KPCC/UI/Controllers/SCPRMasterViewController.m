@@ -70,9 +70,10 @@ busyZoomAnim,
 setForLiveStreamUI,
 setForOnDemandUI;
 
-#pragma mark - UIViewController
+#pragma mark - External Control
 
 // Allows for interaction with system audio controls.
+
 - (BOOL)canBecomeFirstResponder {
     return YES;
 }
@@ -110,6 +111,43 @@ setForOnDemandUI;
         }
     }
 }
+
+- (void)handleResponseForNotification {
+    
+    [self.navigationController popToRootViewControllerAnimated:YES];
+    if ( self.menuOpen ) {
+        [self decloakForMenu:YES];
+    }
+    if ( [[AudioManager shared] currentAudioMode] == AudioModeOnDemand ) {
+        if ( [[AudioManager shared] isPlayingAudio] ) {
+            [[AudioManager shared] adjustAudioWithValue:-1.0 completion:^{
+                [[AudioManager shared] resetPlayer];
+            }];
+        } else {
+            [[AudioManager shared] resetPlayer];
+        }
+    } else if ( [[AudioManager shared] currentAudioMode] == AudioModeLive ) {
+        if ( [[AudioManager shared] status] == StreamStatusPaused ) {
+            [[AudioManager shared] resetPlayer];
+        } else if ( [[SessionManager shared] sessionIsBehindLive] ) {
+            [[AudioManager shared] pauseAudio];
+            [[AudioManager shared] resetPlayer];
+        }
+    }
+    
+    if ( self.preRollViewController.tritonAd ) {
+        self.preRollViewController.tritonAd = nil;
+    }
+    
+    if ( self.initialPlay ) {
+        [self playOrPauseTapped:nil];
+    } else {
+        [self initialPlayTapped:nil];
+    }
+    
+}
+
+#pragma mark - Standard View Callbacks
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -1262,7 +1300,7 @@ setForOnDemandUI;
         }
         
         [[AudioManager shared] setDelegate:self];
-        if ( [[AudioManager shared].audioPlayer rate] <= 0.0 ) {
+        if ( ![[AudioManager shared] isPlayingAudio] ) {
             [self tickOnDemand];
         }
     }];
@@ -1545,7 +1583,7 @@ setForOnDemandUI;
     
     self.queueBlurShown = NO;
     
-    if ( [[AudioManager shared].audioPlayer rate] > 0.0 ) {
+    if ( [[AudioManager shared] isPlayingAudio] ) {
         self.onDemandPanning = YES;
     }
     
@@ -1924,7 +1962,7 @@ setForOnDemandUI;
             NSLog(@"Rewind Button - Hiding because onboarding initial state");
         okToShow = NO;
     }
-    if ( [[AudioManager shared] status] == StreamStatusPlaying || [[AudioManager shared].audioPlayer rate] > 0.0 ) {
+    if ( [[AudioManager shared] status] == StreamStatusPlaying || [[AudioManager shared] isPlayingAudio] ) {
         if ( okToShow )
             NSLog(@"Rewind Button - Hiding because audio is playing");
         okToShow = NO;
@@ -2149,40 +2187,7 @@ setForOnDemandUI;
     
 }
 
-- (void)handleResponseForNotification {
 
-    [self.navigationController popToRootViewControllerAnimated:YES];
-    if ( self.menuOpen ) {
-        [self decloakForMenu:YES];
-    }
-    if ( [[AudioManager shared] currentAudioMode] == AudioModeOnDemand ) {
-        if ( [[AudioManager shared].audioPlayer rate] > 0.0 ) {
-            [[AudioManager shared] adjustAudioWithValue:-1.0 completion:^{
-                [[AudioManager shared] resetPlayer];
-            }];
-        } else {
-            [[AudioManager shared] resetPlayer];
-        }
-    } else if ( [[AudioManager shared] currentAudioMode] == AudioModeLive ) {
-        if ( [[AudioManager shared] status] == StreamStatusPaused ) {
-            [[AudioManager shared] resetPlayer];
-        } else if ( [[SessionManager shared] sessionIsBehindLive] ) {
-            [[AudioManager shared] pauseAudio];
-            [[AudioManager shared] resetPlayer];
-        }
-    }
-    
-    if ( self.preRollViewController.tritonAd ) {
-        self.preRollViewController.tritonAd = nil;
-    }
-    
-    if ( self.initialPlay ) {
-        [self playOrPauseTapped:nil];
-    } else {
-        [self initialPlayTapped:nil];
-    }
-
-}
 
 #pragma mark - Util
 

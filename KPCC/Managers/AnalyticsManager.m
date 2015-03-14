@@ -159,18 +159,6 @@ static AnalyticsManager *singleton = nil;
     
     if ( !comments || SEQ(comments,@"") ) return;
     
-#ifdef MICRO_MANAGE_EXCEPTIONS
-    if ( [[NSDate date] timeIntervalSinceDate:self.lastStreamException] > kExceptionInterval ) {
-        self.allowedExceptions = 0;
-        self.lastStreamException = [NSDate date];
-    } else {
-        self.allowedExceptions++;
-        if ( self.allowedExceptions > kMaxAllowedExceptionsPerInterval ) {
-            return;
-        }
-    }
-#endif
-    
     self.accessLog = [[AudioManager shared].audioPlayer.currentItem accessLog];
     self.errorLog = [[AudioManager shared].audioPlayer.currentItem errorLog];
     

@@ -19,6 +19,9 @@ static long kStreamBufferLimit = 4*60*60;
 static long kStreamCorrectionTolerance = 60*5;
 #endif
 
+#define kLargeSkipInterval 60*10
+#define kSmallSkipInterval 20.0
+
 #ifdef USE_TEST_STREAM
 #define kHLSLiveStreamURL @"http://hls.kqed.org/hls/smil:itunes.smil/playlist.m3u8"
 #else
@@ -91,9 +94,10 @@ typedef NS_ENUM(NSUInteger, StreamStatus) {
 
 #define kPreferredPeakBitRateTolerance 1000
 #define kImpatientWaitingTolerance 15.0
+#define kGiveUpTolerance 30.0
 #define kBookmarkingTolerance 10
 
-@interface AudioManager : NSObject
+@interface AudioManager : NSObject<AVAssetResourceLoaderDelegate>
 
 + (AudioManager*)shared;
 
@@ -149,6 +153,8 @@ typedef NS_ENUM(NSUInteger, StreamStatus) {
 @property BOOL waitingForRecovery;
 @property BOOL beginNormally;
 @property BOOL bufferEmpty;
+@property BOOL streamWarning;
+@property BOOL appGaveUp;
 
 @property (nonatomic, strong) NSMutableDictionary *localBufferSample;
 
@@ -162,7 +168,6 @@ typedef NS_ENUM(NSUInteger, StreamStatus) {
 @property NSInteger onboardingSegment;
 @property (nonatomic) AudioMode currentAudioMode;
 
-- (void)playAudioWithURL:(NSString *)url ondemand:(BOOL)ondemand;
 - (void)playQueueItemWithUrl:(NSString *)url;
 - (void)playQueueItem:(AudioChunk*)chunk;
 - (void)playLiveStream;
@@ -171,7 +176,6 @@ typedef NS_ENUM(NSUInteger, StreamStatus) {
 - (void)startStream;
 - (void)playAudio;
 - (void)pauseAudio;
-- (void)stopStream;
 - (void)stopAllAudio;
 - (void)muteAudio;
 - (void)unmuteAudio;
@@ -201,6 +205,7 @@ typedef NS_ENUM(NSUInteger, StreamStatus) {
 @property BOOL audioCheating;
 
 @property (nonatomic, strong) NSTimer *kickstartTimer;
+@property (nonatomic, strong) NSTimer *giveupTimer;
 
 - (void)updateNowPlayingInfoWithAudio:(id)audio;
 
@@ -221,6 +226,7 @@ typedef NS_ENUM(NSUInteger, StreamStatus) {
 - (void)takedownAudioPlayer;
 - (void)resetPlayer;
 
+- (BOOL)isPlayingAudio;
 - (BOOL)verifyPositionAuthenticity;
 - (void)invalidateTimeObserver;
 

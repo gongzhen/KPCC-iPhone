@@ -214,9 +214,16 @@ static const NSString *ItemStatusContext;
                             [self.audioPlayer play];
                         }
                     }
+                    if ( self.appGaveUp ) {
+                        self.appGaveUp = NO;
+#ifndef SUPPRESS_BITRATE_THROTTLING
+                        if ( [Utils isIOS8] ) {
+                            [self.audioPlayer.currentItem setPreferredPeakBitRate:kPreferredPeakBitRateTolerance];
+                        }
+#endif
+                    }
                 }
             }
-            
             
         } else if ([self.audioPlayer.currentItem status] == AVPlayerItemStatusUnknown) {
             NSLog(@"AVPlayerItemStatus - Unknown");
@@ -227,14 +234,12 @@ static const NSString *ItemStatusContext;
     if (object == self.audioPlayer.currentItem && [keyPath isEqualToString:@"playbackBufferEmpty"]) {
         if ( [change[@"new"] intValue] == 1 ) {
             if ( !self.seekWillEffectBuffer ) {
-                self.bufferEmpty = YES;
+                NSLog(@"Buffer is empty ...");
 #ifndef SUPPRESS_BITRATE_THROTTLING
                 if ( [Utils isIOS8] ) {
                     [self.audioPlayer.currentItem setPreferredPeakBitRate:kPreferredPeakBitRateTolerance];
                 }
 #endif
-                [self waitPatiently];
-
             }
         } else {
             NSLog(@"AVPlayerItem - Buffer filled normally...");
@@ -244,22 +249,20 @@ static const NSString *ItemStatusContext;
     if (object == self.audioPlayer.currentItem && [keyPath isEqualToString:@"playbackLikelyToKeepUp"]) {
         if ( [change[@"new"] intValue] == 0 ) {
             NSLog(@"AVPlayerItem - Stream not likely to keep up...");
-            
             if ( !self.seekWillEffectBuffer ) {
-                if ( self.bufferEmpty ) {
-                    self.dropoutOccurred = YES;
-                }
-                [self analyzeStreamError:@"Stream not likely to keep up..."];
+                self.dropoutOccurred = YES;
+                [self waitPatiently];
 #ifndef SUPPRESS_LOCAL_SAMPLING
                 [self invalidateTimeObserver];
 #endif
 #ifndef SUPPRESS_AGGRESSIVE_KICKSTART
                 self.kickstartTimer = [NSTimer scheduledTimerWithTimeInterval:kImpatientWaitingTolerance
-                                                                           target:self
-                                                                         selector:@selector(impatientRestart)
-                                                                         userInfo:nil
-                                                                          repeats:NO];
+                                                                       target:self
+                                                                     selector:@selector(impatientRestart)
+                                                                     userInfo:nil
+                                                                      repeats:NO];
 #endif
+                [self analyzeStreamError:@"Playback stalled"];
             }
             
         } else {
@@ -308,6 +311,43 @@ static const NSString *ItemStatusContext;
     }
 }
 
+- (void)playbackStalled:(NSNotification*)note {
+    
+#ifndef SUPPRESS_GIVEUP_TIMER
+    if ( self.giveupTimer ) {
+        if ( [self.giveupTimer isValid] ) {
+            [self.giveupTimer invalidate];
+        }
+        self.giveupTimer = nil;
+    }
+    
+    self.giveupTimer = [NSTimer scheduledTimerWithTimeInterval:kGiveUpTolerance
+                                                        target:self
+                                                      selector:@selector(giveUpOnStream)
+                                                      userInfo:nil
+                                                       repeats:NO];
+#endif
+    
+    NSLog(@"Playback stalled ... ");
+    if ( [note object] ) {
+        NSLog(@"%@",[[note object] description]);
+    }
+    if ( [note userInfo] ) {
+        NSLog(@"%@",[[note userInfo] description]);
+    }
+}
+
+
+#pragma mark - Recovery / Logging / Stalls
+- (void)giveUpOnStream {
+    NSLog(@"Giving up. Restarting requires user action...");
+    if ( self.dropoutOccurred ) {
+        [self takedownAudioPlayer];
+        self.dropoutOccurred = NO;
+        self.appGaveUp = YES;
+    }
+}
+
 - (void)interruptAutorecovery {
     if ( self.kickstartTimer ) {
         if ( [self.kickstartTimer isValid] ) {
@@ -317,9 +357,17 @@ static const NSString *ItemStatusContext;
     }
 }
 
-
-#pragma mark - Recovery / Logging / Stalls
 - (void)attemptToRecover {
+    
+#ifndef SUPPRESS_GIVEUP_TIMER
+    if ( self.giveupTimer ) {
+        if ( [self.giveupTimer isValid] ) {
+            [self.giveupTimer invalidate];
+        }
+        self.giveupTimer = nil;
+    }
+#endif
+    
 #ifndef SUPPRESS_AGGRESSIVE_KICKSTART
     if ( self.kickstartTimer ) {
         if ( [self.kickstartTimer isValid] ) {
@@ -350,11 +398,9 @@ static const NSString *ItemStatusContext;
 - (void)impatientRestart {
 #ifndef SUPPRESS_AGGRESSIVE_KICKSTART
     if ( [self.audioPlayer rate] > 0.0 && self.dropoutOccurred ) {
+        [self.audioPlayer pause];
         [self takedownAudioPlayer];
         [self buildStreamer:kHLSLiveStreamURL];
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            [self playAudio];
-        });
     }
 #endif
 }
@@ -368,12 +414,11 @@ static const NSString *ItemStatusContext;
 #endif
     if ( [[UIApplication sharedApplication] applicationState] == UIApplicationStateBackground ) {
         self.rescueTask = [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:^{
+            NSLog(@"System is killing us off ... wrapping it up");
             self.dropoutOccurred = NO;
             [self stopWaiting];
             [self stopAllAudio];
             [self takedownAudioPlayer];
-            SCPRMasterViewController *master = (SCPRMasterViewController*)[[Utils del] masterViewController];
-            [master resetUI];
         }];
     }
 }
@@ -407,22 +452,7 @@ static const NSString *ItemStatusContext;
     }
 }
 
-- (void)playbackStalled:(NSNotification*)note {
-    
-    if ( self.dropoutOccurred ) return;
-    
-    self.dropoutOccurred = YES;
-    [self waitPatiently];
-    
-    NSLog(@"Playback stalled ... ");
-    if ( [note object] ) {
-        NSLog(@"%@",[[note object] description]);
-    }
-    if ( [note userInfo] ) {
-        NSLog(@"%@",[[note userInfo] description]);
-    }
-    
-}
+
 
 - (void)localSample:(CMTime)time {
     NSArray *seekRange = self.audioPlayer.currentItem.seekableTimeRanges;
@@ -461,18 +491,52 @@ static const NSString *ItemStatusContext;
         Float64 maxSeekTime = CMTimeGetSeconds(CMTimeRangeGetEnd(range));
         
         //NSLog(@"Reported Date : %@, Expected Date : %@",repStr,expStr);
-        if ( fabs(etFloat - rtFloat) > 20.0 || ![expectedDate isWithinTimeFrame:20 ofDate:reportedDate] ) {
+        if ( fabs(etFloat - rtFloat) > kSmallSkipInterval || ![expectedDate isWithinTimeFrame:kSmallSkipInterval ofDate:reportedDate] ) {
             
-            if ( self.userPause ) {
-                return;
-            }
+            if ( !self.seekWillEffectBuffer ) {
+                if ( self.userPause ) {
+                    return;
+                }
+            
+                [[AnalyticsManager shared] logEvent:@"streamSkippedByInterval"
+                                     withParameters:@{ @"expected" : expStr,
+                                                       @"reported" : repStr,
+                                                       @"reportedTimeValue" : @(rtFloat),
+                                                       @"reportedMaxSeekTime" : @(maxSeekTime)}];
+                
+#ifndef SUPPRESS_SKIP_FIXER
+                self.seekWillEffectBuffer = YES;
+                self.localBufferSample[@"expectedDate"] = expectedDate;
+                self.localBufferSample[@"open"] = @(NO);
 
-            
-            [[AnalyticsManager shared] logEvent:@"streamSkippedByLargeInterval"
-                                 withParameters:@{ @"expected" : expStr,
-                                                   @"reported" : repStr,
-                                                   @"reportedTimeValue" : @(rtFloat),
-                                                   @"reportedMaxSeekTime" : @(maxSeekTime)}];
+                if ( fabs(etFloat - rtFloat) > kLargeSkipInterval || ![expectedDate isWithinTimeFrame:kLargeSkipInterval ofDate:reportedDate] ) {
+                    [self invalidateTimeObserver];
+                    [self.audioPlayer.currentItem seekToDate:expectedDate completionHandler:^(BOOL finished) {
+
+                        self.seekWillEffectBuffer = NO;
+                        self.localBufferSample[@"expectedDate"] = expectedDate;
+                        self.localBufferSample[@"open"] = @(YES);
+
+                        if ( [self.audioPlayer rate] <= 0.0 ) {
+                            [self.audioPlayer play];
+                        }
+                            
+                        NSDate *now = self.audioPlayer.currentItem.currentDate;
+                        NSString *currTime = [NSDate stringFromDate:now
+                                                         withFormat:@"HH:mm:ss a"];
+                            
+                        [[AnalyticsManager shared] logEvent:@"attemptToFixLargeGapInStream"
+                                                 withParameters:@{ @"expected" : expStr,
+                                                                   @"reported" : repStr,
+                                                                   @"timeAfterAttemptToFix" : currTime,
+                                                                   @"reportedTimeValue" : @(rtFloat),
+                                                                   @"reportedMaxSeekTime" : @(maxSeekTime)}];
+                        
+                    }];
+                }
+            }
+#endif
+            return;
         }
         
         
@@ -486,6 +550,10 @@ static const NSString *ItemStatusContext;
         self.localBufferSample[@"expectedTime"] = [NSValue valueWithCMTime:time];
         
     }
+}
+
+- (BOOL)resourceLoader:(AVAssetResourceLoader *)resourceLoader shouldWaitForRenewalOfRequestedResource:(AVAssetResourceRenewalRequest *)renewalRequest {
+    return YES;
 }
 
 #pragma mark - General
@@ -542,13 +610,18 @@ static const NSString *ItemStatusContext;
     self.frameCount = 0;
     self.timeObserver = [self.audioPlayer addPeriodicTimeObserverForInterval:CMTimeMake(1, 10) queue:NULL usingBlock:^(CMTime time) {
                                                                       
-          if ( weakSelf.frameCount % 10 == 0 ) {
-              weakSelf.currentDate = audioPlayer.currentItem.currentDate;
-          }
-          weakSelf.dropoutOccurred = NO;
-          weakSelf.bufferEmpty = NO;
-          weakSelf.beginNormally = NO;
-        
+        if ( weakSelf.frameCount % 10 == 0 ) {
+            weakSelf.currentDate = audioPlayer.currentItem.currentDate;
+        }
+        if ( weakSelf.dropoutOccurred ) {
+            weakSelf.dropoutOccurred = NO;
+#ifndef SUPPRESS_BITRATE_THROTTLING
+            weakSelf.audioPlayer.currentItem.preferredPeakBitRate = kPreferredPeakBitRateTolerance;
+#endif
+        }
+        weakSelf.bufferEmpty = NO;
+        weakSelf.beginNormally = NO;
+        weakSelf.streamWarning = NO;
         NSArray *seekRange = audioPlayer.currentItem.seekableTimeRanges;
         if (seekRange && [seekRange count] > 0) {
             CMTimeRange range = [seekRange[0] CMTimeRangeValue];
@@ -853,18 +926,15 @@ static const NSString *ItemStatusContext;
     
     self.seekWillEffectBuffer = YES;
     [self.audioPlayer.currentItem seekToTime:CMTimeMake(MAXFLOAT * HUGE_VALF, 1) completionHandler:^(BOOL finished) {
-        
 #ifndef SUPPRESS_LOCAL_SAMPLING
         self.localBufferSample[@"expectedDate"] = self.audioPlayer.currentItem.currentDate;
         self.localBufferSample[@"open"] = @(YES);
 #endif
-        
         if ( [self.audioPlayer rate] <= 0.0 ) {
             [self.audioPlayer play];
         }
         [self.delegate onSeekCompleted];
     }];
-    
 #endif
 }
 
@@ -1266,6 +1336,10 @@ static const NSString *ItemStatusContext;
     
 }
 
+- (BOOL)isPlayingAudio {
+    return [self.audioPlayer rate] > 0.0;
+}
+
 - (void)startStream {
     [self playAudio];
 }
@@ -1512,9 +1586,6 @@ static const NSString *ItemStatusContext;
             // If recovering from stream failure, cancel playing of local audio file
             if (self.localAudioPlayer && self.localAudioPlayer.isPlaying) {
                 [self.localAudioPlayer stop];
-                if ([self.delegate respondsToSelector:@selector(handleUIForRecoveredStream)]) {
-                    //[self.delegate handleUIForRecoveredStream];
-                }
             }
             
             [[AnalyticsManager shared] failStream:NetworkHealthUnknown
