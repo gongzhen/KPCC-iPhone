@@ -46,16 +46,18 @@
     NSDate *live = [NSDate date];
 
     if ( [AudioManager shared].audioPlayer.currentItem ) {
-        NSDate *msd = [[AudioManager shared] maxSeekableDate];
+        NSDate *msd = [[AudioManager shared].audioPlayer.currentItem currentDate];
         if ( msd ) {
-            if ( [msd isWithinReasonableframeOfDate:[NSDate date]] ) {
+            if ( [msd isWithinTimeFrame:kAllowableDriftCeiling ofDate:[NSDate date]] ) {
                 if ( abs([live timeIntervalSinceDate:msd]) > kStreamIsLiveTolerance ) {
                     live = msd;
                     self.latestDriftValue = abs([live timeIntervalSinceDate:msd]);
                 }
+            } else {
+                return live;
             }
         } else {
-            // AVPlayer has yet to acquire a max seekable date, so return some identifiably large value
+            // AVPlayer has no current date, so it's probably paused
             return [[NSDate date] dateByAddingTimeInterval:60*60*24*10];
         }
     }

@@ -23,6 +23,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    self.view.backgroundColor = [UIColor clearColor];
 }
 
 + (SCPRProgressViewController*)o {
@@ -51,11 +52,8 @@
         }
     }
     
-    self.view.clipsToBounds = YES;
-    
     self.view.backgroundColor = [UIColor clearColor];
-    //self.view.backgroundColor = [UIColor redColor];
-    
+    self.view.clipsToBounds = YES;
     CGFloat width = self.view.frame.size.width;
     
     self.barWidth = width;
@@ -120,7 +118,7 @@
     self.liveProgressView.alpha = 0.0;
     self.uiHidden = YES;
     self.view.alpha = 0.0;
-    
+    self.view.backgroundColor = [UIColor clearColor];
 }
 
 - (void)hide {

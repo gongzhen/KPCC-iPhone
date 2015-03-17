@@ -40,8 +40,13 @@ static AnalyticsManager *singleton = nil;
     NSString *mixPanelToken = @"SandboxToken";
     NSString *flurryToken = @"DebugKey";
 #ifdef PRODUCTION
+#ifdef PRERELEASE
+    mixPanelToken = @"SandboxToken";
+    flurryToken = @"DebugKey";
+#else
     mixPanelToken = @"ProductionToken";
     flurryToken = @"ProductionKey";
+#endif
 #endif
     
 #ifdef BETA

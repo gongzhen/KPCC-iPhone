@@ -694,7 +694,6 @@ setForOnDemandUI;
 - (IBAction)rewindToStartTapped:(id)sender {
     
     if ( self.jogging ) return;
-    
     [self activateRewind:RewindDistanceBeginning];
     
 }
@@ -808,7 +807,6 @@ setForOnDemandUI;
 
 # pragma mark - Audio commands
 - (void)playAudio:(BOOL)hard {
-    
     if ( hard && ![[SessionManager shared] sessionIsInBackground] ) {
         [[AudioManager shared] playLiveStream];
     } else {
@@ -1623,6 +1621,7 @@ setForOnDemandUI;
         self.timeLabelOnDemand.alpha = 1.0;
         self.queueBlurView.layer.opacity = 1.0;
         self.scrubbingTriggerView.alpha = 1.0;
+        self.liveProgressViewController.view.alpha = 0.0;
         [self.liveProgressViewController hide];
     } completion:^(BOOL finished) {
         
@@ -1643,7 +1642,6 @@ setForOnDemandUI;
         }
         
         [[SessionManager shared] setCurrentProgram:nil];
-        [self.liveProgressViewController hide];
         
         self.navigationItem.title = @"Programs";
         [self.progressView setProgress:0.0 animated:YES];
@@ -1690,6 +1688,7 @@ setForOnDemandUI;
             [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationOptionCurveLinear animations:^{
                 weakSelf.progressView.alpha = 0.0;
                 weakSelf.shareButton.alpha = 0.0;
+                weakSelf.liveProgressViewController.view.alpha = 0.0;
             } completion:^(BOOL finished){
                 
                 weakSelf.queueBlurShown = YES;
@@ -2280,7 +2279,6 @@ setForOnDemandUI;
         self.navigationItem.title = @"KPCC Live";
     }
     
-    
     if (animated) {
         [pulldownMenu closeDropDown:YES];
     } else {
@@ -2338,8 +2336,10 @@ setForOnDemandUI;
         [self.horizDividerLine.layer pop_addAnimation:dividerFadeAnim forKey:@"horizDividerFadeOutAnimation"];
     }
     //}
-    if ( [AudioManager shared].currentAudioMode == AudioModeLive ) {
+    if ( [AudioManager shared].currentAudioMode == AudioModeLive && !setForOnDemandUI ) {
         [self.liveProgressViewController show];
+    } else {
+        [self.liveProgressViewController hide];
     }
     
     if ( [[NetworkManager shared] networkDown] ) {
@@ -2832,13 +2832,11 @@ setForOnDemandUI;
     // Make sure UI gets set to "Playing" state after a seek.
     [[SessionManager shared] fetchCurrentProgram:^(id returnedObject) {
         [self.jogShuttle endAnimations];
-        [[AudioManager shared] setSeekWillEffectBuffer:NO];
     }];
 }
 
 - (void)onDemandSeekCompleted {
     [self.jogShuttle endAnimations];
-    [[AudioManager shared] setSeekWillEffectBuffer:NO];
 }
 
 - (void)interfere {

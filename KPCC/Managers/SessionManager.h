@@ -17,6 +17,7 @@ typedef NS_ENUM(NSUInteger, OnDemandFinishedReason) {
 };
 
 static NSInteger kStreamIsLiveTolerance = 120;
+static NSInteger kAllowableDriftCeiling = 240;
 
 #ifndef PRODUCTION
 static NSInteger kProgramPollingPressure = 5;

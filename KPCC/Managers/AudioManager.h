@@ -155,6 +155,7 @@ typedef NS_ENUM(NSUInteger, StreamStatus) {
 @property BOOL bufferEmpty;
 @property BOOL streamWarning;
 @property BOOL appGaveUp;
+@property BOOL audioOutputSourceChanging;
 
 @property (nonatomic, strong) NSMutableDictionary *localBufferSample;
 
