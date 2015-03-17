@@ -200,12 +200,12 @@
 
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
 
-    if ( [[UIApplication sharedApplication] applicationState] == UIApplicationStateInactive ) {
-        self.userRespondedToPushWhileClosed = YES;
-        NSLog(@" >>>>> WAITING FOR UI TO RENDER BEFORE PLAYING <<<<< ");
-    } else if ( [[UIApplication sharedApplication] applicationState] == UIApplicationStateBackground ) {
+    if ( [[UIApplication sharedApplication] applicationState] == UIApplicationStateBackground ) {
         NSLog(@" >>>>> ACTING ON PUSH NOW <<<<< ");
         [self actOnNotification:userInfo];
+    } else if ( [[UIApplication sharedApplication] applicationState] == UIApplicationStateInactive ) {
+        self.userRespondedToPushWhileClosed = YES;
+        NSLog(@" >>>>> WAITING FOR UI TO RENDER BEFORE PLAYING <<<<< ");
     }
     
     completionHandler(UIBackgroundFetchResultNoData);
@@ -284,6 +284,8 @@
     if ( [[AudioManager shared] isPlayingAudio] ) {
         [[SessionManager shared] checkProgramUpdate:YES];
     }
+    
+
     // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
 }
 
@@ -291,14 +293,21 @@
     
     [[UIApplication sharedApplication] setApplicationIconBadgeNumber:0];
     
+    if ( self.userRespondedToPushWhileClosed ) {
+        if ( [self.masterViewController viewHasAppeared] ) {
+            [self actOnNotification:nil];
+        } else {
+            NSLog(@" >>>>>>>>>>> CONTINUE WAITING FOR UI TO CATCH UP <<<<<<<<<<<< ");
+        }
+    }
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application {
     
-    if ( [[QueueManager shared] currentBookmark] ) {
-        [[ContentManager shared] saveContext];
-    }
+
+    [[ContentManager shared] saveContext];
+
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
 }
 

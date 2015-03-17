@@ -19,8 +19,8 @@
 #define kPushChannel @"listenLive"
 #else
 #ifdef RELEASE
-#define kPushChannel @"sandbox_listenLive"
-//#define kPushChannel @"private_listenLive"
+//#define kPushChannel @"sandbox_listenLive"
+#define kPushChannel @"private_listenLive"
 #else
 #define kPushChannel @"sandbox_listenLive"
 #endif

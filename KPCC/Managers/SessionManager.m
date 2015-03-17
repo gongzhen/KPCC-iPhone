@@ -41,6 +41,25 @@
     }
 }
 
+- (NSString*)prettyStringForPauseExplanation:(PauseExplanation)explanation {
+    switch (explanation) {
+        case PauseExplanationUnknown:
+            return @"Undetermined";
+        case PauseExplanationAppIsTerminatingSession:
+            return @"App is pausing audio session from stream exception";
+        case PauseExplanationAudioInterruption:
+            return @"App received an interruption from another audio source";
+        case PauseExplanationUserHasPausedExplicitly:
+            return @"The user hit the pause button";
+        case PauseExplanationAppIsRespondingToPush:
+            return @"The app is responding to a Live Stream push";
+        default:
+            break;
+    }
+    
+    return @"";
+}
+
 #pragma mark - Session Mgmt
 - (NSDate*)vLive {
     NSDate *live = [NSDate date];

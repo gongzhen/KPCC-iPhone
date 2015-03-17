@@ -38,12 +38,12 @@ static const NSString *ItemStatusContext;
             singleton.currentAudioMode = AudioModeNeutral;
             singleton.localBufferSample = [NSMutableDictionary new];
             
-            if ( [Utils isIOS8] ) {
-                [[NSNotificationCenter defaultCenter] addObserver:singleton
+
+            [[NSNotificationCenter defaultCenter] addObserver:singleton
                                                          selector:@selector(handleInterruption:)
                                                              name:AVAudioSessionInterruptionNotification
                                                            object:nil];
-            }
+            
             
             [[NSNotificationCenter defaultCenter] addObserver:singleton
                                                      selector:@selector(audioHardwareRouteChanged:)
@@ -57,12 +57,41 @@ static const NSString *ItemStatusContext;
 - (void)audioHardwareRouteChanged:(NSNotification*)note {
     NSLog(@"Received external audio route change notification...");
     NSLog(@"User Info : %@",[[note userInfo] description]);
-    [self setUserPause:YES];
+    
+    AVAudioSessionRouteDescription *previous = note.userInfo[AVAudioSessionRouteChangePreviousRouteKey];
+    
+    BOOL userPause = YES;
+    if ( previous ) {
+        NSArray *outputs = [previous outputs];
+        for ( AVAudioSessionPortDescription *port in outputs ) {
+            NSLog(@"Changing from %@ output",[port portName]);
+            if ( SEQ(port.portType,AVAudioSessionPortBuiltInSpeaker) ) {
+                userPause = NO;
+                break;
+            }
+        }
+    }
+    [self setUserPause:userPause];
     [self setAudioOutputSourceChanging:YES];
 }
 
 - (void)handleInterruption:(NSNotification*)note {
     int interruptionType = [note.userInfo[AVAudioSessionInterruptionTypeKey] intValue];
+    NSLog(@"Options : %@",[note.userInfo description]);
+    NSNumber *resume = note.userInfo[AVAudioSessionInterruptionOptionKey];
+    
+    BOOL pickup = NO;
+    if ( resume ) {
+        if ( [resume intValue] == AVAudioSessionInterruptionOptionShouldResume ) {
+            pickup = YES;
+        }
+    }
+    
+    if ( interruptionType == AVAudioSessionInterruptionTypeEnded && !pickup ) {
+        NSLog(@"Probably interrupted from another app, so don't resume");
+        self.reactivate = NO;
+        return;
+    }
     
     if ( self.currentAudioMode == AudioModeOnboarding ) {
 
@@ -94,6 +123,8 @@ static const NSString *ItemStatusContext;
             if ( self.audioPlayer ) {
                 if ( self.audioPlayer.rate > 0.0 ) {
                     self.reactivate = YES;
+                    [self setAudioOutputSourceChanging:YES];
+                    [[SessionManager shared] setLastKnownPauseExplanation:PauseExplanationAudioInterruption];
                     [self pauseAudio];
                 } else {
                     self.reactivate = NO;
@@ -106,6 +137,7 @@ static const NSString *ItemStatusContext;
             if ( self.audioPlayer ) {
                 if ( self.audioPlayer.rate <= 0.0 && self.reactivate ) {
                     [self playAudio];
+                    self.reactivate = NO;
                 } else {
                     self.reactivate = NO;
                 }
@@ -138,8 +170,6 @@ static const NSString *ItemStatusContext;
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object
                         change:(NSDictionary *)change context:(void *)context {
-    
-    // Monitoring AVPlayer->currentItem status.
     
     NSAssert([NSThread isMainThread],@"not the main queue...");
 #ifdef VERBOSE_LOGGING
@@ -267,7 +297,9 @@ static const NSString *ItemStatusContext;
         if ( [change[@"new"] intValue] == 0 ) {
             NSLog(@"AVPlayerItem - Stream not likely to keep up...");
             if ( !self.seekWillEffectBuffer ) {
-                [self waitPatiently];
+                if ( !self.audioOutputSourceChanging ) {
+                    [self waitPatiently];
+                }
             }
         } else {
             if ( self.dropoutOccurred ) {

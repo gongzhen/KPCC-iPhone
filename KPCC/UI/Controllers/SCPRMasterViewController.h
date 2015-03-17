@@ -143,6 +143,8 @@
 - (void)beginScrubbingWaitMode;
 - (void)endScrubbingWaitMode;
 
+- (void)remoteControlPlayOrPause;
+
 @property (nonatomic, strong) SCPRScrubbingUIViewController *scrubbingUI;
 @property (nonatomic, strong) SCPRButton *scrubberCloseButton;
 @property (nonatomic, strong) IBOutlet UIView *scrubbingUIView;
@@ -156,6 +158,7 @@
 @property (nonatomic, strong) IBOutlet NSLayoutConstraint *fwd30VerticalAnchor;
 
 @property BOOL scrubbing;
+@property BOOL viewHasAppeared;
 
 @property (NS_NONATOMIC_IOSONLY, readonly) BOOL uiIsJogging;
 @property (NS_NONATOMIC_IOSONLY, readonly) NSTimeInterval rewindAgainstStreamDelta;

@@ -16,6 +16,14 @@ typedef NS_ENUM(NSUInteger, OnDemandFinishedReason) {
     OnDemandFinishedReasonEpisodePaused
 };
 
+typedef NS_ENUM(NSUInteger, PauseExplanation) {
+    PauseExplanationUnknown = 0,
+    PauseExplanationAudioInterruption = 1,
+    PauseExplanationAppIsTerminatingSession = 2,
+    PauseExplanationUserHasPausedExplicitly = 3,
+    PauseExplanationAppIsRespondingToPush = 4
+};
+
 static NSInteger kStreamIsLiveTolerance = 120;
 static NSInteger kAllowableDriftCeiling = 240;
 
@@ -54,6 +62,7 @@ static NSInteger kProgramPollingPressure = 5;
 @property (nonatomic) double lastKnownBitrate;
 @property NSInteger latestDriftValue;
 @property (atomic) BOOL userIsViewingHeadlines;
+@property PauseExplanation lastKnownPauseExplanation;
 
 @property (nonatomic, strong) Program *currentProgram;
 
@@ -65,6 +74,8 @@ static NSInteger kProgramPollingPressure = 5;
 - (void)disarmProgramUpdater;
 - (void)resetCache;
 - (void)checkProgramUpdate:(BOOL)force;
+
+
 
 - (BOOL)sessionIsInBackground;
 
@@ -107,7 +118,7 @@ static NSInteger kProgramPollingPressure = 5;
 - (void)trackOnDemandSession;
 - (BOOL)programDirty:(Program*)p;
 
-- (NSDate*)pushDateToNearestTenMinutes:(NSDate*)date;
+- (NSString*)prettyStringForPauseExplanation:(PauseExplanation)explanation;
 
 - (long)bufferLength;
 

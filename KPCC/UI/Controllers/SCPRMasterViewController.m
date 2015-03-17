@@ -78,41 +78,49 @@ setForOnDemandUI;
     return YES;
 }
 
-- (void)remoteControlReceivedWithEvent:(UIEvent *)event {
-    // Handle remote audio control events.
-    if (event.type == UIEventTypeRemoteControl) {
-        if (event.subtype == UIEventSubtypeRemoteControlTogglePlayPause) {
-            
-            NSString *pretty = event.subtype == UIEventSubtypeRemoteControlPlay ? @"Play" : @"Pause";
-            pretty = event.subtype == UIEventSubtypeRemoteControlTogglePlayPause ? @"Toggle" : pretty;
-            NSLog(@"Remote control event : %@",pretty);
-            
-            if ( [[AudioManager shared] currentAudioMode] == AudioModePreroll ) {
-                if ( [self.preRollViewController.prerollPlayer rate] > 0.0 ) {
-                    [self.preRollViewController.prerollPlayer pause];
-                } else {
-                    [self.preRollViewController.prerollPlayer play];
-                }
-                return;
-            }
-            
-            [[AudioManager shared] setUserPause:NO];
-            
-            if ( self.initialPlay ) {
-                [self playOrPauseTapped:nil];
-            } else {
-                [self initialPlayTapped:nil];
-            }
-            
-        } else if (event.subtype == UIEventSubtypeRemoteControlPreviousTrack) {
-            //            [self nextEpisodeTapped:nil];
-        } else if (event.subtype == UIEventSubtypeRemoteControlNextTrack) {
-            //            [self prevEpisodeTapped:nil];
+- (void)remoteControlPlayOrPause {
+    if ( [[AudioManager shared] currentAudioMode] == AudioModePreroll ) {
+        if ( [self.preRollViewController.prerollPlayer rate] > 0.0 ) {
+            [self.preRollViewController.prerollPlayer pause];
+        } else {
+            [self.preRollViewController.prerollPlayer play];
         }
+        return;
+    }
+    
+    [[AudioManager shared] setUserPause:NO];
+    
+    if ( self.initialPlay ) {
+        [self playOrPauseTapped:nil];
+    } else {
+        [self initialPlayTapped:nil];
     }
 }
 
+- (void)remoteControlReceivedWithEvent:(UIEvent *)event {
+    // Handle remote audio control events.
+    NSLog(@" >>>>>> EVENT RECEIVED FROM OTHER REMOTE CONTROL SOURCE <<<<<< ");
+    NSString *pretty = @"";
+    if (event.type == UIEventTypeRemoteControl) {
+        if (event.subtype == UIEventSubtypeRemoteControlTogglePlayPause) {
+            [self remoteControlPlayOrPause];
+            pretty = @"Toggle Play / Pause";
+        } else if ( event.subtype == UIEventSubtypeRemoteControlPause ) {
+            [self remoteControlPlayOrPause];
+            pretty = @"Hard Pause";
+        } else if ( event.subtype == UIEventSubtypeRemoteControlPlay ) {
+            [self remoteControlPlayOrPause];
+            pretty = @"Hard Play";
+        }
+    }
+    NSLog(@"Received : %@",pretty);
+}
+
 - (void)handleResponseForNotification {
+    
+    NSLog(@" >>>>>>> PROCESSING NOTIFICATION ON LAUNCH <<<<<<< ");
+    
+    [[Utils del] setUserRespondedToPushWhileClosed:NO];
     
     [self.navigationController popToRootViewControllerAnimated:YES];
     if ( self.menuOpen ) {
@@ -121,17 +129,24 @@ setForOnDemandUI;
     if ( [[AudioManager shared] currentAudioMode] == AudioModeOnDemand ) {
         if ( [[AudioManager shared] isPlayingAudio] ) {
             [[AudioManager shared] adjustAudioWithValue:-1.0 completion:^{
-                [[AudioManager shared] resetPlayer];
+                NSLog(@"Going live from an ondemand session");
+                [self goLive:YES];
             }];
+            return;
         } else {
-            [[AudioManager shared] resetPlayer];
+            [self goLive:YES];
+            return;
         }
     } else if ( [[AudioManager shared] currentAudioMode] == AudioModeLive ) {
         if ( [[AudioManager shared] status] == StreamStatusPaused ) {
             [[AudioManager shared] resetPlayer];
         } else if ( [[SessionManager shared] sessionIsBehindLive] ) {
+            [[SessionManager shared] setLastKnownPauseExplanation:PauseExplanationAppIsRespondingToPush];
             [[AudioManager shared] pauseAudio];
             [[AudioManager shared] resetPlayer];
+        } else if ( [[AudioManager shared] isPlayingAudio] ) {
+            // OK to do nothing here
+            return;
         }
     }
     
@@ -347,6 +362,9 @@ setForOnDemandUI;
             
         });
     }
+    
+    self.viewHasAppeared = YES;
+    
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -678,6 +696,7 @@ setForOnDemandUI;
             [self pauseAudio];
         }
 #else
+        [[SessionManager shared] setLastKnownPauseExplanation:PauseExplanationUserHasPausedExplicitly];
         [self pauseAudio];
 #endif
         
@@ -709,17 +728,14 @@ setForOnDemandUI;
  * For MPRemoteCommandCenter - see [self primeRemoteCommandCenter]
  */
 - (void)pauseTapped:(id)sender {
-    if ([[AudioManager shared] isStreamPlaying]) {
-        [self pauseAudio];
-    }
+    NSLog(@" >>>>>> EVENT RECEIVED FROM COMMAND CENTER REMOTE <<<<<< ");
+    // Disabling this, seems redundant from the other remote control handling
+    // [self remoteControlPlayOrPause];
 }
 - (void)playTapped:(id)sender {
-    if (![[AudioManager shared] isStreamPlaying]) {
-        if ([[AudioManager shared] isStreamBuffering]) {
-            [[AudioManager shared] stopAllAudio];
-        }
-        [self playAudio:YES];
-    }
+    NSLog(@" >>>>>> EVENT RECEIVED FROM COMMAND CENTER REMOTE <<<<<< ");
+    // Disabling this, seems redundant from the other remote control handling
+    // [self remoteControlPlayOrPause];
 }
 
 - (void)snapJogWheel {
