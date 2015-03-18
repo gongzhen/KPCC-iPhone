@@ -37,7 +37,7 @@ static const NSString *ItemStatusContext;
             singleton.savedVolumeFromMute = -1.0;
             singleton.currentAudioMode = AudioModeNeutral;
             singleton.localBufferSample = [NSMutableDictionary new];
-            
+            singleton.frameCount = 1;
 
             [[NSNotificationCenter defaultCenter] addObserver:singleton
                                                          selector:@selector(handleInterruption:)
@@ -726,7 +726,7 @@ static const NSString *ItemStatusContext;
             }
 
             if ( weakSelf.frameCount % 10000 == 0 ) {
-                weakSelf.frameCount = 0;
+                weakSelf.frameCount = 1;
             }
             weakSelf.frameCount++;
             
@@ -1458,6 +1458,7 @@ static const NSString *ItemStatusContext;
     
     if ( self.audioPlayer.currentItem.status == AVPlayerItemStatusReadyToPlay ) {
         NSLog(@"Player ready immediately");
+        self.beginNormally = NO;
         [self.audioPlayer play];
     }
 

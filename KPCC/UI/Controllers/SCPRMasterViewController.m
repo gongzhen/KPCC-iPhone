@@ -2057,13 +2057,13 @@ setForOnDemandUI;
     }
     
 
-    if ( ![[SessionManager shared] sessionIsBehindLive] ) {
-        if ( [[SessionManager shared] sessionIsInRecess:NO] ) {
-            if ( okToShow )
-                NSLog(@"Rewind Button - Hiding because we're in no-mans-land");
-            okToShow = NO;
-        }
+
+    if ( [[SessionManager shared] sessionIsInRecess:NO] ) {
+        if ( okToShow )
+            NSLog(@"Rewind Button - Hiding because we're in no-mans-land");
+        okToShow = NO;
     }
+    
     
     if ( [[UXmanager shared] onboardingEnding] ) {
         if ( okToShow )

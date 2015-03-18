@@ -715,26 +715,24 @@
 - (BOOL)sessionIsInRecess:(BOOL)respectPause {
     if ( [[AudioManager shared] currentAudioMode] == AudioModeOnDemand ) return NO;
     if ( [[AudioManager shared] currentAudioMode] == AudioModeOnboarding ) return NO;
-    if ( respectPause )
-        if ( [[AudioManager shared] status] == StreamStatusPaused ) return NO;
     
     Program *cp = self.currentProgram;
     NSDate *soft = cp.soft_starts_at;
     NSDate *hard = cp.starts_at;
-    
+
 #ifndef SUPPRESS_V_LIVE
     NSDate *now = [self vLive];
 #else
     NSDate *now = [NSDate date];
 #endif
     
-    if ( [[AudioManager shared] status] != StreamStatusStopped ) {
-        if ( [self sessionIsBehindLive] ) {
+    if ( ![self sessionIsBehindLive] ) {
+        if ( [[AudioManager shared].audioPlayer.currentItem currentDate] ) {
             now = [[AudioManager shared].audioPlayer.currentItem currentDate];
         }
     }
     
-    NSTimeInterval softTI = [soft timeIntervalSince1970]+60;
+    NSTimeInterval softTI = [soft timeIntervalSince1970];
     NSTimeInterval hardTI = [hard timeIntervalSince1970];
     NSTimeInterval nowTI = [now timeIntervalSince1970];
     if ( nowTI >= hardTI && nowTI <= softTI ) {
