@@ -713,6 +713,9 @@ static const NSString *ItemStatusContext;
                     [[QueueManager shared] handleBookmarkingActivity];
                 }
                 
+                if ( weakSelf.frameCount % 10 == 0 ) {
+                    weakSelf.previousEvent = -166;
+                }
                 weakSelf.userPause = NO;
                 weakSelf.seekWillEffectBuffer = NO;
                 weakSelf.seekRequested = NO;

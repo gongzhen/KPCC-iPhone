@@ -157,6 +157,8 @@ typedef NS_ENUM(NSUInteger, StreamStatus) {
 @property BOOL appGaveUp;
 @property BOOL audioOutputSourceChanging;
 
+@property UIEventSubtype previousEvent;
+
 @property (nonatomic, strong) NSMutableDictionary *localBufferSample;
 
 @property UIBackgroundTaskIdentifier rescueTask;

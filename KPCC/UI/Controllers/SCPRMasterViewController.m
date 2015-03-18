@@ -101,19 +101,28 @@ setForOnDemandUI;
     // Handle remote audio control events.
     NSLog(@" >>>>>> EVENT RECEIVED FROM OTHER REMOTE CONTROL SOURCE <<<<<< ");
     NSString *pretty = @"";
+    NSString *ammendment = @"";
     if (event.type == UIEventTypeRemoteControl) {
         if (event.subtype == UIEventSubtypeRemoteControlTogglePlayPause) {
             [self remoteControlPlayOrPause];
             pretty = @"Toggle Play / Pause";
         } else if ( event.subtype == UIEventSubtypeRemoteControlPause ) {
-            [self remoteControlPlayOrPause];
+            if ( [[AudioManager shared] isPlayingAudio] ) {
+                [self remoteControlPlayOrPause];
+            } else {
+                ammendment = @", but we're going to ignore it";
+            }
             pretty = @"Hard Pause";
         } else if ( event.subtype == UIEventSubtypeRemoteControlPlay ) {
-            [self remoteControlPlayOrPause];
+            if ( ![[AudioManager shared] isPlayingAudio] ) {
+                [self remoteControlPlayOrPause];
+            } else {
+                ammendment = @", but we're going to ignore it";
+            }
             pretty = @"Hard Play";
         }
     }
-    NSLog(@"Received : %@",pretty);
+    NSLog(@"Received : %@%@",pretty,ammendment);
 }
 
 - (void)handleResponseForNotification {
