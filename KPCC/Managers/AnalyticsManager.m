@@ -233,7 +233,7 @@ static AnalyticsManager *singleton = nil;
             
             nParams[@"numberOfStalls"] = @(event.numberOfStalls);
             
-            [[SessionManager shared] setLastKnownBitrate:event.observedBitrate];
+            [[SessionManager shared] setLastKnownBitrate:event.indicatedBitrate];
             
             if ( event.observedBitrateStandardDeviation >= 0.0 ) {
                 nParams[@"bitrateDeviation"] = @(event.observedBitrateStandardDeviation);

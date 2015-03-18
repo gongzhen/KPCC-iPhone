@@ -187,8 +187,6 @@
     CGFloat vBeginning = 0.0;
 #endif
     
-    NSLog(@"currentBarLine strokeEnd : %1.2f",self.currentBarLine.strokeEnd);
-    
     [CATransaction begin]; {
         [CATransaction setCompletionBlock:^{
             self.lastCurrentValue = vBeginning;
@@ -218,11 +216,9 @@
     NSTimeInterval beginning = [program.soft_starts_at timeIntervalSince1970];
     NSTimeInterval end = [program.ends_at timeIntervalSince1970];
     NSTimeInterval duration = ( end - beginning );
-    NSTimeInterval live = [[AudioManager shared].maxSeekableDate timeIntervalSince1970];
+    NSTimeInterval live = [[[SessionManager shared] vLive] timeIntervalSince1970];
     
     CGFloat vBeginning = (live - beginning)/duration;
-    
-    NSLog(@"currentBarLine strokeEnd : %1.2f",self.currentBarLine.strokeEnd);
     
     [CATransaction begin]; {
         [CATransaction setCompletionBlock:^{
@@ -288,7 +284,7 @@
     NSTimeInterval live = [[NSDate date] timeIntervalSince1970];
 #endif
 
-    if ( [[SessionManager shared] secondsBehindLive] < 120 ) {
+    if ( [[SessionManager shared] secondsBehindLive] <= [[SessionManager shared] peakDrift] ) {
         live -= [[SessionManager shared] secondsBehindLive];
     }
     

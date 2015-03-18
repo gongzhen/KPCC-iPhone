@@ -60,18 +60,20 @@ static const NSString *ItemStatusContext;
     
     AVAudioSessionRouteDescription *previous = note.userInfo[AVAudioSessionRouteChangePreviousRouteKey];
     
-    BOOL userPause = YES;
-    if ( previous ) {
-        NSArray *outputs = [previous outputs];
-        for ( AVAudioSessionPortDescription *port in outputs ) {
-            NSLog(@"Changing from %@ output",[port portName]);
-            if ( SEQ(port.portType,AVAudioSessionPortBuiltInSpeaker) ) {
-                userPause = NO;
-                break;
+    if ( [self isPlayingAudio] ) {
+        BOOL userPause = [self userPause];
+        if ( previous ) {
+            NSArray *outputs = [previous outputs];
+            for ( AVAudioSessionPortDescription *port in outputs ) {
+                NSLog(@"Changing from %@ output",[port portName]);
+                if ( SEQ(port.portType,AVAudioSessionPortBuiltInSpeaker) ) {
+                    userPause = NO;
+                    break;
+                }
             }
         }
+        [self setUserPause:userPause];
     }
-    [self setUserPause:userPause];
     [self setAudioOutputSourceChanging:YES];
 }
 
@@ -217,6 +219,7 @@ static const NSString *ItemStatusContext;
                 });
             } else if ( self.tryAgain ) {
                 NSLog(@"Trying again after failure...");
+                self.failoverCount = 0;
                 self.tryAgain = NO;
                 dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.15 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                     [self playAudio];
@@ -279,12 +282,16 @@ static const NSString *ItemStatusContext;
             if ( !self.seekWillEffectBuffer ) {
                 NSLog(@"Buffer is empty ...");
 #ifndef SUPPRESS_BITRATE_THROTTLING
-                if ( !self.audioOutputSourceChanging ) {
-                    if ( [Utils isIOS8] ) {
-                        [self.audioPlayer.currentItem setPreferredPeakBitRate:kPreferredPeakBitRateTolerance];
+                if ( [self isPlayingAudio] ) {
+                    if ( !self.audioOutputSourceChanging ) {
+                        if ( [Utils isIOS8] ) {
+                            [self.audioPlayer.currentItem setPreferredPeakBitRate:kPreferredPeakBitRateTolerance];
+                        }
+                    } else {
+                        NSLog(@"Ignoring this buffer emptiness because it was triggered by an output source change");
                     }
                 } else {
-                    NSLog(@"Ignoring this buffer emptiness because it was triggered by an output source change");
+                    NSLog(@"Ignoring buffer emptiness because we're not attempting to play audio");
                 }
 #endif
             }
@@ -295,10 +302,12 @@ static const NSString *ItemStatusContext;
     
     if (object == self.audioPlayer.currentItem && [keyPath isEqualToString:@"playbackLikelyToKeepUp"]) {
         if ( [change[@"new"] intValue] == 0 ) {
-            NSLog(@"AVPlayerItem - Stream not likely to keep up...");
-            if ( !self.seekWillEffectBuffer ) {
-                if ( !self.audioOutputSourceChanging ) {
-                    [self waitPatiently];
+            if ( [self isPlayingAudio] ) {
+                NSLog(@"AVPlayerItem - Stream not likely to keep up...");
+                if ( !self.seekWillEffectBuffer ) {
+                    if ( !self.audioOutputSourceChanging ) {
+                        [self waitPatiently];
+                    }
                 }
             }
         } else {
@@ -369,7 +378,6 @@ static const NSString *ItemStatusContext;
     if ( !self.seekWillEffectBuffer ) {
         if ( !self.audioOutputSourceChanging ) {
             self.dropoutOccurred = YES;
-            
 #ifndef SUPPRESS_LOCAL_SAMPLING
             [self invalidateTimeObserver];
 #endif
@@ -510,6 +518,22 @@ static const NSString *ItemStatusContext;
 
 - (void)localSample:(CMTime)time {
     NSArray *seekRange = self.audioPlayer.currentItem.seekableTimeRanges;
+    
+    NSDate *now = [NSDate date];
+    NSDate *msd = self.maxSeekableDate;
+    if ( msd && [msd isWithinReasonableframeOfDate:now] ) {
+        NSTimeInterval drift = abs([now timeIntervalSince1970] - [msd timeIntervalSince1970]);
+        if ( (drift - kAllowableDriftCeiling > kToleratedIncreaseInDrift) ) {
+            [[AnalyticsManager shared] logEvent:@"driftIncreasing"
+                                 withParameters:@{ @"oldDrift" : @([[SessionManager shared] peakDrift]),
+                                                   @"newDrift" : @(drift) }];
+            NSLog(@"Drift increasing - Old : %ld, New : %ld",(long)[[SessionManager shared] peakDrift], (long)drift);
+        } else {
+            //NSLog(@"Drift stabilizing - Old : %ld, New : %ld",(long)[[SessionManager shared] peakDrift], (long)drift);
+        }
+        [[SessionManager shared] setPeakDrift:MAX(drift,[[SessionManager shared] peakDrift])];
+    }
+    
     AVPlayer *audioPlayer = self.audioPlayer;
     if ( !self.localBufferSample || !self.localBufferSample[@"expectedDate"] ) {
         self.localBufferSample = [NSMutableDictionary new];
@@ -520,6 +544,7 @@ static const NSString *ItemStatusContext;
         self.localBufferSample[@"frame"] = @(self.frameCount);
         self.localBufferSample[@"expectedTime"] = [NSValue valueWithCMTime:audioPlayer.currentItem.currentTime];
     }
+    
     
     if ( [self.localBufferSample[@"open"] boolValue] ) {
         NSMutableArray *localSamples = self.localBufferSample[@"samples"];
@@ -536,7 +561,7 @@ static const NSString *ItemStatusContext;
         Float64 etFloat = CMTimeGetSeconds(expectedTime);
         Float64 rtFloat = CMTimeGetSeconds(reportedTime);
         
-        NSString *expStr = [NSDate stringFromDate:expectedDate
+        NSString *expStr = [NSDate stringFromDate:[expectedDate dateByAddingTimeInterval:1]
                                        withFormat:@"HH:mm:ss a"];
         NSString *repStr = [NSDate stringFromDate:reportedDate
                                        withFormat:@"HH:mm:ss a"];
@@ -552,6 +577,8 @@ static const NSString *ItemStatusContext;
                     return;
                 }
             
+                NSLog(@"Stream skipped a bit : %ld seconds",(long)abs([reportedDate timeIntervalSince1970] - [expectedDate timeIntervalSince1970]));
+                
                 [[AnalyticsManager shared] logEvent:@"streamSkippedByInterval"
                                      withParameters:@{ @"expected" : expStr,
                                                        @"reported" : repStr,
@@ -988,8 +1015,8 @@ static const NSString *ItemStatusContext;
     self.seekWillEffectBuffer = YES;
     [self.audioPlayer.currentItem seekToTime:CMTimeMake(MAXFLOAT * HUGE_VALF, 1) completionHandler:^(BOOL finished) {
 #ifndef SUPPRESS_LOCAL_SAMPLING
-        self.localBufferSample[@"expectedDate"] = self.audioPlayer.currentItem.currentDate;
-        self.localBufferSample[@"open"] = @(YES);
+//        self.localBufferSample[@"expectedDate"] = self.audioPlayer.currentItem.currentDate;
+//        self.localBufferSample[@"open"] = @(YES);
 #endif
         if ( [self.audioPlayer rate] <= 0.0 ) {
             [self.audioPlayer play];
@@ -1243,7 +1270,10 @@ static const NSString *ItemStatusContext;
                           options:NSKeyValueObservingOptionOld|NSKeyValueObservingOptionNew
                           context:nil];
     
-
+#ifndef SUPPRESS_LOCAL_SAMPLING
+    self.localBufferSample = nil;
+#endif
+    
     self.status = StreamStatusStopped;
     self.previousUrl = urlString;
     
@@ -1371,7 +1401,7 @@ static const NSString *ItemStatusContext;
     [[QueueManager shared] setCurrentBookmark:nil];
     
     [self stopAllAudio];
-    //[self buildStreamer:kHLSLiveStreamURL];
+    [self buildStreamer:kHLSLiveStreamURL];
     [self playAudio];
 }
 

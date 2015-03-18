@@ -25,7 +25,8 @@ typedef NS_ENUM(NSUInteger, PauseExplanation) {
 };
 
 static NSInteger kStreamIsLiveTolerance = 120;
-static NSInteger kAllowableDriftCeiling = 240;
+static NSInteger kAllowableDriftCeiling = 270;
+static NSInteger kToleratedIncreaseInDrift = 20;
 
 #ifndef PRODUCTION
 static NSInteger kProgramPollingPressure = 5;
@@ -63,7 +64,7 @@ static NSInteger kProgramPollingPressure = 5;
 @property NSInteger latestDriftValue;
 @property (atomic) BOOL userIsViewingHeadlines;
 @property PauseExplanation lastKnownPauseExplanation;
-
+@property NSInteger peakDrift;
 @property (nonatomic, strong) Program *currentProgram;
 
 - (void)fetchCurrentProgram:(CompletionBlockWithValue)completed;

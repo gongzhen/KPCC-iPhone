@@ -55,4 +55,8 @@
     // Configure the view for the selected state
 }
 
+- (NSString*)reuseIdentifier {
+    return @"programTableCell";
+}
+
 @end

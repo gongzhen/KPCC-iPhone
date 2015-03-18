@@ -29,6 +29,7 @@
         mgr.initialProgramRequested = 0;
 #endif
         mgr.prevCheckedMinute = -1;
+        mgr.peakDrift = kAllowableDriftCeiling;
     });
     return mgr;
 }
@@ -63,11 +64,10 @@
 #pragma mark - Session Mgmt
 - (NSDate*)vLive {
     NSDate *live = [NSDate date];
-
     if ( [AudioManager shared].audioPlayer.currentItem ) {
         NSDate *msd = [[AudioManager shared].audioPlayer.currentItem currentDate];
         if ( msd ) {
-            if ( [msd isWithinTimeFrame:kAllowableDriftCeiling ofDate:[NSDate date]] ) {
+            if ( [msd isWithinTimeFrame:self.peakDrift ofDate:[NSDate date]] ) {
                 if ( abs([live timeIntervalSinceDate:msd]) > kStreamIsLiveTolerance ) {
                     live = msd;
                     self.latestDriftValue = abs([live timeIntervalSinceDate:msd]);

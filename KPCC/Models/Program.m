@@ -90,7 +90,7 @@
 
             if ([matchedArray count] == 1) {
                 // Update existing Program
-                NSLog(@"Update Program - %@", [matchedArray[0] program_slug]);
+                // NSLog(@"Update Program - %@", [matchedArray[0] program_slug]);
                 programObj = matchedArray[0];
                 [self updateProgramObject:programObj withDictionary:program];
             } else if ([matchedArray count] > 1) {

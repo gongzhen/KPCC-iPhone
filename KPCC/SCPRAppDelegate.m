@@ -285,7 +285,12 @@
         [[SessionManager shared] checkProgramUpdate:YES];
     }
     
-
+#ifdef DEBUG
+    if ( [[SessionManager shared] sessionPausedDate] ) {
+        NSLog(@"Session Paused : %@",[NSDate stringFromDate:[[SessionManager shared] sessionPausedDate]
+                                                 withFormat:@"HH:mm:ss a"]);
+    }
+#endif
     // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
 }
 
