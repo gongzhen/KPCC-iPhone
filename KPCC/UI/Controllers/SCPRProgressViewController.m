@@ -23,6 +23,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    self.view.backgroundColor = [UIColor clearColor];
 }
 
 + (SCPRProgressViewController*)o {
@@ -51,11 +52,8 @@
         }
     }
     
-    self.view.clipsToBounds = YES;
-    
     self.view.backgroundColor = [UIColor clearColor];
-    //self.view.backgroundColor = [UIColor redColor];
-    
+    self.view.clipsToBounds = YES;
     CGFloat width = self.view.frame.size.width;
     
     self.barWidth = width;
@@ -120,7 +118,7 @@
     self.liveProgressView.alpha = 0.0;
     self.uiHidden = YES;
     self.view.alpha = 0.0;
-    
+    self.view.backgroundColor = [UIColor clearColor];
 }
 
 - (void)hide {
@@ -189,8 +187,6 @@
     CGFloat vBeginning = 0.0;
 #endif
     
-    NSLog(@"currentBarLine strokeEnd : %1.2f",self.currentBarLine.strokeEnd);
-    
     [CATransaction begin]; {
         [CATransaction setCompletionBlock:^{
             self.lastCurrentValue = vBeginning;
@@ -220,11 +216,9 @@
     NSTimeInterval beginning = [program.soft_starts_at timeIntervalSince1970];
     NSTimeInterval end = [program.ends_at timeIntervalSince1970];
     NSTimeInterval duration = ( end - beginning );
-    NSTimeInterval live = [[AudioManager shared].maxSeekableDate timeIntervalSince1970];
+    NSTimeInterval live = [[[SessionManager shared] vLive] timeIntervalSince1970];
     
     CGFloat vBeginning = (live - beginning)/duration;
-    
-    NSLog(@"currentBarLine strokeEnd : %1.2f",self.currentBarLine.strokeEnd);
     
     [CATransaction begin]; {
         [CATransaction setCompletionBlock:^{
@@ -290,7 +284,7 @@
     NSTimeInterval live = [[NSDate date] timeIntervalSince1970];
 #endif
 
-    if ( [[SessionManager shared] secondsBehindLive] < 120 ) {
+    if ( [[SessionManager shared] secondsBehindLive] <= [[SessionManager shared] peakDrift] ) {
         live -= [[SessionManager shared] secondsBehindLive];
     }
     

@@ -29,6 +29,7 @@
         mgr.initialProgramRequested = 0;
 #endif
         mgr.prevCheckedMinute = -1;
+        mgr.peakDrift = kAllowableDriftCeiling;
     });
     return mgr;
 }
@@ -41,21 +42,41 @@
     }
 }
 
+- (NSString*)prettyStringForPauseExplanation:(PauseExplanation)explanation {
+    switch (explanation) {
+        case PauseExplanationUnknown:
+            return @"Undetermined";
+        case PauseExplanationAppIsTerminatingSession:
+            return @"App is pausing audio session from stream exception";
+        case PauseExplanationAudioInterruption:
+            return @"App received an interruption from another audio source";
+        case PauseExplanationUserHasPausedExplicitly:
+            return @"The user hit the pause button";
+        case PauseExplanationAppIsRespondingToPush:
+            return @"The app is responding to a Live Stream push";
+        default:
+            break;
+    }
+    
+    return @"";
+}
+
 #pragma mark - Session Mgmt
 - (NSDate*)vLive {
     NSDate *live = [NSDate date];
-
     if ( [AudioManager shared].audioPlayer.currentItem ) {
-        NSDate *msd = [[AudioManager shared] maxSeekableDate];
+        NSDate *msd = [[AudioManager shared].audioPlayer.currentItem currentDate];
         if ( msd ) {
-            if ( [msd isWithinReasonableframeOfDate:[NSDate date]] ) {
+            if ( [msd isWithinTimeFrame:self.peakDrift ofDate:[NSDate date]] ) {
                 if ( abs([live timeIntervalSinceDate:msd]) > kStreamIsLiveTolerance ) {
                     live = msd;
                     self.latestDriftValue = abs([live timeIntervalSinceDate:msd]);
                 }
+            } else {
+                return live;
             }
         } else {
-            // AVPlayer has yet to acquire a max seekable date, so return some identifiably large value
+            // AVPlayer has no current date, so it's probably paused
             return [[NSDate date] dateByAddingTimeInterval:60*60*24*10];
         }
     }
@@ -694,26 +715,24 @@
 - (BOOL)sessionIsInRecess:(BOOL)respectPause {
     if ( [[AudioManager shared] currentAudioMode] == AudioModeOnDemand ) return NO;
     if ( [[AudioManager shared] currentAudioMode] == AudioModeOnboarding ) return NO;
-    if ( respectPause )
-        if ( [[AudioManager shared] status] == StreamStatusPaused ) return NO;
     
     Program *cp = self.currentProgram;
     NSDate *soft = cp.soft_starts_at;
     NSDate *hard = cp.starts_at;
-    
+
 #ifndef SUPPRESS_V_LIVE
     NSDate *now = [self vLive];
 #else
     NSDate *now = [NSDate date];
 #endif
     
-    if ( [[AudioManager shared] status] != StreamStatusStopped ) {
-        if ( [self sessionIsBehindLive] ) {
+    if ( ![self sessionIsBehindLive] ) {
+        if ( [[AudioManager shared].audioPlayer.currentItem currentDate] ) {
             now = [[AudioManager shared].audioPlayer.currentItem currentDate];
         }
     }
     
-    NSTimeInterval softTI = [soft timeIntervalSince1970]+60;
+    NSTimeInterval softTI = [soft timeIntervalSince1970];
     NSTimeInterval hardTI = [hard timeIntervalSince1970];
     NSTimeInterval nowTI = [now timeIntervalSince1970];
     if ( nowTI >= hardTI && nowTI <= softTI ) {

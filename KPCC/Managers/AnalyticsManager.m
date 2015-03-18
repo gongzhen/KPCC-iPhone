@@ -40,8 +40,13 @@ static AnalyticsManager *singleton = nil;
     NSString *mixPanelToken = @"SandboxToken";
     NSString *flurryToken = @"DebugKey";
 #ifdef PRODUCTION
+#ifdef PRERELEASE
+    mixPanelToken = @"SandboxToken";
+    flurryToken = @"DebugKey";
+#else
     mixPanelToken = @"ProductionToken";
     flurryToken = @"ProductionKey";
+#endif
 #endif
     
 #ifdef BETA
@@ -159,18 +164,6 @@ static AnalyticsManager *singleton = nil;
     
     if ( !comments || SEQ(comments,@"") ) return;
     
-#ifdef MICRO_MANAGE_EXCEPTIONS
-    if ( [[NSDate date] timeIntervalSinceDate:self.lastStreamException] > kExceptionInterval ) {
-        self.allowedExceptions = 0;
-        self.lastStreamException = [NSDate date];
-    } else {
-        self.allowedExceptions++;
-        if ( self.allowedExceptions > kMaxAllowedExceptionsPerInterval ) {
-            return;
-        }
-    }
-#endif
-    
     self.accessLog = [[AudioManager shared].audioPlayer.currentItem accessLog];
     self.errorLog = [[AudioManager shared].audioPlayer.currentItem errorLog];
     
@@ -240,7 +233,7 @@ static AnalyticsManager *singleton = nil;
             
             nParams[@"numberOfStalls"] = @(event.numberOfStalls);
             
-            [[SessionManager shared] setLastKnownBitrate:event.observedBitrate];
+            [[SessionManager shared] setLastKnownBitrate:event.indicatedBitrate];
             
             if ( event.observedBitrateStandardDeviation >= 0.0 ) {
                 nParams[@"bitrateDeviation"] = @(event.observedBitrateStandardDeviation);

@@ -70,46 +70,108 @@ busyZoomAnim,
 setForLiveStreamUI,
 setForOnDemandUI;
 
-#pragma mark - UIViewController
+#pragma mark - External Control
 
 // Allows for interaction with system audio controls.
+
 - (BOOL)canBecomeFirstResponder {
     return YES;
 }
 
-- (void)remoteControlReceivedWithEvent:(UIEvent *)event {
-    // Handle remote audio control events.
-    if (event.type == UIEventTypeRemoteControl) {
-        if (event.subtype == UIEventSubtypeRemoteControlTogglePlayPause) {
-            
-            NSString *pretty = event.subtype == UIEventSubtypeRemoteControlPlay ? @"Play" : @"Pause";
-            pretty = event.subtype == UIEventSubtypeRemoteControlTogglePlayPause ? @"Toggle" : pretty;
-            NSLog(@"Remote control event : %@",pretty);
-            
-            if ( [[AudioManager shared] currentAudioMode] == AudioModePreroll ) {
-                if ( [self.preRollViewController.prerollPlayer rate] > 0.0 ) {
-                    [self.preRollViewController.prerollPlayer pause];
-                } else {
-                    [self.preRollViewController.prerollPlayer play];
-                }
-                return;
-            }
-            
-            [[AudioManager shared] setUserPause:NO];
-            
-            if ( self.initialPlay ) {
-                [self playOrPauseTapped:nil];
-            } else {
-                [self initialPlayTapped:nil];
-            }
-            
-        } else if (event.subtype == UIEventSubtypeRemoteControlPreviousTrack) {
-            //            [self nextEpisodeTapped:nil];
-        } else if (event.subtype == UIEventSubtypeRemoteControlNextTrack) {
-            //            [self prevEpisodeTapped:nil];
+- (void)remoteControlPlayOrPause {
+    if ( [[AudioManager shared] currentAudioMode] == AudioModePreroll ) {
+        if ( [self.preRollViewController.prerollPlayer rate] > 0.0 ) {
+            [self.preRollViewController.prerollPlayer pause];
+        } else {
+            [self.preRollViewController.prerollPlayer play];
         }
+        return;
+    }
+    
+    [[AudioManager shared] setUserPause:NO];
+    
+    if ( self.initialPlay ) {
+        [self playOrPauseTapped:nil];
+    } else {
+        [self initialPlayTapped:nil];
     }
 }
+
+- (void)remoteControlReceivedWithEvent:(UIEvent *)event {
+    // Handle remote audio control events.
+    NSLog(@" >>>>>> EVENT RECEIVED FROM OTHER REMOTE CONTROL SOURCE <<<<<< ");
+    NSString *pretty = @"";
+    NSString *ammendment = @"";
+    if (event.type == UIEventTypeRemoteControl) {
+        if (event.subtype == UIEventSubtypeRemoteControlTogglePlayPause) {
+            [self remoteControlPlayOrPause];
+            pretty = @"Toggle Play / Pause";
+        } else if ( event.subtype == UIEventSubtypeRemoteControlPause ) {
+            if ( [[AudioManager shared] isPlayingAudio] ) {
+                [self remoteControlPlayOrPause];
+            } else {
+                ammendment = @", but we're going to ignore it";
+            }
+            pretty = @"Hard Pause";
+        } else if ( event.subtype == UIEventSubtypeRemoteControlPlay ) {
+            if ( ![[AudioManager shared] isPlayingAudio] ) {
+                [self remoteControlPlayOrPause];
+            } else {
+                ammendment = @", but we're going to ignore it";
+            }
+            pretty = @"Hard Play";
+        }
+    }
+    NSLog(@"Received : %@%@",pretty,ammendment);
+}
+
+- (void)handleResponseForNotification {
+    
+    NSLog(@" >>>>>>> PROCESSING NOTIFICATION ON LAUNCH <<<<<<< ");
+    
+    [[Utils del] setUserRespondedToPushWhileClosed:NO];
+    
+    [self.navigationController popToRootViewControllerAnimated:YES];
+    if ( self.menuOpen ) {
+        [self decloakForMenu:YES];
+    }
+    if ( [[AudioManager shared] currentAudioMode] == AudioModeOnDemand ) {
+        if ( [[AudioManager shared] isPlayingAudio] ) {
+            [[AudioManager shared] adjustAudioWithValue:-1.0 completion:^{
+                NSLog(@"Going live from an ondemand session");
+                [self goLive:YES];
+            }];
+            return;
+        } else {
+            [self goLive:YES];
+            return;
+        }
+    } else if ( [[AudioManager shared] currentAudioMode] == AudioModeLive ) {
+        if ( [[AudioManager shared] status] == StreamStatusPaused ) {
+            [[AudioManager shared] resetPlayer];
+        } else if ( [[SessionManager shared] sessionIsBehindLive] ) {
+            [[SessionManager shared] setLastKnownPauseExplanation:PauseExplanationAppIsRespondingToPush];
+            [[AudioManager shared] pauseAudio];
+            [[AudioManager shared] resetPlayer];
+        } else if ( [[AudioManager shared] isPlayingAudio] ) {
+            // OK to do nothing here
+            return;
+        }
+    }
+    
+    if ( self.preRollViewController.tritonAd ) {
+        self.preRollViewController.tritonAd = nil;
+    }
+    
+    if ( self.initialPlay ) {
+        [self playOrPauseTapped:nil];
+    } else {
+        [self initialPlayTapped:nil];
+    }
+    
+}
+
+#pragma mark - Standard View Callbacks
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -309,6 +371,9 @@ setForOnDemandUI;
             
         });
     }
+    
+    self.viewHasAppeared = YES;
+    
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -640,6 +705,7 @@ setForOnDemandUI;
             [self pauseAudio];
         }
 #else
+        [[SessionManager shared] setLastKnownPauseExplanation:PauseExplanationUserHasPausedExplicitly];
         [self pauseAudio];
 #endif
         
@@ -656,7 +722,6 @@ setForOnDemandUI;
 - (IBAction)rewindToStartTapped:(id)sender {
     
     if ( self.jogging ) return;
-    
     [self activateRewind:RewindDistanceBeginning];
     
 }
@@ -672,17 +737,14 @@ setForOnDemandUI;
  * For MPRemoteCommandCenter - see [self primeRemoteCommandCenter]
  */
 - (void)pauseTapped:(id)sender {
-    if ([[AudioManager shared] isStreamPlaying]) {
-        [self pauseAudio];
-    }
+    NSLog(@" >>>>>> EVENT RECEIVED FROM COMMAND CENTER REMOTE <<<<<< ");
+    // Disabling this, seems redundant from the other remote control handling
+    // [self remoteControlPlayOrPause];
 }
 - (void)playTapped:(id)sender {
-    if (![[AudioManager shared] isStreamPlaying]) {
-        if ([[AudioManager shared] isStreamBuffering]) {
-            [[AudioManager shared] stopAllAudio];
-        }
-        [self playAudio:YES];
-    }
+    NSLog(@" >>>>>> EVENT RECEIVED FROM COMMAND CENTER REMOTE <<<<<< ");
+    // Disabling this, seems redundant from the other remote control handling
+    // [self remoteControlPlayOrPause];
 }
 
 - (void)snapJogWheel {
@@ -770,7 +832,6 @@ setForOnDemandUI;
 
 # pragma mark - Audio commands
 - (void)playAudio:(BOOL)hard {
-    
     if ( hard && ![[SessionManager shared] sessionIsInBackground] ) {
         [[AudioManager shared] playLiveStream];
     } else {
@@ -1262,7 +1323,7 @@ setForOnDemandUI;
         }
         
         [[AudioManager shared] setDelegate:self];
-        if ( [[AudioManager shared].audioPlayer rate] <= 0.0 ) {
+        if ( ![[AudioManager shared] isPlayingAudio] ) {
             [self tickOnDemand];
         }
     }];
@@ -1545,7 +1606,7 @@ setForOnDemandUI;
     
     self.queueBlurShown = NO;
     
-    if ( [[AudioManager shared].audioPlayer rate] > 0.0 ) {
+    if ( [[AudioManager shared] isPlayingAudio] ) {
         self.onDemandPanning = YES;
     }
     
@@ -1585,6 +1646,7 @@ setForOnDemandUI;
         self.timeLabelOnDemand.alpha = 1.0;
         self.queueBlurView.layer.opacity = 1.0;
         self.scrubbingTriggerView.alpha = 1.0;
+        self.liveProgressViewController.view.alpha = 0.0;
         [self.liveProgressViewController hide];
     } completion:^(BOOL finished) {
         
@@ -1605,7 +1667,6 @@ setForOnDemandUI;
         }
         
         [[SessionManager shared] setCurrentProgram:nil];
-        [self.liveProgressViewController hide];
         
         self.navigationItem.title = @"Programs";
         [self.progressView setProgress:0.0 animated:YES];
@@ -1652,6 +1713,7 @@ setForOnDemandUI;
             [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationOptionCurveLinear animations:^{
                 weakSelf.progressView.alpha = 0.0;
                 weakSelf.shareButton.alpha = 0.0;
+                weakSelf.liveProgressViewController.view.alpha = 0.0;
             } completion:^(BOOL finished){
                 
                 weakSelf.queueBlurShown = YES;
@@ -1924,7 +1986,7 @@ setForOnDemandUI;
             NSLog(@"Rewind Button - Hiding because onboarding initial state");
         okToShow = NO;
     }
-    if ( [[AudioManager shared] status] == StreamStatusPlaying || [[AudioManager shared].audioPlayer rate] > 0.0 ) {
+    if ( [[AudioManager shared] status] == StreamStatusPlaying || [[AudioManager shared] isPlayingAudio] ) {
         if ( okToShow )
             NSLog(@"Rewind Button - Hiding because audio is playing");
         okToShow = NO;
@@ -1995,13 +2057,13 @@ setForOnDemandUI;
     }
     
 
-    if ( ![[SessionManager shared] sessionIsBehindLive] ) {
-        if ( [[SessionManager shared] sessionIsInRecess:NO] ) {
-            if ( okToShow )
-                NSLog(@"Rewind Button - Hiding because we're in no-mans-land");
-            okToShow = NO;
-        }
+
+    if ( [[SessionManager shared] sessionIsInRecess:NO] ) {
+        if ( okToShow )
+            NSLog(@"Rewind Button - Hiding because we're in no-mans-land");
+        okToShow = NO;
     }
+    
     
     if ( [[UXmanager shared] onboardingEnding] ) {
         if ( okToShow )
@@ -2149,40 +2211,7 @@ setForOnDemandUI;
     
 }
 
-- (void)handleResponseForNotification {
 
-    [self.navigationController popToRootViewControllerAnimated:YES];
-    if ( self.menuOpen ) {
-        [self decloakForMenu:YES];
-    }
-    if ( [[AudioManager shared] currentAudioMode] == AudioModeOnDemand ) {
-        if ( [[AudioManager shared].audioPlayer rate] > 0.0 ) {
-            [[AudioManager shared] adjustAudioWithValue:-1.0 completion:^{
-                [[AudioManager shared] resetPlayer];
-            }];
-        } else {
-            [[AudioManager shared] resetPlayer];
-        }
-    } else if ( [[AudioManager shared] currentAudioMode] == AudioModeLive ) {
-        if ( [[AudioManager shared] status] == StreamStatusPaused ) {
-            [[AudioManager shared] resetPlayer];
-        } else if ( [[SessionManager shared] sessionIsBehindLive] ) {
-            [[AudioManager shared] pauseAudio];
-            [[AudioManager shared] resetPlayer];
-        }
-    }
-    
-    if ( self.preRollViewController.tritonAd ) {
-        self.preRollViewController.tritonAd = nil;
-    }
-    
-    if ( self.initialPlay ) {
-        [self playOrPauseTapped:nil];
-    } else {
-        [self initialPlayTapped:nil];
-    }
-
-}
 
 #pragma mark - Util
 
@@ -2275,7 +2304,6 @@ setForOnDemandUI;
         self.navigationItem.title = @"KPCC Live";
     }
     
-    
     if (animated) {
         [pulldownMenu closeDropDown:YES];
     } else {
@@ -2333,8 +2361,10 @@ setForOnDemandUI;
         [self.horizDividerLine.layer pop_addAnimation:dividerFadeAnim forKey:@"horizDividerFadeOutAnimation"];
     }
     //}
-    if ( [AudioManager shared].currentAudioMode == AudioModeLive ) {
+    if ( [AudioManager shared].currentAudioMode == AudioModeLive && !setForOnDemandUI ) {
         [self.liveProgressViewController show];
+    } else {
+        [self.liveProgressViewController hide];
     }
     
     if ( [[NetworkManager shared] networkDown] ) {
@@ -2827,13 +2857,11 @@ setForOnDemandUI;
     // Make sure UI gets set to "Playing" state after a seek.
     [[SessionManager shared] fetchCurrentProgram:^(id returnedObject) {
         [self.jogShuttle endAnimations];
-        [[AudioManager shared] setSeekWillEffectBuffer:NO];
     }];
 }
 
 - (void)onDemandSeekCompleted {
     [self.jogShuttle endAnimations];
-    [[AudioManager shared] setSeekWillEffectBuffer:NO];
 }
 
 - (void)interfere {

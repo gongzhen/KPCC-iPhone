@@ -16,12 +16,22 @@ typedef NS_ENUM(NSUInteger, OnDemandFinishedReason) {
     OnDemandFinishedReasonEpisodePaused
 };
 
+typedef NS_ENUM(NSUInteger, PauseExplanation) {
+    PauseExplanationUnknown = 0,
+    PauseExplanationAudioInterruption = 1,
+    PauseExplanationAppIsTerminatingSession = 2,
+    PauseExplanationUserHasPausedExplicitly = 3,
+    PauseExplanationAppIsRespondingToPush = 4
+};
+
 static NSInteger kStreamIsLiveTolerance = 120;
+static NSInteger kAllowableDriftCeiling = 270;
+static NSInteger kToleratedIncreaseInDrift = 20;
 
 #ifndef PRODUCTION
 static NSInteger kProgramPollingPressure = 5;
 #else
-static NSInteger kProgramPollingPressure = 15;
+static NSInteger kProgramPollingPressure = 5;
 #endif
 
 @interface SessionManager : NSObject
@@ -53,7 +63,8 @@ static NSInteger kProgramPollingPressure = 15;
 @property (nonatomic) double lastKnownBitrate;
 @property NSInteger latestDriftValue;
 @property (atomic) BOOL userIsViewingHeadlines;
-
+@property PauseExplanation lastKnownPauseExplanation;
+@property NSInteger peakDrift;
 @property (nonatomic, strong) Program *currentProgram;
 
 - (void)fetchCurrentProgram:(CompletionBlockWithValue)completed;
@@ -64,6 +75,8 @@ static NSInteger kProgramPollingPressure = 15;
 - (void)disarmProgramUpdater;
 - (void)resetCache;
 - (void)checkProgramUpdate:(BOOL)force;
+
+
 
 - (BOOL)sessionIsInBackground;
 
@@ -106,7 +119,7 @@ static NSInteger kProgramPollingPressure = 15;
 - (void)trackOnDemandSession;
 - (BOOL)programDirty:(Program*)p;
 
-- (NSDate*)pushDateToNearestTenMinutes:(NSDate*)date;
+- (NSString*)prettyStringForPauseExplanation:(PauseExplanation)explanation;
 
 - (long)bufferLength;
 

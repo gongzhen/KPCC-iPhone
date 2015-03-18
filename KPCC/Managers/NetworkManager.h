@@ -44,7 +44,8 @@ typedef NS_ENUM(NSInteger, NetworkHealth) {
 @property (nonatomic,strong) KSReachability *floatingReachability;
 @property (nonatomic,strong) KSReachableOperation *reachableOperation;
 @property (nonatomic,strong) Reachability *basicReachability;
-
+@property (nonatomic,strong) NSDate *timeDropped;
+@property (nonatomic,strong) NSDate *timeReturned;
 - (NetworkHealth)checkNetworkHealth;
 @property (NS_NONATOMIC_IOSONLY, readonly, copy) NSString *networkInformation;
 

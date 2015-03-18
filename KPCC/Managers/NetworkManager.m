@@ -9,10 +9,11 @@
 #import "NetworkManager.h"
 #import <XMLDictionary/XMLDictionary.h>
 #import "AudioManager.h"
+#import "AnalyticsManager.h"
 
 @import AdSupport;
 
-#define kFailThreshold 3.5
+#define kFailThreshold 5.5
 
 static NetworkManager *singleton = nil;
 
@@ -104,12 +105,27 @@ static NetworkManager *singleton = nil;
             
             if ( [weakreach_ reachable] ) {
                 
+                weakself_.timeReturned = [NSDate date];
+                
+
+                
                 weakself_.networkDown = NO;
                 [[NSNotificationCenter defaultCenter] postNotificationName:@"network-status-good"
                                                                 object:nil];
+                
+                if ( weakself_.timeDropped && weakself_.timeReturned ) {
+                    [[AnalyticsManager shared] logEvent:@"connectivityLostAndFound"
+                                         withParameters:@{ @"lostTime" : [NSDate stringFromDate:weakself_.timeDropped
+                                                                                     withFormat:@"HH:mm:ss a"],
+                                                           @"foundTime" : [NSDate stringFromDate:weakself_.timeReturned
+                                                                                      withFormat:@"HH:mm:ss a"] }];
+                    weakself_.timeReturned = nil;
+                    weakself_.timeDropped = nil;
+                }
+                
             } else {
                 
-
+                weakself_.timeDropped = [NSDate date];
                 weakself_.networkDown = YES;
                 weakself_.failTimer = [NSTimer scheduledTimerWithTimeInterval:kFailThreshold
                                                                        target:weakself_
