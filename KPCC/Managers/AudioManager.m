@@ -522,8 +522,9 @@ static const NSString *ItemStatusContext;
     NSDate *now = [NSDate date];
     NSDate *msd = self.maxSeekableDate;
     if ( msd && [msd isWithinReasonableframeOfDate:now] ) {
-        NSTimeInterval drift = abs([now timeIntervalSince1970] - [msd timeIntervalSince1970]);
-        if ( (drift - kAllowableDriftCeiling > kToleratedIncreaseInDrift) ) {
+        NSInteger drift = [now timeIntervalSince1970] - [msd timeIntervalSince1970];
+        NSLog(@"Drift : %ld",(long)drift);
+        if ( (drift - [[SessionManager shared] peakDrift] > kToleratedIncreaseInDrift) ) {
             [[AnalyticsManager shared] logEvent:@"driftIncreasing"
                                  withParameters:@{ @"oldDrift" : @([[SessionManager shared] peakDrift]),
                                                    @"newDrift" : @(drift) }];
