@@ -11,6 +11,14 @@
 
 @import AVFoundation;
 
+@protocol Scrubbable <NSObject>
+
+- (void)actionOfInterestWithPercentage:(CGFloat)percent;
+- (void)actionOfInterestAfterScrub:(CGFloat)finalValue;
+- (UILabel*)scrubbingIndicatorLabel;
+
+@end
+
 @interface SCPRScrubberViewController : UIViewController
 
 @property (nonatomic, strong) IBOutlet UILabel *scrubberTimeLabel;
@@ -23,7 +31,7 @@
 @property (nonatomic,strong) CAShapeLayer *currentBarLine;
 @property (nonatomic,strong) UIPanGestureRecognizer *scrubPanner;
 @property (nonatomic,strong) SCPRTouchableScrubberView *viewAsTouchableScrubberView;
-@property (nonatomic,weak) id parentUIController;
+@property (nonatomic,weak) id<Scrubbable> scrubbingDelegate;
 
 @property (nonatomic, strong) UIView *cloak;
 @property BOOL expanded;
@@ -38,18 +46,14 @@
 - (void)unmask;
 - (void)applyMask;
 
-- (void)tick;
+- (void)tick:(CGFloat)amount;
 - (void)expand;
-- (void)pointedSeek;
-- (void)handleSeekCompleted;
 
 - (void)userTouched:(NSSet*)touches event:(UIEvent*)event;
 - (void)userPanned:(NSSet*)touches event:(UIEvent*)event;
 - (void)userLifted:(NSSet*)touches event:(UIEvent*)event;
 - (void)trackForPoint:(CGPoint)touchPoint;
 
-- (void)killLatencyTimer;
 
-- (double)strokeEndForCurrentTime;
 
 @end

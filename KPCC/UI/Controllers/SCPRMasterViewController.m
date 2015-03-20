@@ -24,6 +24,7 @@
 #import "SCPROnboardingViewController.h"
 #import "UIView+PrintDimensions.h"
 #import "SCPRScrubbingUIViewController.h"
+#import "SCPRTimerControlViewController.h"
 
 @import MessageUI;
 
@@ -1152,7 +1153,6 @@ setForOnDemandUI;
     sCtrl.view = self.scrubberControlView;
     
     self.scrubbingUI.scrubberController = sCtrl;
-    self.scrubbingUI.scrubberController.scrubberTimeLabel = self.scrubberTimeLabel;
     self.scrubbingUI.scrubberController.viewAsTouchableScrubberView = self.touchableScrubberView;
     
     if ( self.scrubbingTriggerView ) {
@@ -1372,7 +1372,7 @@ setForOnDemandUI;
         return;
     }
     
-    if ( ti > kStreamIsLiveTolerance ) {
+    if ( ti > [[SessionManager shared] peakDrift] ) {
         [self.liveDescriptionLabel setText:[NSString stringWithFormat:@"%@ BEHIND LIVE", [NSDate prettyTextFromSeconds:ti]]];
         self.previousRewindThreshold = [[AudioManager shared].audioPlayer.currentItem.currentDate timeIntervalSince1970];
     } else {
@@ -1500,7 +1500,7 @@ setForOnDemandUI;
 #else
             NSDate *ciCurrentDate = [AudioManager shared].audioPlayer.currentItem.currentDate;
             NSTimeInterval ti = [[NSDate date] timeIntervalSinceDate:ciCurrentDate];
-            if ( ti > kStreamIsLiveTolerance ) {
+            if ( ti > [[SessionManager shared] peakDrift] ) {
                 [self.liveDescriptionLabel setText:[NSString stringWithFormat:@"%@ BEHIND LIVE", [NSDate prettyTextFromSeconds:ti]]];
             } else {
                 [self.liveDescriptionLabel setText:[NSString stringWithFormat:@"LIVE"]];
@@ -1806,6 +1806,12 @@ setForOnDemandUI;
                                           [self updateUIWithProgram:programObj];
                                           [[AudioManager shared] updateNowPlayingInfoWithAudio:programObj];
                                           [self finishUpdatingForProgram];
+                                          dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+                                              UIImage *blurred = [self.programImageView.image blurredImageWithRadius:20.0f
+                                                                                                        iterations:3
+                                                                                                         tintColor:[UIColor clearColor]];
+                                              [[DesignManager shared] setCurrentBlurredLiveImage:blurred];
+                                          });
                                           
                                       }];
     } else {
@@ -2690,6 +2696,23 @@ setForOnDemandUI;
             
         }
         case 3: {
+            
+            event = @"menuSelectionWakeSleep";
+            SCPRTimerControlViewController *timer = [[SCPRTimerControlViewController alloc] initWithNibName:@"SCPRTimerControlViewController"
+                                                                                                     bundle:nil];
+            
+            CGSize bounds = [[UIScreen mainScreen] bounds].size;
+            timer.view.frame = CGRectMake(0.0,0.0,bounds.width,bounds.height);
+            
+            
+            [self.navigationController pushViewController:timer
+                                                 animated:YES];
+            
+            [timer setup];
+            
+            break;
+        }
+        case 4: {
             event = @"menuSelectionDonate";
             NSString *urlStr = @"https://scprcontribute.publicradio.org/contribute.php?refId=iphone&askAmount=60";
             NSURL *url = [NSURL URLWithString:urlStr];
@@ -2697,7 +2720,7 @@ setForOnDemandUI;
             [[UIApplication sharedApplication] openURL:url];
             break;
         }
-        case 4: {
+        case 5: {
             
             event = @"menuSelectionFeedback";
             SCPRFeedbackViewController *fbVC = [[SCPRFeedbackViewController alloc] initWithNibName:@"SCPRFeedbackViewController"
@@ -2748,42 +2771,9 @@ setForOnDemandUI;
     
     NSAssert([NSThread isMainThread],@"This is not the main thread...");
     
-    
-    NSDate *ciCurrentDate = [AudioManager shared].audioPlayer.currentItem.currentDate;
-    
-#ifndef SUPPRESS_V_LIVE
-    NSTimeInterval ti = [[[SessionManager shared] vLive] timeIntervalSinceDate:ciCurrentDate];
-#else
-    NSTimeInterval ti = [[NSDate date] timeIntervalSinceDate:ciCurrentDate];
-#endif
-    
-#ifdef THREE_ZERO_ZERO
-    NSTimeInterval tx = [[[AudioManager shared] maxSeekableDate] timeIntervalSinceDate:ciCurrentDate];
-#else
-#ifndef SUPPRESS_V_LIVE
-    NSTimeInterval tx = [[[SessionManager shared] vLive] timeIntervalSinceDate:ciCurrentDate];
-#else
-    NSTimeInterval tx = [[NSDate date] timeIntervalSinceDate:ciCurrentDate];
-#endif
-#endif
-    
     if ( [[AudioManager shared] frameCount] % 10 == 0 ) {
         if ( !self.menuOpen ) {
-#ifndef SUPPRESS_V_LIVE
             [self prettifyBehindLiveStatus];
-#else
-            if ( tx > kStreamIsLiveTolerance ) {
-                [self.liveDescriptionLabel setText:[NSString stringWithFormat:@"%@ BEHIND LIVE", [NSDate prettyTextFromSeconds:ti]]];
-                self.previousRewindThreshold = [[AudioManager shared].audioPlayer.currentItem.currentDate timeIntervalSince1970];
-            } else {
-                if ( [[SessionManager shared] sessionIsInRecess] ) {
-                    [self.liveDescriptionLabel setText:@"UP NEXT"];
-                } else {
-                    [self.liveDescriptionLabel setText:@"LIVE"];
-                    self.dirtyFromRewind = NO;
-                }
-            }
-#endif
         }
         
         if ( [AudioManager shared].currentAudioMode == AudioModeLive ) {

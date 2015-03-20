@@ -87,4 +87,12 @@
     }];
 }
 
+- (void)scprifyWithSize:(CGFloat)pointSize {
+    self.titleLabel.font = [UIFont fontWithName:@"FreightSansProLight-Regular" size:pointSize];
+    [self setTitleColor:[UIColor whiteColor]
+               forState:UIControlStateNormal];
+    [self setTitleColor:[UIColor grayColor]
+               forState:UIControlStateHighlighted];
+}
+
 @end

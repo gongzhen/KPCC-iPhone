@@ -32,6 +32,7 @@
 
 - (void)setup {
     
+    self.scrubberTimeLabel = [self.scrubbingDelegate scrubbingIndicatorLabel];
     self.scrubberTimeLabel.font = [[DesignManager shared] proLight:36.0];
     self.scrubberTimeLabel.textColor = [UIColor whiteColor];
     //self.scrubberTimeLabel.alpha = 0.0;
@@ -78,39 +79,6 @@
                                   1.0);
 }
 
-#ifdef USE_PAN_GESTURE
-- (void)handlePan:(UIPanGestureRecognizer*)panner {
-    if ( panner.state == UIGestureRecognizerStateEnded ) {
-        self.firstTouch = CGPointZero;
-        self.trulyFinishedTimer = [NSTimer scheduledTimerWithTimeInterval:0.15
-                                                                   target:self
-                                                                 selector:@selector(doTheSeek)
-                                                                 userInfo:nil
-                                                                  repeats:NO];
-    }
-    if ( panner.state == UIGestureRecognizerStateBegan ) {
-        self.firstTouch = [panner translationInView:self.view];
-        self.panning = YES;
-
-    }
-    if ( panner.state == UIGestureRecognizerStateChanged ) {
-        CGFloat aX = self.firstTouch.x;
-        CGFloat dX = aX + [panner translationInView:self.view].x;
-        
-        double se = ( dX / self.view.frame.size.width )*1.0f;
-        self.currentBarLine.strokeEnd = se;
-        
-        CMTime total = [[[[AudioManager shared].audioPlayer currentItem] asset] duration];
-        double duration = CMTimeGetSeconds(total);
-
-        NSString *pretty = [Utils elapsedTimeStringWithPosition:duration*se
-                                                    andDuration:duration];
-        [self.scrubberTimeLabel setText:pretty];
-        
-    }
-}
-#endif
-
 - (void)userTouched:(NSSet *)touches event:(UIEvent *)event {
     self.firstTouch = [(UITouch*)[touches anyObject] locationInView:self.view];
     [self trackForPoint:self.firstTouch];
@@ -128,74 +96,35 @@
     self.firstTouch = CGPointZero;
     self.trulyFinishedTimer = [NSTimer scheduledTimerWithTimeInterval:0.15
                                                                target:self
-                                                             selector:@selector(doTheSeek)
+                                                             selector:@selector(userFinishedScrubbing)
                                                              userInfo:nil
                                                               repeats:NO];
 }
 
 - (void)trackForPoint:(CGPoint)touchPoint {
     CGFloat dX = touchPoint.x;
-    
     double se = ( dX / self.view.frame.size.width )*1.0f;
     self.currentBarLine.strokeEnd = se;
-    
-    CMTime total = [[[[AudioManager shared].audioPlayer currentItem] asset] duration];
-    double duration = CMTimeGetSeconds(total);
-    
-    NSString *pretty = [Utils elapsedTimeStringWithPosition:duration*se
-                                                andDuration:duration];
-    [self.scrubberTimeLabel setText:pretty];
+    [self.scrubbingDelegate actionOfInterestWithPercentage:(CGFloat)se];
 }
 
-- (void)doTheSeek {
-    
-    [(SCPRScrubbingUIViewController*)self.parentUIController audioWillSeek];
-    
+- (void)userFinishedScrubbing {
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.25 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        double multiplier = self.currentBarLine.strokeEnd;
-        CMTime total = [[[[AudioManager shared].audioPlayer currentItem] asset] duration];
-        CMTime seek = CMTimeMake(total.value*multiplier, total.timescale);
-        [[AudioManager shared].audioPlayer.currentItem seekToTime:seek completionHandler:^(BOOL finished) {
-            [self handleSeekCompleted];
-        }];
+        [self.scrubbingDelegate actionOfInterestAfterScrub:self.currentBarLine.strokeEnd];
+        self.panning = NO;
     });
-
-
 }
 
-- (void)handleSeekCompleted {
-    // Do any specific cleanup here
-    self.panning = NO;
-    [(SCPRScrubbingUIViewController*)self.parentUIController onDemandSeekCompleted];
-}
 
-- (void)tick {
+- (void)tick:(CGFloat)amount {
     
     if ( self.panning ) return;
     
     dispatch_async(dispatch_get_main_queue(), ^{
-        if (CMTimeGetSeconds([[[[AudioManager shared].audioPlayer currentItem] asset] duration]) > 0) {
-            double currentTime = CMTimeGetSeconds([[[AudioManager shared].audioPlayer currentItem] currentTime]);
-            double duration = CMTimeGetSeconds([[[[AudioManager shared].audioPlayer currentItem] asset] duration]);
-            NSString *pretty = [Utils elapsedTimeStringWithPosition:currentTime
-                                                        andDuration:duration];
-            [self.scrubberTimeLabel setText:pretty];
-            
-            if ( !self.expanded ) {
-               //[self expand];
-            }
-            
-        }
-        double se = [self strokeEndForCurrentTime];
-        self.currentBarLine.strokeEnd = se;
+        self.currentBarLine.strokeEnd = amount;
     });
 }
 
-- (double)strokeEndForCurrentTime {
-    NSInteger cS = CMTimeGetSeconds([[AudioManager shared].audioPlayer.currentItem currentTime]);
-    NSInteger tS = CMTimeGetSeconds([[AudioManager shared].audioPlayer.currentItem.asset duration]);
-    return (cS*1.0f / tS*1.0f)*1.0f;
-}
 
 - (void)expand {
     POPSpringAnimation *scaleAnimation = [POPSpringAnimation animationWithPropertyNamed:kPOPLayerScaleXY];

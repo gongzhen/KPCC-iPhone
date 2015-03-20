@@ -819,7 +819,7 @@ static const NSString *ItemStatusContext;
 #endif
         
         BOOL nudge = NO;
-        if ( abs(now - s2d) > kStreamIsLiveTolerance ) {
+        if ( abs(now - s2d) > [[SessionManager shared] peakDrift] ) {
             nudge = YES;
         }
         

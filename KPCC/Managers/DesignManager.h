@@ -51,6 +51,7 @@ typedef NS_ENUM(NSInteger, SculptingStyle) {
 @property BOOL protectBlurredImage;
 
 @property (nonatomic, strong) UIImage *currentBlurredImage;
+@property (nonatomic, strong) UIImage *currentBlurredLiveImage;
 @property (nonatomic, strong) NSDictionary *attributes;
 @property (nonatomic, strong) UIView *navbarMask;
 

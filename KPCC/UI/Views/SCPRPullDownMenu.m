@@ -15,7 +15,7 @@
 #define kMenuItemKPCCLive   @"KPCC Live"
 #define kMenuItemPrograms   @"Programs"
 #define kMenuItemShortList  @"Headlines"
-#define kMenuItemAlarm      @"Alarm Clock"
+#define kMenuItemAlarm      @"Wake / Sleep"
 #define kMenuItemDonate     @"Donate"
 #define kMenuItemSettings   @"Settings"
 #define kMenuItemFeedback   @"Feedback"
@@ -52,6 +52,7 @@
     NSOrderedSet* orderedItems = [NSOrderedSet orderedSetWithObjects:   kMenuItemKPCCLive,
                                                                         kMenuItemPrograms,
                                                                         kMenuItemShortList,
+                                                                        kMenuItemAlarm,
                                                                         kMenuItemDonate,
                                                                         kMenuItemFeedback,
                                                                         //

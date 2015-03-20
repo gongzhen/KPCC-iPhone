@@ -73,6 +73,8 @@
 		25C409B01A437B9400ADBFFE /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 25C409AF1A437B9400ADBFFE /* AdSupport.framework */; };
 		25E8BD9E1ABA034D007B99EB /* program_avatar_invisibilia.png in Resources */ = {isa = PBXBuildFile; fileRef = 25E8BD9C1ABA034D007B99EB /* program_avatar_invisibilia.png */; };
 		25E8BD9F1ABA034D007B99EB /* program_avatar_invisibilia@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 25E8BD9D1ABA034D007B99EB /* program_avatar_invisibilia@2x.png */; };
+		25E8BDA41ABB933C007B99EB /* SCPRTimerControlViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 25E8BDA21ABB933C007B99EB /* SCPRTimerControlViewController.m */; };
+		25E8BDA51ABB933C007B99EB /* SCPRTimerControlViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 25E8BDA31ABB933C007B99EB /* SCPRTimerControlViewController.xib */; };
 		25F2BC7E1A3B9B4D00108F73 /* SCPRGenericAvatarViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 25F2BC7C1A3B9B4D00108F73 /* SCPRGenericAvatarViewController.m */; };
 		25F2BC7F1A3B9B4D00108F73 /* SCPRGenericAvatarViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 25F2BC7D1A3B9B4D00108F73 /* SCPRGenericAvatarViewController.xib */; };
 		25F2BC811A3BB60B00108F73 /* onboarding-music-bed.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 25F2BC801A3BB60B00108F73 /* onboarding-music-bed.m4a */; };
@@ -362,6 +364,9 @@
 		25C409AF1A437B9400ADBFFE /* AdSupport.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AdSupport.framework; path = System/Library/Frameworks/AdSupport.framework; sourceTree = SDKROOT; };
 		25E8BD9C1ABA034D007B99EB /* program_avatar_invisibilia.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = program_avatar_invisibilia.png; sourceTree = "<group>"; };
 		25E8BD9D1ABA034D007B99EB /* program_avatar_invisibilia@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "program_avatar_invisibilia@2x.png"; sourceTree = "<group>"; };
+		25E8BDA11ABB933C007B99EB /* SCPRTimerControlViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCPRTimerControlViewController.h; path = TimerControl/SCPRTimerControlViewController.h; sourceTree = "<group>"; };
+		25E8BDA21ABB933C007B99EB /* SCPRTimerControlViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SCPRTimerControlViewController.m; path = TimerControl/SCPRTimerControlViewController.m; sourceTree = "<group>"; };
+		25E8BDA31ABB933C007B99EB /* SCPRTimerControlViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = SCPRTimerControlViewController.xib; path = TimerControl/SCPRTimerControlViewController.xib; sourceTree = "<group>"; };
 		25F2BC7B1A3B9B4D00108F73 /* SCPRGenericAvatarViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCPRGenericAvatarViewController.h; sourceTree = "<group>"; };
 		25F2BC7C1A3B9B4D00108F73 /* SCPRGenericAvatarViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SCPRGenericAvatarViewController.m; sourceTree = "<group>"; };
 		25F2BC7D1A3B9B4D00108F73 /* SCPRGenericAvatarViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SCPRGenericAvatarViewController.xib; sourceTree = "<group>"; };
@@ -712,6 +717,16 @@
 			name = Scrubbing;
 			sourceTree = "<group>";
 		};
+		25E8BDA01ABB8702007B99EB /* Sleep Timer */ = {
+			isa = PBXGroup;
+			children = (
+				25E8BDA11ABB933C007B99EB /* SCPRTimerControlViewController.h */,
+				25E8BDA21ABB933C007B99EB /* SCPRTimerControlViewController.m */,
+				25E8BDA31ABB933C007B99EB /* SCPRTimerControlViewController.xib */,
+			);
+			name = "Sleep Timer";
+			sourceTree = "<group>";
+		};
 		5257E9C919E349F70055733F /* Transitions */ = {
 			isa = PBXGroup;
 			children = (
@@ -913,6 +928,7 @@
 		76658ABC18E0AF8500026176 /* View Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				25E8BDA01ABB8702007B99EB /* Sleep Timer */,
 				25BBCD791A892D790015071E /* Scrubbing */,
 				259E44FA1A1D2C0A00F5CD65 /* Onboarding */,
 				258E8E0B1A16ADD800675E68 /* Feedback */,
@@ -1398,6 +1414,7 @@
 				52EFF80819C368C00059A0E3 /* program_avatar_filmweek@2x.png in Resources */,
 				52EFF78719C3688D0059A0E3 /* menu-antenna.png in Resources */,
 				52EFF79519C3688D0059A0E3 /* menu-heart-plus@2x.png in Resources */,
+				25E8BDA51ABB933C007B99EB /* SCPRTimerControlViewController.xib in Resources */,
 				259E450F1A1D583A00F5CD65 /* onboarding2.mp3 in Resources */,
 				52EFF83219C368C00059A0E3 /* program_avatar_on-the-media.png in Resources */,
 				2557BA851A1A9BB800B0CAED /* btn_live_rewind_xtra-small.png in Resources */,
@@ -1557,6 +1574,7 @@
 				52EFF87419C375CA0059A0E3 /* SCPRPullDownMenu.m in Sources */,
 				523126A719EDB78C008A47A7 /* SCPRPreRollViewController.m in Sources */,
 				52E68B8219B8F2D10028F8AE /* SCPRNavigationController.m in Sources */,
+				25E8BDA41ABB933C007B99EB /* SCPRTimerControlViewController.m in Sources */,
 				76A308D318C8FB940065D4B1 /* main.m in Sources */,
 				25A6534B1AAE2BA300ABAAD6 /* Bookmark.m in Sources */,
 				255943EA19F1A7620007294D /* SCPRJogShuttleViewController.m in Sources */,
@@ -1891,7 +1909,6 @@
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
-					"SUPPRESS_DIMENSION_PRINTING=1",
 					"SUPPRESS_AGGRESSIVE_KICKSTART=1",
 				);
 				INFOPLIST_FILE = "KPCC/KPCC-Info.plist";

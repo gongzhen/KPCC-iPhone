@@ -68,7 +68,7 @@
         NSDate *msd = [[AudioManager shared].audioPlayer.currentItem currentDate];
         if ( msd ) {
             if ( [msd isWithinTimeFrame:self.peakDrift ofDate:[NSDate date]] ) {
-                if ( abs([live timeIntervalSinceDate:msd]) > kStreamIsLiveTolerance ) {
+                if ( abs([live timeIntervalSinceDate:msd]) > [[SessionManager shared] peakDrift] ) {
                     live = msd;
                     self.latestDriftValue = abs([live timeIntervalSinceDate:msd]);
                 }
@@ -87,7 +87,7 @@
 - (NSInteger)calculatedDriftValue {
     /*NSInteger vDrift = abs([[NSDate date] timeIntervalSinceDate:[[AudioManager shared] maxSeekableDate]]);
     NSLog(@"Current Drift Value : %ld",(long)vDrift);
-    return vDrift / 2.0 < kStreamIsLiveTolerance ? vDrift / 2.0 : kStreamIsLiveTolerance;*/
+    return vDrift / 2.0 < [[SessionManager shared] peakDrift] ? vDrift / 2.0 : [[SessionManager shared] peakDrift];*/
     return 2;
 }
 
@@ -672,7 +672,7 @@
 #else
     NSDate *live = [NSDate date];
 #endif
-    if ( abs([live timeIntervalSince1970] - [currentDate timeIntervalSince1970]) > kStreamIsLiveTolerance ) {
+    if ( abs([live timeIntervalSince1970] - [currentDate timeIntervalSince1970]) > [[SessionManager shared] peakDrift] ) {
         return YES;
     }
     
