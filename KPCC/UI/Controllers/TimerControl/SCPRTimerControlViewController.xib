@@ -11,6 +11,7 @@
                 <outlet property="alarmClockButton" destination="gq5-2z-xuZ" id="KaS-sO-ddX"/>
                 <outlet property="blurredImageView" destination="cU0-MC-NYs" id="QUm-sX-4Kg"/>
                 <outlet property="buttonSeatView" destination="Twm-1w-3II" id="YMe-Vl-ZAu"/>
+                <outlet property="chromaKeyView" destination="RrQ-WT-gyA" id="Vn8-9X-OCi"/>
                 <outlet property="ddgCenterXAnchor" destination="MZj-0p-geP" id="4c7-lB-LEh"/>
                 <outlet property="duckDuckGooseView" destination="WjB-Rk-rNB" id="vwo-7m-PBt"/>
                 <outlet property="sleepTimerButton" destination="ARK-df-RnX" id="g5B-7q-5Og"/>
@@ -26,6 +27,10 @@
                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="cU0-MC-NYs">
                     <rect key="frame" x="0.0" y="64" width="600" height="536"/>
                 </imageView>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="RrQ-WT-gyA" userLabel="chromaKeyView">
+                    <rect key="frame" x="0.0" y="64" width="600" height="536"/>
+                    <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.59999999999999998" colorSpace="calibratedRGB"/>
+                </view>
                 <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="nY5-Ey-5zw">
                     <rect key="frame" x="0.0" y="64" width="600" height="536"/>
                 </scrollView>
@@ -84,9 +89,13 @@
                 <constraint firstItem="Twm-1w-3II" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="64" id="PeC-h0-ojX"/>
                 <constraint firstAttribute="trailing" secondItem="Twm-1w-3II" secondAttribute="trailing" id="Quu-bh-cHn"/>
                 <constraint firstItem="cU0-MC-NYs" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="Wja-bC-hxe"/>
+                <constraint firstItem="cU0-MC-NYs" firstAttribute="top" secondItem="RrQ-WT-gyA" secondAttribute="top" id="ZO3-Kf-rnx"/>
                 <constraint firstItem="Twm-1w-3II" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="bNx-F0-TQU"/>
                 <constraint firstItem="cU0-MC-NYs" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="64" id="jkP-KS-duE"/>
+                <constraint firstItem="cU0-MC-NYs" firstAttribute="bottom" secondItem="RrQ-WT-gyA" secondAttribute="bottom" id="oxQ-Cp-PNw"/>
                 <constraint firstAttribute="trailing" secondItem="nY5-Ey-5zw" secondAttribute="trailing" id="p2G-kM-C1j"/>
+                <constraint firstItem="cU0-MC-NYs" firstAttribute="trailing" secondItem="RrQ-WT-gyA" secondAttribute="trailing" id="vkI-g6-nNG"/>
+                <constraint firstItem="cU0-MC-NYs" firstAttribute="leading" secondItem="RrQ-WT-gyA" secondAttribute="leading" id="wmU-PD-nya"/>
                 <constraint firstItem="nY5-Ey-5zw" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="64" id="ysW-Kc-0Kl"/>
             </constraints>
             <point key="canvasLocation" x="418" y="258"/>

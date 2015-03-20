@@ -8,6 +8,7 @@
 
 #import "SCPRButton.h"
 #import <POP/POP.h>
+#import "UIColor+UICustom.h"
 
 @implementation SCPRButton
 
@@ -87,8 +88,34 @@
     }];
 }
 
+- (void)setActive:(BOOL)active {
+    _active = active;
+    
+    if ( active ) {
+        [self setTitleColor:[UIColor whiteColor]
+                   forState:UIControlStateNormal];
+        [self setTitleColor:[UIColor whiteColor]
+                   forState:UIControlStateHighlighted];
+    } else {
+        [self setTitleColor:[[UIColor virtualWhiteColor] translucify:0.46]
+                   forState:UIControlStateNormal];
+        [self setTitleColor:[[UIColor virtualWhiteColor] translucify:0.46]
+                   forState:UIControlStateHighlighted];
+    }
+}
+
 - (void)scprifyWithSize:(CGFloat)pointSize {
-    self.titleLabel.font = [UIFont fontWithName:@"FreightSansProLight-Regular" size:pointSize];
+    [self scprGenericWithFont:@"FreightSansProLight-Regular"
+                      andSize:pointSize];
+}
+
+- (void)scprBookifyWithSize:(CGFloat)pointSize {
+    [self scprGenericWithFont:@"FreightSansProBook-Regular"
+                      andSize:pointSize];
+}
+
+- (void)scprGenericWithFont:(NSString *)font andSize:(CGFloat)pointSize {
+    self.titleLabel.font = [UIFont fontWithName:font size:pointSize];
     [self setTitleColor:[UIColor whiteColor]
                forState:UIControlStateNormal];
     [self setTitleColor:[UIColor grayColor]

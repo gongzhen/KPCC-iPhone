@@ -7,6 +7,7 @@
 //
 
 #import "NSDate+Helper.h"
+#import "DesignManager.h"
 
 @implementation NSDate (Helper)
 
@@ -191,6 +192,68 @@
     
     return [NSString stringWithFormat:@"%@%@",hourStatement,minStatement];
     
+}
+
++ (NSMutableAttributedString*)prettyAttributedFromSeconds:(NSInteger)seconds includeSeconds:(BOOL)includeSeconds {
+
+    
+    
+    NSInteger minutes = ceil(seconds/60);
+    NSInteger hours = 0;
+    if ( minutes > 59 ) {
+        hours = ceil(minutes/60);
+        minutes = minutes % 60;
+    }
+    
+    NSString *minuteNoun = nil;
+    NSString *hourStatement = @"";
+    NSString *minStatement = @"";
+    if ( hours > 0 ) {
+        if ( hours == 1 ) {
+            hourStatement = [NSString stringWithFormat:@"%ld hr ",(long)hours];
+        } else {
+            hourStatement = [NSString stringWithFormat:@"%ld hr ",(long)hours];
+        }
+        minuteNoun = @"min";
+    } else {
+        minuteNoun = @"min";
+    }
+    
+    if ( minutes > 0 ) {
+        if ( minutes > 1 ) {
+            //minuteNoun = [minuteNoun stringByAppendingString:@"S"];
+        }
+        minStatement = [NSString stringWithFormat:@"%ld %@",(long)minutes,minuteNoun];
+    }
+    
+
+    NSString *complet = [NSString stringWithFormat:@"%@%@",hourStatement,minStatement];
+    if ( includeSeconds ) {
+        NSInteger leftovers = seconds % 60;
+        NSString *addSec = [NSString stringWithFormat:@"%ld sec",(long)leftovers];
+        complet = [complet stringByAppendingFormat:@" %@",addSec];
+    }
+    NSMutableAttributedString *completeAtt = [[NSMutableAttributedString alloc] initWithString:complet
+                                                                                    attributes:@{ NSFontAttributeName : [[DesignManager shared] proLight:48.0f],
+                                                                                                  NSForegroundColorAttributeName : [UIColor whiteColor] }];
+    NSRange hourRange = [complet rangeOfString:@"hr"];
+    if ( hourRange.location != NSNotFound ) {
+        [completeAtt addAttributes:@{ NSFontAttributeName : [[DesignManager shared] proLight:26.0f] }
+                             range:hourRange];
+    }
+    
+    NSRange minRange = [complet rangeOfString:@"min"];
+    if ( minRange.location != NSNotFound ) {
+        [completeAtt addAttributes:@{ NSFontAttributeName : [[DesignManager shared] proLight:26.0f] }
+                             range:minRange];
+    }
+    
+    NSRange secRange = [complet rangeOfString:@"sec"];
+    if ( secRange.location != NSNotFound ) {
+        [completeAtt addAttributes:@{ NSFontAttributeName : [[DesignManager shared] proLight:26.0f] }
+                             range:secRange];
+    }
+    return completeAtt;
 }
 
 - (BOOL)isWithinReasonableframeOfDate:(NSDate *)date {

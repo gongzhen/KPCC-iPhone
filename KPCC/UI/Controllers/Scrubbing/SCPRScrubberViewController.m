@@ -30,15 +30,21 @@
     // Dispose of any resources that can be recreated.
 }
 
-- (void)setup {
+- (void)setupWithDelegate:(id<Scrubbable>)delegate {
     
+    
+    
+    self.scrubbingDelegate = delegate;
+    self.viewAsTouchableScrubberView = [delegate scrubbableView];
     self.scrubberTimeLabel = [self.scrubbingDelegate scrubbingIndicatorLabel];
     self.scrubberTimeLabel.font = [[DesignManager shared] proLight:36.0];
     self.scrubberTimeLabel.textColor = [UIColor whiteColor];
-    //self.scrubberTimeLabel.alpha = 0.0;
     self.currentTintColor = [UIColor kpccOrangeColor];
+    [self.view layoutIfNeeded];
     
-    CGFloat width = self.view.frame.size.width;
+    CGFloat width = self.viewAsTouchableScrubberView.frame.size.width;
+    NSLog(@"Scrubber Thinks the Width is %1.1f",width);
+    
     CGMutablePathRef currentLinePath = CGPathCreateMutable();
     CGPoint lPts[2];
     lPts[0] = CGPointMake(0.0, 0.0);
@@ -64,6 +70,7 @@
     self.view.userInteractionEnabled = YES;
     self.viewAsTouchableScrubberView.parentScrubberController = self;
     
+    self.view.backgroundColor = [[UIColor virtualWhiteColor] translucify:0.2];
 }
 
 - (void)unmask {

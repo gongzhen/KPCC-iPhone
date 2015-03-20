@@ -40,6 +40,8 @@
 - (BOOL)isOlderThanInSeconds:(NSInteger)secondsAgo;
 @property (NS_NONATOMIC_IOSONLY, readonly) NSInteger secondsUntil;
 + (NSString*)prettyTextFromSeconds:(NSInteger)seconds;
++ (NSMutableAttributedString*)prettyAttributedFromSeconds:(NSInteger)seconds includeSeconds:(BOOL)includeSeconds;
+
 @property (NS_NONATOMIC_IOSONLY, readonly, copy) NSString *prettyTimeString;
 - (NSString*)iso;
 

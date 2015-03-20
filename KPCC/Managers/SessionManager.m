@@ -305,6 +305,65 @@
                                            }];
 }
 
+#pragma mark - Sleep Timer
+- (BOOL)sleepTimerActive {
+    if ( self.sleepTimer ) {
+        return [self.sleepTimer isValid];
+    }
+    
+    return NO;
+}
+
+- (void)armSleepTimerWithSeconds:(NSInteger)seconds completed:(CompletionBlock)completed {
+    
+    [self disarmSleepTimerWithCompletion:nil];
+    
+    self.remainingSleepTimerSeconds = seconds;
+#ifdef DEBUG
+    self.remainingSleepTimerSeconds = 70;
+#endif
+    self.sleepTimer = [NSTimer scheduledTimerWithTimeInterval:1.0
+                                                       target:self
+                                                     selector:@selector(tickSleepTimer)
+                                                     userInfo:nil
+                                                      repeats:YES];
+    
+    if ( completed ) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            completed();
+        });
+    }
+    
+}
+
+- (void)tickSleepTimer {
+    self.remainingSleepTimerSeconds = self.remainingSleepTimerSeconds - 1;
+    if ( self.remainingSleepTimerSeconds <= 0 ) {
+        [[AudioManager shared] adjustAudioWithValue:-.045 completion:^{
+            [[AudioManager shared] stopAllAudio];
+            [self disarmSleepTimerWithCompletion:nil];
+        }];
+    }
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"sleep-timer-ticked"
+                                                        object:nil];
+}
+
+- (void)disarmSleepTimerWithCompletion:(CompletionBlock)completed {
+    if ( self.sleepTimer ) {
+        if ( [self.sleepTimer isValid] ) {
+            [self.sleepTimer invalidate];
+        }
+        self.sleepTimer = nil;
+    }
+    
+    self.remainingSleepTimerSeconds = 300;
+    if ( completed ) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            completed();
+        });
+    }
+}
 
 #pragma mark - Cache
 - (void)resetCache {

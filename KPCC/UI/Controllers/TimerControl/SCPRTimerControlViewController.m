@@ -10,6 +10,7 @@
 #import "DesignManager.h"
 #import "UIView+PrintDimensions.h"
 #import "UIColor+UICustom.h"
+#import "SCPRSleepViewController.h"
 
 @interface SCPRTimerControlViewController ()
 
@@ -35,8 +36,8 @@
     
     self.buttonSeatView.backgroundColor = [UIColor clearColor];
     
-    [self.sleepTimerButton scprifyWithSize:21.0f];
-    [self.alarmClockButton scprifyWithSize:21.0f];
+    [self.sleepTimerButton scprBookifyWithSize:21.0f];
+    [self.alarmClockButton scprBookifyWithSize:21.0f];
     
     [self.sleepTimerButton addTarget:self
                               action:@selector(toggleTimerFunction:)
@@ -49,13 +50,20 @@
                              special:YES];
     
     self.selectedButton = self.sleepTimerButton;
+    [self.sleepTimerButton setActive:YES];
     
     self.toggleScroller.contentSize = CGSizeMake(self.toggleScroller.frame.size.width*2,
                                                  self.toggleScroller.frame.size.height);
     
-    UIView *st = [[UIView alloc] init];
+    self.sleepTimerController = [[SCPRSleepViewController alloc] initWithNibName:@"SCPRSleepViewController"
+                                                                          bundle:nil];
+    self.sleepTimerController.view.frame = self.sleepTimerController.view.frame;
+    
+    UIView *st = self.sleepTimerController.view;
+    
     UIView *ac = [[UIView alloc] init];
-    st.backgroundColor = [[UIColor purpleColor] translucify:0.15];
+    st.backgroundColor = [UIColor clearColor];
+    
     ac.backgroundColor = [[UIColor greenColor] translucify:0.15];
     st.translatesAutoresizingMaskIntoConstraints = NO;
     ac.translatesAutoresizingMaskIntoConstraints = NO;
@@ -64,6 +72,7 @@
     
     [self.toggleScroller addSubview:st];
     [self.toggleScroller addSubview:ac];
+    self.toggleScroller.scrollEnabled = NO;
     
     NSString *hFormat = [NSString stringWithFormat:@"H:|[v1(%1.1f)][v2(%1.1f)]|",self.toggleScroller.frame.size.width,self.toggleScroller.frame.size.width];
     
@@ -73,9 +82,13 @@
                                                            metrics:nil
                                                              views:@{ @"v1" : st,
                                                                       @"v2" : ac }];
-    
+    NSArray *v1vc = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|[v1]|"
+                                                            options:0
+                                                            metrics:nil
+                                                              views:@{ @"v1" : st }];
     
     [self.toggleScroller addConstraints:v1c];
+    [self.toggleScroller addConstraints:v1vc];
     
     NSLayoutConstraint *heightV1 = [NSLayoutConstraint constraintWithItem:st
                                                                 attribute:NSLayoutAttributeHeight
@@ -98,13 +111,19 @@
     
     [self.view layoutIfNeeded];
     
-
+    [self.sleepTimerController setup];
     
 }
 
 - (void)toggleTimerFunction:(SCPRButton*)sender {
     
+    if ( self.selectedButton ) {
+        [self.selectedButton setActive:NO];
+    }
+    
     self.selectedButton = sender;
+    [self.selectedButton setActive:YES];
+    
     CGFloat offset = 0.0f;
     if ( self.selectedButton == self.alarmClockButton ) {
         offset = self.toggleScroller.frame.size.width;

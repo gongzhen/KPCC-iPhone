@@ -48,6 +48,9 @@ static NSInteger kProgramPollingPressure = 5;
 @property (nonatomic, strong) NSTimer *programUpdateTimer;
 @property (nonatomic,strong) NSDictionary *onboardingAudio;
 
+@property (nonatomic) NSInteger remainingSleepTimerSeconds;
+@property NSTimer *sleepTimer;
+
 @property NSInteger prevCheckedMinute;
 
 @property int64_t liveStreamSessionBegan;
@@ -76,7 +79,9 @@ static NSInteger kProgramPollingPressure = 5;
 - (void)resetCache;
 - (void)checkProgramUpdate:(BOOL)force;
 
-
+- (BOOL)sleepTimerActive;
+- (void)armSleepTimerWithSeconds:(NSInteger)seconds completed:(CompletionBlock)completed;
+- (void)disarmSleepTimerWithCompletion:(CompletionBlock)completed;
 
 - (BOOL)sessionIsInBackground;
 

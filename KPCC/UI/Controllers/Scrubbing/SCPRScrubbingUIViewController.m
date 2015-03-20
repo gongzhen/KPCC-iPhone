@@ -36,9 +36,8 @@
 }
 
 - (void)prerender {
-    self.scrubberController.scrubbingDelegate = self;
-    self.scrubberController.view.backgroundColor = [[UIColor virtualWhiteColor] translucify:0.2];
-    [self.scrubberController setup];
+  
+    [self.scrubberController setupWithDelegate:self];
     
     
     [self.fw30Button addTarget:self
@@ -202,6 +201,11 @@
 - (UILabel*)scrubbingIndicatorLabel {
     SCPRMasterViewController *mvc = (SCPRMasterViewController*)self.parentControlView;
     return [mvc scrubberTimeLabel];
+}
+
+- (SCPRTouchableScrubberView*)scrubbableView {
+    SCPRMasterViewController *mvc = (SCPRMasterViewController*)self.parentControlView;
+    return mvc.touchableScrubberView;
 }
 
 #pragma mark - AudioManager

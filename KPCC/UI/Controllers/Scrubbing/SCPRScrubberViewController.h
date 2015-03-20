@@ -16,6 +16,7 @@
 - (void)actionOfInterestWithPercentage:(CGFloat)percent;
 - (void)actionOfInterestAfterScrub:(CGFloat)finalValue;
 - (UILabel*)scrubbingIndicatorLabel;
+- (SCPRTouchableScrubberView*)scrubbableView;
 
 @end
 
@@ -41,7 +42,7 @@
 @property NSTimer *trulyFinishedTimer;
 
 
-- (void)setup;
+- (void)setupWithDelegate:(id<Scrubbable>)delegate;
 
 - (void)unmask;
 - (void)applyMask;

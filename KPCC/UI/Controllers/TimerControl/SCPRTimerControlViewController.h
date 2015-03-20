@@ -9,6 +9,8 @@
 #import <UIKit/UIKit.h>
 #import "SCPRButton.h"
 
+@class SCPRSleepViewController;
+
 @interface SCPRTimerControlViewController : UIViewController
 
 @property (nonatomic, strong) IBOutlet UIView *buttonSeatView;
@@ -18,6 +20,9 @@
 @property (nonatomic, strong) IBOutlet NSLayoutConstraint *ddgCenterXAnchor;
 @property (nonatomic, strong) IBOutlet UIScrollView *toggleScroller;
 @property (nonatomic, strong) IBOutlet UIImageView *blurredImageView;
+@property (nonatomic, strong) IBOutlet UIView *chromaKeyView;
+
+@property (nonatomic, strong) SCPRSleepViewController *sleepTimerController;
 
 @property (nonatomic, weak) SCPRButton *selectedButton;
 
