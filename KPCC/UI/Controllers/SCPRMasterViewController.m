@@ -207,6 +207,21 @@ setForOnDemandUI;
                                                  name:@"network-status-fail"
                                                object:nil];
     
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(tickSleepTimer)
+                                                 name:@"sleep-timer-ticked"
+                                               object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(showSleepTimer)
+                                                 name:@"sleep-timer-armed"
+                                               object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(hideSleepTimer)
+                                                 name:@"sleep-timer-disarmed"
+                                               object:nil];
+    
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
     
     self.liveProgressViewController = [[SCPRProgressViewController alloc] init];
@@ -307,6 +322,8 @@ setForOnDemandUI;
                          action:@selector(shareButtonTapped:)
                forControlEvents:UIControlEventTouchUpInside
                         special:YES];
+    
+    [self setupTimerControls];
     
     self.previousRewindThreshold = 0;
     self.mpvv = [[MPVolumeView alloc] initWithFrame:CGRectMake(-30.0, -300.0, 1.0, 1.0)];
@@ -460,6 +477,37 @@ setForOnDemandUI;
         }];
         
     }];
+}
+
+#pragma mark - Sleep Timer
+- (void)showSleepTimer {
+    [UIView animateWithDuration:0.25 animations:^{
+        self.sleepTimerContainerView.alpha = 1.0;
+    }];
+}
+
+- (void)hideSleepTimer {
+    [UIView animateWithDuration:0.25 animations:^{
+        self.sleepTimerContainerView.alpha = 0.0;
+    }];
+}
+
+- (void)setupTimerControls {
+    self.plainTextCountdownLabel.textColor = [UIColor whiteColor];
+    self.plainTextCountdownLabel.font = [[DesignManager shared] proBold:20.0f];
+    self.clockIconImageView.image = [UIImage imageNamed:@"icon-stopwatch.png"];
+    self.clockIconImageView.contentMode = UIViewContentModeCenter;
+    self.sleepTimerCountdownProgress.progressTintColor = [UIColor whiteColor];
+    self.sleepTimerCountdownProgress.backgroundColor = [UIColor clearColor];
+    [self hideSleepTimer];
+}
+
+- (void)tickSleepTimer {
+    CGFloat total = [[SessionManager shared] originalSleepTimerRequest]*1.0f;
+    CGFloat remaining = [[SessionManager shared] remainingSleepTimerSeconds]*1.0f;
+    CGFloat pct = remaining / total;
+    [self.sleepTimerCountdownProgress setProgress:pct animated:YES];
+    self.plainTextCountdownLabel.text = [NSDate scientificStringFromSeconds:remaining];
 }
 
 #pragma mark - Onboarding

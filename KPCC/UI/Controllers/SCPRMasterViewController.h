@@ -143,6 +143,13 @@
 - (void)beginScrubbingWaitMode;
 - (void)endScrubbingWaitMode;
 
+// Sleep Timer
+@property (nonatomic, strong) IBOutlet UIView *sleepTimerContainerView;
+@property (nonatomic, strong) IBOutlet UIProgressView *sleepTimerCountdownProgress;
+@property (nonatomic, strong) IBOutlet UIImageView *clockIconImageView;
+@property (nonatomic, strong) IBOutlet UILabel *plainTextCountdownLabel;
+- (void)setupTimerControls;
+
 - (void)remoteControlPlayOrPause;
 
 @property (nonatomic, strong) SCPRScrubbingUIViewController *scrubbingUI;

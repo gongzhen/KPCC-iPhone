@@ -196,8 +196,6 @@
 
 + (NSMutableAttributedString*)prettyAttributedFromSeconds:(NSInteger)seconds includeSeconds:(BOOL)includeSeconds {
 
-    
-    
     NSInteger minutes = ceil(seconds/60);
     NSInteger hours = 0;
     if ( minutes > 59 ) {
@@ -255,6 +253,42 @@
     }
     return completeAtt;
 }
+
++ (NSString*)scientificStringFromSeconds:(NSInteger)seconds {
+    NSInteger minutes = ceil(seconds/60);
+    NSInteger hours = 0;
+    if ( minutes > 59 ) {
+        hours = ceil(minutes/60);
+        minutes = minutes % 60;
+    }
+    
+    NSString *hourStatement = @"";
+    NSString *minStatement = @"";
+    if ( hours > 0 ) {
+        if ( hours == 1 ) {
+            hourStatement = [NSString stringWithFormat:@"%ld:",(long)hours];
+        } else {
+            hourStatement = [NSString stringWithFormat:@"%ld:",(long)hours];
+        }
+    }
+    
+    if ( minutes > 0 ) {
+        if ( minutes > 1 ) {
+            //minuteNoun = [minuteNoun stringByAppendingString:@"S"];
+        }
+        minStatement = [NSString stringWithFormat:@"%ld",(long)minutes];
+    }
+    
+    
+    NSString *complet = [NSString stringWithFormat:@"%@%@",hourStatement,minStatement];
+    NSInteger leftovers = seconds % 60;
+    NSString *addSec = [NSString stringWithFormat:@":%ld",(long)leftovers];
+    complet = [complet stringByAppendingFormat:@"%@",addSec];
+    
+    return complet;
+}
+
+
 
 - (BOOL)isWithinReasonableframeOfDate:(NSDate *)date {
     return [self isWithinTimeFrame:60*30 ofDate:date];

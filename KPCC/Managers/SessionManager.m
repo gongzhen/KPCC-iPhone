@@ -318,15 +318,17 @@
     
     [self disarmSleepTimerWithCompletion:nil];
     
+    self.originalSleepTimerRequest = seconds;
     self.remainingSleepTimerSeconds = seconds;
-#ifdef DEBUG
-    self.remainingSleepTimerSeconds = 70;
-#endif
+
     self.sleepTimer = [NSTimer scheduledTimerWithTimeInterval:1.0
                                                        target:self
                                                      selector:@selector(tickSleepTimer)
                                                      userInfo:nil
                                                       repeats:YES];
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"sleep-timer-armed"
+                                                        object:nil];
     
     if ( completed ) {
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -356,6 +358,9 @@
         }
         self.sleepTimer = nil;
     }
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"sleep-timer-disarmed"
+                                                        object:nil];
     
     self.remainingSleepTimerSeconds = 300;
     if ( completed ) {

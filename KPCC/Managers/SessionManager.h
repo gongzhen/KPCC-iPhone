@@ -49,6 +49,8 @@ static NSInteger kProgramPollingPressure = 5;
 @property (nonatomic,strong) NSDictionary *onboardingAudio;
 
 @property (nonatomic) NSInteger remainingSleepTimerSeconds;
+@property (nonatomic) NSInteger originalSleepTimerRequest;
+
 @property NSTimer *sleepTimer;
 
 @property NSInteger prevCheckedMinute;
