@@ -25,10 +25,10 @@
 @property (nonatomic, strong) IBOutlet UILabel *scrubberTimeLabel;
 @property (nonatomic, strong) IBOutlet UIView *scrubbingContainerView;
 @property (nonatomic, strong)  UIView *currentProgressView;
-@property (nonatomic, strong)  UIView *liveProgressView;
-@property (nonatomic, strong) UIColor *liveTintColor;
+@property (nonatomic, strong)  UIView *containerProgressView;
+@property (nonatomic, strong) UIColor *containerTintColor;
 @property (nonatomic, strong) UIColor *currentTintColor;
-@property (nonatomic,strong) CAShapeLayer *liveBarLine;
+@property (nonatomic,strong) CAShapeLayer *containerBarLine;
 @property (nonatomic,strong) CAShapeLayer *currentBarLine;
 @property (nonatomic,strong) UIPanGestureRecognizer *scrubPanner;
 @property (nonatomic,strong) SCPRTouchableScrubberView *viewAsTouchableScrubberView;
@@ -38,11 +38,17 @@
 @property BOOL expanded;
 @property BOOL panning;
 @property BOOL restoreFromSeekGate;
+@property BOOL circular;
+
 @property CGPoint firstTouch;
+@property CGPoint previousPoint;
+@property CGPoint nowPoint;
 @property NSTimer *trulyFinishedTimer;
 
 
 - (void)setupWithDelegate:(id<Scrubbable>)delegate;
+- (void)setupWithDelegate:(id<Scrubbable>)delegate circular:(BOOL)circular;
+
 
 - (void)unmask;
 - (void)applyMask;

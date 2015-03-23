@@ -31,8 +31,10 @@
 }
 
 - (void)setupWithDelegate:(id<Scrubbable>)delegate {
-    
-    
+    [self setupWithDelegate:delegate circular:NO];
+}
+
+- (void)setupWithDelegate:(id<Scrubbable>)delegate circular:(BOOL)circular {
     
     self.scrubbingDelegate = delegate;
     self.viewAsTouchableScrubberView = [delegate scrubbableView];
@@ -40,16 +42,60 @@
     self.scrubberTimeLabel.font = [[DesignManager shared] proLight:36.0];
     self.scrubberTimeLabel.textColor = [UIColor whiteColor];
     self.currentTintColor = [UIColor kpccOrangeColor];
+    self.circular = circular;
+    
     [self.view layoutIfNeeded];
     
     CGFloat width = self.viewAsTouchableScrubberView.frame.size.width;
     NSLog(@"Scrubber Thinks the Width is %1.1f",width);
-    
     CGMutablePathRef currentLinePath = CGPathCreateMutable();
-    CGPoint lPts[2];
-    lPts[0] = CGPointMake(0.0, 0.0);
-    lPts[1] = CGPointMake(width, 0.0);
-    CGPathAddLines(currentLinePath, nil, lPts, 2);
+    CGFloat lineWidth = 0.0;
+    if ( !circular ) {
+        lineWidth = self.view.frame.size.height*2.0f;
+        CGPoint lPts[2];
+        lPts[0] = CGPointMake(0.0, 0.0);
+        lPts[1] = CGPointMake(width, 0.0);
+        CGPathAddLines(currentLinePath, nil, lPts, 2);
+    } else {
+        
+        lineWidth = self.view.frame.size.height / 10.0f;
+        self.containerTintColor = [UIColor kpccAsphaltColor];
+ 
+        CGPoint arcCenter = CGPointMake(CGRectGetMidX(self.view.bounds), CGRectGetMidY(self.view.bounds));
+        CGFloat radius = CGRectGetMidX(self.view.bounds)-(lineWidth / 2.0f);
+        //CGFloat startAngle = -M_PI_2;
+        //CGFloat endAngle = 2*M_PI-M_PI_2;
+        
+        CGFloat startAngle = [Utils degreesToRadians:-90.0f];
+        CGFloat endAngle = [Utils degreesToRadians:270.0f];
+        
+        UIBezierPath *circlePath = [UIBezierPath bezierPathWithArcCenter:arcCenter
+                                                         radius:radius
+                                                     startAngle:startAngle
+                                                       endAngle:endAngle
+                                                      clockwise:YES];
+        currentLinePath = CGPathCreateMutableCopy(circlePath.CGPath);
+        
+        UIBezierPath *circleSeatPath = [UIBezierPath bezierPathWithArcCenter:arcCenter
+                                                                      radius:radius
+                                                                  startAngle:startAngle
+                                                                    endAngle:endAngle
+                                                                   clockwise:YES];
+        
+        CGMutablePathRef seatLinePath = CGPathCreateMutableCopy(circleSeatPath.CGPath);
+        
+        self.containerBarLine = [CAShapeLayer layer];
+        self.containerBarLine.path = seatLinePath;
+        self.containerBarLine.strokeColor = self.containerTintColor.CGColor;
+        self.containerBarLine.strokeStart = 0.0;
+        self.containerBarLine.strokeEnd = 1.0;
+        self.containerBarLine.opacity = 1.0;
+        self.containerBarLine.fillColor = [UIColor clearColor].CGColor;
+        self.containerBarLine.lineWidth = lineWidth;
+        self.view.backgroundColor = [UIColor clearColor];
+        [self.view.layer addSublayer:self.containerBarLine];
+        
+    }
     
     self.currentBarLine = [CAShapeLayer layer];
     self.currentBarLine.path = currentLinePath;
@@ -57,8 +103,8 @@
     self.currentBarLine.strokeStart = 0.0;
     self.currentBarLine.strokeEnd = 0.0;
     self.currentBarLine.opacity = 1.0;
-    self.currentBarLine.fillColor = self.currentTintColor.CGColor;
-    self.currentBarLine.lineWidth = self.view.frame.size.height*2;
+    self.currentBarLine.fillColor = [UIColor clearColor].CGColor;
+    self.currentBarLine.lineWidth = lineWidth;
     
     [self.view.layer addSublayer:self.currentBarLine];
     
@@ -70,7 +116,7 @@
     self.view.userInteractionEnabled = YES;
     self.viewAsTouchableScrubberView.parentScrubberController = self;
     
-    self.view.backgroundColor = [[UIColor virtualWhiteColor] translucify:0.2];
+    self.view.backgroundColor = circular ? [UIColor clearColor] : [[UIColor virtualWhiteColor] translucify:0.2];
 }
 
 - (void)unmask {
@@ -88,6 +134,7 @@
 
 - (void)userTouched:(NSSet *)touches event:(UIEvent *)event {
     self.firstTouch = [(UITouch*)[touches anyObject] locationInView:self.view];
+    self.previousPoint = self.firstTouch;
     [self trackForPoint:self.firstTouch];
     self.panning = YES;
 }
@@ -109,8 +156,23 @@
 }
 
 - (void)trackForPoint:(CGPoint)touchPoint {
+    self.nowPoint = touchPoint;
     CGFloat dX = touchPoint.x;
-    double se = ( dX / self.view.frame.size.width )*1.0f;
+    CGFloat basis = self.view.frame.size.width;
+    double se = 0.0f;
+    if ( self.circular ) {
+        CGPoint zeroDegrees = CGPointMake(self.view.frame.size.width/2.0f,
+                                          0.0f);
+        CGFloat xDelta = touchPoint.x - zeroDegrees.x;
+        CGFloat yDelta = touchPoint.y - zeroDegrees.y;
+        CGFloat degrees = [Utils radiansToDegrees:atan2(yDelta, xDelta)];
+        se = degrees / 180.0f;
+        NSLog(@"%1.1f°",degrees);
+        
+    } else {
+        se = ( dX / basis )*1.0f;
+    }
+    
     self.currentBarLine.strokeEnd = se;
     [self.scrubbingDelegate actionOfInterestWithPercentage:(CGFloat)se];
 }

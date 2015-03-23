@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6751" systemVersion="13F1066" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="tBl-Ag-e49">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6751" systemVersion="14C1510" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="tBl-Ag-e49">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6736"/>
@@ -130,20 +130,20 @@
                                         </state>
                                     </button>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Lbg-2T-XEE" userLabel="sleepTimerView">
-                                        <rect key="frame" x="0.0" y="0.0" width="320" height="30"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="320" height="36"/>
                                         <subviews>
                                             <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" progress="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="oYn-me-xoQ" userLabel="sleepProgressView">
                                                 <rect key="frame" x="0.0" y="0.0" width="320" height="2"/>
                                             </progressView>
                                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="fox-H6-rJE" userLabel="clockIconImage">
-                                                <rect key="frame" x="20" y="3" width="24" height="24"/>
+                                                <rect key="frame" x="15" y="7" width="24" height="24"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" constant="24" id="OBV-Xr-bq9"/>
                                                     <constraint firstAttribute="height" constant="24" id="XRs-mY-afv"/>
                                                 </constraints>
                                             </imageView>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="7:59:59" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="k2b-3L-5Rz">
-                                                <rect key="frame" x="52" y="3" width="220" height="24"/>
+                                                <rect key="frame" x="47" y="3" width="225" height="24"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="24" id="j5q-n8-r2C"/>
                                                 </constraints>
@@ -151,18 +151,28 @@
                                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zND-XD-IVD" userLabel="cancelSleepTimerBtn">
+                                                <rect key="frame" x="0.0" y="0.0" width="320" height="36"/>
+                                                <state key="normal">
+                                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                                </state>
+                                            </button>
                                         </subviews>
                                         <color key="backgroundColor" white="1" alpha="0.0" colorSpace="calibratedWhite"/>
                                         <constraints>
                                             <constraint firstAttribute="trailing" secondItem="oYn-me-xoQ" secondAttribute="trailing" id="08d-Y3-cvv"/>
                                             <constraint firstItem="oYn-me-xoQ" firstAttribute="leading" secondItem="Lbg-2T-XEE" secondAttribute="leading" id="6e8-jv-3Gc"/>
+                                            <constraint firstItem="zND-XD-IVD" firstAttribute="top" secondItem="Lbg-2T-XEE" secondAttribute="top" id="Gjf-aU-6z7"/>
                                             <constraint firstAttribute="trailing" secondItem="k2b-3L-5Rz" secondAttribute="trailing" constant="48" id="HOE-hd-aCl"/>
-                                            <constraint firstItem="fox-H6-rJE" firstAttribute="top" secondItem="oYn-me-xoQ" secondAttribute="bottom" constant="1" id="IVq-mk-4l6"/>
+                                            <constraint firstItem="fox-H6-rJE" firstAttribute="top" secondItem="oYn-me-xoQ" secondAttribute="bottom" constant="5" id="IVq-mk-4l6"/>
                                             <constraint firstItem="oYn-me-xoQ" firstAttribute="top" secondItem="Lbg-2T-XEE" secondAttribute="top" id="Y8m-3I-XWm"/>
-                                            <constraint firstItem="fox-H6-rJE" firstAttribute="leading" secondItem="Lbg-2T-XEE" secondAttribute="leading" constant="20" id="abc-Zj-4OD"/>
+                                            <constraint firstItem="fox-H6-rJE" firstAttribute="leading" secondItem="Lbg-2T-XEE" secondAttribute="leading" constant="15" id="abc-Zj-4OD"/>
                                             <constraint firstItem="k2b-3L-5Rz" firstAttribute="top" secondItem="oYn-me-xoQ" secondAttribute="bottom" constant="1" id="gzH-FI-1zL"/>
-                                            <constraint firstAttribute="height" constant="30" id="l6g-ua-9Yu"/>
+                                            <constraint firstAttribute="trailing" secondItem="zND-XD-IVD" secondAttribute="trailing" id="jRt-Q6-gWc"/>
+                                            <constraint firstAttribute="height" constant="36" id="l6g-ua-9Yu"/>
                                             <constraint firstItem="k2b-3L-5Rz" firstAttribute="leading" secondItem="fox-H6-rJE" secondAttribute="trailing" constant="8" id="lgh-bJ-ApK"/>
+                                            <constraint firstItem="zND-XD-IVD" firstAttribute="leading" secondItem="Lbg-2T-XEE" secondAttribute="leading" id="s2H-kF-u7j"/>
+                                            <constraint firstAttribute="bottom" secondItem="zND-XD-IVD" secondAttribute="bottom" id="vUI-tv-9en"/>
                                         </constraints>
                                     </view>
                                 </subviews>
@@ -406,6 +416,7 @@
                         <outlet property="back30Button" destination="vgV-P3-0W0" id="JSx-0k-Xyj"/>
                         <outlet property="back30VerticalAnchor" destination="qVW-Cb-d3A" id="645-c4-nRa"/>
                         <outlet property="blurView" destination="LAZ-J2-lj5" id="MOo-Zb-mB0"/>
+                        <outlet property="cancelSleepTimerButton" destination="zND-XD-IVD" id="hmr-4E-GTO"/>
                         <outlet property="clockIconImageView" destination="fox-H6-rJE" id="yun-lv-9UD"/>
                         <outlet property="currentProgressBarView" destination="alx-1P-Yo8" id="ovX-oD-G78"/>
                         <outlet property="darkBgView" destination="sYL-12-Hgi" id="tPF-W9-NAM"/>

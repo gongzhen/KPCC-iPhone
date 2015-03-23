@@ -32,6 +32,7 @@ static NSString *kRewindingText = @"REWINDING...";
 static NSString *kForwardingText = @"GOING LIVE...";
 static NSString *kBufferingText = @"BUFFERING";
 static CGFloat kScrubbingThreeFiveSlip = 36.0;
+static NSInteger kCancelSleepTimerAlertTag = 44839;
 
 @interface SCPRMasterViewController () <AudioManagerDelegate, UINavigationControllerDelegate, UIViewControllerTransitioningDelegate, SCPRPreRollControllerDelegate, UIScrollViewDelegate>
 
@@ -176,6 +177,8 @@ setForOnDemandUI;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    self.navigationController.interactivePopGestureRecognizer.enabled = NO;
     
     self.view.backgroundColor = [UIColor blackColor];
     self.horizDividerLine.layer.opacity = 0.0;
@@ -322,6 +325,10 @@ setForOnDemandUI;
                          action:@selector(shareButtonTapped:)
                forControlEvents:UIControlEventTouchUpInside
                         special:YES];
+    
+    [self.cancelSleepTimerButton addTarget:self
+                                    action:@selector(cancelSleepTimerAction)
+                          forControlEvents:UIControlEventTouchUpInside];
     
     [self setupTimerControls];
     
@@ -494,11 +501,11 @@ setForOnDemandUI;
 
 - (void)setupTimerControls {
     self.plainTextCountdownLabel.textColor = [UIColor whiteColor];
-    self.plainTextCountdownLabel.font = [[DesignManager shared] proBold:20.0f];
+    self.plainTextCountdownLabel.font = [[DesignManager shared] proBook:20.0f];
     self.clockIconImageView.image = [UIImage imageNamed:@"icon-stopwatch.png"];
     self.clockIconImageView.contentMode = UIViewContentModeCenter;
     self.sleepTimerCountdownProgress.progressTintColor = [UIColor whiteColor];
-    self.sleepTimerCountdownProgress.backgroundColor = [UIColor clearColor];
+    self.sleepTimerCountdownProgress.trackTintColor = [UIColor clearColor];
     [self hideSleepTimer];
 }
 
@@ -508,6 +515,16 @@ setForOnDemandUI;
     CGFloat pct = remaining / total;
     [self.sleepTimerCountdownProgress setProgress:pct animated:YES];
     self.plainTextCountdownLabel.text = [NSDate scientificStringFromSeconds:remaining];
+}
+
+- (void)cancelSleepTimerAction {
+    UIAlertView *cancelAlert = [[UIAlertView alloc] initWithTitle:@""
+                                                          message:@"Are you sure you want to stop your sleep timer?"
+                                                         delegate:self
+                                                cancelButtonTitle:@"Cancel"
+                                                otherButtonTitles:@"Stop", nil];
+    cancelAlert.tag = kCancelSleepTimerAlertTag;
+    [cancelAlert show];
 }
 
 #pragma mark - Onboarding
@@ -3040,6 +3057,14 @@ setForOnDemandUI;
 
 #pragma mark - UIAlertView
 - (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex {
+    
+    if ( alertView.tag == kCancelSleepTimerAlertTag ) {
+        if ( buttonIndex == 1 ) {
+            [[SessionManager shared] disarmSleepTimerWithCompletion:nil];
+        }
+        return;
+    }
+    
     self.promptedAboutFailureAlready = NO;
     if ( buttonIndex == 0 ) {
         self.uiLocked = NO;

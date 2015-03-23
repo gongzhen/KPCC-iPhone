@@ -18,6 +18,14 @@ static char *alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz012
     return (SCPRAppDelegate*)[UIApplication sharedApplication].delegate;
 }
 
++ (CGFloat)degreesToRadians:(CGFloat) degrees {
+    return degrees * M_PI / 180.0;
+}
+
++ (CGFloat)radiansToDegrees:(CGFloat)radians {
+    return radians * 180 / M_PI;
+}
+
 + (NSDate*)dateFromRFCString:(NSString*)dateString {
     if ([dateString isEqual:[NSNull null] ]) {
         return nil;

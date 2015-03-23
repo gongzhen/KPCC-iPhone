@@ -11,6 +11,7 @@
 #import "UIView+PrintDimensions.h"
 #import "UIColor+UICustom.h"
 #import "SCPRSleepViewController.h"
+#import "SCPRAlarmClockViewController.h"
 
 @interface SCPRTimerControlViewController ()
 
@@ -26,11 +27,22 @@
     // Do any additional setup after loading the view from its nib.
 }
 
+- (void)viewWillAppear:(BOOL)animated {
+    
+    [self.navigationController.interactivePopGestureRecognizer setDelegate:self];
+}
+
+- (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer {
+    return false;
+}
+
 - (void)setup {
     
     [self.view layoutIfNeeded];
     [self.view printDimensionsWithIdentifier:@"Timer Container View"];
     [self.toggleScroller printDimensionsWithIdentifier:@"Timer Scroller View"];
+    
+    
     
     self.toggleScroller.translatesAutoresizingMaskIntoConstraints = NO;
     
@@ -59,12 +71,19 @@
                                                                           bundle:nil];
     self.sleepTimerController.view.frame = self.sleepTimerController.view.frame;
     
+    
+    self.alarmClockController = [[SCPRAlarmClockViewController alloc] initWithNibName:@"SCPRAlarmClockViewController"
+                                                                               bundle:nil];
+    
+    self.alarmClockController.view.frame = self.alarmClockController.view.frame;
+    
+    
     UIView *st = self.sleepTimerController.view;
+    UIView *ac = self.alarmClockController.view;
     
-    UIView *ac = [[UIView alloc] init];
     st.backgroundColor = [UIColor clearColor];
+    ac.backgroundColor = [UIColor clearColor];
     
-    ac.backgroundColor = [[UIColor greenColor] translucify:0.15];
     st.translatesAutoresizingMaskIntoConstraints = NO;
     ac.translatesAutoresizingMaskIntoConstraints = NO;
     
@@ -82,13 +101,20 @@
                                                            metrics:nil
                                                              views:@{ @"v1" : st,
                                                                       @"v2" : ac }];
+    
     NSArray *v1vc = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|[v1]|"
                                                             options:0
                                                             metrics:nil
                                                               views:@{ @"v1" : st }];
     
+    NSArray *v2vc = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|[v2]|"
+                                                            options:0
+                                                            metrics:nil
+                                                              views:@{ @"v2" : ac }];
+    
     [self.toggleScroller addConstraints:v1c];
     [self.toggleScroller addConstraints:v1vc];
+    [self.toggleScroller addConstraints:v2vc];
     
     NSLayoutConstraint *heightV1 = [NSLayoutConstraint constraintWithItem:st
                                                                 attribute:NSLayoutAttributeHeight
@@ -112,7 +138,7 @@
     [self.view layoutIfNeeded];
     
     [self.sleepTimerController setup];
-    
+    [self.alarmClockController setup];
 }
 
 - (void)toggleTimerFunction:(SCPRButton*)sender {

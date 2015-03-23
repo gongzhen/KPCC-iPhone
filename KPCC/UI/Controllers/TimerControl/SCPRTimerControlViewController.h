@@ -10,8 +10,9 @@
 #import "SCPRButton.h"
 
 @class SCPRSleepViewController;
+@class SCPRAlarmClockViewController;
 
-@interface SCPRTimerControlViewController : UIViewController
+@interface SCPRTimerControlViewController : UIViewController<UIGestureRecognizerDelegate>
 
 @property (nonatomic, strong) IBOutlet UIView *buttonSeatView;
 @property (nonatomic, strong) IBOutlet UIView *duckDuckGooseView;
@@ -23,6 +24,7 @@
 @property (nonatomic, strong) IBOutlet UIView *chromaKeyView;
 
 @property (nonatomic, strong) SCPRSleepViewController *sleepTimerController;
+@property (nonatomic, strong) SCPRAlarmClockViewController *alarmClockController;
 
 @property (nonatomic, weak) SCPRButton *selectedButton;
 

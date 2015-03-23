@@ -77,6 +77,8 @@
 		25E8BDA51ABB933C007B99EB /* SCPRTimerControlViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 25E8BDA31ABB933C007B99EB /* SCPRTimerControlViewController.xib */; };
 		25E8BDAB1ABC923E007B99EB /* SCPRSleepViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 25E8BDA91ABC923E007B99EB /* SCPRSleepViewController.m */; };
 		25E8BDAC1ABC923E007B99EB /* SCPRSleepViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 25E8BDAA1ABC923E007B99EB /* SCPRSleepViewController.xib */; };
+		25E8BDB01AC0920E007B99EB /* SCPRAlarmClockViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 25E8BDAE1AC0920E007B99EB /* SCPRAlarmClockViewController.m */; };
+		25E8BDB11AC0920E007B99EB /* SCPRAlarmClockViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 25E8BDAF1AC0920E007B99EB /* SCPRAlarmClockViewController.xib */; };
 		25F2BC7E1A3B9B4D00108F73 /* SCPRGenericAvatarViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 25F2BC7C1A3B9B4D00108F73 /* SCPRGenericAvatarViewController.m */; };
 		25F2BC7F1A3B9B4D00108F73 /* SCPRGenericAvatarViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 25F2BC7D1A3B9B4D00108F73 /* SCPRGenericAvatarViewController.xib */; };
 		25F2BC811A3BB60B00108F73 /* onboarding-music-bed.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 25F2BC801A3BB60B00108F73 /* onboarding-music-bed.m4a */; };
@@ -376,6 +378,9 @@
 		25E8BDA81ABC923E007B99EB /* SCPRSleepViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCPRSleepViewController.h; path = TimerControl/SleepTimer/SCPRSleepViewController.h; sourceTree = "<group>"; };
 		25E8BDA91ABC923E007B99EB /* SCPRSleepViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SCPRSleepViewController.m; path = TimerControl/SleepTimer/SCPRSleepViewController.m; sourceTree = "<group>"; };
 		25E8BDAA1ABC923E007B99EB /* SCPRSleepViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = SCPRSleepViewController.xib; path = TimerControl/SleepTimer/SCPRSleepViewController.xib; sourceTree = "<group>"; };
+		25E8BDAD1AC0920E007B99EB /* SCPRAlarmClockViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCPRAlarmClockViewController.h; path = TimerControl/AlarmClock/SCPRAlarmClockViewController.h; sourceTree = "<group>"; };
+		25E8BDAE1AC0920E007B99EB /* SCPRAlarmClockViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SCPRAlarmClockViewController.m; path = TimerControl/AlarmClock/SCPRAlarmClockViewController.m; sourceTree = "<group>"; };
+		25E8BDAF1AC0920E007B99EB /* SCPRAlarmClockViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = SCPRAlarmClockViewController.xib; path = TimerControl/AlarmClock/SCPRAlarmClockViewController.xib; sourceTree = "<group>"; };
 		25F2BC7B1A3B9B4D00108F73 /* SCPRGenericAvatarViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCPRGenericAvatarViewController.h; sourceTree = "<group>"; };
 		25F2BC7C1A3B9B4D00108F73 /* SCPRGenericAvatarViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SCPRGenericAvatarViewController.m; sourceTree = "<group>"; };
 		25F2BC7D1A3B9B4D00108F73 /* SCPRGenericAvatarViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SCPRGenericAvatarViewController.xib; sourceTree = "<group>"; };
@@ -755,6 +760,9 @@
 		25E8BDA71ABC9209007B99EB /* Alarm Clock */ = {
 			isa = PBXGroup;
 			children = (
+				25E8BDAD1AC0920E007B99EB /* SCPRAlarmClockViewController.h */,
+				25E8BDAE1AC0920E007B99EB /* SCPRAlarmClockViewController.m */,
+				25E8BDAF1AC0920E007B99EB /* SCPRAlarmClockViewController.xib */,
 			);
 			name = "Alarm Clock";
 			sourceTree = "<group>";
@@ -1498,6 +1506,7 @@
 				52EFF88919C3BC020059A0E3 /* item-chevron-right@2x.png in Resources */,
 				761CC5A4195A2878006A6C7C /* Testflight-Info.plist in Resources */,
 				52EFF81E19C368C00059A0E3 /* program_avatar_marketplace.png in Resources */,
+				25E8BDB11AC0920E007B99EB /* SCPRAlarmClockViewController.xib in Resources */,
 				52EFF83A19C368C00059A0E3 /* program_avatar_radiolab.png in Resources */,
 				52EFF86A19C368C00059A0E3 /* program_avatar_wits.png in Resources */,
 				258E8E061A16AA4200675E68 /* desk_customer_template.json in Resources */,
@@ -1606,6 +1615,7 @@
 				258FC47E1A01915E00282D59 /* UIColor+UICustom.m in Sources */,
 				258BD3B11A0C0FFF00E7560F /* SCPRProgressViewController.m in Sources */,
 				52CF917A1A0032C7007BCFA8 /* QueueManager.m in Sources */,
+				25E8BDB01AC0920E007B99EB /* SCPRAlarmClockViewController.m in Sources */,
 				258BB0381A1C07FD00B8FCFE /* UXmanager.m in Sources */,
 				76B9A9AC18EF59FD007A6D8C /* SCPRUserReportViewController.m in Sources */,
 				76658AB918DCB51000026176 /* NSDate+Helper.m in Sources */,

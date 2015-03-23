@@ -148,7 +148,9 @@
 @property (nonatomic, strong) IBOutlet UIProgressView *sleepTimerCountdownProgress;
 @property (nonatomic, strong) IBOutlet UIImageView *clockIconImageView;
 @property (nonatomic, strong) IBOutlet UILabel *plainTextCountdownLabel;
+@property (nonatomic, strong) IBOutlet UIButton *cancelSleepTimerButton;
 - (void)setupTimerControls;
+- (void)cancelSleepTimerAction;
 
 - (void)remoteControlPlayOrPause;
 

@@ -317,7 +317,9 @@
 - (void)armSleepTimerWithSeconds:(NSInteger)seconds completed:(CompletionBlock)completed {
     
     [self disarmSleepTimerWithCompletion:nil];
-    
+#ifdef DEBUG
+    seconds = 35;
+#endif
     self.originalSleepTimerRequest = seconds;
     self.remainingSleepTimerSeconds = seconds;
 
