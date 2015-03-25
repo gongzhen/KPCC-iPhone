@@ -523,7 +523,6 @@ static const NSString *ItemStatusContext;
     NSDate *msd = self.maxSeekableDate;
     if ( msd && [msd isWithinReasonableframeOfDate:now] ) {
         NSInteger drift = [now timeIntervalSince1970] - [msd timeIntervalSince1970];
-        NSLog(@"Drift : %ld",(long)drift);
         if ( (drift - [[SessionManager shared] peakDrift] > kToleratedIncreaseInDrift) ) {
             [[AnalyticsManager shared] logEvent:@"driftIncreasing"
                                  withParameters:@{ @"oldDrift" : @([[SessionManager shared] peakDrift]),
@@ -707,6 +706,8 @@ static const NSString *ItemStatusContext;
         weakSelf.beginNormally = NO;
         weakSelf.streamWarning = NO;
         
+        [[Utils del] endAlarmClock];
+        
         NSArray *seekRange = audioPlayer.currentItem.seekableTimeRanges;
         if (seekRange && [seekRange count] > 0) {
             CMTimeRange range = [seekRange[0] CMTimeRangeValue];
@@ -732,6 +733,7 @@ static const NSString *ItemStatusContext;
             weakSelf.maxSeekableDate = [NSDate dateWithTimeInterval:(CMTimeGetSeconds(CMTimeRangeGetEnd(range)) - CMTimeGetSeconds(time)) sinceDate:weakSelf.currentDate];
             
             if ( weakSelf.frameCount % 10 == 0 ) {
+                
 #ifndef SUPPRESS_LOCAL_SAMPLING
                 if ( weakSelf.currentAudioMode == AudioModeLive ) {
                     [weakSelf localSample:time];
@@ -744,6 +746,10 @@ static const NSString *ItemStatusContext;
                 weakSelf.userPause = NO;
                 weakSelf.seekWillEffectBuffer = NO;
                 weakSelf.seekRequested = NO;
+                
+                if ( [[SessionManager shared] sleepTimerArmed] ) {
+                    [[SessionManager shared] tickSleepTimer];
+                }
                 
                 [[SessionManager shared] trackLiveSession];
                 [[SessionManager shared] trackRewindSession];

@@ -117,8 +117,6 @@
     
     [[UXmanager shared] setSuppressBalloon:YES];
     [[SessionManager shared] setUseLocalNotifications:( types & UIUserNotificationTypeAlert )];
-   
-    
     if ( ![[UXmanager shared] userHasSeenOnboarding] ) {
         [[UXmanager shared] closeOutOnboarding];
     }
@@ -338,8 +336,74 @@
 }
 
 - (void)application:(UIApplication *)application didReceiveLocalNotification:(UILocalNotification *)notification {
-    if ( [[UIApplication sharedApplication] applicationState] == UIApplicationStateActive ) {
-        [[SessionManager shared] processNotification:notification];
+    
+    
+}
+
+- (void)armAlarmClockWithDate:(NSDate *)date {
+    
+    UILocalNotification *alarm = [[UILocalNotification alloc] init];
+    alarm.alertTitle = @"Wake Up!";
+    alarm.alertBody = @"It's time for your fix of KPCC";
+    alarm.fireDate = date;
+    [[UIApplication sharedApplication] scheduleLocalNotification:alarm];
+    
+    NSInteger timeFromNow = [date timeIntervalSinceDate:[NSDate date]];
+    timeFromNow -= 20.0f;
+    NSLog(@"Will check the time in : %ld seconds",(long)timeFromNow);
+    
+    self.alarmDate = date;
+    self.initialCheckTimer = [NSTimer scheduledTimerWithTimeInterval:timeFromNow
+                                                  target:self
+                                                selector:@selector(checkAlarmClock)
+                                                userInfo:nil
+                                                 repeats:NO];
+}
+
+- (void)application:(UIApplication *)application performFetchWithCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
+    NSLog(@"System performing bg fetch at : %@",[NSDate stringFromDate:[NSDate date]
+                                                            withFormat:@"hh:mm a"]);
+    [self checkAlarmClock];
+    
+    completionHandler(self.alarmResults);
+}
+
+- (void)checkAlarmClock {
+    
+    self.alarmTask = [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:^{
+        
+    }];
+    
+    NSLog(@"Checking alarm...");
+    if ( [[NSDate date] timeIntervalSinceDate:self.alarmDate] >= 0 ) {
+        if ( self.timer ) {
+            if ( [self.timer isValid] ) {
+                [self.timer invalidate];
+            }
+            self.timer = nil;
+        }
+        [self.masterViewController handleAlarmClock];
+        self.alarmResults = UIBackgroundFetchResultNewData;
+    } else {
+        if ( !self.timer ) {
+            NSLog(@"Arming check timer...");
+            self.timer = [NSTimer scheduledTimerWithTimeInterval:10.0f
+                                                          target:self
+                                                        selector:@selector(checkAlarmClock)
+                                                        userInfo:nil
+                                                         repeats:YES];
+        }
+        self.alarmResults = UIBackgroundFetchResultNoData;
+        [[UIApplication sharedApplication] endBackgroundTask:self.alarmTask];
+        self.alarmTask = 0;
+    }
+    
+}
+
+- (void)endAlarmClock {
+    if ( self.alarmTask ) {
+        [[UIApplication sharedApplication] endBackgroundTask:self.alarmTask];
+        self.alarmTask = 0;
     }
 }
 

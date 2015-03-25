@@ -45,7 +45,7 @@
 @property CGPoint nowPoint;
 @property NSTimer *trulyFinishedTimer;
 
-
+- (void)applyPercentageToScrubber:(CGFloat)percentage;
 - (void)setupWithDelegate:(id<Scrubbable>)delegate;
 - (void)setupWithDelegate:(id<Scrubbable>)delegate circular:(BOOL)circular;
 

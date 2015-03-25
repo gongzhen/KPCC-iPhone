@@ -254,6 +254,55 @@
     return completeAtt;
 }
 
++ (NSString*)prettyUSTimeFromSeconds:(NSInteger)seconds {
+    NSInteger minutes = ceil(seconds/60);
+    NSInteger hours = 0;
+    if ( minutes > 59 ) {
+        hours = ceil(minutes/60);
+        minutes = minutes % 60;
+    }
+    
+    NSString *hoursFormatted = @"";
+    if ( hours < 10 ) {
+        hoursFormatted = [NSString stringWithFormat:@"0%ld",(long)hours];
+    } else {
+        hoursFormatted = [NSString stringWithFormat:@"%ld",(long)hours];
+    }
+    
+    NSString *minutesFormatted = @"";
+    if ( minutes < 10 ) {
+        minutesFormatted = [NSString stringWithFormat:@"0%ld",(long)minutes];
+    } else {
+        minutesFormatted = [NSString stringWithFormat:@"%ld",(long)minutes];
+    }
+    
+    NSString *europe = [NSString stringWithFormat:@"%@:%@",hoursFormatted,minutesFormatted];
+    NSLog(@"Raw time : %@",europe);
+    
+    NSDateFormatter *inputFormatter = [[NSDateFormatter alloc] init];
+    [inputFormatter setDateFormat:@"HH:mm"];
+    NSDate *europeanDate = [inputFormatter dateFromString:europe];
+    
+    NSString *usDateString = [NSDate stringFromDate:europeanDate
+                                         withFormat:@"hh:mm a"];
+    
+    NSLog(@"US : %@",usDateString);
+    
+    return usDateString;
+}
+
++ (NSDate*)midnightThisMorning {
+    NSDate *now = [NSDate date];
+    NSDateComponents *comps = [[NSCalendar currentCalendar] components:NSCalendarUnitDay
+                                                              fromDate:now];
+    NSDate *midnight = [[NSCalendar currentCalendar] dateFromComponents:comps];
+    
+    NSLog(@"Midnight : %@",[NSDate stringFromDate:midnight
+                                       withFormat:@"MM/dd/yyyy hh:mm a"]);
+    
+    return midnight;
+}
+
 + (NSString*)scientificStringFromSeconds:(NSInteger)seconds {
     NSInteger minutes = ceil(seconds/60);
     NSInteger hours = 0;

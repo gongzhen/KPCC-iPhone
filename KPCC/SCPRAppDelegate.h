@@ -37,10 +37,20 @@
 @property (strong, nonatomic) SCPRMasterViewController *masterViewController;
 @property (strong, nonatomic) SCPRNavigationController *masterNavigationController;
 @property (strong, nonatomic) SCPROnboardingViewController *onboardingController;
+@property (strong, nonatomic) NSTimer *timer;
+@property (strong, nonatomic) NSDate *alarmDate;
+@property (strong, nonatomic) NSTimer *initialCheckTimer;
+@property UIBackgroundFetchResult alarmResults;
+
+
 @property BOOL userRespondedToPushWhileClosed;
+
+@property UIBackgroundTaskIdentifier alarmTask;
 
 @property (strong, nonatomic) NSDictionary *latestPush;
 
 - (void)actOnNotification:(NSDictionary*)userInfo;
+- (void)armAlarmClockWithDate:(NSDate*)date;
+- (void)endAlarmClock;
 
 @end

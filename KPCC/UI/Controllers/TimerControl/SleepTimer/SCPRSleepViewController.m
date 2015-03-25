@@ -11,6 +11,7 @@
 #import "UILabel+Additions.h"
 #import "NSDate+Helper.h"
 #import "SessionManager.h"
+#import "AudioManager.h"
 
 @interface SCPRSleepViewController ()
 
@@ -90,8 +91,6 @@
                                                  name:@"sleep-timer-ticked"
                                                object:nil];
     
-    
-    
     [[DesignManager shared] sculptButton:self.startButton
                                withStyle:SculptingStyleClearWithBorder
                                  andText:@"Cancel Sleep Timer"];
@@ -128,6 +127,29 @@
 }
 
 #pragma mark - Timer Functions
+- (void)kickoff {
+
+    
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.25 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        
+        [[SessionManager shared] armSleepTimerWithSeconds:self.armableSeconds
+                                                completed:^{
+                                                    
+                                                    [UIView animateWithDuration:0.33 animations:^{
+                                                        [self setupActive];
+                                                        [self.view layoutIfNeeded];
+                                                    } completion:^(BOOL finished) {
+                                                        
+                                                        
+                                                        
+                                                    }];
+                                                    
+                                                }];
+        
+    });
+
+}
+
 - (void)sleepTimerTicked {
     self.indicatorLabel.attributedText = [NSDate prettyAttributedFromSeconds:[[SessionManager shared] remainingSleepTimerSeconds] includeSeconds:YES];
     if ( [[SessionManager shared] remainingSleepTimerSeconds] <= 0 ) {
@@ -144,19 +166,21 @@
         [self.spinner startAnimating];
         [self.startButton setAlpha:0.0];
     } completion:^(BOOL finished) {
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.25 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+#ifdef USE_ONDEMAND_SAFEGUARD
+        if ( [[AudioManager shared] isPlayingAudio] && [[AudioManager shared] currentAudioMode] != AudioModeLive ) {
             
-            [[SessionManager shared] armSleepTimerWithSeconds:self.armableSeconds
-                                                    completed:^{
-                                                        
-                                                        [UIView animateWithDuration:0.33 animations:^{
-                                                            [self setupActive];
-                                                            [self.view layoutIfNeeded];
-                                                        }];
-                                                        
-                                                    }];
+            [[[UIAlertView alloc] initWithTitle:@"Switch to Live"
+                                        message:@"Using a sleep timer will change your listening to the KPCC live stream. Is this OK?"
+                                       delegate:self
+                              cancelButtonTitle:@"No thanks"
+                              otherButtonTitles:@"Yes",nil] show];
             
-        });
+        } else {
+#endif
+            [self kickoff];
+#ifdef USE_ONDEMAND_SAFEGUARD
+        }
+#endif
     }];
 }
 
@@ -211,6 +235,17 @@
     return self.scrubbingTouchView;
 }
 
+#pragma mark - UIAlertView
+- (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex {
+    if ( buttonIndex == 0 ) {
+        [UIView animateWithDuration:0.33 animations:^{
+            [self setupInactive];
+            [self.view layoutIfNeeded];
+        }];
+    } else {
+        [self kickoff];
+    }
+}
 
 - (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self];

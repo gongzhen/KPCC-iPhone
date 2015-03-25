@@ -307,27 +307,24 @@
 
 #pragma mark - Sleep Timer
 - (BOOL)sleepTimerActive {
-    if ( self.sleepTimer ) {
-        return [self.sleepTimer isValid];
-    }
-    
-    return NO;
+    return self.sleepTimerArmed;
 }
 
 - (void)armSleepTimerWithSeconds:(NSInteger)seconds completed:(CompletionBlock)completed {
     
     [self disarmSleepTimerWithCompletion:nil];
 #ifdef DEBUG
-    seconds = 35;
+    seconds = 275;
 #endif
     self.originalSleepTimerRequest = seconds;
     self.remainingSleepTimerSeconds = seconds;
 
-    self.sleepTimer = [NSTimer scheduledTimerWithTimeInterval:1.0
+    /*self.sleepTimer = [NSTimer scheduledTimerWithTimeInterval:1.0
                                                        target:self
                                                      selector:@selector(tickSleepTimer)
                                                      userInfo:nil
-                                                      repeats:YES];
+                                                      repeats:YES];*/
+    self.sleepTimerArmed = YES;
     
     [[NSNotificationCenter defaultCenter] postNotificationName:@"sleep-timer-armed"
                                                         object:nil];
@@ -343,9 +340,9 @@
 - (void)tickSleepTimer {
     self.remainingSleepTimerSeconds = self.remainingSleepTimerSeconds - 1;
     if ( self.remainingSleepTimerSeconds <= 0 ) {
+        [self disarmSleepTimerWithCompletion:nil];
         [[AudioManager shared] adjustAudioWithValue:-.045 completion:^{
             [[AudioManager shared] stopAllAudio];
-            [self disarmSleepTimerWithCompletion:nil];
         }];
     }
     
@@ -360,6 +357,8 @@
         }
         self.sleepTimer = nil;
     }
+    
+    self.sleepTimerArmed = NO;
     
     [[NSNotificationCenter defaultCenter] postNotificationName:@"sleep-timer-disarmed"
                                                         object:nil];

@@ -183,6 +183,8 @@
 - (void)treatUIforProgram;
 - (void)determinePlayState;
 
+- (void)handleAlarmClock;
+
 - (void)moveTextIntoPlace:(BOOL)animated;
 - (void)goLive:(BOOL)play;
 - (void)goLive:(BOOL)play smooth:(BOOL)smooth;

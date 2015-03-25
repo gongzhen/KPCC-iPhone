@@ -39,7 +39,7 @@
     self.scrubbingDelegate = delegate;
     self.viewAsTouchableScrubberView = [delegate scrubbableView];
     self.scrubberTimeLabel = [self.scrubbingDelegate scrubbingIndicatorLabel];
-    self.scrubberTimeLabel.font = [[DesignManager shared] proLight:36.0];
+    self.scrubberTimeLabel.font = [[DesignManager shared] proLight:self.scrubberTimeLabel.font.pointSize];
     self.scrubberTimeLabel.textColor = [UIColor whiteColor];
     self.currentTintColor = [UIColor kpccOrangeColor];
     self.circular = circular;
@@ -58,16 +58,16 @@
         CGPathAddLines(currentLinePath, nil, lPts, 2);
     } else {
         
-        lineWidth = self.view.frame.size.height / 10.0f;
-        self.containerTintColor = [UIColor kpccAsphaltColor];
+        lineWidth = self.view.frame.size.height / 4.0f;
+        self.containerTintColor = [[UIColor virtualWhiteColor] translucify:0.25];
  
         CGPoint arcCenter = CGPointMake(CGRectGetMidX(self.view.bounds), CGRectGetMidY(self.view.bounds));
         CGFloat radius = CGRectGetMidX(self.view.bounds)-(lineWidth / 2.0f);
-        //CGFloat startAngle = -M_PI_2;
-        //CGFloat endAngle = 2*M_PI-M_PI_2;
+        CGFloat startAngle = -M_PI_2;
+        CGFloat endAngle = 2*M_PI-M_PI_2;
         
-        CGFloat startAngle = [Utils degreesToRadians:-90.0f];
-        CGFloat endAngle = [Utils degreesToRadians:270.0f];
+        //CGFloat startAngle = [Utils degreesToRadians:-90.0f];
+        //CGFloat endAngle = [Utils degreesToRadians:270.0f];
         
         UIBezierPath *circlePath = [UIBezierPath bezierPathWithArcCenter:arcCenter
                                                          radius:radius
@@ -119,6 +119,12 @@
     self.view.backgroundColor = circular ? [UIColor clearColor] : [[UIColor virtualWhiteColor] translucify:0.2];
 }
 
+- (void)applyPercentageToScrubber:(CGFloat)percentage {
+    [UIView animateWithDuration:0.33 animations:^{
+        self.currentBarLine.strokeEnd = percentage;
+    }];
+}
+
 - (void)unmask {
 
     self.cloak.frame = CGRectMake(0.0, 0.0, self.view.frame.size.width,
@@ -165,9 +171,14 @@
                                           0.0f);
         CGFloat xDelta = touchPoint.x - zeroDegrees.x;
         CGFloat yDelta = touchPoint.y - zeroDegrees.y;
-        CGFloat degrees = [Utils radiansToDegrees:atan2(yDelta, xDelta)];
-        se = degrees / 180.0f;
+        CGFloat degrees = 2*[Utils radiansToDegrees:atan2(yDelta, xDelta)];
         NSLog(@"%1.1f°",degrees);
+        
+        if ( degrees <= 0.0f ) {
+            degrees = 360.0f;
+        }
+        se = degrees / 360.0f;
+        
         
     } else {
         se = ( dX / basis )*1.0f;

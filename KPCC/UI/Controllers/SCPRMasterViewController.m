@@ -225,6 +225,11 @@ setForOnDemandUI;
                                                  name:@"sleep-timer-disarmed"
                                                object:nil];
     
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(hideSleepTimer)
+                                                 name:@"sleep-timer-fired"
+                                               object:nil];
+    
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
     
     self.liveProgressViewController = [[SCPRProgressViewController alloc] init];
@@ -488,8 +493,32 @@ setForOnDemandUI;
 
 #pragma mark - Sleep Timer
 - (void)showSleepTimer {
+    
+    self.plainTextCountdownLabel.text = @"";
+    
+    [self decloakForMenu:YES];
+    
     [UIView animateWithDuration:0.25 animations:^{
         self.sleepTimerContainerView.alpha = 1.0;
+    } completion:^(BOOL finished) {
+        [self.navigationController popToRootViewControllerAnimated:YES];
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.25 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            if ( ![[AudioManager shared] isPlayingAudio] ) {
+                if ( [[AudioManager shared] currentAudioMode] != AudioModeLive ) {
+                    [self goLive:YES];
+                } else {
+                    if ( self.initialPlay ) {
+                        [self playAudio:NO];
+                    } else {
+                        [self initialPlayTapped:nil];
+                    }
+                }
+            } else {
+                if ( [[AudioManager shared] currentAudioMode] != AudioModeLive ) {
+                    [self goLive:YES];
+                }
+            }
+        });
     }];
 }
 
@@ -513,7 +542,10 @@ setForOnDemandUI;
     CGFloat total = [[SessionManager shared] originalSleepTimerRequest]*1.0f;
     CGFloat remaining = [[SessionManager shared] remainingSleepTimerSeconds]*1.0f;
     CGFloat pct = remaining / total;
-    [self.sleepTimerCountdownProgress setProgress:pct animated:YES];
+    [UIView animateWithDuration:0.25 animations:^{
+        [self.sleepTimerCountdownProgress setProgress:pct];
+    }];
+    
     self.plainTextCountdownLabel.text = [NSDate scientificStringFromSeconds:remaining];
 }
 
@@ -525,6 +557,13 @@ setForOnDemandUI;
                                                 otherButtonTitles:@"Stop", nil];
     cancelAlert.tag = kCancelSleepTimerAlertTag;
     [cancelAlert show];
+}
+
+- (void)handleAlarmClock {
+    [self resetUI];
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [self initialPlayTapped:nil];
+    });
 }
 
 #pragma mark - Onboarding

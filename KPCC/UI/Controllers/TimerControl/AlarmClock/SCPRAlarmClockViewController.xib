@@ -7,6 +7,7 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="SCPRAlarmClockViewController">
             <connections>
+                <outlet property="scheduleButton" destination="17c-Ik-Srn" id="Lmr-DU-rhS"/>
                 <outlet property="scrubberControl" destination="Kut-0t-9ey" id="4pd-8S-PNV"/>
                 <outlet property="scrubberMainValueLabel" destination="2og-4H-7S2" id="Nu2-eg-yP4"/>
                 <outlet property="scrubbingSurface" destination="89A-V8-Iun" id="lMI-mY-89h"/>
@@ -30,22 +31,34 @@
                     </connections>
                 </view>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2og-4H-7S2" userLabel="scrubberValueLabel">
-                    <rect key="frame" x="195" y="120" width="200" height="42"/>
+                    <rect key="frame" x="20" y="120" width="551" height="42"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="42" id="4mD-a7-gHS"/>
                     </constraints>
-                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="19"/>
                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                     <nil key="highlightedColor"/>
                 </label>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="17c-Ik-Srn" userLabel="Start Button" customClass="SCPRButton">
+                    <rect key="frame" x="30" y="526" width="530" height="42"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="42" id="wSO-b6-qWf"/>
+                    </constraints>
+                    <state key="normal" title="Start Sleep Timer">
+                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                    </state>
+                </button>
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
             <constraints>
+                <constraint firstAttribute="bottom" secondItem="17c-Ik-Srn" secondAttribute="bottom" constant="32" id="8No-F7-QB2"/>
+                <constraint firstItem="2og-4H-7S2" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="20" id="Gc6-s7-5s9"/>
+                <constraint firstAttribute="trailing" secondItem="17c-Ik-Srn" secondAttribute="trailing" constant="40" id="HKO-ua-sme"/>
                 <constraint firstAttribute="centerY" secondItem="89A-V8-Iun" secondAttribute="centerY" constant="30" id="PlI-YV-g3E"/>
                 <constraint firstAttribute="centerX" secondItem="89A-V8-Iun" secondAttribute="centerX" constant="5" id="UUa-eE-Uw0"/>
                 <constraint firstItem="89A-V8-Iun" firstAttribute="top" secondItem="2og-4H-7S2" secondAttribute="bottom" constant="8" id="W3p-co-4uP"/>
-                <constraint firstItem="89A-V8-Iun" firstAttribute="leading" secondItem="2og-4H-7S2" secondAttribute="leading" id="nFu-VP-Fe1"/>
-                <constraint firstItem="89A-V8-Iun" firstAttribute="trailing" secondItem="2og-4H-7S2" secondAttribute="trailing" id="vz8-h9-FLn"/>
+                <constraint firstItem="17c-Ik-Srn" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="30" id="ga2-pc-uQW"/>
+                <constraint firstAttribute="trailing" secondItem="2og-4H-7S2" secondAttribute="trailing" constant="29" id="tdn-68-XFJ"/>
             </constraints>
             <point key="canvasLocation" x="451" y="128"/>
         </view>

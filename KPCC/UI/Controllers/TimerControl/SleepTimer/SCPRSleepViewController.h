@@ -10,7 +10,7 @@
 #import "SCPRScrubberViewController.h"
 #import "SCPRButton.h"
 
-@interface SCPRSleepViewController : UIViewController<Scrubbable>
+@interface SCPRSleepViewController : UIViewController<Scrubbable,UIAlertViewDelegate>
 
 @property (nonatomic, strong) IBOutlet SCPRScrubberViewController *scrubber;
 @property (nonatomic, strong) IBOutlet SCPRTouchableScrubberView *scrubbingTouchView;
@@ -31,5 +31,7 @@
 - (void)armSleepTimer;
 - (void)disarmSleepTimer;
 - (void)zero;
+- (void)kickoff;
+
 
 @end

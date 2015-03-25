@@ -29,7 +29,7 @@
                 </imageView>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="RrQ-WT-gyA" userLabel="chromaKeyView">
                     <rect key="frame" x="0.0" y="64" width="600" height="536"/>
-                    <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.59999999999999998" colorSpace="calibratedRGB"/>
+                    <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.62" colorSpace="calibratedRGB"/>
                 </view>
                 <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="nY5-Ey-5zw">
                     <rect key="frame" x="0.0" y="64" width="600" height="536"/>

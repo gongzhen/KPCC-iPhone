@@ -65,6 +65,8 @@ static NSInteger kProgramPollingPressure = 5;
 @property BOOL expiring;
 @property BOOL userLeavingForClickthrough;
 @property BOOL updaterArmed;
+@property BOOL sleepTimerArmed;
+
 @property (nonatomic) double lastKnownBitrate;
 @property NSInteger latestDriftValue;
 @property (atomic) BOOL userIsViewingHeadlines;
@@ -86,6 +88,7 @@ static NSInteger kProgramPollingPressure = 5;
 - (void)disarmSleepTimerWithCompletion:(CompletionBlock)completed;
 
 - (BOOL)sessionIsInBackground;
+- (void)tickSleepTimer;
 
 // Drift
 - (NSDate*)vLive;

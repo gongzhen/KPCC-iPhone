@@ -8,6 +8,10 @@
 
 #import "SCPRAlarmClockViewController.h"
 #import "UILabel+Additions.h"
+#import "NSDate+Helper.h"
+#import "UIColor+UICustom.h"
+#import "DesignManager.h"
+#import "Utils.h"
 
 @interface SCPRAlarmClockViewController ()
 
@@ -30,8 +34,41 @@
                                    circular:YES];
     [self.scrubberControl unmask];
     
+    
     [self.scrubberMainValueLabel proBookFontize];
+    
+    self.relativeNow = [NSDate date];
+    self.armDate = [self.relativeNow dateByAddingTimeInterval:60*60*8];
+    
+    NSString *pretty = [NSDate stringFromDate:self.armDate
+                                   withFormat:@"EEE MM/dd, hh:mm a"];
+    self.scrubberMainValueLabel.text = pretty;
+    
+    [[DesignManager shared] sculptButton:self.scheduleButton
+                               withStyle:SculptingStyleClearWithBorder
+                                 andText:@"Set Alarm Clock"];
+    
+    [self.scheduleButton addTarget:self
+                            action:@selector(scheduleAlarm)
+                  forControlEvents:UIControlEventTouchUpInside
+                           special:YES];
+    
     self.scrubberMainValueLabel.textColor = [UIColor whiteColor];
+    
+    [self.scrubberControl applyPercentageToScrubber:(CGFloat)((1.0f*60*60*8)/(1.0f*60*60*24))];
+}
+
+#pragma mark - Action
+- (void)scheduleAlarm {
+    
+    [UIView animateWithDuration:0.45 animations:^{
+        self.scrubberMainValueLabel.textColor = [UIColor kpccOrangeColor];
+        self.scrubberControl.view.alpha = 0.0;
+    } completion:^(BOOL finished) {
+        
+        [[Utils del] armAlarmClockWithDate:self.armDate];
+        
+    }];
 }
 
 #pragma mark - Scrubbable
@@ -40,9 +77,20 @@
 }
 
 - (void)actionOfInterestWithPercentage:(CGFloat)percent {
-    // Range is 5 to 480
-    NSInteger dayInSeconds = 60*60*24;
+    NSInteger twentyFour = 60*60*24;
+    twentyFour = ceilf((twentyFour * 1.0) * percent);
+    NSDate *then = [self.relativeNow dateByAddingTimeInterval:twentyFour];
+    self.armDate = then;
+    NSString *pretty = [NSDate stringFromDate:then
+                                   withFormat:@"EEE MM/dd, hh:mm a"];
     
+#ifdef DEBUG
+    self.armDate = [[NSDate date] dateByAddingTimeInterval:210.0];
+#endif
+    
+    self.scrubberMainValueLabel.text = pretty;
+    
+
 }
 
 - (UILabel*)scrubbingIndicatorLabel {
