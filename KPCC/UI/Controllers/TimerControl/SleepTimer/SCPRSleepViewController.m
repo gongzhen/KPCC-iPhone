@@ -192,7 +192,7 @@
     } completion:^(BOOL finished) {
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.25 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             
-            [[SessionManager shared] disarmSleepTimerWithCompletion:^{
+            [[SessionManager shared] cancelSleepTimerWithCompletion:^{
                                                         
                                                         [UIView animateWithDuration:0.33 animations:^{
                                                             [self setupInactive];

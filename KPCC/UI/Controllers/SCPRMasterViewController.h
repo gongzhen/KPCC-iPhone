@@ -200,6 +200,8 @@
 - (void)onboarding_beginOutro;
 - (void)onboarding_fin;
 
+- (void)superPop;
+
 @property (nonatomic, strong) IBOutlet NSLayoutConstraint *imageTopConstraint;
 
 @property BOOL genericImageForProgram;

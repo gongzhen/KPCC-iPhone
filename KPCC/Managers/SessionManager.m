@@ -332,6 +332,10 @@
     if ( completed ) {
         dispatch_async(dispatch_get_main_queue(), ^{
             completed();
+            
+            [[AnalyticsManager shared] logEvent:@"sleepTimerArmed"
+                                 withParameters:@{ @"short" : @1 }];
+            
         });
     }
     
@@ -343,11 +347,20 @@
         [self disarmSleepTimerWithCompletion:nil];
         [[AudioManager shared] adjustAudioWithValue:-.045 completion:^{
             [[AudioManager shared] stopAllAudio];
+            
+            [[AnalyticsManager shared] logEvent:@"sleepTimerFired"
+                                 withParameters:@{ @"short" : @1 }];
         }];
     }
     
     [[NSNotificationCenter defaultCenter] postNotificationName:@"sleep-timer-ticked"
                                                         object:nil];
+}
+
+- (void)cancelSleepTimerWithCompletion:(CompletionBlock)completed {
+    [[AnalyticsManager shared] logEvent:@"sleepTimerCanceled"
+                         withParameters:@{ @"short" : @1 }];
+    [self disarmSleepTimerWithCompletion:completed];
 }
 
 - (void)disarmSleepTimerWithCompletion:(CompletionBlock)completed {

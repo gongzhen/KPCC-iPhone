@@ -17,12 +17,15 @@
 #ifdef PRODUCTION
 #define NSLog //
 #define kPushChannel @"listenLive"
+#define kAlarmChannel @"iPhoneAlarm"
 #else
 #ifdef RELEASE
 //#define kPushChannel @"sandbox_listenLive"
 #define kPushChannel @"private_listenLive"
+#define kAlarmChannel @"private_iPhoneAlarm"
 #else
 #define kPushChannel @"sandbox_listenLive"
+#define kAlarmChannel @"sandbox_iPhoneAlarm"
 #endif
 #endif
 
@@ -51,6 +54,9 @@
 
 - (void)actOnNotification:(NSDictionary*)userInfo;
 - (void)armAlarmClockWithDate:(NSDate*)date;
+- (void)cancelAlarmClock;
 - (void)endAlarmClock;
+- (void)buildTimer;
+- (void)manuallyCheckAlarm;
 
 @end

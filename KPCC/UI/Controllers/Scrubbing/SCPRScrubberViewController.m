@@ -22,6 +22,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+
     // Do any additional setup after loading the view from its nib.
 }
 
@@ -35,6 +36,17 @@
 }
 
 - (void)setupWithDelegate:(id<Scrubbable>)delegate circular:(BOOL)circular {
+    
+    
+#ifndef SHOW_ANGLE
+    [self.radiusTerminusView removeFromSuperview];
+    [self.degreesLabel removeFromSuperview];
+#else
+    self.radiusTerminusView.layer.cornerRadius = self.radiusTerminusView.frame.size.width / 2.0;
+    self.radiusTerminusView.clipsToBounds = YES;
+    self.radiusTerminusView.layer.borderColor = [UIColor blackColor].CGColor;
+    self.radiusTerminusView.layer.borderWidth = 1.0f;
+#endif
     
     self.scrubbingDelegate = delegate;
     self.viewAsTouchableScrubberView = [delegate scrubbableView];
@@ -167,18 +179,52 @@
     CGFloat basis = self.view.frame.size.width;
     double se = 0.0f;
     if ( self.circular ) {
+        
+#ifdef USE_ATAN2
         CGPoint zeroDegrees = CGPointMake(self.view.frame.size.width/2.0f,
                                           0.0f);
-        CGFloat xDelta = touchPoint.x - zeroDegrees.x;
-        CGFloat yDelta = touchPoint.y - zeroDegrees.y;
+        CGPoint xp = [self extendPoint:touchPoint toEdge:zeroDegrees];
+        CGFloat xDelta = xp.x - zeroDegrees.x;
+        CGFloat yDelta = xp.y - zeroDegrees.y;
         CGFloat degrees = 2*[Utils radiansToDegrees:atan2(yDelta, xDelta)];
         NSLog(@"%1.1f°",degrees);
-        
         if ( degrees <= 0.0f ) {
             degrees = 360.0f;
         }
         se = degrees / 360.0f;
+#else
+        CGPoint origin = CGPointMake(self.view.frame.size.width / 2.0f,
+                                     self.view.frame.size.height / 2.0f);
+        CGPoint zeroDegrees = CGPointMake(self.view.frame.size.width/2.0f,
+                                          0.0f);
         
+        CGFloat ui = origin.x - zeroDegrees.x;
+        CGFloat uj = origin.y - zeroDegrees.y;
+        
+        CGPoint xp = [self extendPoint:touchPoint toEdge:zeroDegrees];
+        CGFloat vi = xp.x - origin.x;
+        CGFloat vj = origin.y - xp.y;
+        
+        CGFloat dotProduct = ui*vi + uj*vj;
+        
+        CGFloat uLength = sqrtf((ui*ui)+(uj*uj));
+        CGFloat vLength = sqrtf((vi*vi)+(vj*vj));
+        
+        CGFloat radians = acosf(dotProduct / ( uLength * vLength));
+        CGFloat degrees = [Utils radiansToDegrees:radians];
+        if ( xp.x < origin.x ) {
+            // Out of position angle (0 -> π)
+            degrees = 180.f + (180.f - degrees);
+        }
+        
+        se = degrees / 360.f;
+        
+#endif
+#ifdef SHOW_ANGLE
+        self.radiusTerminusView.center = xp;
+        self.degreesLabel.text = [NSString stringWithFormat:@"%1.1f°",degrees];
+        [self.view setNeedsDisplay];
+#endif
         
     } else {
         se = ( dX / basis )*1.0f;
@@ -186,6 +232,46 @@
     
     self.currentBarLine.strokeEnd = se;
     [self.scrubbingDelegate actionOfInterestWithPercentage:(CGFloat)se];
+}
+
+- (CGPoint)extendPoint:(CGPoint)touchPoint toEdge:(CGPoint)bound {
+    CGPoint origin = CGPointMake(self.view.frame.size.width / 2.0,
+                                 self.view.frame.size.height / 2.0);
+    CGFloat slopeNumerator = touchPoint.y - origin.y;
+    CGFloat slopeDenom = touchPoint.x - origin.x;
+    
+    
+    CGPoint extendedPoint = touchPoint;
+    CGFloat currX = extendedPoint.x;
+    CGFloat currY = extendedPoint.y;
+    while ((currX <= self.view.frame.size.width && currX >= 0.0f) &&
+           (currY >= 0.0f && currY <= self.view.frame.size.height) ) {
+        currX = extendedPoint.x;
+        currY = extendedPoint.y;
+        currX = currX + slopeDenom;
+        currY = currY + slopeNumerator;
+        extendedPoint = CGPointMake(currX, currY);
+    }
+    
+    if ( currY > self.view.frame.size.height ) {
+        currY = self.view.frame.size.height;
+    }
+    if ( currY < 0.0f ) {
+        currY = 0.0f;
+    }
+    if ( currX > self.view.frame.size.width ) {
+        currX = self.view.frame.size.width;
+    }
+    if ( currX < 0.0f ) {
+        currX = 0.0f;
+    }
+    
+    extendedPoint = CGPointMake(currX, currY);
+    
+    NSLog(@"Old Point {%1.1fx, %1.1fy}, New Point {%1.1fx, %1.1fy}",touchPoint.x,touchPoint.y,
+     extendedPoint.x,extendedPoint.y);
+    
+    return extendedPoint;
 }
 
 - (void)userFinishedScrubbing {

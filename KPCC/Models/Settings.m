@@ -7,6 +7,8 @@
 //
 
 #import "Settings.h"
+#import "SCPRAppDelegate.h"
+#import "Utils.h"
 
 @implementation Settings
 
@@ -18,6 +20,10 @@
     self.pushTokenData = [aDecoder decodeObjectForKey:@"pushTokenData"];
     self.userHasConnectedWithKochava = [aDecoder decodeBoolForKey:@"userHasConnectedWithKochava"];
     self.lastBookmarkSweep = [aDecoder decodeObjectForKey:@"lastBookmarkSweep"];
+    self.alarmFireDate = [aDecoder decodeObjectForKey:@"alarmFireDate"];
+    
+    [[Utils del] setAlarmDate:self.alarmFireDate];
+    
     return self;
 }
 
@@ -36,6 +42,10 @@
                 forKey:@"userHasViewedScrubbingOnboarding"];
     [aCoder encodeObject:self.lastBookmarkSweep
                   forKey:@"lastBookmarkSweep"];
+    [aCoder encodeObject:self.alarmFireDate
+                  forKey:@"alarmFireDate"];
+    
+    
 }
 
 @end

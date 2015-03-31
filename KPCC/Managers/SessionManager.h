@@ -83,9 +83,12 @@ static NSInteger kProgramPollingPressure = 5;
 - (void)resetCache;
 - (void)checkProgramUpdate:(BOOL)force;
 
+- (BOOL)alarmExpired;
+
 - (BOOL)sleepTimerActive;
 - (void)armSleepTimerWithSeconds:(NSInteger)seconds completed:(CompletionBlock)completed;
 - (void)disarmSleepTimerWithCompletion:(CompletionBlock)completed;
+- (void)cancelSleepTimerWithCompletion:(CompletionBlock)completed;
 
 - (BOOL)sessionIsInBackground;
 - (void)tickSleepTimer;

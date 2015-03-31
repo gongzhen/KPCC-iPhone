@@ -19,7 +19,14 @@
 @property (nonatomic, strong) NSDate *relativeNow;
 @property (nonatomic, strong) NSDate *armDate;
 @property (nonatomic, strong) IBOutlet SCPRButton *scheduleButton;
+@property (nonatomic, strong) IBOutlet UIActivityIndicatorView *spinner;
+@property (nonatomic, strong) IBOutlet UILabel *midnightLabel;
+@property (nonatomic, strong) IBOutlet UILabel *noonLabel;
+@property (nonatomic, strong) IBOutlet UILabel *willWakeLabel;
+
+@property BOOL throwRequirement;
 
 - (void)setup;
+- (void)setupForState;
 
 @end

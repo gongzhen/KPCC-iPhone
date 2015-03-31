@@ -33,6 +33,8 @@
 @property (nonatomic,strong) UIPanGestureRecognizer *scrubPanner;
 @property (nonatomic,strong) SCPRTouchableScrubberView *viewAsTouchableScrubberView;
 @property (nonatomic,weak) id<Scrubbable> scrubbingDelegate;
+@property (nonatomic, strong) IBOutlet UILabel *degreesLabel;
+@property (nonatomic, strong) IBOutlet UIView *radiusTerminusView;
 
 @property (nonatomic, strong) UIView *cloak;
 @property BOOL expanded;

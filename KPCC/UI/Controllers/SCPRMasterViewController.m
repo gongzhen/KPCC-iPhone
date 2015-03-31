@@ -318,7 +318,6 @@ setForOnDemandUI;
     [self.initialPlayButton addTarget:self
                                action:@selector(initialPlayTapped:)
                      forControlEvents:UIControlEventTouchUpInside
-     
                               special:YES];
     
     [self.playPauseButton addTarget:self
@@ -417,6 +416,11 @@ setForOnDemandUI;
 - (void)viewDidLayoutSubviews {
 
 
+}
+
+- (void)superPop {
+    [self.navigationController popToRootViewControllerAnimated:YES];
+    [self decloakForMenu:YES];
 }
 
 - (void)addPreRollController {
@@ -3099,7 +3103,7 @@ setForOnDemandUI;
     
     if ( alertView.tag == kCancelSleepTimerAlertTag ) {
         if ( buttonIndex == 1 ) {
-            [[SessionManager shared] disarmSleepTimerWithCompletion:nil];
+            [[SessionManager shared] cancelSleepTimerWithCompletion:nil];
         }
         return;
     }
