@@ -43,6 +43,8 @@
 @property (strong, nonatomic) NSTimer *timer;
 @property (strong, nonatomic) NSDate *alarmDate;
 @property (strong, nonatomic) NSTimer *initialCheckTimer;
+@property (strong, nonatomic) NSTimer *alarmTimer;
+
 @property UIBackgroundFetchResult alarmResults;
 
 
@@ -54,6 +56,7 @@
 
 - (void)actOnNotification:(NSDictionary*)userInfo;
 - (void)armAlarmClockWithDate:(NSDate*)date;
+- (void)fireAlarmClock;
 - (void)cancelAlarmClock;
 - (void)endAlarmClock;
 - (void)buildTimer;

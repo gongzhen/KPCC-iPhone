@@ -26,11 +26,15 @@ typedef NS_ENUM(NSInteger, SculptingStyle) {
 - (UIView*)textHeaderWithText:(NSString *)text textColor:(UIColor*)color backgroundColor:(UIColor*)backgroundColor;
 - (UIView*)textHeaderWithText:(NSString *)text textColor:(UIColor *)color backgroundColor:(UIColor *)backgroundColor divider:(BOOL)divider;
 - (void)sculptButton:(UIButton*)button withStyle:(SculptingStyle)style andText:(NSString*)text;
+- (void)sculptButton:(UIButton*)button withStyle:(SculptingStyle)style andText:(NSString*)text iconName:(NSString*)iconName;
+
+- (NSAttributedString*)standardTimeFormatWithString:(NSString*)timeString attributes:(NSDictionary*)attributes;
 
 // Layouts
 - (NSArray*)typicalConstraints:(UIView *)view withTopOffset:(CGFloat)topOffset fullscreen:(BOOL)fullscreen;
 - (NSArray*)sizeConstraintsForView:(UIView *)view;
 - (NSArray*)sizeConstraintsForView:(UIView *)view hints:(NSDictionary*)hints;
+- (NSDictionary*)centeredConstraintsForView:(UIView *)view withinParent:(UIView*)parent;
 
 - (NSLayoutConstraint*)snapView:(id)view toContainer:(id)container withTopOffset:(CGFloat)topOffset;
 - (NSLayoutConstraint*)snapView:(id)view toContainer:(id)container withTopOffset:(CGFloat)topOffset fullscreen:(BOOL)fullscreen;

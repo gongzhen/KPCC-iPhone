@@ -314,7 +314,7 @@
     
     [self disarmSleepTimerWithCompletion:nil];
 #ifdef DEBUG
-    seconds = 275;
+    seconds = 65;
 #endif
     self.originalSleepTimerRequest = seconds;
     self.remainingSleepTimerSeconds = seconds;
@@ -344,13 +344,16 @@
 - (void)tickSleepTimer {
     self.remainingSleepTimerSeconds = self.remainingSleepTimerSeconds - 1;
     if ( self.remainingSleepTimerSeconds <= 0 ) {
-        [self disarmSleepTimerWithCompletion:nil];
+        [self disarmSleepTimerWithCompletion:^{
+            self.remainingSleepTimerSeconds = 300;
+        }];
         [[AudioManager shared] adjustAudioWithValue:-.045 completion:^{
             [[AudioManager shared] stopAllAudio];
             
             [[AnalyticsManager shared] logEvent:@"sleepTimerFired"
                                  withParameters:@{ @"short" : @1 }];
         }];
+        return;
     }
     
     [[NSNotificationCenter defaultCenter] postNotificationName:@"sleep-timer-ticked"
@@ -376,7 +379,6 @@
     [[NSNotificationCenter defaultCenter] postNotificationName:@"sleep-timer-disarmed"
                                                         object:nil];
     
-    self.remainingSleepTimerSeconds = 300;
     if ( completed ) {
         dispatch_async(dispatch_get_main_queue(), ^{
             completed();
@@ -758,6 +760,7 @@
 }
 
 - (BOOL)sessionIsExpired {
+    
     
     if ( [[AudioManager shared] currentAudioMode] == AudioModeOnDemand ) return NO;
     if ( [[AudioManager shared] status] == StreamStatusPaused ||

@@ -42,7 +42,7 @@
     [self.view printDimensionsWithIdentifier:@"Timer Container View"];
     [self.toggleScroller printDimensionsWithIdentifier:@"Timer Scroller View"];
     
-    
+    self.navigationItem.title = @"Wake / Sleep";
     
     self.toggleScroller.translatesAutoresizingMaskIntoConstraints = NO;
     
@@ -137,6 +137,7 @@
     
     [self.view layoutIfNeeded];
     
+    [self.chromaKeyView setBackgroundColor:[[UIColor virtualBlackColor] translucify:0.5f]];
     [self.sleepTimerController setup];
     [self.alarmClockController setup];
 }

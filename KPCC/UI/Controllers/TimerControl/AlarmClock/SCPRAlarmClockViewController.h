@@ -23,6 +23,11 @@
 @property (nonatomic, strong) IBOutlet UILabel *midnightLabel;
 @property (nonatomic, strong) IBOutlet UILabel *noonLabel;
 @property (nonatomic, strong) IBOutlet UILabel *willWakeLabel;
+@property (nonatomic, strong) IBOutlet NSLayoutConstraint *topAnchor;
+
+// 3.5"
+@property (nonatomic, strong) IBOutlet NSLayoutConstraint *bottomAnchor;
+@property (nonatomic, strong) IBOutlet NSLayoutConstraint *inbetweenAnchor;
 
 @property BOOL throwRequirement;
 

@@ -230,14 +230,19 @@
 
 - (void)application:(UIApplication *)application didReceiveLocalNotification:(UILocalNotification *)notification {
     
-    NSLog(@"Alarm Clock is firing");
-    [self endAlarmClock];
+    NSLog(@"Did receive local notification");
+    [self fireAlarmClock];
     
-    [[AnalyticsManager shared] logEvent:@"alarmClockFired"
-                         withParameters:@{ @"short" : @1 }];
+}
+
+- (void)application:(UIApplication *)application handleActionWithIdentifier:(NSString *)identifier forLocalNotification:(UILocalNotification *)notification completionHandler:(void (^)())completionHandler {
     
-    [[AudioManager shared] setUserPause:NO];
-    [self.masterViewController handleResponseForNotification];
+    NSLog(@"Handle action with Identifier");
+    if ( SEQ(notification.alertAction,@"play-audio") ) {
+        [[AudioManager shared] setUserPause:NO]; // Override the user's pause request
+        [self.masterViewController handleResponseForNotification];
+    }
+    completionHandler();
     
 }
 
@@ -314,7 +319,7 @@
         [[SessionManager shared] checkProgramUpdate:YES];
     }
     
-    [self manuallyCheckAlarm];
+    
     
 #ifdef DEBUG
     if ( [[SessionManager shared] sessionPausedDate] ) {
@@ -337,6 +342,7 @@
         }
     }
     
+    [self manuallyCheckAlarm];
     
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
 }
@@ -375,26 +381,28 @@
 
 - (void)armAlarmClockWithDate:(NSDate *)date {
 #ifndef USE_PUSH_FOR_ALARM
-    
-#ifdef DEBUG
-    date = [[NSDate date] dateByAddingTimeInterval:30.0f];
+    self.alarmDate = date;
+#ifndef PRODUCTION
+    //self.alarmDate = [[NSDate date] dateByAddingTimeInterval:25.0];
 #endif
     
-    self.alarmDate = [NSDate dateWithTimeIntervalSince1970:[date timeIntervalSince1970]];
+    self.alarmTimer = [NSTimer scheduledTimerWithTimeInterval:abs([self.alarmDate timeIntervalSinceNow])
+                                                       target:self
+                                                     selector:@selector(fireAlarmClock)
+                                                     userInfo:nil
+                                                      repeats:NO];
+    
     if ( [[AudioManager shared] isPlayingAudio] ) {
         [[AudioManager shared] adjustAudioWithValue:-0.075
                                          completion:^{
                                              [[AudioManager shared] stopAllAudio];
                                              [self buildTimer];
-                                             [self.masterViewController superPop];
                                          }];
         return;
     }
     
 
     [self buildTimer];
-    [self.masterViewController superPop];
-    
     [[AnalyticsManager shared] logEvent:@"alarmClockArmed"
                          withParameters:@{ @"short" : @1 }];
     
@@ -419,13 +427,19 @@
     alarm.alertBody = @"It's time for your fix of KPCC";
     alarm.fireDate = self.alarmDate;
     alarm.soundName = @"alarm_beat.aif";
+    alarm.alertAction = @"play-audio";
+    alarm.timeZone = [NSTimeZone defaultTimeZone];
+    alarm.hasAction = YES;
     
-    [[UIApplication sharedApplication] scheduleLocalNotification:alarm];
+    //[[UIApplication sharedApplication] scheduleLocalNotification:alarm];
     
     
     
     NSLog(@"Alarm will fire at : %@",[NSDate stringFromDate:self.alarmDate
-                                                 withFormat:@"EEE MM/dd, hh:mm:ss a"]);
+                                                 withFormat:@"EEE MM/dd YYYY, hh:mm:ss a"]);
+    
+    NSArray *local = [[UIApplication sharedApplication] scheduledLocalNotifications];
+    NSLog(@"System reports %ld scheduled notes",(long)local.count);
     
     [[UXmanager shared].settings setAlarmFireDate:self.alarmDate];
     [[UXmanager shared] persist];
@@ -477,6 +491,9 @@
 }
 
 - (void)manuallyCheckAlarm {
+    NSArray *local = [[UIApplication sharedApplication] scheduledLocalNotifications];
+    NSLog(@"System reports %ld scheduled notes",(long)local.count);
+    
     NSDate *alarmDate = [[UXmanager shared].settings alarmFireDate];
     if ( alarmDate ) {
         NSInteger diff = [[NSDate date] timeIntervalSinceDate:alarmDate];
@@ -484,6 +501,33 @@
             [self endAlarmClock];
         }
     }
+}
+
+- (void)fireAlarmClock {
+    
+    
+    if ( self.alarmTimer ) {
+        if ( [self.alarmTimer isValid] ) {
+            [self.alarmTimer invalidate];
+        }
+        self.alarmTimer = nil;
+    }
+    if ( ![[UXmanager shared].settings alarmFireDate] ) {
+        return;
+    }
+    
+    NSLog(@"Alarm Clock is firing");
+    
+    [self endAlarmClock];
+    
+    [[AnalyticsManager shared] logEvent:@"alarmClockFired"
+                         withParameters:@{ @"short" : @1 }];
+    
+    [[AudioManager shared] setUserPause:NO];
+    [self.masterViewController handleResponseForNotification];
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"alarm-fired"
+                                                        object:nil];
 }
 
 - (void)cancelAlarmClock {

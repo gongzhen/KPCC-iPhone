@@ -275,6 +275,12 @@ static DesignManager *singleton = nil;
 
 #pragma mark - Makeovers
 - (void)sculptButton:(UIButton *)button withStyle:(SculptingStyle)style andText:(NSString *)text {
+    [self sculptButton:button
+             withStyle:style
+               andText:text
+              iconName:nil];
+}
+- (void)sculptButton:(UIButton *)button withStyle:(SculptingStyle)style andText:(NSString *)text iconName:(NSString *)iconName {
     [button setTitle:text forState:UIControlStateNormal];
     [button setTitle:text forState:UIControlStateHighlighted];
     [button.titleLabel proSemiBoldFontize];
@@ -292,7 +298,7 @@ static DesignManager *singleton = nil;
         case SculptingStyleClearWithBorder:
         {
             button.backgroundColor = [UIColor clearColor];
-            button.layer.borderColor = [UIColor virtualWhiteColor].CGColor;
+            button.layer.borderColor = [[UIColor virtualWhiteColor] translucify:0.46f].CGColor;
             button.layer.borderWidth = 1.0;
             [button setTitleColor:[UIColor whiteColor]
                          forState:UIControlStateNormal];
@@ -307,6 +313,107 @@ static DesignManager *singleton = nil;
             
         }
     }
+    
+    if ( iconName ) {
+#ifdef AUTOLAYOUT_FOR_STANDARD
+        button.translatesAutoresizingMaskIntoConstraints = NO;
+    
+        UIImage *img = [UIImage imageNamed:iconName];
+        UIImageView *imgView = [[UIImageView alloc] initWithImage:img];
+        imgView.contentMode = UIViewContentModeCenter;
+        NSArray *sizeC = [self sizeConstraintsForView:imgView];
+        imgView.translatesAutoresizingMaskIntoConstraints = NO;
+        [imgView addConstraints:sizeC];
+        
+        CGFloat leftFloat = img.size.width * 0.18f;
+        [button addSubview:imgView];
+        
+        NSString *hFmt = [NSString stringWithFormat:@"H:[icon]-%1.1f-[title]",leftFloat];
+        NSArray *hC = [NSLayoutConstraint constraintsWithVisualFormat:hFmt
+                                                              options:0
+                                                              metrics:nil
+                                                                views:@{ @"icon" : imgView,
+                                                                         @"title" : button.titleLabel }];
+        
+        NSDictionary *centered = [self centeredConstraintsForView:imgView
+                                                     withinParent:button];
+        
+        NSLayoutConstraint *centerY = centered[@"y"];
+        
+        NSDictionary *titleCentered = [self centeredConstraintsForView:button.titleLabel
+                                                          withinParent:button];
+        
+        [button addConstraint:titleCentered[@"x"]];
+        
+        button.titleLabel.backgroundColor = [UIColor purpleColor];
+        
+
+        [button addConstraints:hC];
+        [button addConstraint:centerY];
+#else
+        [button setImage:[UIImage imageNamed:iconName]
+                forState:UIControlStateNormal];
+        [button setImage:[UIImage imageNamed:iconName]
+                forState:UIControlStateHighlighted];
+        
+        [button setImageEdgeInsets:UIEdgeInsetsMake(0.0, 0.0, 0.0, 20.0f)];
+        
+        [button setTintColor:[UIColor whiteColor]];
+        
+#endif
+    } else {
+        [button setImage:[UIImage imageNamed:nil]
+                forState:UIControlStateNormal];
+        [button setImage:[UIImage imageNamed:nil]
+                forState:UIControlStateHighlighted];
+    }
+}
+
+- (NSDictionary*)centeredConstraintsForView:(UIView *)view withinParent:(UIView *)parent {
+    NSLayoutConstraint *centerY = [NSLayoutConstraint constraintWithItem:view
+                                                               attribute:NSLayoutAttributeCenterY
+                                                               relatedBy:NSLayoutRelationEqual
+                                                                  toItem:parent
+                                                               attribute:NSLayoutAttributeCenterY
+                                                              multiplier:1.0f
+                                                                constant:0.0f];
+    
+    NSLayoutConstraint *centerX = [NSLayoutConstraint constraintWithItem:view
+                                                               attribute:NSLayoutAttributeCenterX
+                                                               relatedBy:NSLayoutRelationEqual
+                                                                  toItem:parent
+                                                               attribute:NSLayoutAttributeCenterX
+                                                              multiplier:1.0f
+                                                                constant:0.0f];
+    
+    return @{ @"x" : centerX, @"y" : centerY };
+}
+
+- (NSAttributedString*)standardTimeFormatWithString:(NSString *)timeString attributes:(NSDictionary *)attributes {
+    NSMutableAttributedString *lowerBoundString = [[NSMutableAttributedString alloc] initWithString:timeString
+                                                                                         attributes:nil];
+    
+    NSRange ampm = [[timeString lowercaseString] rangeOfString:@"am"];
+    if ( ampm.location == NSNotFound ) {
+        ampm = [[timeString lowercaseString] rangeOfString:@"pm"];
+    }
+
+    // TODO: should error check for neither, but right now... meh
+    
+    NSString *digits = [timeString substringToIndex:ampm.location];
+    NSRange digitsRange = NSMakeRange(0, digits.length);
+    
+    NSDictionary *digitParams = @{ NSFontAttributeName : attributes[@"digits"],
+                                   NSForegroundColorAttributeName : [UIColor whiteColor] };
+    NSDictionary *ampmParams = @{ NSFontAttributeName : attributes[@"period"],
+                                  NSForegroundColorAttributeName : [UIColor whiteColor] };
+    
+    [lowerBoundString addAttributes:digitParams
+                              range:digitsRange];
+    [lowerBoundString addAttributes:ampmParams
+                              range:ampm];
+    
+    return lowerBoundString;
 }
 
 #pragma mark - Fonts

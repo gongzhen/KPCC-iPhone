@@ -32,6 +32,14 @@
 - (void)setup {
     [self.view layoutIfNeeded];
     
+    if ( [Utils isThreePointFive] ) {
+        self.globalTopAnchor.constant = 178.0f;
+        self.bottomAnchor.constant = 12.0f;
+    } else {
+        self.globalTopAnchor.constant = 228.0f;
+        self.bottomAnchor.constant = 32.0f;
+    }
+    
     self.spinner.alpha = 0.0;
     self.armableSeconds = 300;
     
@@ -57,6 +65,8 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     self.spinner.alpha = 0.0;
     self.startButton.alpha = 1.0;
+
+    [self actionOfInterestWithPercentage:0.0];
     [self.startButton removeTarget:nil
                             action:nil
                   forControlEvents:UIControlEventAllEvents];
@@ -68,14 +78,14 @@
     
     [[DesignManager shared] sculptButton:self.startButton
                                withStyle:SculptingStyleClearWithBorder
-                                 andText:@"Start Sleep Timer"];
+                                 andText:@"Start Sleep Timer"
+     iconName:@"icon-stopwatch.png"];
+    
     self.scrubbingSeatView.alpha = 1.0;
     self.indicatorTopAnchor.constant = 38.0f;
     self.remainingLabel.alpha = 0.0;
     self.indicatorLabel.attributedText = [NSDate prettyAttributedFromSeconds:300 includeSeconds:NO];
-    
-
-    
+    self.indicatorLabel.alpha = 1.0;
     [self.startButton addTarget:self
                          action:@selector(armSleepTimer)
                forControlEvents:UIControlEventTouchUpInside
@@ -91,9 +101,15 @@
                                                  name:@"sleep-timer-ticked"
                                                object:nil];
     
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(disarmSleepTimer)
+                                                 name:@"sleep-timer-disarmed"
+                                               object:nil];
+    
     [[DesignManager shared] sculptButton:self.startButton
                                withStyle:SculptingStyleClearWithBorder
                                  andText:@"Cancel Sleep Timer"];
+    
     self.scrubbingSeatView.alpha = 0.0;
     self.indicatorTopAnchor.constant = 13.0f;
     self.remainingLabel.alpha = 1.0;
@@ -189,6 +205,8 @@
         [self.spinner setAlpha:1.0];
         [self.spinner startAnimating];
         [self.startButton setAlpha:0.0];
+        [self.indicatorLabel setAlpha:0.0f];
+        [self.remainingLabel setAlpha:0.0f];
     } completion:^(BOOL finished) {
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.25 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             

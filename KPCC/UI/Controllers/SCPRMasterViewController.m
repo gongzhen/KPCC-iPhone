@@ -196,8 +196,9 @@ setForOnDemandUI;
     
     if ( [Utils isThreePointFive] ) {
         if ( [Utils isIOS8] ) {
-            [self.initialControlsYConstraint setConstant:131.0];
+            [self.initialControlsYConstraint setConstant:151.0];
             [self.playerControlsTopYConstraint setConstant:288.0];
+            [self.programTitleYConstraint setConstant:278.0];
         } else {
             [self.initialControlsYConstraint setConstant:101.0];
             [self.playerControlsTopYConstraint setConstant:258.0];
@@ -421,6 +422,7 @@ setForOnDemandUI;
 - (void)superPop {
     [self.navigationController popToRootViewControllerAnimated:YES];
     [self decloakForMenu:YES];
+    self.navigationItem.title = @"KPCC Live";
 }
 
 - (void)addPreRollController {
@@ -499,31 +501,27 @@ setForOnDemandUI;
 - (void)showSleepTimer {
     
     self.plainTextCountdownLabel.text = @"";
-    
-    [self decloakForMenu:YES];
-    
-    [UIView animateWithDuration:0.25 animations:^{
-        self.sleepTimerContainerView.alpha = 1.0;
-    } completion:^(BOOL finished) {
-        [self.navigationController popToRootViewControllerAnimated:YES];
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.25 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            if ( ![[AudioManager shared] isPlayingAudio] ) {
-                if ( [[AudioManager shared] currentAudioMode] != AudioModeLive ) {
-                    [self goLive:YES];
-                } else {
-                    if ( self.initialPlay ) {
-                        [self playAudio:NO];
-                    } else {
-                        [self initialPlayTapped:nil];
-                    }
-                }
+
+        
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.25 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [self superPop];
+        if ( ![[AudioManager shared] isPlayingAudio] ) {
+            if ( [[AudioManager shared] currentAudioMode] != AudioModeLive ) {
+                [self goLive:YES];
             } else {
-                if ( [[AudioManager shared] currentAudioMode] != AudioModeLive ) {
-                    [self goLive:YES];
+                if ( self.initialPlay ) {
+                    [self playAudio:NO];
+                } else {
+                    [self initialPlayTapped:nil];
                 }
             }
-        });
-    }];
+        } else {
+            if ( [[AudioManager shared] currentAudioMode] != AudioModeLive ) {
+                [self goLive:YES];
+            }
+        }
+    });
+   
 }
 
 - (void)hideSleepTimer {
@@ -548,6 +546,7 @@ setForOnDemandUI;
     CGFloat pct = remaining / total;
     [UIView animateWithDuration:0.25 animations:^{
         [self.sleepTimerCountdownProgress setProgress:pct];
+        [self.sleepTimerContainerView setAlpha:1.0];
     }];
     
     self.plainTextCountdownLabel.text = [NSDate scientificStringFromSeconds:remaining];
@@ -2268,7 +2267,6 @@ setForOnDemandUI;
     return;
 #endif
     
-
     NSLog(@" ||||||||||| UNLOCKING UI FROM NETWORK GAP |||||||||||| ");
     
     [[NSNotificationCenter defaultCenter] addObserver:self

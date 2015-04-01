@@ -22,6 +22,11 @@
 @property (nonatomic, strong) IBOutlet NSLayoutConstraint *indicatorTopAnchor;
 @property (nonatomic, strong) IBOutlet UIView *scrubbingSeatView;
 @property (nonatomic, strong) IBOutlet UIActivityIndicatorView *spinner;
+
+// 3.5"
+@property (nonatomic, strong) IBOutlet NSLayoutConstraint *bottomAnchor;
+@property (nonatomic, strong) IBOutlet NSLayoutConstraint *globalTopAnchor;
+
 @property NSInteger armableSeconds;
 
 - (void)setup;

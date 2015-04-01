@@ -49,12 +49,14 @@
 
 - (NSDate*)minuteRoundedUpByThreshold:(NSInteger)minute {
     NSDateComponents *time = [[NSCalendar currentCalendar]
-                              components:NSHourCalendarUnit | NSMinuteCalendarUnit
+                              components:( NSCalendarUnitYear | NSCalendarUnitWeekOfYear | NSCalendarUnitMonth | NSCalendarUnitWeekOfMonth | NSCalendarUnitDay | NSCalendarUnitWeekday | NSCalendarUnitHour | NSCalendarUnitMinute )
                               fromDate:self];
+    
     NSInteger minutes = [time minute];
     float minuteUnit = ceil((float) minutes / (CGFloat)minute*1.0);
     minutes = minuteUnit * (minute*1.0);
     [time setMinute: minutes];
+    [time setSecond:0];
     return [[NSCalendar currentCalendar] dateFromComponents:time];
 }
 
@@ -314,24 +316,24 @@
     NSString *hourStatement = @"";
     NSString *minStatement = @"";
     if ( hours > 0 ) {
-        if ( hours == 1 ) {
-            hourStatement = [NSString stringWithFormat:@"%ld:",(long)hours];
-        } else {
-            hourStatement = [NSString stringWithFormat:@"%ld:",(long)hours];
-        }
+        hourStatement = [NSString stringWithFormat:@"%ld:",(long)hours];
     }
+ 
+    minStatement = [NSString stringWithFormat:@"%ld",(long)minutes];
     
-    if ( minutes > 0 ) {
-        if ( minutes > 1 ) {
-            //minuteNoun = [minuteNoun stringByAppendingString:@"S"];
-        }
-        minStatement = [NSString stringWithFormat:@"%ld",(long)minutes];
+    if ( hours > 0 && minutes < 10 ) {
+        minStatement = [NSString stringWithFormat:@"0%ld",(long)minutes];
     }
     
     
     NSString *complet = [NSString stringWithFormat:@"%@%@",hourStatement,minStatement];
     NSInteger leftovers = seconds % 60;
+    
+    
     NSString *addSec = [NSString stringWithFormat:@":%ld",(long)leftovers];
+    if ( leftovers < 10 ) {
+        addSec = [NSString stringWithFormat:@":0%ld",(long)leftovers];
+    }
     complet = [complet stringByAppendingFormat:@"%@",addSec];
     
     return complet;

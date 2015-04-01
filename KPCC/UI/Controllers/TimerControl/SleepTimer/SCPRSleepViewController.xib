@@ -7,6 +7,8 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="SCPRSleepViewController">
             <connections>
+                <outlet property="bottomAnchor" destination="FKf-BN-S7v" id="61G-4g-qkD"/>
+                <outlet property="globalTopAnchor" destination="zCc-k2-uXr" id="7bA-IK-weN"/>
                 <outlet property="indicatorLabel" destination="eMp-zX-4Ac" id="lOP-rQ-8bI"/>
                 <outlet property="indicatorTopAnchor" destination="nYY-jY-QUp" id="EPT-ft-b0b"/>
                 <outlet property="lowerBoundLabel" destination="lUK-FQ-W7q" id="MUU-GM-41t"/>
@@ -90,7 +92,7 @@
                     <rect key="frame" x="290" y="537" width="20" height="20"/>
                 </activityIndicatorView>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="R4Y-RH-XVV" userLabel="Start Button" customClass="SCPRButton">
-                    <rect key="frame" x="35" y="526" width="530" height="42"/>
+                    <rect key="frame" x="30" y="526" width="540" height="42"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="42" id="6FZ-cf-bHT"/>
                     </constraints>
@@ -101,7 +103,7 @@
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
             <constraints>
-                <constraint firstAttribute="trailing" secondItem="R4Y-RH-XVV" secondAttribute="trailing" constant="35" id="3a4-HC-LMq"/>
+                <constraint firstAttribute="trailing" secondItem="R4Y-RH-XVV" secondAttribute="trailing" constant="30" id="3a4-HC-LMq"/>
                 <constraint firstAttribute="trailing" secondItem="eMp-zX-4Ac" secondAttribute="trailing" constant="10" id="8k3-Dd-LEG"/>
                 <constraint firstAttribute="bottom" secondItem="R4Y-RH-XVV" secondAttribute="bottom" constant="32" id="FKf-BN-S7v"/>
                 <constraint firstAttribute="trailing" secondItem="3VR-M7-GzS" secondAttribute="trailing" constant="10" id="Fi1-Vy-yVb"/>
@@ -110,7 +112,7 @@
                 <constraint firstItem="aHo-0w-ieX" firstAttribute="centerY" secondItem="R4Y-RH-XVV" secondAttribute="centerY" id="SXP-1P-idD"/>
                 <constraint firstItem="3VR-M7-GzS" firstAttribute="top" secondItem="eMp-zX-4Ac" secondAttribute="bottom" constant="8" id="fdQ-2G-VCf"/>
                 <constraint firstItem="3VR-M7-GzS" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="10" id="hoi-tg-jx3"/>
-                <constraint firstItem="R4Y-RH-XVV" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="35" id="ie6-NG-a3X"/>
+                <constraint firstItem="R4Y-RH-XVV" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="30" id="ie6-NG-a3X"/>
                 <constraint firstAttribute="trailing" secondItem="bWg-pH-jh1" secondAttribute="trailing" id="mF0-7C-JA0"/>
                 <constraint firstItem="bWg-pH-jh1" firstAttribute="top" secondItem="eMp-zX-4Ac" secondAttribute="bottom" constant="38" id="nYY-jY-QUp"/>
                 <constraint firstItem="aHo-0w-ieX" firstAttribute="centerX" secondItem="R4Y-RH-XVV" secondAttribute="centerX" id="rFV-uc-Eyw"/>

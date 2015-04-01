@@ -7,6 +7,8 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="SCPRAlarmClockViewController">
             <connections>
+                <outlet property="bottomAnchor" destination="8No-F7-QB2" id="kG8-io-6fo"/>
+                <outlet property="inbetweenAnchor" destination="wvt-9h-pjA" id="zgp-96-hWB"/>
                 <outlet property="midnightLabel" destination="ZTc-uA-3aV" id="bgr-OA-jSj"/>
                 <outlet property="noonLabel" destination="dMo-yx-Y3n" id="AWO-7N-mMX"/>
                 <outlet property="scheduleButton" destination="17c-Ik-Srn" id="Lmr-DU-rhS"/>
@@ -14,6 +16,7 @@
                 <outlet property="scrubberMainValueLabel" destination="2og-4H-7S2" id="Nu2-eg-yP4"/>
                 <outlet property="scrubbingSurface" destination="89A-V8-Iun" id="lMI-mY-89h"/>
                 <outlet property="spinner" destination="nU7-Hs-qSo" id="bah-Ln-c4n"/>
+                <outlet property="topAnchor" destination="3mC-MD-3OB" id="IXk-aJ-S56"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
                 <outlet property="willWakeLabel" destination="0Jc-TA-Wkp" id="iun-lA-154"/>
             </connections>
@@ -24,10 +27,7 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="4:50 AM" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2og-4H-7S2" userLabel="scrubberValueLabel">
-                    <rect key="frame" x="20" y="156" width="551" height="42"/>
-                    <constraints>
-                        <constraint firstAttribute="height" constant="42" id="4mD-a7-gHS"/>
-                    </constraints>
+                    <rect key="frame" x="20" y="156" width="551" height="58"/>
                     <fontDescription key="fontDescription" type="system" pointSize="48"/>
                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                     <nil key="highlightedColor"/>
@@ -36,7 +36,7 @@
                     <rect key="frame" x="290" y="537" width="20" height="20"/>
                 </activityIndicatorView>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="17c-Ik-Srn" userLabel="Start Button" customClass="SCPRButton">
-                    <rect key="frame" x="30" y="526" width="530" height="42"/>
+                    <rect key="frame" x="30" y="526" width="540" height="42"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="42" id="wSO-b6-qWf"/>
                     </constraints>
@@ -45,7 +45,7 @@
                     </state>
                 </button>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="midnight" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZTc-uA-3aV" userLabel="midnightLabel">
-                    <rect key="frame" x="20" y="229" width="551" height="21"/>
+                    <rect key="frame" x="20" y="245" width="551" height="21"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="21" id="FpH-Mc-G6K"/>
                     </constraints>
@@ -54,7 +54,7 @@
                     <nil key="highlightedColor"/>
                 </label>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="WILL WAKE AT:" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0Jc-TA-Wkp" userLabel="willWakeAtLabel">
-                    <rect key="frame" x="20" y="127" width="551" height="21"/>
+                    <rect key="frame" x="20" y="133" width="551" height="21"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="21" id="Y7h-tR-Mik"/>
                     </constraints>
@@ -63,7 +63,7 @@
                     <nil key="highlightedColor"/>
                 </label>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="noon" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dMo-yx-Y3n" userLabel="noonLabel">
-                    <rect key="frame" x="20" y="475" width="551" height="21"/>
+                    <rect key="frame" x="20" y="459" width="551" height="21"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="21" id="dVD-Ef-z0b"/>
                     </constraints>
@@ -72,10 +72,10 @@
                     <nil key="highlightedColor"/>
                 </label>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="89A-V8-Iun" userLabel="dialView" customClass="SCPRTouchableScrubberView">
-                    <rect key="frame" x="195" y="262" width="200" height="200"/>
+                    <rect key="frame" x="211" y="278" width="168" height="168"/>
                     <subviews>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ig1-jG-GQc" userLabel="degreeReading">
-                            <rect key="frame" x="96" y="82" width="42" height="21"/>
+                            <rect key="frame" x="80" y="66" width="42" height="21"/>
                             <constraints>
                                 <constraint firstAttribute="width" constant="42" id="GhN-0U-DPU"/>
                                 <constraint firstAttribute="height" constant="21" id="qIw-BR-ssg"/>
@@ -91,9 +91,9 @@
                     </subviews>
                     <color key="backgroundColor" red="0.85345643939393945" green="0.85345643939393945" blue="0.85345643939393945" alpha="1" colorSpace="calibratedRGB"/>
                     <constraints>
-                        <constraint firstAttribute="width" constant="200" id="1ol-9K-tSq"/>
+                        <constraint firstAttribute="width" constant="168" id="1ol-9K-tSq"/>
                         <constraint firstAttribute="centerY" secondItem="ig1-jG-GQc" secondAttribute="centerY" constant="7.5" id="Yiu-AY-hjg"/>
-                        <constraint firstAttribute="height" constant="200" id="dHH-Kv-7DA"/>
+                        <constraint firstAttribute="height" constant="168" id="dHH-Kv-7DA"/>
                         <constraint firstAttribute="centerX" secondItem="ig1-jG-GQc" secondAttribute="centerX" constant="-17" id="r3j-3P-E5h"/>
                     </constraints>
                     <connections>
@@ -105,17 +105,17 @@
             <constraints>
                 <constraint firstItem="0Jc-TA-Wkp" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="20" id="28L-Dd-AKa"/>
                 <constraint firstItem="2og-4H-7S2" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="156" id="3mC-MD-3OB"/>
-                <constraint firstItem="2og-4H-7S2" firstAttribute="top" secondItem="0Jc-TA-Wkp" secondAttribute="bottom" constant="8" id="6j0-ca-Xr3"/>
+                <constraint firstItem="2og-4H-7S2" firstAttribute="top" secondItem="0Jc-TA-Wkp" secondAttribute="bottom" constant="2" id="6j0-ca-Xr3"/>
                 <constraint firstAttribute="centerX" secondItem="89A-V8-Iun" secondAttribute="centerX" constant="5" id="8ML-Vw-qsY"/>
                 <constraint firstAttribute="bottom" secondItem="17c-Ik-Srn" secondAttribute="bottom" constant="32" id="8No-F7-QB2"/>
                 <constraint firstItem="2og-4H-7S2" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="20" id="Gc6-s7-5s9"/>
-                <constraint firstAttribute="trailing" secondItem="17c-Ik-Srn" secondAttribute="trailing" constant="40" id="HKO-ua-sme"/>
+                <constraint firstAttribute="trailing" secondItem="17c-Ik-Srn" secondAttribute="trailing" constant="30" id="HKO-ua-sme"/>
                 <constraint firstAttribute="trailing" secondItem="0Jc-TA-Wkp" secondAttribute="trailing" constant="29" id="Yg3-14-HDP"/>
                 <constraint firstItem="dMo-yx-Y3n" firstAttribute="top" secondItem="89A-V8-Iun" secondAttribute="bottom" constant="13" id="cF0-HK-1ho"/>
                 <constraint firstItem="dMo-yx-Y3n" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="20" id="d5S-Zl-RsM"/>
                 <constraint firstAttribute="trailing" secondItem="dMo-yx-Y3n" secondAttribute="trailing" constant="29" id="fIF-i9-Lbg"/>
                 <constraint firstItem="17c-Ik-Srn" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="30" id="ga2-pc-uQW"/>
-                <constraint firstItem="17c-Ik-Srn" firstAttribute="centerX" secondItem="nU7-Hs-qSo" secondAttribute="centerX" constant="-5" id="hO8-1N-CJj"/>
+                <constraint firstItem="17c-Ik-Srn" firstAttribute="centerX" secondItem="nU7-Hs-qSo" secondAttribute="centerX" id="hO8-1N-CJj"/>
                 <constraint firstItem="89A-V8-Iun" firstAttribute="top" secondItem="ZTc-uA-3aV" secondAttribute="bottom" constant="12" id="iGZ-M7-a8p"/>
                 <constraint firstAttribute="trailing" secondItem="ZTc-uA-3aV" secondAttribute="trailing" constant="29" id="s8p-fz-GWP"/>
                 <constraint firstItem="ZTc-uA-3aV" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="20" id="tIS-a6-8li"/>
