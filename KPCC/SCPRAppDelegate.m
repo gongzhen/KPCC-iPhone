@@ -43,8 +43,8 @@
     [[AnalyticsManager shared] setup];
     
 #ifndef PRODUCTION
-    [[UXmanager shared].settings setUserHasViewedOnboarding:YES];
-    [[UXmanager shared].settings setUserHasViewedOnDemandOnboarding:YES];
+    //[[UXmanager shared].settings setUserHasViewedOnboarding:YES];
+    //[[UXmanager shared].settings setUserHasViewedOnDemandOnboarding:YES];
 #ifdef TESTING_SCRUBBER
     [[UXmanager shared].settings setUserHasViewedScrubbingOnboarding:NO];
 #endif
@@ -231,6 +231,10 @@
 - (void)application:(UIApplication *)application didReceiveLocalNotification:(UILocalNotification *)notification {
     
     NSLog(@"Did receive local notification");
+    self.alarmTask = [application beginBackgroundTaskWithExpirationHandler:^{
+        
+    }];
+    
     [self fireAlarmClock];
     
 }
@@ -383,26 +387,46 @@
 #ifndef USE_PUSH_FOR_ALARM
     self.alarmDate = date;
 #ifndef PRODUCTION
-    //self.alarmDate = [[NSDate date] dateByAddingTimeInterval:25.0];
+    self.alarmDate = [[NSDate date] dateByAddingTimeInterval:25.0];
 #endif
     
-    self.alarmTimer = [NSTimer scheduledTimerWithTimeInterval:abs([self.alarmDate timeIntervalSinceNow])
-                                                       target:self
-                                                     selector:@selector(fireAlarmClock)
-                                                     userInfo:nil
-                                                      repeats:NO];
+    [[UIApplication sharedApplication] setIdleTimerDisabled:YES];
     
+    NSInteger tisn = abs([self.alarmDate timeIntervalSinceNow]);
+    NSLog(@"Will fire in %ld seconds",(long)tisn);
+    self.timer = [NSTimer scheduledTimerWithTimeInterval:tisn
+                                                  target:self
+                                                selector:@selector(fireAlarmClock)
+                                                userInfo:nil
+                                                 repeats:NO];
+
     if ( [[AudioManager shared] isPlayingAudio] ) {
         [[AudioManager shared] adjustAudioWithValue:-0.075
                                          completion:^{
                                              [[AudioManager shared] stopAllAudio];
                                              [self buildTimer];
+                                             
+                                             self.alarmTimer = [NSTimer scheduledTimerWithTimeInterval:1.0f
+                                                                                           target:self
+                                                                                         selector:@selector(checkAlarmClock)
+                                                                                         userInfo:nil
+                                                                                          repeats:YES];
+    
+                                             
                                          }];
         return;
     }
     
 
     [self buildTimer];
+    
+    self.alarmTimer = [NSTimer scheduledTimerWithTimeInterval:1.0f
+                                                  target:self
+                                                selector:@selector(checkAlarmClock)
+                                                userInfo:nil
+                                                 repeats:NO];
+    
+    
     [[AnalyticsManager shared] logEvent:@"alarmClockArmed"
                          withParameters:@{ @"short" : @1 }];
     
@@ -423,7 +447,7 @@
 
 - (void)buildTimer {
     UILocalNotification *alarm = [[UILocalNotification alloc] init];
-    alarm.alertTitle = @"Wake Up!";
+    alarm.alertTitle = @"Time to wake up!";
     alarm.alertBody = @"It's time for your fix of KPCC";
     alarm.fireDate = self.alarmDate;
     alarm.soundName = @"alarm_beat.aif";
@@ -431,7 +455,7 @@
     alarm.timeZone = [NSTimeZone defaultTimeZone];
     alarm.hasAction = YES;
     
-    //[[UIApplication sharedApplication] scheduleLocalNotification:alarm];
+    [[UIApplication sharedApplication] scheduleLocalNotification:alarm];
     
     
     
@@ -460,32 +484,23 @@
 
 - (void)checkAlarmClock {
     
-    self.alarmTask = [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:^{
-        
-    }];
-    
-    NSLog(@"Checking alarm...");
-    if ( [[NSDate date] timeIntervalSinceDate:self.alarmDate] >= 0 ) {
-        if ( self.timer ) {
-            if ( [self.timer isValid] ) {
-                [self.timer invalidate];
-            }
-            self.timer = nil;
+    NSLog(@"Checking... %ld",(long)[[NSDate date] timeIntervalSinceDate:self.alarmDate]);
+    if ( self.alarmTimer ) {
+        if ( [self.alarmTimer isValid] ) {
+            [self.alarmTimer invalidate];
         }
-        [self.masterViewController handleAlarmClock];
-        self.alarmResults = UIBackgroundFetchResultNewData;
+        self.alarmTimer = nil;
+    }
+    
+    if ( [[NSDate date] timeIntervalSinceDate:self.alarmDate] >= 0 ) {
+
+        [self fireAlarmClock];
     } else {
-        if ( !self.timer ) {
-            NSLog(@"Arming check timer...");
-            self.timer = [NSTimer scheduledTimerWithTimeInterval:10.0f
+            self.alarmTimer = [NSTimer scheduledTimerWithTimeInterval:1.0f
                                                           target:self
                                                         selector:@selector(checkAlarmClock)
                                                         userInfo:nil
-                                                         repeats:YES];
-        }
-        self.alarmResults = UIBackgroundFetchResultNoData;
-        [[UIApplication sharedApplication] endBackgroundTask:self.alarmTask];
-        self.alarmTask = 0;
+                                                              repeats:NO];
     }
     
 }
@@ -499,7 +514,11 @@
         NSInteger diff = [[NSDate date] timeIntervalSinceDate:alarmDate];
         if ( diff > 0 ) {
             [self endAlarmClock];
+        } else {
+            [[UIApplication sharedApplication] setIdleTimerDisabled:YES];
         }
+    } else {
+        [[UIApplication sharedApplication] setIdleTimerDisabled:NO];
     }
 }
 
@@ -548,7 +567,13 @@
     [[UXmanager shared].settings setAlarmFireDate:nil];
     [[UXmanager shared] persist];
     [[UIApplication sharedApplication] cancelAllLocalNotifications];
+    [[UIApplication sharedApplication] setIdleTimerDisabled:NO];
 #endif
+}
+
+- (void)killBackgroundTask {
+    [[UIApplication sharedApplication] endBackgroundTask:self.alarmTask];
+    self.alarmTask = 0;
 }
 
 #pragma mark - ContentProcessor

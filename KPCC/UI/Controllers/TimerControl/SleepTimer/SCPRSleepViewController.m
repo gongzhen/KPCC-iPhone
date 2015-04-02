@@ -239,7 +239,7 @@
     
     NSInteger seconds = minutes * 60;
     seconds += 300;
-    
+    seconds = seconds - ( seconds % 300 );
     NSLog(@"Seconds : %ld",(long)seconds);
     self.armableSeconds = seconds;
     self.indicatorLabel.attributedText = [NSDate prettyAttributedFromSeconds:seconds includeSeconds:NO];

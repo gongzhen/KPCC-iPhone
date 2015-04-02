@@ -61,5 +61,6 @@
 - (void)endAlarmClock;
 - (void)buildTimer;
 - (void)manuallyCheckAlarm;
+- (void)killBackgroundTask;
 
 @end

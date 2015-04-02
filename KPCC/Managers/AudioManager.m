@@ -686,6 +686,10 @@ static const NSString *ItemStatusContext;
     AVPlayer *audioPlayer = self.audioPlayer;
     __unsafe_unretained typeof(self) weakSelf = self;
 
+    if ( [[Utils del] alarmTask] > 0 ) {
+        [[Utils del] killBackgroundTask];
+    }
+    
     [self invalidateTimeObserver];
     
     self.timeObserver = nil;
@@ -705,6 +709,8 @@ static const NSString *ItemStatusContext;
         weakSelf.bufferEmpty = NO;
         weakSelf.beginNormally = NO;
         weakSelf.streamWarning = NO;
+        
+
         
         NSArray *seekRange = audioPlayer.currentItem.seekableTimeRanges;
         if (seekRange && [seekRange count] > 0) {
