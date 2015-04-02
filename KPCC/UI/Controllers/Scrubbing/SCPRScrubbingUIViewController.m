@@ -36,9 +36,9 @@
 }
 
 - (void)prerender {
-    self.scrubberController.view.backgroundColor = [[UIColor virtualWhiteColor] translucify:0.2];
-    [self.scrubberController setup];
-    self.scrubberController.parentUIController = self;
+  
+    [self.scrubberController setupWithDelegate:self];
+    
     
     [self.fw30Button addTarget:self
                         action:@selector(forward30)
@@ -177,6 +177,37 @@
     }
 }
 
+#pragma mark - Scrubbable
+- (void)actionOfInterestWithPercentage:(CGFloat)percent {
+    CMTime total = [[[[AudioManager shared].audioPlayer currentItem] asset] duration];
+    double duration = CMTimeGetSeconds(total);
+    
+    NSString *pretty = [Utils elapsedTimeStringWithPosition:duration*percent
+                                                andDuration:duration];
+    [self.scrubbingIndicatorLabel setText:pretty];
+}
+
+- (void)actionOfInterestAfterScrub:(CGFloat)finalValue {
+    
+    double multiplier = finalValue;
+    CMTime total = [[[[AudioManager shared].audioPlayer currentItem] asset] duration];
+    CMTime seek = CMTimeMake(total.value*multiplier, total.timescale);
+    [[AudioManager shared].audioPlayer.currentItem seekToTime:seek completionHandler:^(BOOL finished) {
+        
+    }];
+
+}
+
+- (UILabel*)scrubbingIndicatorLabel {
+    SCPRMasterViewController *mvc = (SCPRMasterViewController*)self.parentControlView;
+    return [mvc scrubberTimeLabel];
+}
+
+- (SCPRTouchableScrubberView*)scrubbableView {
+    SCPRMasterViewController *mvc = (SCPRMasterViewController*)self.parentControlView;
+    return mvc.touchableScrubberView;
+}
+
 #pragma mark - AudioManager
 - (void)onRateChange {
     if ([[AudioManager shared] isStreamPlaying] || [[AudioManager shared] isStreamBuffering]) {
@@ -187,8 +218,27 @@
 }
 
 - (void)onTimeChange {
-    [self.scrubberController tick];
+    
+    if ( !self.scrubberController.panning ) {
+        if (CMTimeGetSeconds([[[[AudioManager shared].audioPlayer currentItem] asset] duration]) > 0) {
+            double currentTime = CMTimeGetSeconds([[[AudioManager shared].audioPlayer currentItem] currentTime]);
+            double duration = CMTimeGetSeconds([[[[AudioManager shared].audioPlayer currentItem] asset] duration]);
+            NSString *pretty = [Utils elapsedTimeStringWithPosition:currentTime
+                                                        andDuration:duration];
+            [self.scrubbingIndicatorLabel setText:pretty];
+        }
+    }
+    
+    double se = [self strokeEndForCurrentTime];
+    [self.scrubberController tick:se];
     [self unmuteUI];
+    
+}
+
+- (double)strokeEndForCurrentTime {
+    NSInteger cS = CMTimeGetSeconds([[AudioManager shared].audioPlayer.currentItem currentTime]);
+    NSInteger tS = CMTimeGetSeconds([[AudioManager shared].audioPlayer.currentItem.asset duration]);
+    return (cS*1.0f / tS*1.0f)*1.0f;
 }
 
 - (void)onSeekCompleted {
@@ -204,7 +254,7 @@
     if ( s == StreamStatusPlaying ) {
         self.scrubberController.currentBarLine.strokeEnd = 0.0;
     } else {
-        [self.scrubberController tick];
+        [self.scrubberController tick:0.0f];
     }
 }
 /*

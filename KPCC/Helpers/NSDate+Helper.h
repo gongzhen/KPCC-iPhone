@@ -40,13 +40,19 @@
 - (BOOL)isOlderThanInSeconds:(NSInteger)secondsAgo;
 @property (NS_NONATOMIC_IOSONLY, readonly) NSInteger secondsUntil;
 + (NSString*)prettyTextFromSeconds:(NSInteger)seconds;
++ (NSMutableAttributedString*)prettyAttributedFromSeconds:(NSInteger)seconds includeSeconds:(BOOL)includeSeconds;
++ (NSString*)scientificStringFromSeconds:(NSInteger)seconds;
+
 @property (NS_NONATOMIC_IOSONLY, readonly, copy) NSString *prettyTimeString;
 - (NSString*)iso;
 
 - (NSDate*)minuteRoundedUpByThreshold:(NSInteger)minute;
 
++ (NSDate*)midnightThisMorning;
+
 - (BOOL)isWithinReasonableframeOfDate:(NSDate*)date;
 - (BOOL)isWithinTimeFrame:(NSInteger)seconds ofDate:(NSDate*)date;
 
++ (NSString*)prettyUSTimeFromSeconds:(NSInteger)seconds;
 
 @end

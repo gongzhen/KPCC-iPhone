@@ -13,7 +13,7 @@
 #import "AudioManager.h"
 #import "SCPRButton.h"
 
-@interface SCPRScrubbingUIViewController : UIViewController<AudioManagerDelegate>
+@interface SCPRScrubbingUIViewController : UIViewController<AudioManagerDelegate,Scrubbable>
 
 @property (nonatomic,strong) IBOutlet UIButton *closeButton;
 @property (nonatomic,strong) IBOutlet UILabel *captionLabel;
@@ -40,6 +40,9 @@
 - (void)unmuteUI;
 - (void)killLatencyTimer;
 - (void)audioWillSeek;
+
+- (double)strokeEndForCurrentTime;
+
 @property BOOL uiIsMutedForSeek;
 
 @end

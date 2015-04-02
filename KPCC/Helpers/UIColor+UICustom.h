@@ -19,5 +19,6 @@
 + (UIColor*)paleHorseColor;
 + (UIColor*)kpccSlateColor;
 + (UIColor*)kpccAsphaltColor;
++ (UIColor*)kpccSoftOrangeColor;
 
 @end

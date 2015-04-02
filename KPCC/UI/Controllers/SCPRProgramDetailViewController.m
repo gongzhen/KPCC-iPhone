@@ -61,6 +61,10 @@
     //[[NetworkManager shared] fetchEpisodesForProgram:_program.program_slug dispay:self];
 }
 
+- (void)viewWillDisappear:(BOOL)animated {
+    self.navigationController.interactivePopGestureRecognizer.delegate = nil;
+}
+
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
 

@@ -19,5 +19,6 @@
 @property (nonatomic, strong) NSString *pushTokenString;
 @property (nonatomic, strong) NSString *latestPushJson;
 @property (nonatomic, strong) NSDate *lastBookmarkSweep;
+@property (nonatomic, strong) NSDate *alarmFireDate;
 
 @end

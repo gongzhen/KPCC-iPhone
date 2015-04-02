@@ -26,8 +26,8 @@ static long kStreamCorrectionTolerance = 60*5;
 #define kHLSLiveStreamURL @"http://hls.kqed.org/hls/smil:itunes.smil/playlist.m3u8"
 #else
 #ifdef BETA
-#define kHLSLiveStreamURLBase @"http://streammachine-test.scprdev.org:8020/sg/test.m3u8"
-//#define kHLSLiveStreamURLBase @"http://streammachine-hls001.scprdev.org/sg/kpcc-aac.m3u8"
+//#define kHLSLiveStreamURLBase @"http://streammachine-test.scprdev.org:8020/sg/test.m3u8"
+#define kHLSLiveStreamURLBase @"http://streammachine-hls001.scprdev.org/sg/kpcc-aac.m3u8"
 #define kHLSLiveStreamURL [NSString stringWithFormat:@"%@?ua=KPCCiPhone-%@",kHLSLiveStreamURLBase,[Utils urlSafeVersion]]
 #else
 #ifdef FORCE_TEST_STREAM

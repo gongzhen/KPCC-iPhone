@@ -24,6 +24,7 @@
 #import "SCPROnboardingViewController.h"
 #import "UIView+PrintDimensions.h"
 #import "SCPRScrubbingUIViewController.h"
+#import "SCPRTimerControlViewController.h"
 
 @import MessageUI;
 
@@ -31,6 +32,7 @@ static NSString *kRewindingText = @"REWINDING...";
 static NSString *kForwardingText = @"GOING LIVE...";
 static NSString *kBufferingText = @"BUFFERING";
 static CGFloat kScrubbingThreeFiveSlip = 36.0;
+static NSInteger kCancelSleepTimerAlertTag = 44839;
 
 @interface SCPRMasterViewController () <AudioManagerDelegate, UINavigationControllerDelegate, UIViewControllerTransitioningDelegate, SCPRPreRollControllerDelegate, UIScrollViewDelegate>
 
@@ -176,6 +178,8 @@ setForOnDemandUI;
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    self.navigationController.interactivePopGestureRecognizer.enabled = NO;
+    
     self.view.backgroundColor = [UIColor blackColor];
     self.horizDividerLine.layer.opacity = 0.0;
     self.queueBlurView.layer.opacity = 0.0;
@@ -192,8 +196,9 @@ setForOnDemandUI;
     
     if ( [Utils isThreePointFive] ) {
         if ( [Utils isIOS8] ) {
-            [self.initialControlsYConstraint setConstant:131.0];
+            [self.initialControlsYConstraint setConstant:151.0];
             [self.playerControlsTopYConstraint setConstant:288.0];
+            [self.programTitleYConstraint setConstant:278.0];
         } else {
             [self.initialControlsYConstraint setConstant:101.0];
             [self.playerControlsTopYConstraint setConstant:258.0];
@@ -204,6 +209,26 @@ setForOnDemandUI;
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(lockUI:)
                                                  name:@"network-status-fail"
+                                               object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(tickSleepTimer)
+                                                 name:@"sleep-timer-ticked"
+                                               object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(showSleepTimer)
+                                                 name:@"sleep-timer-armed"
+                                               object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(hideSleepTimer)
+                                                 name:@"sleep-timer-disarmed"
+                                               object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(hideSleepTimer)
+                                                 name:@"sleep-timer-fired"
                                                object:nil];
     
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
@@ -294,7 +319,6 @@ setForOnDemandUI;
     [self.initialPlayButton addTarget:self
                                action:@selector(initialPlayTapped:)
                      forControlEvents:UIControlEventTouchUpInside
-     
                               special:YES];
     
     [self.playPauseButton addTarget:self
@@ -306,6 +330,12 @@ setForOnDemandUI;
                          action:@selector(shareButtonTapped:)
                forControlEvents:UIControlEventTouchUpInside
                         special:YES];
+    
+    [self.cancelSleepTimerButton addTarget:self
+                                    action:@selector(cancelSleepTimerAction)
+                          forControlEvents:UIControlEventTouchUpInside];
+    
+    [self setupTimerControls];
     
     self.previousRewindThreshold = 0;
     self.mpvv = [[MPVolumeView alloc] initWithFrame:CGRectMake(-30.0, -300.0, 1.0, 1.0)];
@@ -389,6 +419,12 @@ setForOnDemandUI;
 
 }
 
+- (void)superPop {
+    [self.navigationController popToRootViewControllerAnimated:YES];
+    [self decloakForMenu:YES];
+    self.navigationItem.title = @"KPCC Live";
+}
+
 - (void)addPreRollController {
     
     if ( ![[UXmanager shared] userHasSeenOnboarding] ) return;
@@ -459,6 +495,78 @@ setForOnDemandUI;
         }];
         
     }];
+}
+
+#pragma mark - Sleep Timer
+- (void)showSleepTimer {
+    
+    self.plainTextCountdownLabel.text = @"";
+
+        
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.25 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [self superPop];
+        if ( ![[AudioManager shared] isPlayingAudio] ) {
+            if ( [[AudioManager shared] currentAudioMode] != AudioModeLive ) {
+                [self goLive:YES];
+            } else {
+                if ( self.initialPlay ) {
+                    [self playAudio:NO];
+                } else {
+                    [self initialPlayTapped:nil];
+                }
+            }
+        } else {
+            if ( [[AudioManager shared] currentAudioMode] != AudioModeLive ) {
+                [self goLive:YES];
+            }
+        }
+    });
+   
+}
+
+- (void)hideSleepTimer {
+    [UIView animateWithDuration:0.25 animations:^{
+        self.sleepTimerContainerView.alpha = 0.0;
+    }];
+}
+
+- (void)setupTimerControls {
+    self.plainTextCountdownLabel.textColor = [UIColor whiteColor];
+    self.plainTextCountdownLabel.font = [[DesignManager shared] proBook:20.0f];
+    self.clockIconImageView.image = [UIImage imageNamed:@"icon-stopwatch.png"];
+    self.clockIconImageView.contentMode = UIViewContentModeCenter;
+    self.sleepTimerCountdownProgress.progressTintColor = [UIColor whiteColor];
+    self.sleepTimerCountdownProgress.trackTintColor = [UIColor clearColor];
+    [self hideSleepTimer];
+}
+
+- (void)tickSleepTimer {
+    CGFloat total = [[SessionManager shared] originalSleepTimerRequest]*1.0f;
+    CGFloat remaining = [[SessionManager shared] remainingSleepTimerSeconds]*1.0f;
+    CGFloat pct = remaining / total;
+    [UIView animateWithDuration:0.25 animations:^{
+        [self.sleepTimerCountdownProgress setProgress:pct];
+        [self.sleepTimerContainerView setAlpha:1.0];
+    }];
+    
+    self.plainTextCountdownLabel.text = [NSDate scientificStringFromSeconds:remaining];
+}
+
+- (void)cancelSleepTimerAction {
+    UIAlertView *cancelAlert = [[UIAlertView alloc] initWithTitle:@""
+                                                          message:@"Are you sure you want to stop your sleep timer?"
+                                                         delegate:self
+                                                cancelButtonTitle:@"Cancel"
+                                                otherButtonTitles:@"Stop", nil];
+    cancelAlert.tag = kCancelSleepTimerAlertTag;
+    [cancelAlert show];
+}
+
+- (void)handleAlarmClock {
+    [self resetUI];
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [self initialPlayTapped:nil];
+    });
 }
 
 #pragma mark - Onboarding
@@ -1152,7 +1260,6 @@ setForOnDemandUI;
     sCtrl.view = self.scrubberControlView;
     
     self.scrubbingUI.scrubberController = sCtrl;
-    self.scrubbingUI.scrubberController.scrubberTimeLabel = self.scrubberTimeLabel;
     self.scrubbingUI.scrubberController.viewAsTouchableScrubberView = self.touchableScrubberView;
     
     if ( self.scrubbingTriggerView ) {
@@ -1372,7 +1479,7 @@ setForOnDemandUI;
         return;
     }
     
-    if ( ti > kStreamIsLiveTolerance ) {
+    if ( ti > [[SessionManager shared] peakDrift] ) {
         [self.liveDescriptionLabel setText:[NSString stringWithFormat:@"%@ BEHIND LIVE", [NSDate prettyTextFromSeconds:ti]]];
         self.previousRewindThreshold = [[AudioManager shared].audioPlayer.currentItem.currentDate timeIntervalSince1970];
     } else {
@@ -1500,7 +1607,7 @@ setForOnDemandUI;
 #else
             NSDate *ciCurrentDate = [AudioManager shared].audioPlayer.currentItem.currentDate;
             NSTimeInterval ti = [[NSDate date] timeIntervalSinceDate:ciCurrentDate];
-            if ( ti > kStreamIsLiveTolerance ) {
+            if ( ti > [[SessionManager shared] peakDrift] ) {
                 [self.liveDescriptionLabel setText:[NSString stringWithFormat:@"%@ BEHIND LIVE", [NSDate prettyTextFromSeconds:ti]]];
             } else {
                 [self.liveDescriptionLabel setText:[NSString stringWithFormat:@"LIVE"]];
@@ -1806,6 +1913,12 @@ setForOnDemandUI;
                                           [self updateUIWithProgram:programObj];
                                           [[AudioManager shared] updateNowPlayingInfoWithAudio:programObj];
                                           [self finishUpdatingForProgram];
+                                          dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+                                              UIImage *blurred = [self.programImageView.image blurredImageWithRadius:20.0f
+                                                                                                        iterations:3
+                                                                                                         tintColor:[UIColor clearColor]];
+                                              [[DesignManager shared] setCurrentBlurredLiveImage:blurred];
+                                          });
                                           
                                       }];
     } else {
@@ -2154,7 +2267,6 @@ setForOnDemandUI;
     return;
 #endif
     
-
     NSLog(@" ||||||||||| UNLOCKING UI FROM NETWORK GAP |||||||||||| ");
     
     [[NSNotificationCenter defaultCenter] addObserver:self
@@ -2690,6 +2802,23 @@ setForOnDemandUI;
             
         }
         case 3: {
+            
+            event = @"menuSelectionWakeSleep";
+            SCPRTimerControlViewController *timer = [[SCPRTimerControlViewController alloc] initWithNibName:@"SCPRTimerControlViewController"
+                                                                                                     bundle:nil];
+            
+            CGSize bounds = [[UIScreen mainScreen] bounds].size;
+            timer.view.frame = CGRectMake(0.0,0.0,bounds.width,bounds.height);
+            
+            
+            [self.navigationController pushViewController:timer
+                                                 animated:YES];
+            
+            [timer setup];
+            
+            break;
+        }
+        case 4: {
             event = @"menuSelectionDonate";
             NSString *urlStr = @"https://scprcontribute.publicradio.org/contribute.php?refId=iphone&askAmount=60";
             NSURL *url = [NSURL URLWithString:urlStr];
@@ -2697,7 +2826,7 @@ setForOnDemandUI;
             [[UIApplication sharedApplication] openURL:url];
             break;
         }
-        case 4: {
+        case 5: {
             
             event = @"menuSelectionFeedback";
             SCPRFeedbackViewController *fbVC = [[SCPRFeedbackViewController alloc] initWithNibName:@"SCPRFeedbackViewController"
@@ -2748,42 +2877,9 @@ setForOnDemandUI;
     
     NSAssert([NSThread isMainThread],@"This is not the main thread...");
     
-    
-    NSDate *ciCurrentDate = [AudioManager shared].audioPlayer.currentItem.currentDate;
-    
-#ifndef SUPPRESS_V_LIVE
-    NSTimeInterval ti = [[[SessionManager shared] vLive] timeIntervalSinceDate:ciCurrentDate];
-#else
-    NSTimeInterval ti = [[NSDate date] timeIntervalSinceDate:ciCurrentDate];
-#endif
-    
-#ifdef THREE_ZERO_ZERO
-    NSTimeInterval tx = [[[AudioManager shared] maxSeekableDate] timeIntervalSinceDate:ciCurrentDate];
-#else
-#ifndef SUPPRESS_V_LIVE
-    NSTimeInterval tx = [[[SessionManager shared] vLive] timeIntervalSinceDate:ciCurrentDate];
-#else
-    NSTimeInterval tx = [[NSDate date] timeIntervalSinceDate:ciCurrentDate];
-#endif
-#endif
-    
     if ( [[AudioManager shared] frameCount] % 10 == 0 ) {
         if ( !self.menuOpen ) {
-#ifndef SUPPRESS_V_LIVE
             [self prettifyBehindLiveStatus];
-#else
-            if ( tx > kStreamIsLiveTolerance ) {
-                [self.liveDescriptionLabel setText:[NSString stringWithFormat:@"%@ BEHIND LIVE", [NSDate prettyTextFromSeconds:ti]]];
-                self.previousRewindThreshold = [[AudioManager shared].audioPlayer.currentItem.currentDate timeIntervalSince1970];
-            } else {
-                if ( [[SessionManager shared] sessionIsInRecess] ) {
-                    [self.liveDescriptionLabel setText:@"UP NEXT"];
-                } else {
-                    [self.liveDescriptionLabel setText:@"LIVE"];
-                    self.dirtyFromRewind = NO;
-                }
-            }
-#endif
         }
         
         if ( [AudioManager shared].currentAudioMode == AudioModeLive ) {
@@ -3002,6 +3098,14 @@ setForOnDemandUI;
 
 #pragma mark - UIAlertView
 - (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex {
+    
+    if ( alertView.tag == kCancelSleepTimerAlertTag ) {
+        if ( buttonIndex == 1 ) {
+            [[SessionManager shared] cancelSleepTimerWithCompletion:nil];
+        }
+        return;
+    }
+    
     self.promptedAboutFailureAlready = NO;
     if ( buttonIndex == 0 ) {
         self.uiLocked = NO;

@@ -10,6 +10,6 @@
 
 @interface SCPRTouchableScrubberView : UIView
 
-@property (nonatomic, weak) id parentScrubberController;
+@property (nonatomic, weak) IBOutlet id parentScrubberController;
 
 @end

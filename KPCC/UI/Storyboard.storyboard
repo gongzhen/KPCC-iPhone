@@ -129,9 +129,58 @@
                                             <color key="titleColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
                                     </button>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Lbg-2T-XEE" userLabel="sleepTimerView">
+                                        <rect key="frame" x="0.0" y="0.0" width="320" height="36"/>
+                                        <subviews>
+                                            <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" progress="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="oYn-me-xoQ" userLabel="sleepProgressView">
+                                                <rect key="frame" x="0.0" y="0.0" width="320" height="2"/>
+                                            </progressView>
+                                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="fox-H6-rJE" userLabel="clockIconImage">
+                                                <rect key="frame" x="15" y="7" width="24" height="24"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" constant="24" id="OBV-Xr-bq9"/>
+                                                    <constraint firstAttribute="height" constant="24" id="XRs-mY-afv"/>
+                                                </constraints>
+                                            </imageView>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="7:59:59" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="k2b-3L-5Rz">
+                                                <rect key="frame" x="47" y="3" width="225" height="24"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="24" id="j5q-n8-r2C"/>
+                                                </constraints>
+                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zND-XD-IVD" userLabel="cancelSleepTimerBtn">
+                                                <rect key="frame" x="0.0" y="0.0" width="320" height="36"/>
+                                                <state key="normal">
+                                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                                </state>
+                                            </button>
+                                        </subviews>
+                                        <color key="backgroundColor" white="1" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        <constraints>
+                                            <constraint firstAttribute="trailing" secondItem="oYn-me-xoQ" secondAttribute="trailing" id="08d-Y3-cvv"/>
+                                            <constraint firstItem="oYn-me-xoQ" firstAttribute="leading" secondItem="Lbg-2T-XEE" secondAttribute="leading" id="6e8-jv-3Gc"/>
+                                            <constraint firstItem="zND-XD-IVD" firstAttribute="top" secondItem="Lbg-2T-XEE" secondAttribute="top" id="Gjf-aU-6z7"/>
+                                            <constraint firstAttribute="trailing" secondItem="k2b-3L-5Rz" secondAttribute="trailing" constant="48" id="HOE-hd-aCl"/>
+                                            <constraint firstItem="fox-H6-rJE" firstAttribute="top" secondItem="oYn-me-xoQ" secondAttribute="bottom" constant="5" id="IVq-mk-4l6"/>
+                                            <constraint firstItem="oYn-me-xoQ" firstAttribute="top" secondItem="Lbg-2T-XEE" secondAttribute="top" id="Y8m-3I-XWm"/>
+                                            <constraint firstItem="fox-H6-rJE" firstAttribute="leading" secondItem="Lbg-2T-XEE" secondAttribute="leading" constant="15" id="abc-Zj-4OD"/>
+                                            <constraint firstItem="k2b-3L-5Rz" firstAttribute="top" secondItem="oYn-me-xoQ" secondAttribute="bottom" constant="1" id="gzH-FI-1zL"/>
+                                            <constraint firstAttribute="trailing" secondItem="zND-XD-IVD" secondAttribute="trailing" id="jRt-Q6-gWc"/>
+                                            <constraint firstAttribute="height" constant="36" id="l6g-ua-9Yu"/>
+                                            <constraint firstItem="k2b-3L-5Rz" firstAttribute="leading" secondItem="fox-H6-rJE" secondAttribute="trailing" constant="8" id="lgh-bJ-ApK"/>
+                                            <constraint firstItem="zND-XD-IVD" firstAttribute="leading" secondItem="Lbg-2T-XEE" secondAttribute="leading" id="s2H-kF-u7j"/>
+                                            <constraint firstAttribute="bottom" secondItem="zND-XD-IVD" secondAttribute="bottom" id="vUI-tv-9en"/>
+                                        </constraints>
+                                    </view>
                                 </subviews>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <constraints>
+                                    <constraint firstItem="Lbg-2T-XEE" firstAttribute="top" secondItem="m78-b6-vle" secondAttribute="top" id="10J-8a-oaN"/>
+                                    <constraint firstAttribute="trailing" secondItem="Lbg-2T-XEE" secondAttribute="trailing" id="BBW-vZ-mXy"/>
+                                    <constraint firstItem="Lbg-2T-XEE" firstAttribute="leading" secondItem="m78-b6-vle" secondAttribute="leading" id="F5I-NJ-2KI"/>
                                     <constraint firstItem="ao2-yr-kyf" firstAttribute="top" secondItem="g8v-J1-2Ng" secondAttribute="bottom" priority="998" constant="1" id="K6s-m8-mkg"/>
                                     <constraint firstAttribute="bottom" secondItem="uVS-5U-Chc" secondAttribute="bottom" constant="22" id="Lq6-MO-4y6"/>
                                     <constraint firstAttribute="centerX" secondItem="ao2-yr-kyf" secondAttribute="centerX" id="Ume-M2-oah"/>
@@ -367,6 +416,8 @@
                         <outlet property="back30Button" destination="vgV-P3-0W0" id="JSx-0k-Xyj"/>
                         <outlet property="back30VerticalAnchor" destination="qVW-Cb-d3A" id="645-c4-nRa"/>
                         <outlet property="blurView" destination="LAZ-J2-lj5" id="MOo-Zb-mB0"/>
+                        <outlet property="cancelSleepTimerButton" destination="zND-XD-IVD" id="hmr-4E-GTO"/>
+                        <outlet property="clockIconImageView" destination="fox-H6-rJE" id="yun-lv-9UD"/>
                         <outlet property="currentProgressBarView" destination="alx-1P-Yo8" id="ovX-oD-G78"/>
                         <outlet property="darkBgView" destination="sYL-12-Hgi" id="tPF-W9-NAM"/>
                         <outlet property="dividerOnDemand" destination="J5U-kb-6Je" id="5tr-af-9iL"/>
@@ -385,6 +436,7 @@
                         <outlet property="liveRewindBottomYConstraint" destination="Lq6-MO-4y6" id="dIY-KV-CZT"/>
                         <outlet property="liveStreamView" destination="m78-b6-vle" id="Nzq-R7-aId"/>
                         <outlet property="onDemandPlayerView" destination="Syv-nA-vpR" id="ggY-CP-sW5"/>
+                        <outlet property="plainTextCountdownLabel" destination="k2b-3L-5Rz" id="G9e-AA-05N"/>
                         <outlet property="playPauseButton" destination="pSM-s0-r5H" id="ZeI-Th-4ug"/>
                         <outlet property="playerControlsBottomYConstraint" destination="his-y5-F8f" id="79O-NQ-KXa"/>
                         <outlet property="playerControlsView" destination="Qkn-sg-4PL" id="WVU-af-QdV"/>
@@ -403,6 +455,8 @@
                         <outlet property="scrubberTimeLabel" destination="EHS-IB-VJt" id="6Tw-Lb-obi"/>
                         <outlet property="scrubbingUIView" destination="GPc-Sk-C7l" id="Tj9-fk-675"/>
                         <outlet property="shareButton" destination="Daw-6l-gOy" id="6Vw-bg-NxE"/>
+                        <outlet property="sleepTimerContainerView" destination="Lbg-2T-XEE" id="hwj-N0-km0"/>
+                        <outlet property="sleepTimerCountdownProgress" destination="oYn-me-xoQ" id="dpM-lu-bXz"/>
                         <outlet property="timeLabelOnDemand" destination="Q1h-II-U3Q" id="19n-gX-I7H"/>
                         <outlet property="topYScrubbingAnchor" destination="2Jc-o2-Juz" id="lna-aR-frw"/>
                         <outlet property="touchableScrubberView" destination="tCd-bL-d4d" id="zHe-bY-6SW"/>
@@ -410,7 +464,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Tsp-6Z-muj" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="379" y="136"/>
+            <point key="canvasLocation" x="331" y="178"/>
         </scene>
         <!--Old Tester View-->
         <scene sceneID="uBf-aC-IbT">

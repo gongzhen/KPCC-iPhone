@@ -110,7 +110,13 @@ static AnalyticsManager *singleton = nil;
 - (void)logEvent:(NSString *)event withParameters:(NSDictionary *)parameters {
     NSMutableDictionary *userInfo = [[NSMutableDictionary alloc] init];
     
-    parameters = [self logifiedParamsList:parameters];
+    NSMutableDictionary *mParams = [parameters mutableCopy];
+    if ( parameters[@"short"] ) {
+        [mParams removeObjectForKey:@"short"];
+        parameters = mParams;
+    } else {
+        parameters = [self logifiedParamsList:parameters];
+    }
     
     if ( ![[UXmanager shared].settings userHasViewedOnboarding] ) return;
     
@@ -151,7 +157,7 @@ static AnalyticsManager *singleton = nil;
         }
     }
     
-    //[Flurry logEvent:event withParameters:userInfo timed:YES];
+    [Flurry logEvent:event withParameters:userInfo timed:YES];
 #endif
     
 }

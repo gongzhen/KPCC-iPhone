@@ -35,6 +35,8 @@ static NSString *kPotentialElements = @"date time uri cs-guid s-ip s-ip-changes 
 
 + (NSString*)episodeDateStringFromRFCDate:(NSDate *)date;
 + (NSString*)elapsedTimeStringWithPosition:(double)position andDuration:(double)duration;
++ (CGFloat)degreesToRadians:(CGFloat) degrees;
++ (CGFloat)radiansToDegrees:(CGFloat)radians;
 
 + (BOOL)pureNil:(id)object;
 + (BOOL)isRetina;

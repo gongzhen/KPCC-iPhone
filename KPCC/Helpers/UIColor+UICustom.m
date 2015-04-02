@@ -96,6 +96,9 @@
                            alpha:1.0];
 }
 
++ (UIColor*)kpccSoftOrangeColor {
+    return [UIColor colorWithHex:0xF87E21];
+}
 
 + (UIColor*)kpccOrangeColor {
     return [UIColor colorWithHex:0xFF8C26];

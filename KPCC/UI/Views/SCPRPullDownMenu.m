@@ -15,7 +15,7 @@
 #define kMenuItemKPCCLive   @"KPCC Live"
 #define kMenuItemPrograms   @"Programs"
 #define kMenuItemShortList  @"Headlines"
-#define kMenuItemAlarm      @"Alarm Clock"
+#define kMenuItemAlarm      @"Wake / Sleep"
 #define kMenuItemDonate     @"Donate"
 #define kMenuItemSettings   @"Settings"
 #define kMenuItemFeedback   @"Feedback"
@@ -52,6 +52,7 @@
     NSOrderedSet* orderedItems = [NSOrderedSet orderedSetWithObjects:   kMenuItemKPCCLive,
                                                                         kMenuItemPrograms,
                                                                         kMenuItemShortList,
+                                                                        kMenuItemAlarm,
                                                                         kMenuItemDonate,
                                                                         kMenuItemFeedback,
                                                                         //
@@ -278,7 +279,7 @@
                          animations:^{
                              if (!fullyOpen)
                              {
-                                 self.center = CGPointMake(self.frame.size.width / 2, (/*(self.frame.size.height / 2) +*/ topMargin + (16.0 * [menuItems count])));
+                                 self.center = CGPointMake(self.frame.size.width / 2, (/*(self.frame.size.height / 2) +*/ topMargin + (([menuItems count]*3.0) * [menuItems count])));
                                  fullyOpen = YES;
                              }
                          }

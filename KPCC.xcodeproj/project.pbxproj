@@ -21,6 +21,7 @@
 		254CC6A01A240B6200560805 /* onboarding-episode-swipe@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 254CC69F1A240B6200560805 /* onboarding-episode-swipe@2x.png */; };
 		254CC6A31A255A1E00560805 /* SCPRButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 254CC6A21A255A1E00560805 /* SCPRButton.m */; };
 		254E177019F863960022BF6B /* UILabel+Additions.m in Sources */ = {isa = PBXBuildFile; fileRef = 254E176F19F863960022BF6B /* UILabel+Additions.m */; };
+		25547AB41ACA051D00241B7D /* alarm_beat.aif in Resources */ = {isa = PBXBuildFile; fileRef = 25547AB31ACA051D00241B7D /* alarm_beat.aif */; };
 		2557BA831A1A9BB800B0CAED /* btn_back_to_live_xtra-small.png in Resources */ = {isa = PBXBuildFile; fileRef = 2557BA7F1A1A9BB800B0CAED /* btn_back_to_live_xtra-small.png */; };
 		2557BA841A1A9BB800B0CAED /* btn_back_to_live_xtra-small@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2557BA801A1A9BB800B0CAED /* btn_back_to_live_xtra-small@2x.png */; };
 		2557BA851A1A9BB800B0CAED /* btn_live_rewind_xtra-small.png in Resources */ = {isa = PBXBuildFile; fileRef = 2557BA811A1A9BB800B0CAED /* btn_live_rewind_xtra-small.png */; };
@@ -73,6 +74,12 @@
 		25C409B01A437B9400ADBFFE /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 25C409AF1A437B9400ADBFFE /* AdSupport.framework */; };
 		25E8BD9E1ABA034D007B99EB /* program_avatar_invisibilia.png in Resources */ = {isa = PBXBuildFile; fileRef = 25E8BD9C1ABA034D007B99EB /* program_avatar_invisibilia.png */; };
 		25E8BD9F1ABA034D007B99EB /* program_avatar_invisibilia@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 25E8BD9D1ABA034D007B99EB /* program_avatar_invisibilia@2x.png */; };
+		25E8BDA41ABB933C007B99EB /* SCPRTimerControlViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 25E8BDA21ABB933C007B99EB /* SCPRTimerControlViewController.m */; };
+		25E8BDA51ABB933C007B99EB /* SCPRTimerControlViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 25E8BDA31ABB933C007B99EB /* SCPRTimerControlViewController.xib */; };
+		25E8BDAB1ABC923E007B99EB /* SCPRSleepViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 25E8BDA91ABC923E007B99EB /* SCPRSleepViewController.m */; };
+		25E8BDAC1ABC923E007B99EB /* SCPRSleepViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 25E8BDAA1ABC923E007B99EB /* SCPRSleepViewController.xib */; };
+		25E8BDB01AC0920E007B99EB /* SCPRAlarmClockViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 25E8BDAE1AC0920E007B99EB /* SCPRAlarmClockViewController.m */; };
+		25E8BDB11AC0920E007B99EB /* SCPRAlarmClockViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 25E8BDAF1AC0920E007B99EB /* SCPRAlarmClockViewController.xib */; };
 		25F2BC7E1A3B9B4D00108F73 /* SCPRGenericAvatarViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 25F2BC7C1A3B9B4D00108F73 /* SCPRGenericAvatarViewController.m */; };
 		25F2BC7F1A3B9B4D00108F73 /* SCPRGenericAvatarViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 25F2BC7D1A3B9B4D00108F73 /* SCPRGenericAvatarViewController.xib */; };
 		25F2BC811A3BB60B00108F73 /* onboarding-music-bed.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 25F2BC801A3BB60B00108F73 /* onboarding-music-bed.m4a */; };
@@ -254,6 +261,10 @@
 		76B9A9AE18EF59FD007A6D8C /* SCPRUserReportViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 76B9A9AB18EF59FD007A6D8C /* SCPRUserReportViewController.xib */; };
 		76B9A9B618EF79F6007A6D8C /* SCPRFooterView.m in Sources */ = {isa = PBXBuildFile; fileRef = 76B9A9B518EF79F6007A6D8C /* SCPRFooterView.m */; };
 		76EF5E8A193E8D6B00568A9D /* Storyboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 76EF5E89193E8D6B00568A9D /* Storyboard.storyboard */; };
+		B5F9F7491ABCE8FD00115DB3 /* icon-clock.png in Resources */ = {isa = PBXBuildFile; fileRef = B5F9F7451ABCE8FD00115DB3 /* icon-clock.png */; };
+		B5F9F74A1ABCE8FD00115DB3 /* icon-clock@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B5F9F7461ABCE8FD00115DB3 /* icon-clock@2x.png */; };
+		B5F9F74B1ABCE8FD00115DB3 /* icon-stopwatch.png in Resources */ = {isa = PBXBuildFile; fileRef = B5F9F7471ABCE8FD00115DB3 /* icon-stopwatch.png */; };
+		B5F9F74C1ABCE8FD00115DB3 /* icon-stopwatch@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B5F9F7481ABCE8FD00115DB3 /* icon-stopwatch@2x.png */; };
 		D60D1CDDD065418D8BE73D8C /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C4832A831DF6416997B73FBF /* libPods.a */; };
 /* End PBXBuildFile section */
 
@@ -287,6 +298,7 @@
 		254CC6A21A255A1E00560805 /* SCPRButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SCPRButton.m; sourceTree = "<group>"; };
 		254E176E19F863960022BF6B /* UILabel+Additions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UILabel+Additions.h"; sourceTree = "<group>"; };
 		254E176F19F863960022BF6B /* UILabel+Additions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UILabel+Additions.m"; sourceTree = "<group>"; };
+		25547AB31ACA051D00241B7D /* alarm_beat.aif */ = {isa = PBXFileReference; lastKnownFileType = file; name = alarm_beat.aif; path = Audio/alarm_beat.aif; sourceTree = "<group>"; };
 		2557BA7F1A1A9BB800B0CAED /* btn_back_to_live_xtra-small.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "btn_back_to_live_xtra-small.png"; sourceTree = "<group>"; };
 		2557BA801A1A9BB800B0CAED /* btn_back_to_live_xtra-small@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "btn_back_to_live_xtra-small@2x.png"; sourceTree = "<group>"; };
 		2557BA811A1A9BB800B0CAED /* btn_live_rewind_xtra-small.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "btn_live_rewind_xtra-small.png"; sourceTree = "<group>"; };
@@ -362,6 +374,15 @@
 		25C409AF1A437B9400ADBFFE /* AdSupport.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AdSupport.framework; path = System/Library/Frameworks/AdSupport.framework; sourceTree = SDKROOT; };
 		25E8BD9C1ABA034D007B99EB /* program_avatar_invisibilia.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = program_avatar_invisibilia.png; sourceTree = "<group>"; };
 		25E8BD9D1ABA034D007B99EB /* program_avatar_invisibilia@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "program_avatar_invisibilia@2x.png"; sourceTree = "<group>"; };
+		25E8BDA11ABB933C007B99EB /* SCPRTimerControlViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCPRTimerControlViewController.h; path = TimerControl/SCPRTimerControlViewController.h; sourceTree = "<group>"; };
+		25E8BDA21ABB933C007B99EB /* SCPRTimerControlViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SCPRTimerControlViewController.m; path = TimerControl/SCPRTimerControlViewController.m; sourceTree = "<group>"; };
+		25E8BDA31ABB933C007B99EB /* SCPRTimerControlViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = SCPRTimerControlViewController.xib; path = TimerControl/SCPRTimerControlViewController.xib; sourceTree = "<group>"; };
+		25E8BDA81ABC923E007B99EB /* SCPRSleepViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCPRSleepViewController.h; path = TimerControl/SleepTimer/SCPRSleepViewController.h; sourceTree = "<group>"; };
+		25E8BDA91ABC923E007B99EB /* SCPRSleepViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SCPRSleepViewController.m; path = TimerControl/SleepTimer/SCPRSleepViewController.m; sourceTree = "<group>"; };
+		25E8BDAA1ABC923E007B99EB /* SCPRSleepViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = SCPRSleepViewController.xib; path = TimerControl/SleepTimer/SCPRSleepViewController.xib; sourceTree = "<group>"; };
+		25E8BDAD1AC0920E007B99EB /* SCPRAlarmClockViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCPRAlarmClockViewController.h; path = TimerControl/AlarmClock/SCPRAlarmClockViewController.h; sourceTree = "<group>"; };
+		25E8BDAE1AC0920E007B99EB /* SCPRAlarmClockViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SCPRAlarmClockViewController.m; path = TimerControl/AlarmClock/SCPRAlarmClockViewController.m; sourceTree = "<group>"; };
+		25E8BDAF1AC0920E007B99EB /* SCPRAlarmClockViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = SCPRAlarmClockViewController.xib; path = TimerControl/AlarmClock/SCPRAlarmClockViewController.xib; sourceTree = "<group>"; };
 		25F2BC7B1A3B9B4D00108F73 /* SCPRGenericAvatarViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCPRGenericAvatarViewController.h; sourceTree = "<group>"; };
 		25F2BC7C1A3B9B4D00108F73 /* SCPRGenericAvatarViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SCPRGenericAvatarViewController.m; sourceTree = "<group>"; };
 		25F2BC7D1A3B9B4D00108F73 /* SCPRGenericAvatarViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SCPRGenericAvatarViewController.xib; sourceTree = "<group>"; };
@@ -589,6 +610,10 @@
 		76EF5E84193E8BEC00568A9D /* KPCC-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "KPCC-Bridging-Header.h"; path = "UI/Controllers/KPCC-Bridging-Header.h"; sourceTree = "<group>"; };
 		76EF5E85193E8BEC00568A9D /* TestFlight-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "TestFlight-Bridging-Header.h"; path = "UI/Controllers/TestFlight-Bridging-Header.h"; sourceTree = "<group>"; };
 		76EF5E89193E8D6B00568A9D /* Storyboard.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Storyboard.storyboard; sourceTree = "<group>"; };
+		B5F9F7451ABCE8FD00115DB3 /* icon-clock.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-clock.png"; sourceTree = "<group>"; };
+		B5F9F7461ABCE8FD00115DB3 /* icon-clock@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-clock@2x.png"; sourceTree = "<group>"; };
+		B5F9F7471ABCE8FD00115DB3 /* icon-stopwatch.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-stopwatch.png"; sourceTree = "<group>"; };
+		B5F9F7481ABCE8FD00115DB3 /* icon-stopwatch@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-stopwatch@2x.png"; sourceTree = "<group>"; };
 		C4832A831DF6416997B73FBF /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		F9D194612962C66D8F109726 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -649,6 +674,7 @@
 		258E8DFD1A16AA1800675E68 /* Audio */ = {
 			isa = PBXGroup;
 			children = (
+				25547AB31ACA051D00241B7D /* alarm_beat.aif */,
 				25F2BC821A3BB61300108F73 /* onboarding-voiceover.m4a */,
 				25F2BC801A3BB60B00108F73 /* onboarding-music-bed.m4a */,
 				25263A871A32669E00BD5FF9 /* onboarding3.mp3 */,
@@ -710,6 +736,38 @@
 				2537D8BC1A8BD7B700481CF8 /* SCPRTouchableScrubberView.m */,
 			);
 			name = Scrubbing;
+			sourceTree = "<group>";
+		};
+		25E8BDA01ABB8702007B99EB /* Wake / Sleep */ = {
+			isa = PBXGroup;
+			children = (
+				25E8BDA71ABC9209007B99EB /* Alarm Clock */,
+				25E8BDA61ABC91E7007B99EB /* Sleep Timer */,
+				25E8BDA11ABB933C007B99EB /* SCPRTimerControlViewController.h */,
+				25E8BDA21ABB933C007B99EB /* SCPRTimerControlViewController.m */,
+				25E8BDA31ABB933C007B99EB /* SCPRTimerControlViewController.xib */,
+			);
+			name = "Wake / Sleep";
+			sourceTree = "<group>";
+		};
+		25E8BDA61ABC91E7007B99EB /* Sleep Timer */ = {
+			isa = PBXGroup;
+			children = (
+				25E8BDA81ABC923E007B99EB /* SCPRSleepViewController.h */,
+				25E8BDA91ABC923E007B99EB /* SCPRSleepViewController.m */,
+				25E8BDAA1ABC923E007B99EB /* SCPRSleepViewController.xib */,
+			);
+			name = "Sleep Timer";
+			sourceTree = "<group>";
+		};
+		25E8BDA71ABC9209007B99EB /* Alarm Clock */ = {
+			isa = PBXGroup;
+			children = (
+				25E8BDAD1AC0920E007B99EB /* SCPRAlarmClockViewController.h */,
+				25E8BDAE1AC0920E007B99EB /* SCPRAlarmClockViewController.m */,
+				25E8BDAF1AC0920E007B99EB /* SCPRAlarmClockViewController.xib */,
+			);
+			name = "Alarm Clock";
 			sourceTree = "<group>";
 		};
 		5257E9C919E349F70055733F /* Transitions */ = {
@@ -913,6 +971,7 @@
 		76658ABC18E0AF8500026176 /* View Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				25E8BDA01ABB8702007B99EB /* Wake / Sleep */,
 				25BBCD791A892D790015071E /* Scrubbing */,
 				259E44FA1A1D2C0A00F5CD65 /* Onboarding */,
 				258E8E0B1A16ADD800675E68 /* Feedback */,
@@ -974,6 +1033,10 @@
 		7685BD57194BBCB90075BB16 /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				B5F9F7451ABCE8FD00115DB3 /* icon-clock.png */,
+				B5F9F7461ABCE8FD00115DB3 /* icon-clock@2x.png */,
+				B5F9F7471ABCE8FD00115DB3 /* icon-stopwatch.png */,
+				B5F9F7481ABCE8FD00115DB3 /* icon-stopwatch@2x.png */,
 				25BBCD7F1A893C350015071E /* btn_back_30.png */,
 				25BBCD801A893C350015071E /* btn_back_30@2x.png */,
 				25BBCD811A893C350015071E /* btn_close.png */,
@@ -1289,6 +1352,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				25BBCD7E1A892DA30015071E /* SCPRScrubberViewController.xib in Resources */,
+				B5F9F74C1ABCE8FD00115DB3 /* icon-stopwatch@2x.png in Resources */,
 				52EFF85E19C368C00059A0E3 /* program_avatar_wait-wait-dont-tell-me.png in Resources */,
 				52EFF82819C368C00059A0E3 /* program_avatar_moth-radio-hour@2x.png in Resources */,
 				52EFF86019C368C00059A0E3 /* program_avatar_wait-wait-dont-tell-me@2x.png in Resources */,
@@ -1309,6 +1373,7 @@
 				523126A819EDB78C008A47A7 /* SCPRPreRollViewController.xib in Resources */,
 				52EFF81A19C368C00059A0E3 /* program_avatar_marketplace-morning-report.png in Resources */,
 				52EFF86219C368C00059A0E3 /* program_avatar_weekend-edition-saturday.png in Resources */,
+				25E8BDAC1ABC923E007B99EB /* SCPRSleepViewController.xib in Resources */,
 				52EFF79119C3688D0059A0E3 /* menu-glasses@2x.png in Resources */,
 				768C0675199590CC00F829EB /* FreigSanProBoldIt.otf in Resources */,
 				523E86D219C8A292006FC366 /* SCPRProgramDetailViewController.xib in Resources */,
@@ -1398,9 +1463,12 @@
 				52EFF80819C368C00059A0E3 /* program_avatar_filmweek@2x.png in Resources */,
 				52EFF78719C3688D0059A0E3 /* menu-antenna.png in Resources */,
 				52EFF79519C3688D0059A0E3 /* menu-heart-plus@2x.png in Resources */,
+				25E8BDA51ABB933C007B99EB /* SCPRTimerControlViewController.xib in Resources */,
 				259E450F1A1D583A00F5CD65 /* onboarding2.mp3 in Resources */,
 				52EFF83219C368C00059A0E3 /* program_avatar_on-the-media.png in Resources */,
 				2557BA851A1A9BB800B0CAED /* btn_live_rewind_xtra-small.png in Resources */,
+				B5F9F74A1ABCE8FD00115DB3 /* icon-clock@2x.png in Resources */,
+				B5F9F7491ABCE8FD00115DB3 /* icon-clock.png in Resources */,
 				52EFF79B19C3688D0059A0E3 /* menu-settings.png in Resources */,
 				76A308D118C8FB940065D4B1 /* InfoPlist.strings in Resources */,
 				25F2BC831A3BB61300108F73 /* onboarding-voiceover.m4a in Resources */,
@@ -1441,10 +1509,12 @@
 				52EFF88919C3BC020059A0E3 /* item-chevron-right@2x.png in Resources */,
 				761CC5A4195A2878006A6C7C /* Testflight-Info.plist in Resources */,
 				52EFF81E19C368C00059A0E3 /* program_avatar_marketplace.png in Resources */,
+				25E8BDB11AC0920E007B99EB /* SCPRAlarmClockViewController.xib in Resources */,
 				52EFF83A19C368C00059A0E3 /* program_avatar_radiolab.png in Resources */,
 				52EFF86A19C368C00059A0E3 /* program_avatar_wits.png in Resources */,
 				258E8E061A16AA4200675E68 /* desk_customer_template.json in Resources */,
 				52D9227A19D366C90018AD4B /* content-share@2x.png in Resources */,
+				25547AB41ACA051D00241B7D /* alarm_beat.aif in Resources */,
 				52EFF86819C368C00059A0E3 /* program_avatar_weekend-edition-sunday@2x.png in Resources */,
 				52EFF84819C368C00059A0E3 /* program_avatar_splendid-table@2x.png in Resources */,
 				254CC6971A23A7A600560805 /* onboarding-logo@2x.png in Resources */,
@@ -1456,6 +1526,7 @@
 				25F2BC811A3BB60B00108F73 /* onboarding-music-bed.m4a in Resources */,
 				254CC6981A23A7A600560805 /* onboarding-push-icon.png in Resources */,
 				52D0FC3819D20D29009AECEE /* program_avatar_the-frame@2x.png in Resources */,
+				B5F9F74B1ABCE8FD00115DB3 /* icon-stopwatch.png in Resources */,
 				768C06601995905D00F829EB /* chevron_down@2x.png in Resources */,
 				768C0671199590CC00F829EB /* FreigSanProBlkIt.otf in Resources */,
 				52CC6D6919D112F400C67322 /* SCPRProgramsListViewController.xib in Resources */,
@@ -1548,6 +1619,7 @@
 				258FC47E1A01915E00282D59 /* UIColor+UICustom.m in Sources */,
 				258BD3B11A0C0FFF00E7560F /* SCPRProgressViewController.m in Sources */,
 				52CF917A1A0032C7007BCFA8 /* QueueManager.m in Sources */,
+				25E8BDB01AC0920E007B99EB /* SCPRAlarmClockViewController.m in Sources */,
 				258BB0381A1C07FD00B8FCFE /* UXmanager.m in Sources */,
 				76B9A9AC18EF59FD007A6D8C /* SCPRUserReportViewController.m in Sources */,
 				76658AB918DCB51000026176 /* NSDate+Helper.m in Sources */,
@@ -1557,9 +1629,11 @@
 				52EFF87419C375CA0059A0E3 /* SCPRPullDownMenu.m in Sources */,
 				523126A719EDB78C008A47A7 /* SCPRPreRollViewController.m in Sources */,
 				52E68B8219B8F2D10028F8AE /* SCPRNavigationController.m in Sources */,
+				25E8BDA41ABB933C007B99EB /* SCPRTimerControlViewController.m in Sources */,
 				76A308D318C8FB940065D4B1 /* main.m in Sources */,
 				25A6534B1AAE2BA300ABAAD6 /* Bookmark.m in Sources */,
 				255943EA19F1A7620007294D /* SCPRJogShuttleViewController.m in Sources */,
+				25E8BDAB1ABC923E007B99EB /* SCPRSleepViewController.m in Sources */,
 				52CC6D6219D100DE00C67322 /* SCPRProgramTableViewCell.m in Sources */,
 				52D6B2001A02EEB90068B19A /* SCPRQueueScrollableView.m in Sources */,
 				525C6CA419F701FA0076C13B /* TritonAd.m in Sources */,
@@ -1891,7 +1965,6 @@
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
-					"SUPPRESS_DIMENSION_PRINTING=1",
 					"SUPPRESS_AGGRESSIVE_KICKSTART=1",
 				);
 				INFOPLIST_FILE = "KPCC/KPCC-Info.plist";

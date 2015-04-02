@@ -43,8 +43,8 @@
     [[AnalyticsManager shared] setup];
     
 #ifndef PRODUCTION
-    [[UXmanager shared].settings setUserHasViewedOnboarding:YES];
-    [[UXmanager shared].settings setUserHasViewedOnDemandOnboarding:YES];
+    //[[UXmanager shared].settings setUserHasViewedOnboarding:YES];
+    //[[UXmanager shared].settings setUserHasViewedOnDemandOnboarding:YES];
 #ifdef TESTING_SCRUBBER
     [[UXmanager shared].settings setUserHasViewedScrubbingOnboarding:NO];
 #endif
@@ -117,8 +117,6 @@
     
     [[UXmanager shared] setSuppressBalloon:YES];
     [[SessionManager shared] setUseLocalNotifications:( types & UIUserNotificationTypeAlert )];
-   
-    
     if ( ![[UXmanager shared] userHasSeenOnboarding] ) {
         [[UXmanager shared] closeOutOnboarding];
     }
@@ -194,12 +192,30 @@
     
 }
 
-- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
-    [self actOnNotification:userInfo];
-}
 
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
 
+    NSError *jsonError = nil;
+    NSData *data = [NSJSONSerialization dataWithJSONObject:userInfo
+                                                   options:NSJSONWritingPrettyPrinted
+                                                     error:&jsonError];
+    NSString *dataStr = [[NSString alloc] initWithData:data
+                                              encoding:NSUTF8StringEncoding];
+    NSLog(@" •••••••• >>>>>>>> User Info from Push : %@ <<<<<<<< ••••••••",dataStr);
+    
+#ifdef USE_PUSH_FOR_ALARM
+    if ( userInfo[@"alarm"] ) {
+        NSLog(@"Alarm Received");
+        self.alarmTask = [application beginBackgroundTaskWithExpirationHandler:^{
+            
+        }];
+        
+        [self actOnNotification:userInfo];
+        completionHandler(UIBackgroundFetchResultNewData);
+        return;
+    }
+#endif
+    
     if ( [[UIApplication sharedApplication] applicationState] == UIApplicationStateBackground ) {
         NSLog(@" >>>>> ACTING ON PUSH NOW <<<<< ");
         [self actOnNotification:userInfo];
@@ -210,6 +226,28 @@
     
     completionHandler(UIBackgroundFetchResultNoData);
 
+}
+
+- (void)application:(UIApplication *)application didReceiveLocalNotification:(UILocalNotification *)notification {
+    
+    NSLog(@"Did receive local notification");
+    self.alarmTask = [application beginBackgroundTaskWithExpirationHandler:^{
+        
+    }];
+    
+    [self fireAlarmClock];
+    
+}
+
+- (void)application:(UIApplication *)application handleActionWithIdentifier:(NSString *)identifier forLocalNotification:(UILocalNotification *)notification completionHandler:(void (^)())completionHandler {
+    
+    NSLog(@"Handle action with Identifier");
+    if ( SEQ(notification.alertAction,@"play-audio") ) {
+        [[AudioManager shared] setUserPause:NO]; // Override the user's pause request
+        [self.masterViewController handleResponseForNotification];
+    }
+    completionHandler();
+    
 }
 
 - (void)actOnNotification:(NSDictionary *)userInfo {
@@ -285,6 +323,8 @@
         [[SessionManager shared] checkProgramUpdate:YES];
     }
     
+    
+    
 #ifdef DEBUG
     if ( [[SessionManager shared] sessionPausedDate] ) {
         NSLog(@"Session Paused : %@",[NSDate stringFromDate:[[SessionManager shared] sessionPausedDate]
@@ -305,6 +345,9 @@
             NSLog(@" >>>>>>>>>>> CONTINUE WAITING FOR UI TO CATCH UP <<<<<<<<<<<< ");
         }
     }
+    
+    [self manuallyCheckAlarm];
+    
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
 }
 
@@ -337,10 +380,200 @@
      forState:UIControlStateNormal];*/
 }
 
-- (void)application:(UIApplication *)application didReceiveLocalNotification:(UILocalNotification *)notification {
-    if ( [[UIApplication sharedApplication] applicationState] == UIApplicationStateActive ) {
-        [[SessionManager shared] processNotification:notification];
+
+#pragma mark - Alarm Clock
+
+- (void)armAlarmClockWithDate:(NSDate *)date {
+#ifndef USE_PUSH_FOR_ALARM
+    self.alarmDate = date;
+#ifndef PRODUCTION
+    self.alarmDate = [[NSDate date] dateByAddingTimeInterval:25.0];
+#endif
+    
+    [[UIApplication sharedApplication] setIdleTimerDisabled:YES];
+    
+    NSInteger tisn = abs([self.alarmDate timeIntervalSinceNow]);
+    NSLog(@"Will fire in %ld seconds",(long)tisn);
+    self.timer = [NSTimer scheduledTimerWithTimeInterval:tisn
+                                                  target:self
+                                                selector:@selector(fireAlarmClock)
+                                                userInfo:nil
+                                                 repeats:NO];
+
+    if ( [[AudioManager shared] isPlayingAudio] ) {
+        [[AudioManager shared] adjustAudioWithValue:-0.075
+                                         completion:^{
+                                             [[AudioManager shared] stopAllAudio];
+                                             [self buildTimer];
+                                             
+                                             self.alarmTimer = [NSTimer scheduledTimerWithTimeInterval:1.0f
+                                                                                           target:self
+                                                                                         selector:@selector(checkAlarmClock)
+                                                                                         userInfo:nil
+                                                                                          repeats:YES];
+    
+                                             
+                                         }];
+        return;
     }
+    
+
+    [self buildTimer];
+    
+    self.alarmTimer = [NSTimer scheduledTimerWithTimeInterval:1.0f
+                                                  target:self
+                                                selector:@selector(checkAlarmClock)
+                                                userInfo:nil
+                                                 repeats:NO];
+    
+    
+    [[AnalyticsManager shared] logEvent:@"alarmClockArmed"
+                         withParameters:@{ @"short" : @1 }];
+    
+#else
+    
+    PFInstallation *i = [PFInstallation currentInstallation];
+    [i addUniqueObject:kAlarmChannel
+                forKey:@"channels"];
+    i[@"activeFireDate"] = date;
+    [i saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+        
+        
+        
+    }];
+    
+#endif
+}
+
+- (void)buildTimer {
+    UILocalNotification *alarm = [[UILocalNotification alloc] init];
+    alarm.alertTitle = @"Time to wake up!";
+    alarm.alertBody = @"It's time for your fix of KPCC";
+    alarm.fireDate = self.alarmDate;
+    alarm.soundName = @"alarm_beat.aif";
+    alarm.alertAction = @"play-audio";
+    alarm.timeZone = [NSTimeZone defaultTimeZone];
+    alarm.hasAction = YES;
+    
+    [[UIApplication sharedApplication] scheduleLocalNotification:alarm];
+    
+    
+    
+    NSLog(@"Alarm will fire at : %@",[NSDate stringFromDate:self.alarmDate
+                                                 withFormat:@"EEE MM/dd YYYY, hh:mm:ss a"]);
+    
+    NSArray *local = [[UIApplication sharedApplication] scheduledLocalNotifications];
+    NSLog(@"System reports %ld scheduled notes",(long)local.count);
+    
+    [[UXmanager shared].settings setAlarmFireDate:self.alarmDate];
+    [[UXmanager shared] persist];
+}
+
+- (void)setAlarmDate:(NSDate *)alarmDate {
+    _alarmDate = alarmDate;
+    
+}
+
+- (void)application:(UIApplication *)application performFetchWithCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
+    /*NSLog(@"System performing bg fetch at : %@",[NSDate stringFromDate:[NSDate date]
+                                                            withFormat:@"hh:mm a"]);
+    [self checkAlarmClock];
+    
+    completionHandler(self.alarmResults);*/
+}
+
+- (void)checkAlarmClock {
+    
+    NSLog(@"Checking... %ld",(long)[[NSDate date] timeIntervalSinceDate:self.alarmDate]);
+    if ( self.alarmTimer ) {
+        if ( [self.alarmTimer isValid] ) {
+            [self.alarmTimer invalidate];
+        }
+        self.alarmTimer = nil;
+    }
+    
+    if ( [[NSDate date] timeIntervalSinceDate:self.alarmDate] >= 0 ) {
+
+        [self fireAlarmClock];
+    } else {
+            self.alarmTimer = [NSTimer scheduledTimerWithTimeInterval:1.0f
+                                                          target:self
+                                                        selector:@selector(checkAlarmClock)
+                                                        userInfo:nil
+                                                              repeats:NO];
+    }
+    
+}
+
+- (void)manuallyCheckAlarm {
+    NSArray *local = [[UIApplication sharedApplication] scheduledLocalNotifications];
+    NSLog(@"System reports %ld scheduled notes",(long)local.count);
+    
+    NSDate *alarmDate = [[UXmanager shared].settings alarmFireDate];
+    if ( alarmDate ) {
+        NSInteger diff = [[NSDate date] timeIntervalSinceDate:alarmDate];
+        if ( diff > 0 ) {
+            [self endAlarmClock];
+        } else {
+            [[UIApplication sharedApplication] setIdleTimerDisabled:YES];
+        }
+    } else {
+        [[UIApplication sharedApplication] setIdleTimerDisabled:NO];
+    }
+}
+
+- (void)fireAlarmClock {
+    
+    
+    if ( self.alarmTimer ) {
+        if ( [self.alarmTimer isValid] ) {
+            [self.alarmTimer invalidate];
+        }
+        self.alarmTimer = nil;
+    }
+    if ( ![[UXmanager shared].settings alarmFireDate] ) {
+        return;
+    }
+    
+    NSLog(@"Alarm Clock is firing");
+    
+    [self endAlarmClock];
+    
+    [[AnalyticsManager shared] logEvent:@"alarmClockFired"
+                         withParameters:@{ @"short" : @1 }];
+    
+    [[AudioManager shared] setUserPause:NO];
+    [self.masterViewController handleResponseForNotification];
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"alarm-fired"
+                                                        object:nil];
+}
+
+- (void)cancelAlarmClock {
+    [self endAlarmClock];
+    
+    [[AnalyticsManager shared] logEvent:@"alarmCanceled"
+                         withParameters:@{ @"short" : @1 }];
+}
+
+- (void)endAlarmClock {
+#ifdef USE_PUSH_FOR_ALARM
+    if ( self.alarmTask ) {
+        [[UIApplication sharedApplication] endBackgroundTask:self.alarmTask];
+        self.alarmTask = 0;
+    }
+#else
+    self.alarmDate = nil;
+    [[UXmanager shared].settings setAlarmFireDate:nil];
+    [[UXmanager shared] persist];
+    [[UIApplication sharedApplication] cancelAllLocalNotifications];
+    [[UIApplication sharedApplication] setIdleTimerDisabled:NO];
+#endif
+}
+
+- (void)killBackgroundTask {
+    [[UIApplication sharedApplication] endBackgroundTask:self.alarmTask];
+    self.alarmTask = 0;
 }
 
 #pragma mark - ContentProcessor

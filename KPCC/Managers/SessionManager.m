@@ -68,7 +68,7 @@
         NSDate *msd = [[AudioManager shared].audioPlayer.currentItem currentDate];
         if ( msd ) {
             if ( [msd isWithinTimeFrame:self.peakDrift ofDate:[NSDate date]] ) {
-                if ( abs([live timeIntervalSinceDate:msd]) > kStreamIsLiveTolerance ) {
+                if ( abs([live timeIntervalSinceDate:msd]) > [[SessionManager shared] peakDrift] ) {
                     live = msd;
                     self.latestDriftValue = abs([live timeIntervalSinceDate:msd]);
                 }
@@ -87,7 +87,7 @@
 - (NSInteger)calculatedDriftValue {
     /*NSInteger vDrift = abs([[NSDate date] timeIntervalSinceDate:[[AudioManager shared] maxSeekableDate]]);
     NSLog(@"Current Drift Value : %ld",(long)vDrift);
-    return vDrift / 2.0 < kStreamIsLiveTolerance ? vDrift / 2.0 : kStreamIsLiveTolerance;*/
+    return vDrift / 2.0 < [[SessionManager shared] peakDrift] ? vDrift / 2.0 : [[SessionManager shared] peakDrift];*/
     return 2;
 }
 
@@ -305,6 +305,86 @@
                                            }];
 }
 
+#pragma mark - Sleep Timer
+- (BOOL)sleepTimerActive {
+    return self.sleepTimerArmed;
+}
+
+- (void)armSleepTimerWithSeconds:(NSInteger)seconds completed:(CompletionBlock)completed {
+    
+    [self disarmSleepTimerWithCompletion:nil];
+#ifdef DEBUG
+    seconds = 65;
+#endif
+    self.originalSleepTimerRequest = seconds;
+    self.remainingSleepTimerSeconds = seconds;
+
+    /*self.sleepTimer = [NSTimer scheduledTimerWithTimeInterval:1.0
+                                                       target:self
+                                                     selector:@selector(tickSleepTimer)
+                                                     userInfo:nil
+                                                      repeats:YES];*/
+    self.sleepTimerArmed = YES;
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"sleep-timer-armed"
+                                                        object:nil];
+    
+    if ( completed ) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            completed();
+            
+            [[AnalyticsManager shared] logEvent:@"sleepTimerArmed"
+                                 withParameters:@{ @"short" : @1 }];
+            
+        });
+    }
+    
+}
+
+- (void)tickSleepTimer {
+    self.remainingSleepTimerSeconds = self.remainingSleepTimerSeconds - 1;
+    if ( self.remainingSleepTimerSeconds <= 0 ) {
+        [self disarmSleepTimerWithCompletion:^{
+            self.remainingSleepTimerSeconds = 300;
+        }];
+        [[AudioManager shared] adjustAudioWithValue:-.045 completion:^{
+            [[AudioManager shared] stopAllAudio];
+            
+            [[AnalyticsManager shared] logEvent:@"sleepTimerFired"
+                                 withParameters:@{ @"short" : @1 }];
+        }];
+        return;
+    }
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"sleep-timer-ticked"
+                                                        object:nil];
+}
+
+- (void)cancelSleepTimerWithCompletion:(CompletionBlock)completed {
+    [[AnalyticsManager shared] logEvent:@"sleepTimerCanceled"
+                         withParameters:@{ @"short" : @1 }];
+    [self disarmSleepTimerWithCompletion:completed];
+}
+
+- (void)disarmSleepTimerWithCompletion:(CompletionBlock)completed {
+    if ( self.sleepTimer ) {
+        if ( [self.sleepTimer isValid] ) {
+            [self.sleepTimer invalidate];
+        }
+        self.sleepTimer = nil;
+    }
+    
+    self.sleepTimerArmed = NO;
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"sleep-timer-disarmed"
+                                                        object:nil];
+    
+    if ( completed ) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            completed();
+        });
+    }
+}
 
 #pragma mark - Cache
 - (void)resetCache {
@@ -672,7 +752,7 @@
 #else
     NSDate *live = [NSDate date];
 #endif
-    if ( abs([live timeIntervalSince1970] - [currentDate timeIntervalSince1970]) > kStreamIsLiveTolerance ) {
+    if ( abs([live timeIntervalSince1970] - [currentDate timeIntervalSince1970]) > [[SessionManager shared] peakDrift] ) {
         return YES;
     }
     
@@ -680,6 +760,7 @@
 }
 
 - (BOOL)sessionIsExpired {
+    
     
     if ( [[AudioManager shared] currentAudioMode] == AudioModeOnDemand ) return NO;
     if ( [[AudioManager shared] status] == StreamStatusPaused ||

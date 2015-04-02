@@ -7,6 +7,7 @@
 //
 
 #import "NSDate+Helper.h"
+#import "DesignManager.h"
 
 @implementation NSDate (Helper)
 
@@ -48,12 +49,14 @@
 
 - (NSDate*)minuteRoundedUpByThreshold:(NSInteger)minute {
     NSDateComponents *time = [[NSCalendar currentCalendar]
-                              components:NSHourCalendarUnit | NSMinuteCalendarUnit
+                              components:( NSCalendarUnitYear | NSCalendarUnitWeekOfYear | NSCalendarUnitMonth | NSCalendarUnitWeekOfMonth | NSCalendarUnitDay | NSCalendarUnitWeekday | NSCalendarUnitHour | NSCalendarUnitMinute )
                               fromDate:self];
+    
     NSInteger minutes = [time minute];
     float minuteUnit = ceil((float) minutes / (CGFloat)minute*1.0);
     minutes = minuteUnit * (minute*1.0);
     [time setMinute: minutes];
+    [time setSecond:0];
     return [[NSCalendar currentCalendar] dateFromComponents:time];
 }
 
@@ -192,6 +195,151 @@
     return [NSString stringWithFormat:@"%@%@",hourStatement,minStatement];
     
 }
+
++ (NSMutableAttributedString*)prettyAttributedFromSeconds:(NSInteger)seconds includeSeconds:(BOOL)includeSeconds {
+
+    NSInteger minutes = ceil(seconds/60);
+    NSInteger hours = 0;
+    if ( minutes > 59 ) {
+        hours = ceil(minutes/60);
+        minutes = minutes % 60;
+    }
+    
+    NSString *minuteNoun = nil;
+    NSString *hourStatement = @"";
+    NSString *minStatement = @"";
+    if ( hours > 0 ) {
+        if ( hours == 1 ) {
+            hourStatement = [NSString stringWithFormat:@"%ld hr ",(long)hours];
+        } else {
+            hourStatement = [NSString stringWithFormat:@"%ld hr ",(long)hours];
+        }
+        minuteNoun = @"min";
+    } else {
+        minuteNoun = @"min";
+    }
+    
+    if ( minutes > 0 ) {
+        if ( minutes > 1 ) {
+            //minuteNoun = [minuteNoun stringByAppendingString:@"S"];
+        }
+        minStatement = [NSString stringWithFormat:@"%ld %@",(long)minutes,minuteNoun];
+    }
+    
+
+    NSString *complet = [NSString stringWithFormat:@"%@%@",hourStatement,minStatement];
+    if ( includeSeconds ) {
+        NSInteger leftovers = seconds % 60;
+        NSString *addSec = [NSString stringWithFormat:@"%ld sec",(long)leftovers];
+        complet = [complet stringByAppendingFormat:@" %@",addSec];
+    }
+    NSMutableAttributedString *completeAtt = [[NSMutableAttributedString alloc] initWithString:complet
+                                                                                    attributes:@{ NSFontAttributeName : [[DesignManager shared] proLight:48.0f],
+                                                                                                  NSForegroundColorAttributeName : [UIColor whiteColor] }];
+    NSRange hourRange = [complet rangeOfString:@"hr"];
+    if ( hourRange.location != NSNotFound ) {
+        [completeAtt addAttributes:@{ NSFontAttributeName : [[DesignManager shared] proLight:26.0f] }
+                             range:hourRange];
+    }
+    
+    NSRange minRange = [complet rangeOfString:@"min"];
+    if ( minRange.location != NSNotFound ) {
+        [completeAtt addAttributes:@{ NSFontAttributeName : [[DesignManager shared] proLight:26.0f] }
+                             range:minRange];
+    }
+    
+    NSRange secRange = [complet rangeOfString:@"sec"];
+    if ( secRange.location != NSNotFound ) {
+        [completeAtt addAttributes:@{ NSFontAttributeName : [[DesignManager shared] proLight:26.0f] }
+                             range:secRange];
+    }
+    return completeAtt;
+}
+
++ (NSString*)prettyUSTimeFromSeconds:(NSInteger)seconds {
+    NSInteger minutes = ceil(seconds/60);
+    NSInteger hours = 0;
+    if ( minutes > 59 ) {
+        hours = ceil(minutes/60);
+        minutes = minutes % 60;
+    }
+    
+    NSString *hoursFormatted = @"";
+    if ( hours < 10 ) {
+        hoursFormatted = [NSString stringWithFormat:@"0%ld",(long)hours];
+    } else {
+        hoursFormatted = [NSString stringWithFormat:@"%ld",(long)hours];
+    }
+    
+    NSString *minutesFormatted = @"";
+    if ( minutes < 10 ) {
+        minutesFormatted = [NSString stringWithFormat:@"0%ld",(long)minutes];
+    } else {
+        minutesFormatted = [NSString stringWithFormat:@"%ld",(long)minutes];
+    }
+    
+    NSString *europe = [NSString stringWithFormat:@"%@:%@",hoursFormatted,minutesFormatted];
+    NSLog(@"Raw time : %@",europe);
+    
+    NSDateFormatter *inputFormatter = [[NSDateFormatter alloc] init];
+    [inputFormatter setDateFormat:@"HH:mm"];
+    NSDate *europeanDate = [inputFormatter dateFromString:europe];
+    
+    NSString *usDateString = [NSDate stringFromDate:europeanDate
+                                         withFormat:@"hh:mm a"];
+    
+    NSLog(@"US : %@",usDateString);
+    
+    return usDateString;
+}
+
++ (NSDate*)midnightThisMorning {
+    NSDate *now = [NSDate date];
+    NSDateComponents *comps = [[NSCalendar currentCalendar] components:NSCalendarUnitDay
+                                                              fromDate:now];
+    NSDate *midnight = [[NSCalendar currentCalendar] dateFromComponents:comps];
+    
+    NSLog(@"Midnight : %@",[NSDate stringFromDate:midnight
+                                       withFormat:@"MM/dd/yyyy hh:mm a"]);
+    
+    return midnight;
+}
+
++ (NSString*)scientificStringFromSeconds:(NSInteger)seconds {
+    NSInteger minutes = ceil(seconds/60);
+    NSInteger hours = 0;
+    if ( minutes > 59 ) {
+        hours = ceil(minutes/60);
+        minutes = minutes % 60;
+    }
+    
+    NSString *hourStatement = @"";
+    NSString *minStatement = @"";
+    if ( hours > 0 ) {
+        hourStatement = [NSString stringWithFormat:@"%ld:",(long)hours];
+    }
+ 
+    minStatement = [NSString stringWithFormat:@"%ld",(long)minutes];
+    
+    if ( hours > 0 && minutes < 10 ) {
+        minStatement = [NSString stringWithFormat:@"0%ld",(long)minutes];
+    }
+    
+    
+    NSString *complet = [NSString stringWithFormat:@"%@%@",hourStatement,minStatement];
+    NSInteger leftovers = seconds % 60;
+    
+    
+    NSString *addSec = [NSString stringWithFormat:@":%ld",(long)leftovers];
+    if ( leftovers < 10 ) {
+        addSec = [NSString stringWithFormat:@":0%ld",(long)leftovers];
+    }
+    complet = [complet stringByAppendingFormat:@"%@",addSec];
+    
+    return complet;
+}
+
+
 
 - (BOOL)isWithinReasonableframeOfDate:(NSDate *)date {
     return [self isWithinTimeFrame:60*30 ofDate:date];

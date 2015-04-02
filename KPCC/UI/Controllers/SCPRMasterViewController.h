@@ -143,6 +143,15 @@
 - (void)beginScrubbingWaitMode;
 - (void)endScrubbingWaitMode;
 
+// Sleep Timer
+@property (nonatomic, strong) IBOutlet UIView *sleepTimerContainerView;
+@property (nonatomic, strong) IBOutlet UIProgressView *sleepTimerCountdownProgress;
+@property (nonatomic, strong) IBOutlet UIImageView *clockIconImageView;
+@property (nonatomic, strong) IBOutlet UILabel *plainTextCountdownLabel;
+@property (nonatomic, strong) IBOutlet UIButton *cancelSleepTimerButton;
+- (void)setupTimerControls;
+- (void)cancelSleepTimerAction;
+
 - (void)remoteControlPlayOrPause;
 
 @property (nonatomic, strong) SCPRScrubbingUIViewController *scrubbingUI;
@@ -174,6 +183,8 @@
 - (void)treatUIforProgram;
 - (void)determinePlayState;
 
+- (void)handleAlarmClock;
+
 - (void)moveTextIntoPlace:(BOOL)animated;
 - (void)goLive:(BOOL)play;
 - (void)goLive:(BOOL)play smooth:(BOOL)smooth;
@@ -188,6 +199,8 @@
 - (void)onboarding_rewindToBeginning;
 - (void)onboarding_beginOutro;
 - (void)onboarding_fin;
+
+- (void)superPop;
 
 @property (nonatomic, strong) IBOutlet NSLayoutConstraint *imageTopConstraint;
 

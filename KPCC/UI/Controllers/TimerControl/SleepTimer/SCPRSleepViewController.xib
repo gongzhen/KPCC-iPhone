@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6751" systemVersion="14C1510" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6736"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="SCPRSleepViewController">
+            <connections>
+                <outlet property="bottomAnchor" destination="FKf-BN-S7v" id="61G-4g-qkD"/>
+                <outlet property="globalTopAnchor" destination="zCc-k2-uXr" id="7bA-IK-weN"/>
+                <outlet property="indicatorLabel" destination="eMp-zX-4Ac" id="lOP-rQ-8bI"/>
+                <outlet property="indicatorTopAnchor" destination="nYY-jY-QUp" id="EPT-ft-b0b"/>
+                <outlet property="lowerBoundLabel" destination="lUK-FQ-W7q" id="MUU-GM-41t"/>
+                <outlet property="remainingLabel" destination="3VR-M7-GzS" id="OPe-6X-lAg"/>
+                <outlet property="scrubber" destination="WeI-MB-p7g" id="Fsv-Ao-Sbw"/>
+                <outlet property="scrubbingSeatView" destination="bWg-pH-jh1" id="cyI-5S-Wfg"/>
+                <outlet property="scrubbingTouchView" destination="lMf-PN-dDU" id="5zR-Cg-iDo"/>
+                <outlet property="spinner" destination="aHo-0w-ieX" id="xjg-9D-PJI"/>
+                <outlet property="startButton" destination="R4Y-RH-XVV" id="kxy-BF-Kiq"/>
+                <outlet property="upperBoundLabel" destination="929-2z-A8Z" id="4Sj-L5-dDa"/>
+                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bWg-pH-jh1" userLabel="scrubberSeat">
+                    <rect key="frame" x="0.0" y="228" width="600" height="119"/>
+                    <subviews>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lMf-PN-dDU" userLabel="scrubbingArea" customClass="SCPRTouchableScrubberView">
+                            <rect key="frame" x="10" y="0.0" width="580" height="90"/>
+                            <color key="backgroundColor" red="0.78385416666666663" green="0.78385416666666663" blue="0.78385416666666663" alpha="1" colorSpace="calibratedRGB"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="90" id="T6u-Vm-aH3"/>
+                            </constraints>
+                        </view>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="5 min" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lUK-FQ-W7q">
+                            <rect key="frame" x="10" y="98" width="52" height="21"/>
+                            <constraints>
+                                <constraint firstAttribute="width" constant="52" id="APP-H2-aLZ"/>
+                                <constraint firstAttribute="height" constant="21" id="BLa-mc-7eC"/>
+                            </constraints>
+                            <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="8 hr" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="929-2z-A8Z">
+                            <rect key="frame" x="558" y="98" width="32" height="21"/>
+                            <constraints>
+                                <constraint firstAttribute="width" relation="lessThanOrEqual" constant="32" id="4dx-nW-YEi"/>
+                                <constraint firstAttribute="height" constant="21" id="wqX-bm-Uow"/>
+                            </constraints>
+                            <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                    </subviews>
+                    <color key="backgroundColor" red="0.14491090045302113" green="1" blue="0.2310293212498673" alpha="1" colorSpace="calibratedRGB"/>
+                    <constraints>
+                        <constraint firstItem="lUK-FQ-W7q" firstAttribute="top" secondItem="lMf-PN-dDU" secondAttribute="bottom" constant="8" id="7GQ-EV-fxy"/>
+                        <constraint firstItem="929-2z-A8Z" firstAttribute="top" secondItem="lMf-PN-dDU" secondAttribute="bottom" constant="8" id="8ll-5q-Epm"/>
+                        <constraint firstAttribute="trailing" secondItem="lMf-PN-dDU" secondAttribute="trailing" constant="10" id="DQk-aM-aLV"/>
+                        <constraint firstItem="lMf-PN-dDU" firstAttribute="top" secondItem="bWg-pH-jh1" secondAttribute="top" id="Q2J-pG-PiA"/>
+                        <constraint firstItem="lMf-PN-dDU" firstAttribute="leading" secondItem="lUK-FQ-W7q" secondAttribute="leading" id="WSg-16-8tT"/>
+                        <constraint firstItem="929-2z-A8Z" firstAttribute="trailing" secondItem="lMf-PN-dDU" secondAttribute="trailing" id="dgP-gL-23y"/>
+                        <constraint firstItem="lMf-PN-dDU" firstAttribute="leading" secondItem="bWg-pH-jh1" secondAttribute="leading" constant="10" id="ipR-nh-QFI"/>
+                        <constraint firstAttribute="height" constant="119" id="whJ-jc-MeI"/>
+                    </constraints>
+                </view>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="REMAINING" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3VR-M7-GzS" userLabel="TimeRemainingLabel">
+                    <rect key="frame" x="10" y="198" width="580" height="21"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="21" id="oZ5-fC-Yjy"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="7 hr 59 min" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eMp-zX-4Ac">
+                    <rect key="frame" x="10" y="140" width="580" height="50"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="50" id="J8a-Zg-4kJ"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" type="system" pointSize="48"/>
+                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="white" translatesAutoresizingMaskIntoConstraints="NO" id="aHo-0w-ieX">
+                    <rect key="frame" x="290" y="537" width="20" height="20"/>
+                </activityIndicatorView>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="R4Y-RH-XVV" userLabel="Start Button" customClass="SCPRButton">
+                    <rect key="frame" x="30" y="526" width="540" height="42"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="42" id="6FZ-cf-bHT"/>
+                    </constraints>
+                    <state key="normal" title="Start Sleep Timer">
+                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                    </state>
+                </button>
+            </subviews>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+            <constraints>
+                <constraint firstAttribute="trailing" secondItem="R4Y-RH-XVV" secondAttribute="trailing" constant="30" id="3a4-HC-LMq"/>
+                <constraint firstAttribute="trailing" secondItem="eMp-zX-4Ac" secondAttribute="trailing" constant="10" id="8k3-Dd-LEG"/>
+                <constraint firstAttribute="bottom" secondItem="R4Y-RH-XVV" secondAttribute="bottom" constant="32" id="FKf-BN-S7v"/>
+                <constraint firstAttribute="trailing" secondItem="3VR-M7-GzS" secondAttribute="trailing" constant="10" id="Fi1-Vy-yVb"/>
+                <constraint firstItem="bWg-pH-jh1" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="Iyl-bo-MfD"/>
+                <constraint firstItem="eMp-zX-4Ac" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="10" id="KQK-FX-Nc5"/>
+                <constraint firstItem="aHo-0w-ieX" firstAttribute="centerY" secondItem="R4Y-RH-XVV" secondAttribute="centerY" id="SXP-1P-idD"/>
+                <constraint firstItem="3VR-M7-GzS" firstAttribute="top" secondItem="eMp-zX-4Ac" secondAttribute="bottom" constant="8" id="fdQ-2G-VCf"/>
+                <constraint firstItem="3VR-M7-GzS" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="10" id="hoi-tg-jx3"/>
+                <constraint firstItem="R4Y-RH-XVV" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="30" id="ie6-NG-a3X"/>
+                <constraint firstAttribute="trailing" secondItem="bWg-pH-jh1" secondAttribute="trailing" id="mF0-7C-JA0"/>
+                <constraint firstItem="bWg-pH-jh1" firstAttribute="top" secondItem="eMp-zX-4Ac" secondAttribute="bottom" constant="38" id="nYY-jY-QUp"/>
+                <constraint firstItem="aHo-0w-ieX" firstAttribute="centerX" secondItem="R4Y-RH-XVV" secondAttribute="centerX" id="rFV-uc-Eyw"/>
+                <constraint firstItem="bWg-pH-jh1" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="228" id="zCc-k2-uXr"/>
+            </constraints>
+            <point key="canvasLocation" x="445" y="272"/>
+        </view>
+        <viewController id="WeI-MB-p7g" customClass="SCPRScrubberViewController">
+            <connections>
+                <outlet property="view" destination="lMf-PN-dDU" id="TGw-az-D1E"/>
+            </connections>
+        </viewController>
+    </objects>
+</document>

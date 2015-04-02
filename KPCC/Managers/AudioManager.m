@@ -523,7 +523,6 @@ static const NSString *ItemStatusContext;
     NSDate *msd = self.maxSeekableDate;
     if ( msd && [msd isWithinReasonableframeOfDate:now] ) {
         NSInteger drift = [now timeIntervalSince1970] - [msd timeIntervalSince1970];
-        NSLog(@"Drift : %ld",(long)drift);
         if ( (drift - [[SessionManager shared] peakDrift] > kToleratedIncreaseInDrift) ) {
             [[AnalyticsManager shared] logEvent:@"driftIncreasing"
                                  withParameters:@{ @"oldDrift" : @([[SessionManager shared] peakDrift]),
@@ -687,6 +686,10 @@ static const NSString *ItemStatusContext;
     AVPlayer *audioPlayer = self.audioPlayer;
     __unsafe_unretained typeof(self) weakSelf = self;
 
+    if ( [[Utils del] alarmTask] > 0 ) {
+        [[Utils del] killBackgroundTask];
+    }
+    
     [self invalidateTimeObserver];
     
     self.timeObserver = nil;
@@ -706,6 +709,8 @@ static const NSString *ItemStatusContext;
         weakSelf.bufferEmpty = NO;
         weakSelf.beginNormally = NO;
         weakSelf.streamWarning = NO;
+        
+
         
         NSArray *seekRange = audioPlayer.currentItem.seekableTimeRanges;
         if (seekRange && [seekRange count] > 0) {
@@ -732,6 +737,7 @@ static const NSString *ItemStatusContext;
             weakSelf.maxSeekableDate = [NSDate dateWithTimeInterval:(CMTimeGetSeconds(CMTimeRangeGetEnd(range)) - CMTimeGetSeconds(time)) sinceDate:weakSelf.currentDate];
             
             if ( weakSelf.frameCount % 10 == 0 ) {
+                
 #ifndef SUPPRESS_LOCAL_SAMPLING
                 if ( weakSelf.currentAudioMode == AudioModeLive ) {
                     [weakSelf localSample:time];
@@ -744,6 +750,10 @@ static const NSString *ItemStatusContext;
                 weakSelf.userPause = NO;
                 weakSelf.seekWillEffectBuffer = NO;
                 weakSelf.seekRequested = NO;
+                
+                if ( [[SessionManager shared] sleepTimerArmed] ) {
+                    [[SessionManager shared] tickSleepTimer];
+                }
                 
                 [[SessionManager shared] trackLiveSession];
                 [[SessionManager shared] trackRewindSession];
@@ -819,7 +829,7 @@ static const NSString *ItemStatusContext;
 #endif
         
         BOOL nudge = NO;
-        if ( abs(now - s2d) > kStreamIsLiveTolerance ) {
+        if ( abs(now - s2d) > [[SessionManager shared] peakDrift] ) {
             nudge = YES;
         }
         

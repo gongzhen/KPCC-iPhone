@@ -48,6 +48,11 @@ static NSInteger kProgramPollingPressure = 5;
 @property (nonatomic, strong) NSTimer *programUpdateTimer;
 @property (nonatomic,strong) NSDictionary *onboardingAudio;
 
+@property (nonatomic) NSInteger remainingSleepTimerSeconds;
+@property (nonatomic) NSInteger originalSleepTimerRequest;
+
+@property NSTimer *sleepTimer;
+
 @property NSInteger prevCheckedMinute;
 
 @property int64_t liveStreamSessionBegan;
@@ -60,6 +65,8 @@ static NSInteger kProgramPollingPressure = 5;
 @property BOOL expiring;
 @property BOOL userLeavingForClickthrough;
 @property BOOL updaterArmed;
+@property BOOL sleepTimerArmed;
+
 @property (nonatomic) double lastKnownBitrate;
 @property NSInteger latestDriftValue;
 @property (atomic) BOOL userIsViewingHeadlines;
@@ -76,9 +83,15 @@ static NSInteger kProgramPollingPressure = 5;
 - (void)resetCache;
 - (void)checkProgramUpdate:(BOOL)force;
 
+- (BOOL)alarmExpired;
 
+- (BOOL)sleepTimerActive;
+- (void)armSleepTimerWithSeconds:(NSInteger)seconds completed:(CompletionBlock)completed;
+- (void)disarmSleepTimerWithCompletion:(CompletionBlock)completed;
+- (void)cancelSleepTimerWithCompletion:(CompletionBlock)completed;
 
 - (BOOL)sessionIsInBackground;
+- (void)tickSleepTimer;
 
 // Drift
 - (NSDate*)vLive;

@@ -45,6 +45,10 @@
     self.navigationItem.title = @"Programs";
 }
 
+- (void)viewWillDisappear:(BOOL)animated {
+    self.navigationController.interactivePopGestureRecognizer.delegate = nil;
+}
+
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     

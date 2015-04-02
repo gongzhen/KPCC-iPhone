@@ -17,12 +17,15 @@
 #ifdef PRODUCTION
 #define NSLog //
 #define kPushChannel @"listenLive"
+#define kAlarmChannel @"iPhoneAlarm"
 #else
 #ifdef RELEASE
 //#define kPushChannel @"sandbox_listenLive"
 #define kPushChannel @"private_listenLive"
+#define kAlarmChannel @"private_iPhoneAlarm"
 #else
 #define kPushChannel @"sandbox_listenLive"
+#define kAlarmChannel @"sandbox_iPhoneAlarm"
 #endif
 #endif
 
@@ -37,10 +40,27 @@
 @property (strong, nonatomic) SCPRMasterViewController *masterViewController;
 @property (strong, nonatomic) SCPRNavigationController *masterNavigationController;
 @property (strong, nonatomic) SCPROnboardingViewController *onboardingController;
+@property (strong, nonatomic) NSTimer *timer;
+@property (strong, nonatomic) NSDate *alarmDate;
+@property (strong, nonatomic) NSTimer *initialCheckTimer;
+@property (strong, nonatomic) NSTimer *alarmTimer;
+
+@property UIBackgroundFetchResult alarmResults;
+
+
 @property BOOL userRespondedToPushWhileClosed;
+
+@property UIBackgroundTaskIdentifier alarmTask;
 
 @property (strong, nonatomic) NSDictionary *latestPush;
 
 - (void)actOnNotification:(NSDictionary*)userInfo;
+- (void)armAlarmClockWithDate:(NSDate*)date;
+- (void)fireAlarmClock;
+- (void)cancelAlarmClock;
+- (void)endAlarmClock;
+- (void)buildTimer;
+- (void)manuallyCheckAlarm;
+- (void)killBackgroundTask;
 
 @end

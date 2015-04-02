@@ -28,7 +28,6 @@
 @property (nonatomic, strong) UITapGestureRecognizer *adTapper;
 @property (nonatomic,weak) id<SCPRPreRollControllerDelegate> delegate;
 @property (nonatomic,strong) TritonAd *tritonAd;
-
 @property (nonatomic,strong) IBOutlet UIImageView *adImageView;
 @property (nonatomic,strong) IBOutlet UIView *curtainView;
 

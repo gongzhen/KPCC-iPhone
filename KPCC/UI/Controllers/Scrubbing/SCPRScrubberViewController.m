@@ -22,6 +22,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+
     // Do any additional setup after loading the view from its nib.
 }
 
@@ -30,19 +31,83 @@
     // Dispose of any resources that can be recreated.
 }
 
-- (void)setup {
+- (void)setupWithDelegate:(id<Scrubbable>)delegate {
+    [self setupWithDelegate:delegate circular:NO];
+}
+
+- (void)setupWithDelegate:(id<Scrubbable>)delegate circular:(BOOL)circular {
     
-    self.scrubberTimeLabel.font = [[DesignManager shared] proLight:36.0];
+    
+#ifndef SHOW_ANGLE
+    [self.radiusTerminusView removeFromSuperview];
+    [self.degreesLabel removeFromSuperview];
+#else
+    self.radiusTerminusView.layer.cornerRadius = self.radiusTerminusView.frame.size.width / 2.0;
+    self.radiusTerminusView.clipsToBounds = YES;
+    self.radiusTerminusView.layer.borderColor = [UIColor blackColor].CGColor;
+    self.radiusTerminusView.layer.borderWidth = 1.0f;
+#endif
+    
+    self.scrubbingDelegate = delegate;
+    self.viewAsTouchableScrubberView = [delegate scrubbableView];
+    self.scrubberTimeLabel = [self.scrubbingDelegate scrubbingIndicatorLabel];
+    self.scrubberTimeLabel.font = [[DesignManager shared] proLight:self.scrubberTimeLabel.font.pointSize];
     self.scrubberTimeLabel.textColor = [UIColor whiteColor];
-    //self.scrubberTimeLabel.alpha = 0.0;
     self.currentTintColor = [UIColor kpccOrangeColor];
+    self.circular = circular;
     
-    CGFloat width = self.view.frame.size.width;
+    [self.view layoutIfNeeded];
+    
+    CGFloat width = self.viewAsTouchableScrubberView.frame.size.width;
+    NSLog(@"Scrubber Thinks the Width is %1.1f",width);
     CGMutablePathRef currentLinePath = CGPathCreateMutable();
-    CGPoint lPts[2];
-    lPts[0] = CGPointMake(0.0, 0.0);
-    lPts[1] = CGPointMake(width, 0.0);
-    CGPathAddLines(currentLinePath, nil, lPts, 2);
+    CGFloat lineWidth = 0.0;
+    if ( !circular ) {
+        lineWidth = self.view.frame.size.height*2.0f;
+        CGPoint lPts[2];
+        lPts[0] = CGPointMake(0.0, 0.0);
+        lPts[1] = CGPointMake(width, 0.0);
+        CGPathAddLines(currentLinePath, nil, lPts, 2);
+    } else {
+        
+        lineWidth = self.view.frame.size.height / 4.0f;
+        self.containerTintColor = [[UIColor virtualWhiteColor] translucify:0.25];
+ 
+        CGPoint arcCenter = CGPointMake(CGRectGetMidX(self.view.bounds), CGRectGetMidY(self.view.bounds));
+        CGFloat radius = CGRectGetMidX(self.view.bounds)-(lineWidth / 2.0f);
+        CGFloat startAngle = -M_PI_2;
+        CGFloat endAngle = 2*M_PI-M_PI_2;
+        
+        //CGFloat startAngle = [Utils degreesToRadians:-90.0f];
+        //CGFloat endAngle = [Utils degreesToRadians:270.0f];
+        
+        UIBezierPath *circlePath = [UIBezierPath bezierPathWithArcCenter:arcCenter
+                                                         radius:radius
+                                                     startAngle:startAngle
+                                                       endAngle:endAngle
+                                                      clockwise:YES];
+        currentLinePath = CGPathCreateMutableCopy(circlePath.CGPath);
+        
+        UIBezierPath *circleSeatPath = [UIBezierPath bezierPathWithArcCenter:arcCenter
+                                                                      radius:radius
+                                                                  startAngle:startAngle
+                                                                    endAngle:endAngle
+                                                                   clockwise:YES];
+        
+        CGMutablePathRef seatLinePath = CGPathCreateMutableCopy(circleSeatPath.CGPath);
+        
+        self.containerBarLine = [CAShapeLayer layer];
+        self.containerBarLine.path = seatLinePath;
+        self.containerBarLine.strokeColor = self.containerTintColor.CGColor;
+        self.containerBarLine.strokeStart = 0.0;
+        self.containerBarLine.strokeEnd = 1.0;
+        self.containerBarLine.opacity = 1.0;
+        self.containerBarLine.fillColor = [UIColor clearColor].CGColor;
+        self.containerBarLine.lineWidth = lineWidth;
+        self.view.backgroundColor = [UIColor clearColor];
+        [self.view.layer addSublayer:self.containerBarLine];
+        
+    }
     
     self.currentBarLine = [CAShapeLayer layer];
     self.currentBarLine.path = currentLinePath;
@@ -50,8 +115,8 @@
     self.currentBarLine.strokeStart = 0.0;
     self.currentBarLine.strokeEnd = 0.0;
     self.currentBarLine.opacity = 1.0;
-    self.currentBarLine.fillColor = self.currentTintColor.CGColor;
-    self.currentBarLine.lineWidth = self.view.frame.size.height*2;
+    self.currentBarLine.fillColor = [UIColor clearColor].CGColor;
+    self.currentBarLine.lineWidth = lineWidth;
     
     [self.view.layer addSublayer:self.currentBarLine];
     
@@ -63,6 +128,13 @@
     self.view.userInteractionEnabled = YES;
     self.viewAsTouchableScrubberView.parentScrubberController = self;
     
+    self.view.backgroundColor = circular ? [UIColor clearColor] : [[UIColor virtualWhiteColor] translucify:0.2];
+}
+
+- (void)applyPercentageToScrubber:(CGFloat)percentage {
+    [UIView animateWithDuration:0.33 animations:^{
+        self.currentBarLine.strokeEnd = percentage;
+    }];
 }
 
 - (void)unmask {
@@ -78,41 +150,9 @@
                                   1.0);
 }
 
-#ifdef USE_PAN_GESTURE
-- (void)handlePan:(UIPanGestureRecognizer*)panner {
-    if ( panner.state == UIGestureRecognizerStateEnded ) {
-        self.firstTouch = CGPointZero;
-        self.trulyFinishedTimer = [NSTimer scheduledTimerWithTimeInterval:0.15
-                                                                   target:self
-                                                                 selector:@selector(doTheSeek)
-                                                                 userInfo:nil
-                                                                  repeats:NO];
-    }
-    if ( panner.state == UIGestureRecognizerStateBegan ) {
-        self.firstTouch = [panner translationInView:self.view];
-        self.panning = YES;
-
-    }
-    if ( panner.state == UIGestureRecognizerStateChanged ) {
-        CGFloat aX = self.firstTouch.x;
-        CGFloat dX = aX + [panner translationInView:self.view].x;
-        
-        double se = ( dX / self.view.frame.size.width )*1.0f;
-        self.currentBarLine.strokeEnd = se;
-        
-        CMTime total = [[[[AudioManager shared].audioPlayer currentItem] asset] duration];
-        double duration = CMTimeGetSeconds(total);
-
-        NSString *pretty = [Utils elapsedTimeStringWithPosition:duration*se
-                                                    andDuration:duration];
-        [self.scrubberTimeLabel setText:pretty];
-        
-    }
-}
-#endif
-
 - (void)userTouched:(NSSet *)touches event:(UIEvent *)event {
     self.firstTouch = [(UITouch*)[touches anyObject] locationInView:self.view];
+    self.previousPoint = self.firstTouch;
     [self trackForPoint:self.firstTouch];
     self.panning = YES;
 }
@@ -128,74 +168,129 @@
     self.firstTouch = CGPointZero;
     self.trulyFinishedTimer = [NSTimer scheduledTimerWithTimeInterval:0.15
                                                                target:self
-                                                             selector:@selector(doTheSeek)
+                                                             selector:@selector(userFinishedScrubbing)
                                                              userInfo:nil
                                                               repeats:NO];
 }
 
 - (void)trackForPoint:(CGPoint)touchPoint {
+    self.nowPoint = touchPoint;
     CGFloat dX = touchPoint.x;
+    CGFloat basis = self.view.frame.size.width;
+    double se = 0.0f;
+    if ( self.circular ) {
+        
+#ifdef USE_ATAN2
+        CGPoint zeroDegrees = CGPointMake(self.view.frame.size.width/2.0f,
+                                          0.0f);
+        CGPoint xp = [self extendPoint:touchPoint toEdge:zeroDegrees];
+        CGFloat xDelta = xp.x - zeroDegrees.x;
+        CGFloat yDelta = xp.y - zeroDegrees.y;
+        CGFloat degrees = 2*[Utils radiansToDegrees:atan2(yDelta, xDelta)];
+        NSLog(@"%1.1f°",degrees);
+        if ( degrees <= 0.0f ) {
+            degrees = 360.0f;
+        }
+        se = degrees / 360.0f;
+#else
+        CGPoint origin = CGPointMake(self.view.frame.size.width / 2.0f,
+                                     self.view.frame.size.height / 2.0f);
+        CGPoint zeroDegrees = CGPointMake(self.view.frame.size.width/2.0f,
+                                          0.0f);
+        
+        CGFloat ui = origin.x - zeroDegrees.x;
+        CGFloat uj = origin.y - zeroDegrees.y;
+        
+        CGPoint xp = [self extendPoint:touchPoint toEdge:zeroDegrees];
+        CGFloat vi = xp.x - origin.x;
+        CGFloat vj = origin.y - xp.y;
+        
+        CGFloat dotProduct = ui*vi + uj*vj;
+        
+        CGFloat uLength = sqrtf((ui*ui)+(uj*uj));
+        CGFloat vLength = sqrtf((vi*vi)+(vj*vj));
+        
+        CGFloat radians = acosf(dotProduct / ( uLength * vLength));
+        CGFloat degrees = [Utils radiansToDegrees:radians];
+        if ( xp.x < origin.x ) {
+            // Out of position angle (0 -> π)
+            degrees = 180.f + (180.f - degrees);
+        }
+        
+        se = degrees / 360.f;
+        
+#endif
+#ifdef SHOW_ANGLE
+        self.radiusTerminusView.center = xp;
+        self.degreesLabel.text = [NSString stringWithFormat:@"%1.1f°",degrees];
+        [self.view setNeedsDisplay];
+#endif
+        
+    } else {
+        se = ( dX / basis )*1.0f;
+    }
     
-    double se = ( dX / self.view.frame.size.width )*1.0f;
     self.currentBarLine.strokeEnd = se;
-    
-    CMTime total = [[[[AudioManager shared].audioPlayer currentItem] asset] duration];
-    double duration = CMTimeGetSeconds(total);
-    
-    NSString *pretty = [Utils elapsedTimeStringWithPosition:duration*se
-                                                andDuration:duration];
-    [self.scrubberTimeLabel setText:pretty];
+    [self.scrubbingDelegate actionOfInterestWithPercentage:(CGFloat)se];
 }
 
-- (void)doTheSeek {
+- (CGPoint)extendPoint:(CGPoint)touchPoint toEdge:(CGPoint)bound {
+    CGPoint origin = CGPointMake(self.view.frame.size.width / 2.0,
+                                 self.view.frame.size.height / 2.0);
+    CGFloat slopeNumerator = touchPoint.y - origin.y;
+    CGFloat slopeDenom = touchPoint.x - origin.x;
     
-    [(SCPRScrubbingUIViewController*)self.parentUIController audioWillSeek];
     
+    CGPoint extendedPoint = touchPoint;
+    CGFloat currX = extendedPoint.x;
+    CGFloat currY = extendedPoint.y;
+    while ((currX <= self.view.frame.size.width && currX >= 0.0f) &&
+           (currY >= 0.0f && currY <= self.view.frame.size.height) ) {
+        currX = extendedPoint.x;
+        currY = extendedPoint.y;
+        currX = currX + slopeDenom;
+        currY = currY + slopeNumerator;
+        extendedPoint = CGPointMake(currX, currY);
+    }
+    
+    if ( currY > self.view.frame.size.height ) {
+        currY = self.view.frame.size.height;
+    }
+    if ( currY < 0.0f ) {
+        currY = 0.0f;
+    }
+    if ( currX > self.view.frame.size.width ) {
+        currX = self.view.frame.size.width;
+    }
+    if ( currX < 0.0f ) {
+        currX = 0.0f;
+    }
+    
+    extendedPoint = CGPointMake(currX, currY);
+    
+    NSLog(@"Old Point {%1.1fx, %1.1fy}, New Point {%1.1fx, %1.1fy}",touchPoint.x,touchPoint.y,
+     extendedPoint.x,extendedPoint.y);
+    
+    return extendedPoint;
+}
+
+- (void)userFinishedScrubbing {
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.25 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        double multiplier = self.currentBarLine.strokeEnd;
-        CMTime total = [[[[AudioManager shared].audioPlayer currentItem] asset] duration];
-        CMTime seek = CMTimeMake(total.value*multiplier, total.timescale);
-        [[AudioManager shared].audioPlayer.currentItem seekToTime:seek completionHandler:^(BOOL finished) {
-            [self handleSeekCompleted];
-        }];
+        [self.scrubbingDelegate actionOfInterestAfterScrub:self.currentBarLine.strokeEnd];
+        self.panning = NO;
     });
-
-
 }
 
-- (void)handleSeekCompleted {
-    // Do any specific cleanup here
-    self.panning = NO;
-    [(SCPRScrubbingUIViewController*)self.parentUIController onDemandSeekCompleted];
-}
 
-- (void)tick {
+- (void)tick:(CGFloat)amount {
     
     if ( self.panning ) return;
     
     dispatch_async(dispatch_get_main_queue(), ^{
-        if (CMTimeGetSeconds([[[[AudioManager shared].audioPlayer currentItem] asset] duration]) > 0) {
-            double currentTime = CMTimeGetSeconds([[[AudioManager shared].audioPlayer currentItem] currentTime]);
-            double duration = CMTimeGetSeconds([[[[AudioManager shared].audioPlayer currentItem] asset] duration]);
-            NSString *pretty = [Utils elapsedTimeStringWithPosition:currentTime
-                                                        andDuration:duration];
-            [self.scrubberTimeLabel setText:pretty];
-            
-            if ( !self.expanded ) {
-               //[self expand];
-            }
-            
-        }
-        double se = [self strokeEndForCurrentTime];
-        self.currentBarLine.strokeEnd = se;
+        self.currentBarLine.strokeEnd = amount;
     });
 }
 
-- (double)strokeEndForCurrentTime {
-    NSInteger cS = CMTimeGetSeconds([[AudioManager shared].audioPlayer.currentItem currentTime]);
-    NSInteger tS = CMTimeGetSeconds([[AudioManager shared].audioPlayer.currentItem.asset duration]);
-    return (cS*1.0f / tS*1.0f)*1.0f;
-}
 
 - (void)expand {
     POPSpringAnimation *scaleAnimation = [POPSpringAnimation animationWithPropertyNamed:kPOPLayerScaleXY];
