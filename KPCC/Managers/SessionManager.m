@@ -893,6 +893,7 @@
     self.sessionReturnedDate = nil;
     self.sessionPausedDate = nil;
     self.expiring = YES;
+    
     [[AudioManager shared] setWaitForSeek:NO];
     [[AudioManager shared] setSeekRequested:NO];
     
