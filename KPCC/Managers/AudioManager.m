@@ -594,11 +594,10 @@ static const NSString *ItemStatusContext;
                 self.localBufferSample[@"expectedDate"] = expectedDate;
                 self.localBufferSample[@"open"] = @(NO);
 
-                if ( fabs(etFloat - rtFloat) > kLargeSkipInterval || ![expectedDate isWithinTimeFrame:kLargeSkipInterval ofDate:reportedDate] ) {
+                if ( etFloat - rtFloat > kLargeSkipInterval ) {
                     [self invalidateTimeObserver];
                     [self.audioPlayer.currentItem seekToDate:expectedDate completionHandler:^(BOOL finished) {
 
-                        
                         self.localBufferSample[@"expectedDate"] = expectedDate;
                         self.localBufferSample[@"open"] = @(YES);
                         
@@ -714,8 +713,6 @@ static const NSString *ItemStatusContext;
         weakSelf.beginNormally = NO;
         weakSelf.streamWarning = NO;
         
-
-        
         NSArray *seekRange = audioPlayer.currentItem.seekableTimeRanges;
         if (seekRange && [seekRange count] > 0) {
             CMTimeRange range = [seekRange[0] CMTimeRangeValue];
@@ -728,6 +725,7 @@ static const NSString *ItemStatusContext;
                     weakSelf.smooth = NO;
                 }];
             }
+            
 #ifndef SUPPRESS_AGGRESSIVE_KICKSTART
             if ( weakSelf.kickstartTimer ) {
                 if ( [weakSelf.kickstartTimer isValid] ) {
@@ -806,8 +804,6 @@ static const NSString *ItemStatusContext;
     NSLog(@"Requesting a seek to : %@",[NSDate stringFromDate:date
                                                    withFormat:@"hh:mm:ss a"]);
     
-
-    
     if (!self.audioPlayer) {
         self.waitForSeek = YES;
         self.audioPlayer.volume = 0.0;
@@ -820,7 +816,6 @@ static const NSString *ItemStatusContext;
     self.waitForSeek = NO;
     self.seekRequested = YES;
     self.seekWillEffectBuffer = YES;
-    
 #ifndef SUPPRESS_LOCAL_SAMPLING
     self.localBufferSample = nil;
 #endif
@@ -849,6 +844,7 @@ static const NSString *ItemStatusContext;
                    self.audioPlayer.currentItem.status == AVPlayerItemStatusReadyToPlay) {
                     
                     if ( ![self verifyPositionAuthenticity] ) {
+                        
                         // Try again
                         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.75 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                             NSLog(@"*********** // Buffering ... \\ ************");
@@ -1006,8 +1002,6 @@ static const NSString *ItemStatusContext;
     if (!self.audioPlayer) {
         [self buildStreamer:kHLSLiveStreamURL];
     }
-
-
     
     NSDate *target = [NSDate date];
     if ( labs([[self maxSeekableDate] timeIntervalSince1970] - [target timeIntervalSince1970] ) <= kStreamCorrectionTolerance ) {
