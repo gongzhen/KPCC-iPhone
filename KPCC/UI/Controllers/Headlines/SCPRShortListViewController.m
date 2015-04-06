@@ -204,7 +204,13 @@ static NSString *kShortListMenuURL = @"http://www.scpr.org/short-list/latest#no-
             if ( [str rangeOfString:@"pageview?"].location != NSNotFound ) {
                 return YES;
             }
+            if ( [str rangeOfString:@"chartbeat"].location != NSNotFound ) {
+                return YES;
+            }
             if ( [str rangeOfString:@"http"].location != NSNotFound ) {
+                
+                NSLog(@"Headlines electing to load : %@",str);
+                
                 if ( !self.pushing ) {
                     
                     [SCPRSpinnerViewController spinInCenterOfViewController:self appeared:^{
