@@ -523,6 +523,10 @@ static const NSString *ItemStatusContext;
     NSDate *msd = self.maxSeekableDate;
     if ( msd && [msd isWithinReasonableframeOfDate:now] ) {
         NSInteger drift = [now timeIntervalSince1970] - [msd timeIntervalSince1970];
+        
+#ifdef DEBUG
+        NSLog(@"Drift : %ld",(long)drift);
+#endif
         if ( (drift - [[SessionManager shared] peakDrift] > kToleratedIncreaseInDrift) ) {
             [[AnalyticsManager shared] logEvent:@"driftIncreasing"
                                  withParameters:@{ @"oldDrift" : @([[SessionManager shared] peakDrift]),
@@ -590,11 +594,10 @@ static const NSString *ItemStatusContext;
                 self.localBufferSample[@"expectedDate"] = expectedDate;
                 self.localBufferSample[@"open"] = @(NO);
 
-                if ( fabs(etFloat - rtFloat) > kLargeSkipInterval || ![expectedDate isWithinTimeFrame:kLargeSkipInterval ofDate:reportedDate] ) {
+                if ( etFloat - rtFloat > kLargeSkipInterval ) {
                     [self invalidateTimeObserver];
                     [self.audioPlayer.currentItem seekToDate:expectedDate completionHandler:^(BOOL finished) {
 
-                        
                         self.localBufferSample[@"expectedDate"] = expectedDate;
                         self.localBufferSample[@"open"] = @(YES);
                         
@@ -710,8 +713,6 @@ static const NSString *ItemStatusContext;
         weakSelf.beginNormally = NO;
         weakSelf.streamWarning = NO;
         
-
-        
         NSArray *seekRange = audioPlayer.currentItem.seekableTimeRanges;
         if (seekRange && [seekRange count] > 0) {
             CMTimeRange range = [seekRange[0] CMTimeRangeValue];
@@ -724,6 +725,7 @@ static const NSString *ItemStatusContext;
                     weakSelf.smooth = NO;
                 }];
             }
+            
 #ifndef SUPPRESS_AGGRESSIVE_KICKSTART
             if ( weakSelf.kickstartTimer ) {
                 if ( [weakSelf.kickstartTimer isValid] ) {
@@ -802,11 +804,6 @@ static const NSString *ItemStatusContext;
     NSLog(@"Requesting a seek to : %@",[NSDate stringFromDate:date
                                                    withFormat:@"hh:mm:ss a"]);
     
-#ifndef SUPPRESS_LOCAL_SAMPLING
-    self.localBufferSample[@"expectedDate"] = date;
-    self.localBufferSample[@"open"] = @(NO);
-#endif
-    
     if (!self.audioPlayer) {
         self.waitForSeek = YES;
         self.audioPlayer.volume = 0.0;
@@ -819,6 +816,9 @@ static const NSString *ItemStatusContext;
     self.waitForSeek = NO;
     self.seekRequested = YES;
     self.seekWillEffectBuffer = YES;
+#ifndef SUPPRESS_LOCAL_SAMPLING
+    self.localBufferSample = nil;
+#endif
     
     if ( !failover ) {
         NSTimeInterval s2d = [date timeIntervalSince1970];
@@ -844,6 +844,7 @@ static const NSString *ItemStatusContext;
                    self.audioPlayer.currentItem.status == AVPlayerItemStatusReadyToPlay) {
                     
                     if ( ![self verifyPositionAuthenticity] ) {
+                        
                         // Try again
                         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.75 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                             NSLog(@"*********** // Buffering ... \\ ************");
@@ -949,11 +950,6 @@ static const NSString *ItemStatusContext;
                 return;
             }
             
-#ifndef SUPPRESS_LOCAL_SAMPLING
-            self.localBufferSample[@"expectedDate"] = self.audioPlayer.currentItem.currentDate;
-            self.localBufferSample[@"open"] = @(YES);
-#endif
-            
             if ( [self.audioPlayer rate] == 0.0 ) {
                 [self playAudio];
             }
@@ -1006,11 +1002,6 @@ static const NSString *ItemStatusContext;
     if (!self.audioPlayer) {
         [self buildStreamer:kHLSLiveStreamURL];
     }
-
-#ifndef SUPPRESS_LOCAL_SAMPLING
-    self.localBufferSample[@"expectedDate"] = [NSDate date];
-    self.localBufferSample[@"open"] = @(NO);
-#endif
     
     NSDate *target = [NSDate date];
     if ( labs([[self maxSeekableDate] timeIntervalSince1970] - [target timeIntervalSince1970] ) <= kStreamCorrectionTolerance ) {
@@ -1024,16 +1015,17 @@ static const NSString *ItemStatusContext;
 #else
     
     self.seekWillEffectBuffer = YES;
-    [self.audioPlayer.currentItem seekToTime:CMTimeMake(MAXFLOAT * HUGE_VALF, 1) completionHandler:^(BOOL finished) {
 #ifndef SUPPRESS_LOCAL_SAMPLING
-//        self.localBufferSample[@"expectedDate"] = self.audioPlayer.currentItem.currentDate;
-//        self.localBufferSample[@"open"] = @(YES);
+    self.localBufferSample = nil;
 #endif
+    
+    [self.audioPlayer.currentItem seekToTime:CMTimeMake(MAXFLOAT * HUGE_VALF, 1) completionHandler:^(BOOL finished) {
         if ( [self.audioPlayer rate] <= 0.0 ) {
             [self.audioPlayer play];
         }
         [self.delegate onSeekCompleted];
     }];
+    
 #endif
 }
 
@@ -1339,6 +1331,7 @@ static const NSString *ItemStatusContext;
         [self.audioPlayer cancelPendingPrerolls];
     }
     
+    self.localBufferSample = nil;
     self.maxSeekableDate = nil;
     self.minSeekableDate = nil;
     self.status = StreamStatusStopped;

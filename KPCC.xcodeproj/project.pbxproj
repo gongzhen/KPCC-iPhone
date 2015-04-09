@@ -1752,8 +1752,7 @@
 					"$(inherited)",
 					"COCOAPODS=1",
 					"BETA=1",
-					"FORCE_TEST_STREAM=1",
-					"SUPPRESS_NETWORK_LOGGING=1",
+					"SUPPRESS_AGGRESSIVE_KICKSTART=1",
 				);
 				INFOPLIST_FILE = "KPCC/KPCC-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;

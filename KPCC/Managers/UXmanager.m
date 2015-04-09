@@ -361,7 +361,7 @@
 }
 
 - (void)selectMenuItem:(NSInteger)menuitem {
-    [self.onboardingCtrl revealLensWithOrigin:CGPointMake(10.0, (64*menuitem)+74.0-((menuitem-1)*3.0))];
+    [self.onboardingCtrl revealLensWithOrigin:CGPointMake(10.0, (64*menuitem)+74.0-((menuitem-1)*3.0)-3.0)];
     [self.masterCtrl.pulldownMenu lightUpCellWithIndex:menuitem];
 }
 
@@ -385,7 +385,6 @@
         [self.masterCtrl.liveProgressViewController.view setAlpha:0.0];
     } completion:^(BOOL finished) {
         [self.onboardingCtrl revealNotificationsPrompt];
-        
         [[AudioManager shared].audioPlayer pause];
         [self.lisaPlayer pause];
     }];
