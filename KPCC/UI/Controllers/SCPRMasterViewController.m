@@ -361,7 +361,6 @@ setForOnDemandUI;
             self.originalFrames[@"programTitle"] = @(self.programTitleYConstraint.constant);
             self.originalFrames[@"liveRewind"] = @(self.liveRewindBottomYConstraint.constant);
             
-            
         } else {
             
         }

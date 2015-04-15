@@ -12,5 +12,6 @@ pod 'Mixpanel', '~> 2.7'
 pod 'KSReachability'
 pod 'Kochava'
 pod 'NewRelicAgent'
+pod 'ParseCrashReporting'
 
 link_with ['KPCC', 'KPCC-TestFlight']

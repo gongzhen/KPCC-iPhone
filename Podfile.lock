@@ -1,23 +1,23 @@
 PODS:
-  - AFNetworking (2.5.1):
-    - AFNetworking/NSURLConnection (= 2.5.1)
-    - AFNetworking/NSURLSession (= 2.5.1)
-    - AFNetworking/Reachability (= 2.5.1)
-    - AFNetworking/Security (= 2.5.1)
-    - AFNetworking/Serialization (= 2.5.1)
-    - AFNetworking/UIKit (= 2.5.1)
-  - AFNetworking/NSURLConnection (2.5.1):
+  - AFNetworking (2.5.2):
+    - AFNetworking/NSURLConnection (= 2.5.2)
+    - AFNetworking/NSURLSession (= 2.5.2)
+    - AFNetworking/Reachability (= 2.5.2)
+    - AFNetworking/Security (= 2.5.2)
+    - AFNetworking/Serialization (= 2.5.2)
+    - AFNetworking/UIKit (= 2.5.2)
+  - AFNetworking/NSURLConnection (2.5.2):
     - AFNetworking/Reachability
     - AFNetworking/Security
     - AFNetworking/Serialization
-  - AFNetworking/NSURLSession (2.5.1):
+  - AFNetworking/NSURLSession (2.5.2):
     - AFNetworking/Reachability
     - AFNetworking/Security
     - AFNetworking/Serialization
-  - AFNetworking/Reachability (2.5.1)
-  - AFNetworking/Security (2.5.1)
-  - AFNetworking/Serialization (2.5.1)
-  - AFNetworking/UIKit (2.5.1):
+  - AFNetworking/Reachability (2.5.2)
+  - AFNetworking/Security (2.5.2)
+  - AFNetworking/Serialization (2.5.2)
+  - AFNetworking/UIKit (2.5.2):
     - AFNetworking/NSURLConnection
     - AFNetworking/NSURLSession
   - Bolts (1.1.4)
@@ -26,12 +26,14 @@ PODS:
   - JDStatusBarNotification (1.5.1)
   - Kochava (20150116)
   - KSReachability (1.4)
-  - Mixpanel (2.7.2):
-    - Mixpanel/MPCategoryHelpers (= 2.7.2)
-  - Mixpanel/MPCategoryHelpers (2.7.2)
+  - Mixpanel (2.7.3):
+    - Mixpanel/MPCategoryHelpers (= 2.7.3)
+  - Mixpanel/MPCategoryHelpers (2.7.3)
   - NewRelicAgent (4.186)
-  - Parse (1.6.4):
+  - Parse (1.7.1):
     - Bolts (~> 1.1)
+  - ParseCrashReporting (1.7.1):
+    - Parse (~> 1.7.1)
   - pop (1.0.7)
   - XMLDictionary (1.4)
 
@@ -45,21 +47,23 @@ DEPENDENCIES:
   - Mixpanel (~> 2.7)
   - NewRelicAgent
   - Parse (~> 1.6)
+  - ParseCrashReporting
   - pop (~> 1.0)
   - XMLDictionary (~> 1.4)
 
 SPEC CHECKSUMS:
-  AFNetworking: 8bee59492a6ff15d69130efa4d0dc67e0094a52a
-  Bolts: dd9fb8433d67f5acc3b6b4d1379bbc5513d716c1
-  FlurrySDK: 710642d1de75c220eeb48a387a80a943fe1c3371
-  FXBlurView: abe1046285813c4f6e9008abbc324fc5ab32af90
-  JDStatusBarNotification: 46965cc93efa668fa9f1c31cb223df5c84b421d5
-  Kochava: 033f0bf159aa5003f389d8eb270074c3958d3b9a
-  KSReachability: 29c0ec738e487c750a0e46b6554cc50df73f60b1
-  Mixpanel: def38b9e600f101686b8d647e05660a72c089c65
-  NewRelicAgent: 3ad10d9fe34dc0bffa1f2a1d50793d607b62823a
-  Parse: c2610f7a12ad0defc974803b819c4efe7746e6db
-  pop: 2f14a1ea61339767af9e66741b418c831b3844df
-  XMLDictionary: 735e81b9a043e220b0d24e9d4f16719606f2e0fc
+  AFNetworking: fefbce9660acb17f48ae0011292d4da0f457bf36
+  Bolts: f8e2f94edbf9fec7bb8de5ecaaa3aa6b7de6f64e
+  FlurrySDK: 6d8cc2f898589214ed72e481cf59cffa55b88fe0
+  FXBlurView: c6d23f3d35af2c6282296a2930f61c6e2c788d01
+  JDStatusBarNotification: 83c7d7a4e1e0d09528bcb98827fe4fc99dbdd6aa
+  Kochava: 848021ac47726fdc40f4f2f15428c64d0edf10b0
+  KSReachability: 7b418ec0b38c29765adad11421718a8a172dfa30
+  Mixpanel: 1d387d76800e07e953958c62c97fea27f13632dd
+  NewRelicAgent: c9efe4386f703c97741fbb1f65e80d5513a04866
+  Parse: fa8ec29de6d82035635986c11946299fb1b38316
+  ParseCrashReporting: 9aeff8680d500e5e833564fca5b60333f7bb7403
+  pop: 628ffc631644601567ee8bfaaaea493ebd7d0923
+  XMLDictionary: f9f51601ba76678b594ab485f2b00ec1fed23724
 
 COCOAPODS: 0.36.0
