@@ -53,5 +53,6 @@ static NSString *kPotentialElements = @"date time uri cs-guid s-ip s-ip-changes 
 + (NSDictionary*)accessLogToDictionary:(AVPlayerItemAccessLog*)accessLog;
 + (NSDictionary*)errorLogToDictionary:(AVPlayerItemErrorLog*)errorLog;
 + (NSArray*)reversedArrayFromArray:(NSArray*)inOrder;
++ (void)crash;
 
 @end

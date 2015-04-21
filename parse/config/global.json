@@ -1,0 +1,11 @@
+{
+    "applications": {
+        "SCPR": {
+            "applicationId": "MJX73XakLj614npNSWnw3RDH8PS1PmWgLwccuS4H", 
+            "masterKey": "YlZspmy30gRUxSVfIsLr3fqLd0amyfIe5AQZ7Ino"
+        }, 
+        "_default": {
+            "link": "SCPR"
+        }
+    }
+}

@@ -361,7 +361,6 @@ setForOnDemandUI;
             self.originalFrames[@"programTitle"] = @(self.programTitleYConstraint.constant);
             self.originalFrames[@"liveRewind"] = @(self.liveRewindBottomYConstraint.constant);
             
-            
         } else {
             
         }
@@ -373,7 +372,6 @@ setForOnDemandUI;
     [super viewWillAppear:animated];
     
     [[DesignManager shared] treatBar];
-    
     [AudioManager shared].delegate = self;
     
     if (self.menuOpen) {

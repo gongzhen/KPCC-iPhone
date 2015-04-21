@@ -17,6 +17,7 @@
 #import "UXmanager.h"
 #import "AnalyticsManager.h"
 #import <Parse/Parse.h>
+#import <ParseCrashReporting.h>
 
 #ifdef ENABLE_TESTFLIGHT
 #import "TestFlight.h"
@@ -52,6 +53,9 @@
 #endif
     
 #ifndef TURN_OFF_SANDBOX_CONFIG
+    
+    [ParseCrashReporting enable];
+    
     [Parse setApplicationId:globalConfig[@"Parse"][@"ApplicationId"]
                   clientKey:globalConfig[@"Parse"][@"ClientKey"]];
 #endif

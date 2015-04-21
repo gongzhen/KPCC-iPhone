@@ -340,6 +340,10 @@ static char *alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz012
     return array;
 
 }
+
++ (void)crash {
+    [NSException raise:NSGenericException format:@"Everything is ok. This is just a test crash."];
+}
 /**
  * Date helper functions
  * in Swift

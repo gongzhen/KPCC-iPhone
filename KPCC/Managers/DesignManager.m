@@ -398,7 +398,14 @@ static DesignManager *singleton = nil;
         ampm = [[timeString lowercaseString] rangeOfString:@"pm"];
     }
 
-    // TODO: should error check for neither, but right now... meh
+    if ( ampm.location == NSNotFound ) {
+        NSRange total = NSMakeRange(0, timeString.length);
+        NSDictionary *digitParams = @{ NSFontAttributeName : attributes[@"digits"],
+                                       NSForegroundColorAttributeName : [UIColor whiteColor] };
+        [lowerBoundString addAttributes:digitParams
+                                  range:total];
+        return lowerBoundString;
+    }
     
     NSString *digits = [timeString substringToIndex:ampm.location];
     NSRange digitsRange = NSMakeRange(0, digits.length);

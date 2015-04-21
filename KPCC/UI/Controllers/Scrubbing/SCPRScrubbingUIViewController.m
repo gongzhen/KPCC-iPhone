@@ -192,8 +192,9 @@
     double multiplier = finalValue;
     CMTime total = [[[[AudioManager shared].audioPlayer currentItem] asset] duration];
     CMTime seek = CMTimeMake(total.value*multiplier, total.timescale);
+    [[AudioManager shared] invalidateTimeObserver];
     [[AudioManager shared].audioPlayer.currentItem seekToTime:seek completionHandler:^(BOOL finished) {
-        
+        [[AudioManager shared] startObservingTime];
     }];
 
 }
