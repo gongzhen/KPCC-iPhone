@@ -372,7 +372,6 @@ setForOnDemandUI;
     [super viewWillAppear:animated];
     
     [[DesignManager shared] treatBar];
-    
     [AudioManager shared].delegate = self;
     
     if (self.menuOpen) {

@@ -1484,16 +1484,18 @@ static const NSString *ItemStatusContext;
                             return;
                         }
                     }
-                    
+                } else {
+                    self.beginNormally = NO;
+                    [self.audioPlayer play];
                 }
             }
         }
-    }
-    
-    if ( self.audioPlayer.currentItem.status == AVPlayerItemStatusReadyToPlay ) {
-        NSLog(@"Player ready immediately");
-        self.beginNormally = NO;
-        [self.audioPlayer play];
+    } else {
+        if ( self.audioPlayer.currentItem.status == AVPlayerItemStatusReadyToPlay ) {
+            NSLog(@"Player ready immediately");
+            self.beginNormally = NO;
+            [self.audioPlayer play];
+        }
     }
 
 }
