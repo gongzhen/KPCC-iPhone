@@ -2395,6 +2395,7 @@ setForOnDemandUI;
     dividerFadeAnim.duration = 0.3;
     [self.horizDividerLine.layer pop_addAnimation:dividerFadeAnim forKey:@"horizDividerOutFadeAnimation"];
     
+    self.scrubbingTriggerView.alpha = 0.0f;
     
 
 }
@@ -2485,6 +2486,7 @@ setForOnDemandUI;
     
     [self primeManualControlButton];
     
+    self.scrubbingTriggerView.alpha = 1.0f;
     
 }
 
