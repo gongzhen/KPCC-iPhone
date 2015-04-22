@@ -1274,7 +1274,6 @@
 				76A308C018C8FB940065D4B1 /* Frameworks */,
 				76A308C118C8FB940065D4B1 /* Resources */,
 				9E4DCD001A0847218C219F40 /* Copy Pods Resources */,
-				25A653471AAA64E700ABAAD6 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -1547,19 +1546,6 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		25A653471AAA64E700ABAAD6 /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "export PATH=/usr/local/bin:$PATH\ncd parse\n\nparse symbols \"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}\"";
-		};
 		25DF10EE1ADC36A500B6DC8B /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
