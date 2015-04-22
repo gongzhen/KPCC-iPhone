@@ -1354,7 +1354,11 @@ static const NSString *ItemStatusContext;
 - (void)playAudioWithURL:(NSString *)url {
     
     if ( [self currentAudioMode] != AudioModePreroll ) {
-        //url = [url stringByAppendingString:[NSString stringWithFormat:@"?ua=KPCCiPhone-%@",[Utils urlSafeVersion]]];
+        if ( [url rangeOfString:@"?"].location == NSNotFound ) {
+            url = [url stringByAppendingString:[NSString stringWithFormat:@"?ua=KPCCiPhone-%@",[Utils urlSafeVersion]]];
+        } else {
+            url = [url stringByAppendingString:[NSString stringWithFormat:@"&ua=KPCCiPhone-%@", [Utils urlSafeVersion]]];
+        }
     }
     
     [[UXmanager shared] timeBegin];
