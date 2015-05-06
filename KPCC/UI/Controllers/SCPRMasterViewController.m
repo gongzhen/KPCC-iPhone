@@ -422,7 +422,8 @@ setForOnDemandUI;
 
 - (void)viewDidLayoutSubviews {
 
-
+    [self.upcomingScreen alignDividerToValue:self.horizDividerLine.frame.origin.y];
+    
 }
 
 - (void)superPop {
@@ -439,50 +440,50 @@ setForOnDemandUI;
     self.mainContentScroller.pagingEnabled = YES;
     
     
-    self.cpScreen = [[SCPRCurrentProgramViewController alloc] initWithNibName:@"SCPRCurrentProgramViewController"
+    self.upcomingScreen = [[SCPRUpcomingProgramViewController alloc] initWithNibName:@"SCPRUpcomingProgramViewController"
                                                                        bundle:nil];
     self.cpFullDetailScreen = [[SCPRCompleteScheduleViewController alloc] initWithNibName:@"SCPRCompleteScheduleViewController"
                                                                                    bundle:nil];
     
 
     
-    self.cpScreen.view.frame = self.cpScreen.view.frame;
+    self.upcomingScreen.view.frame = self.upcomingScreen.view.frame;
     self.cpFullDetailScreen.view.frame = self.cpFullDetailScreen.view.frame;
     
 
     
-    NSArray *cpSizeConstraints = [[DesignManager shared] sizeConstraintsForView:self.cpScreen.view hints:@{ @"height" : @(self.mainContentScroller.frame.size.height-32.0f),
+    NSArray *cpSizeConstraints = [[DesignManager shared] sizeConstraintsForView:self.upcomingScreen.view hints:@{ @"height" : @(self.mainContentScroller.frame.size.height-32.0f),
                                                                                                             @"width" : @(self.mainContentScroller.frame.size.width)}];
     
     NSArray *fsSizeConstraints = [[DesignManager shared] sizeConstraintsForView:self.cpFullDetailScreen.view hints:@{ @"height" : @(self.mainContentScroller.frame.size.height-32.0f),
                                                                                                             @"width" : @(self.mainContentScroller.frame.size.width)}];
     
-    [self.cpScreen.view addConstraints:cpSizeConstraints];
+    [self.upcomingScreen.view addConstraints:cpSizeConstraints];
     [self.cpFullDetailScreen.view addConstraints:fsSizeConstraints];
     
-    [self.mainContentScroller addSubview:self.cpScreen.view];
+    [self.mainContentScroller addSubview:self.upcomingScreen.view];
     [self.mainContentScroller addSubview:self.cpFullDetailScreen.view];
     
-    self.cpScreen.view.translatesAutoresizingMaskIntoConstraints = NO;
+    self.upcomingScreen.view.translatesAutoresizingMaskIntoConstraints = NO;
     self.cpFullDetailScreen.view.translatesAutoresizingMaskIntoConstraints = NO;
     self.liveStreamView.translatesAutoresizingMaskIntoConstraints = NO;
     
-    NSArray *fConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[mainView][cpScreen][cpFull]"
+    NSArray *fConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[mainView][upcomingScreen][cpFull]"
                                                                     options:0
                                                                     metrics:nil
                                                                       views:@{ @"mainView" : self.liveStreamView,
-                                                                               @"cpScreen" : self.cpScreen.view,
+                                                                               @"upcomingScreen" : self.upcomingScreen.view,
                                                                                @"cpFull" : self.cpFullDetailScreen.view }];
     
-    NSArray *fVConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|[cpScreen]"
+    NSArray *fVConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|[upcomingScreen]"
                                                                     options:0
                                                                     metrics:nil
-                                                                      views:@{ @"cpScreen" : self.cpScreen.view }];
+                                                                      views:@{ @"upcomingScreen" : self.upcomingScreen.view }];
     
-    /*NSArray *fullScheduleH = [NSLayoutConstraint constraintsWithVisualFormat:@"H:[cpScreen][cpFull]|"
+    /*NSArray *fullScheduleH = [NSLayoutConstraint constraintsWithVisualFormat:@"H:[upcomingScreen][cpFull]|"
                                                                      options:0
                                                                      metrics:nil
-                                                                       views:@{ @"cpScreen" : self.cpScreen.view,
+                                                                       views:@{ @"upcomingScreen" : self.upcomingScreen.view,
                                                                                 @"cpFull" : self.cpFullDetailScreen.view }];*/
     
     NSArray *fullScheduleV = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|[cpFull]"
@@ -497,14 +498,14 @@ setForOnDemandUI;
 
 
     
-    [self.cpScreen.view layoutIfNeeded];
+    [self.upcomingScreen.view layoutIfNeeded];
     [self.cpFullDetailScreen.view layoutIfNeeded];
-    [self.cpScreen.view updateConstraintsIfNeeded];
+    [self.upcomingScreen.view updateConstraintsIfNeeded];
     [self.cpFullDetailScreen.view updateConstraintsIfNeeded];
     [self.mainContentScroller layoutIfNeeded];
     [self.mainContentScroller updateConstraintsIfNeeded];
     
-    [self.cpScreen.view printDimensionsWithIdentifier:@"Current Program View"];
+    [self.upcomingScreen.view printDimensionsWithIdentifier:@"Current Program View"];
     [self.cpFullDetailScreen.view printDimensionsWithIdentifier:@"Full Schedule View"];
     
     self.mainContentScroller.delegate = self;
@@ -828,9 +829,6 @@ setForOnDemandUI;
         }];
     }];
 
-    
-
-    
 }
 
 - (void)specialRewind {
@@ -1589,6 +1587,8 @@ setForOnDemandUI;
             [self.liveProgressViewController hide];
             [self determinePlayState];
             
+            [self.upcomingScreen primeWithProgramBasedOnCurrent:returnedObject];
+        
             if ( [[Utils del] userRespondedToPushWhileClosed] ) {
                 [[Utils del] setUserRespondedToPushWhileClosed:NO];
                 dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
@@ -2113,6 +2113,7 @@ setForOnDemandUI;
             self.liveDescriptionLabel.text = @"";
             
             
+            
             // Hide or show divider depending on screen size
             self.horizDividerLine.layer.opacity = 0.0;
             if ( !suppressDivider ) {
@@ -2122,6 +2123,7 @@ setForOnDemandUI;
                 POPSpringAnimation *scaleAnimation = [POPSpringAnimation animationWithPropertyNamed:kPOPLayerScaleXY];
                 scaleAnimation.fromValue  = [NSValue valueWithCGSize:CGSizeMake(0.025f, 1.0f)];
                 scaleAnimation.toValue  = [NSValue valueWithCGSize:CGSizeMake(1.0f, 1.0f)];
+            
                 [self.horizDividerLine.layer pop_addAnimation:scaleAnimation forKey:@"scaleAnimation"];
                 
             } else {
@@ -2148,6 +2150,7 @@ setForOnDemandUI;
                         [[UXmanager shared] beginAudio];
                     }
                 }
+                
                 
             }];
             

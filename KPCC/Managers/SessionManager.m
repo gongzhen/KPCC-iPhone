@@ -446,51 +446,22 @@
     [[NetworkManager shared] requestFromSCPRWithEndpoint:urlString completion:^(id returnedObject) {
         // Create Program and insert into managed object context
         if ( returnedObject && [(NSDictionary*)returnedObject count] > 0 ) {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                Program *programObj = [Program insertProgramWithDictionary:returnedObject
-                                                    inManagedObjectContext:[[ContentManager shared] managedObjectContext]];
-                
-                [[ContentManager shared] saveContext];
-                
-                BOOL touch = NO;
-                if ( self.currentProgram ) {
-                    if ( !SEQ(self.currentProgram.program_slug,
-                              programObj.program_slug) ) {
-                        touch = YES;
-                    }
-                } else if ( programObj ) {
-                    touch = YES;
-                }
-                
-#ifdef TEST_PROGRAM_IMAGE
-                touch = YES;
-#endif
-                if ( touch ) {
-                    touch = ![self ignoreProgramUpdating];
-                }
-                
-                if ( self.genericImageForProgram && programObj ) {
-                    touch = YES;
-                    self.genericImageForProgram = NO;
-                }
-                
-                self.currentProgram = programObj;
-                if ( touch ) {
-                    [[NSNotificationCenter defaultCenter] postNotificationName:@"program_has_changed"
-                                                                        object:nil
-                                                                      userInfo:nil];
-                }
-                completed(programObj);
-                
-                
-            });
+            if ( completed ) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    
+                    Program *programObj = [Program insertProgramWithDictionary:returnedObject
+                                                        inManagedObjectContext:[[ContentManager shared] managedObjectContext]];
+                    
+                    [[ContentManager shared] saveContext];
+                    
+                    completed(programObj);
+                });
+            }
         } else {
             dispatch_async(dispatch_get_main_queue(), ^{
-                [[NSNotificationCenter defaultCenter] postNotificationName:@"program_has_changed"
-                                                                    object:nil
-                                                                  userInfo:nil];
-                
-                completed(nil);
+                if ( completed ) {
+                    completed(nil);
+                }
             });
         }
     }];
@@ -498,30 +469,53 @@
 }
 
 - (void)fetchCurrentProgram:(CompletionBlockWithValue)completed {
-#ifdef LEGACY_TIMER
-    NSDate *d2u = [NSDate date];
-    if ( [self sessionIsBehindLive] && ![self seekForwardRequested] && !self.expiring ) {
-        d2u = [[AudioManager shared].audioPlayer.currentItem currentDate];
-        d2u = [d2u minuteRoundedUpByThreshold:3];
-        NSLog(@"Adjusted time to fetch program : %@",[NSDate stringFromDate:d2u
-                                                                 withFormat:@"hh:mm:ss a"]);
-    }
-    
-    if ( !d2u ) {
-        completed(nil);
-        return;
-    }
-    
-    [self fetchProgramAtDate:d2u completed:completed];
-#else
     NSDate *ct = [[AudioManager shared].audioPlayer.currentItem currentDate];
-    if ( ct ) {
-        [self fetchProgramAtDate:ct completed:completed];
-    } else {
-        [self fetchProgramAtDate:[NSDate date]
-                       completed:completed];
+    if ( !ct ) {
+        ct = [NSDate date];
     }
-#endif
+    [self fetchProgramAtDate:ct completed:^(id returnedObject) {
+
+        NSAssert([NSThread isMainThread],@"Somehow being called on a secondary thread");
+        if ( returnedObject ) {
+            Program *programObj = (Program*)returnedObject;
+            BOOL touch = NO;
+            if ( self.currentProgram ) {
+                if ( !SEQ(self.currentProgram.program_slug,
+                          programObj.program_slug) ) {
+                    touch = YES;
+                }
+            } else if ( programObj ) {
+                touch = YES;
+            }
+            
+            if ( touch ) {
+                touch = ![self ignoreProgramUpdating];
+            }
+            
+            if ( self.genericImageForProgram && programObj ) {
+                touch = YES;
+                self.genericImageForProgram = NO;
+            }
+            
+            self.currentProgram = programObj;
+            if ( touch ) {
+                [[NSNotificationCenter defaultCenter] postNotificationName:@"program_has_changed"
+                                                                    object:nil
+                                                                  userInfo:nil];
+            }
+            completed(programObj);
+        } else {
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"program_has_changed"
+                                                                object:nil
+                                                              userInfo:nil];
+            
+            completed(nil);
+            
+        }
+            
+
+    }];
+
 }
 
 - (void)armProgramUpdater {
@@ -752,7 +746,7 @@
 #else
     NSDate *live = [NSDate date];
 #endif
-    if ( abs([live timeIntervalSince1970] - [currentDate timeIntervalSince1970]) > [[SessionManager shared] peakDrift] ) {
+    if ( fabs([live timeIntervalSince1970] - [currentDate timeIntervalSince1970]) > [[SessionManager shared] peakDrift] ) {
         return YES;
     }
     
@@ -872,19 +866,7 @@
         
     } else {
         if ( [[AudioManager shared] status] != StreamStatusPaused ) {
-#ifdef LEGACY_TIMER
-            if ( [self sessionIsBehindLive] ) {
-                [self fetchProgramAtDate:[[AudioManager shared].audioPlayer.currentItem currentDate] completed:^(id returnedObject) {
-                    self.sessionReturnedDate = nil;
-                }];
-            } else {
-                [self fetchCurrentProgram:^(id returnedObject) {
-                    self.sessionReturnedDate = nil;
-                }];
-            }
-#else
             [self checkProgramUpdate:YES];
-#endif
         }
     }
 }

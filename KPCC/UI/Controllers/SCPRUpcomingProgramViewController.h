@@ -1,5 +1,5 @@
 //
-//  SCPRCurrentProgramViewController.h
+//  SCPRUpcomingProgramViewController.h
 //  KPCC
 //
 //  Created by Ben Hochberg on 5/5/15.
@@ -7,8 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "Program.h"
 
-@interface SCPRCurrentProgramViewController : UIViewController
+@class SCPRGenericAvatarViewController;
+
+@interface SCPRUpcomingProgramViewController : UIViewController
 
 @property IBOutlet UILabel *upNextLabel;
 @property IBOutlet UILabel *programTitleLabel;
@@ -18,5 +21,12 @@
 @property IBOutlet UIView *dividerViewLeft;
 @property IBOutlet UIView *dividerViewRight;
 @property IBOutlet UIButton *viewFullScheduleButton;
+@property IBOutlet SCPRGenericAvatarViewController *genericAvatar;
+
+@property (nonatomic, strong) IBOutlet NSLayoutConstraint *verticalPushAnchor;
+@property (nonatomic, strong) Program *nextProgram;
+
+- (void)primeWithProgramBasedOnCurrent:(Program*)program;
+- (void)alignDividerToValue:(CGFloat)yCoordinate;
 
 @end

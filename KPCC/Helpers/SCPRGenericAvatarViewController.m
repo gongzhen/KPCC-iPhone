@@ -50,7 +50,7 @@
     NSString *name = program.title;
     NSString *actionWord;
     NSString *actionLetter = @"";
-    if ( [name rangeOfString:@"The"].location == 0 ) {
+    if ( [name rangeOfString:@"The "].location == 0 ) {
         NSArray *splitty = [name componentsSeparatedByString:@" "];
         if ( [splitty count] > 1 ) {
             actionWord = splitty[1];

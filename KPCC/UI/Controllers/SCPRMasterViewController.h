@@ -24,7 +24,7 @@
 #import "SCPRButton.h"
 #import "SCPRScrubbingUIViewController.h"
 #import "SCPRTouchableScrubberView.h"
-#import "SCPRCurrentProgramViewController.h"
+#import "SCPRUpcomingProgramViewController.h"
 #import "SCPRCompleteScheduleViewController.h"
 
 @interface SCPRMasterViewController : UIViewController<SCPRMenuDelegate,UIAlertViewDelegate,UIScrollViewDelegate>
@@ -49,7 +49,7 @@
 @property (nonatomic, strong) IBOutlet NSLayoutConstraint *cpWidthConstraint;
 @property (nonatomic, strong) IBOutlet NSLayoutConstraint *fsWidthConstraint;
 
-@property (nonatomic, strong) IBOutlet SCPRCurrentProgramViewController *cpScreen;
+@property (nonatomic, strong) IBOutlet SCPRUpcomingProgramViewController *upcomingScreen;
 @property (nonatomic, strong) IBOutlet SCPRCompleteScheduleViewController *cpFullDetailScreen;
 @property (nonatomic,strong) MPVolumeView *mpvv;
 - (void)setupScroller;

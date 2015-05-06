@@ -5,15 +5,17 @@
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7701"/>
     </dependencies>
     <objects>
-        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="SCPRCurrentProgramViewController">
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="SCPRUpcomingProgramViewController">
             <connections>
                 <outlet property="avatarImageView" destination="CiL-KU-SNN" id="ybw-BA-xau"/>
                 <outlet property="clockImageView" destination="jd8-LM-NlD" id="Fbo-S4-Fff"/>
                 <outlet property="dividerViewLeft" destination="LBP-Xh-p1Q" id="vxF-LR-449"/>
                 <outlet property="dividerViewRight" destination="cIk-Bt-ic3" id="wRn-ef-tq5"/>
+                <outlet property="genericAvatar" destination="XS2-XA-rz8" id="taR-F0-LSK"/>
                 <outlet property="programTitleLabel" destination="M8j-Vi-R5e" id="hd7-9b-CPN"/>
                 <outlet property="timeLabel" destination="l5u-K6-3c2" id="xM1-uB-zbg"/>
                 <outlet property="upNextLabel" destination="oJZ-LK-GlB" id="ohc-GI-2Bu"/>
+                <outlet property="verticalPushAnchor" destination="d44-f6-TK5" id="gMS-Y6-nZU"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
                 <outlet property="viewFullScheduleButton" destination="uUC-yF-7Nu" id="xbJ-YC-tki"/>
             </connections>
@@ -47,6 +49,36 @@
                     <color key="backgroundColor" red="0.92376893940000004" green="0.92376893940000004" blue="0.92376893940000004" alpha="1" colorSpace="calibratedRGB"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="1" id="WW7-yk-sSw"/>
+                    </constraints>
+                </view>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="q3U-N6-KBl" userLabel="genericAvatar">
+                    <rect key="frame" x="38" y="279" width="32" height="32"/>
+                    <subviews>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fzX-rs-QCO" userLabel="genAvSeatView">
+                            <rect key="frame" x="0.0" y="0.0" width="32" height="32"/>
+                            <subviews>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BsQ-zf-NMH">
+                                    <rect key="frame" x="0.0" y="0.0" width="32" height="32"/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                            </subviews>
+                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            <constraints>
+                                <constraint firstItem="BsQ-zf-NMH" firstAttribute="top" secondItem="fzX-rs-QCO" secondAttribute="top" id="17J-VB-wYN"/>
+                                <constraint firstAttribute="trailing" secondItem="BsQ-zf-NMH" secondAttribute="trailing" id="frG-PS-Kk9"/>
+                                <constraint firstAttribute="bottom" secondItem="BsQ-zf-NMH" secondAttribute="bottom" id="hgy-nh-sFN"/>
+                                <constraint firstItem="BsQ-zf-NMH" firstAttribute="leading" secondItem="fzX-rs-QCO" secondAttribute="leading" id="uuu-re-Gfq"/>
+                            </constraints>
+                        </view>
+                    </subviews>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <constraints>
+                        <constraint firstAttribute="trailing" secondItem="fzX-rs-QCO" secondAttribute="trailing" id="6nj-5d-xMk"/>
+                        <constraint firstItem="fzX-rs-QCO" firstAttribute="leading" secondItem="q3U-N6-KBl" secondAttribute="leading" id="8wS-95-nPo"/>
+                        <constraint firstAttribute="bottom" secondItem="fzX-rs-QCO" secondAttribute="bottom" id="ItX-jU-OXR"/>
+                        <constraint firstItem="fzX-rs-QCO" firstAttribute="top" secondItem="q3U-N6-KBl" secondAttribute="top" id="oZw-1f-a2Y"/>
                     </constraints>
                 </view>
                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="program_avatar_all-things-considered.png" translatesAutoresizingMaskIntoConstraints="NO" id="CiL-KU-SNN" userLabel="avatarImageView">
@@ -94,8 +126,8 @@
             </subviews>
             <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.70999999999999996" colorSpace="calibratedRGB"/>
             <constraints>
-                <constraint firstItem="uUC-yF-7Nu" firstAttribute="top" secondItem="LBP-Xh-p1Q" secondAttribute="bottom" constant="189" id="2Jw-Kw-atM"/>
                 <constraint firstAttribute="bottom" secondItem="uUC-yF-7Nu" secondAttribute="bottom" constant="37" id="2vf-9y-2nM"/>
+                <constraint firstItem="CiL-KU-SNN" firstAttribute="trailing" secondItem="q3U-N6-KBl" secondAttribute="trailing" constant="2" id="334-pW-eZ6"/>
                 <constraint firstAttribute="trailing" secondItem="cIk-Bt-ic3" secondAttribute="trailing" id="3oa-VO-Tmp"/>
                 <constraint firstItem="jd8-LM-NlD" firstAttribute="top" secondItem="CiL-KU-SNN" secondAttribute="bottom" constant="16" id="4Xb-h7-ZwW"/>
                 <constraint firstItem="l5u-K6-3c2" firstAttribute="centerX" secondItem="jd8-LM-NlD" secondAttribute="centerX" id="5b5-Vf-jFT"/>
@@ -103,17 +135,28 @@
                 <constraint firstItem="l5u-K6-3c2" firstAttribute="top" secondItem="jd8-LM-NlD" secondAttribute="bottom" constant="1" id="H8W-oD-9pV"/>
                 <constraint firstAttribute="centerX" secondItem="uUC-yF-7Nu" secondAttribute="centerX" id="QSQ-Lx-E7a"/>
                 <constraint firstItem="cIk-Bt-ic3" firstAttribute="leading" secondItem="CiL-KU-SNN" secondAttribute="trailing" constant="-2" id="S3H-me-Lhi"/>
+                <constraint firstItem="CiL-KU-SNN" firstAttribute="leading" secondItem="q3U-N6-KBl" secondAttribute="leading" constant="2" id="X2w-R3-Xby"/>
                 <constraint firstItem="M8j-Vi-R5e" firstAttribute="leading" secondItem="CiL-KU-SNN" secondAttribute="trailing" constant="6" id="X5V-iy-ozn"/>
                 <constraint firstItem="M8j-Vi-R5e" firstAttribute="leading" secondItem="oJZ-LK-GlB" secondAttribute="leading" constant="-2" id="XSE-79-gSp"/>
-                <constraint firstItem="LBP-Xh-p1Q" firstAttribute="top" secondItem="M8j-Vi-R5e" secondAttribute="bottom" constant="30" id="cSN-Ff-zec"/>
+                <constraint firstItem="cIk-Bt-ic3" firstAttribute="top" secondItem="M8j-Vi-R5e" secondAttribute="bottom" constant="30" id="aV9-Ke-1cm"/>
+                <constraint firstItem="LBP-Xh-p1Q" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="341" id="d44-f6-TK5"/>
                 <constraint firstItem="M8j-Vi-R5e" firstAttribute="top" secondItem="oJZ-LK-GlB" secondAttribute="bottom" id="mGi-yM-xdW"/>
                 <constraint firstItem="cIk-Bt-ic3" firstAttribute="centerY" secondItem="LBP-Xh-p1Q" secondAttribute="centerY" id="mu1-MD-OYW"/>
+                <constraint firstItem="CiL-KU-SNN" firstAttribute="bottom" secondItem="q3U-N6-KBl" secondAttribute="bottom" id="noc-d6-81p"/>
+                <constraint firstItem="CiL-KU-SNN" firstAttribute="top" secondItem="q3U-N6-KBl" secondAttribute="top" id="ntR-LZ-cqv"/>
                 <constraint firstItem="LBP-Xh-p1Q" firstAttribute="top" secondItem="CiL-KU-SNN" secondAttribute="bottom" constant="30" id="olg-OZ-PZl"/>
                 <constraint firstItem="CiL-KU-SNN" firstAttribute="centerX" secondItem="jd8-LM-NlD" secondAttribute="centerX" constant="1" id="pw0-k2-9G2"/>
                 <constraint firstItem="LBP-Xh-p1Q" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="xEo-ao-ndX"/>
             </constraints>
             <point key="canvasLocation" x="470" y="264"/>
         </view>
+        <viewController id="XS2-XA-rz8" customClass="SCPRGenericAvatarViewController">
+            <connections>
+                <outlet property="initialLetter" destination="BsQ-zf-NMH" id="JBh-51-ojA"/>
+                <outlet property="seatView" destination="fzX-rs-QCO" id="T0w-HZ-cwC"/>
+                <outlet property="view" destination="q3U-N6-KBl" id="voa-C8-Ldf"/>
+            </connections>
+        </viewController>
     </objects>
     <resources>
         <image name="icon-up-next.png" width="18" height="19"/>
