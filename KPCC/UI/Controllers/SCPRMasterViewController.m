@@ -204,6 +204,8 @@ setForOnDemandUI;
             [self.playerControlsTopYConstraint setConstant:258.0];
             [self.programTitleYConstraint setConstant:278.0];
         }
+    } else {
+        [self.programTitleYConstraint setConstant:148.0f];
     }
     
     [[NSNotificationCenter defaultCenter] addObserver:self
@@ -350,12 +352,18 @@ setForOnDemandUI;
 
     [self primeScrubber];
     
+
     [SCPRCloakViewController cloakWithCustomCenteredView:nil cloakAppeared:^{
         if ( [[UXmanager shared] userHasSeenOnboarding] ) {
             
             [self updateDataForUI];
             [self.view layoutIfNeeded];
             [self.liveStreamView layoutIfNeeded];
+            [self setupScroller];
+            [self.blurView setNeedsDisplay];
+            
+            [self.mainContentScroller printDimensionsWithIdentifier:@"Main Scroller"];
+            [self.liveStreamView printDimensionsWithIdentifier:@"Live Stream View"];
             
             self.originalFrames[@"playerControls"] = @(self.playerControlsBottomYConstraint.constant);
             self.originalFrames[@"programTitle"] = @(self.programTitleYConstraint.constant);
@@ -421,6 +429,86 @@ setForOnDemandUI;
     [self.navigationController popToRootViewControllerAnimated:YES];
     [self decloakForMenu:YES];
     self.navigationItem.title = @"KPCC Live";
+}
+
+- (void)setupScroller {
+    
+    self.mainContentScroller.translatesAutoresizingMaskIntoConstraints = NO;
+    self.mainContentScroller.contentSize = CGSizeMake(self.mainContentScroller.frame.size.width*3.0,
+                                                      self.mainContentScroller.frame.size.height-64.0f);
+    self.mainContentScroller.pagingEnabled = YES;
+    
+    
+    self.cpScreen = [[SCPRCurrentProgramViewController alloc] initWithNibName:@"SCPRCurrentProgramViewController"
+                                                                       bundle:nil];
+    self.cpFullDetailScreen = [[SCPRCompleteScheduleViewController alloc] initWithNibName:@"SCPRCompleteScheduleViewController"
+                                                                                   bundle:nil];
+    
+
+    
+    self.cpScreen.view.frame = self.cpScreen.view.frame;
+    self.cpFullDetailScreen.view.frame = self.cpFullDetailScreen.view.frame;
+    
+
+    
+    NSArray *cpSizeConstraints = [[DesignManager shared] sizeConstraintsForView:self.cpScreen.view hints:@{ @"height" : @(self.mainContentScroller.frame.size.height-32.0f),
+                                                                                                            @"width" : @(self.mainContentScroller.frame.size.width)}];
+    
+    NSArray *fsSizeConstraints = [[DesignManager shared] sizeConstraintsForView:self.cpFullDetailScreen.view hints:@{ @"height" : @(self.mainContentScroller.frame.size.height-32.0f),
+                                                                                                            @"width" : @(self.mainContentScroller.frame.size.width)}];
+    
+    [self.cpScreen.view addConstraints:cpSizeConstraints];
+    [self.cpFullDetailScreen.view addConstraints:fsSizeConstraints];
+    
+    [self.mainContentScroller addSubview:self.cpScreen.view];
+    [self.mainContentScroller addSubview:self.cpFullDetailScreen.view];
+    
+    self.cpScreen.view.translatesAutoresizingMaskIntoConstraints = NO;
+    self.cpFullDetailScreen.view.translatesAutoresizingMaskIntoConstraints = NO;
+    self.liveStreamView.translatesAutoresizingMaskIntoConstraints = NO;
+    
+    NSArray *fConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[mainView][cpScreen][cpFull]"
+                                                                    options:0
+                                                                    metrics:nil
+                                                                      views:@{ @"mainView" : self.liveStreamView,
+                                                                               @"cpScreen" : self.cpScreen.view,
+                                                                               @"cpFull" : self.cpFullDetailScreen.view }];
+    
+    NSArray *fVConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|[cpScreen]"
+                                                                    options:0
+                                                                    metrics:nil
+                                                                      views:@{ @"cpScreen" : self.cpScreen.view }];
+    
+    /*NSArray *fullScheduleH = [NSLayoutConstraint constraintsWithVisualFormat:@"H:[cpScreen][cpFull]|"
+                                                                     options:0
+                                                                     metrics:nil
+                                                                       views:@{ @"cpScreen" : self.cpScreen.view,
+                                                                                @"cpFull" : self.cpFullDetailScreen.view }];*/
+    
+    NSArray *fullScheduleV = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|[cpFull]"
+                                                                     options:0
+                                                                     metrics:nil
+                                                                       views:@{ @"cpFull" : self.cpFullDetailScreen.view }];
+    
+    [self.mainContentScroller addConstraints:fConstraints];
+    [self.mainContentScroller addConstraints:fVConstraints];
+    [self.mainContentScroller addConstraints:fullScheduleV];
+    
+
+
+    
+    [self.cpScreen.view layoutIfNeeded];
+    [self.cpFullDetailScreen.view layoutIfNeeded];
+    [self.cpScreen.view updateConstraintsIfNeeded];
+    [self.cpFullDetailScreen.view updateConstraintsIfNeeded];
+    [self.mainContentScroller layoutIfNeeded];
+    [self.mainContentScroller updateConstraintsIfNeeded];
+    
+    [self.cpScreen.view printDimensionsWithIdentifier:@"Current Program View"];
+    [self.cpFullDetailScreen.view printDimensionsWithIdentifier:@"Full Schedule View"];
+    
+    self.mainContentScroller.delegate = self;
+    
 }
 
 - (void)addPreRollController {
@@ -1526,7 +1614,7 @@ setForOnDemandUI;
 
 - (void)moveTextIntoPlace:(BOOL)animated {
     
-    CGFloat constant = 200;
+    CGFloat constant = 220.0f;
     if ( self.programTitleYConstraint.constant == constant ) return;
     if ( !animated ) {
         [self.programTitleYConstraint setConstant:constant];
@@ -2023,11 +2111,12 @@ setForOnDemandUI;
             }
             
             self.liveDescriptionLabel.text = @"";
-            [self.playerControlsBottomYConstraint pop_addAnimation:bottomAnim forKey:@"animatePlayControlsDown"];
+            
             
             // Hide or show divider depending on screen size
             self.horizDividerLine.layer.opacity = 0.0;
             if ( !suppressDivider ) {
+                
                 self.horizDividerLine.layer.transform = CATransform3DMakeScale(0.025f, 1.0f, 1.0f);
                 self.horizDividerLine.layer.opacity = 0.4;
                 POPSpringAnimation *scaleAnimation = [POPSpringAnimation animationWithPropertyNamed:kPOPLayerScaleXY];
@@ -2061,7 +2150,9 @@ setForOnDemandUI;
                 }
                 
             }];
+            
             [self.initialControlsView.layer pop_addAnimation:fadeControls forKey:@"fadeDownInitialControls"];
+            [self.playerControlsBottomYConstraint pop_addAnimation:bottomAnim forKey:@"animatePlayControlsDown"];
             
             self.lockAnimationUI = NO;
             
@@ -2628,44 +2719,62 @@ setForOnDemandUI;
 
 #pragma mark - UIScrollViewDelegate for audio queue
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
-    NSLog(@"Will begin dragging ... ");
     
-    self.onDemandPanning = YES;
-    [self onDemandFadeDown];
+    if ( scrollView == self.queueScrollView ) {
+        NSLog(@"Will begin dragging ... ");
+        self.onDemandPanning = YES;
+        [self onDemandFadeDown];
+    }
+    if ( scrollView == self.mainContentScroller ) {
+        [UIView animateWithDuration:0.25f animations:^{
+            self.queueBlurView.alpha = 1.0f;
+            self.queueDarkBgView.alpha = 0.4f;
+        }];
+    }
 }
 
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
     
-    int newPage = scrollView.contentOffset.x / scrollView.frame.size.width;
-    if (self.queueCurrentPage == newPage) {
-        [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationOptionCurveLinear animations:^{
-            self.timeLabelOnDemand.alpha = 1.0;
-            self.progressView.alpha = 1.0;
-            self.queueBlurView.alpha = 0.0;
-            self.queueDarkBgView.alpha = 0.0;
-            self.shareButton.alpha = 1.0;
-        } completion:^(BOOL finished) {
-            self.queueBlurShown = NO;
-        }];
-        return;
-    }
-    
-    if (self.queueScrollTimer != nil && [self.queueScrollTimer isValid]) {
-        [self.queueScrollTimer invalidate];
-        self.queueScrollTimer = nil;
-    }
-    
-    if ( [[AudioManager shared] status] == StreamStatusPlaying ) {
-        if ( ![self.jogShuttle spinning] ) {
-            [self snapJogWheel];
+    if ( scrollView == self.queueScrollView ) {
+        int newPage = scrollView.contentOffset.x / scrollView.frame.size.width;
+        if (self.queueCurrentPage == newPage) {
+            [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationOptionCurveLinear animations:^{
+                self.timeLabelOnDemand.alpha = 1.0;
+                self.progressView.alpha = 1.0;
+                self.queueBlurView.alpha = 0.0;
+                self.queueDarkBgView.alpha = 0.0;
+                self.shareButton.alpha = 1.0;
+            } completion:^(BOOL finished) {
+                self.queueBlurShown = NO;
+            }];
+            return;
         }
+        
+        if (self.queueScrollTimer != nil && [self.queueScrollTimer isValid]) {
+            [self.queueScrollTimer invalidate];
+            self.queueScrollTimer = nil;
+        }
+        
+        if ( [[AudioManager shared] status] == StreamStatusPlaying ) {
+            if ( ![self.jogShuttle spinning] ) {
+                [self snapJogWheel];
+            }
+        }
+        
+        self.queueScrollTimer = [NSTimer scheduledTimerWithTimeInterval:0.5
+                                                                 target:self
+                                                               selector:@selector(queueScrollEnded)
+                                                               userInfo:nil
+                                                                repeats:NO];
     }
-    
-    self.queueScrollTimer = [NSTimer scheduledTimerWithTimeInterval:0.5
-                                                             target:self
-                                                           selector:@selector(queueScrollEnded)
-                                                           userInfo:nil
-                                                            repeats:NO];
+    if ( scrollView == self.mainContentScroller ) {
+        [UIView animateWithDuration:0.25f animations:^{
+            if ( self.mainContentScroller.contentOffset.x == 0.0f ) {
+                self.queueBlurView.alpha = 0.0f;
+                self.queueDarkBgView.alpha = 0.0f;
+            }
+        }];
+    }
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {

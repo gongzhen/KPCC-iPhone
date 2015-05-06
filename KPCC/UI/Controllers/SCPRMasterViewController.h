@@ -24,8 +24,10 @@
 #import "SCPRButton.h"
 #import "SCPRScrubbingUIViewController.h"
 #import "SCPRTouchableScrubberView.h"
+#import "SCPRCurrentProgramViewController.h"
+#import "SCPRCompleteScheduleViewController.h"
 
-@interface SCPRMasterViewController : UIViewController<SCPRMenuDelegate,UIAlertViewDelegate>
+@interface SCPRMasterViewController : UIViewController<SCPRMenuDelegate,UIAlertViewDelegate,UIScrollViewDelegate>
 
 @property IBOutlet UILabel *programTitleLabel;
 @property IBOutlet UIImageView *programImageView;
@@ -39,7 +41,18 @@
 @property IBOutlet FXBlurView *blurView;
 @property IBOutlet UIView *darkBgView;
 
+
+@property IBOutlet UIScrollView *mainContentScroller;
+@property (nonatomic, strong) IBOutlet NSLayoutConstraint *mainHeightConstraint;
+@property (nonatomic, strong) IBOutlet NSLayoutConstraint *cpHeightConstraint;
+@property (nonatomic, strong) IBOutlet NSLayoutConstraint *fsHeightConstraint;
+@property (nonatomic, strong) IBOutlet NSLayoutConstraint *cpWidthConstraint;
+@property (nonatomic, strong) IBOutlet NSLayoutConstraint *fsWidthConstraint;
+
+@property (nonatomic, strong) IBOutlet SCPRCurrentProgramViewController *cpScreen;
+@property (nonatomic, strong) IBOutlet SCPRCompleteScheduleViewController *cpFullDetailScreen;
 @property (nonatomic,strong) MPVolumeView *mpvv;
+- (void)setupScroller;
 
 @property NSInteger tickCounter;
 
@@ -153,6 +166,9 @@
 - (void)cancelSleepTimerAction;
 
 - (void)remoteControlPlayOrPause;
+
+
+
 
 @property (nonatomic, strong) SCPRScrubbingUIViewController *scrubbingUI;
 @property (nonatomic, strong) SCPRButton *scrubberCloseButton;
