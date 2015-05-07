@@ -179,6 +179,7 @@ setForOnDemandUI;
     [super viewDidLoad];
     
     self.navigationController.interactivePopGestureRecognizer.enabled = NO;
+    self.hiddenVector = [NSMutableArray new];
     
     self.view.backgroundColor = [UIColor blackColor];
     self.horizDividerLine.layer.opacity = 0.0;
@@ -240,13 +241,13 @@ setForOnDemandUI;
     self.liveProgressViewController.liveProgressView = self.liveProgressBarView;
     self.liveProgressViewController.currentProgressView = self.currentProgressBarView;
     self.playerControlsView.backgroundColor = [UIColor clearColor];
-    self.progressView.alpha = 0.0;
-    self.liveProgressView.alpha = 0.0;
+    self.progressView.alpha = 0.0f;
+    self.liveProgressView.alpha = 0.0f;
     
     self.queueBlurView.contentMode = UIViewContentModeScaleAspectFill;
     
     self.liveRewindAltButton.userInteractionEnabled = NO;
-    [self.liveRewindAltButton setAlpha:0.0];
+    [self.liveRewindAltButton setAlpha:0.0f];
     
     pulldownMenu = [[SCPRPullDownMenu alloc] initWithView:self.view];
     pulldownMenu.delegate = self;
@@ -1276,21 +1277,23 @@ setForOnDemandUI;
 #pragma mark - Scrubbing
 - (void)bringUpScrubber {
     
-    if ( [[AudioManager shared] currentAudioMode] != AudioModeOnDemand ) return;
+    if ( [[AudioManager shared] currentAudioMode] != AudioModeOnDemand &&
+        [[AudioManager shared] currentAudioMode] != AudioModeLive ) {
+        return;
+    }
     
     if ( self.scrubberLoadingGate ) return;
     
     self.scrubberLoadingGate = YES;
     self.scrubbingUI.playPauseButton = self.playPauseButton;
     
+    [self.scrubbingUI primeForAudioMode];
+    
     [[AudioManager shared] setDelegate:self.scrubbingUI];
     
     if ( [Utils isThreePointFive] ) {
         self.topYScrubbingAnchor.constant = [self.topYScrubbingAnchor constant]-kScrubbingThreeFiveSlip;
         self.playerControlsBottomYConstraint.constant = [self.playerControlsBottomYConstraint constant]+kScrubbingThreeFiveSlip;
-        
-
-        
         [self.scrubbingUI.view layoutIfNeeded];
     }
     
@@ -1306,14 +1309,8 @@ setForOnDemandUI;
         [self.scrubbingUI scrubberWillAppear];
         self.scrubbingUI.view.alpha = 1.0;
         [self.scrubbingUI.scrubberController unmask];
-    } completion:^(BOOL finished) {
-
-        //[self.queueDarkBgView fillHole];
         
-        /*CGRect raw = self.scrubberControlView.frame;
-        CGRect cooked = [self.scrubbingUIView convertRect:raw
-                                                   toView:self.queueDarkBgView];
-        [self.queueDarkBgView cutAHole:cooked];*/
+    } completion:^(BOOL finished) {
         
         if ( [Utils isThreePointFive] ) {
             POPSpringAnimation *scaleAnimation = [POPSpringAnimation animationWithPropertyNamed:kPOPLayerScaleXY];
@@ -1339,6 +1336,13 @@ setForOnDemandUI;
     self.scrubbingUI.rw30Button = self.back30Button;
     self.scrubbingUI.fw30Button = self.fwd30Button;
 
+    self.scrubbingUI.lowerBoundLabel = self.lowerBoundScrubberLabel;
+    self.scrubbingUI.upperBoundLabel = self.upperBoundScrubberLabel;
+    self.scrubbingUI.timeBehindLiveLabel = self.timeBehindLiveScrubberLabel;
+    self.scrubbingUI.timeNumericLabel = self.timeNumbericScrubberLabel;
+    self.scrubbingUI.captionLabel = self.scrubberTimeLabel;
+    self.scrubbingUI.liveProgressView = self.liveProgressScrubberView;
+    self.scrubbingUI.liveStreamProgressAnchor = self.liveProgressScrubberAnchor;
     
     SCPRScrubberViewController *sCtrl = [[SCPRScrubberViewController alloc]
                                          init];
@@ -1378,26 +1382,36 @@ setForOnDemandUI;
     self.back30VerticalAnchor.constant = [Utils isThreePointFive] ? 28.0 : 40.0;
     self.fwd30VerticalAnchor.constant = [Utils isThreePointFive] ? 28.0 : 40.0;
     self.scrubbingUI.parentControlView = self;
+    self.scrubbingTriggerView.alpha = 0.0f;
     
     sUI.view.alpha = 0.0;
-    self.scrubbingTriggerView.alpha = 0.0;
-    
+
     [self.scrubbingUI prerender];
     
-
-    /*
-    CGRect raw = self.scrubberControlView.frame;
-    CGRect cooked = [self.scrubbingUIView convertRect:raw
-                                               toView:self.queueDarkBgView];
-    [self.queueDarkBgView cutAHole:cooked];*/
 }
 
 
 - (void)cloakForScrubber {
 
-    SCPRQueueScrollableView *cv = self.queueUIContents[self.queueCurrentPage];
-    cv.audioTitleLabel.alpha = 0.6;
-
+    if ( [[AudioManager shared] currentAudioMode] == AudioModeOnDemand ) {
+        SCPRQueueScrollableView *cv = self.queueUIContents[self.queueCurrentPage];
+        cv.audioTitleLabel.alpha = 0.6;
+    }
+    
+    [self pushToHiddenVector:self.scrubbingTriggerView];
+    [self pushToHiddenVector:self.timeLabelOnDemand];
+    [self pushToHiddenVector:self.progressView];
+    [self pushToHiddenVector:self.liveProgressViewController.view];
+    [self pushToHiddenVector:self.liveDescriptionLabel];
+    [self pushToHiddenVector:self.onDemandPlayerView];
+    [self pushToHiddenVector:self.horizDividerLine];
+    [self pushToHiddenVector:self.programTitleLabel];
+    
+    
+    self.queueBlurView.alpha = 1.0f;
+    self.queueDarkBgView.alpha = 0.45f;
+    
+    /*
     self.scrubbingTriggerView.alpha = 0.0;
     self.timeLabelOnDemand.alpha = 0.0;
     self.progressView.alpha = 0.0;
@@ -1406,17 +1420,22 @@ setForOnDemandUI;
     self.horizDividerLine.alpha = 0.0;
     self.programTitleLabel.alpha = 0.0;
     self.queueDarkBgView.alpha = 0.45;
+    */
+    
     self.queueScrollView.userInteractionEnabled = NO;
-    
     self.scrubbing = YES;
-    
+    [self commitHiddenVector];
 }
 
 - (void)decloakForScrubber {
+    if ( [[AudioManager shared] currentAudioMode] == AudioModeOnDemand ) {
+        SCPRQueueScrollableView *cv = self.queueUIContents[self.queueCurrentPage];
+        cv.audioTitleLabel.alpha = 1.0;
+    }
     
-    SCPRQueueScrollableView *cv = self.queueUIContents[self.queueCurrentPage];
-    cv.audioTitleLabel.alpha = 1.0;
+    [self popHiddenVector];
     
+    /*
     self.scrubbingTriggerView.alpha = 1.0;
     self.timeLabelOnDemand.alpha = 1.0;
     self.progressView.alpha = 1.0;
@@ -1424,7 +1443,8 @@ setForOnDemandUI;
     self.onDemandPlayerView.alpha = 1.0;
     self.horizDividerLine.alpha = 0.4;
     self.programTitleLabel.alpha = 1.0;
-    self.queueDarkBgView.alpha = 0.0;
+    self.queueDarkBgView.alpha = 0.0;*/
+    
     self.queueScrollView.userInteractionEnabled = YES;
     
     self.scrubbing = NO;
@@ -1750,7 +1770,6 @@ setForOnDemandUI;
     setForLiveStreamUI = YES;
     self.onDemandFailing = NO;
     self.scrubbingUIView.alpha = 0.0;
-    self.scrubbingTriggerView.alpha = 0.0;
     self.queueBlurShown = NO;
     
     self.navigationItem.title = @"KPCC Live";
@@ -2138,6 +2157,8 @@ setForOnDemandUI;
             fadeControls.toValue = @(0);
             [fadeControls setCompletionBlock:^(POPAnimation *p, BOOL c) {
                 
+                self.scrubbingTriggerView.alpha = 1.0f;
+                
                 if ( !self.preRollViewController.tritonAd ) {
                     if ( [[UXmanager shared] userHasSeenOnboarding] ) {
                         self.initialPlay = YES;
@@ -2417,7 +2438,29 @@ setForOnDemandUI;
     
 }
 
+- (void)pushToHiddenVector:(UIView *)viewToHide {
+    if ( viewToHide.alpha > 0.0f ) {
+        [self.hiddenVector addObject:@{ @"view" : viewToHide, @"alpha" : @(viewToHide.alpha) }];
+    }
+}
 
+- (void)commitHiddenVector {
+    [UIView animateWithDuration:0.275 animations:^{
+        for ( NSDictionary *th in self.hiddenVector ) {
+            UIView *v2h = th[@"view"];
+            v2h.alpha = 0.0f;
+        }
+    }];
+}
+
+- (void)popHiddenVector {
+    [UIView animateWithDuration:0.275 animations:^{
+        for ( NSDictionary *th in self.hiddenVector ) {
+            UIView *v2h = th[@"view"];
+            v2h.alpha = [th[@"alpha"] floatValue];
+        }
+    }];
+}
 
 #pragma mark - Util
 

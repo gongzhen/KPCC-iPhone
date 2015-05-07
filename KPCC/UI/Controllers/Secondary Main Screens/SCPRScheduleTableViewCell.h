@@ -14,7 +14,7 @@
 @property (nonatomic, strong) IBOutlet UILabel *programTitleLabel;
 
 - (void)setupWithProgram:(NSDictionary*)program;
-- (NSString*)formatOfInterestFromString:(NSString*)rawDateStr startDate:(BOOL)startDate;
+- (NSString*)formatOfInterestFromDate:(NSDate*)rawDate startDate:(BOOL)startDate;
 + (NSString*)rui;
 
 @end

@@ -32,15 +32,19 @@
     self.programTitleLabel.text = program[@"title"];
     
     NSString *startsStr = program[@"starts_at"];
-    NSString *startFmt = [self formatOfInterestFromString:startsStr
+    
+    NSDate *startsDate = [Utils dateFromRFCString:startsStr];
+    NSString *startFmt = [self formatOfInterestFromDate:startsDate
                                                 startDate:YES];
-    NSString *formattedStartStr = [NSDate stringFromDate:[Utils dateFromRFCString:startsStr]
+    NSString *formattedStartStr = [NSDate stringFromDate:startsDate
                                               withFormat:startFmt];
     
     NSString *endsStr = program[@"ends_at"];
-    NSString *endsFmt = [self formatOfInterestFromString:endsStr
+    
+    NSDate *endsDate = [Utils dateFromRFCString:endsStr];
+    NSString *endsFmt = [self formatOfInterestFromDate:endsDate
                                                startDate:NO];
-    NSString *formattedEndStr = [NSDate stringFromDate:[Utils dateFromRFCString:endsStr]
+    NSString *formattedEndStr = [NSDate stringFromDate:endsDate
                                             withFormat:endsFmt];
     
     NSString *combined = [NSString stringWithFormat:@"%@-%@",formattedStartStr,formattedEndStr];
@@ -51,22 +55,11 @@
     self.backgroundColor = [UIColor clearColor];
 }
 
-- (NSString*)formatOfInterestFromString:(NSString *)rawDateStr startDate:(BOOL)startDate {
-    NSDate *startsDate = [Utils dateFromRFCString:rawDateStr];
-    NSDateComponents *startComps = [[NSCalendar currentCalendar] components:NSCalendarUnitMinute
-                                                                   fromDate:startsDate];
-    NSString *dFmt = @"";
-    if ( [startComps minute] == 0 ) {
-        dFmt = @"h";
-    } else {
-        dFmt = @"h:mm";
-    }
+- (NSString*)formatOfInterestFromDate:rawDate startDate:(BOOL)startDate {
+
+    return [Utils formatOfInterestFromDate:rawDate
+                                 startDate:startDate];
     
-    if ( !startDate ) {
-        dFmt = [dFmt stringByAppendingString:@" a"];
-    }
-    
-    return dFmt;
 }
 
 - (NSString*)reuseIdentifier {

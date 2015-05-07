@@ -23,6 +23,13 @@
 @property (nonatomic,strong) IBOutlet SCPRButton *fw30Button;
 @property (nonatomic,strong) IBOutlet UIImageView *blurredImageView;
 @property (nonatomic,strong) IBOutlet UIView *darkeningView;
+@property (nonatomic,strong) IBOutlet UILabel *lowerBoundLabel;
+@property (nonatomic,strong) IBOutlet UILabel *upperBoundLabel;
+@property (nonatomic,strong) IBOutlet UILabel *timeBehindLiveLabel;
+@property (nonatomic,strong) IBOutlet UILabel *timeNumericLabel;
+@property (nonatomic,strong) IBOutlet UIView *liveProgressView;
+@property (nonatomic,strong) IBOutlet NSLayoutConstraint *liveStreamProgressAnchor;
+
 @property NSTimer *seekLatencyTimer;
 
 @property (nonatomic,strong) SCPRScrubberViewController *scrubberController;
@@ -40,9 +47,11 @@
 - (void)unmuteUI;
 - (void)killLatencyTimer;
 - (void)audioWillSeek;
+- (void)primeForAudioMode;
 
 - (double)strokeEndForCurrentTime;
 
 @property BOOL uiIsMutedForSeek;
+@property CGFloat maxPercentage;
 
 @end

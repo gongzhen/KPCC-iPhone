@@ -10,6 +10,8 @@
 #import "DesignManager.h"
 #import "SCPRMasterViewController.h"
 #import "SCPRJogShuttleViewController.h"
+#import "Program.h"
+#import "SessionManager.h"
 
 @interface SCPRScrubbingUIViewController ()
 
@@ -23,6 +25,13 @@
     self.darkeningView.backgroundColor = [[UIColor virtualBlackColor] translucify:0.35];
     
 
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(primeForAudioMode)
+                                                 name:@"audio-mode-changed"
+                                               object:nil];
+    
+    [self primeForAudioMode];
+    
     // Do any additional setup after loading the view from its nib.
 }
 
@@ -34,6 +43,71 @@
 - (void)viewDidLayoutSubviews {
     
 }
+
+- (void)primeForAudioMode {
+    
+    if ( [[AudioManager shared] currentAudioMode] == AudioModeLive ) {
+        
+        self.liveProgressView.alpha = 1.0f;
+        self.liveProgressView.backgroundColor = [[UIColor kpccPeriwinkleColor] translucify:0.88f];
+        self.scrubberController.liveProgressView = self.liveProgressView;
+        self.scrubberController.liveProgressAnchor = self.liveStreamProgressAnchor;
+        
+        Program *p = [[SessionManager shared] currentProgram];
+        
+        NSDate *startDate = p.starts_at;
+        NSDate *endDate = p.ends_at;
+        
+        NSString *sdFmtRaw = [Utils formatOfInterestFromDate:startDate
+                                                startDate:NO
+                           gapped:NO];
+        NSString *edFmtRaw = [Utils formatOfInterestFromDate:endDate
+                                                startDate:NO
+                           gapped:NO];
+        
+        NSString *sdFmt = [NSDate stringFromDate:startDate
+                                      withFormat:sdFmtRaw];
+        NSString *edFmt = [NSDate stringFromDate:endDate
+                                      withFormat:edFmtRaw];
+        
+        self.lowerBoundLabel.alpha = 1.0f;
+        self.upperBoundLabel.alpha = 1.0f;
+        
+        self.lowerBoundLabel.attributedText = [[DesignManager shared] standardTimeFormatWithString:sdFmt
+                                                                                        attributes:@{ @"digits" : [[DesignManager shared] proLight:16.0f],
+                                                                                                      @"period" : [[DesignManager shared] proLight:16.0f] }];
+        
+        self.upperBoundLabel.attributedText = [[DesignManager shared] standardTimeFormatWithString:edFmt
+                                                                                        attributes:@{ @"digits" : [[DesignManager shared] proLight:16.0f],
+                                                                                                      @"period" : [[DesignManager shared] proLight:16.0f] }];
+        
+        NSDate *now = [[SessionManager shared] vNow];
+        NSTimeInterval nowTI = [now timeIntervalSince1970];
+        NSTimeInterval total = [endDate timeIntervalSince1970] - [startDate timeIntervalSince1970];
+        NSTimeInterval diff = nowTI - [startDate timeIntervalSince1970];
+        self.maxPercentage = diff / ( total * 1.0f );
+        
+        CGFloat endPoint = self.scrubberController.view.frame.size.width * self.maxPercentage;
+        self.liveStreamProgressAnchor.constant = endPoint;
+        
+        self.timeNumericLabel.alpha = 1.0f;
+        self.timeBehindLiveLabel.alpha = 1.0f;
+        self.timeNumericLabel.textColor = [UIColor whiteColor];
+        self.timeBehindLiveLabel.textColor = [UIColor kpccOrangeColor];
+        self.captionLabel.alpha = 0.0f;
+        
+    }
+    if ( [[AudioManager shared] currentAudioMode] == AudioModeOnDemand ) {
+        self.liveProgressView.alpha = 0.0f;
+        self.lowerBoundLabel.alpha = 0.0f;
+        self.upperBoundLabel.alpha = 0.0f;
+        self.timeNumericLabel.alpha = 0.0f;
+        self.timeBehindLiveLabel.alpha = 0.0f;
+        self.captionLabel.alpha = 1.0f;
+        self.maxPercentage = -1.0f;
+    }
+}
+
 
 - (void)prerender {
   
@@ -51,13 +125,13 @@
 }
 
 - (void)forward30 {
-    
     [[AudioManager shared] setSeekWillEffectBuffer:YES];
-    
     CMTime ct = [[AudioManager shared].audioPlayer.currentItem currentTime];
     ct.value += (30.0*ct.timescale);
     [[AudioManager shared].audioPlayer.currentItem seekToTime:ct completionHandler:^(BOOL finished) {
-        [self onDemandSeekCompleted];
+        if ( [[AudioManager shared] currentAudioMode] == AudioModeOnDemand ) {
+            [self onDemandSeekCompleted];
+        }
     }];
 }
 
@@ -68,7 +142,9 @@
     CMTime ct = [[AudioManager shared].audioPlayer.currentItem currentTime];
     ct.value -= (30.0*ct.timescale);
     [[AudioManager shared].audioPlayer.currentItem seekToTime:ct completionHandler:^(BOOL finished) {
-        [self onDemandSeekCompleted];
+        if ( [[AudioManager shared] currentAudioMode] == AudioModeOnDemand ) {
+            [self onDemandSeekCompleted];
+        }
     }];
 }
 
@@ -190,8 +266,15 @@
 - (void)actionOfInterestAfterScrub:(CGFloat)finalValue {
     
     double multiplier = finalValue;
-    CMTime total = [[[[AudioManager shared].audioPlayer currentItem] asset] duration];
-    CMTime seek = CMTimeMake(total.value*multiplier, total.timescale);
+    CMTime seek;
+    
+    if ( [[AudioManager shared] currentAudioMode] == AudioModeOnDemand ) {
+        CMTime total = [[[[AudioManager shared].audioPlayer currentItem] asset] duration];
+        seek = CMTimeMake(total.value*multiplier, total.timescale);
+    } else if ( [[AudioManager shared] currentAudioMode] == AudioModeOnDemand ) {
+        
+    }
+    
     [[AudioManager shared] invalidateTimeObserver];
     [[AudioManager shared].audioPlayer.currentItem seekToTime:seek completionHandler:^(BOOL finished) {
         [[AudioManager shared] startObservingTime];

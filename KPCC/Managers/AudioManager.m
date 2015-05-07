@@ -166,10 +166,6 @@ static const NSString *ItemStatusContext;
     }
 }
 
-- (void)setCurrentAudioMode:(AudioMode)currentAudioMode {
-    _currentAudioMode = currentAudioMode;
-}
-
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object
                         change:(NSDictionary *)change context:(void *)context {
     
@@ -640,6 +636,16 @@ static const NSString *ItemStatusContext;
 
 - (BOOL)resourceLoader:(AVAssetResourceLoader *)resourceLoader shouldWaitForRenewalOfRequestedResource:(AVAssetResourceRenewalRequest *)renewalRequest {
     return YES;
+}
+
+#pragma mark - State
+- (void)setCurrentAudioMode:(AudioMode)currentAudioMode {
+    _currentAudioMode = currentAudioMode;
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"audio-mode-changed"
+                                                        object:nil
+                                                      userInfo:@{ @"new-state" : @(currentAudioMode) }];
+                                                                  
 }
 
 #pragma mark - General

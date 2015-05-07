@@ -26,6 +26,32 @@ static char *alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz012
     return radians * 180 / M_PI;
 }
 
++ (NSString*)formatOfInterestFromDate:rawDate startDate:(BOOL)startDate gapped:(BOOL)gapped {
+    
+    NSDateComponents *startComps = [[NSCalendar currentCalendar] components:NSCalendarUnitMinute
+                                                                   fromDate:rawDate];
+    NSString *dFmt = @"";
+    if ( [startComps minute] == 0 ) {
+        dFmt = @"h";
+    } else {
+        dFmt = @"h:mm";
+    }
+    
+    if ( !startDate ) {
+        if ( gapped ) {
+            dFmt = [dFmt stringByAppendingString:@" a"];
+        } else {
+            dFmt = [dFmt stringByAppendingString:@"a"];
+        }
+    }
+    
+    return dFmt;
+}
+
++ (NSString*)formatOfInterestFromDate:rawDate startDate:(BOOL)startDate {
+    return [Utils formatOfInterestFromDate:rawDate startDate:startDate gapped:YES];
+}
+
 + (NSDate*)dateFromRFCString:(NSString*)dateString {
     if ([dateString isEqual:[NSNull null] ]) {
         return nil;

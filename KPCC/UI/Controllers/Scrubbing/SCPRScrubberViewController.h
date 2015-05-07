@@ -17,6 +17,7 @@
 - (void)actionOfInterestAfterScrub:(CGFloat)finalValue;
 - (UILabel*)scrubbingIndicatorLabel;
 - (SCPRTouchableScrubberView*)scrubbableView;
+- (CGFloat)maxPercentage;
 
 @end
 
@@ -35,6 +36,8 @@
 @property (nonatomic,weak) id<Scrubbable> scrubbingDelegate;
 @property (nonatomic, strong) IBOutlet UILabel *degreesLabel;
 @property (nonatomic, strong) IBOutlet UIView *radiusTerminusView;
+@property (nonatomic, weak) UIView *liveProgressView;
+@property (nonatomic, weak) NSLayoutConstraint *liveProgressAnchor;
 
 @property (nonatomic, strong) UIView *cloak;
 @property BOOL expanded;

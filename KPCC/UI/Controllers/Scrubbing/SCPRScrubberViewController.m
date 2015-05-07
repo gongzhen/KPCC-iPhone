@@ -228,6 +228,8 @@
         
     } else {
         se = ( dX / basis )*1.0f;
+        CGFloat max = [self.scrubbingDelegate maxPercentage];
+        se = fminf(max, se);
     }
     
     self.currentBarLine.strokeEnd = se;
