@@ -20,5 +20,6 @@
 + (UIColor*)kpccSlateColor;
 + (UIColor*)kpccAsphaltColor;
 + (UIColor*)kpccSoftOrangeColor;
++ (UIColor*)kpccSubtleGrayColor;
 
 @end

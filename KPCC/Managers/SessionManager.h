@@ -76,6 +76,8 @@ static NSInteger kProgramPollingPressure = 5;
 
 - (void)fetchCurrentProgram:(CompletionBlockWithValue)completed;
 - (void)fetchProgramAtDate:(NSDate*)date completed:(CompletionBlockWithValue)completed;
+- (void)fetchScheduleForTodayAndTomorrow:(CompletionBlockWithValue)completed;
+
 - (void)fetchOnboardingProgramWithSegment:(NSInteger)segment completed:(CompletionBlockWithValue)completed;
 
 - (void)armProgramUpdater;
@@ -95,6 +97,7 @@ static NSInteger kProgramPollingPressure = 5;
 
 // Drift
 - (NSDate*)vLive;
+- (NSDate*)vNow;
 - (NSInteger)calculatedDriftValue;
 
 - (NSTimeInterval)secondsBehindLive;

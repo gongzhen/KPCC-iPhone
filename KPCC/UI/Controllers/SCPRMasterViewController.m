@@ -436,7 +436,7 @@ setForOnDemandUI;
     
     self.mainContentScroller.translatesAutoresizingMaskIntoConstraints = NO;
     self.mainContentScroller.contentSize = CGSizeMake(self.mainContentScroller.frame.size.width*3.0,
-                                                      self.mainContentScroller.frame.size.height-64.0f);
+                                                      self.liveStreamView.frame.size.height);
     self.mainContentScroller.pagingEnabled = YES;
     
     
@@ -452,10 +452,10 @@ setForOnDemandUI;
     
 
     
-    NSArray *cpSizeConstraints = [[DesignManager shared] sizeConstraintsForView:self.upcomingScreen.view hints:@{ @"height" : @(self.mainContentScroller.frame.size.height-32.0f),
+    NSArray *cpSizeConstraints = [[DesignManager shared] sizeConstraintsForView:self.upcomingScreen.view hints:@{ @"height" : @(self.liveStreamView.frame.size.height),
                                                                                                             @"width" : @(self.mainContentScroller.frame.size.width)}];
     
-    NSArray *fsSizeConstraints = [[DesignManager shared] sizeConstraintsForView:self.cpFullDetailScreen.view hints:@{ @"height" : @(self.mainContentScroller.frame.size.height-32.0f),
+    NSArray *fsSizeConstraints = [[DesignManager shared] sizeConstraintsForView:self.cpFullDetailScreen.view hints:@{ @"height" : @(self.liveStreamView.frame.size.height),
                                                                                                             @"width" : @(self.mainContentScroller.frame.size.width)}];
     
     [self.upcomingScreen.view addConstraints:cpSizeConstraints];
@@ -1588,7 +1588,8 @@ setForOnDemandUI;
             [self determinePlayState];
             
             [self.upcomingScreen primeWithProgramBasedOnCurrent:returnedObject];
-        
+            [self.cpFullDetailScreen setupSchedule];
+            
             if ( [[Utils del] userRespondedToPushWhileClosed] ) {
                 [[Utils del] setUserRespondedToPushWhileClosed:NO];
                 dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{

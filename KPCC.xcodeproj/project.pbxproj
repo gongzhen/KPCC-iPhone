@@ -84,12 +84,16 @@
 		25F2BC7F1A3B9B4D00108F73 /* SCPRGenericAvatarViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 25F2BC7D1A3B9B4D00108F73 /* SCPRGenericAvatarViewController.xib */; };
 		25F2BC811A3BB60B00108F73 /* onboarding-music-bed.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 25F2BC801A3BB60B00108F73 /* onboarding-music-bed.m4a */; };
 		25F2BC831A3BB61300108F73 /* onboarding-voiceover.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 25F2BC821A3BB61300108F73 /* onboarding-voiceover.m4a */; };
-		25F30ADA1AF96DAF00F27187 /* SCPRUpcomingProgramViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 25F30AD81AF96DAF00F27187 /* SCPRUpcomingProgramViewController.m */; };
-		25F30ADB1AF96DAF00F27187 /* SCPRUpcomingProgramViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 25F30AD91AF96DAF00F27187 /* SCPRUpcomingProgramViewController.xib */; };
-		25F30ADF1AF96DD700F27187 /* SCPRCompleteScheduleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 25F30ADD1AF96DD700F27187 /* SCPRCompleteScheduleViewController.m */; };
-		25F30AE01AF96DD700F27187 /* SCPRCompleteScheduleViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 25F30ADE1AF96DD700F27187 /* SCPRCompleteScheduleViewController.xib */; };
 		25F30AE31AF98F1A00F27187 /* icon-up-next.png in Resources */ = {isa = PBXBuildFile; fileRef = 25F30AE11AF98F1A00F27187 /* icon-up-next.png */; };
 		25F30AE41AF98F1A00F27187 /* icon-up-next@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 25F30AE21AF98F1A00F27187 /* icon-up-next@2x.png */; };
+		25F30AEC1AFAB6B700F27187 /* SCPRCompleteScheduleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 25F30AE71AFAB6B700F27187 /* SCPRCompleteScheduleViewController.m */; };
+		25F30AED1AFAB6B700F27187 /* SCPRCompleteScheduleViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 25F30AE81AFAB6B700F27187 /* SCPRCompleteScheduleViewController.xib */; };
+		25F30AEE1AFAB6B700F27187 /* SCPRUpcomingProgramViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 25F30AEA1AFAB6B700F27187 /* SCPRUpcomingProgramViewController.m */; };
+		25F30AEF1AFAB6B700F27187 /* SCPRUpcomingProgramViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 25F30AEB1AFAB6B700F27187 /* SCPRUpcomingProgramViewController.xib */; };
+		25F30AF51AFAB89600F27187 /* SCPRScheduleTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 25F30AF31AFAB89500F27187 /* SCPRScheduleTableViewCell.m */; };
+		25F30AF61AFAB89600F27187 /* SCPRScheduleTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 25F30AF41AFAB89600F27187 /* SCPRScheduleTableViewCell.xib */; };
+		25F30AFA1AFABB3E00F27187 /* SCPRScheduleHeaderViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 25F30AF81AFABB3E00F27187 /* SCPRScheduleHeaderViewController.m */; };
+		25F30AFB1AFABB3E00F27187 /* SCPRScheduleHeaderViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 25F30AF91AFABB3E00F27187 /* SCPRScheduleHeaderViewController.xib */; };
 		523126A719EDB78C008A47A7 /* SCPRPreRollViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 523126A519EDB78C008A47A7 /* SCPRPreRollViewController.m */; };
 		523126A819EDB78C008A47A7 /* SCPRPreRollViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 523126A619EDB78C008A47A7 /* SCPRPreRollViewController.xib */; };
 		523E86D019C8A292006FC366 /* SCPRProgramDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 523E86CE19C8A292006FC366 /* SCPRProgramDetailViewController.m */; };
@@ -394,14 +398,20 @@
 		25F2BC7D1A3B9B4D00108F73 /* SCPRGenericAvatarViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SCPRGenericAvatarViewController.xib; sourceTree = "<group>"; };
 		25F2BC801A3BB60B00108F73 /* onboarding-music-bed.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; name = "onboarding-music-bed.m4a"; path = "Audio/onboarding-music-bed.m4a"; sourceTree = "<group>"; };
 		25F2BC821A3BB61300108F73 /* onboarding-voiceover.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; name = "onboarding-voiceover.m4a"; path = "Audio/onboarding-voiceover.m4a"; sourceTree = "<group>"; };
-		25F30AD71AF96DAF00F27187 /* SCPRUpcomingProgramViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCPRUpcomingProgramViewController.h; sourceTree = "<group>"; };
-		25F30AD81AF96DAF00F27187 /* SCPRUpcomingProgramViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SCPRUpcomingProgramViewController.m; sourceTree = "<group>"; };
-		25F30AD91AF96DAF00F27187 /* SCPRUpcomingProgramViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SCPRUpcomingProgramViewController.xib; sourceTree = "<group>"; };
-		25F30ADC1AF96DD700F27187 /* SCPRCompleteScheduleViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCPRCompleteScheduleViewController.h; sourceTree = "<group>"; };
-		25F30ADD1AF96DD700F27187 /* SCPRCompleteScheduleViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SCPRCompleteScheduleViewController.m; sourceTree = "<group>"; };
-		25F30ADE1AF96DD700F27187 /* SCPRCompleteScheduleViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SCPRCompleteScheduleViewController.xib; sourceTree = "<group>"; };
 		25F30AE11AF98F1A00F27187 /* icon-up-next.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-up-next.png"; sourceTree = "<group>"; };
 		25F30AE21AF98F1A00F27187 /* icon-up-next@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-up-next@2x.png"; sourceTree = "<group>"; };
+		25F30AE61AFAB6B700F27187 /* SCPRCompleteScheduleViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCPRCompleteScheduleViewController.h; path = "Secondary Main Screens/SCPRCompleteScheduleViewController.h"; sourceTree = "<group>"; };
+		25F30AE71AFAB6B700F27187 /* SCPRCompleteScheduleViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SCPRCompleteScheduleViewController.m; path = "Secondary Main Screens/SCPRCompleteScheduleViewController.m"; sourceTree = "<group>"; };
+		25F30AE81AFAB6B700F27187 /* SCPRCompleteScheduleViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = SCPRCompleteScheduleViewController.xib; path = "Secondary Main Screens/SCPRCompleteScheduleViewController.xib"; sourceTree = "<group>"; };
+		25F30AE91AFAB6B700F27187 /* SCPRUpcomingProgramViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCPRUpcomingProgramViewController.h; path = "Secondary Main Screens/SCPRUpcomingProgramViewController.h"; sourceTree = "<group>"; };
+		25F30AEA1AFAB6B700F27187 /* SCPRUpcomingProgramViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SCPRUpcomingProgramViewController.m; path = "Secondary Main Screens/SCPRUpcomingProgramViewController.m"; sourceTree = "<group>"; };
+		25F30AEB1AFAB6B700F27187 /* SCPRUpcomingProgramViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = SCPRUpcomingProgramViewController.xib; path = "Secondary Main Screens/SCPRUpcomingProgramViewController.xib"; sourceTree = "<group>"; };
+		25F30AF21AFAB89500F27187 /* SCPRScheduleTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCPRScheduleTableViewCell.h; path = "Secondary Main Screens/SCPRScheduleTableViewCell.h"; sourceTree = "<group>"; };
+		25F30AF31AFAB89500F27187 /* SCPRScheduleTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SCPRScheduleTableViewCell.m; path = "Secondary Main Screens/SCPRScheduleTableViewCell.m"; sourceTree = "<group>"; };
+		25F30AF41AFAB89600F27187 /* SCPRScheduleTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = SCPRScheduleTableViewCell.xib; path = "Secondary Main Screens/SCPRScheduleTableViewCell.xib"; sourceTree = "<group>"; };
+		25F30AF71AFABB3E00F27187 /* SCPRScheduleHeaderViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCPRScheduleHeaderViewController.h; path = "Secondary Main Screens/SCPRScheduleHeaderViewController.h"; sourceTree = "<group>"; };
+		25F30AF81AFABB3E00F27187 /* SCPRScheduleHeaderViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SCPRScheduleHeaderViewController.m; path = "Secondary Main Screens/SCPRScheduleHeaderViewController.m"; sourceTree = "<group>"; };
+		25F30AF91AFABB3E00F27187 /* SCPRScheduleHeaderViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = SCPRScheduleHeaderViewController.xib; path = "Secondary Main Screens/SCPRScheduleHeaderViewController.xib"; sourceTree = "<group>"; };
 		45A107003D6C750C5E0ECAC3 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		523126A419EDB78C008A47A7 /* SCPRPreRollViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCPRPreRollViewController.h; sourceTree = "<group>"; };
 		523126A519EDB78C008A47A7 /* SCPRPreRollViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SCPRPreRollViewController.m; sourceTree = "<group>"; };
@@ -784,6 +794,41 @@
 			name = "Alarm Clock";
 			sourceTree = "<group>";
 		};
+		25F30AE51AFAB67C00F27187 /* Secondary Main Screens */ = {
+			isa = PBXGroup;
+			children = (
+				25F30AF11AFAB6CD00F27187 /* Full Schedule */,
+				25F30AF01AFAB6BC00F27187 /* Upcoming Program */,
+			);
+			name = "Secondary Main Screens";
+			sourceTree = "<group>";
+		};
+		25F30AF01AFAB6BC00F27187 /* Upcoming Program */ = {
+			isa = PBXGroup;
+			children = (
+				25F30AE91AFAB6B700F27187 /* SCPRUpcomingProgramViewController.h */,
+				25F30AEA1AFAB6B700F27187 /* SCPRUpcomingProgramViewController.m */,
+				25F30AEB1AFAB6B700F27187 /* SCPRUpcomingProgramViewController.xib */,
+			);
+			name = "Upcoming Program";
+			sourceTree = "<group>";
+		};
+		25F30AF11AFAB6CD00F27187 /* Full Schedule */ = {
+			isa = PBXGroup;
+			children = (
+				25F30AE61AFAB6B700F27187 /* SCPRCompleteScheduleViewController.h */,
+				25F30AE71AFAB6B700F27187 /* SCPRCompleteScheduleViewController.m */,
+				25F30AE81AFAB6B700F27187 /* SCPRCompleteScheduleViewController.xib */,
+				25F30AF21AFAB89500F27187 /* SCPRScheduleTableViewCell.h */,
+				25F30AF31AFAB89500F27187 /* SCPRScheduleTableViewCell.m */,
+				25F30AF41AFAB89600F27187 /* SCPRScheduleTableViewCell.xib */,
+				25F30AF71AFABB3E00F27187 /* SCPRScheduleHeaderViewController.h */,
+				25F30AF81AFABB3E00F27187 /* SCPRScheduleHeaderViewController.m */,
+				25F30AF91AFABB3E00F27187 /* SCPRScheduleHeaderViewController.xib */,
+			);
+			name = "Full Schedule";
+			sourceTree = "<group>";
+		};
 		5257E9C919E349F70055733F /* Transitions */ = {
 			isa = PBXGroup;
 			children = (
@@ -985,6 +1030,7 @@
 		76658ABC18E0AF8500026176 /* View Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				25F30AE51AFAB67C00F27187 /* Secondary Main Screens */,
 				25E8BDA01ABB8702007B99EB /* Wake / Sleep */,
 				25BBCD791A892D790015071E /* Scrubbing */,
 				259E44FA1A1D2C0A00F5CD65 /* Onboarding */,
@@ -997,12 +1043,6 @@
 				76B9A9AB18EF59FD007A6D8C /* SCPRUserReportViewController.xib */,
 				768C064619958FD900F829EB /* SCPRMasterViewController.h */,
 				768C064719958FD900F829EB /* SCPRMasterViewController.m */,
-				25F30AD71AF96DAF00F27187 /* SCPRUpcomingProgramViewController.h */,
-				25F30AD81AF96DAF00F27187 /* SCPRUpcomingProgramViewController.m */,
-				25F30AD91AF96DAF00F27187 /* SCPRUpcomingProgramViewController.xib */,
-				25F30ADC1AF96DD700F27187 /* SCPRCompleteScheduleViewController.h */,
-				25F30ADD1AF96DD700F27187 /* SCPRCompleteScheduleViewController.m */,
-				25F30ADE1AF96DD700F27187 /* SCPRCompleteScheduleViewController.xib */,
 				52E68B7F19B8F2D10028F8AE /* SCPRNavigationController.h */,
 				52E68B8019B8F2D10028F8AE /* SCPRNavigationController.m */,
 				52E68B8119B8F2D10028F8AE /* SCPRNavigationController.xib */,
@@ -1398,7 +1438,6 @@
 				25E8BDAC1ABC923E007B99EB /* SCPRSleepViewController.xib in Resources */,
 				52EFF79119C3688D0059A0E3 /* menu-glasses@2x.png in Resources */,
 				768C0675199590CC00F829EB /* FreigSanProBoldIt.otf in Resources */,
-				25F30AE01AF96DD700F27187 /* SCPRCompleteScheduleViewController.xib in Resources */,
 				523E86D219C8A292006FC366 /* SCPRProgramDetailViewController.xib in Resources */,
 				76A308E518C8FB940065D4B1 /* Images.xcassets in Resources */,
 				52CF917619FEF306007BCFA8 /* btn_play.png in Resources */,
@@ -1407,6 +1446,7 @@
 				52EFF86E19C368C00059A0E3 /* program_avatar_writers-almanac.png in Resources */,
 				2594B5411A31420D0013B93A /* onboarding-episode-swipe.png in Resources */,
 				52EFF7EC19C368C00059A0E3 /* program_avatar_all-things-considered@2x.png in Resources */,
+				25F30AFB1AFABB3E00F27187 /* SCPRScheduleHeaderViewController.xib in Resources */,
 				52EFF78919C3688D0059A0E3 /* menu-antenna@2x.png in Resources */,
 				25E8BD9F1ABA034D007B99EB /* program_avatar_invisibilia@2x.png in Resources */,
 				258E8E071A16AA4200675E68 /* desk_template.json in Resources */,
@@ -1433,7 +1473,6 @@
 				768C065E1995905D00F829EB /* chevron_down.png in Resources */,
 				52EFF79719C3688D0059A0E3 /* menu-microphone.png in Resources */,
 				7685BD60194BBCB90075BB16 /* playButton.png in Resources */,
-				25F30ADB1AF96DAF00F27187 /* SCPRUpcomingProgramViewController.xib in Resources */,
 				52EFF86419C368C00059A0E3 /* program_avatar_weekend-edition-saturday@2x.png in Resources */,
 				52EFF84219C368C00059A0E3 /* program_avatar_snap-judgment.png in Resources */,
 				768C0681199590CC00F829EB /* FreigSanProMedIt.otf in Resources */,
@@ -1491,6 +1530,7 @@
 				259E450F1A1D583A00F5CD65 /* onboarding2.mp3 in Resources */,
 				52EFF83219C368C00059A0E3 /* program_avatar_on-the-media.png in Resources */,
 				2557BA851A1A9BB800B0CAED /* btn_live_rewind_xtra-small.png in Resources */,
+				25F30AED1AFAB6B700F27187 /* SCPRCompleteScheduleViewController.xib in Resources */,
 				B5F9F74A1ABCE8FD00115DB3 /* icon-clock@2x.png in Resources */,
 				B5F9F7491ABCE8FD00115DB3 /* icon-clock.png in Resources */,
 				52EFF79B19C3688D0059A0E3 /* menu-settings.png in Resources */,
@@ -1534,6 +1574,7 @@
 				258E8E031A16AA3900675E68 /* Wood_Crash.mp3 in Resources */,
 				52EFF88919C3BC020059A0E3 /* item-chevron-right@2x.png in Resources */,
 				761CC5A4195A2878006A6C7C /* Testflight-Info.plist in Resources */,
+				25F30AEF1AFAB6B700F27187 /* SCPRUpcomingProgramViewController.xib in Resources */,
 				52EFF81E19C368C00059A0E3 /* program_avatar_marketplace.png in Resources */,
 				25E8BDB11AC0920E007B99EB /* SCPRAlarmClockViewController.xib in Resources */,
 				52EFF83A19C368C00059A0E3 /* program_avatar_radiolab.png in Resources */,
@@ -1553,6 +1594,7 @@
 				254CC6981A23A7A600560805 /* onboarding-push-icon.png in Resources */,
 				52D0FC3819D20D29009AECEE /* program_avatar_the-frame@2x.png in Resources */,
 				B5F9F74B1ABCE8FD00115DB3 /* icon-stopwatch.png in Resources */,
+				25F30AF61AFAB89600F27187 /* SCPRScheduleTableViewCell.xib in Resources */,
 				768C06601995905D00F829EB /* chevron_down@2x.png in Resources */,
 				768C0671199590CC00F829EB /* FreigSanProBlkIt.otf in Resources */,
 				52CC6D6919D112F400C67322 /* SCPRProgramsListViewController.xib in Resources */,
@@ -1622,13 +1664,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				25F30AEE1AFAB6B700F27187 /* SCPRUpcomingProgramViewController.m in Sources */,
 				258E8DFB1A16A6E800675E68 /* FeedbackManager.m in Sources */,
 				76658AB518DCB0DC00026176 /* AnalyticsManager.m in Sources */,
 				523E86D919CB694B006FC366 /* Episode.m in Sources */,
 				52CF917D1A0036CA007BCFA8 /* AudioChunk.m in Sources */,
 				76349D1B18D8C74F0027C3B8 /* NetworkManager.m in Sources */,
 				254CC6A31A255A1E00560805 /* SCPRButton.m in Sources */,
-				25F30ADF1AF96DD700F27187 /* SCPRCompleteScheduleViewController.m in Sources */,
+				25F30AFA1AFABB3E00F27187 /* SCPRScheduleHeaderViewController.m in Sources */,
 				52D0FC1C19D1F24F009AECEE /* SCPRProgramDetailHeaderView.m in Sources */,
 				254831C11A41555700963078 /* UIView+PrintDimensions.m in Sources */,
 				258BB03E1A1C083B00B8FCFE /* Settings.m in Sources */,
@@ -1657,6 +1700,7 @@
 				523126A719EDB78C008A47A7 /* SCPRPreRollViewController.m in Sources */,
 				52E68B8219B8F2D10028F8AE /* SCPRNavigationController.m in Sources */,
 				25E8BDA41ABB933C007B99EB /* SCPRTimerControlViewController.m in Sources */,
+				25F30AEC1AFAB6B700F27187 /* SCPRCompleteScheduleViewController.m in Sources */,
 				76A308D318C8FB940065D4B1 /* main.m in Sources */,
 				25A6534B1AAE2BA300ABAAD6 /* Bookmark.m in Sources */,
 				255943EA19F1A7620007294D /* SCPRJogShuttleViewController.m in Sources */,
@@ -1679,8 +1723,8 @@
 				258E239F1A13FA84009F8F97 /* DataModel.xcdatamodeld in Sources */,
 				5257E9CC19E34A550055733F /* SCPRSlideInTransition.m in Sources */,
 				52CC6D5E19D0DC7100C67322 /* Segment.m in Sources */,
+				25F30AF51AFAB89600F27187 /* SCPRScheduleTableViewCell.m in Sources */,
 				760EA99219521E98009B504E /* AVPlayer+Additions.m in Sources */,
-				25F30ADA1AF96DAF00F27187 /* SCPRUpcomingProgramViewController.m in Sources */,
 				52E68B8819B919300028F8AE /* SCPRMenuButton.m in Sources */,
 				768C064819958FDA00F829EB /* SCPRMasterViewController.m in Sources */,
 				7695FD15195E299000F63DE9 /* SCPRNavigationBar.m in Sources */,

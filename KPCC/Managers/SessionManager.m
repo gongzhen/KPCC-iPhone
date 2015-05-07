@@ -68,9 +68,9 @@
         NSDate *msd = [[AudioManager shared].audioPlayer.currentItem currentDate];
         if ( msd ) {
             if ( [msd isWithinTimeFrame:self.peakDrift ofDate:[NSDate date]] ) {
-                if ( abs([live timeIntervalSinceDate:msd]) > [[SessionManager shared] peakDrift] ) {
+                if ( fabs([live timeIntervalSinceDate:msd]) > [[SessionManager shared] peakDrift] ) {
                     live = msd;
-                    self.latestDriftValue = abs([live timeIntervalSinceDate:msd]);
+                    self.latestDriftValue = fabs([live timeIntervalSinceDate:msd]);
                 }
             } else {
                 return live;
@@ -82,6 +82,14 @@
     }
     
     return live;
+}
+
+- (NSDate*)vNow {
+    if ( [[AudioManager shared].audioPlayer.currentItem currentDate] ) {
+        return [[AudioManager shared].audioPlayer.currentItem currentDate];
+    }
+    
+    return [NSDate date];
 }
 
 - (NSInteger)calculatedDriftValue {
@@ -516,6 +524,37 @@
 
     }];
 
+}
+
+- (void)fetchScheduleForTodayAndTomorrow:(CompletionBlockWithValue)completed {
+    
+    NSDate *now = [[AudioManager shared].audioPlayer.currentItem currentDate];
+    if ( !now ) {
+        now = [NSDate date];
+    }
+    
+    NSDateComponents *comps = [[NSCalendar currentCalendar] components:NSCalendarUnitYear|NSCalendarUnitDay|NSCalendarUnitMonth|NSCalendarUnitHour|NSCalendarUnitMinute|NSCalendarUnitSecond
+                                                              fromDate:now];
+    [comps setHour:23];
+    [comps setMinute:59];
+    [comps setMinute:59];
+    
+    NSDate *tonight = [[NSCalendar currentCalendar] dateFromComponents:comps];
+    NSTimeInterval timeUntilMidnight = [tonight timeIntervalSince1970] - [now timeIntervalSince1970];
+    timeUntilMidnight += 60*60*24;
+    
+    NSString *endpoint = [NSString stringWithFormat:@"%@/schedule?start_time=%ld&length=%ld",kServerBase,(long)[now timeIntervalSince1970],(long)timeUntilMidnight];
+    [[NetworkManager shared] requestFromSCPRWithEndpoint:endpoint completion:^(id returnedObject) {
+        
+        if ( completed ) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                completed(returnedObject);
+            });
+        }
+        
+    }];
+    
+    
 }
 
 - (void)armProgramUpdater {

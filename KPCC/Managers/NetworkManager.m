@@ -143,7 +143,6 @@ static NetworkManager *singleton = nil;
     NSURL *url = [NSURL URLWithString:host];
     self.floatingReachability = [KSReachability reachabilityToHost:[url host]];
     [self applyNotifiersToReachability:self.floatingReachability];
-    
 }
 
 - (void)trueFail {
