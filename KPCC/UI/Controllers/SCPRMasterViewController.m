@@ -1276,6 +1276,8 @@ setForOnDemandUI;
 #pragma mark - Scrubbing
 - (void)bringUpScrubber {
     
+    if ( [[AudioManager shared] currentAudioMode] != AudioModeOnDemand ) return;
+    
     if ( self.scrubberLoadingGate ) return;
     
     self.scrubberLoadingGate = YES;
