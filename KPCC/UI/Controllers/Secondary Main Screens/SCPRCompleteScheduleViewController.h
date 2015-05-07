@@ -19,5 +19,6 @@
 @property (nonatomic, strong) NSMutableArray *headerVector;
 
 - (void)setupSchedule;
+- (NSString*)mapForWeekday:(NSInteger)weekday;
 
 @end

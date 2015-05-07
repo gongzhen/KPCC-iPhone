@@ -495,9 +495,6 @@ setForOnDemandUI;
     [self.mainContentScroller addConstraints:fVConstraints];
     [self.mainContentScroller addConstraints:fullScheduleV];
     
-
-
-    
     [self.upcomingScreen.view layoutIfNeeded];
     [self.cpFullDetailScreen.view layoutIfNeeded];
     [self.upcomingScreen.view updateConstraintsIfNeeded];
@@ -507,6 +504,8 @@ setForOnDemandUI;
     
     [self.upcomingScreen.view printDimensionsWithIdentifier:@"Current Program View"];
     [self.cpFullDetailScreen.view printDimensionsWithIdentifier:@"Full Schedule View"];
+    
+    self.upcomingScreen.tableToScroll = self.mainContentScroller;
     
     self.mainContentScroller.delegate = self;
     
@@ -531,7 +530,6 @@ setForOnDemandUI;
             [self.view addSubview:self.preRollViewController.view];
             [self.preRollViewController didMoveToParentViewController:self];
         });
-
     }];
     
 

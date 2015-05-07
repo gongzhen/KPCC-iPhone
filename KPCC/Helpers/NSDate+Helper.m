@@ -346,7 +346,7 @@
 }
 
 - (BOOL)isWithinTimeFrame:(NSInteger)seconds ofDate:(NSDate *)date {
-    if ( abs([date timeIntervalSince1970] - [self timeIntervalSince1970]) <= seconds ) {
+    if ( fabs([date timeIntervalSince1970] - [self timeIntervalSince1970]) <= seconds ) {
         return YES;
     }
     

@@ -10,6 +10,7 @@
 #import "Program.h"
 
 @class SCPRGenericAvatarViewController;
+@class SCPRButton;
 
 @interface SCPRUpcomingProgramViewController : UIViewController
 
@@ -20,9 +21,9 @@
 @property IBOutlet UILabel *timeLabel;
 @property IBOutlet UIView *dividerViewLeft;
 @property IBOutlet UIView *dividerViewRight;
-@property IBOutlet UIButton *viewFullScheduleButton;
+@property IBOutlet SCPRButton *viewFullScheduleButton;
 @property IBOutlet SCPRGenericAvatarViewController *genericAvatar;
-
+@property (nonatomic, weak) UIScrollView *tableToScroll;
 @property (nonatomic, strong) IBOutlet NSLayoutConstraint *verticalPushAnchor;
 @property (nonatomic, strong) Program *nextProgram;
 

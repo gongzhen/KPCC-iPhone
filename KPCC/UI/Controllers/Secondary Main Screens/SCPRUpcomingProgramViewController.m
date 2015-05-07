@@ -13,6 +13,7 @@
 #import "ContentManager.h"
 #import "SessionManager.h"
 #import "SCPRGenericAvatarViewController.h"
+#import "SCPRButton.h"
 
 @interface SCPRUpcomingProgramViewController ()
 
@@ -45,6 +46,12 @@
                                              selector:@selector(primeWithProgramBasedOnCurrent)
                                                  name:@"program_has_changed"
                                                object:nil];
+    
+    [self.viewFullScheduleButton addTarget:self
+                                    action:@selector(moveToFullSchedule)
+                          forControlEvents:UIControlEventTouchUpInside
+     special:YES];
+    
     // Do any additional setup after loading the view from its nib.
 }
 
@@ -95,6 +102,13 @@
         self.avatarImageView.alpha = 0.0f;
         self.genericAvatar.view.alpha = 1.0f;
     }
+}
+
+- (void)moveToFullSchedule {
+    CGFloat offset = self.tableToScroll.frame.size.width;
+    [self.tableToScroll setContentOffset:CGPointMake(self.tableToScroll.contentOffset.x+offset,
+                                                     self.tableToScroll.contentOffset.y)
+                                animated:YES];
 }
 
 - (void)alignDividerToValue:(CGFloat)yCoordinate {

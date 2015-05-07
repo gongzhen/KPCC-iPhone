@@ -45,6 +45,11 @@
             NSInteger weekday = [comps weekday]; // In the U.S. Sunday == 1 not 0.... like the *entire rest of the world*
             self.todayInEnglish = @"TODAY";
             
+            NSInteger tomorrowWeekday = [comps weekday]+1;
+            if ( tomorrowWeekday > 7 ) {
+                tomorrowWeekday = 1;
+            }
+            
             NSLog(@"Date Components : %@",[comps description]);
             
             self.programObjects = returnedObject;
@@ -71,11 +76,10 @@
                 header1.view.frame = header1.view.frame;
                 [header1 setupWithText:self.todayInEnglish];
                 [self.headerVector addObject:header1];
-                
             }
             
             if ( self.tomorrowPrograms.count > 0 ) {
-                self.tomorrowInEnglish = @"THURSDAY";
+                self.tomorrowInEnglish = [self mapForWeekday:tomorrowWeekday];
                 SCPRScheduleHeaderViewController *header2 = [[SCPRScheduleHeaderViewController alloc] initWithNibName:@"SCPRScheduleHeaderViewController"
                                                                                                                bundle:nil];
                 header2.view.frame = header2.view.frame;
@@ -83,14 +87,46 @@
                 [self.headerVector addObject:header2];
             }
             
-            
             self.scheduleTable.dataSource = self;
             self.scheduleTable.delegate = self;
             [self.scheduleTable reloadData];
+            
         }
         
     }];
     
+}
+
+- (NSString*)mapForWeekday:(NSInteger)weekday {
+    
+    NSString *english = @"";
+    switch (weekday) {
+        case 1:
+            english = @"SUNDAY";
+            break;
+        case 2:
+            english = @"MONDAY";
+            break;
+        case 3:
+            english = @"TUESDAY";
+            break;
+        case 4:
+            english = @"WEDNESDAY";
+            break;
+        case 5:
+            english = @"THURSDAY";
+            break;
+        case 6:
+            english = @"FRIDAY";
+            break;
+        case 7:
+            english = @"SATURDAY";
+            break;
+        default:
+            break;
+    }
+    
+    return english;
 }
 
 #pragma mark - UITableView

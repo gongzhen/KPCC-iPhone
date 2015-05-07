@@ -581,7 +581,7 @@ static const NSString *ItemStatusContext;
                     return;
                 }
             
-                NSLog(@"Stream skipped a bit : %ld seconds",(long)abs([reportedDate timeIntervalSince1970] - [expectedDate timeIntervalSince1970]));
+                NSLog(@"Stream skipped a bit : %ld seconds",(long)fabs([reportedDate timeIntervalSince1970] - [expectedDate timeIntervalSince1970]));
                 
                 [[AnalyticsManager shared] logEvent:@"streamSkippedByInterval"
                                      withParameters:@{ @"expected" : expStr,
@@ -829,7 +829,7 @@ static const NSString *ItemStatusContext;
 #endif
         
         BOOL nudge = NO;
-        if ( abs(now - s2d) > [[SessionManager shared] peakDrift] ) {
+        if ( fabs(now - s2d) > [[SessionManager shared] peakDrift] ) {
             nudge = YES;
         }
         
@@ -975,7 +975,7 @@ static const NSString *ItemStatusContext;
     if ( [[SessionManager shared] secondsBehindLive] > stableDuration ) {
         Program *p = [[SessionManager shared] currentProgram];
         if ( p ) {
-            if ( labs([[p ends_at] timeIntervalSince1970] - [[p starts_at] timeIntervalSince1970]) < stableDuration ) {
+            if ( fabs([[p ends_at] timeIntervalSince1970] - [[p starts_at] timeIntervalSince1970]) < stableDuration ) {
                 return NO;
             }
         }

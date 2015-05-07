@@ -93,7 +93,7 @@
 }
 
 - (NSInteger)calculatedDriftValue {
-    /*NSInteger vDrift = abs([[NSDate date] timeIntervalSinceDate:[[AudioManager shared] maxSeekableDate]]);
+    /*NSInteger vDrift = fabs([[NSDate date] timeIntervalSinceDate:[[AudioManager shared] maxSeekableDate]]);
     NSLog(@"Current Drift Value : %ld",(long)vDrift);
     return vDrift / 2.0 < [[SessionManager shared] peakDrift] ? vDrift / 2.0 : [[SessionManager shared] peakDrift];*/
     return 2;
@@ -111,7 +111,7 @@
     
     NSTimeInterval ctTI = [currentTime timeIntervalSince1970];
     NSTimeInterval msdTI = [msd timeIntervalSince1970];
-    NSTimeInterval seconds = abs(ctTI - msdTI);
+    NSTimeInterval seconds = fabs(ctTI - msdTI);
     return seconds;
 }
 
@@ -147,7 +147,7 @@
     }
     
     NSTimeInterval now = [[NSDate date] timeIntervalSince1970];
-    NSTimeInterval sessionLength = abs(now - self.liveStreamSessionBegan);
+    NSTimeInterval sessionLength = fabs(now - self.liveStreamSessionBegan);
     NSString *pt = [NSDate prettyTextFromSeconds:sessionLength];
     if ( sessionLength > 30000 ) return @"";
     
@@ -245,7 +245,7 @@
     if ( !self.odSessionIsHot ) return @"";
 
     NSTimeInterval now = [[NSDate date] timeIntervalSince1970];
-    NSTimeInterval sessionLength = abs(now - self.onDemandSessionBegan);
+    NSTimeInterval sessionLength = fabs(now - self.onDemandSessionBegan);
     NSString *pt = [NSDate prettyTextFromSeconds:sessionLength];
     
     NSString *sid = self.odSessionID;
@@ -601,7 +601,7 @@
     
     NSTimeInterval nowTI = [now timeIntervalSince1970];
     NSTimeInterval thenTI = [then timeIntervalSince1970];
-    if ( abs(thenTI - nowTI) < 60 ) {
+    if ( fabs(thenTI - nowTI) < 60 ) {
         then = [NSDate dateWithTimeInterval:30*60
                                   sinceDate:then];
     }

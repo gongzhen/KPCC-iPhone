@@ -396,7 +396,7 @@
     
     [[UIApplication sharedApplication] setIdleTimerDisabled:YES];
     
-    NSInteger tisn = abs([self.alarmDate timeIntervalSinceNow]);
+    NSInteger tisn = fabs([self.alarmDate timeIntervalSinceNow]);
     NSLog(@"Will fire in %ld seconds",(long)tisn);
     self.timer = [NSTimer scheduledTimerWithTimeInterval:tisn
                                                   target:self
