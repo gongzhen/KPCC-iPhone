@@ -172,6 +172,8 @@
 @property (nonatomic, strong) IBOutlet UILabel *timeNumbericScrubberLabel;
 @property (nonatomic, strong) IBOutlet UIView *liveProgressScrubberView;
 @property (nonatomic, strong) IBOutlet NSLayoutConstraint *liveProgressScrubberAnchor;
+@property (nonatomic, strong) IBOutlet UIView *liveProgressNeedleView;
+@property (nonatomic, strong) IBOutlet UILabel *liveProgressNeedleReadingLabel;
 
 @property (nonatomic, strong) NSMutableArray *hiddenVector;
 - (void)pushToHiddenVector:(UIView*)viewToHide;

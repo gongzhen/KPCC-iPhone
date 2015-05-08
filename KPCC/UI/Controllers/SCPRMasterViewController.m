@@ -1343,6 +1343,8 @@ setForOnDemandUI;
     self.scrubbingUI.captionLabel = self.scrubberTimeLabel;
     self.scrubbingUI.liveProgressView = self.liveProgressScrubberView;
     self.scrubbingUI.liveStreamProgressAnchor = self.liveProgressScrubberAnchor;
+    self.scrubbingUI.liveProgressNeedleReadingLabel = self.liveProgressNeedleReadingLabel;
+    self.scrubbingUI.liveProgressNeedleView = self.liveProgressNeedleView;
     
     SCPRScrubberViewController *sCtrl = [[SCPRScrubberViewController alloc]
                                          init];
@@ -1398,18 +1400,25 @@ setForOnDemandUI;
         cv.audioTitleLabel.alpha = 0.6;
     }
     
-    [self pushToHiddenVector:self.scrubbingTriggerView];
+    
+    if ( [[AudioManager shared] currentAudioMode] == AudioModeLive ) {
+
+    }
+    
     [self pushToHiddenVector:self.timeLabelOnDemand];
+    [self pushToHiddenVector:self.onDemandPlayerView];
     [self pushToHiddenVector:self.progressView];
     [self pushToHiddenVector:self.liveProgressViewController.view];
     [self pushToHiddenVector:self.liveDescriptionLabel];
-    [self pushToHiddenVector:self.onDemandPlayerView];
+    [self pushToHiddenVector:self.scrubbingTriggerView];
     [self pushToHiddenVector:self.horizDividerLine];
     [self pushToHiddenVector:self.programTitleLabel];
     
-    
-    self.queueBlurView.alpha = 1.0f;
-    self.queueDarkBgView.alpha = 0.45f;
+    [UIView animateWithDuration:0.25 animations:^{
+        self.queueBlurView.alpha = 1.0f;
+        self.queueDarkBgView.alpha = 0.45f;
+    }];
+
     
     /*
     self.scrubbingTriggerView.alpha = 0.0;
@@ -1439,11 +1448,15 @@ setForOnDemandUI;
     self.scrubbingTriggerView.alpha = 1.0;
     self.timeLabelOnDemand.alpha = 1.0;
     self.progressView.alpha = 1.0;
-    self.queueBlurView.alpha = 0.0;
     self.onDemandPlayerView.alpha = 1.0;
     self.horizDividerLine.alpha = 0.4;
     self.programTitleLabel.alpha = 1.0;
-    self.queueDarkBgView.alpha = 0.0;*/
+    */
+    
+    [UIView animateWithDuration:0.25 animations:^{
+        self.queueBlurView.alpha = 0.0;
+        self.queueDarkBgView.alpha = 0.0;
+    }];
     
     self.queueScrollView.userInteractionEnabled = YES;
     
@@ -2819,6 +2832,9 @@ setForOnDemandUI;
             if ( self.mainContentScroller.contentOffset.x == 0.0f ) {
                 self.queueBlurView.alpha = 0.0f;
                 self.queueDarkBgView.alpha = 0.0f;
+                self.scrubbingTriggerView.alpha = 1.0f;
+            } else {
+                self.scrubbingTriggerView.alpha = 0.0f;
             }
         }];
     }

@@ -29,6 +29,8 @@
 @property (nonatomic,strong) IBOutlet UILabel *timeNumericLabel;
 @property (nonatomic,strong) IBOutlet UIView *liveProgressView;
 @property (nonatomic,strong) IBOutlet NSLayoutConstraint *liveStreamProgressAnchor;
+@property (nonatomic,strong) IBOutlet UIView *liveProgressNeedleView;
+@property (nonatomic,strong) IBOutlet UILabel *liveProgressNeedleReadingLabel;
 
 @property NSTimer *seekLatencyTimer;
 
@@ -39,8 +41,7 @@
 - (void)setupWithProgram:(NSDictionary*)program blurredImage:(UIImage*)image parent:(id)parent;
 - (void)takedown;
 - (void)scrubberWillAppear;
-
-
+- (void)updateTimeBehindHUD;
 
 // Seeking
 - (void)muteUI;
@@ -48,6 +49,12 @@
 - (void)killLatencyTimer;
 - (void)audioWillSeek;
 - (void)primeForAudioMode;
+
+// Live
+- (double)livePercentage;
+- (double)percentageThroughCurrentProgram;
+- (void)tickLive:(BOOL)animated;
+- (CMTime)convertToTimeValueFromPercentage:(double)percent;
 
 - (double)strokeEndForCurrentTime;
 

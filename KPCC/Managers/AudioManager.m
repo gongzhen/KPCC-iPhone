@@ -787,6 +787,7 @@ static const NSString *ItemStatusContext;
     if ( self.timeObserver ) {
         [self.audioPlayer removeTimeObserver:self.timeObserver];
         self.timeObserver = nil;
+        self.localBufferSample = nil;
     }
 }
 

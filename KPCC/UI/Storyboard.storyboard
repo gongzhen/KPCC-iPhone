@@ -331,10 +331,10 @@
                                         </state>
                                     </button>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jOK-Q6-eLd" userLabel="liveProgressScrubbingView">
-                                        <rect key="frame" x="5" y="231" width="310" height="90"/>
+                                        <rect key="frame" x="5" y="231" width="200" height="90"/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <constraints>
-                                            <constraint firstAttribute="width" constant="310" id="8IR-i2-hae"/>
+                                            <constraint firstAttribute="width" constant="200" id="8IR-i2-hae"/>
                                         </constraints>
                                     </view>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="tCd-bL-d4d" userLabel="ScrubbingUIView" customClass="SCPRTouchableScrubberView">
@@ -383,13 +383,31 @@
                                         <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="iwP-gg-3AR" userLabel="progressNeedleView">
+                                        <rect key="frame" x="205" y="211" width="1" height="110"/>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="1" id="mUU-Gu-0d2"/>
+                                        </constraints>
+                                    </view>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="12:59pm" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DHg-Ou-2cW">
+                                        <rect key="frame" x="205" y="188" width="61" height="21"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="21" id="mw4-dL-DAa"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
+                                        <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
                                 </subviews>
                                 <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="calibratedRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="trailing" secondItem="tCd-bL-d4d" secondAttribute="trailing" constant="5" id="18v-jl-0Zc"/>
+                                    <constraint firstItem="iwP-gg-3AR" firstAttribute="top" secondItem="DHg-Ou-2cW" secondAttribute="bottom" constant="2" id="2mY-CL-sPZ"/>
                                     <constraint firstItem="u3B-hQ-8TW" firstAttribute="leading" secondItem="GPc-Sk-C7l" secondAttribute="leading" constant="28" id="2yg-ja-Vdg"/>
                                     <constraint firstItem="EHS-IB-VJt" firstAttribute="top" secondItem="u3B-hQ-8TW" secondAttribute="bottom" constant="110" id="3b0-wn-piY"/>
                                     <constraint firstItem="AZf-cs-ef5" firstAttribute="leading" secondItem="GPc-Sk-C7l" secondAttribute="leading" constant="28" id="4pa-2p-Ld3"/>
+                                    <constraint firstItem="iwP-gg-3AR" firstAttribute="height" secondItem="jOK-Q6-eLd" secondAttribute="height" constant="20" id="6Sa-yO-F2h"/>
                                     <constraint firstItem="3MS-4t-3kF" firstAttribute="top" secondItem="tCd-bL-d4d" secondAttribute="bottom" constant="40" id="9kl-YN-blq"/>
                                     <constraint firstAttribute="trailing" secondItem="AZf-cs-ef5" secondAttribute="trailing" constant="28" id="9nm-If-gPc"/>
                                     <constraint firstItem="vgV-P3-0W0" firstAttribute="leading" secondItem="GPc-Sk-C7l" secondAttribute="leading" constant="28" id="BWc-W7-fwp"/>
@@ -401,8 +419,11 @@
                                     <constraint firstItem="tCd-bL-d4d" firstAttribute="bottom" secondItem="jOK-Q6-eLd" secondAttribute="bottom" id="LbB-D5-mm8"/>
                                     <constraint firstItem="AZf-cs-ef5" firstAttribute="top" secondItem="GPc-Sk-C7l" secondAttribute="top" constant="8" id="Pf4-ll-kwd"/>
                                     <constraint firstItem="EHS-IB-VJt" firstAttribute="leading" secondItem="GPc-Sk-C7l" secondAttribute="leading" constant="10" id="YHG-3f-8y2"/>
+                                    <constraint firstItem="iwP-gg-3AR" firstAttribute="bottom" secondItem="jOK-Q6-eLd" secondAttribute="bottom" id="m49-iS-OEl"/>
                                     <constraint firstItem="tCd-bL-d4d" firstAttribute="leading" secondItem="jOK-Q6-eLd" secondAttribute="leading" id="n8t-rA-eTq"/>
+                                    <constraint firstItem="iwP-gg-3AR" firstAttribute="leading" secondItem="DHg-Ou-2cW" secondAttribute="leading" id="naJ-Cy-UVc"/>
                                     <constraint firstItem="vgV-P3-0W0" firstAttribute="top" secondItem="tCd-bL-d4d" secondAttribute="bottom" constant="40" id="qVW-Cb-d3A"/>
+                                    <constraint firstItem="iwP-gg-3AR" firstAttribute="leading" secondItem="jOK-Q6-eLd" secondAttribute="trailing" id="qt9-Ny-ccZ"/>
                                     <constraint firstAttribute="trailing" secondItem="EHS-IB-VJt" secondAttribute="trailing" constant="10" id="xRj-nW-hRJ"/>
                                     <constraint firstItem="tCd-bL-d4d" firstAttribute="top" secondItem="jOK-Q6-eLd" secondAttribute="top" id="zl5-eW-NWl"/>
                                 </constraints>
@@ -490,6 +511,8 @@
                         <outlet property="letsGoLabel" destination="yse-EI-1wa" id="VmE-eu-zi6"/>
                         <outlet property="liveDescriptionLabel" destination="g8v-J1-2Ng" id="sUp-r5-wI2"/>
                         <outlet property="liveProgressBarView" destination="oJb-yn-ZLF" id="ezZ-SB-MJT"/>
+                        <outlet property="liveProgressNeedleReadingLabel" destination="DHg-Ou-2cW" id="zUv-eL-4ve"/>
+                        <outlet property="liveProgressNeedleView" destination="iwP-gg-3AR" id="fc9-Ph-ibB"/>
                         <outlet property="liveProgressScrubberAnchor" destination="8IR-i2-hae" id="EMN-57-Zk2"/>
                         <outlet property="liveProgressScrubberView" destination="jOK-Q6-eLd" id="0KW-rG-uGp"/>
                         <outlet property="liveProgressView" destination="NyH-8S-Oy4" id="vFh-Hk-TJd"/>
@@ -530,7 +553,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Tsp-6Z-muj" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="472" y="136"/>
+            <point key="canvasLocation" x="337" y="136"/>
         </scene>
         <!--Old Tester View-->
         <scene sceneID="uBf-aC-IbT">

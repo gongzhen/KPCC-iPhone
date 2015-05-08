@@ -25,7 +25,7 @@ typedef NS_ENUM(NSUInteger, PauseExplanation) {
 };
 
 static NSInteger kStreamIsLiveTolerance = 120;
-static NSInteger kAllowableDriftCeiling = 270;
+static NSInteger kAllowableDriftCeiling = 180;
 static NSInteger kToleratedIncreaseInDrift = 20;
 
 #ifndef PRODUCTION

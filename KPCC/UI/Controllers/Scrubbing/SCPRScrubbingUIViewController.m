@@ -49,7 +49,7 @@
     if ( [[AudioManager shared] currentAudioMode] == AudioModeLive ) {
         
         self.liveProgressView.alpha = 1.0f;
-        self.liveProgressView.backgroundColor = [[UIColor kpccPeriwinkleColor] translucify:0.88f];
+        self.liveProgressView.backgroundColor = [[UIColor virtualWhiteColor] translucify:0.4f];
         self.scrubberController.liveProgressView = self.liveProgressView;
         self.scrubberController.liveProgressAnchor = self.liveStreamProgressAnchor;
         
@@ -73,28 +73,47 @@
         self.lowerBoundLabel.alpha = 1.0f;
         self.upperBoundLabel.alpha = 1.0f;
         
-        self.lowerBoundLabel.attributedText = [[DesignManager shared] standardTimeFormatWithString:sdFmt
+        self.lowerBoundLabel.attributedText = [[DesignManager shared] standardTimeFormatWithString:[sdFmt lowercaseString]
                                                                                         attributes:@{ @"digits" : [[DesignManager shared] proLight:16.0f],
                                                                                                       @"period" : [[DesignManager shared] proLight:16.0f] }];
         
-        self.upperBoundLabel.attributedText = [[DesignManager shared] standardTimeFormatWithString:edFmt
+        self.upperBoundLabel.attributedText = [[DesignManager shared] standardTimeFormatWithString:[edFmt lowercaseString]
                                                                                         attributes:@{ @"digits" : [[DesignManager shared] proLight:16.0f],
                                                                                                       @"period" : [[DesignManager shared] proLight:16.0f] }];
         
-        NSDate *now = [[SessionManager shared] vNow];
-        NSTimeInterval nowTI = [now timeIntervalSince1970];
-        NSTimeInterval total = [endDate timeIntervalSince1970] - [startDate timeIntervalSince1970];
-        NSTimeInterval diff = nowTI - [startDate timeIntervalSince1970];
-        self.maxPercentage = diff / ( total * 1.0f );
+
+        self.maxPercentage = [self livePercentage];
+        [self tickLive];
         
-        CGFloat endPoint = self.scrubberController.view.frame.size.width * self.maxPercentage;
-        self.liveStreamProgressAnchor.constant = endPoint;
+        [self.timeNumericLabel proLightFontize];
+        [self.timeBehindLiveLabel proMediumFontize];
         
-        self.timeNumericLabel.alpha = 1.0f;
-        self.timeBehindLiveLabel.alpha = 1.0f;
+        if ( [[AudioManager shared] status] != StreamStatusStopped ) {
+            
+            self.timeNumericLabel.alpha = 1.0f;
+            self.timeBehindLiveLabel.alpha = 1.0f;
+            
+            NSInteger seconds = [[SessionManager shared] secondsBehindLive];
+            NSString *readable = @"LIVE";
+            if ( seconds >= kAllowableDriftCeiling ) {
+                readable = [[NSDate scientificStringFromSeconds:seconds] lowercaseString];
+            }
+            
+            self.timeNumericLabel.text = readable;
+            
+        } else {
+            self.timeNumericLabel.alpha = 0.0f;
+            self.timeBehindLiveLabel.alpha = 0.0f;
+        }
+
         self.timeNumericLabel.textColor = [UIColor whiteColor];
         self.timeBehindLiveLabel.textColor = [UIColor kpccOrangeColor];
         self.captionLabel.alpha = 0.0f;
+        
+        self.liveProgressNeedleView.alpha = 1.0f;
+        self.liveProgressNeedleReadingLabel.alpha = 1.0f;
+        [self.liveProgressNeedleReadingLabel proMediumFontize];
+        
         
     }
     if ( [[AudioManager shared] currentAudioMode] == AudioModeOnDemand ) {
@@ -105,6 +124,8 @@
         self.timeBehindLiveLabel.alpha = 0.0f;
         self.captionLabel.alpha = 1.0f;
         self.maxPercentage = -1.0f;
+        self.liveProgressNeedleReadingLabel.alpha = 0.0f;
+        self.liveProgressNeedleView.alpha = 0.0f;
     }
 }
 
@@ -125,6 +146,7 @@
 }
 
 - (void)forward30 {
+    
     [[AudioManager shared] setSeekWillEffectBuffer:YES];
     CMTime ct = [[AudioManager shared].audioPlayer.currentItem currentTime];
     ct.value += (30.0*ct.timescale);
@@ -133,12 +155,12 @@
             [self onDemandSeekCompleted];
         }
     }];
+    
 }
 
 - (void)rewind30 {
     
     [[AudioManager shared] setSeekWillEffectBuffer:YES];
-    
     CMTime ct = [[AudioManager shared].audioPlayer.currentItem currentTime];
     ct.value -= (30.0*ct.timescale);
     [[AudioManager shared].audioPlayer.currentItem seekToTime:ct completionHandler:^(BOOL finished) {
@@ -146,6 +168,7 @@
             [self onDemandSeekCompleted];
         }
     }];
+    
 }
 
 - (void)setupWithProgram:(NSDictionary *)program blurredImage:(UIImage *)image parent:(id)parent {
@@ -271,13 +294,21 @@
     if ( [[AudioManager shared] currentAudioMode] == AudioModeOnDemand ) {
         CMTime total = [[[[AudioManager shared].audioPlayer currentItem] asset] duration];
         seek = CMTimeMake(total.value*multiplier, total.timescale);
-    } else if ( [[AudioManager shared] currentAudioMode] == AudioModeOnDemand ) {
-        
+    } else if ( [[AudioManager shared] currentAudioMode] == AudioModeLive ) {
+        seek = [self convertToTimeValueFromPercentage:multiplier];
+        NSLog(@"Live S2T : %ld",(long)CMTimeGetSeconds(seek));
     }
     
     [[AudioManager shared] invalidateTimeObserver];
+    [[AudioManager shared] setSeekWillEffectBuffer:YES];
     [[AudioManager shared].audioPlayer.currentItem seekToTime:seek completionHandler:^(BOOL finished) {
+        
+        NSDate *cd = [[AudioManager shared].audioPlayer.currentItem currentDate];
+        NSLog(@"Current Time is Now : %@",[NSDate stringFromDate:cd
+                                                      withFormat:@"hh:mm a"]);
+        [[AudioManager shared] setSeekWillEffectBuffer:NO];
         [[AudioManager shared] startObservingTime];
+        
     }];
 
 }
@@ -294,22 +325,28 @@
 
 #pragma mark - AudioManager
 - (void)onRateChange {
-    if ([[AudioManager shared] isStreamPlaying] || [[AudioManager shared] isStreamBuffering]) {
-        [self.playPauseButton fadeImage:[UIImage imageNamed:@"btn_pause.png"] duration:0.2];
+    if ( [[AudioManager shared] isStreamPlaying] || [[AudioManager shared] isStreamBuffering] ) {
+        [self.playPauseButton fadeImage:[UIImage imageNamed:@"btn_pause.png"]
+                               duration:0.2];
     } else {
-        [self.playPauseButton fadeImage:[UIImage imageNamed:@"btn_play.png"] duration:0.2];
+        [self.playPauseButton fadeImage:[UIImage imageNamed:@"btn_play.png"]
+                               duration:0.2];
     }
 }
 
 - (void)onTimeChange {
     
     if ( !self.scrubberController.panning ) {
-        if (CMTimeGetSeconds([[[[AudioManager shared].audioPlayer currentItem] asset] duration]) > 0) {
-            double currentTime = CMTimeGetSeconds([[[AudioManager shared].audioPlayer currentItem] currentTime]);
-            double duration = CMTimeGetSeconds([[[[AudioManager shared].audioPlayer currentItem] asset] duration]);
-            NSString *pretty = [Utils elapsedTimeStringWithPosition:currentTime
-                                                        andDuration:duration];
-            [self.scrubbingIndicatorLabel setText:pretty];
+        if ( [[AudioManager shared] currentAudioMode] == AudioModeOnboarding ) {
+            if (CMTimeGetSeconds([[[[AudioManager shared].audioPlayer currentItem] asset] duration]) > 0) {
+                double currentTime = CMTimeGetSeconds([[[AudioManager shared].audioPlayer currentItem] currentTime]);
+                double duration = CMTimeGetSeconds([[[[AudioManager shared].audioPlayer currentItem] asset] duration]);
+                NSString *pretty = [Utils elapsedTimeStringWithPosition:currentTime
+                                                            andDuration:duration];
+                [self.scrubbingIndicatorLabel setText:pretty];
+            }
+        } else {
+            [self tickLive];
         }
     }
     
@@ -320,9 +357,102 @@
 }
 
 - (double)strokeEndForCurrentTime {
-    NSInteger cS = CMTimeGetSeconds([[AudioManager shared].audioPlayer.currentItem currentTime]);
-    NSInteger tS = CMTimeGetSeconds([[AudioManager shared].audioPlayer.currentItem.asset duration]);
-    return (cS*1.0f / tS*1.0f)*1.0f;
+    if ( [[AudioManager shared] currentAudioMode] == AudioModeOnDemand ) {
+        NSInteger cS = CMTimeGetSeconds([[AudioManager shared].audioPlayer.currentItem currentTime]);
+        NSInteger tS = CMTimeGetSeconds([[AudioManager shared].audioPlayer.currentItem.asset duration]);
+        return (cS*1.0f / tS*1.0f)*1.0f;
+    }
+    if ( [[AudioManager shared] currentAudioMode] == AudioModeLive ) {
+        return [self percentageThroughCurrentProgram];
+    }
+    
+    return 0.0f;
+}
+
+#pragma mark - Live
+- (double)livePercentage {
+    Program *p = [[SessionManager shared] currentProgram];
+    if ( !p ) {
+        return 0.0f;
+    }
+    
+    NSDate *startDate = p.starts_at;
+    NSDate *endDate = p.ends_at;
+    NSDate *now = [[SessionManager shared] vLive];
+    NSTimeInterval nowTI = [now timeIntervalSince1970];
+    NSTimeInterval total = [endDate timeIntervalSince1970] - [startDate timeIntervalSince1970];
+    NSTimeInterval diff = nowTI - [startDate timeIntervalSince1970];
+    
+    return (double) ( diff / ( total * 1.0f ) );
+}
+
+- (double)percentageThroughCurrentProgram {
+    
+    if ( [[SessionManager shared] sessionIsBehindLive] ) {
+        NSDate *currentPlayerDate = [[SessionManager shared] vNow];
+        Program *p = [[SessionManager shared] currentProgram];
+        NSDate *endDate = p.ends_at;
+        NSDate *startDate = p.starts_at;
+        CGFloat duration = [endDate timeIntervalSince1970] - [startDate timeIntervalSince1970];
+        CGFloat chunk = [currentPlayerDate timeIntervalSince1970] - [startDate timeIntervalSince1970];
+        
+        return chunk / duration;
+    }
+    
+    return [self livePercentage];
+}
+
+- (void)tickLive {
+    
+    NSDate *live = [[SessionManager shared] vLive];
+    NSString *prettyTime = [NSDate stringFromDate:live
+                                       withFormat:@"h:mma"];
+    self.liveProgressNeedleReadingLabel.text = [prettyTime lowercaseString];
+    
+    self.maxPercentage = [self livePercentage];
+    
+    if ( [[SessionManager shared] sessionIsBehindLive] ) {
+        [self.timeNumericLabel setText:[NSDate scientificStringFromSeconds:[[SessionManager shared] secondsBehindLive]]];
+    } else {
+        [self.timeNumericLabel setText:@"LIVE"];
+    }
+    
+    CGFloat endPoint = self.scrubberController.view.frame.size.width * self.maxPercentage;
+    [UIView animateWithDuration:0.25 animations:^{
+        self.liveStreamProgressAnchor.constant = endPoint;
+        [self.view layoutIfNeeded];
+    }];
+}
+
+- (CMTime)convertToTimeValueFromPercentage:(double)percent {
+    Program *p = [[SessionManager shared] currentProgram];
+    NSDate *startDate = p.starts_at;
+    NSDate *endDate = p.ends_at;
+
+    NSTimeInterval total = [endDate timeIntervalSince1970] - [startDate timeIntervalSince1970];
+    NSInteger secondsThroughProgram = floorf(total * percent);
+    NSDate *msd = [[SessionManager shared] vLive];
+    
+    NSInteger liveInSeconds = [msd timeIntervalSince1970];
+    NSInteger programEndInSeconds = [endDate timeIntervalSince1970];
+    
+    NSInteger totalTime = 0;
+    if ( programEndInSeconds > liveInSeconds ) {
+        
+        CGFloat chunkUpToLive = liveInSeconds - [startDate timeIntervalSince1970];
+        totalTime = chunkUpToLive - secondsThroughProgram;
+        
+    } else {
+
+        
+    }
+    
+    NSArray *ranges = [[AudioManager shared].audioPlayer.currentItem seekableTimeRanges];
+    CMTimeRange range = [ranges[0] CMTimeRangeValue];
+    NSInteger end = CMTimeGetSeconds(CMTimeRangeGetEnd(range));
+    return CMTimeMake(end - totalTime, 1);
+    
+    
 }
 
 - (void)onSeekCompleted {
