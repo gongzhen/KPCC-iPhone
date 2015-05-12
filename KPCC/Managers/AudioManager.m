@@ -299,8 +299,8 @@ static const NSString *ItemStatusContext;
     if (object == self.audioPlayer.currentItem && [keyPath isEqualToString:@"playbackLikelyToKeepUp"]) {
         if ( [change[@"new"] intValue] == 0 ) {
             if ( [self isPlayingAudio] ) {
-                NSLog(@"AVPlayerItem - Stream not likely to keep up...");
                 if ( !self.seekWillEffectBuffer ) {
+                    NSLog(@"AVPlayerItem - Stream not likely to keep up...");
                     if ( !self.audioOutputSourceChanging ) {
                         [self waitPatiently];
                     }
@@ -532,6 +532,11 @@ static const NSString *ItemStatusContext;
             //NSLog(@"Drift stabilizing - Old : %ld, New : %ld",(long)[[SessionManager shared] peakDrift], (long)drift);
         }
         [[SessionManager shared] setPeakDrift:MAX(drift,[[SessionManager shared] peakDrift])];
+        if ( [[SessionManager shared] minDrift] > 0 ) {
+            [[SessionManager shared] setMinDrift:MIN(drift,[[SessionManager shared] minDrift])];
+        } else {
+            [[SessionManager shared] setMinDrift:drift];
+        }
     }
     
     AVPlayer *audioPlayer = self.audioPlayer;

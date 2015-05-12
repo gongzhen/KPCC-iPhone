@@ -13,6 +13,7 @@
 #import "Utils.h"
 #import "POP.h"
 #import "QueueManager.h"
+#import "SessionManager.h"
 
 @interface SCPRScrubberViewController ()
 
@@ -178,6 +179,9 @@
     CGFloat dX = touchPoint.x;
     CGFloat basis = self.view.frame.size.width;
     double se = 0.0f;
+    
+    BOOL puntScrub = NO;
+    
     if ( self.circular ) {
         
 #ifdef USE_ATAN2
@@ -229,12 +233,20 @@
     } else {
         se = ( dX / basis )*1.0f;
         CGFloat max = [self.scrubbingDelegate maxPercentage];
+        if ( se > max ) {
+            if ( ![[SessionManager shared] sessionIsBehindLive] ) {
+                puntScrub = YES;
+            }
+        }
         se = fminf(max, se);
         se = fmaxf(0.0f, se);
     }
     
     self.currentBarLine.strokeEnd = se;
-    [self.scrubbingDelegate actionOfInterestWithPercentage:(CGFloat)se];
+    
+    if ( !puntScrub ) {
+        [self.scrubbingDelegate actionOfInterestWithPercentage:(CGFloat)se];
+    }
 }
 
 - (CGPoint)extendPoint:(CGPoint)touchPoint toEdge:(CGPoint)bound {

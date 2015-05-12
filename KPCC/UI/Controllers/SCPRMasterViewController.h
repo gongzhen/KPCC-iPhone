@@ -80,6 +80,7 @@
 @property IBOutlet UILabel *timeLabelOnDemand;
 @property IBOutlet SCPRButton *shareButton;
 @property IBOutlet UIProgressView *progressView;
+@property IBOutlet UIView *onDemandMainDividerView;
 
 - (void)onDemandFadeDown;
 
@@ -100,6 +101,8 @@
 @property (nonatomic,strong) IBOutlet UIView *liveProgressView;
 @property (nonatomic,strong) IBOutlet UIView *currentProgressBarView;
 @property (nonatomic,strong) IBOutlet UIView *liveProgressBarView;
+@property IBOutlet NSLayoutConstraint *horizontalDividerPush;
+
 
 // Pre-Roll
 - (void)handlePreRollControl:(BOOL)paused;
@@ -130,6 +133,10 @@
 @property BOOL playStateGate;
 @property BOOL onDemandPanning;
 @property BOOL onDemandFailing;
+
+@property CGFloat initialProgramTitleConstant;
+@property CGFloat deployedProgramTitleConstant;
+@property CGFloat threePointFivePlayControlsConstant;
 
 @property NSInteger onDemandGateCount;
 @property NSInteger previousRewindThreshold;
@@ -174,6 +181,8 @@
 @property (nonatomic, strong) IBOutlet NSLayoutConstraint *liveProgressScrubberAnchor;
 @property (nonatomic, strong) IBOutlet UIView *liveProgressNeedleView;
 @property (nonatomic, strong) IBOutlet UILabel *liveProgressNeedleReadingLabel;
+@property IBOutlet NSLayoutConstraint *topGapScrubbingAnchor;
+@property IBOutlet NSLayoutConstraint *flagAnchor;
 
 @property (nonatomic, strong) NSMutableArray *hiddenVector;
 - (void)pushToHiddenVector:(UIView*)viewToHide;

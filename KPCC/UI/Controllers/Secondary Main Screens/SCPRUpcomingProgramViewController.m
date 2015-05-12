@@ -44,7 +44,7 @@
     
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(primeWithProgramBasedOnCurrent)
-                                                 name:@"program_has_changed"
+                                                 name:@"program-has-changed"
                                                object:nil];
     
     [self.viewFullScheduleButton addTarget:self

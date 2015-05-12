@@ -31,11 +31,13 @@
 @property (nonatomic,strong) IBOutlet NSLayoutConstraint *liveStreamProgressAnchor;
 @property (nonatomic,strong) IBOutlet UIView *liveProgressNeedleView;
 @property (nonatomic,strong) IBOutlet UILabel *liveProgressNeedleReadingLabel;
+@property (nonatomic,strong) IBOutlet NSLayoutConstraint *flagAnchor;
 
 @property NSTimer *seekLatencyTimer;
 
 @property (nonatomic,strong) SCPRScrubberViewController *scrubberController;
 @property (nonatomic,weak) id parentControlView;
+@property CMTime lowerBoundThreshold;
 
 - (void)prerender;
 - (void)setupWithProgram:(NSDictionary*)program blurredImage:(UIImage*)image parent:(id)parent;
@@ -55,6 +57,7 @@
 - (double)percentageThroughCurrentProgram;
 - (void)tickLive:(BOOL)animated;
 - (CMTime)convertToTimeValueFromPercentage:(double)percent;
+- (void)recalibrateAfterScrub;
 
 - (double)strokeEndForCurrentTime;
 

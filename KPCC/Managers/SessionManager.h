@@ -24,7 +24,6 @@ typedef NS_ENUM(NSUInteger, PauseExplanation) {
     PauseExplanationAppIsRespondingToPush = 4
 };
 
-static NSInteger kStreamIsLiveTolerance = 120;
 static NSInteger kAllowableDriftCeiling = 180;
 static NSInteger kToleratedIncreaseInDrift = 20;
 
@@ -72,6 +71,7 @@ static NSInteger kProgramPollingPressure = 5;
 @property (atomic) BOOL userIsViewingHeadlines;
 @property PauseExplanation lastKnownPauseExplanation;
 @property NSInteger peakDrift;
+@property NSInteger minDrift;
 @property (nonatomic, strong) Program *currentProgram;
 
 - (void)fetchCurrentProgram:(CompletionBlockWithValue)completed;
@@ -101,6 +101,7 @@ static NSInteger kProgramPollingPressure = 5;
 - (NSInteger)calculatedDriftValue;
 
 - (NSTimeInterval)secondsBehindLive;
+- (NSTimeInterval)virtualSecondsBehindLive;
 
 - (void)processNotification:(UILocalNotification*)programUpdate;
 @property (NS_NONATOMIC_IOSONLY) BOOL ignoreProgramUpdating;
@@ -129,6 +130,8 @@ static NSInteger kProgramPollingPressure = 5;
 - (NSString*)endLiveSession;
 - (void)trackLiveSession;
 - (void)trackRewindSession;
+
+
 
 - (NSString*)startOnDemandSession;
 - (NSString*)endOnDemandSessionWithReason:(OnDemandFinishedReason)reason;

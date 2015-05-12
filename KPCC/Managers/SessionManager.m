@@ -115,6 +115,10 @@
     return seconds;
 }
 
+- (NSTimeInterval)virtualSecondsBehindLive {
+    return [self secondsBehindLive];
+}
+
 - (NSString*)startLiveSession {
     
     if ( self.sessionIsHot ) return @"";
@@ -181,7 +185,7 @@
     
     NSTimeInterval seconds = [self secondsBehindLive];
     NSString *pt = @"";
-    if ( seconds > 60 ) {
+    if ( seconds > kAllowableDriftCeiling ) {
         pt = [NSDate prettyTextFromSeconds:seconds];
     } else {
         pt = @"LIVE";
@@ -230,6 +234,7 @@
     
     NSString *ct = [NSString stringWithFormat:@"%ld",(long)[[NSDate date] timeIntervalSince1970]];
     NSString *sid = [Utils sha1:ct];
+    
     self.odSessionID = sid;
     @synchronized(self) {
         self.odSessionIsHot = YES;
@@ -438,7 +443,7 @@
 #ifdef TESTING_PROGRAM_CHANGE
     Program *p = [self fakeProgram];
     self.currentProgram = p;
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"program_has_changed"
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"program-has-changed"
                                                         object:nil
                                                       userInfo:nil];
     
@@ -477,10 +482,7 @@
 }
 
 - (void)fetchCurrentProgram:(CompletionBlockWithValue)completed {
-    NSDate *ct = [[AudioManager shared].audioPlayer.currentItem currentDate];
-    if ( !ct ) {
-        ct = [NSDate date];
-    }
+    NSDate *ct = [self vNow];
     [self fetchProgramAtDate:ct completed:^(id returnedObject) {
 
         NSAssert([NSThread isMainThread],@"Somehow being called on a secondary thread");
@@ -507,13 +509,14 @@
             
             self.currentProgram = programObj;
             if ( touch ) {
-                [[NSNotificationCenter defaultCenter] postNotificationName:@"program_has_changed"
+                [[NSNotificationCenter defaultCenter] postNotificationName:@"program-has-changed"
                                                                     object:nil
                                                                   userInfo:nil];
             }
             completed(programObj);
+            
         } else {
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"program_has_changed"
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"program-has-changed"
                                                                 object:nil
                                                               userInfo:nil];
             
@@ -710,39 +713,19 @@
 
     if ( [[AudioManager shared] currentAudioMode] == AudioModeOnDemand ) return;
     
-    NSDate *ct = [[AudioManager shared].audioPlayer.currentItem currentDate];
-    if ( ct ) {
-        NSDateComponents *comps = [[NSCalendar currentCalendar] components:NSCalendarUnitMinute|NSCalendarUnitSecond
-                                                                  fromDate:ct];
-        if ( [comps minute] == 6 || [comps minute] % kProgramPollingPressure == 0 || force ) {
-            
-            if ( [comps minute] == self.prevCheckedMinute ) return;
-            self.prevCheckedMinute = [comps minute];
-            
-            if ( [self updaterArmed] ) {
-                return;
-            } else {
-                
-                self.prevCheckedMinute = [comps minute];
-                NSLog(@"Checking program : %@ (%ld)",[NSDate stringFromDate:ct
-                                                                 withFormat:@"hh:mm a"],(long)[ct timeIntervalSince1970]);
-                [self processTimer:nil];
-                
-            }
-            
-        } else {
-            [self setUpdaterArmed:NO];
-        }
-        
-    } else {
-        if ( force ) {
-            if ( [self updaterArmed] ) {
-                return;
-            } else {
-                [self processTimer:nil];
-            }
-        } else {
-            [self setUpdaterArmed:NO];
+    if ( force ) {
+        [self processTimer:nil];
+        return;
+    }
+    
+    NSDate *ct = [self vNow];
+    NSTimeInterval ctInSeconds = [ct timeIntervalSince1970];
+    Program *p = self.currentProgram;
+    if ( p ) {
+        NSDate *ends = p.ends_at;
+        NSTimeInterval eaInSeconds = [ends timeIntervalSince1970];
+        if ( (ctInSeconds*1.0f) >= eaInSeconds ) {
+            [self processTimer:nil];
         }
     }
     
