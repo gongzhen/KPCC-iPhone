@@ -34,7 +34,7 @@ static const NSString *ItemStatusContext;
             singleton = [[AudioManager alloc] init];
             singleton.fadeQueue = [[NSOperationQueue alloc] init];
             singleton.status = StreamStatusStopped;
-            singleton.savedVolumeFromMute = -1.0;
+            singleton.savedVolumeFromMute = -1.0f;
             singleton.currentAudioMode = AudioModeNeutral;
             singleton.localBufferSample = [NSMutableDictionary new];
             singleton.frameCount = 1;
@@ -821,8 +821,8 @@ static const NSString *ItemStatusContext;
     
     if (!self.audioPlayer) {
         self.waitForSeek = YES;
-        self.audioPlayer.volume = 0.0;
-        self.savedVolume = 1.0;
+        self.audioPlayer.volume = 0.0f;
+        self.savedVolume = 1.0f;
         self.queuedSeekDate = date;
         [self buildStreamer:kHLSLiveStreamURL];
         return;
@@ -1451,7 +1451,7 @@ static const NSString *ItemStatusContext;
 }
 
 - (BOOL)isPlayingAudio {
-    return [self.audioPlayer rate] > 0.0;
+    return [self.audioPlayer rate] > 0.0f;
 }
 
 - (void)startStream {
@@ -1468,7 +1468,7 @@ static const NSString *ItemStatusContext;
     }
     
     if ( [self currentAudioMode] == AudioModeOnboarding ) {
-        self.audioPlayer.volume = 0.0;
+        self.audioPlayer.volume = 0.0f;
     }
     
     [[SessionManager shared] startAudioSession];
@@ -1479,9 +1479,9 @@ static const NSString *ItemStatusContext;
     if ( self.smooth ) {
         self.savedVolume = self.audioPlayer.volume;
         if ( self.savedVolume <= 0.0 ) {
-            self.savedVolume = 1.0;
+            self.savedVolume = 1.0f;
         }
-        self.audioPlayer.volume = 0.0;
+        self.audioPlayer.volume = 0.0f;
     }
     
     if ( self.currentAudioMode == AudioModeOnDemand ) {
@@ -1573,7 +1573,7 @@ static const NSString *ItemStatusContext;
         if ( self.savedVolumeFromMute >= 0.0000f ) {
             self.savedVolume = self.savedVolumeFromMute;
         }
-        self.savedVolumeFromMute = -1.0;
+        self.savedVolumeFromMute = -1.0f;
     }
     [self threadedAdjustWithValue:increment completion:completion];
 }
@@ -1585,7 +1585,7 @@ static const NSString *ItemStatusContext;
     BOOL basecase = NO;
     BOOL increasing = NO;
     if ( increment < 0.0000f ) {
-        basecase = self.audioPlayer.volume <= 0.0;
+        basecase = self.audioPlayer.volume <= 0.0f;
     } else {
         basecase = self.audioPlayer.volume >= self.savedVolume;
         increasing = YES;
@@ -1614,13 +1614,13 @@ static const NSString *ItemStatusContext;
 
 - (void)muteAudio {
     self.savedVolumeFromMute = self.audioPlayer.volume;
-    if ( self.savedVolumeFromMute <= 0.0 ) self.savedVolumeFromMute = 1.0;
-    self.audioPlayer.volume = 0.0;
+    if ( self.savedVolumeFromMute <= 0.0 ) self.savedVolumeFromMute = 1.0f;
+    self.audioPlayer.volume = 0.0f;
 }
 
 - (void)unmuteAudio {
     self.audioPlayer.volume = self.savedVolumeFromMute;
-    self.savedVolumeFromMute = -1.0;
+    self.savedVolumeFromMute = -1.0f;
 }
 
 - (BOOL)isStreamPlaying {

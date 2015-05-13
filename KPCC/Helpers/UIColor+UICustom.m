@@ -19,7 +19,7 @@
 
 - (UIColor*)intensify {
     const CGFloat *cdata = CGColorGetComponents(self.CGColor);
-    CGFloat max = 0.0;
+    CGFloat max = 0.0f;
     NSInteger index = 0;
     for ( unsigned i = 0; i < 3; i++ ) {
         CGFloat val = cdata[i];

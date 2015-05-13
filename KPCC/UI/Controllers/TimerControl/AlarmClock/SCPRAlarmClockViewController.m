@@ -29,7 +29,7 @@
     
     self.view.backgroundColor = [UIColor clearColor];
     self.scrubberControl.scrubbingDelegate = self;
-    self.spinner.alpha = 0.0;
+    self.spinner.alpha = 0.0f;
 
     
     // Do any additional setup after loading the view from its nib.
@@ -47,7 +47,7 @@
         self.scheduleButton.alpha = 0.45;
         self.scheduleButton.enabled = NO;
     } else {
-        self.scheduleButton.alpha = 1.0;
+        self.scheduleButton.alpha = 1.0f;
         self.scheduleButton.enabled = YES;
     }*/
 
@@ -130,7 +130,7 @@
         action = @selector(scheduleAlarm);
         scrubberAlpha = 1.0f;
         textColor = [UIColor whiteColor];
-        topPush = 64.0;
+        topPush = 64.0f;
         wakeAlpha = 0.0f;
         iconName = @"icon-clock.png";
         self.relativeNow = [NSDate date];
@@ -174,8 +174,8 @@
 }
 - (void)scheduleAlarm {
     [UIView animateWithDuration:0.22 animations:^{
-        self.scheduleButton.alpha = 0.0;
-        self.spinner.alpha = 1.0;
+        self.scheduleButton.alpha = 0.0f;
+        self.spinner.alpha = 1.0f;
         [self.spinner startAnimating];
     } completion:^(BOOL finished) {
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.75 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
@@ -201,8 +201,8 @@
     
     [UIView animateWithDuration:0.22 animations:^{
 
-        self.scheduleButton.alpha = 0.0;
-        self.spinner.alpha = 1.0;
+        self.scheduleButton.alpha = 0.0f;
+        self.spinner.alpha = 1.0f;
         [self.spinner startAnimating];
     } completion:^(BOOL finished) {
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.75 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{

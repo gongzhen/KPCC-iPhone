@@ -89,12 +89,12 @@
                                                      mw.frame.size.height);
     [del.onboardingController prepare];
     self.onboardingCtrl = del.onboardingController;
-    self.onboardingCtrl.view.alpha = 0.0;
-    self.onboardingCtrl.lensVC.view.layer.opacity = 0.0;
+    self.onboardingCtrl.view.alpha = 0.0f;
+    self.onboardingCtrl.lensVC.view.layer.opacity = 0.0f;
     self.onboardingCtrl.orangeStripView.backgroundColor = [[UIColor kpccOrangeColor] translucify:0.6];
     [self.onboardingCtrl.orangeStripView removeFromSuperview];
     
-    self.onboardingCtrl.textCalloutBalloonCtrl.view.alpha = 0.0;
+    self.onboardingCtrl.textCalloutBalloonCtrl.view.alpha = 0.0f;
     self.onboardingCtrl.navbarMask = [[UIView alloc] initWithFrame:CGRectMake(0.0,0.0,[[UIScreen mainScreen] bounds].size.width,4.0)];
     self.onboardingCtrl.navbarMask.backgroundColor = [UIColor blackColor];
     nav.navigationBar.layer.mask = [self.onboardingCtrl.navbarMask layer];
@@ -115,7 +115,7 @@
     [self.lisaPlayer prepareToPlay];
     [self.musicPlayer prepareToPlay];
     
-    //self.lisaPlayer.volume = 1.0;
+    //self.lisaPlayer.volume = 1.0f;
     //self.musicPlayer.volume = 0.2;
     
 }
@@ -125,7 +125,7 @@
     [[AudioManager shared] setCurrentAudioMode:AudioModeOnboarding];
     
     self.masterCtrl = masterCtrl;
-    self.onboardingCtrl.view.alpha = 1.0;
+    self.onboardingCtrl.view.alpha = 1.0f;
     [self.masterCtrl primeOnboarding];
     
     self.onboardingCtrl.interactionButton.frame = [self.masterCtrl.view convertRect:self.masterCtrl.initialControlsView.frame
@@ -149,7 +149,7 @@
     
     
     [UIView animateWithDuration:0.25 animations:^{
-        self.onboardingCtrl.brandingView.alpha = 0.0;
+        self.onboardingCtrl.brandingView.alpha = 0.0f;
         [self.masterCtrl.blurView setNeedsDisplay];
         self.onboardingCtrl.navbarMask.frame = CGRectMake(self.onboardingCtrl.navbarMask.frame.origin.x,
                                                           0.0,
@@ -171,7 +171,7 @@
     
     
     [UIView animateWithDuration:0.66 animations:^{
-        self.masterCtrl.blurView.alpha = 0.0;
+        self.masterCtrl.blurView.alpha = 0.0f;
     } completion:^(BOOL finished) {
         
         [[UIApplication sharedApplication] setStatusBarHidden:NO
@@ -240,9 +240,9 @@
 }
 
 - (void)presentLensOverRewindButton {
-    self.onboardingCtrl.interactionButton.alpha = 0.0;
+    self.onboardingCtrl.interactionButton.alpha = 0.0f;
     [UIView animateWithDuration:0.15 animations:^{
-        self.masterCtrl.liveRewindAltButton.alpha = 1.0;
+        self.masterCtrl.liveRewindAltButton.alpha = 1.0f;
     } completion:^(BOOL finished) {
         CGPoint origin = self.masterCtrl.liveRewindAltButton.frame.origin;
         [self.onboardingCtrl revealLensWithOrigin:[self.masterCtrl.liveStreamView convertPoint:CGPointMake(origin.x+5.0, origin.y+3.0)
@@ -265,7 +265,7 @@
 
 - (void)restoreInteractionButton {
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.25 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        self.onboardingCtrl.interactionButton.alpha = 1.0;
+        self.onboardingCtrl.interactionButton.alpha = 1.0f;
     });
 }
 
@@ -394,7 +394,7 @@
     [self.onboardingCtrl collapseNotificationsPrompt];
     [UIView animateWithDuration:0.5 animations:^{
         [self.masterCtrl.darkBgView.layer setOpacity:0.0];
-        self.masterCtrl.playerControlsView.alpha = 1.0;
+        self.masterCtrl.playerControlsView.alpha = 1.0f;
         [self.masterCtrl.liveStreamView setAlpha:1.0];
         [self.masterCtrl.liveProgressViewController.view setAlpha:1.0];
     } completion:^(BOOL finished) {
@@ -467,7 +467,7 @@
     [self fadePlayer:self.musicPlayer];
     
     [UIView animateWithDuration:0.25 animations:^{
-        self.masterCtrl.liveProgressViewController.view.alpha = 0.0;
+        self.masterCtrl.liveProgressViewController.view.alpha = 0.0f;
         [self showMenuButton];
     } completion:^(BOOL finished) {
         [self.masterCtrl onboarding_fin];
@@ -497,13 +497,13 @@
 - (void)hideMenuButton {
     SCPRAppDelegate *del = [Utils del];
     SCPRNavigationController *nav = [del masterNavigationController];
-    nav.menuButton.alpha = 0.0;
+    nav.menuButton.alpha = 0.0f;
 }
 
 - (void)showMenuButton {
     SCPRAppDelegate *del = [Utils del];
     SCPRNavigationController *nav = [del masterNavigationController];
-    nav.menuButton.alpha = 1.0;
+    nav.menuButton.alpha = 1.0f;
 }
 
 @end

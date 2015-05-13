@@ -48,7 +48,7 @@
     self.blurView.tintColor = [UIColor clearColor];
     self.blurView.blurRadius = 20.f;
     self.blurView.dynamic = NO;
-    self.blurView.alpha = 0.0;
+    self.blurView.alpha = 0.0f;
     self.programBgImage.contentMode = UIViewContentModeCenter;
     self.curtainView.backgroundColor = [UIColor clearColor];
 
@@ -113,7 +113,7 @@
                                                                                     
                                                                                     [SCPRSpinnerViewController finishSpinning];
                                                                                     [UIView animateWithDuration:0.25 animations:^{
-                                                                                        self.curtainView.alpha = 0.0;
+                                                                                        self.curtainView.alpha = 0.0f;
                                                                                     } completion:^(BOOL finished) {
                                                                                         [self.curtainView removeFromSuperview];
                                                                                     }];

@@ -31,7 +31,7 @@
 static NSString *kRewindingText = @"REWINDING...";
 static NSString *kForwardingText = @"GOING LIVE...";
 static NSString *kBufferingText = @"BUFFERING";
-static CGFloat kScrubbingThreeFiveSlip = 16.0;
+static CGFloat kScrubbingThreeFiveSlip = 16.0f;
 static NSInteger kCancelSleepTimerAlertTag = 44839;
 
 @interface SCPRMasterViewController () <AudioManagerDelegate, UINavigationControllerDelegate, UIViewControllerTransitioningDelegate, SCPRPreRollControllerDelegate, UIScrollViewDelegate>
@@ -182,15 +182,15 @@ setForOnDemandUI;
     self.hiddenVector = [NSMutableArray new];
     
     self.view.backgroundColor = [UIColor blackColor];
-    self.horizDividerLine.layer.opacity = 0.0;
-    self.queueBlurView.layer.opacity = 0.0;
-    self.scrubbingUIView.alpha = 0.0;
+    self.horizDividerLine.layer.opacity = 0.0f;
+    self.queueBlurView.layer.opacity = 0.0f;
+    self.scrubbingUIView.alpha = 0.0f;
     
     self.darkBgView.hidden = NO;
     self.darkBgView.backgroundColor = [[UIColor virtualBlackColor] translucify:0.7];
-    self.darkBgView.layer.opacity = 0.0;
-    self.queueBlurView.alpha = 1.0;
-    self.darkBgView.alpha = 1.0;
+    self.darkBgView.layer.opacity = 0.0f;
+    self.queueBlurView.alpha = 1.0f;
+    self.darkBgView.alpha = 1.0f;
     self.onDemandMainDividerView.alpha = 0.4f;
     
     self.deployedProgramTitleConstant = [Utils isThreePointFive] ? 143.0f : 200.0f;
@@ -292,7 +292,7 @@ setForOnDemandUI;
     
     self.jogShuttle = [[SCPRJogShuttleViewController alloc] init];
     self.jogShuttle.view = self.rewindView;
-    self.jogShuttle.view.alpha = 0.0;
+    self.jogShuttle.view.alpha = 0.0f;
     [self.jogShuttle prepare];
     
     // Views for audio queue
@@ -314,9 +314,9 @@ setForOnDemandUI;
     [self.queueBlurView setTintColor:[UIColor clearColor]];
     [self.queueDarkBgView setAlpha:0.0];
     
-    self.view.alpha = 0.0;
+    self.view.alpha = 0.0f;
     [self.letsGoLabel proMediumFontize];
-    self.letsGoLabel.alpha = 0.0;
+    self.letsGoLabel.alpha = 0.0f;
     
     if ( ![[UXmanager shared] userHasSeenOnboarding] ) {
         [[UXmanager shared] loadOnboarding];
@@ -568,10 +568,10 @@ setForOnDemandUI;
             self.liveRewindBottomYConstraint.constant = [self.originalFrames[@"liveRewind"] floatValue];
             self.programTitleYConstraint.constant = [self.originalFrames[@"programTitle"] floatValue];
             [self.liveProgressViewController hide];
-            self.horizDividerLine.layer.opacity = 0.0;
-            self.initialControlsView.layer.opacity = 1.0;
-            self.initialPlayButton.layer.opacity = 1.0;
-            self.initialPlayButton.alpha = 1.0;
+            self.horizDividerLine.layer.opacity = 0.0f;
+            self.initialControlsView.layer.opacity = 1.0f;
+            self.initialPlayButton.layer.opacity = 1.0f;
+            self.initialPlayButton.alpha = 1.0f;
         } completion:^(BOOL finished) {
             
             [self.preRollViewController.view removeFromSuperview];
@@ -624,7 +624,7 @@ setForOnDemandUI;
 
 - (void)hideSleepTimer {
     [UIView animateWithDuration:0.25 animations:^{
-        self.sleepTimerContainerView.alpha = 0.0;
+        self.sleepTimerContainerView.alpha = 0.0f;
     }];
 }
 
@@ -679,31 +679,31 @@ setForOnDemandUI;
     self.automationMode = YES;
     self.programImageView.image = [UIImage imageNamed:@"onboarding-tile.jpg"];
     
-    self.blurView.layer.opacity = 1.0;
+    self.blurView.layer.opacity = 1.0f;
     
     CGFloat yOrigin = self.programImageView.frame.origin.y;
     NSLog(@"yOrigin : %1.1f",yOrigin);
-    self.imageTopConstraint.constant = -36.0;
+    self.imageTopConstraint.constant = -36.0f;
     
     nav.navigationBarHidden = NO;
     
-    self.initialControlsView.layer.opacity = 0.0;
-    self.liveStreamView.alpha = 0.0;
-    self.liveDescriptionLabel.alpha = 0.0;
-    self.pulldownMenu.alpha = 0.0;
+    self.initialControlsView.layer.opacity = 0.0f;
+    self.liveStreamView.alpha = 0.0f;
+    self.liveDescriptionLabel.alpha = 0.0f;
+    self.pulldownMenu.alpha = 0.0f;
     
     self.programTitleLabel.font = [UIFont systemFontOfSize:30.0];
     [self.programTitleLabel proLightFontize];
-    self.liveProgressViewController.view.alpha = 0.0;
+    self.liveProgressViewController.view.alpha = 0.0f;
     
     [[SessionManager shared] fetchOnboardingProgramWithSegment:1 completed:^(id returnedObject) {
         [self.blurView setNeedsDisplay];
         self.programTitleLabel.text = @"";
         [SCPRCloakViewController uncloak];
         [UIView animateWithDuration:0.33 animations:^{
-            self.view.alpha = 1.0;
+            self.view.alpha = 1.0f;
             [self.blurView.layer setOpacity:1.0];
-            self.darkBgView.layer.opacity = 0.0;
+            self.darkBgView.layer.opacity = 0.0f;
             [[UXmanager shared] hideMenuButton];
         } completion:^(BOOL finished) {
             [[UXmanager shared] fadeInBranding];
@@ -713,7 +713,7 @@ setForOnDemandUI;
 
 - (void)onboarding_revealPlayerControls {
     [UIView animateWithDuration:0.2 animations:^{
-        self.letsGoLabel.alpha = 1.0;
+        self.letsGoLabel.alpha = 1.0f;
     }];
     
     POPBasicAnimation *scaleAnimation = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerScaleXY];
@@ -740,8 +740,8 @@ setForOnDemandUI;
     [self.liveProgressViewController show];
     
     [UIView animateWithDuration:0.33 animations:^{
-        self.liveProgressViewController.view.alpha = 1.0;
-        self.liveStreamView.alpha = 1.0;
+        self.liveProgressViewController.view.alpha = 1.0f;
+        self.liveStreamView.alpha = 1.0f;
     } completion:^(BOOL finished) {
         [self.programTitleLabel fadeText:@"Welcome to KPCC"];
     }];
@@ -768,10 +768,10 @@ setForOnDemandUI;
     self.initialPlay = YES;
     
     [UIView animateWithDuration:0.33 animations:^{
-        self.liveDescriptionLabel.alpha = 1.0;
+        self.liveDescriptionLabel.alpha = 1.0f;
         [[UXmanager shared] showMenuButton];
         [self.darkBgView.layer setOpacity:0.0];
-        self.onDemandPlayerView.alpha = 0.0;
+        self.onDemandPlayerView.alpha = 0.0f;
     }];
     
     [[UXmanager shared].settings setUserHasViewedOnboarding:YES];
@@ -787,14 +787,14 @@ setForOnDemandUI;
         [del.onboardingController ondemandMode];
         [del.window bringSubviewToFront:del.onboardingController.view];
         [UIView animateWithDuration:0.25 animations:^{
-            del.onboardingController.view.alpha = 1.0;
+            del.onboardingController.view.alpha = 1.0f;
         }];
     } else if ( ![UXmanager shared].settings.userHasViewedScrubbingOnboarding ) {
         SCPRAppDelegate *del = [Utils del];
         [del.onboardingController scrubbingMode];
         [del.window bringSubviewToFront:del.onboardingController.view];
         [UIView animateWithDuration:0.25 animations:^{
-            del.onboardingController.view.alpha = 1.0;
+            del.onboardingController.view.alpha = 1.0f;
         }];
     }
 }
@@ -823,7 +823,7 @@ setForOnDemandUI;
 
     [[SessionManager shared] fetchCurrentProgram:^(id returnedObject) {
         [UIView animateWithDuration:0.15 animations:^{
-            self.liveRewindAltButton.alpha = 0.0;
+            self.liveRewindAltButton.alpha = 0.0f;
         } completion:^(BOOL finished) {
             if (self.preRollViewController.tritonAd) {
                 [self cloakForPreRoll:YES];
@@ -1224,9 +1224,9 @@ setForOnDemandUI;
     }
     
     [UIView animateWithDuration:0.25 animations:^{
-        self.liveRewindAltButton.alpha = 0.0;
+        self.liveRewindAltButton.alpha = 0.0f;
         if ( [[AudioManager shared] currentAudioMode] != AudioModeOnboarding ) {
-            self.queueBlurView.alpha = 1.0;
+            self.queueBlurView.alpha = 1.0f;
         }
     }];
     
@@ -1306,7 +1306,9 @@ setForOnDemandUI;
     self.scrubbingUI.liveProgressNeedleReadingLabel = self.liveProgressNeedleReadingLabel;
     self.scrubbingUI.liveProgressNeedleView = self.liveProgressNeedleView;
     self.scrubbingUI.flagAnchor = self.flagAnchor;
-    
+    self.scrubbingUI.currentProgressNeedleView = self.currentProgressNeedleView;
+    self.scrubbingUI.currentProgressReadingLabel = self.currentProgressNeedleReadingLabel;
+   
     if ( [Utils isThreePointFive] ) {
         self.topGapScrubbingAnchor.constant = 54.0f;
     }
@@ -1339,19 +1341,19 @@ setForOnDemandUI;
     lpgr.minimumPressDuration = 0.25;
     [self.scrubbingTriggerView addGestureRecognizer:lpgr];
     
-    CGFloat adjustment = [Utils isThreePointFive] ? 90.0 : 0.0;
+    CGFloat adjustment = [Utils isThreePointFive] ? 90.0 : 0.0f;
     self.scrubbingTriggerView.frame = CGRectMake(0.0, self.progressView.frame.origin.y-self.scrubbingTriggerView.frame.size.height+20.0-adjustment,
                                                  self.scrubbingTriggerView.frame.size.width,
                                                  self.scrubbingTriggerView.frame.size.height);
     
     [self.view addSubview:self.scrubbingTriggerView];
     
-    self.back30VerticalAnchor.constant = [Utils isThreePointFive] ? 28.0 : 40.0;
-    self.fwd30VerticalAnchor.constant = [Utils isThreePointFive] ? 28.0 : 40.0;
+    self.back30VerticalAnchor.constant = [Utils isThreePointFive] ? 28.0 : 40.0f;
+    self.fwd30VerticalAnchor.constant = [Utils isThreePointFive] ? 28.0 : 40.0f;
     self.scrubbingUI.parentControlView = self;
     self.scrubbingTriggerView.alpha = 0.0f;
     
-    sUI.view.alpha = 0.0;
+    sUI.view.alpha = 0.0f;
 
     [self.scrubbingUI prerender];
     
@@ -1389,7 +1391,7 @@ setForOnDemandUI;
         }
         
         [self.scrubbingUI scrubberWillAppear];
-        self.scrubbingUI.view.alpha = 1.0;
+        self.scrubbingUI.view.alpha = 1.0f;
         [self.scrubbingUI.scrubberController unmask];
         
     } completion:^(BOOL finished) {
@@ -1438,13 +1440,13 @@ setForOnDemandUI;
 
     
     /*
-    self.scrubbingTriggerView.alpha = 0.0;
-    self.timeLabelOnDemand.alpha = 0.0;
-    self.progressView.alpha = 0.0;
-    self.queueBlurView.alpha = 1.0;
-    self.onDemandPlayerView.alpha = 0.0;
-    self.horizDividerLine.alpha = 0.0;
-    self.programTitleLabel.alpha = 0.0;
+    self.scrubbingTriggerView.alpha = 0.0f;
+    self.timeLabelOnDemand.alpha = 0.0f;
+    self.progressView.alpha = 0.0f;
+    self.queueBlurView.alpha = 1.0f;
+    self.onDemandPlayerView.alpha = 0.0f;
+    self.horizDividerLine.alpha = 0.0f;
+    self.programTitleLabel.alpha = 0.0f;
     self.queueDarkBgView.alpha = 0.45;
     */
     
@@ -1456,23 +1458,23 @@ setForOnDemandUI;
 - (void)decloakForScrubber {
     if ( [[AudioManager shared] currentAudioMode] == AudioModeOnDemand ) {
         SCPRQueueScrollableView *cv = self.queueUIContents[self.queueCurrentPage];
-        cv.audioTitleLabel.alpha = 1.0;
+        cv.audioTitleLabel.alpha = 1.0f;
     }
     
     [self popHiddenVector];
     
     /*
-    self.scrubbingTriggerView.alpha = 1.0;
-    self.timeLabelOnDemand.alpha = 1.0;
-    self.progressView.alpha = 1.0;
-    self.onDemandPlayerView.alpha = 1.0;
+    self.scrubbingTriggerView.alpha = 1.0f;
+    self.timeLabelOnDemand.alpha = 1.0f;
+    self.progressView.alpha = 1.0f;
+    self.onDemandPlayerView.alpha = 1.0f;
     self.horizDividerLine.alpha = 0.4;
-    self.programTitleLabel.alpha = 1.0;
+    self.programTitleLabel.alpha = 1.0f;
     */
     
     [UIView animateWithDuration:0.25 animations:^{
-        self.queueBlurView.alpha = 0.0;
-        self.queueDarkBgView.alpha = 0.0;
+        self.queueBlurView.alpha = 0.0f;
+        self.queueDarkBgView.alpha = 0.0f;
     }];
     
     self.queueScrollView.userInteractionEnabled = YES;
@@ -1498,7 +1500,7 @@ setForOnDemandUI;
     
     self.scrubberCloseButton.contentMode = UIViewContentModeCenter;
     
-    self.scrubberCloseButton.alpha = 0.0;
+    self.scrubberCloseButton.alpha = 0.0f;
     
     [self.scrubberCloseButton setTranslatesAutoresizingMaskIntoConstraints:NO];
     
@@ -1515,8 +1517,8 @@ setForOnDemandUI;
                                                                    multiplier:1.0
                                                                      constant:0.0];
     
-    CGFloat btnSize = [Utils isThreePointFive] ? 32.0 : 40.0;
-    CGFloat bottomAnchorConstant = [Utils isThreePointFive] ? 8.0 : 14.0;
+    CGFloat btnSize = [Utils isThreePointFive] ? 32.0 : 40.0f;
+    CGFloat bottomAnchorConstant = [Utils isThreePointFive] ? 8.0 : 14.0f;
     
     NSArray *vConstraints = [NSLayoutConstraint constraintsWithVisualFormat:[NSString stringWithFormat:@"V:[button(%1.1f)]-%1.1f-|",btnSize,bottomAnchorConstant]
                                                                     options:0
@@ -1526,7 +1528,7 @@ setForOnDemandUI;
     [self.view addConstraints:vConstraints];
     
     [UIView animateWithDuration:0.25 animations:^{
-        self.scrubberCloseButton.alpha = 1.0;
+        self.scrubberCloseButton.alpha = 1.0f;
     }];
     
 }
@@ -1551,7 +1553,7 @@ setForOnDemandUI;
         
         [self.scrubbingUI takedown];
         SCPRQueueScrollableView *cqsv = self.queueUIContents[self.queueCurrentPage];
-        cqsv.audioTitleLabel.alpha = 1.0;
+        cqsv.audioTitleLabel.alpha = 1.0f;
         self.scrubberLoadingGate = NO;
         
     } completion:^(BOOL finished) {
@@ -1700,7 +1702,7 @@ setForOnDemandUI;
         [UIView animateWithDuration:0.1 animations:^{
             
             if ( !self.menuOpen && ![[UXmanager shared] notificationsPromptDisplaying] && !self.scrubbing )
-                self.liveDescriptionLabel.alpha = 1.0;
+                self.liveDescriptionLabel.alpha = 1.0f;
             
         } completion:^(BOOL finished) {
             if ([[AudioManager shared] isStreamPlaying] || [[AudioManager shared] isStreamBuffering]) {
@@ -1797,7 +1799,7 @@ setForOnDemandUI;
     setForOnDemandUI = NO;
     setForLiveStreamUI = YES;
     self.onDemandFailing = NO;
-    self.scrubbingUIView.alpha = 0.0;
+    self.scrubbingUIView.alpha = 0.0f;
     self.queueBlurShown = NO;
     
     self.navigationItem.title = @"KPCC Live";
@@ -1824,8 +1826,8 @@ setForOnDemandUI;
         [self.queueScrollView setHidden:YES];
     }
     
-    self.queueBlurView.alpha = 0.0;
-    self.queueDarkBgView.alpha = 0.0;
+    self.queueBlurView.alpha = 0.0f;
+    self.queueDarkBgView.alpha = 0.0f;
     
     setForLiveStreamUI = YES;
     
@@ -1855,8 +1857,8 @@ setForOnDemandUI;
     [self snapJogWheel];
     
     self.onDemandGateCount = 0;
-    self.queueBlurView.alpha = 1.0;
-    self.queueBlurView.layer.opacity = 1.0;
+    self.queueBlurView.alpha = 1.0f;
+    self.queueBlurView.layer.opacity = 1.0f;
     
     if ([self.onDemandPlayerView isHidden]) {
         [self.onDemandPlayerView setHidden:NO];
@@ -1884,11 +1886,11 @@ setForOnDemandUI;
     [[DesignManager shared] setProtectBlurredImage:YES];
     
     [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationOptionCurveLinear animations:^{
-        self.jogShuttle.view.alpha = 1.0;
-        self.timeLabelOnDemand.alpha = 1.0;
-        self.queueBlurView.layer.opacity = 1.0;
-        self.scrubbingTriggerView.alpha = 1.0;
-        self.liveProgressViewController.view.alpha = 0.0;
+        self.jogShuttle.view.alpha = 1.0f;
+        self.timeLabelOnDemand.alpha = 1.0f;
+        self.queueBlurView.layer.opacity = 1.0f;
+        self.scrubbingTriggerView.alpha = 1.0f;
+        self.liveProgressViewController.view.alpha = 0.0f;
         [self.liveProgressViewController hide];
     } completion:^(BOOL finished) {
         
@@ -1913,10 +1915,10 @@ setForOnDemandUI;
         self.navigationItem.title = @"Programs";
         [self.progressView setProgress:0.0 animated:YES];
         
-        self.progressView.alpha = 1.0;
-        self.queueScrollView.alpha = 1.0;
-        self.onDemandPlayerView.alpha = 1.0;
-        self.queueDarkBgView.alpha = 0.0;
+        self.progressView.alpha = 1.0f;
+        self.queueScrollView.alpha = 1.0f;
+        self.onDemandPlayerView.alpha = 1.0f;
+        self.queueDarkBgView.alpha = 0.0f;
         
         [self primeRemoteCommandCenter:NO];
         
@@ -1953,9 +1955,9 @@ setForOnDemandUI;
         __block SCPRMasterViewController *weakSelf = self;
         [self setDataForOnDemand:program andAudioChunk:array[index] completion:^{
             [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationOptionCurveLinear animations:^{
-                weakSelf.progressView.alpha = 0.0;
-                weakSelf.shareButton.alpha = 0.0;
-                weakSelf.liveProgressViewController.view.alpha = 0.0;
+                weakSelf.progressView.alpha = 0.0f;
+                weakSelf.shareButton.alpha = 0.0f;
+                weakSelf.liveProgressViewController.view.alpha = 0.0f;
             } completion:^(BOOL finished){
                 
                 weakSelf.queueBlurShown = YES;
@@ -2060,7 +2062,7 @@ setForOnDemandUI;
     } else {
         
         [self updateUIWithProgram:programObj];
-        self.view.alpha = 1.0;
+        self.view.alpha = 1.0f;
         
     }
     
@@ -2077,7 +2079,7 @@ setForOnDemandUI;
         }
         
         [UIView animateWithDuration:0.25 animations:^{
-            self.imageTopConstraint.constant = -64.0;
+            self.imageTopConstraint.constant = -64.0f;
             [self.view setNeedsUpdateConstraints];
             [self.view layoutIfNeeded];
         }];
@@ -2090,10 +2092,10 @@ setForOnDemandUI;
         [self setUIContents:YES];
         [self primeManualControlButton];
         
-        self.view.alpha = 1.0;
+        self.view.alpha = 1.0f;
         
         if ( !self.scrubbing ) {
-            self.scrubbingUI.view.alpha = 0.0;
+            self.scrubbingUI.view.alpha = 0.0f;
         }
         
         if ( [SCPRCloakViewController cloakInUse] ) {
@@ -2141,9 +2143,9 @@ setForOnDemandUI;
     if (animated) {
         
         [UIView animateWithDuration:0.25 animations:^{
-            self.initialControlsView.alpha = 0.0;
-            self.letsGoLabel.alpha = 0.0;
-            self.liveStreamView.alpha = 1.0;
+            self.initialControlsView.alpha = 0.0f;
+            self.letsGoLabel.alpha = 0.0f;
+            self.liveStreamView.alpha = 1.0f;
             
             CGFloat programTitleConstant = self.deployedProgramTitleConstant;
             [self.programTitleYConstraint setConstant:programTitleConstant];
@@ -2151,7 +2153,7 @@ setForOnDemandUI;
             [self.liveStreamView layoutIfNeeded];
             if ( !self.preRollViewController.tritonAd ) {
                 if ( self.initiateRewind ) {
-                    self.playPauseButton.alpha = 0.0;
+                    self.playPauseButton.alpha = 0.0f;
                 }
             }
         } completion:^(BOOL finished) {
@@ -2172,7 +2174,7 @@ setForOnDemandUI;
             
             
             // Hide or show divider depending on screen size
-            self.horizDividerLine.layer.opacity = 0.0;
+            self.horizDividerLine.layer.opacity = 0.0f;
             if ( !suppressDivider ) {
                 
                 self.horizDividerLine.layer.transform = CATransform3DMakeScale(0.025f, 1.0f, 1.0f);
@@ -2221,8 +2223,8 @@ setForOnDemandUI;
         }];
         
     } else {
-        self.initialPlayButton.alpha = 0.0;
-        self.initialControlsView.alpha = 0.0;
+        self.initialPlayButton.alpha = 0.0f;
+        self.initialControlsView.alpha = 0.0f;
         self.initialPlay = YES;
         [self.playerControlsBottomYConstraint setConstant:0];
         self.lockAnimationUI = NO;
@@ -2353,12 +2355,12 @@ setForOnDemandUI;
         self.onboardingRewindButtonShown = YES;
         self.liveRewindAltButton.userInteractionEnabled = YES;
         [UIView animateWithDuration:0.33 animations:^{
-            self.liveRewindAltButton.alpha = 1.0;
+            self.liveRewindAltButton.alpha = 1.0f;
         }];
     } else {
         self.liveRewindAltButton.userInteractionEnabled = NO;
         [UIView animateWithDuration:0.33 animations:^{
-            self.liveRewindAltButton.alpha = 0.0;
+            self.liveRewindAltButton.alpha = 0.0f;
         }];
     }
     
@@ -2388,7 +2390,7 @@ setForOnDemandUI;
     if ( [[AudioManager shared] currentAudioMode] == AudioModeOnDemand ) {
         self.onDemandPlayerView.alpha = 0.45;
         self.onDemandPlayerView.userInteractionEnabled = NO;
-        self.timeLabelOnDemand.alpha = 0.0;
+        self.timeLabelOnDemand.alpha = 0.0f;
     }
     
     if ( self.initialPlay ) {
@@ -2441,7 +2443,7 @@ setForOnDemandUI;
     self.dirtyFromFailure = YES;
     self.promptedAboutFailureAlready = NO;
     self.preRollViewController.tritonAd = nil;
-    self.initialPlayButton.alpha = 1.0;
+    self.initialPlayButton.alpha = 1.0f;
     self.initialPlayButton.userInteractionEnabled = YES;
     
     if ( self.preRollOpen ) {
@@ -2455,19 +2457,19 @@ setForOnDemandUI;
     }
     
     if ( [[AudioManager shared] currentAudioMode] == AudioModeOnDemand ) {
-        self.onDemandPlayerView.alpha = 1.0;
-        self.timeLabelOnDemand.alpha = 1.0;
+        self.onDemandPlayerView.alpha = 1.0f;
+        self.timeLabelOnDemand.alpha = 1.0f;
     }
     
     if ( !self.menuOpen ) {
         if ( self.initialPlay ) {
-            self.playerControlsView.alpha = 1.0;
-            self.programTitleLabel.alpha = 1.0;
+            self.playerControlsView.alpha = 1.0f;
+            self.programTitleLabel.alpha = 1.0f;
             [self.liveProgressViewController show];
         } else {
-            self.initialControlsView.alpha = 1.0;
-            self.playerControlsView.alpha = 1.0;
-            self.initialPlayButton.alpha = 1.0;
+            self.initialControlsView.alpha = 1.0f;
+            self.playerControlsView.alpha = 1.0f;
+            self.initialPlayButton.alpha = 1.0f;
             self.initialPlayButton.userInteractionEnabled = YES;
         }
     }
@@ -2477,9 +2479,9 @@ setForOnDemandUI;
     self.initialControlsView.userInteractionEnabled = YES;
     self.playerControlsView.userInteractionEnabled = YES;
     
-    self.liveStreamView.alpha = 1.0;
+    self.liveStreamView.alpha = 1.0f;
     self.liveStreamView.userInteractionEnabled = YES;
-    self.programTitleLabel.alpha = 1.0;
+    self.programTitleLabel.alpha = 1.0f;
     
 }
 
@@ -2523,7 +2525,7 @@ setForOnDemandUI;
     
     [self removeAllAnimations];
     
-    self.pulldownMenu.alpha = 1.0;
+    self.pulldownMenu.alpha = 1.0f;
     [self.liveProgressViewController hide];
     
     self.navigationItem.title = @"Menu";
@@ -2547,7 +2549,7 @@ setForOnDemandUI;
     blurFadeAnimation.duration = 0.3;
     
     POPBasicAnimation *darkBgFadeAnimation = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
-    darkBgFadeAnimation.toValue = @1.0;
+    darkBgFadeAnimation.toValue = @1.0f;
     darkBgFadeAnimation.duration = 0.3;
     
     POPBasicAnimation *controlsFadeAnimation = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
@@ -2572,7 +2574,7 @@ setForOnDemandUI;
     }
     
     [UIView animateWithDuration:0.33 animations:^{
-        self.liveRewindAltButton.alpha = 0.0;
+        self.liveRewindAltButton.alpha = 0.0f;
     }];
     
     POPBasicAnimation *dividerFadeAnim = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
@@ -2623,11 +2625,11 @@ setForOnDemandUI;
     fadeAnimation.duration = 0.3;
     
     POPBasicAnimation *darkBgFadeAnimation = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
-    darkBgFadeAnimation.toValue = @0.0;
+    darkBgFadeAnimation.toValue = @0.0f;
     darkBgFadeAnimation.duration = 0.3;
     
     POPBasicAnimation *controlsFadeIn = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
-    controlsFadeIn.toValue = @1.0;
+    controlsFadeIn.toValue = @1.0f;
     controlsFadeIn.duration = 0.3;
     
     POPBasicAnimation *cfi = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
@@ -2712,7 +2714,7 @@ setForOnDemandUI;
     blurFadeAnimation.duration = 0.3;
     
     POPBasicAnimation *darkBgFadeAnimation = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
-    darkBgFadeAnimation.toValue = @0.0;
+    darkBgFadeAnimation.toValue = @0.0f;
     darkBgFadeAnimation.duration = 0.3;
     
     POPBasicAnimation *controlsFadeAnimation = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
@@ -2836,11 +2838,11 @@ setForOnDemandUI;
         int newPage = scrollView.contentOffset.x / scrollView.frame.size.width;
         if (self.queueCurrentPage == newPage) {
             [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationOptionCurveLinear animations:^{
-                self.timeLabelOnDemand.alpha = 1.0;
-                self.progressView.alpha = 1.0;
-                self.queueBlurView.alpha = 0.0;
-                self.queueDarkBgView.alpha = 0.0;
-                self.shareButton.alpha = 1.0;
+                self.timeLabelOnDemand.alpha = 1.0f;
+                self.progressView.alpha = 1.0f;
+                self.queueBlurView.alpha = 0.0f;
+                self.queueDarkBgView.alpha = 0.0f;
+                self.shareButton.alpha = 1.0f;
             } completion:^(BOOL finished) {
                 self.queueBlurShown = NO;
             }];
@@ -2885,9 +2887,9 @@ setForOnDemandUI;
 #pragma mark - On demand loading transitions
 - (void)onDemandFadeDown {
     [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationOptionCurveLinear animations:^{
-        //self.timeLabelOnDemand.alpha = 0.0;
-        self.progressView.alpha = 0.0;
-        self.shareButton.alpha = 0.0;
+        //self.timeLabelOnDemand.alpha = 0.0f;
+        self.progressView.alpha = 0.0f;
+        self.shareButton.alpha = 0.0f;
     } completion:^(BOOL finished){
         
     }];
@@ -2895,8 +2897,8 @@ setForOnDemandUI;
     if (!self.queueBlurShown) {
         [self.queueBlurView setNeedsDisplay];
         [UIView animateWithDuration:0.3 delay:0. options:UIViewAnimationOptionCurveLinear animations:^{
-            self.queueBlurView.alpha = 1.0;
-            self.queueDarkBgView.alpha = 0.0;
+            self.queueBlurView.alpha = 1.0f;
+            self.queueDarkBgView.alpha = 0.0f;
         } completion:^(BOOL finished) {
             self.queueBlurShown = YES;
         }];
@@ -2910,7 +2912,7 @@ setForOnDemandUI;
     self.onDemandPanning = NO;
     
     [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationOptionCurveLinear animations:^{
-        self.timeLabelOnDemand.alpha = 1.0;
+        self.timeLabelOnDemand.alpha = 1.0f;
     } completion:nil];
     
     [[SessionManager shared] endOnDemandSessionWithReason:OnDemandFinishedReasonEpisodeSkipped];
@@ -2949,11 +2951,11 @@ setForOnDemandUI;
         [self.queueBlurView setNeedsDisplay];
         [UIView animateWithDuration:0.3 delay:0. options:UIViewAnimationOptionCurveLinear animations:^{
             
-            self.queueBlurView.alpha = 0.0;
-            self.queueDarkBgView.alpha = 0.0;
-            self.progressView.alpha = 1.0;
-            self.shareButton.alpha = 1.0;
-            self.timeLabelOnDemand.alpha = 1.0;
+            self.queueBlurView.alpha = 0.0f;
+            self.queueDarkBgView.alpha = 0.0f;
+            self.progressView.alpha = 1.0f;
+            self.shareButton.alpha = 1.0f;
+            self.timeLabelOnDemand.alpha = 1.0f;
             SCPRQueueScrollableView *cv = self.queueUIContents[self.queueCurrentPage];
             if ( self.scrubbing ) {
                 cv.audioTitleLabel.alpha = 0.6;
@@ -3098,7 +3100,7 @@ setForOnDemandUI;
                 if ( self.liveStreamView.layer.opacity < 1.0 ) {
                     [UIView animateWithDuration:0.25 animations:^{
                         NSLog(@"Opacity was affected");
-                        self.liveStreamView.layer.opacity = 1.0;
+                        self.liveStreamView.layer.opacity = 1.0f;
                     }];
                 }
             }

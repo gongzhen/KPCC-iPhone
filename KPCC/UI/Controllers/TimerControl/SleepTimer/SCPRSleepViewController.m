@@ -42,7 +42,7 @@
         self.bottomAnchor.constant = 32.0f;
     }
     
-    self.spinner.alpha = 0.0;
+    self.spinner.alpha = 0.0f;
     self.armableSeconds = 300;
     
     [self.scrubber setupWithDelegate:self];
@@ -65,8 +65,8 @@
 
 - (void)zero {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
-    self.spinner.alpha = 0.0;
-    self.startButton.alpha = 1.0;
+    self.spinner.alpha = 0.0f;
+    self.startButton.alpha = 1.0f;
 
     [self actionOfInterestWithPercentage:0.0];
     [self.startButton removeTarget:nil
@@ -83,11 +83,11 @@
                                  andText:@"Start Sleep Timer"
      iconName:@"icon-stopwatch.png"];
     
-    self.scrubbingSeatView.alpha = 1.0;
+    self.scrubbingSeatView.alpha = 1.0f;
     self.indicatorTopAnchor.constant = 38.0f;
-    self.remainingLabel.alpha = 0.0;
+    self.remainingLabel.alpha = 0.0f;
     self.indicatorLabel.attributedText = [NSDate prettyAttributedFromSeconds:300 includeSeconds:NO];
-    self.indicatorLabel.alpha = 1.0;
+    self.indicatorLabel.alpha = 1.0f;
     [self.startButton addTarget:self
                          action:@selector(armSleepTimer)
                forControlEvents:UIControlEventTouchUpInside
@@ -112,9 +112,9 @@
                                withStyle:SculptingStyleClearWithBorder
                                  andText:@"Cancel Sleep Timer"];
     
-    self.scrubbingSeatView.alpha = 0.0;
+    self.scrubbingSeatView.alpha = 0.0f;
     self.indicatorTopAnchor.constant = 13.0f;
-    self.remainingLabel.alpha = 1.0;
+    self.remainingLabel.alpha = 1.0f;
     
     [self.startButton addTarget:self
                          action:@selector(disarmSleepTimer)

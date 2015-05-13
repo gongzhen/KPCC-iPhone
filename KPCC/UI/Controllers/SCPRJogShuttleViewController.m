@@ -89,9 +89,9 @@
     circle.fillColor = [UIColor clearColor].CGColor;
     circle.strokeColor = self.strokeColor.CGColor;
     circle.lineWidth = self.strokeWidth;
-    circle.opacity = 0.0;
-    circle.strokeStart = 0.0;
-    circle.strokeEnd = 0.0;
+    circle.opacity = 0.0f;
+    circle.strokeStart = 0.0f;
+    circle.strokeEnd = 0.0f;
     return circle;
 }
 
@@ -131,8 +131,8 @@
     self.direction = SpinDirectionForward;
     self.soundPlayedBit = YES;
     self.completionBit = NO;
-    self.view.alpha = 1.0;
-    self.view.layer.opacity = 1.0;
+    self.view.alpha = 1.0f;
+    self.view.layer.opacity = 1.0f;
     
     [self animateWithSpeed:0.76
                    tension:self.tension
@@ -189,11 +189,11 @@
     
         self.circleLayer = [self generateCircleLayer];
         [self.view.layer addSublayer:self.circleLayer];
-        self.circleLayer.opacity = 1.0;
+        self.circleLayer.opacity = 1.0f;
         
         [UIView animateWithDuration:0.15 animations:^{
             self.prehiddenFrame = viewToHide.frame;
-            viewToHide.alpha = 0.0;
+            viewToHide.alpha = 0.0f;
         }];
         
     }
@@ -202,7 +202,7 @@
         [CATransaction setCompletionBlock:^{
             if ( self.completionBit ) {
                 [UIView animateWithDuration:0.15 animations:^{
-                    viewToHide.alpha = 1.0;
+                    viewToHide.alpha = 1.0f;
                 } completion:^(BOOL finished) {
                     if ( self.killBit ) {
                         self.completionBit = NO;
@@ -225,7 +225,7 @@
         }];
         
         CABasicAnimation *animation = [CABasicAnimation animationWithKeyPath:@"strokeEnd"];
-        CGFloat halfSpeed = duration / 2.0;
+        CGFloat halfSpeed = duration / 2.0f;
         animation.duration = halfSpeed;
         animation.removedOnCompletion = NO;
         
@@ -244,18 +244,18 @@
         CABasicAnimation* rotationAnimation;
         rotationAnimation = [CABasicAnimation animationWithKeyPath:@"transform.rotation.z"];
         
-        CGFloat degrees = 0.0;
-        CGFloat modifier = self.direction == SpinDirectionBackward ? -1.0 : 1.0;
+        CGFloat degrees = 0.0f;
+        CGFloat modifier = self.direction == SpinDirectionBackward ? -1.0 : 1.0f;
         if ( self.forceSingleRotation ) {
-            degrees = modifier * M_PI * 4.0;
+            degrees = modifier * M_PI * 4.0f;
         } else {
-            degrees = modifier * M_PI * 4.0;
+            degrees = modifier * M_PI * 4.0f;
         }
         
         rotationAnimation.toValue = [NSNumber numberWithFloat:degrees];
         rotationAnimation.duration = duration;
         rotationAnimation.cumulative = YES;
-        rotationAnimation.repeatCount = 1.0;
+        rotationAnimation.repeatCount = 1.0f;
         rotationAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseIn];
         rotationAnimation.removedOnCompletion = YES;
         [self.view.layer addAnimation:rotationAnimation
@@ -272,7 +272,7 @@
 #ifdef USE_REWIND_UNCOILING
     [CATransaction begin]; {
         [CATransaction setCompletionBlock:^{
-            self.circleLayer.strokeEnd = 1.0;
+            self.circleLayer.strokeEnd = 1.0f;
             if ( completion ) {
                 dispatch_async(dispatch_get_main_queue(), completion);
             }

@@ -46,7 +46,7 @@
                                     26.0,
                                     26.0);
     
-    spinner.view.alpha = 0.0;
+    spinner.view.alpha = 0.0f;
     [view addSubview:spinner.view];
     [spinner.view setNeedsLayout];
     
@@ -120,8 +120,8 @@
         
         CABasicAnimation* opacityAnimation;
         opacityAnimation = [CABasicAnimation animationWithKeyPath:@"opacity"];
-        opacityAnimation.fromValue = @0.0;
-        opacityAnimation.toValue = @1.0;
+        opacityAnimation.fromValue = @0.0f;
+        opacityAnimation.toValue = @1.0f;
         opacityAnimation.duration = 0.15;
         opacityAnimation.cumulative = YES;
         opacityAnimation.repeatCount = 1;
@@ -134,7 +134,7 @@
         
         CABasicAnimation *drawAnimation;
         drawAnimation = [CABasicAnimation animationWithKeyPath:@"strokeEnd"];
-        drawAnimation.fromValue = @0.0;
+        drawAnimation.fromValue = @0.0f;
         drawAnimation.toValue = @0.65;
         drawAnimation.cumulative = YES;
         drawAnimation.duration = 0.75;
@@ -190,10 +190,10 @@
     circle.path = self.circlePath.CGPath;
     circle.fillColor = [UIColor clearColor].CGColor;
     circle.strokeColor = self.strokeColor.CGColor;
-    circle.lineWidth = 1.0;
-    circle.opacity = 0.0;
-    circle.strokeStart = 0.0;
-    circle.strokeEnd = 0.0;
+    circle.lineWidth = 1.0f;
+    circle.opacity = 0.0f;
+    circle.strokeStart = 0.0f;
+    circle.strokeEnd = 0.0f;
     
     self.circleLayer = circle;
     [self.view.layer addSublayer:self.circleLayer];

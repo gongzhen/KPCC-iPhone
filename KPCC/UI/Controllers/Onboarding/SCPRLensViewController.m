@@ -46,10 +46,10 @@
     circle.path = self.circlePath.CGPath;
     circle.fillColor = [[UIColor virtualWhiteColor] translucify:0.33].CGColor;
     circle.strokeColor = [UIColor virtualWhiteColor].CGColor;
-    circle.lineWidth = 3.0;
-    circle.opacity = 1.0;
-    circle.strokeStart = 0.0;
-    circle.strokeEnd = 1.0;
+    circle.lineWidth = 3.0f;
+    circle.opacity = 1.0f;
+    circle.strokeStart = 0.0f;
+    circle.strokeEnd = 1.0f;
     
     self.circleShape = circle;
     [self.view.layer addSublayer:self.circleShape];
@@ -67,7 +67,7 @@
         if ( !self.lock ) {
             self.lock = YES;
             [UIView animateWithDuration:0.33 animations:^{
-                self.view.alpha = 0.0;
+                self.view.alpha = 0.0f;
             } completion:^(BOOL finished) {
                 completed();
             }];

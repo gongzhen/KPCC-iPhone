@@ -43,7 +43,7 @@
     [self.radiusTerminusView removeFromSuperview];
     [self.degreesLabel removeFromSuperview];
 #else
-    self.radiusTerminusView.layer.cornerRadius = self.radiusTerminusView.frame.size.width / 2.0;
+    self.radiusTerminusView.layer.cornerRadius = self.radiusTerminusView.frame.size.width / 2.0f;
     self.radiusTerminusView.clipsToBounds = YES;
     self.radiusTerminusView.layer.borderColor = [UIColor blackColor].CGColor;
     self.radiusTerminusView.layer.borderWidth = 1.0f;
@@ -62,7 +62,7 @@
     CGFloat width = self.viewAsTouchableScrubberView.frame.size.width;
     NSLog(@"Scrubber Thinks the Width is %1.1f",width);
     CGMutablePathRef currentLinePath = CGPathCreateMutable();
-    CGFloat lineWidth = 0.0;
+    CGFloat lineWidth = 0.0f;
     if ( !circular ) {
         lineWidth = self.view.frame.size.height*2.0f;
         CGPoint lPts[2];
@@ -100,9 +100,9 @@
         self.containerBarLine = [CAShapeLayer layer];
         self.containerBarLine.path = seatLinePath;
         self.containerBarLine.strokeColor = self.containerTintColor.CGColor;
-        self.containerBarLine.strokeStart = 0.0;
-        self.containerBarLine.strokeEnd = 1.0;
-        self.containerBarLine.opacity = 1.0;
+        self.containerBarLine.strokeStart = 0.0f;
+        self.containerBarLine.strokeEnd = 1.0f;
+        self.containerBarLine.opacity = 1.0f;
         self.containerBarLine.fillColor = [UIColor clearColor].CGColor;
         self.containerBarLine.lineWidth = lineWidth;
         self.view.backgroundColor = [UIColor clearColor];
@@ -113,9 +113,9 @@
     self.currentBarLine = [CAShapeLayer layer];
     self.currentBarLine.path = currentLinePath;
     self.currentBarLine.strokeColor = self.currentTintColor.CGColor;
-    self.currentBarLine.strokeStart = 0.0;
-    self.currentBarLine.strokeEnd = 0.0;
-    self.currentBarLine.opacity = 1.0;
+    self.currentBarLine.strokeStart = 0.0f;
+    self.currentBarLine.strokeEnd = 0.0f;
+    self.currentBarLine.opacity = 1.0f;
     self.currentBarLine.fillColor = [UIColor clearColor].CGColor;
     self.currentBarLine.lineWidth = lineWidth;
     

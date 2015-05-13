@@ -70,7 +70,7 @@ static DesignManager *singleton = nil;
             self.displayingStockPhoto = NO;
             dispatch_async(dispatch_get_main_queue(), ^{
                 imageView.image = image;
-                imageView.alpha = 1.0;
+                imageView.alpha = 1.0f;
                 CATransition *transition = [CATransition animation];
                 transition.duration = kFadeDuration;
                 transition.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
@@ -95,7 +95,7 @@ static DesignManager *singleton = nil;
     
     self.displayingStockPhoto = YES;
     [imageView setImage:[UIImage imageNamed:@"program_tile_generic.jpg"]];
-    imageView.alpha = 1.0;
+    imageView.alpha = 1.0f;
     CATransition *transition = [CATransition animation];
     transition.duration = kFadeDuration;
     transition.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
@@ -299,7 +299,7 @@ static DesignManager *singleton = nil;
         {
             button.backgroundColor = [UIColor clearColor];
             button.layer.borderColor = [[UIColor virtualWhiteColor] translucify:0.46f].CGColor;
-            button.layer.borderWidth = 1.0;
+            button.layer.borderWidth = 1.0f;
             [button setTitleColor:[UIColor whiteColor]
                          forState:UIControlStateNormal];
             [button setTitleColor:[[UIColor virtualWhiteColor] translucify:0.75]

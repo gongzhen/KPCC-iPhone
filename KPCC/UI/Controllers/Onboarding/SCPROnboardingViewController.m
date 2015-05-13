@@ -27,7 +27,7 @@
                                                  name:@"panic"
                                                object:nil];
     
-    self.fakeScrubberView.alpha = 0.0;
+    self.fakeScrubberView.alpha = 0.0f;
     
     // Do any additional setup after loading the view from its nib.
 }
@@ -45,13 +45,13 @@
 - (void)prepare {
     [self.lensVC prepare];
     
-    self.lensVC.view.layer.opacity = 0.0;
-    self.kpccLogoView.alpha = 0.0;
-    self.dividerView.alpha = 0.0;
-    self.welcomeLabel.alpha = 0.0;
-    self.brandingView.alpha = 1.0;
-    self.notificationsView.alpha = 0.0;
-    self.orangeStripView.alpha = 0.0;
+    self.lensVC.view.layer.opacity = 0.0f;
+    self.kpccLogoView.alpha = 0.0f;
+    self.dividerView.alpha = 0.0f;
+    self.welcomeLabel.alpha = 0.0f;
+    self.brandingView.alpha = 1.0f;
+    self.notificationsView.alpha = 0.0f;
+    self.orangeStripView.alpha = 0.0f;
     
     
 #ifdef SKIPPABLE_ONBOARDING
@@ -99,7 +99,7 @@
 
 - (void)revealLensWithOrigin:(CGPoint)origin {
     
-    CGFloat modifier = [Utils isIOS8] ? 0.0 : 20.0;
+    CGFloat modifier = [Utils isIOS8] ? 0.0 : 20.0f;
     self.lensTopConstraint.constant = origin.y+modifier;
     self.lenstLeftConstraint.constant = origin.x+modifier;
     
@@ -109,7 +109,7 @@
     scaleAnimation.springBounciness = 1.0f;
     scaleAnimation.springSpeed = .5f;
 
-    self.lensVC.view.layer.opacity = 1.0;
+    self.lensVC.view.layer.opacity = 1.0f;
     [self.lensVC.view.layer pop_addAnimation:scaleAnimation forKey:@"popToVisible"];
     
 }
@@ -130,7 +130,7 @@
     POPBasicAnimation *scaleAnimation = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerScaleXY];
     scaleAnimation.fromValue  = [NSValue valueWithCGSize:CGSizeMake(0.025f, 1.0f)];
     scaleAnimation.toValue  = [NSValue valueWithCGSize:CGSizeMake(1.0f, 1.0f)];
-    scaleAnimation.duration = 1.0;
+    scaleAnimation.duration = 1.0f;
     [self.dividerView.layer pop_addAnimation:scaleAnimation forKey:@"scaleAnimation"];
     
     [UIView animateWithDuration:0.33f animations:^{
@@ -158,7 +158,7 @@
 
 - (void)revealNotificationsPrompt {
     
-    self.interactionButton.alpha = 0.0;
+    self.interactionButton.alpha = 0.0f;
     
     POPSpringAnimation *scaleAnimation = [POPSpringAnimation animationWithPropertyNamed:kPOPLayerScaleXY];
     scaleAnimation.fromValue  = [NSValue valueWithCGSize:CGSizeMake(0.0f, 0.0f)];
@@ -173,13 +173,13 @@
     [self.noToNotificationsButton.layer pop_addAnimation:scaleAnimation forKey:@"iconScale"];
     
     [UIView animateWithDuration:0.33 animations:^{
-        self.notificationsView.alpha = 1.0;
+        self.notificationsView.alpha = 1.0f;
     }];
 }
 
 - (void)collapseNotificationsPrompt {
     
-    self.interactionButton.alpha = 1.0;
+    self.interactionButton.alpha = 1.0f;
     
     POPSpringAnimation *scaleAnimation = [POPSpringAnimation animationWithPropertyNamed:kPOPLayerScaleXY];
     scaleAnimation.fromValue  = [NSValue valueWithCGSize:CGSizeMake(1.0f, 1.0f)];
@@ -194,14 +194,14 @@
     [self.noToNotificationsButton.layer pop_addAnimation:scaleAnimation forKey:@"iconScale"];
     
     [UIView animateWithDuration:0.33 animations:^{
-        self.notificationsView.alpha = 0.0;
+        self.notificationsView.alpha = 0.0f;
     }];
 }
 
 - (void)showCalloutWithText:(NSString *)text pointerPosition:(CGFloat)pointer /*ignore position for now*/ position:(CGPoint)position {
-    self.textCalloutBalloonCtrl.view.alpha = 0.0;
+    self.textCalloutBalloonCtrl.view.alpha = 0.0f;
     
-    CGFloat magicNumber = [Utils isThreePointFive] ? 20.0 : 70.0;
+    CGFloat magicNumber = [Utils isThreePointFive] ? 20.0 : 70.0f;
     [self.calloutAnchor setConstant:magicNumber];
     
     
@@ -212,13 +212,13 @@
     self.textCalloutBalloonCtrl.bodyTextLabel.text = text;
     
     [UIView animateWithDuration:0.4 animations:^{
-        self.textCalloutBalloonCtrl.view.alpha = 1.0;
+        self.textCalloutBalloonCtrl.view.alpha = 1.0f;
     }];
 }
 
 - (void)hideCallout {
     [UIView animateWithDuration:0.4 animations:^{
-        self.textCalloutBalloonCtrl.view.alpha = 0.0;
+        self.textCalloutBalloonCtrl.view.alpha = 0.0f;
     } completion:^(BOOL finished) {
         [self.textCalloutBalloonCtrl.view removeFromSuperview];
     }];
@@ -233,12 +233,12 @@
 }
 
 - (void)ondemandMode {
-    self.view.alpha = 0.0;
-    self.onDemandContainerView.alpha = 1.0;
-    self.notificationsView.alpha = 0.0;
-    self.brandingView.alpha = 0.0;
-    self.textCalloutBalloonCtrl.view.alpha = 0.0;
-    self.lensVC.view.alpha = 0.0;
+    self.view.alpha = 0.0f;
+    self.onDemandContainerView.alpha = 1.0f;
+    self.notificationsView.alpha = 0.0f;
+    self.brandingView.alpha = 0.0f;
+    self.textCalloutBalloonCtrl.view.alpha = 0.0f;
+    self.lensVC.view.alpha = 0.0f;
     self.view.backgroundColor = [[UIColor virtualBlackColor] translucify:0.75];
     
     if ( [[UXmanager shared] userHasSeenScrubbingOnboarding] ) {
@@ -281,7 +281,7 @@
     
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.25 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         [UIView animateWithDuration:0.25 animations:^{
-            self.view.alpha = 1.0;
+            self.view.alpha = 1.0f;
         }];
     });
 }
@@ -296,25 +296,25 @@
 - (void)scrubbingMode {
     
     if ( !self.dontFade ) {
-        self.view.alpha = 0.0;
+        self.view.alpha = 0.0f;
     }
     
     [UIView animateWithDuration:0.25 animations:^{
-        self.onDemandContainerView.alpha = 0.0;
+        self.onDemandContainerView.alpha = 0.0f;
     } completion:^(BOOL finished) {
         
-        self.scrubbingContainerView.alpha = 0.0;
+        self.scrubbingContainerView.alpha = 0.0f;
         [self.view addSubview:self.scrubbingContainerView];
         
         self.scrubbingContainerView.translatesAutoresizingMaskIntoConstraints = NO;
         
         
-        self.fakeScrubberView.alpha = 1.0;
+        self.fakeScrubberView.alpha = 1.0f;
         self.fakeScrubberView.backgroundColor = [UIColor kpccOrangeColor];
-        self.notificationsView.alpha = 0.0;
-        self.brandingView.alpha = 0.0;
-        self.textCalloutBalloonCtrl.view.alpha = 0.0;
-        self.lensVC.view.alpha = 0.0;
+        self.notificationsView.alpha = 0.0f;
+        self.brandingView.alpha = 0.0f;
+        self.textCalloutBalloonCtrl.view.alpha = 0.0f;
+        self.lensVC.view.alpha = 0.0f;
         self.view.backgroundColor = [[UIColor virtualBlackColor] translucify:0.88];
         
         self.scrubbingSwiper = [[UISwipeGestureRecognizer alloc] initWithTarget:self
@@ -339,14 +339,14 @@
         BOOL fadeUpScrubbingView = NO;
         if ( !self.view.superview ) {
             
-            self.view.alpha = 0.0;
+            self.view.alpha = 0.0f;
             SCPRAppDelegate *del = [Utils del];
             self.view.frame = CGRectMake(0.0,0.0,del.window.frame.size.width,
                                          del.window.frame.size.height);
             [del.window addSubview:self.view];
-            self.scrubbingContainerView.alpha = 1.0;
+            self.scrubbingContainerView.alpha = 1.0f;
         } else {
-            self.scrubbingContainerView.alpha = 0.0;
+            self.scrubbingContainerView.alpha = 0.0f;
             fadeUpScrubbingView = YES;
         }
         
@@ -360,7 +360,7 @@
                                                                   multiplier:1.0
                                                                     constant:0.0];
         
-        CGFloat push = [Utils isThreePointFive] ? 54.0 : 97.0;
+        CGFloat push = [Utils isThreePointFive] ? 54.0 : 97.0f;
         NSLayoutConstraint *yCenter = [NSLayoutConstraint constraintWithItem:self.scrubbingContainerView
                                                                    attribute:NSLayoutAttributeCenterY
                                                                    relatedBy:NSLayoutRelationEqual
@@ -386,9 +386,9 @@
         
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.25 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             [UIView animateWithDuration:0.25 animations:^{
-                self.view.alpha = 1.0;
+                self.view.alpha = 1.0f;
                 if ( fadeUpScrubbingView ) {
-                    self.scrubbingContainerView.alpha = 1.0;
+                    self.scrubbingContainerView.alpha = 1.0f;
                 }
             }];
         });
@@ -399,8 +399,8 @@
 
 - (void)dismissOnDemand {
     [UIView animateWithDuration:0.25 animations:^{
-        self.onDemandContainerView.alpha = 0.0;
-        self.view.alpha = 0.0;
+        self.onDemandContainerView.alpha = 0.0f;
+        self.view.alpha = 0.0f;
     } completion:^(BOOL finished) {
         [UXmanager shared].settings.userHasViewedOnDemandOnboarding = YES;
         [UXmanager shared].settings.userHasViewedScrubbingOnboarding = YES;

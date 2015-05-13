@@ -39,8 +39,8 @@
 
 
 - (void)prepareForReuse {
-    self.iconImageView.alpha = 0.0;
-    self.gav.view.alpha = 0.0;
+    self.iconImageView.alpha = 0.0f;
+    self.gav.view.alpha = 0.0f;
 }
 
 - (void)awakeFromNib {

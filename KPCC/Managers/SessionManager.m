@@ -792,7 +792,6 @@
 
 - (BOOL)sessionIsExpired {
     
-    
     if ( [[AudioManager shared] currentAudioMode] == AudioModeOnDemand ) return NO;
     if ( [[AudioManager shared] status] == StreamStatusPaused ||
             [[AudioManager shared] status] == StreamStatusStopped ) {
@@ -816,6 +815,7 @@
     }
 
     return NO;
+    
 }
 
 - (BOOL)sessionIsInRecess {
@@ -873,8 +873,6 @@
 
 - (void)processNotification:(UILocalNotification*)programUpdate {
     
-    if ( [self ignoreProgramUpdating] ) return;
-    
     if ( SEQ([programUpdate alertBody],kUpdateProgramKey) ) {
         [self fetchCurrentProgram:^(id returnedObject) {
             
@@ -883,9 +881,7 @@
 }
 
 - (void)processTimer:(NSTimer*)timer {
-    
-    if ( [self ignoreProgramUpdating] ) return;
-    
+
     [self setUpdaterArmed:YES];
     [self fetchCurrentProgram:^(id returnedObject) {
         

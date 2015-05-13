@@ -19,7 +19,7 @@ static char *alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz012
 }
 
 + (CGFloat)degreesToRadians:(CGFloat) degrees {
-    return degrees * M_PI / 180.0;
+    return degrees * M_PI / 180.0f;
 }
 
 + (CGFloat)radiansToDegrees:(CGFloat)radians {
@@ -168,7 +168,7 @@ static char *alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz012
 }
 
 + (BOOL)isThreePointFive {
-    return [[UIScreen mainScreen] bounds].size.height < 568.0;
+    return [[UIScreen mainScreen] bounds].size.height < 568.0f;
 }
 
 +(NSString *)base64:(NSData *)input {

@@ -103,7 +103,7 @@ static NSString *kCommentsPlaceholder = @"... Add your comments here";
     [self.descriptionInputView setFont:[[DesignManager shared] proLight:self.descriptionInputView.font.pointSize]];
     
     self.splashBlurView.tintColor = [UIColor clearColor];
-    self.nativeSpinner.alpha = 0.0;
+    self.nativeSpinner.alpha = 0.0f;
     
 #ifdef DEBUG
     //self.emailTextField.text = @"bhochberg@scpr.org";
@@ -121,7 +121,7 @@ static NSString *kCommentsPlaceholder = @"... Add your comments here";
     [self.authButton setTitleColor:[UIColor whiteColor]
                           forState:UIControlStateHighlighted];
     self.authButton.layer.borderColor = [[UIColor virtualWhiteColor] translucify:0.45].CGColor;
-    self.authButton.layer.borderWidth = 1.0;
+    self.authButton.layer.borderWidth = 1.0f;
     
     self.versionLabel.textColor = [UIColor whiteColor];
     
@@ -151,8 +151,8 @@ static NSString *kCommentsPlaceholder = @"... Add your comments here";
     if ( sender == self.authButton ) {
         
         [UIView animateWithDuration:0.25 animations:^{
-            self.authButton.alpha = 0.0;
-            self.nativeSpinner.alpha = 1.0;
+            self.authButton.alpha = 0.0f;
+            self.nativeSpinner.alpha = 1.0f;
             [self.nativeSpinner startAnimating];
         } completion:^(BOOL finished) {
             [self continueSubmission];
@@ -248,8 +248,8 @@ static NSString *kCommentsPlaceholder = @"... Add your comments here";
                                                   object:nil];
     
     [UIView animateWithDuration:0.22 animations:^{
-        self.authButton.alpha = 1.0;
-        self.nativeSpinner.alpha = 0.0;
+        self.authButton.alpha = 1.0f;
+        self.nativeSpinner.alpha = 0.0f;
 
     } completion:^(BOOL finished) {
         
@@ -278,7 +278,7 @@ static NSString *kCommentsPlaceholder = @"... Add your comments here";
                                                         object:nil];
     
     [UIView animateWithDuration:0.22 animations:^{
-        self.authButton.alpha = 1.0;
+        self.authButton.alpha = 1.0f;
     } completion:^(BOOL finished) {
         
     }];
@@ -289,7 +289,7 @@ static NSString *kCommentsPlaceholder = @"... Add your comments here";
     if ( result == ValidationResultOK ) {
         [UIView animateWithDuration:0.22
                          animations:^{
-                             self.authButton.alpha = 1.0;
+                             self.authButton.alpha = 1.0f;
                              self.authButton.userInteractionEnabled = YES;
                          }];
     } else {
@@ -414,7 +414,7 @@ static NSString *kCommentsPlaceholder = @"... Add your comments here";
         return self.descriptionCell.frame.size.height;
     }
     
-    return 44.0;
+    return 44.0f;
 }
 
 - (UIView*)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
@@ -438,7 +438,7 @@ static NSString *kCommentsPlaceholder = @"... Add your comments here";
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
-    return 34.0;
+    return 34.0f;
 }
 
 #pragma mark - UITextView

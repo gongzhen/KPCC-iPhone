@@ -52,7 +52,7 @@
     [UIView animateWithDuration:0.3f animations:^{
         CGRect frame = CGRectMake(self.view.frame.origin.x, 0, self.view.frame.size.width, self.view.frame.size.height);
         self.view.frame = frame;
-        self.view.alpha = 1.0;
+        self.view.alpha = 1.0f;
     } completion:^(BOOL finished) {
         completed();
     }];

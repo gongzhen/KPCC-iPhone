@@ -31,7 +31,15 @@
 @property (nonatomic,strong) IBOutlet NSLayoutConstraint *liveStreamProgressAnchor;
 @property (nonatomic,strong) IBOutlet UIView *liveProgressNeedleView;
 @property (nonatomic,strong) IBOutlet UILabel *liveProgressNeedleReadingLabel;
+@property (nonatomic,strong) IBOutlet UIView *currentProgressNeedleView;
+@property (nonatomic,strong) IBOutlet UILabel *currentProgressReadingLabel;
 @property (nonatomic,strong) IBOutlet NSLayoutConstraint *flagAnchor;
+@property IBOutlet NSLayoutConstraint *cpFlagAnchor;
+@property IBOutlet NSLayoutConstraint *cpLeftAnchor;
+
+@property NSInteger positionBeforeScrub;
+@property NSInteger newPositionDelta;
+
 @property BOOL ignoringThresholdGate;
 
 @property CGFloat tolerance;
@@ -46,7 +54,7 @@
 - (void)setupWithProgram:(NSDictionary*)program blurredImage:(UIImage*)image parent:(id)parent;
 - (void)takedown;
 - (void)scrubberWillAppear;
-- (void)updateTimeBehindHUD;
+- (void)printCurrentDate;
 
 // Seeking
 - (void)muteUI;
@@ -60,8 +68,14 @@
 - (double)percentageThroughCurrentProgram;
 - (void)tickLive:(BOOL)animated;
 - (CMTime)convertToTimeValueFromPercentage:(double)percent;
+- (NSInteger)convertToSecondsFromPercentage:(double)percent;
+
 - (void)recalibrateAfterScrub;
 - (void)behindLiveStatus;
+
+- (void)trackScrubberUse;
+- (void)trackSeekButtonUse:(BOOL)rewind;
+- (NSString*)prettyStringForAmount:(NSInteger)amount;
 
 - (double)strokeEndForCurrentTime;
 
