@@ -34,13 +34,7 @@
     return mgr;
 }
 
-- (void)startAudioSession {
-    if ( [[AudioManager shared] currentAudioMode] == AudioModeLive ) {
-        [self startLiveSession];
-    } else if ( [[AudioManager shared] currentAudioMode] == AudioModeOnDemand ) {
-        [self startOnDemandSession];
-    }
-}
+
 
 - (NSString*)prettyStringForPauseExplanation:(PauseExplanation)explanation {
     switch (explanation) {
@@ -130,6 +124,14 @@
 
 - (NSInteger)medianDrift {
     return floor((self.minDrift + self.peakDrift)/2.0);
+}
+
+- (void)startAudioSession {
+    if ( [[AudioManager shared] currentAudioMode] == AudioModeLive ) {
+        [self startLiveSession];
+    } else if ( [[AudioManager shared] currentAudioMode] == AudioModeOnDemand ) {
+        [self startOnDemandSession];
+    }
 }
 
 - (NSString*)startLiveSession {

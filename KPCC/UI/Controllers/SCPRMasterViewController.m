@@ -1039,12 +1039,7 @@ setForOnDemandUI;
     if ( hard && ![[SessionManager shared] sessionIsInBackground] ) {
         [[AudioManager shared] playLiveStream];
     } else {
-        if ( [[SessionManager shared] userLeavingForClickthrough] ) {
-            [[AudioManager shared] playAudio];
-        } else {
-            [[AudioManager shared] playAudio];
-            [[SessionManager shared] startLiveSession];
-        }
+        [[AudioManager shared] playAudio];
     }
 }
 
