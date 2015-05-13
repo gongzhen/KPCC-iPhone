@@ -1507,6 +1507,8 @@ static const NSString *ItemStatusContext;
                     self.beginNormally = NO;
                     [self.audioPlayer play];
                 }
+            } else {
+                [self.audioPlayer play];
             }
         }
     } else {
