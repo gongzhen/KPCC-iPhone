@@ -32,6 +32,8 @@
 - (void)setup {
     [self.view layoutIfNeeded];
     
+    self.maxPercentage = MAXFLOAT;
+    
     if ( [Utils isThreePointFive] ) {
         self.globalTopAnchor.constant = 178.0f;
         self.bottomAnchor.constant = 12.0f;

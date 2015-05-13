@@ -72,6 +72,7 @@ static NSInteger kProgramPollingPressure = 5;
 @property PauseExplanation lastKnownPauseExplanation;
 @property NSInteger peakDrift;
 @property NSInteger minDrift;
+@property NSInteger curDrift;
 @property (nonatomic, strong) Program *currentProgram;
 
 - (void)fetchCurrentProgram:(CompletionBlockWithValue)completed;
@@ -102,6 +103,7 @@ static NSInteger kProgramPollingPressure = 5;
 
 - (NSTimeInterval)secondsBehindLive;
 - (NSTimeInterval)virtualSecondsBehindLive;
+- (NSInteger)medianDrift;
 
 - (void)processNotification:(UILocalNotification*)programUpdate;
 @property (NS_NONATOMIC_IOSONLY) BOOL ignoreProgramUpdating;

@@ -114,24 +114,10 @@
         
         if ( [[AudioManager shared] status] != StreamStatusStopped ) {
 
-#ifdef HIDE_SCRUBBER_LIVE_LABELS
-            self.timeNumericLabel.alpha = 0.0f;
             self.timeBehindLiveLabel.alpha = 0.0f;
-#else
             self.timeNumericLabel.alpha = 1.0f;
-            self.timeBehindLiveLabel.alpha = 1.0f;
-#endif
-            NSInteger seconds = [[SessionManager shared] secondsBehindLive];
-            NSString *readable = @"LIVE";
-            if ( seconds >= [[SessionManager shared] peakDrift] ) {
-                readable = [[NSDate scientificStringFromSeconds:seconds] lowercaseString];
-#ifdef HIDE_SCRUBBER_LIVE_LABELS
-                self.timeNumericLabel.alpha = 1.0f;
-                self.timeBehindLiveLabel.alpha = 1.0f;
-#endif
-            }
             
-            self.timeNumericLabel.text = readable;
+            [self behindLiveStatus];
             
         } else {
             self.timeNumericLabel.alpha = 0.0f;
@@ -204,6 +190,7 @@
     CMTime ct = [[AudioManager shared].audioPlayer.currentItem currentTime];
     ct.value -= (30.0*ct.timescale);
     
+    self.ignoringThresholdGate = YES;
     
     [[AudioManager shared] invalidateTimeObserver];
     [[AudioManager shared].audioPlayer.currentItem seekToTime:ct completionHandler:^(BOOL finished) {
@@ -464,24 +451,13 @@
     self.maxPercentage = [self livePercentage];
     self.maxPercentage = fmin(self.maxPercentage, 1.0f);
     
-    BOOL siLive = NO;
-
-    CGFloat sbl = [[SessionManager shared] secondsBehindLive];
-    if ( sbl > [[SessionManager shared] peakDrift] ) {
-        [self.timeNumericLabel setText:[NSDate scientificStringFromSeconds:[[SessionManager shared] secondsBehindLive]]];
-    } else {
-        siLive = YES;
-        [self.timeNumericLabel setText:@"LIVE"];
-    }
-    
     CGFloat endPoint = self.scrubberController.view.frame.size.width * self.maxPercentage;
 
-    
     [UIView animateWithDuration:0.25 animations:^{
         self.liveStreamProgressAnchor.constant = endPoint;
         
         if ( self.maxPercentage >= 0.85f ) {
-            self.flagAnchor.constant = -1.0f*self.liveProgressNeedleReadingLabel.frame.size.width;
+            self.flagAnchor.constant = self.liveProgressNeedleReadingLabel.frame.size.width;
         } else {
             self.flagAnchor.constant = 0.0f;
         }
@@ -494,17 +470,9 @@
             self.liveProgressNeedleView.alpha = 1.0f;
         }
         
-        [self.view layoutIfNeeded];
+        [self behindLiveStatus];
         
-#ifdef HIDE_SCRUBBER_LIVE_LABELS
-        if ( siLive ) {
-            self.timeBehindLiveLabel.alpha = 0.0f;
-            self.timeNumericLabel.alpha = 0.0f;
-        } else {
-            self.timeBehindLiveLabel.alpha = 1.0f;
-            self.timeNumericLabel.alpha = 1.0f;
-        }
-#endif
+        [self.view layoutIfNeeded];
     }];
 }
 
@@ -568,9 +536,25 @@
         
         [[SessionManager shared] fetchCurrentProgram:^(id returnedObject) {
             
-            
-            
         }];
+    }
+}
+
+- (void)behindLiveStatus {
+    
+    CGFloat sbl = [[SessionManager shared] virtualSecondsBehindLive];
+    if ( self.tolerance > 20.0f && fabs(sbl - self.tolerance) < 24.0f && self.tolerance > 0.0f ) {
+        return;
+    }
+    
+    self.tolerance = sbl;
+    if ( self.tolerance > 20.0f || self.ignoringThresholdGate ) {
+        self.timeBehindLiveLabel.alpha = 1.0f;
+        [self.timeNumericLabel setText:[NSDate scientificStringFromSeconds:[[SessionManager shared] virtualSecondsBehindLive]]];
+    } else {
+        self.ignoringThresholdGate = NO;
+        self.timeBehindLiveLabel.alpha = 0.0f;
+        [self.timeNumericLabel setText:@"LIVE"];
     }
 }
 

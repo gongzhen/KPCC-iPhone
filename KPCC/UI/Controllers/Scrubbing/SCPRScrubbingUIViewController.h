@@ -32,6 +32,9 @@
 @property (nonatomic,strong) IBOutlet UIView *liveProgressNeedleView;
 @property (nonatomic,strong) IBOutlet UILabel *liveProgressNeedleReadingLabel;
 @property (nonatomic,strong) IBOutlet NSLayoutConstraint *flagAnchor;
+@property BOOL ignoringThresholdGate;
+
+@property CGFloat tolerance;
 
 @property NSTimer *seekLatencyTimer;
 
@@ -58,6 +61,7 @@
 - (void)tickLive:(BOOL)animated;
 - (CMTime)convertToTimeValueFromPercentage:(double)percent;
 - (void)recalibrateAfterScrub;
+- (void)behindLiveStatus;
 
 - (double)strokeEndForCurrentTime;
 

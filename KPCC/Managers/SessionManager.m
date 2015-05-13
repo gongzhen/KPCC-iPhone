@@ -116,7 +116,20 @@
 }
 
 - (NSTimeInterval)virtualSecondsBehindLive {
-    return [self secondsBehindLive];
+    /*
+    NSDate *cd = [AudioManager shared].audioPlayer.currentItem.currentDate;
+    NSDate *now = [NSDate date];
+    NSTimeInterval mt = [now timeIntervalSince1970];
+    NSTimeInterval ct = [cd timeIntervalSince1970];*/
+    CMTimeRange e = [[AudioManager shared].audioPlayer.currentItem.seekableTimeRanges[0] CMTimeRangeValue];
+    NSInteger mt = CMTimeGetSeconds(CMTimeRangeGetEnd(e));
+    NSInteger ct = CMTimeGetSeconds([AudioManager shared].audioPlayer.currentItem.currentTime);
+    
+    return (mt - ct) - (self.curDrift - self.minDrift);
+}
+
+- (NSInteger)medianDrift {
+    return floor((self.minDrift + self.peakDrift)/2.0);
 }
 
 - (NSString*)startLiveSession {

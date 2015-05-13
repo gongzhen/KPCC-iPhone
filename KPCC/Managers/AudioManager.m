@@ -537,6 +537,9 @@ static const NSString *ItemStatusContext;
         } else {
             [[SessionManager shared] setMinDrift:drift];
         }
+        
+        [[SessionManager shared] setCurDrift:drift];
+        
     }
     
     AVPlayer *audioPlayer = self.audioPlayer;

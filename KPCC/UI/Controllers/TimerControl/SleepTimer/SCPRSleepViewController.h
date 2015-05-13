@@ -28,6 +28,7 @@
 @property (nonatomic, strong) IBOutlet NSLayoutConstraint *globalTopAnchor;
 
 @property NSInteger armableSeconds;
+@property CGFloat maxPercentage;
 
 - (void)setup;
 - (void)setupInactive;
