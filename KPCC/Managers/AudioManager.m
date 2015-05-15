@@ -727,6 +727,8 @@ static const NSString *ItemStatusContext;
         weakSelf.beginNormally = NO;
         weakSelf.streamWarning = NO;
         
+
+        
         NSArray *seekRange = audioPlayer.currentItem.seekableTimeRanges;
         if (seekRange && [seekRange count] > 0) {
             CMTimeRange range = [seekRange[0] CMTimeRangeValue];
@@ -751,6 +753,11 @@ static const NSString *ItemStatusContext;
             
             weakSelf.minSeekableDate = [NSDate dateWithTimeInterval:( -1 * (CMTimeGetSeconds(time) - CMTimeGetSeconds(range.start))) sinceDate:weakSelf.currentDate];
             weakSelf.maxSeekableDate = [NSDate dateWithTimeInterval:(CMTimeGetSeconds(CMTimeRangeGetEnd(range)) - CMTimeGetSeconds(time)) sinceDate:weakSelf.currentDate];
+            if ( [[SessionManager shared] localLiveTime] == 0.0f ) {
+                [[SessionManager shared] setLocalLiveTime:[weakSelf.maxSeekableDate timeIntervalSince1970]];
+            } else {
+                [[SessionManager shared] setLocalLiveTime:[[SessionManager shared] localLiveTime]+0.1f];
+            }
             
             if ( weakSelf.frameCount % 10 == 0 ) {
                 
@@ -793,6 +800,9 @@ static const NSString *ItemStatusContext;
 
 - (void)invalidateTimeObserver {
     if ( self.timeObserver ) {
+        
+        [[SessionManager shared] setLocalLiveTime:0.0f];
+        
         [self.audioPlayer removeTimeObserver:self.timeObserver];
         self.timeObserver = nil;
         self.localBufferSample = nil;

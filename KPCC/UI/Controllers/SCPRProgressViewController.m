@@ -74,7 +74,7 @@
     self.liveBarLine.strokeEnd = 0.0f;
     self.liveBarLine.opacity = 1.0f;
     self.liveBarLine.fillColor = self.liveTintColor.CGColor;
-    self.liveBarLine.lineWidth = 6.0f;
+    self.liveBarLine.lineWidth = self.view.frame.size.height*2.0f;
     
     CGPoint lPts[2];
     lPts[0] = CGPointMake(0.0, 0.0);
@@ -87,7 +87,7 @@
     self.currentBarLine.strokeEnd = 0.0f;
     self.currentBarLine.opacity = 1.0f;
     self.currentBarLine.fillColor = self.currentTintColor.CGColor;
-    self.currentBarLine.lineWidth = 6.0f;
+    self.currentBarLine.lineWidth = self.view.frame.size.height*2.0f;
     
     [self.liveProgressView.layer addSublayer:self.liveBarLine];
     [self.currentProgressView.layer addSublayer:self.currentBarLine];
@@ -284,9 +284,9 @@
     NSTimeInterval live = [[NSDate date] timeIntervalSince1970];
 #endif
 
-    if ( [[SessionManager shared] secondsBehindLive] <= [[SessionManager shared] peakDrift] ) {
+    /*if ( [[SessionManager shared] secondsBehindLive] <= [[SessionManager shared] peakDrift] ) {
         live -= [[SessionManager shared] secondsBehindLive];
-    }
+    }*/
     
     if ( [[AudioManager shared] currentAudioMode] == AudioModeOnboarding ) {
         live = CMTimeGetSeconds([AudioManager shared].audioPlayer.currentItem.currentTime);

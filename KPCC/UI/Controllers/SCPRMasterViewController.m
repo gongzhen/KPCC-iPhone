@@ -1204,7 +1204,7 @@ setForOnDemandUI;
                     if ( self.dirtyFromRewind ) {
                         [[AudioManager shared] specialSeekToDate:cProgram.soft_starts_at];
                     } else {
-                        [[AudioManager shared] seekToDate:cProgram.soft_starts_at forward:NO failover:NO];
+                        [[AudioManager shared] seekToDate:[cProgram.soft_starts_at dateByAddingTimeInterval:30.0f] forward:NO failover:NO];
                     }
                 }
                 break;
@@ -1615,7 +1615,7 @@ setForOnDemandUI;
         return;
     }
     
-    if ( ti > [[SessionManager shared] peakDrift] ) {
+    if ( ti > kToleratedIncreaseInDrift ) {
         [self.liveDescriptionLabel setText:[NSString stringWithFormat:@"%@ BEHIND LIVE", [NSDate prettyTextFromSeconds:ti]]];
         self.previousRewindThreshold = [[AudioManager shared].audioPlayer.currentItem.currentDate timeIntervalSince1970];
     } else {

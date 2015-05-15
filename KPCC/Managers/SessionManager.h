@@ -26,6 +26,7 @@ typedef NS_ENUM(NSUInteger, PauseExplanation) {
 
 static NSInteger kAllowableDriftCeiling = 180;
 static NSInteger kToleratedIncreaseInDrift = 20;
+static CGFloat kVirtualBehindLiveTolerance = 10.0f;
 
 #ifndef PRODUCTION
 static NSInteger kProgramPollingPressure = 5;
@@ -53,6 +54,7 @@ static NSInteger kProgramPollingPressure = 5;
 @property NSTimer *sleepTimer;
 
 @property NSInteger prevCheckedMinute;
+@property NSTimeInterval localLiveTime;
 
 @property int64_t liveStreamSessionBegan;
 @property int64_t liveStreamSessionEnded;

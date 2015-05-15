@@ -12,8 +12,9 @@
 #import "SCPRJogShuttleViewController.h"
 #import "Program.h"
 #import "SessionManager.h"
+#import "AnalyticsManager.h"
 
-static CGFloat kVirtualBehindLiveTolerance = 10.0f;
+
 
 @interface SCPRScrubbingUIViewController ()
 
@@ -45,9 +46,23 @@ static CGFloat kVirtualBehindLiveTolerance = 10.0f;
 }
 
 - (void)primeForAudioMode {
+
+    
+#ifndef USE_FLAGS
+    [self.liveProgressNeedleReadingLabel removeFromSuperview];
+    [self.liveProgressNeedleView removeFromSuperview];
+    [self.currentProgressNeedleView removeFromSuperview];
+    [self.currentProgressReadingLabel removeFromSuperview];
     
     
-    self.sampledNow = [[[SessionManager shared] vLive] timeIntervalSince1970] - [[SessionManager shared] curDrift];
+    self.liveProgressNeedleView = nil;
+    self.liveProgressNeedleReadingLabel = nil;
+    self.currentProgressReadingLabel = nil;
+    self.currentProgressNeedleView = nil;
+    
+    //[self.timeBehindLiveLabel removeFromSuperview];
+    //self.timeBehindLiveLabel = nil;
+#endif
     
     [[NSNotificationCenter defaultCenter] removeObserver:self
                                                  name:@"program-has-changed"
@@ -148,6 +163,8 @@ static CGFloat kVirtualBehindLiveTolerance = 10.0f;
         self.maxPercentage = MAXFLOAT;
         self.liveProgressNeedleReadingLabel.alpha = 0.0f;
         self.liveProgressNeedleView.alpha = 0.0f;
+        
+        [[self scrubbingIndicatorLabel] proLightFontize];
     }
 }
 
@@ -323,6 +340,7 @@ static CGFloat kVirtualBehindLiveTolerance = 10.0f;
         
         [[AudioManager shared] muteAudio];
         [(SCPRMasterViewController*)self.parentControlView beginScrubbingWaitMode];
+        
     }];
 
 }
@@ -384,6 +402,12 @@ static CGFloat kVirtualBehindLiveTolerance = 10.0f;
         direction = @"Forward";
     }
     
+    [[AnalyticsManager shared] logEvent:eventName
+                         withParameters:@{
+                                          @"method" : method,
+                                          @"amount" : [NSString stringWithFormat:@"%@ %ld",direction,(long)labs(self.newPositionDelta)]
+                                          }];
+    
     NSLog(@"%@ : method : %@, amount : %@ %ld",eventName,method,direction,(long)labs(self.newPositionDelta));
 }
 
@@ -401,12 +425,20 @@ static CGFloat kVirtualBehindLiveTolerance = 10.0f;
         
         pretty = [Utils elapsedTimeStringWithPosition:duration*percent
                                                     andDuration:duration];
+        
+        [[self scrubbingIndicatorLabel] setText:pretty];
     }
     if ( [[AudioManager shared] currentAudioMode] == AudioModeLive ) {
         
         NSDate *scrubbed = [self convertToDateFromPercentage:percent];
         pretty = [[NSDate stringFromDate:scrubbed
                              withFormat:@"h:mm:ss a"] lowercaseString];
+
+        NSAttributedString *fancyTime = [[DesignManager shared] standardTimeFormatWithString:pretty
+                                                                                  attributes:@{ @"digits" : [[DesignManager shared] proLight:32.0f],
+                                                                                                @"period" : [[DesignManager shared] proLight:18.0f] }];
+        
+        [[self scrubbingIndicatorLabel] setAttributedText:fancyTime];
         
         CGFloat where = percent * self.scrubbableView.frame.size.width;
         self.cpLeftAnchor.constant = where;
@@ -422,7 +454,7 @@ static CGFloat kVirtualBehindLiveTolerance = 10.0f;
         
     }
     
-    [[self scrubbingIndicatorLabel] setText:pretty];
+
 }
 
 - (void)actionOfInterestAfterScrub:(CGFloat)finalValue {
@@ -432,9 +464,11 @@ static CGFloat kVirtualBehindLiveTolerance = 10.0f;
     CMTime seek;
     NSDate *seekDate;
     if ( [[AudioManager shared] currentAudioMode] == AudioModeOnDemand ) {
+        
         CMTime total = [[[[AudioManager shared].audioPlayer currentItem] asset] duration];
         seek = CMTimeMake(total.value*multiplier, total.timescale);
         onDemand = YES;
+        
     } else if ( [[AudioManager shared] currentAudioMode] == AudioModeLive ) {
         
         seekDate = [self convertToDateFromPercentage:finalValue];
@@ -443,8 +477,8 @@ static CGFloat kVirtualBehindLiveTolerance = 10.0f;
     }
     
     Program *p = [[SessionManager shared] currentProgram];
-    if ( [p.starts_at timeIntervalSince1970] > [seekDate timeIntervalSince1970] ) {
-        seekDate = p.starts_at;
+    if ( [p.starts_at timeIntervalSince1970] >= [seekDate timeIntervalSince1970] ) {
+        seekDate = [p.starts_at dateByAddingTimeInterval:30.0f];
     }
     
     self.positionBeforeScrub = [[[SessionManager shared] vNow] timeIntervalSince1970];
@@ -472,15 +506,21 @@ static CGFloat kVirtualBehindLiveTolerance = 10.0f;
             NSTimeInterval actual = [[[AudioManager shared].audioPlayer.currentItem currentDate] timeIntervalSince1970];
             NSTimeInterval hoped = [self.roundSeekDate timeIntervalSince1970];
             if ( fabs(actual - hoped) >= kVirtualBehindLiveTolerance ) {
+                
                 CMTime nowTime = [[AudioManager shared].audioPlayer.currentItem currentTime];
                 CMTime attemptTime = CMTimeMake(nowTime.value+(-1.0*(actual-hoped)*nowTime.timescale), nowTime.timescale);
+                
+                NSLog(@"Not close enough, going to try again...");
                 [[AudioManager shared].audioPlayer.currentItem seekToTime:attemptTime completionHandler:^(BOOL finished) {
                     [self postSeek];
                 }];
+                
             } else {
                 [self postSeek];
             }
+            
         }];
+        
     }
 }
 
@@ -493,9 +533,6 @@ static CGFloat kVirtualBehindLiveTolerance = 10.0f;
     if ( [[AudioManager shared] currentAudioMode] == AudioModeLive ) {
         [self recalibrateAfterScrub];
     }
-    
-    /*[[self scrubbingIndicatorLabel] setText:[[NSDate stringFromDate:[[SessionManager shared] vNow]
-                                                        withFormat:@"h:mma"] lowercaseString]];*/
     
     [self printCurrentDate];
     
@@ -541,7 +578,7 @@ static CGFloat kVirtualBehindLiveTolerance = 10.0f;
                 double duration = CMTimeGetSeconds([[[[AudioManager shared].audioPlayer currentItem] asset] duration]);
                 NSString *pretty = [Utils elapsedTimeStringWithPosition:currentTime
                                                             andDuration:duration];
-                [self.scrubbingIndicatorLabel setText:pretty];
+                [[self scrubbingIndicatorLabel] setText:pretty];
             }
         } else {
             [self tickLive];
@@ -577,7 +614,7 @@ static CGFloat kVirtualBehindLiveTolerance = 10.0f;
     NSDate *startDate = p.starts_at;
     NSDate *endDate = p.ends_at;
   
-    NSTimeInterval nowTI = self.sampledNow;
+    NSTimeInterval nowTI = [[[SessionManager shared] vLive] timeIntervalSince1970];
     NSTimeInterval total = [endDate timeIntervalSince1970] - [startDate timeIntervalSince1970];
     NSTimeInterval diff = nowTI - [startDate timeIntervalSince1970];
     
@@ -607,11 +644,9 @@ static CGFloat kVirtualBehindLiveTolerance = 10.0f;
 }
 
 - (void)tickLive {
-    
-    self.sampledNow += 0.1f;
-
  
-    NSString *prettyTime = [NSDate stringFromDate:[NSDate dateWithTimeIntervalSince1970:self.sampledNow]
+    NSDate *vLive = [[SessionManager shared] vLive];
+    NSString *prettyTime = [NSDate stringFromDate:vLive
                                        withFormat:@"h:mma"];
     
     self.liveProgressNeedleReadingLabel.text = [prettyTime lowercaseString];
@@ -665,7 +700,6 @@ static CGFloat kVirtualBehindLiveTolerance = 10.0f;
 - (CMTime)convertToTimeValueFromPercentage:(double)percent {
 
     NSInteger totalTime = [self convertToSecondsFromPercentage:percent];
-    
     
     NSArray *ranges = [[AudioManager shared].audioPlayer.currentItem seekableTimeRanges];
     CMTimeRange range = [ranges[0] CMTimeRangeValue];
@@ -740,35 +774,53 @@ static CGFloat kVirtualBehindLiveTolerance = 10.0f;
     
     [UIView animateWithDuration:0.25f animations:^{
         
-        CGFloat sbl = self.sampledNow - [[[AudioManager shared].audioPlayer.currentItem currentDate] timeIntervalSince1970];
+        CGFloat sbl = [[[SessionManager shared] vLive] timeIntervalSince1970] - [[[AudioManager shared].audioPlayer.currentItem currentDate] timeIntervalSince1970];
         if ( sbl < 0.0f ) {
             sbl = 0.0f;
         }
         
+
+        
         if ( sbl > kVirtualBehindLiveTolerance || self.ignoringThresholdGate ) {
+            
+            NSLog(@"Calculated difference : %1.1f",sbl);
+            
             self.timeBehindLiveLabel.alpha = 0.0f;
-            [[self scrubbingIndicatorLabel] fadeText:[[NSDate stringFromDate:[[SessionManager shared] vNow]
-                                                                 withFormat:@"h:mm:ss a"] lowercaseString] duration:0.125];
+            /*[[self scrubbingIndicatorLabel] fadeText:[[NSDate stringFromDate:[[SessionManager shared] vNow]
+                                                                 withFormat:@"h:mm:ss a"] lowercaseString] duration:0.125];*/
+            
+            NSString *uglyString = [[NSDate stringFromDate:[[SessionManager shared] vNow] withFormat:@"h:mm:ss a"] lowercaseString];
+            NSAttributedString *fancyTime = [[DesignManager shared] standardTimeFormatWithString:uglyString
+                                                                                      attributes:@{ @"digits" : [[DesignManager shared] proLight:32.0f],
+                                                                                                    @"period" : [[DesignManager shared] proLight:18.0f] }];
+            [[self scrubbingIndicatorLabel] setAttributedText:fancyTime];
             
             // Not needed
             self.currentProgressReadingLabel.alpha = 0.0f;
             self.currentProgressNeedleView.alpha = 0.0f;
             
+            self.fw30Button.alpha = 1.0f;
+            self.fw30Button.userInteractionEnabled = YES;
+            
         } else {
+            
             self.ignoringThresholdGate = NO;
             self.timeBehindLiveLabel.alpha = 0.0f;
             self.currentProgressReadingLabel.alpha = 0.0f;
             self.currentProgressNeedleView.alpha = 0.0f;
-            [self.timeNumericLabel fadeText:@"LIVE" duration:0.225];
+            
+            self.fw30Button.alpha = 0.4f;
+            self.fw30Button.userInteractionEnabled = NO;
+            
+            [self.timeNumericLabel fadeText:@"LIVE"
+                                   duration:0.225];
+            
         }
         
         self.ignoringThresholdGate = sbl > kVirtualBehindLiveTolerance;
         
     }];
     
-
-    
-
 }
 
 #pragma mark - OnDemand

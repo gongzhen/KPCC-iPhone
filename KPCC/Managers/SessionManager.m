@@ -57,20 +57,26 @@
 
 #pragma mark - Session Mgmt
 - (NSDate*)vLive {
-    NSDate *live = [NSDate date];
+    NSDate *live = [[NSDate date] dateByAddingTimeInterval:-90.0f]; // Add in what we know is going to be slightly behind live
+    if ( self.localLiveTime > 0.0f ) {
+        live = [NSDate dateWithTimeIntervalSince1970:self.localLiveTime];
+    }
+    
     if ( [AudioManager shared].audioPlayer.currentItem ) {
         NSDate *msd = [[AudioManager shared].audioPlayer.currentItem currentDate];
         if ( msd ) {
-            if ( [msd isWithinTimeFrame:self.peakDrift ofDate:[NSDate date]] ) {
+           /* if ( [msd isWithinTimeFrame:self.peakDrift ofDate:[NSDate date]] ) {
                 if ( fabs([live timeIntervalSinceDate:msd]) > [[SessionManager shared] peakDrift] ) {
                     live = msd;
                     self.latestDriftValue = fabs([live timeIntervalSinceDate:msd]);
                 }
             } else {
                 return live;
-            }
+            } */
+            // Make this a no-op for now
+            
         } else {
-            // AVPlayer has no current date, so it's probably paused
+            // AVPlayer has no current date, so it's probably stopped
             return [[NSDate date] dateByAddingTimeInterval:60*60*24*10];
         }
     }
@@ -81,6 +87,10 @@
 - (NSDate*)vNow {
     if ( [[AudioManager shared].audioPlayer.currentItem currentDate] ) {
         return [[AudioManager shared].audioPlayer.currentItem currentDate];
+    }
+    
+    if ( self.localLiveTime > 0.0f ) {
+        return [NSDate dateWithTimeIntervalSince1970:self.localLiveTime];
     }
     
     return [NSDate date];
@@ -783,7 +793,7 @@
 #else
     NSDate *live = [NSDate date];
 #endif
-    if ( fabs([live timeIntervalSince1970] - [currentDate timeIntervalSince1970]) > [[SessionManager shared] peakDrift] ) {
+    if ( fabs([live timeIntervalSince1970] - [currentDate timeIntervalSince1970]) > [self medianDrift] ) {
         return YES;
     }
     

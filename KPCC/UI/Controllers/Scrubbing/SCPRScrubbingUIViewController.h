@@ -77,7 +77,6 @@ typedef NS_ENUM(NSInteger, ScrubbingType) {
 - (void)killLatencyTimer;
 - (void)audioWillSeek;
 - (void)primeForAudioMode;
-- (void)lock;
 - (void)postSeek;
 
 // Live
