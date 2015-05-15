@@ -521,7 +521,7 @@ static const NSString *ItemStatusContext;
         NSInteger drift = [now timeIntervalSince1970] - [msd timeIntervalSince1970];
         
 #ifdef DEBUG
-        NSLog(@"Drift : %ld",(long)drift);
+        //NSLog(@"Drift : %ld",(long)drift);
 #endif
         if ( (drift - [[SessionManager shared] peakDrift] > kToleratedIncreaseInDrift) ) {
             [[AnalyticsManager shared] logEvent:@"driftIncreasing"

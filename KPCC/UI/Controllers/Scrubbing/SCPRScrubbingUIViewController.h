@@ -13,6 +13,13 @@
 #import "AudioManager.h"
 #import "SCPRButton.h"
 
+typedef NS_ENUM(NSInteger, ScrubbingType) {
+    ScrubbingTypeUnknown = 0,
+    ScrubbingTypeScrubber,
+    ScrubbingTypeBack30,
+    ScrubbingTypeFwd30
+};
+
 @interface SCPRScrubbingUIViewController : UIViewController<AudioManagerDelegate,Scrubbable>
 
 @property (nonatomic,strong) IBOutlet UIButton *closeButton;
@@ -34,11 +41,19 @@
 @property (nonatomic,strong) IBOutlet UIView *currentProgressNeedleView;
 @property (nonatomic,strong) IBOutlet UILabel *currentProgressReadingLabel;
 @property (nonatomic,strong) IBOutlet NSLayoutConstraint *flagAnchor;
-@property IBOutlet NSLayoutConstraint *cpFlagAnchor;
-@property IBOutlet NSLayoutConstraint *cpLeftAnchor;
+@property (nonatomic,strong) IBOutlet NSLayoutConstraint *cpFlagAnchor;
+@property (nonatomic,strong) IBOutlet NSLayoutConstraint *cpLeftAnchor;
 
 @property NSInteger positionBeforeScrub;
 @property NSInteger newPositionDelta;
+@property NSInteger sampleTick;
+
+@property BOOL seeking;
+
+@property NSTimeInterval frozenNow;
+@property NSTimeInterval sampledNow;
+
+@property (nonatomic, copy) NSDate *roundSeekDate;
 
 @property BOOL ignoringThresholdGate;
 
@@ -62,19 +77,25 @@
 - (void)killLatencyTimer;
 - (void)audioWillSeek;
 - (void)primeForAudioMode;
+- (void)lock;
+- (void)postSeek;
 
 // Live
 - (double)livePercentage;
 - (double)percentageThroughCurrentProgram;
 - (void)tickLive:(BOOL)animated;
+
 - (CMTime)convertToTimeValueFromPercentage:(double)percent;
 - (NSInteger)convertToSecondsFromPercentage:(double)percent;
+- (NSDate*)convertToDateFromPercentage:(double)percent;
 
 - (void)recalibrateAfterScrub;
 - (void)behindLiveStatus;
 
 - (void)trackScrubberUse;
 - (void)trackSeekButtonUse:(BOOL)rewind;
+- (void)trackUsageWithType:(ScrubbingType)type;
+
 - (NSString*)prettyStringForAmount:(NSInteger)amount;
 
 - (double)strokeEndForCurrentTime;

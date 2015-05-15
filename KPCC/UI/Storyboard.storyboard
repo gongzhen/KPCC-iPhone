@@ -343,7 +343,7 @@
                                         </constraints>
                                     </view>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="uEE-9J-A6Q" userLabel="cpNeedleView">
-                                        <rect key="frame" x="159" y="211" width="1" height="110"/>
+                                        <rect key="frame" x="77" y="211" width="1" height="110"/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="1" id="Ob2-P8-p6s"/>
@@ -360,7 +360,7 @@
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="12:59pm" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HBu-JX-Ltd" userLabel="11:59pm">
-                                        <rect key="frame" x="160" y="188" width="61" height="21"/>
+                                        <rect key="frame" x="78" y="188" width="61" height="21"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="21" id="xjL-ig-Pu8"/>
                                         </constraints>
@@ -388,12 +388,12 @@
                                     <constraint firstAttribute="trailing" secondItem="3MS-4t-3kF" secondAttribute="trailing" constant="28" id="EqX-64-hYy"/>
                                     <constraint firstItem="u3B-hQ-8TW" firstAttribute="top" secondItem="AZf-cs-ef5" secondAttribute="bottom" constant="8" id="J1c-v7-Pjv"/>
                                     <constraint firstItem="tCd-bL-d4d" firstAttribute="bottom" secondItem="jOK-Q6-eLd" secondAttribute="bottom" id="LbB-D5-mm8"/>
+                                    <constraint firstItem="uEE-9J-A6Q" firstAttribute="leading" secondItem="tCd-bL-d4d" secondAttribute="leading" constant="72" id="N8j-V1-1IO"/>
                                     <constraint firstItem="AZf-cs-ef5" firstAttribute="top" secondItem="GPc-Sk-C7l" secondAttribute="top" constant="8" id="Pf4-ll-kwd"/>
                                     <constraint firstItem="HBu-JX-Ltd" firstAttribute="centerY" secondItem="DHg-Ou-2cW" secondAttribute="centerY" id="SY4-ZA-jP9"/>
                                     <constraint firstItem="HBu-JX-Ltd" firstAttribute="leading" secondItem="uEE-9J-A6Q" secondAttribute="trailing" id="Wg9-rj-pzy"/>
                                     <constraint firstItem="EHS-IB-VJt" firstAttribute="leading" secondItem="GPc-Sk-C7l" secondAttribute="leading" constant="10" id="YHG-3f-8y2"/>
                                     <constraint firstItem="AO7-pD-NEw" firstAttribute="leading" secondItem="GPc-Sk-C7l" secondAttribute="leading" constant="6" id="aqp-di-bI3"/>
-                                    <constraint firstItem="tCd-bL-d4d" firstAttribute="leading" secondItem="uEE-9J-A6Q" secondAttribute="leading" constant="-154" id="gh6-GP-3vk"/>
                                     <constraint firstItem="Jgq-4b-KvR" firstAttribute="top" secondItem="tCd-bL-d4d" secondAttribute="bottom" constant="3" id="kGQ-HK-bob"/>
                                     <constraint firstItem="iwP-gg-3AR" firstAttribute="bottom" secondItem="jOK-Q6-eLd" secondAttribute="bottom" id="m49-iS-OEl"/>
                                     <constraint firstItem="tCd-bL-d4d" firstAttribute="leading" secondItem="jOK-Q6-eLd" secondAttribute="leading" id="n8t-rA-eTq"/>
@@ -541,11 +541,13 @@
                         <outlet property="cancelSleepTimerButton" destination="zND-XD-IVD" id="hmr-4E-GTO"/>
                         <outlet property="clockIconImageView" destination="fox-H6-rJE" id="yun-lv-9UD"/>
                         <outlet property="cpFlagAnchor" destination="Wg9-rj-pzy" id="KC4-xh-Lgg"/>
-                        <outlet property="cpLeftAnchor" destination="gh6-GP-3vk" id="NiI-lb-zBo"/>
+                        <outlet property="cpLeftAnchor" destination="N8j-V1-1IO" id="Zga-aa-9Wm"/>
                         <outlet property="currentProgressBarView" destination="alx-1P-Yo8" id="ovX-oD-G78"/>
                         <outlet property="currentProgressNeedleReadingLabel" destination="HBu-JX-Ltd" id="DMd-Y1-1oe"/>
                         <outlet property="currentProgressNeedleView" destination="uEE-9J-A6Q" id="1cU-fv-W6s"/>
                         <outlet property="darkBgView" destination="sYL-12-Hgi" id="tPF-W9-NAM"/>
+                        <outlet property="dividerLineLeftAnchor" destination="CES-aZ-hkE" id="LlN-Eo-vYa"/>
+                        <outlet property="dividerLineRightAnchor" destination="Ibj-dJ-DDh" id="fbi-bV-2iI"/>
                         <outlet property="dividerOnDemand" destination="J5U-kb-6Je" id="5tr-af-9iL"/>
                         <outlet property="flagAnchor" destination="naJ-Cy-UVc" id="e1o-VW-mn8"/>
                         <outlet property="fwd30Button" destination="3MS-4t-3kF" id="CGt-TQ-9Ys"/>

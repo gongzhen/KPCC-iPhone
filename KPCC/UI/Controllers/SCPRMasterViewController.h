@@ -187,6 +187,8 @@
 @property IBOutlet NSLayoutConstraint *cpLeftAnchor;
 @property IBOutlet NSLayoutConstraint *topGapScrubbingAnchor;
 @property IBOutlet NSLayoutConstraint *flagAnchor;
+@property IBOutlet NSLayoutConstraint *dividerLineLeftAnchor;
+@property IBOutlet NSLayoutConstraint *dividerLineRightAnchor;
 
 @property (nonatomic, strong) NSMutableArray *hiddenVector;
 - (void)pushToHiddenVector:(UIView*)viewToHide;

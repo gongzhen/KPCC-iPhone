@@ -180,6 +180,7 @@ setForOnDemandUI;
     
     self.navigationController.interactivePopGestureRecognizer.enabled = NO;
     self.hiddenVector = [NSMutableArray new];
+    self.mainContentScroller.scrollEnabled = NO;
     
     self.view.backgroundColor = [UIColor blackColor];
     self.horizDividerLine.layer.opacity = 0.0f;
@@ -2177,6 +2178,17 @@ setForOnDemandUI;
             self.horizDividerLine.layer.opacity = 0.0f;
             if ( !suppressDivider ) {
                 
+                self.horizDividerLine.translatesAutoresizingMaskIntoConstraints = NO;
+                self.liveStreamView.translatesAutoresizingMaskIntoConstraints = NO;
+                
+                [self.liveStreamView printDimensionsWithIdentifier:@">>>>>>>>> LIVE STREAM VIEW"];
+                
+                self.dividerLineLeftAnchor.constant = 5.0f;
+                self.dividerLineRightAnchor.constant = -5.0f;
+                
+                [self.liveStreamView layoutIfNeeded];
+                NSLog(@">>>>>>>> Divider Width : %1.1f",self.horizDividerLine.frame.size.width);
+                
                 self.horizDividerLine.layer.transform = CATransform3DMakeScale(0.025f, 1.0f, 1.0f);
                 self.horizDividerLine.layer.opacity = 0.4;
                 POPSpringAnimation *scaleAnimation = [POPSpringAnimation animationWithPropertyNamed:kPOPLayerScaleXY];
@@ -2197,6 +2209,7 @@ setForOnDemandUI;
             [fadeControls setCompletionBlock:^(POPAnimation *p, BOOL c) {
                 
                 self.scrubbingTriggerView.alpha = 1.0f;
+                self.mainContentScroller.scrollEnabled = YES;
                 
                 if ( !self.preRollViewController.tritonAd ) {
                     if ( [[UXmanager shared] userHasSeenOnboarding] ) {
@@ -2822,12 +2835,25 @@ setForOnDemandUI;
         [self onDemandFadeDown];
     }
     if ( scrollView == self.mainContentScroller ) {
+        
+        self.dividerLineRightAnchor.constant = 0.0f;
+        self.dividerLineLeftAnchor.constant = 0.0f;
+        
         [UIView animateWithDuration:0.25f animations:^{
+            
+            [self.liveStreamView layoutIfNeeded];
+            
+            SCPRAppDelegate *del = (SCPRAppDelegate*)[[UIApplication sharedApplication] delegate];
+            SCPRNavigationController *nav = del.masterNavigationController;
+            
             self.queueBlurView.alpha = 1.0f;
             self.queueDarkBgView.alpha = 0.4f;
             [self pushToHiddenVector:self.playerControlsView];
             [self pushToHiddenVector:self.initialControlsView];
+            [self pushToHiddenVector:nav.menuButton];
+            
             [self commitHiddenVector];
+            
         }];
     }
 }
@@ -2872,6 +2898,10 @@ setForOnDemandUI;
                 self.queueBlurView.alpha = 0.0f;
                 self.queueDarkBgView.alpha = 0.0f;
                 self.scrubbingTriggerView.alpha = 1.0f;
+                self.dividerLineRightAnchor.constant = -5.0f;
+                self.dividerLineLeftAnchor.constant = 5.0f;
+                [self.liveStreamView layoutIfNeeded];
+                
                 [self popHiddenVector];
             } else {
                 self.scrubbingTriggerView.alpha = 0.0f;

@@ -15,6 +15,8 @@
 
 - (void)actionOfInterestWithPercentage:(CGFloat)percent;
 - (void)actionOfInterestAfterScrub:(CGFloat)finalValue;
+- (void)actionOfInterestOnScrubBegin;
+
 - (UILabel*)scrubbingIndicatorLabel;
 - (SCPRTouchableScrubberView*)scrubbableView;
 - (CGFloat)maxPercentage;

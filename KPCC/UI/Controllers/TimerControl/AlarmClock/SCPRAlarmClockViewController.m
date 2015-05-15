@@ -235,6 +235,10 @@
 
 }
 
+- (void)actionOfInterestOnScrubBegin {
+    
+}
+
 - (UILabel*)scrubbingIndicatorLabel {
     return self.scrubberMainValueLabel;
 }

@@ -247,6 +247,10 @@
     self.indicatorLabel.attributedText = [NSDate prettyAttributedFromSeconds:seconds includeSeconds:NO];
 }
 
+- (void)actionOfInterestOnScrubBegin {
+    
+}
+
 - (UILabel*)scrubbingIndicatorLabel {
     return self.indicatorLabel;
 }

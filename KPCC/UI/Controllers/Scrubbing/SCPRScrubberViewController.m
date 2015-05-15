@@ -154,8 +154,11 @@
 - (void)userTouched:(NSSet *)touches event:(UIEvent *)event {
     self.firstTouch = [(UITouch*)[touches anyObject] locationInView:self.view];
     self.previousPoint = self.firstTouch;
+    
     [self trackForPoint:self.firstTouch];
     self.panning = YES;
+    
+    [self.scrubbingDelegate actionOfInterestOnScrubBegin];
 }
 
 - (void)userPanned:(NSSet *)touches event:(UIEvent *)event {

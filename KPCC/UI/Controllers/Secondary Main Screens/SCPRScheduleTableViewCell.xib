@@ -22,6 +22,9 @@
                     </label>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tYr-R4-Rfv" userLabel="programTitleLabel">
                         <rect key="frame" x="105" y="0.0" width="51" height="64"/>
+                        <constraints>
+                            <constraint firstAttribute="width" relation="lessThanOrEqual" constant="201" id="ms7-bb-t3T"/>
+                        </constraints>
                         <fontDescription key="fontDescription" type="system" pointSize="21"/>
                         <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                         <nil key="highlightedColor"/>

@@ -57,8 +57,8 @@
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fzX-rs-QCO" userLabel="genAvSeatView">
                             <rect key="frame" x="0.0" y="0.0" width="32" height="32"/>
                             <subviews>
-                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BsQ-zf-NMH">
-                                    <rect key="frame" x="0.0" y="0.0" width="32" height="32"/>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BsQ-zf-NMH">
+                                    <rect key="frame" x="0.0" y="-2" width="32" height="32"/>
                                     <fontDescription key="fontDescription" type="system" pointSize="20"/>
                                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                     <nil key="highlightedColor"/>
@@ -66,10 +66,10 @@
                             </subviews>
                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             <constraints>
-                                <constraint firstItem="BsQ-zf-NMH" firstAttribute="top" secondItem="fzX-rs-QCO" secondAttribute="top" id="17J-VB-wYN"/>
-                                <constraint firstAttribute="trailing" secondItem="BsQ-zf-NMH" secondAttribute="trailing" id="frG-PS-Kk9"/>
-                                <constraint firstAttribute="bottom" secondItem="BsQ-zf-NMH" secondAttribute="bottom" id="hgy-nh-sFN"/>
-                                <constraint firstItem="BsQ-zf-NMH" firstAttribute="leading" secondItem="fzX-rs-QCO" secondAttribute="leading" id="uuu-re-Gfq"/>
+                                <constraint firstAttribute="centerY" secondItem="BsQ-zf-NMH" secondAttribute="centerY" constant="2" id="6ZO-a6-3Om"/>
+                                <constraint firstItem="BsQ-zf-NMH" firstAttribute="height" secondItem="fzX-rs-QCO" secondAttribute="height" id="dzw-j8-Wnu"/>
+                                <constraint firstAttribute="centerX" secondItem="BsQ-zf-NMH" secondAttribute="centerX" id="eMe-5U-qK9"/>
+                                <constraint firstItem="BsQ-zf-NMH" firstAttribute="width" secondItem="fzX-rs-QCO" secondAttribute="width" id="yEj-nw-g33"/>
                             </constraints>
                         </view>
                     </subviews>

@@ -13,7 +13,7 @@
 #import "Program.h"
 #import "SessionManager.h"
 
-static CGFloat kVirtualBehindLiveTolerance = 20.0f;
+static CGFloat kVirtualBehindLiveTolerance = 10.0f;
 
 @interface SCPRScrubbingUIViewController ()
 
@@ -25,11 +25,6 @@ static CGFloat kVirtualBehindLiveTolerance = 20.0f;
     [super viewDidLoad];
     
     self.darkeningView.backgroundColor = [[UIColor virtualBlackColor] translucify:0.35];
-    
-
-
-    
-
     
     [self primeForAudioMode];
     
@@ -51,6 +46,9 @@ static CGFloat kVirtualBehindLiveTolerance = 20.0f;
 
 - (void)primeForAudioMode {
     
+    
+    self.sampledNow = [[[SessionManager shared] vLive] timeIntervalSince1970] - [[SessionManager shared] curDrift];
+    
     [[NSNotificationCenter defaultCenter] removeObserver:self
                                                  name:@"program-has-changed"
                                                object:nil];
@@ -66,6 +64,7 @@ static CGFloat kVirtualBehindLiveTolerance = 20.0f;
     
     self.currentProgressNeedleView.alpha = 0.0f;
     self.currentProgressReadingLabel.alpha = 0.0f;
+    self.currentProgressNeedleView.translatesAutoresizingMaskIntoConstraints = NO;
     
     if ( [[AudioManager shared] currentAudioMode] == AudioModeLive ) {
         
@@ -75,7 +74,7 @@ static CGFloat kVirtualBehindLiveTolerance = 20.0f;
         self.scrubberController.liveProgressAnchor = self.liveStreamProgressAnchor;
         self.currentProgressNeedleView.alpha = 0.0f;
         self.currentProgressReadingLabel.alpha = 0.0f;
-        
+        self.timeBehindLiveLabel.text = @"YOUR LISTENING SPOT";
         Program *p = [[SessionManager shared] currentProgram];
         
         NSDate *startDate = p.starts_at;
@@ -117,7 +116,6 @@ static CGFloat kVirtualBehindLiveTolerance = 20.0f;
 
             self.timeBehindLiveLabel.alpha = 0.0f;
             self.timeNumericLabel.alpha = 1.0f;
-            
             [self behindLiveStatus];
             
         } else {
@@ -136,7 +134,8 @@ static CGFloat kVirtualBehindLiveTolerance = 20.0f;
         [self.currentProgressReadingLabel proMediumFontize];
         self.currentProgressReadingLabel.textColor = [UIColor kpccOrangeColor];
         self.currentProgressNeedleView.backgroundColor = [UIColor kpccOrangeColor];
-        
+        self.currentProgressNeedleView.alpha = 0.0f;
+        self.currentProgressReadingLabel.alpha = 0.0f;
         
     }
     if ( [[AudioManager shared] currentAudioMode] == AudioModeOnDemand ) {
@@ -179,6 +178,8 @@ static CGFloat kVirtualBehindLiveTolerance = 20.0f;
     CMTime ct = [[AudioManager shared].audioPlayer.currentItem currentTime];
     ct.value += (30.0*ct.timescale);
     
+    self.seeking = YES;
+    
     [[AudioManager shared].audioPlayer pause];
     [[AudioManager shared] invalidateTimeObserver];
     [self printCurrentDate];
@@ -194,6 +195,10 @@ static CGFloat kVirtualBehindLiveTolerance = 20.0f;
         [self printCurrentDate];
         
         [[AudioManager shared] startObservingTime];
+        
+        [self trackUsageWithType:ScrubbingTypeFwd30];
+        
+        self.seeking = NO;
         
     }];
     
@@ -205,12 +210,14 @@ static CGFloat kVirtualBehindLiveTolerance = 20.0f;
     CMTime ct = [[AudioManager shared].audioPlayer.currentItem currentTime];
     ct.value -= (30.0*ct.timescale);
     
+    self.seeking = YES;
     self.ignoringThresholdGate = YES;
     
     [[AudioManager shared].audioPlayer pause];
     [[AudioManager shared] invalidateTimeObserver];
     [self printCurrentDate];
     [[AudioManager shared].audioPlayer.currentItem seekToTime:ct completionHandler:^(BOOL finished) {
+        
         if ( [[AudioManager shared] currentAudioMode] == AudioModeOnDemand ) {
             [self onDemandSeekCompleted];
         }
@@ -218,9 +225,16 @@ static CGFloat kVirtualBehindLiveTolerance = 20.0f;
             [self recalibrateAfterScrub];
         }
         
+        [self behindLiveStatus];
+        
         [self printCurrentDate];
         [[AudioManager shared].audioPlayer play];
         [[AudioManager shared] startObservingTime];
+        
+        [self trackUsageWithType:ScrubbingTypeBack30];
+        
+        self.seeking = NO;
+        
     }];
     
 }
@@ -333,10 +347,29 @@ static CGFloat kVirtualBehindLiveTolerance = 20.0f;
     }
 }
 
+
 #pragma mark - Events
 - (void)trackScrubberUse {
+    [self trackUsageWithType:ScrubbingTypeScrubber];
+}
+
+- (void)trackUsageWithType:(ScrubbingType)type {
     NSString *eventName = @"";
-    NSString *method = @"scrubber";
+    NSString *method = @"";
+    switch (type) {
+        case ScrubbingTypeScrubber:
+            method = @"scrubber";
+            break;
+        case ScrubbingTypeBack30:
+        case ScrubbingTypeFwd30:
+            method = @"button";
+            break;
+        case ScrubbingTypeUnknown:
+        default:
+            method = @"unknown";
+            break;
+    }
+    
     if ( [[AudioManager shared] currentAudioMode] == AudioModeLive ) {
         eventName = @"liveStreamScrubbed";
     }
@@ -350,9 +383,15 @@ static CGFloat kVirtualBehindLiveTolerance = 20.0f;
     } else {
         direction = @"Forward";
     }
+    
+    NSLog(@"%@ : method : %@, amount : %@ %ld",eventName,method,direction,(long)labs(self.newPositionDelta));
 }
 
 #pragma mark - Scrubbable
+- (void)actionOfInterestOnScrubBegin {
+    self.frozenNow = self.sampledNow;
+}
+
 - (void)actionOfInterestWithPercentage:(CGFloat)percent {
     NSString *pretty = @"";
     
@@ -365,20 +404,18 @@ static CGFloat kVirtualBehindLiveTolerance = 20.0f;
     }
     if ( [[AudioManager shared] currentAudioMode] == AudioModeLive ) {
         
-        Program *p = [[SessionManager shared] currentProgram];
-        NSInteger totalSeconds = [self convertToSecondsFromPercentage:percent];
-        NSDate *cd = [[[AudioManager shared].audioPlayer.currentItem currentDate] earlierDate:p.ends_at];
-        NSDate *scrubbed = [cd dateByAddingTimeInterval:-1.0*totalSeconds];
-        pretty = [NSDate stringFromDate:scrubbed
-                             withFormat:@"h:mma"];
+        NSDate *scrubbed = [self convertToDateFromPercentage:percent];
+        pretty = [[NSDate stringFromDate:scrubbed
+                             withFormat:@"h:mm:ss a"] lowercaseString];
         
         CGFloat where = percent * self.scrubbableView.frame.size.width;
-        self.cpLeftAnchor.constant = -1.0f*where;
-        
+        self.cpLeftAnchor.constant = where;
         
         [UIView animateWithDuration:0.25f animations:^{
             [self.view updateConstraintsIfNeeded];
             [self.view layoutIfNeeded];
+            
+            // Not needed ...
             self.currentProgressReadingLabel.alpha = 0.0f;
             self.currentProgressNeedleView.alpha = 0.0f;
         }];
@@ -390,41 +427,84 @@ static CGFloat kVirtualBehindLiveTolerance = 20.0f;
 
 - (void)actionOfInterestAfterScrub:(CGFloat)finalValue {
     
+    BOOL onDemand = NO;
     double multiplier = finalValue;
     CMTime seek;
-    
+    NSDate *seekDate;
     if ( [[AudioManager shared] currentAudioMode] == AudioModeOnDemand ) {
         CMTime total = [[[[AudioManager shared].audioPlayer currentItem] asset] duration];
         seek = CMTimeMake(total.value*multiplier, total.timescale);
+        onDemand = YES;
     } else if ( [[AudioManager shared] currentAudioMode] == AudioModeLive ) {
-        seek = [self convertToTimeValueFromPercentage:multiplier];
-        NSLog(@"Live S2T : %ld",(long)CMTimeGetSeconds(seek));
+        
+        seekDate = [self convertToDateFromPercentage:finalValue];
+        self.roundSeekDate = seekDate;
+        
     }
     
-    self.positionBeforeScrub = CMTimeGetSeconds(seek);
+    Program *p = [[SessionManager shared] currentProgram];
+    if ( [p.starts_at timeIntervalSince1970] > [seekDate timeIntervalSince1970] ) {
+        seekDate = p.starts_at;
+    }
+    
+    self.positionBeforeScrub = [[[SessionManager shared] vNow] timeIntervalSince1970];
+    NSLog(@"Position before scrub : %ld", (long)self.positionBeforeScrub);
     
     [[AudioManager shared] invalidateTimeObserver];
     [[AudioManager shared] setSeekWillEffectBuffer:YES];
     [[AudioManager shared].audioPlayer pause];
+    
+    self.seeking = YES;
+    
     [self printCurrentDate];
-    [[AudioManager shared].audioPlayer.currentItem seekToTime:seek completionHandler:^(BOOL finished) {
+    
+    if ( onDemand ) {
+        [[AudioManager shared].audioPlayer.currentItem seekToTime:seek completionHandler:^(BOOL finished) {
+            [self postSeek];
+        }];
+    } else {
         
-        CMTime ct = [[AudioManager shared].audioPlayer.currentItem currentTime];
-        self.newPositionDelta = CMTimeGetSeconds(ct) - self.positionBeforeScrub;
+        NSLog(@"Going to seek by date to : %@",[NSDate stringFromDate:seekDate
+                                                           withFormat:@"h:mm:ss a"]);
         
-        [[AudioManager shared] setSeekWillEffectBuffer:NO];
-        [[AudioManager shared] startObservingTime];
-        if ( [[AudioManager shared] currentAudioMode] == AudioModeLive ) {
-            [self recalibrateAfterScrub];
-        }
-        
-        [self printCurrentDate];
-        [[AudioManager shared].audioPlayer play];
-        
-        [self trackScrubberUse];
-        
-    }];
+        [[AudioManager shared].audioPlayer.currentItem seekToDate:seekDate completionHandler:^(BOOL finished) {
+            
+            NSTimeInterval actual = [[[AudioManager shared].audioPlayer.currentItem currentDate] timeIntervalSince1970];
+            NSTimeInterval hoped = [self.roundSeekDate timeIntervalSince1970];
+            if ( fabs(actual - hoped) >= kVirtualBehindLiveTolerance ) {
+                CMTime nowTime = [[AudioManager shared].audioPlayer.currentItem currentTime];
+                CMTime attemptTime = CMTimeMake(nowTime.value+(-1.0*(actual-hoped)*nowTime.timescale), nowTime.timescale);
+                [[AudioManager shared].audioPlayer.currentItem seekToTime:attemptTime completionHandler:^(BOOL finished) {
+                    [self postSeek];
+                }];
+            } else {
+                [self postSeek];
+            }
+        }];
+    }
+}
 
+- (void)postSeek {
+    self.newPositionDelta = [[[SessionManager shared] vNow] timeIntervalSince1970] - self.positionBeforeScrub;
+    NSLog(@"Scrub Delta : %ld",(long)self.newPositionDelta);
+    
+    [[AudioManager shared] setSeekWillEffectBuffer:NO];
+    
+    if ( [[AudioManager shared] currentAudioMode] == AudioModeLive ) {
+        [self recalibrateAfterScrub];
+    }
+    
+    /*[[self scrubbingIndicatorLabel] setText:[[NSDate stringFromDate:[[SessionManager shared] vNow]
+                                                        withFormat:@"h:mma"] lowercaseString]];*/
+    
+    [self printCurrentDate];
+    
+    [[AudioManager shared].audioPlayer play];
+    [[AudioManager shared] startObservingTime];
+    
+    self.seeking = NO;
+    
+    [self trackScrubberUse];
 }
 
 - (UILabel*)scrubbingIndicatorLabel {
@@ -433,7 +513,7 @@ static CGFloat kVirtualBehindLiveTolerance = 20.0f;
         return [mvc scrubberTimeLabel];
     }
     
-    return self.currentProgressReadingLabel;
+    return self.timeNumericLabel;
 }
 
 - (SCPRTouchableScrubberView*)scrubbableView {
@@ -496,28 +576,30 @@ static CGFloat kVirtualBehindLiveTolerance = 20.0f;
     
     NSDate *startDate = p.starts_at;
     NSDate *endDate = p.ends_at;
-    NSDate *now = [[SessionManager shared] vLive];
-    NSTimeInterval nowTI = [now timeIntervalSince1970];
+  
+    NSTimeInterval nowTI = self.sampledNow;
     NSTimeInterval total = [endDate timeIntervalSince1970] - [startDate timeIntervalSince1970];
     NSTimeInterval diff = nowTI - [startDate timeIntervalSince1970];
     
-    return (double) ( diff / ( total * 1.0f ) );
+    NSString *imprecise = [NSString stringWithFormat:@"%1.4f",( diff / ( total * 1.0f ) )];
+    CGFloat impValue = [imprecise floatValue];
+    
+    return (double)impValue;
 }
 
 - (double)percentageThroughCurrentProgram {
     
-    if ( [[SessionManager shared] sessionIsBehindLive] ) {
-        NSDate *currentPlayerDate = [[SessionManager shared] vNow];
-        Program *p = [[SessionManager shared] currentProgram];
-        NSDate *endDate = p.ends_at;
-        NSDate *startDate = p.starts_at;
-        CGFloat duration = [endDate timeIntervalSince1970] - [startDate timeIntervalSince1970];
-        CGFloat chunk = [currentPlayerDate timeIntervalSince1970] - [startDate timeIntervalSince1970];
-        
-        return chunk / duration;
-    }
+    Program *p = [[SessionManager shared] currentProgram];
+    NSDate *endDate = p.ends_at;
+    NSDate *startDate = p.starts_at;
+    CGFloat duration = [endDate timeIntervalSince1970] - [startDate timeIntervalSince1970];
+    CGFloat chunk = [[[SessionManager shared] vNow] timeIntervalSince1970] - [startDate timeIntervalSince1970];
     
-    return [self livePercentage];
+    NSString *imprecise = [NSString stringWithFormat:@"%1.4f",chunk / duration];
+    CGFloat impValue = [imprecise floatValue];
+    
+    return (double) impValue;
+    
 }
 
 - (void)tickLive:(BOOL)animated {
@@ -526,13 +608,20 @@ static CGFloat kVirtualBehindLiveTolerance = 20.0f;
 
 - (void)tickLive {
     
-    NSDate *live = [[SessionManager shared] vLive];
-    NSString *prettyTime = [NSDate stringFromDate:live
+    self.sampledNow += 0.1f;
+
+ 
+    NSString *prettyTime = [NSDate stringFromDate:[NSDate dateWithTimeIntervalSince1970:self.sampledNow]
                                        withFormat:@"h:mma"];
+    
     self.liveProgressNeedleReadingLabel.text = [prettyTime lowercaseString];
     
     self.maxPercentage = [self livePercentage];
     self.maxPercentage = fmin(self.maxPercentage, 1.0f);
+    
+    CGFloat percent = [self percentageThroughCurrentProgram];
+    CGFloat where = percent * self.scrubbableView.frame.size.width;
+    self.cpLeftAnchor.constant = where;
     
     CGFloat endPoint = self.scrubberController.view.frame.size.width * self.maxPercentage;
 
@@ -553,10 +642,24 @@ static CGFloat kVirtualBehindLiveTolerance = 20.0f;
             self.liveProgressNeedleView.alpha = 1.0f;
         }
         
-        [self behindLiveStatus];
+        self.sampleTick++;
+        if ( self.sampleTick % 10 == 0 ) {
+            self.sampleTick = 0;
+            [self behindLiveStatus];
+        }
+        
         
         [self.view layoutIfNeeded];
     }];
+}
+
+- (NSDate*)convertToDateFromPercentage:(double)percent {
+    Program *p = [[SessionManager shared] currentProgram];
+    NSTimeInterval duration = [p.ends_at timeIntervalSince1970] - [p.starts_at timeIntervalSince1970];
+    CGFloat cpInSeconds = duration * percent;
+    NSDate *rough = [p.starts_at dateByAddingTimeInterval:cpInSeconds];
+    
+    return rough;
 }
 
 - (CMTime)convertToTimeValueFromPercentage:(double)percent {
@@ -634,35 +737,32 @@ static CGFloat kVirtualBehindLiveTolerance = 20.0f;
 
 - (void)behindLiveStatus {
     
+    
     [UIView animateWithDuration:0.25f animations:^{
         
-        CGFloat sbl = [[SessionManager shared] virtualSecondsBehindLive];
-        if ( self.tolerance > kVirtualBehindLiveTolerance && fabs(sbl - self.tolerance) < kVirtualBehindLiveTolerance && self.tolerance > 0.0f ) {
-            if ( sbl > kVirtualBehindLiveTolerance ) {
-                self.timeBehindLiveLabel.alpha = 1.0f;
-            } else {
-                self.ignoringThresholdGate = NO;
-            }
-            return;
+        CGFloat sbl = self.sampledNow - [[[AudioManager shared].audioPlayer.currentItem currentDate] timeIntervalSince1970];
+        if ( sbl < 0.0f ) {
+            sbl = 0.0f;
         }
         
-        self.tolerance = sbl;
-        
-        self.ignoringThresholdGate = sbl > kVirtualBehindLiveTolerance;
-        
-        if ( self.tolerance > kVirtualBehindLiveTolerance || self.ignoringThresholdGate ) {
-            self.timeBehindLiveLabel.alpha = 1.0f;
-            [self.timeNumericLabel setText:[NSDate scientificStringFromSeconds:[[SessionManager shared] virtualSecondsBehindLive]]];
+        if ( sbl > kVirtualBehindLiveTolerance || self.ignoringThresholdGate ) {
+            self.timeBehindLiveLabel.alpha = 0.0f;
+            [[self scrubbingIndicatorLabel] fadeText:[[NSDate stringFromDate:[[SessionManager shared] vNow]
+                                                                 withFormat:@"h:mm:ss a"] lowercaseString] duration:0.125];
+            
+            // Not needed
             self.currentProgressReadingLabel.alpha = 0.0f;
             self.currentProgressNeedleView.alpha = 0.0f;
+            
         } else {
             self.ignoringThresholdGate = NO;
             self.timeBehindLiveLabel.alpha = 0.0f;
             self.currentProgressReadingLabel.alpha = 0.0f;
             self.currentProgressNeedleView.alpha = 0.0f;
-            [self.timeNumericLabel setText:@"LIVE"];
+            [self.timeNumericLabel fadeText:@"LIVE" duration:0.225];
         }
         
+        self.ignoringThresholdGate = sbl > kVirtualBehindLiveTolerance;
         
     }];
     
