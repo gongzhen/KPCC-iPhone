@@ -12,13 +12,8 @@
 #import "AudioChunk.h"
 #import "AudioManager.h"
 #import "SCPRButton.h"
+#import "AnalyticsManager.h"
 
-typedef NS_ENUM(NSInteger, ScrubbingType) {
-    ScrubbingTypeUnknown = 0,
-    ScrubbingTypeScrubber,
-    ScrubbingTypeBack30,
-    ScrubbingTypeFwd30
-};
 
 @interface SCPRScrubbingUIViewController : UIViewController<AudioManagerDelegate,Scrubbable>
 
@@ -79,6 +74,7 @@ typedef NS_ENUM(NSInteger, ScrubbingType) {
 - (void)primeForAudioMode;
 - (void)postSeek;
 
+
 // Live
 - (double)livePercentage;
 - (double)percentageThroughCurrentProgram;
@@ -90,10 +86,6 @@ typedef NS_ENUM(NSInteger, ScrubbingType) {
 
 - (void)recalibrateAfterScrub;
 - (void)behindLiveStatus;
-
-- (void)trackScrubberUse;
-- (void)trackSeekButtonUse:(BOOL)rewind;
-- (void)trackUsageWithType:(ScrubbingType)type;
 
 - (NSString*)prettyStringForAmount:(NSInteger)amount;
 

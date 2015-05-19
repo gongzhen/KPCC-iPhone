@@ -179,28 +179,15 @@
     [self.scrubberController setupWithDelegate:self];
     
     
-    [self.fw30Button addTarget:self
-                        action:@selector(forward30)
-              forControlEvents:UIControlEventTouchUpInside];
-    
-    [self.rw30Button addTarget:self
-                        action:@selector(rewind30)
-              forControlEvents:UIControlEventTouchUpInside];
+
 
 }
 
 - (void)forward30 {
     
-    [[AudioManager shared] setSeekWillEffectBuffer:YES];
-    CMTime ct = [[AudioManager shared].audioPlayer.currentItem currentTime];
-    ct.value += (30.0*ct.timescale);
-    
     self.seeking = YES;
     
-    [[AudioManager shared].audioPlayer pause];
-    [[AudioManager shared] invalidateTimeObserver];
-    [self printCurrentDate];
-    [[AudioManager shared].audioPlayer.currentItem seekToTime:ct completionHandler:^(BOOL finished) {
+    [[AudioManager shared] forwardSeekThirtySecondsWithCompletion:^{
         if ( [[AudioManager shared] currentAudioMode] == AudioModeOnDemand ) {
             [self onDemandSeekCompleted];
         }
@@ -208,33 +195,18 @@
             [self recalibrateAfterScrub];
         }
         
-        [[AudioManager shared].audioPlayer play];
-        [self printCurrentDate];
-        
-        [[AudioManager shared] startObservingTime];
-        
-        [self trackUsageWithType:ScrubbingTypeFwd30];
-        
         self.seeking = NO;
-        
     }];
+
     
 }
 
 - (void)rewind30 {
     
-    [[AudioManager shared] setSeekWillEffectBuffer:YES];
-    CMTime ct = [[AudioManager shared].audioPlayer.currentItem currentTime];
-    ct.value -= (30.0*ct.timescale);
-    
     self.seeking = YES;
-    self.ignoringThresholdGate = YES;
+    [AudioManager shared].ignoreDriftTolerance = YES;
     
-    [[AudioManager shared].audioPlayer pause];
-    [[AudioManager shared] invalidateTimeObserver];
-    [self printCurrentDate];
-    [[AudioManager shared].audioPlayer.currentItem seekToTime:ct completionHandler:^(BOOL finished) {
-        
+    [[AudioManager shared] backwardSeekThirtySecondsWithCompletion:^{
         if ( [[AudioManager shared] currentAudioMode] == AudioModeOnDemand ) {
             [self onDemandSeekCompleted];
         }
@@ -244,15 +216,9 @@
         
         [self behindLiveStatus];
         
-        [self printCurrentDate];
-        [[AudioManager shared].audioPlayer play];
-        [[AudioManager shared] startObservingTime];
-        
-        [self trackUsageWithType:ScrubbingTypeBack30];
-        
         self.seeking = NO;
-        
     }];
+    
     
 }
 
@@ -366,50 +332,7 @@
 }
 
 
-#pragma mark - Events
-- (void)trackScrubberUse {
-    [self trackUsageWithType:ScrubbingTypeScrubber];
-}
 
-- (void)trackUsageWithType:(ScrubbingType)type {
-    NSString *eventName = @"";
-    NSString *method = @"";
-    switch (type) {
-        case ScrubbingTypeScrubber:
-            method = @"scrubber";
-            break;
-        case ScrubbingTypeBack30:
-        case ScrubbingTypeFwd30:
-            method = @"button";
-            break;
-        case ScrubbingTypeUnknown:
-        default:
-            method = @"unknown";
-            break;
-    }
-    
-    if ( [[AudioManager shared] currentAudioMode] == AudioModeLive ) {
-        eventName = @"liveStreamScrubbed";
-    }
-    if ( [[AudioManager shared] currentAudioMode] == AudioModeOnDemand ) {
-        eventName = @"onDemandAudioScrubbed";
-    }
-    
-    NSString *direction = @"";
-    if ( self.newPositionDelta < 0 ) {
-        direction = @"Backward";
-    } else {
-        direction = @"Forward";
-    }
-    
-    [[AnalyticsManager shared] logEvent:eventName
-                         withParameters:@{
-                                          @"method" : method,
-                                          @"amount" : [NSString stringWithFormat:@"%@ %ld",direction,(long)labs(self.newPositionDelta)]
-                                          }];
-    
-    NSLog(@"%@ : method : %@, amount : %@ %ld",eventName,method,direction,(long)labs(self.newPositionDelta));
-}
 
 #pragma mark - Scrubbable
 - (void)actionOfInterestOnScrubBegin {
@@ -476,9 +399,11 @@
         
     }
     
-    Program *p = [[SessionManager shared] currentProgram];
-    if ( [p.starts_at timeIntervalSince1970] >= [seekDate timeIntervalSince1970] ) {
-        seekDate = [p.starts_at dateByAddingTimeInterval:30.0f];
+    if ( seekDate ) {
+        Program *p = [[SessionManager shared] currentProgram];
+        if ( [p.starts_at timeIntervalSince1970] >= [seekDate timeIntervalSince1970] ) {
+            seekDate = [p.starts_at dateByAddingTimeInterval:30.0f];
+        }
     }
     
     self.positionBeforeScrub = [[[SessionManager shared] vNow] timeIntervalSince1970];
@@ -497,6 +422,14 @@
             [self postSeek];
         }];
     } else {
+        
+        if ( !seekDate ) {
+            // a nil seekDate implies seeking to live
+            [[AudioManager shared] forwardSeekLiveWithCompletion:^{
+                [self postSeek];
+            }];
+            return;
+        }
         
         NSLog(@"Going to seek by date to : %@",[NSDate stringFromDate:seekDate
                                                            withFormat:@"h:mm:ss a"]);
@@ -525,8 +458,8 @@
 }
 
 - (void)postSeek {
-    self.newPositionDelta = [[[SessionManager shared] vNow] timeIntervalSince1970] - self.positionBeforeScrub;
-    NSLog(@"Scrub Delta : %ld",(long)self.newPositionDelta);
+    [AudioManager shared].newPositionDelta = [[[SessionManager shared] vNow] timeIntervalSince1970] - self.positionBeforeScrub;
+    NSLog(@"Scrub Delta : %ld",(long)[AudioManager shared].newPositionDelta);
     
     [[AudioManager shared] setSeekWillEffectBuffer:NO];
     
@@ -541,7 +474,7 @@
     
     self.seeking = NO;
     
-    [self trackScrubberUse];
+    [[AnalyticsManager shared] trackSeekUsageWithType:ScrubbingTypeScrubber];
 }
 
 - (UILabel*)scrubbingIndicatorLabel {
@@ -694,6 +627,12 @@
     CGFloat cpInSeconds = duration * percent;
     NSDate *rough = [p.starts_at dateByAddingTimeInterval:cpInSeconds];
     
+    if ( [rough timeIntervalSinceDate:[[SessionManager shared] vLive]] >= 0.0f ) {
+        // Seek to Live
+        // rough = nil;
+        // Disable this for now
+    }
+    
     return rough;
 }
 
@@ -779,11 +718,11 @@
             sbl = 0.0f;
         }
         
-
+        NSLog(@"Calculated difference : %1.1f",sbl);
         
-        if ( sbl > kVirtualBehindLiveTolerance || self.ignoringThresholdGate ) {
+        if ( sbl > kVirtualBehindLiveTolerance || [AudioManager shared].ignoreDriftTolerance ) {
             
-            NSLog(@"Calculated difference : %1.1f",sbl);
+            
             
             self.timeBehindLiveLabel.alpha = 0.0f;
             /*[[self scrubbingIndicatorLabel] fadeText:[[NSDate stringFromDate:[[SessionManager shared] vNow]
@@ -804,7 +743,7 @@
             
         } else {
             
-            self.ignoringThresholdGate = NO;
+            [AudioManager shared].ignoreDriftTolerance = NO;
             self.timeBehindLiveLabel.alpha = 0.0f;
             self.currentProgressReadingLabel.alpha = 0.0f;
             self.currentProgressNeedleView.alpha = 0.0f;
@@ -817,7 +756,7 @@
             
         }
         
-        self.ignoringThresholdGate = sbl > kVirtualBehindLiveTolerance;
+        [AudioManager shared].ignoreDriftTolerance = sbl > kVirtualBehindLiveTolerance;
         
     }];
     
@@ -840,6 +779,16 @@
     } else {
         [self.scrubberController tick:0.0f];
     }
+    
+    [self.fw30Button addTarget:self
+                        action:@selector(forward30)
+              forControlEvents:UIControlEventTouchUpInside
+     special:YES];
+    
+    [self.rw30Button addTarget:self
+                        action:@selector(rewind30)
+              forControlEvents:UIControlEventTouchUpInside
+     special:YES];
 }
 /*
 #pragma mark - Navigation

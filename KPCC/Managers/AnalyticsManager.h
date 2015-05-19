@@ -18,6 +18,13 @@
 static NSInteger kMaxAllowedExceptionsPerInterval = 5;
 static NSInteger kExceptionInterval = 60;
 
+typedef NS_ENUM(NSInteger, ScrubbingType) {
+    ScrubbingTypeUnknown = 0,
+    ScrubbingTypeScrubber,
+    ScrubbingTypeBack30,
+    ScrubbingTypeFwd30
+};
+
 @interface AnalyticsManager : NSObject
 
 @property long lastErrorLoggedTime;
@@ -41,6 +48,9 @@ static NSInteger kExceptionInterval = 60;
 - (void)failStream:(NetworkHealth)cause comments:(NSString *)comments force:(BOOL)force;
 - (void)kTrackSession:(NSString*)modifier;
 - (void)clearLogs;
+
+- (void)trackSeekUsageWithType:(ScrubbingType)type;
+
 - (NSDictionary*)logifiedParamsList:(NSDictionary*)originalParams;
 
 @end

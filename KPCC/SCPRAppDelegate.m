@@ -48,6 +48,8 @@
     [[UXmanager shared].settings setUserHasViewedOnDemandOnboarding:YES];
 #ifdef TESTING_SCRUBBER
     [[UXmanager shared].settings setUserHasViewedScrubbingOnboarding:NO];
+    [[UXmanager shared].settings setUserHasViewedLiveScrubbingOnboarding:NO];
+    [[UXmanager shared].settings setUserHasViewedScheduleOnboarding:NO];
 #endif
     [[UXmanager shared] persist];
 #endif
@@ -361,6 +363,11 @@
     [[ContentManager shared] saveContext];
 
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+}
+
+#pragma mark - Training
+- (void)onboardForLiveFunctionality {
+    [self.onboardingController onboardingSwipingAction:YES];
 }
 
 

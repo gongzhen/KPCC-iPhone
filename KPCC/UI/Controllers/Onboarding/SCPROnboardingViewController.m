@@ -232,7 +232,7 @@
     [[UXmanager shared] restorePreNotificationUI:NO];
 }
 
-- (void)ondemandMode {
+- (void)onboardingSwipingAction:(BOOL)schedule {
     self.view.alpha = 0.0f;
     self.onDemandContainerView.alpha = 1.0f;
     self.notificationsView.alpha = 0.0f;
@@ -241,12 +241,19 @@
     self.lensVC.view.alpha = 0.0f;
     self.view.backgroundColor = [[UIColor virtualBlackColor] translucify:0.75];
     
-    if ( [[UXmanager shared] userHasSeenScrubbingOnboarding] ) {
+    if ( schedule ) {
         self.swiper = [[UISwipeGestureRecognizer alloc] initWithTarget:self
-                                                            action:@selector(dismissOnDemand)];
+                                                                action:@selector(dismissSchedule)];
+        self.onDemandSwipeImageView.image = [UIImage imageNamed:@"onboarding-schedule-swipe-left.png"];
+        self.swipeToSkipLabel.text = @"Swipe left to see what's up next";
     } else {
-        self.swiper = [[UISwipeGestureRecognizer alloc] initWithTarget:self
-                                                                action:@selector(finishOnDemandAndGoToScrubbing)];
+        if ( [[UXmanager shared] userHasSeenScrubbingOnboarding] ) {
+            self.swiper = [[UISwipeGestureRecognizer alloc] initWithTarget:self
+                                                                    action:@selector(dismissOnDemand)];
+        } else {
+            self.swiper = [[UISwipeGestureRecognizer alloc] initWithTarget:self
+                                                                    action:@selector(finishOnDemandAndGoToScrubbing)];
+        }
     }
     
     self.swiper.direction = UISwipeGestureRecognizerDirectionLeft|UISwipeGestureRecognizerDirectionRight;
@@ -266,18 +273,24 @@
         [del.window addSubview:self.view];
     }
     
-    if ( [[UXmanager shared] userHasSeenScrubbingOnboarding] ) {
+    if ( schedule ) {
         [self.gotItButton addTarget:self
-                             action:@selector(dismissOnDemand)
+                             action:@selector(dismissSchedule)
                    forControlEvents:UIControlEventTouchUpInside
                             special:YES];
     } else {
-        [self.gotItButton addTarget:self
-                             action:@selector(finishOnDemandAndGoToScrubbing)
-                   forControlEvents:UIControlEventTouchUpInside];
+        if ( [[UXmanager shared] userHasSeenScrubbingOnboarding] ) {
+            [self.gotItButton addTarget:self
+                                 action:@selector(dismissOnDemand)
+                       forControlEvents:UIControlEventTouchUpInside
+                                special:YES];
+        } else {
+            [self.gotItButton addTarget:self
+                                 action:@selector(finishOnDemandAndGoToScrubbing)
+                       forControlEvents:UIControlEventTouchUpInside];
+        }
     }
     
-
     
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.25 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         [UIView animateWithDuration:0.25 animations:^{
@@ -286,14 +299,24 @@
     });
 }
 
+- (void)onboardingSwipingAction {
+    
+    [self onboardingSwipingAction:NO];
+    
+}
+
 - (void)finishOnDemandAndGoToScrubbing {
     [[UXmanager shared].settings setUserHasViewedOnDemandOnboarding:YES];
     [[UXmanager shared] persist];
     self.dontFade = YES;
-    [self scrubbingMode];
+    [self onboardingScrubbingAction];
 }
 
-- (void)scrubbingMode {
+- (void)onboardingScrubbingAction {
+    [self onboardingScrubbingAction:NO];
+}
+
+- (void)onboardingScrubbingAction:(BOOL)live {
     
     if ( !self.dontFade ) {
         self.view.alpha = 0.0f;
@@ -317,17 +340,17 @@
         self.lensVC.view.alpha = 0.0f;
         self.view.backgroundColor = [[UIColor virtualBlackColor] translucify:0.88];
         
+        SEL handler = live ? @selector(finishLiveOnboarding) : @selector(dismissOnDemand);
+        
         self.scrubbingSwiper = [[UISwipeGestureRecognizer alloc] initWithTarget:self
-                                                                         action:@selector(dismissOnDemand)];
+                                                                         action:handler];
         self.scrubbingSwiper.direction = UISwipeGestureRecognizerDirectionLeft|UISwipeGestureRecognizerDirectionRight;
         
         if ( self.swiper ) {
             [self.view removeGestureRecognizer:self.swiper];
             self.swiper = nil;
         }
-        
-        //[self.view addGestureRecognizer:self.scrubbingSwiper];
-        
+                
         [self.scrubbingSwipeToSkipLabel proBookFontize];
         
         [self.scrubbingGotItButton.titleLabel proSemiBoldFontize];
@@ -338,7 +361,6 @@
         
         BOOL fadeUpScrubbingView = NO;
         if ( !self.view.superview ) {
-            
             self.view.alpha = 0.0f;
             SCPRAppDelegate *del = [Utils del];
             self.view.frame = CGRectMake(0.0,0.0,del.window.frame.size.width,
@@ -371,16 +393,18 @@
         
         [self.view addConstraints:@[hCenter,yCenter]];
         
-        NSMutableAttributedString *s = [[NSMutableAttributedString alloc] initWithString:@"Press and hold to seek back or forward within an episode"
+        NSString *text = live ? @"Press and hold to seek back within the live stream" : @"Press and hold to seek back or forward within an episode";
+        NSMutableAttributedString *s = [[NSMutableAttributedString alloc] initWithString:text
                                                                               attributes:@{ NSFontAttributeName : self.scrubbingSwipeToSkipLabel.font }];
         NSRange r = [[s string] rangeOfString:@"Press and hold"];
         NSDictionary *attributes = @{ NSForegroundColorAttributeName : [UIColor kpccOrangeColor] };
         [s setAttributes:attributes
                    range:r];
+        
         self.scrubbingSwipeToSkipLabel.attributedText = s;
         
         [self.scrubbingGotItButton addTarget:self
-                                      action:@selector(dismissOnDemand)
+                                      action:handler
                             forControlEvents:UIControlEventTouchUpInside
                                      special:YES];
         
@@ -407,6 +431,23 @@
 #ifndef TESTING_SCRUBBER
         [[UXmanager shared] persist];
 #endif
+    }];
+}
+
+- (void)dismissSchedule {
+    [[UXmanager shared].settings setUserHasViewedScheduleOnboarding:YES];
+    [[UXmanager shared] persist];
+    self.dontFade = YES;
+    [self onboardingScrubbingAction:YES];
+}
+
+- (void)finishLiveOnboarding {
+    [UIView animateWithDuration:0.25 animations:^{
+        self.onDemandContainerView.alpha = 0.0f;
+        self.view.alpha = 0.0f;
+    } completion:^(BOOL finished) {
+        [[UXmanager shared].settings setUserHasViewedLiveScrubbingOnboarding:YES];
+        [[UXmanager shared] persist];
     }];
 }
 

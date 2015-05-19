@@ -193,7 +193,7 @@ setForOnDemandUI;
     self.queueBlurView.alpha = 1.0f;
     self.darkBgView.alpha = 1.0f;
     self.onDemandMainDividerView.alpha = 0.4f;
-    
+
     self.deployedProgramTitleConstant = [Utils isThreePointFive] ? 143.0f : 200.0f;
     self.initialProgramTitleConstant = [Utils isThreePointFive] ? 56.0f : 118.0f;
     self.threePointFivePlayControlsConstant = 10.0f;
@@ -239,6 +239,8 @@ setForOnDemandUI;
                                              selector:@selector(hideSleepTimer)
                                                  name:@"sleep-timer-fired"
                                                object:nil];
+    
+
     
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
     
@@ -343,6 +345,16 @@ setForOnDemandUI;
     [self.cancelSleepTimerButton addTarget:self
                                     action:@selector(cancelSleepTimerAction)
                           forControlEvents:UIControlEventTouchUpInside];
+    
+    [self.mainBackward30Button addTarget:self
+                                  action:@selector(seekBack30)
+                        forControlEvents:UIControlEventTouchUpInside
+                                 special:YES];
+    
+    [self.mainForward30Button addTarget:self
+                                 action:@selector(seekFwd30)
+                       forControlEvents:UIControlEventTouchUpInside
+                                special:YES];
     
     [self setupTimerControls];
     
@@ -785,14 +797,14 @@ setForOnDemandUI;
 - (void)showOnDemandOnboarding {
     if ( ![UXmanager shared].settings.userHasViewedOnDemandOnboarding ) {
         SCPRAppDelegate *del = [Utils del];
-        [del.onboardingController ondemandMode];
+        [del.onboardingController onboardingSwipingAction:NO];
         [del.window bringSubviewToFront:del.onboardingController.view];
         [UIView animateWithDuration:0.25 animations:^{
             del.onboardingController.view.alpha = 1.0f;
         }];
     } else if ( ![UXmanager shared].settings.userHasViewedScrubbingOnboarding ) {
         SCPRAppDelegate *del = [Utils del];
-        [del.onboardingController scrubbingMode];
+        [del.onboardingController onboardingScrubbingAction];
         [del.window bringSubviewToFront:del.onboardingController.view];
         [UIView animateWithDuration:0.25 animations:^{
             del.onboardingController.view.alpha = 1.0f;
@@ -1050,12 +1062,16 @@ setForOnDemandUI;
 
 - (void)rewindFifteen {
     seekRequested = YES;
-    [[AudioManager shared] backwardSeekFifteenSeconds];
+    [[AudioManager shared] backwardSeekFifteenSecondsWithCompletion:^{
+        
+    }];
 }
 
 - (void)fastForwardFifteen {
     seekRequested = YES;
-    [[AudioManager shared] forwardSeekFifteenSeconds];
+    [[AudioManager shared] forwardSeekFifteenSecondsWithCompletion:^{
+        
+    }];
 }
 
 - (void)goLive:(BOOL)play {
@@ -1271,7 +1287,7 @@ setForOnDemandUI;
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.66 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         
         seekRequested = YES;
-        [[AudioManager shared] forwardSeekLive];
+        [[AudioManager shared] forwardSeekLiveWithCompletion:nil];
         
     });
 }
@@ -1294,8 +1310,8 @@ setForOnDemandUI;
     sUI.view = self.scrubbingUIView;
     
     self.scrubbingUI = sUI;
-    self.scrubbingUI.rw30Button = self.back30Button;
-    self.scrubbingUI.fw30Button = self.fwd30Button;
+    self.scrubbingUI.rw30Button = self.mainBackward30Button;
+    self.scrubbingUI.fw30Button = self.mainForward30Button;
 
     self.scrubbingUI.lowerBoundLabel = self.lowerBoundScrubberLabel;
     self.scrubbingUI.upperBoundLabel = self.upperBoundScrubberLabel;
@@ -1369,6 +1385,8 @@ setForOnDemandUI;
     
     if ( self.scrubberLoadingGate ) return;
     
+    [self wipeTargetsForScrubButtons];
+    
     self.scrubberLoadingGate = YES;
     self.scrubbingUI.playPauseButton = self.playPauseButton;
     
@@ -1440,17 +1458,6 @@ setForOnDemandUI;
     }];
 
     
-    /*
-    self.scrubbingTriggerView.alpha = 0.0f;
-    self.timeLabelOnDemand.alpha = 0.0f;
-    self.progressView.alpha = 0.0f;
-    self.queueBlurView.alpha = 1.0f;
-    self.onDemandPlayerView.alpha = 0.0f;
-    self.horizDividerLine.alpha = 0.0f;
-    self.programTitleLabel.alpha = 0.0f;
-    self.queueDarkBgView.alpha = 0.45;
-    */
-    
     self.queueScrollView.userInteractionEnabled = NO;
     self.scrubbing = YES;
     [self commitHiddenVector];
@@ -1463,15 +1470,6 @@ setForOnDemandUI;
     }
     
     [self popHiddenVector];
-    
-    /*
-    self.scrubbingTriggerView.alpha = 1.0f;
-    self.timeLabelOnDemand.alpha = 1.0f;
-    self.progressView.alpha = 1.0f;
-    self.onDemandPlayerView.alpha = 1.0f;
-    self.horizDividerLine.alpha = 0.4;
-    self.programTitleLabel.alpha = 1.0f;
-    */
     
     [UIView animateWithDuration:0.25 animations:^{
         self.queueBlurView.alpha = 0.0f;
@@ -1545,6 +1543,19 @@ setForOnDemandUI;
 }
 
 - (void)finishedWithScrubber {
+    
+    [self wipeTargetsForScrubButtons];
+    
+    [self.mainBackward30Button addTarget:self
+                                  action:@selector(seekBack30)
+                        forControlEvents:UIControlEventTouchUpInside
+                                 special:YES];
+    
+    [self.mainForward30Button addTarget:self
+                                 action:@selector(seekFwd30)
+                       forControlEvents:UIControlEventTouchUpInside
+                                special:YES];
+    
     [UIView animateWithDuration:0.25 animations:^{
 
         if ( [Utils isThreePointFive] ) {
@@ -1584,14 +1595,69 @@ setForOnDemandUI;
     [self.jogShuttle endAnimations];
 }
 
+- (void)seekBack30 {
+    
+    [[AudioManager shared] setIgnoreDriftTolerance:YES];
+    [[AudioManager shared] backwardSeekThirtySecondsWithCompletion:^{
+ 
+    }];
+    
+}
+
+- (void)seekFwd30 {
+    [[AudioManager shared] setIgnoreDriftTolerance:NO];
+    [[AudioManager shared] forwardSeekThirtySecondsWithCompletion:^{
+      
+    }];
+}
+
+- (void)animatedStateForForwardButton:(BOOL)enabled {
+    [self animatedStateForButton:self.mainForward30Button
+                         enabled:enabled];
+}
+
+- (void)animatedStateForBackwardButton:(BOOL)enabled {
+    [self animatedStateForButton:self.mainBackward30Button
+                         enabled:enabled];
+}
+
+- (void)animatedStateForButton:(UIButton *)button enabled:(BOOL)enabled {
+    [UIView animateWithDuration:0.33f animations:^{
+        button.alpha = enabled ? 1.0f : 0.4f;
+    }];
+
+    button.userInteractionEnabled = enabled;
+}
+
+- (void)wipeTargetsForScrubButtons {
+    [self.mainForward30Button removeTarget:nil
+                                    action:nil
+                          forControlEvents:UIControlEventAllEvents];
+    
+    [self.mainBackward30Button removeTarget:nil
+                                     action:nil
+                           forControlEvents:UIControlEventAllEvents];
+}
+
 # pragma mark - UI control
 - (void)prettifyBehindLiveStatus {
+    
+    if ( [[AudioManager shared] currentAudioMode] == AudioModeOnDemand ) {
+        [self animatedStateForForwardButton:YES];
+        [self animatedStateForBackwardButton:YES];
+        return;
+    }
     
     NSDate *ciCurrentDate = [AudioManager shared].audioPlayer.currentItem.currentDate;
     if ( !ciCurrentDate ) {
         self.liveDescriptionLabel.text = @"";
         return;
     }
+    
+    if ( [[AudioManager shared] calibrating] ) {
+        return;
+    }
+    
 #ifndef SUPPRESS_V_LIVE
     NSTimeInterval ti = [[[SessionManager shared] vLive] timeIntervalSinceDate:ciCurrentDate];
 #else
@@ -1599,32 +1665,42 @@ setForOnDemandUI;
 #endif
     
 #ifndef SUPPRESS_V_LIVE
-    if ( ti > 60*60*24 ) {
+    if ( ti > 60*60*48 ) {
         if ( [[SessionManager shared] sessionIsInRecess] ) {
-            [self.liveDescriptionLabel setText:@"UP NEXT"];
+            [self.liveDescriptionLabel fadeText:@"UP NEXT"];
         } else {
-            [self.liveDescriptionLabel setText:@"LIVE"];
+            [self.liveDescriptionLabel fadeText:@"LIVE"];
             self.dirtyFromRewind = NO;
         }
+        
+        [self animatedStateForForwardButton:NO];
+        
         return;
     }
 #endif
     
     if ( [[NetworkManager shared] networkDown] ) {
-        [self.liveDescriptionLabel setText:@"NO NETWORK"];
+        [self.liveDescriptionLabel fadeText:@"NO NETWORK"];
         return;
     }
     
-    if ( ti > kToleratedIncreaseInDrift ) {
-        [self.liveDescriptionLabel setText:[NSString stringWithFormat:@"%@ BEHIND LIVE", [NSDate prettyTextFromSeconds:ti]]];
+    [self animatedStateForBackwardButton:YES];
+    
+    if ( ti > kVirtualBehindLiveTolerance || [[AudioManager shared] ignoreDriftTolerance] ) {
+        [self.liveDescriptionLabel fadeText:[NSString stringWithFormat:@"%@ BEHIND LIVE", [NSDate prettyTextFromSeconds:ti]]];
         self.previousRewindThreshold = [[AudioManager shared].audioPlayer.currentItem.currentDate timeIntervalSince1970];
+        
+        [self animatedStateForForwardButton:YES];
     } else {
         if ( [[SessionManager shared] sessionIsInRecess] ) {
-            [self.liveDescriptionLabel setText:@"UP NEXT"];
+            [self.liveDescriptionLabel fadeText:@"UP NEXT"];
         } else {
-            [self.liveDescriptionLabel setText:@"LIVE"];
+            [self.liveDescriptionLabel fadeText:@"LIVE"];
             self.dirtyFromRewind = NO;
         }
+      
+        [self animatedStateForForwardButton:NO];
+        
     }
 }
 
@@ -2163,16 +2239,16 @@ setForOnDemandUI;
             BOOL suppressDivider = NO;
             if ( [Utils isThreePointFive] ) {
                 if ( [self.preRollViewController tritonAd] ) {
+                    
                     bottomAnim.toValue = @(60.0);
                     suppressDivider = YES;
+                    
                 } else {
                     bottomAnim.toValue = @(self.threePointFivePlayControlsConstant);
                 }
             }
             
-            self.liveDescriptionLabel.text = @"";
-            
-            
+            [self.liveDescriptionLabel fadeText:@""];
             
             // Hide or show divider depending on screen size
             self.horizDividerLine.layer.opacity = 0.0f;
@@ -2794,6 +2870,8 @@ setForOnDemandUI;
 
 # pragma mark - SCPRPreRollControllerDelegate
 - (void)preRollStartedPlaying {
+    [self animatedStateForBackwardButton:NO];
+    [self animatedStateForForwardButton:NO];
     [self.playPauseButton fadeImage:[UIImage imageNamed:@"btn_pause.png"] duration:0.2];
 }
 
@@ -2816,6 +2894,7 @@ setForOnDemandUI;
         if (self.preRollOpen) {
             [self decloakForPreRoll:YES];
         }
+        
         if ( self.initiateRewind ) {
             [self activateRewind:RewindDistanceBeginning];
         } else {
@@ -3125,7 +3204,18 @@ setForOnDemandUI;
             [self prettifyBehindLiveStatus];
         }
         
+        if ( !self.trainingUIisExposed && [AudioManager shared].currentAudioMode == AudioModeLive ) {
+            self.trainingUIisExposed = YES;
+            if ( ![[UXmanager shared].settings userHasViewedScheduleOnboarding] ) {
+                SCPRAppDelegate *del = [Utils del];
+                [del onboardForLiveFunctionality];
+            }
+        }
+        
         if ( [AudioManager shared].currentAudioMode == AudioModeLive ) {
+            if ( self.liveRewindAltButton.alpha == 1.0 || self.liveRewindAltButton.layer.opacity == 1.0 )
+                [self primeManualControlButton];
+            
             if ( !self.menuOpen ) {
                 if ( self.liveStreamView.layer.opacity < 1.0 ) {
                     [UIView animateWithDuration:0.25 animations:^{
@@ -3159,10 +3249,7 @@ setForOnDemandUI;
         }
         
         
-        if ( [AudioManager shared].currentAudioMode == AudioModeLive ) {
-            if ( self.liveRewindAltButton.alpha == 1.0 || self.liveRewindAltButton.layer.opacity == 1.0 )
-                [self primeManualControlButton];
-        }
+
     }
     
     [self.liveProgressViewController tick];

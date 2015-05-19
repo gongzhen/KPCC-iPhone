@@ -57,7 +57,12 @@
 
 #pragma mark - Session Mgmt
 - (NSDate*)vLive {
+    
+    
     NSDate *live = [[NSDate date] dateByAddingTimeInterval:-90.0f]; // Add in what we know is going to be slightly behind live
+    if ( [[AudioManager shared] maxSeekableDate] ) {
+        live = [[AudioManager shared] maxSeekableDate];
+    }
     if ( self.localLiveTime > 0.0f ) {
         live = [NSDate dateWithTimeIntervalSince1970:self.localLiveTime];
     }

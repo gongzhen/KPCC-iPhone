@@ -307,4 +307,46 @@ static AnalyticsManager *singleton = nil;
     return english;
 }
 
+#pragma mark - Events
+
+- (void)trackSeekUsageWithType:(ScrubbingType)type {
+    NSString *eventName = @"";
+    NSString *method = @"";
+    switch (type) {
+        case ScrubbingTypeScrubber:
+            method = @"scrubber";
+            break;
+        case ScrubbingTypeBack30:
+        case ScrubbingTypeFwd30:
+            method = @"button";
+            break;
+        case ScrubbingTypeUnknown:
+        default:
+            method = @"unknown";
+            break;
+    }
+    
+    if ( [[AudioManager shared] currentAudioMode] == AudioModeLive ) {
+        eventName = @"liveStreamScrubbed";
+    }
+    if ( [[AudioManager shared] currentAudioMode] == AudioModeOnDemand ) {
+        eventName = @"onDemandAudioScrubbed";
+    }
+    
+    NSString *direction = @"";
+    if ( [[AudioManager shared] newPositionDelta] < 0 ) {
+        direction = @"Backward";
+    } else {
+        direction = @"Forward";
+    }
+    
+    [[AnalyticsManager shared] logEvent:eventName
+                         withParameters:@{
+                                          @"method" : method,
+                                          @"amount" : [NSString stringWithFormat:@"%@ %1.1f",direction,fabs([[AudioManager shared] newPositionDelta])]
+                                          }];
+    
+    NSLog(@"%@ : method : %@, amount : %@ %1.1f",eventName,method,direction,fabs([[AudioManager shared] newPositionDelta]));
+}
+
 @end

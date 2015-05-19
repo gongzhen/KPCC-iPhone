@@ -709,6 +709,7 @@ static const NSString *ItemStatusContext;
     
     [self invalidateTimeObserver];
     
+    self.calibrating = YES;
     self.timeObserver = nil;
     self.waitForFirstTick = YES;
     self.frameCount = 0;
@@ -753,10 +754,15 @@ static const NSString *ItemStatusContext;
             
             weakSelf.minSeekableDate = [NSDate dateWithTimeInterval:( -1 * (CMTimeGetSeconds(time) - CMTimeGetSeconds(range.start))) sinceDate:weakSelf.currentDate];
             weakSelf.maxSeekableDate = [NSDate dateWithTimeInterval:(CMTimeGetSeconds(CMTimeRangeGetEnd(range)) - CMTimeGetSeconds(time)) sinceDate:weakSelf.currentDate];
-            if ( [[SessionManager shared] localLiveTime] == 0.0f ) {
-                [[SessionManager shared] setLocalLiveTime:[weakSelf.maxSeekableDate timeIntervalSince1970]];
+            
+            if ( self.currentAudioMode == AudioModeLive ) {
+                if ( [[SessionManager shared] localLiveTime] == 0.0f ) {
+                    [[SessionManager shared] setLocalLiveTime:[weakSelf.maxSeekableDate timeIntervalSince1970]];
+                } else {
+                    [[SessionManager shared] setLocalLiveTime:[[SessionManager shared] localLiveTime]+0.1f];
+                }
             } else {
-                [[SessionManager shared] setLocalLiveTime:[[SessionManager shared] localLiveTime]+0.1f];
+                [[SessionManager shared] setLocalLiveTime:0.0f];
             }
             
             if ( weakSelf.frameCount % 10 == 0 ) {
@@ -783,12 +789,16 @@ static const NSString *ItemStatusContext;
                 [[SessionManager shared] trackOnDemandSession];
                 [[SessionManager shared] checkProgramUpdate:NO];
                 
+
+                weakSelf.calibrating = NO;
                 weakSelf.audioOutputSourceChanging = NO;
+                
             }
 
             if ( weakSelf.frameCount % 10000 == 0 ) {
                 weakSelf.frameCount = 1;
             }
+            
             weakSelf.frameCount++;
             
         }
@@ -1023,14 +1033,9 @@ static const NSString *ItemStatusContext;
    */
 }
 
-- (void)forwardSeekLive {
+- (void)forwardSeekLiveWithCompletion:(CompletionBlock)completion {
     if (!self.audioPlayer) {
         [self buildStreamer:kHLSLiveStreamURL];
-    }
-    
-    NSDate *target = [NSDate date];
-    if ( labs([[self maxSeekableDate] timeIntervalSince1970] - [target timeIntervalSince1970] ) <= kStreamCorrectionTolerance ) {
-        target = [self maxSeekableDate];
     }
     
 #ifdef THREE_ZERO_ZERO
@@ -1040,46 +1045,135 @@ static const NSString *ItemStatusContext;
 #else
     
     self.seekWillEffectBuffer = YES;
-#ifndef SUPPRESS_LOCAL_SAMPLING
-    self.localBufferSample = nil;
-#endif
+    self.ignoreDriftTolerance = NO;
+    
+    [self invalidateTimeObserver];
+    if ( [self isPlayingAudio] ) {
+        [self.audioPlayer pause];
+    }
     
     [self.audioPlayer.currentItem seekToTime:CMTimeMake(MAXFLOAT * HUGE_VALF, 1) completionHandler:^(BOOL finished) {
-        if ( [self.audioPlayer rate] <= 0.0 ) {
-            [self.audioPlayer play];
+        
+        NSDate *landingDate = self.audioPlayer.currentItem.currentDate;
+        NSTimeInterval diff = fabs([landingDate timeIntervalSince1970] - [[SessionManager shared] localLiveTime]);
+        if ( diff > kVirtualBehindLiveTolerance ) {
+            
+            NSLog(@"Trying again because seek to live came up short ... %@ vs %@",[NSDate stringFromDate:landingDate
+                                                                                              withFormat:@"h:mm:ss a"],
+            [NSDate stringFromDate:[[SessionManager shared] vLive]
+                              withFormat:@"h:mm:ss a"]);
+            
+            [self.audioPlayer.currentItem seekToTime:CMTimeMake(MAXFLOAT * HUGE_VALF, 1) completionHandler:^(BOOL finished) {
+                [self finishSeekToLive];
+            }];
+            return;
         }
-        [self.delegate onSeekCompleted];
+        
+        [self finishSeekToLive];
+        
+        if ( completion ) {
+            dispatch_async(dispatch_get_main_queue(), completion);
+        }
+        
     }];
     
 #endif
 }
 
-- (void)forwardSeekThirtySeconds {
-    NSDate *currentDate = self.audioPlayer.currentItem.currentDate;
-    if (currentDate) {
-        [self seekToDate:[currentDate dateByAddingTimeInterval:(30)]];
+- (void)finishSeekToLive {
+    if ( [self.audioPlayer rate] <= 0.0 ) {
+        [self.audioPlayer play];
     }
+    
+    [self startObservingTime];
+    self.seekWillEffectBuffer = NO;
+    
+    [self.delegate onSeekCompleted];
 }
 
-- (void)backwardSeekThirtySeconds {
-    NSDate *currentDate = self.audioPlayer.currentItem.currentDate;
-    if (currentDate) {
-        [self seekToDate:[currentDate dateByAddingTimeInterval:(-30)]];
-    }
+- (void)intervalSeekWithTimeInterval:(NSTimeInterval)interval completion:(CompletionBlock)completion {
+    [self setSeekWillEffectBuffer:YES];
+    CMTime ct = [self.audioPlayer.currentItem currentTime];
+    ct.value += (interval*ct.timescale);
+    
+    NSDate *targetDate = self.audioPlayer.currentItem.currentDate;
+    targetDate = [targetDate dateByAddingTimeInterval:interval];
+    
+    [self invalidateTimeObserver];
+    [self.audioPlayer.currentItem seekToTime:ct completionHandler:^(BOOL finished) {
+        
+        NSDate *landingDate = self.audioPlayer.currentItem.currentDate;
+        NSTimeInterval diff = [landingDate timeIntervalSince1970] - [targetDate timeIntervalSince1970];
+        NSLog(@"After 1 attempt the difference between live and target seek is %1.1f",diff);
+        
+        if ( fabs(diff) > kVirtualBehindLiveTolerance ) {
+            
+            NSLog(@"Trying again because interval seeking came up short ... %@ vs %@",[NSDate stringFromDate:landingDate
+                                                                                              withFormat:@"h:mm:ss a"],
+                  [NSDate stringFromDate:targetDate
+                              withFormat:@"h:mm:ss a"]);
+            
+            [self.audioPlayer pause];
+            CMTime ctFail = self.audioPlayer.currentItem.currentTime;
+            ctFail.value += -1.0f*diff*ctFail.timescale;
+            
+            [self.audioPlayer.currentItem seekToTime:ctFail completionHandler:^(BOOL finished) {
+                NSTimeInterval failDiff = [landingDate timeIntervalSince1970] - [targetDate timeIntervalSince1970];
+                NSLog(@"After 2 attempts the difference between live and target seek is %1.1f",failDiff);
+                [self finishIntervalSeek:interval completion:completion];
+            }];
+            
+            return;
+        }
+
+
+        [self finishIntervalSeek:interval completion:completion];
+        
+    }];
 }
 
-- (void)forwardSeekFifteenSeconds {
-    NSDate *currentDate = self.audioPlayer.currentItem.currentDate;
-    if (currentDate) {
-        [self seekToDate:[currentDate dateByAddingTimeInterval:(15)]];
+- (void)finishIntervalSeek:(NSTimeInterval)interval completion:(CompletionBlock)completion {
+
+    self.newPositionDelta = interval;
+    
+    if ( [self.audioPlayer rate] <= 0.0f ) {
+        [self.audioPlayer play];
     }
+    
+    [self startObservingTime];
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        
+        if ( completion ) {
+            completion();
+        }
+        
+        ScrubbingType type = interval < 0.0f ? ScrubbingTypeBack30 : ScrubbingTypeFwd30;
+        
+        [self setSeekWillEffectBuffer:NO];
+        [[AnalyticsManager shared] trackSeekUsageWithType:type];
+        
+        
+    });
 }
 
-- (void)backwardSeekFifteenSeconds {
-    NSDate *currentDate = self.audioPlayer.currentItem.currentDate;
-    if (currentDate) {
-        [self seekToDate:[currentDate dateByAddingTimeInterval:(-15)]];
-    }
+- (void)forwardSeekThirtySecondsWithCompletion:(CompletionBlock)completion {
+    NSTimeInterval backward = 30.0f;
+    [self intervalSeekWithTimeInterval:backward completion:completion];
+}
+- (void)backwardSeekThirtySecondsWithCompletion:(CompletionBlock)completion {
+    NSTimeInterval backward = -30.0f;
+    [self intervalSeekWithTimeInterval:backward completion:completion];
+}
+
+- (void)forwardSeekFifteenSecondsWithCompletion:(CompletionBlock)completion {
+    NSTimeInterval backward = 15.0f;
+    [self intervalSeekWithTimeInterval:backward completion:completion];
+}
+
+- (void)backwardSeekFifteenSecondsWithCompletion:(CompletionBlock)completion {
+    NSTimeInterval backward = -15.0f;
+    [self intervalSeekWithTimeInterval:backward completion:completion];
 }
 
 - (NSString *)currentDateTimeString {

@@ -62,5 +62,6 @@
 - (void)buildTimer;
 - (void)manuallyCheckAlarm;
 - (void)killBackgroundTask;
+- (void)onboardForLiveFunctionality;
 
 @end

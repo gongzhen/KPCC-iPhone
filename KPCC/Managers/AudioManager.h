@@ -204,6 +204,10 @@ typedef NS_ENUM(NSUInteger, StreamStatus) {
 @property NSInteger frameCount;
 
 @property BOOL audioCheating;
+@property BOOL ignoreDriftTolerance;
+@property BOOL calibrating;
+
+@property NSTimeInterval newPositionDelta;
 
 @property (nonatomic, strong) NSTimer *kickstartTimer;
 @property (nonatomic, strong) NSTimer *giveupTimer;
@@ -215,11 +219,15 @@ typedef NS_ENUM(NSUInteger, StreamStatus) {
 - (void)seekToDate:(NSDate *)date forward:(BOOL)forward failover:(BOOL)failover;
 - (void)specialSeekToDate:(NSDate*)date;
 
-- (void)forwardSeekLive;
-- (void)forwardSeekThirtySeconds;
-- (void)backwardSeekThirtySeconds;
-- (void)forwardSeekFifteenSeconds;
-- (void)backwardSeekFifteenSeconds;
+- (void)forwardSeekLiveWithCompletion:(CompletionBlock)completion;
+- (void)forwardSeekThirtySecondsWithCompletion:(CompletionBlock)completion;
+- (void)backwardSeekThirtySecondsWithCompletion:(CompletionBlock)completion;
+- (void)intervalSeekWithTimeInterval:(NSTimeInterval)interval completion:(CompletionBlock)completion;
+- (void)finishIntervalSeek:(NSTimeInterval)interval completion:(CompletionBlock)completion;
+- (void)finishSeekToLive;
+
+- (void)forwardSeekFifteenSecondsWithCompletion:(CompletionBlock)completion;
+- (void)backwardSeekFifteenSecondsWithCompletion:(CompletionBlock)completion;
 
 - (void)analyzeStreamError:(NSString*)comments;
 - (void)adjustAudioWithValue:(CGFloat)increment completion:(void (^)(void))completion;

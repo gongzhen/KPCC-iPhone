@@ -102,7 +102,8 @@
 @property (nonatomic,strong) IBOutlet UIView *currentProgressBarView;
 @property (nonatomic,strong) IBOutlet UIView *liveProgressBarView;
 @property IBOutlet NSLayoutConstraint *horizontalDividerPush;
-
+@property (nonatomic,strong) IBOutlet SCPRButton *mainBackward30Button;
+@property (nonatomic,strong) IBOutlet SCPRButton *mainForward30Button;
 
 // Pre-Roll
 - (void)handlePreRollControl:(BOOL)paused;
@@ -143,6 +144,7 @@
 
 // Onboarding
 @property BOOL automationMode;
+@property BOOL trainingUIisExposed;
 @property (nonatomic,strong) IBOutlet UILabel *letsGoLabel;
 
 - (void)activateRewind:(RewindDistance)distance;
@@ -161,6 +163,10 @@
 - (void)tickOnDemand;
 - (void)beginScrubbingWaitMode;
 - (void)endScrubbingWaitMode;
+- (void)animatedStateForButton:(UIButton*)button enabled:(BOOL)enabled;
+- (void)animatedStateForForwardButton:(BOOL)enabled;
+- (void)animatedStateForBackwardButton:(BOOL)enabled;
+- (void)wipeTargetsForScrubButtons;
 
 @property (nonatomic, strong) SCPRScrubbingUIViewController *scrubbingUI;
 @property (nonatomic, strong) SCPRButton *scrubberCloseButton;

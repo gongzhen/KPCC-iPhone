@@ -94,6 +94,8 @@
 		25F30AF61AFAB89600F27187 /* SCPRScheduleTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 25F30AF41AFAB89600F27187 /* SCPRScheduleTableViewCell.xib */; };
 		25F30AFA1AFABB3E00F27187 /* SCPRScheduleHeaderViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 25F30AF81AFABB3E00F27187 /* SCPRScheduleHeaderViewController.m */; };
 		25F30AFB1AFABB3E00F27187 /* SCPRScheduleHeaderViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 25F30AF91AFABB3E00F27187 /* SCPRScheduleHeaderViewController.xib */; };
+		25F30AFD1B0A9B1800F27187 /* onboarding-schedule-swipe-left@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 25F30AFC1B0A9B1800F27187 /* onboarding-schedule-swipe-left@2x.png */; };
+		25F30AFF1B0A9B5500F27187 /* onboarding-schedule-swipe-left.png in Resources */ = {isa = PBXBuildFile; fileRef = 25F30AFE1B0A9B5500F27187 /* onboarding-schedule-swipe-left.png */; };
 		523126A719EDB78C008A47A7 /* SCPRPreRollViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 523126A519EDB78C008A47A7 /* SCPRPreRollViewController.m */; };
 		523126A819EDB78C008A47A7 /* SCPRPreRollViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 523126A619EDB78C008A47A7 /* SCPRPreRollViewController.xib */; };
 		523E86D019C8A292006FC366 /* SCPRProgramDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 523E86CE19C8A292006FC366 /* SCPRProgramDetailViewController.m */; };
@@ -412,6 +414,8 @@
 		25F30AF71AFABB3E00F27187 /* SCPRScheduleHeaderViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCPRScheduleHeaderViewController.h; path = "Secondary Main Screens/SCPRScheduleHeaderViewController.h"; sourceTree = "<group>"; };
 		25F30AF81AFABB3E00F27187 /* SCPRScheduleHeaderViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SCPRScheduleHeaderViewController.m; path = "Secondary Main Screens/SCPRScheduleHeaderViewController.m"; sourceTree = "<group>"; };
 		25F30AF91AFABB3E00F27187 /* SCPRScheduleHeaderViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = SCPRScheduleHeaderViewController.xib; path = "Secondary Main Screens/SCPRScheduleHeaderViewController.xib"; sourceTree = "<group>"; };
+		25F30AFC1B0A9B1800F27187 /* onboarding-schedule-swipe-left@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "onboarding-schedule-swipe-left@2x.png"; sourceTree = "<group>"; };
+		25F30AFE1B0A9B5500F27187 /* onboarding-schedule-swipe-left.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "onboarding-schedule-swipe-left.png"; sourceTree = "<group>"; };
 		45A107003D6C750C5E0ECAC3 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		523126A419EDB78C008A47A7 /* SCPRPreRollViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCPRPreRollViewController.h; sourceTree = "<group>"; };
 		523126A519EDB78C008A47A7 /* SCPRPreRollViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SCPRPreRollViewController.m; sourceTree = "<group>"; };
@@ -674,6 +678,8 @@
 		254CC68F1A23A77B00560805 /* Onboarding */ = {
 			isa = PBXGroup;
 			children = (
+				25F30AFE1B0A9B5500F27187 /* onboarding-schedule-swipe-left.png */,
+				25F30AFC1B0A9B1800F27187 /* onboarding-schedule-swipe-left@2x.png */,
 				2594B5401A31420D0013B93A /* onboarding-episode-swipe.png */,
 				254CC69F1A240B6200560805 /* onboarding-episode-swipe@2x.png */,
 				254CC6901A23A7A600560805 /* onboarding-logo.png */,
@@ -1421,6 +1427,7 @@
 				768C065C1995905D00F829EB /* btn_play_large@2x.png in Resources */,
 				52EFF85219C368C00059A0E3 /* program_avatar_ted-radio-hour.png in Resources */,
 				2546AF6F1AB0CB6800E11D5B /* SCPRProgramTableViewCell.xib in Resources */,
+				25F30AFD1B0A9B1800F27187 /* onboarding-schedule-swipe-left@2x.png in Resources */,
 				2557BA841A1A9BB800B0CAED /* btn_back_to_live_xtra-small@2x.png in Resources */,
 				76B9A9AE18EF59FD007A6D8C /* SCPRUserReportViewController.xib in Resources */,
 				52EFF81619C368C00059A0E3 /* program_avatar_loh-life.png in Resources */,
@@ -1535,6 +1542,7 @@
 				B5F9F7491ABCE8FD00115DB3 /* icon-clock.png in Resources */,
 				52EFF79B19C3688D0059A0E3 /* menu-settings.png in Resources */,
 				76A308D118C8FB940065D4B1 /* InfoPlist.strings in Resources */,
+				25F30AFF1B0A9B5500F27187 /* onboarding-schedule-swipe-left.png in Resources */,
 				25F2BC831A3BB61300108F73 /* onboarding-voiceover.m4a in Resources */,
 				768C06581995905D00F829EB /* btn_pause@2x.png in Resources */,
 				254CC6991A23A7A600560805 /* onboarding-push-icon@2x.png in Resources */,

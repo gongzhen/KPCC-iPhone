@@ -74,9 +74,13 @@
 - (void)hideLens;
 - (void)showCalloutWithText:(NSString*)text pointerPosition:(CGFloat)pointer position:(CGPoint)position;
 - (void)hideCallout;
-- (void)ondemandMode;
-- (void)scrubbingMode;
+- (void)onboardingSwipingAction:(BOOL)schedule;
+- (void)onboardingScrubbingAction;
+- (void)onboardingScrubbingAction:(BOOL)live;
+
 - (void)dismissOnDemand;
+- (void)dismissLiveScrubbing;
+- (void)dismissSchedule;
 - (void)repurposeButton;
 
 // User responses

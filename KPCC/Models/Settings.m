@@ -21,6 +21,8 @@
     self.userHasConnectedWithKochava = [aDecoder decodeBoolForKey:@"userHasConnectedWithKochava"];
     self.lastBookmarkSweep = [aDecoder decodeObjectForKey:@"lastBookmarkSweep"];
     self.alarmFireDate = [aDecoder decodeObjectForKey:@"alarmFireDate"];
+    self.userHasViewedScrubbingOnboarding = [aDecoder decodeBoolForKey:@"userHasViewedScrubbingOnboarding"];
+    self.userHasViewedScheduleOnboarding = [aDecoder decodeBoolForKey:@"userHasViewedScheduleOnboarding"];
     
     [[Utils del] setAlarmDate:self.alarmFireDate];
     
@@ -44,8 +46,10 @@
                   forKey:@"lastBookmarkSweep"];
     [aCoder encodeObject:self.alarmFireDate
                   forKey:@"alarmFireDate"];
-    
-    
+    [aCoder encodeBool:self.userHasViewedScheduleOnboarding
+                forKey:@"userHasViewedScheduleOnboarding"];
+    [aCoder encodeBool:self.userHasViewedScrubbingOnboarding
+                forKey:@"userHasViewedScrubbingOnboarding"];
 }
 
 @end

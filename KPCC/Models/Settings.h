@@ -14,6 +14,8 @@
 @property BOOL userHasViewedOnDemandOnboarding;
 @property BOOL userHasViewedScrubbingOnboarding;
 @property BOOL userHasConnectedWithKochava;
+@property BOOL userHasViewedLiveScrubbingOnboarding;
+@property BOOL userHasViewedScheduleOnboarding;
 
 @property (nonatomic, strong) NSData *pushTokenData;
 @property (nonatomic, strong) NSString *pushTokenString;
