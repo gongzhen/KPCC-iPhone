@@ -390,8 +390,6 @@ setForOnDemandUI;
             self.originalFrames[@"programTitle"] = @(self.programTitleYConstraint.constant);
             self.originalFrames[@"liveRewind"] = @(self.liveRewindBottomYConstraint.constant);
             
-        } else {
-            
         }
     }];
     
@@ -414,7 +412,7 @@ setForOnDemandUI;
     
     if ( [[NetworkManager shared] networkDown] ) {
         self.initialPlayButton.userInteractionEnabled = NO;
-        self.initialPlayButton.alpha = 0.4;
+        self.initialPlayButton.alpha = 0.4f;
     }
     
     // Once the view has appeared we can register to begin receiving system audio controls.
@@ -422,7 +420,7 @@ setForOnDemandUI;
     [self becomeFirstResponder];
     
     if ( ![[UXmanager shared] userHasSeenOnboarding] ) {
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(.25 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(.25f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             
             [[UXmanager shared] beginOnboarding:self];
             
