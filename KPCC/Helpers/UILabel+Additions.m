@@ -15,7 +15,7 @@
 - (void)fadeText:(NSString *)text {
     [self stopPulsating];
     [self fadeText:text
-          duration:0.5f];
+          duration:0.30f];
 }
 
 - (void)fadeText:(NSString *)text duration:(CGFloat)duration {

@@ -192,7 +192,7 @@
             [self onDemandSeekCompleted];
         }
         if ( [[AudioManager shared] currentAudioMode] == AudioModeLive ) {
-            [self recalibrateAfterScrub];
+            [[AudioManager shared] recalibrateAfterScrub];
         }
         
         self.seeking = NO;
@@ -211,7 +211,7 @@
             [self onDemandSeekCompleted];
         }
         if ( [[AudioManager shared] currentAudioMode] == AudioModeLive ) {
-            [self recalibrateAfterScrub];
+            [[AudioManager shared] recalibrateAfterScrub];
         }
         
         [self behindLiveStatus];
@@ -411,7 +411,6 @@
     
     [[AudioManager shared] invalidateTimeObserver];
     [[AudioManager shared] setSeekWillEffectBuffer:YES];
-    [[AudioManager shared].audioPlayer pause];
     
     self.seeking = YES;
     
@@ -440,14 +439,18 @@
             NSTimeInterval hoped = [self.roundSeekDate timeIntervalSince1970];
             if ( fabs(actual - hoped) >= kVirtualBehindLiveTolerance ) {
                 
+                [[AudioManager shared].audioPlayer pause];
+                
                 CMTime nowTime = [[AudioManager shared].audioPlayer.currentItem currentTime];
                 CMTime attemptTime = CMTimeMake(nowTime.value+(-1.0*(actual-hoped)*nowTime.timescale), nowTime.timescale);
                 
                 NSLog(@"Not close enough, going to try again...");
-                [[AudioManager shared].audioPlayer.currentItem seekToTime:attemptTime completionHandler:^(BOOL finished) {
-                    [self postSeek];
-                }];
-                
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                    [[AudioManager shared].audioPlayer.currentItem seekToTime:attemptTime completionHandler:^(BOOL finished) {
+                        [self postSeek];
+                    }];
+                });
+
             } else {
                 [self postSeek];
             }
@@ -464,15 +467,20 @@
     [[AudioManager shared] setSeekWillEffectBuffer:NO];
     
     if ( [[AudioManager shared] currentAudioMode] == AudioModeLive ) {
-        [self recalibrateAfterScrub];
+        [[AudioManager shared] recalibrateAfterScrub];
     }
     
     [self printCurrentDate];
     
-    [[AudioManager shared].audioPlayer play];
+    if ( [[AudioManager shared].audioPlayer rate] <= 0.0f ) {
+        [[AudioManager shared].audioPlayer play];
+    }
+    
     [[AudioManager shared] startObservingTime];
     
     self.seeking = NO;
+    
+    [(SCPRMasterViewController*)self.parentViewController primeManualControlButton];
     
     [[AnalyticsManager shared] trackSeekUsageWithType:ScrubbingTypeScrubber];
 }
@@ -691,21 +699,7 @@
 
 - (void)recalibrateAfterScrub {
     
-    NSDate *vNow = [[SessionManager shared] vNow];
-    Program *cp = [[SessionManager shared] currentProgram];
-    NSTimeInterval vNowInSeconds = [vNow timeIntervalSince1970];
-    NSTimeInterval saInSeconds = [cp.soft_starts_at timeIntervalSince1970];
-    NSTimeInterval eaInSeconds = [cp.ends_at timeIntervalSince1970];
-    
-    if ( vNowInSeconds >= eaInSeconds || vNowInSeconds <= saInSeconds ) {
-        NSLog(@"Scrub will force program update for vNow : %@",[NSDate stringFromDate:vNow
-                                                                           withFormat:@"h:mm:s a"]);
 
-        
-        [[SessionManager shared] fetchCurrentProgram:^(id returnedObject) {
-            
-        }];
-    }
 }
 
 - (void)behindLiveStatus {
@@ -720,7 +714,7 @@
         
         NSLog(@"Calculated difference : %1.1f",sbl);
         
-        if ( sbl > kVirtualBehindLiveTolerance || [AudioManager shared].ignoreDriftTolerance ) {
+        if ( sbl > kVirtualMediumBehindLiveTolerance || [AudioManager shared].ignoreDriftTolerance ) {
             
             
             

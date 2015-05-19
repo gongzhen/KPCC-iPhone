@@ -261,6 +261,8 @@
 @property BOOL genericImageForProgram;
 @property BOOL onboardingRewindButtonShown;
 
+- (BOOL)cloaked;
+
 - (void)rollInterferenceText;
 - (void)showOnDemandOnboarding;
 - (void)prettifyBehindLiveStatus;

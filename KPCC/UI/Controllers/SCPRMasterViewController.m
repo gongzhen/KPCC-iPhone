@@ -186,6 +186,7 @@ setForOnDemandUI;
     self.horizDividerLine.layer.opacity = 0.0f;
     self.queueBlurView.layer.opacity = 0.0f;
     self.scrubbingUIView.alpha = 0.0f;
+    self.shareButton.alpha = 0.0f;
     
     self.darkBgView.hidden = NO;
     self.darkBgView.backgroundColor = [[UIColor virtualBlackColor] translucify:0.7];
@@ -261,6 +262,7 @@ setForOnDemandUI;
     pulldownMenu.delegate = self;
     [self.view addSubview:pulldownMenu];
     [pulldownMenu loadMenu];
+    self.pulldownMenu.alpha = 0.0f;
     
     // Set up pre-roll child view controller.
     [self addPreRollController];
@@ -447,7 +449,7 @@ setForOnDemandUI;
 
 - (void)superPop {
     [self.navigationController popToRootViewControllerAnimated:YES];
-    [self decloakForMenu:YES];
+    
     self.navigationItem.title = @"KPCC Live";
 }
 
@@ -657,7 +659,9 @@ setForOnDemandUI;
     CGFloat pct = remaining / total;
     [UIView animateWithDuration:0.25 animations:^{
         [self.sleepTimerCountdownProgress setProgress:pct];
-        [self.sleepTimerContainerView setAlpha:1.0];
+        if ( ![self cloaked] ) {
+            [self.sleepTimerContainerView setAlpha:1.0];
+        }
     }];
     
     self.plainTextCountdownLabel.text = [NSDate scientificStringFromSeconds:remaining];
@@ -825,6 +829,8 @@ setForOnDemandUI;
     
     if ( ![[UXmanager shared].settings userHasViewedOnboarding] ) {
         [[UXmanager shared] fadeOutBrandingWithCompletion:^{
+            [self animatedStateForBackwardButton:NO];
+            [self animatedStateForForwardButton:NO];
             [self moveTextIntoPlace:YES];
             [self primePlaybackUI:YES];
             self.initialPlay = YES;
@@ -1151,6 +1157,9 @@ setForOnDemandUI;
     self.jogging = YES;
     self.shuttlingGate = YES;
     
+    [[AudioManager shared] setCalibrating:YES];
+    [[SessionManager shared] setLocalLiveTime:0.0f];
+    
     Program *cProgram = [[SessionManager shared] currentProgram];
     [self.jogShuttle.view setAlpha:1.0f];
     
@@ -1248,6 +1257,8 @@ setForOnDemandUI;
     }];
     
     self.shuttlingGate = YES;
+    [[AudioManager shared] setCalibrating:YES];
+    [[SessionManager shared] setLocalLiveTime:0.0f];
     
     [self.jogShuttle.view setAlpha:1.0];
     [[SessionManager shared] setSeekForwardRequested:YES];
@@ -1451,6 +1462,8 @@ setForOnDemandUI;
     [self pushToHiddenVector:self.scrubbingTriggerView];
     [self pushToHiddenVector:self.programTitleLabel];
     [self pushToHiddenVector:self.liveRewindAltButton];
+    [self pushToHiddenVector:self.shareButton];
+    [self pushToHiddenVector:self.sleepTimerContainerView];
     
     [UIView animateWithDuration:0.25 animations:^{
         self.queueBlurView.alpha = 1.0f;
@@ -1558,6 +1571,8 @@ setForOnDemandUI;
     
     [UIView animateWithDuration:0.25 animations:^{
 
+        
+        
         if ( [Utils isThreePointFive] ) {
             self.playerControlsBottomYConstraint.constant = [self.playerControlsBottomYConstraint constant]-kScrubbingThreeFiveSlip;
             [self.view layoutIfNeeded];
@@ -1576,10 +1591,16 @@ setForOnDemandUI;
             [self.playPauseButton.layer pop_addAnimation:scaleAnimation forKey:@"squeeze-play-button"];
         }
         
-        [[AudioManager shared] setDelegate:self];
-        if ( ![[AudioManager shared] isPlayingAudio] ) {
-            [self tickOnDemand];
-        }
+     
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.25f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            [[AudioManager shared] setDelegate:self];
+            if ( ![[AudioManager shared] isPlayingAudio] ) {
+                if ( [[AudioManager shared] currentAudioMode] == AudioModeOnDemand ) {
+                    [self tickOnDemand];
+                }
+            }
+        });
+
     }];
 }
 
@@ -1686,7 +1707,7 @@ setForOnDemandUI;
     
     [self animatedStateForBackwardButton:YES];
     
-    if ( ti > kVirtualBehindLiveTolerance || [[AudioManager shared] ignoreDriftTolerance] ) {
+    if ( ti > kVirtualMediumBehindLiveTolerance || [[AudioManager shared] ignoreDriftTolerance] ) {
         [self.liveDescriptionLabel fadeText:[NSString stringWithFormat:@"%@ BEHIND LIVE", [NSDate prettyTextFromSeconds:ti]]];
         self.previousRewindThreshold = [[AudioManager shared].audioPlayer.currentItem.currentDate timeIntervalSince1970];
         
@@ -1905,6 +1926,7 @@ setForOnDemandUI;
     
     self.queueBlurView.alpha = 0.0f;
     self.queueDarkBgView.alpha = 0.0f;
+    self.shareButton.alpha = 0.0f;
     
     setForLiveStreamUI = YES;
     
@@ -1969,6 +1991,7 @@ setForOnDemandUI;
         self.scrubbingTriggerView.alpha = 1.0f;
         self.liveProgressViewController.view.alpha = 0.0f;
         [self.liveProgressViewController hide];
+        self.shareButton.alpha = 1.0f;
     } completion:^(BOOL finished) {
         
         [self.jogShuttle animateIndefinitelyWithViewToHide:self.playPauseButton completion:^{
@@ -2355,6 +2378,10 @@ setForOnDemandUI;
             okToShow = NO;
         }
     }
+    if ( [[AudioManager shared] calibrating] ) {
+        if ( okToShow )
+            NSLog(@"Rewind Button - Hiding because audio is still calibrating");
+    }
     if ( [[AudioManager shared] currentAudioMode] == AudioModeOnDemand ) {
         if ( okToShow )
             NSLog(@"Rewind Button - Hiding because Audio Mode is onDemand");
@@ -2370,7 +2397,10 @@ setForOnDemandUI;
             NSLog(@"Rewind Button - Hiding because of the UI is jogging");
         okToShow = NO;
     }
-
+    if ( [self scrubbing] ) {
+        if ( okToShow )
+            NSLog(@"Rewind Button - Hiding because of scrubbing" );
+    }
     if ( self.preRollViewController.tritonAd ) {
         if ( self.initialPlay ) {
             if ( okToShow )
@@ -2602,7 +2632,9 @@ setForOnDemandUI;
 
 #pragma mark - Util
 
-
+- (BOOL)cloaked {
+    return (self.scrubbing || self.preRollOpen || self.menuOpen);
+}
 
 #pragma mark - Menu control
 
@@ -2672,8 +2704,9 @@ setForOnDemandUI;
     [self.horizDividerLine.layer pop_addAnimation:dividerFadeAnim forKey:@"horizDividerOutFadeAnimation"];
     
     self.scrubbingTriggerView.alpha = 0.0f;
+    self.scrubbingTriggerView.userInteractionEnabled = NO;
+    self.mainContentScroller.scrollEnabled = NO;
     
-
 }
 
 - (void)decloakForMenu:(BOOL)animated {
@@ -2763,6 +2796,8 @@ setForOnDemandUI;
     [self primeManualControlButton];
     
     self.scrubbingTriggerView.alpha = 1.0f;
+    self.scrubbingTriggerView.userInteractionEnabled = YES;
+    self.mainContentScroller.scrollEnabled = YES;
     
 }
 
@@ -2820,6 +2855,8 @@ setForOnDemandUI;
     [self.programTitleLabel.layer pop_addAnimation:controlsFadeAnimation forKey:@"titleFade"];
     [self.liveDescriptionLabel.layer pop_addAnimation:controlsFadeAnimation forKey:@"statusFade"];
     
+    self.scrubbingTriggerView.alpha = 0.0f;
+    
     self.preRollOpen = YES;
     [self.view bringSubviewToFront:self.playerControlsView];
     
@@ -2864,6 +2901,7 @@ setForOnDemandUI;
         [self.horizDividerLine.layer pop_addAnimation:dividerFadeAnim forKey:@"horizDividerFadeOutAnimation"];
     }
     
+    self.scrubbingTriggerView.alpha = 0.0f;
     
     self.preRollOpen = NO;
 }
@@ -3124,6 +3162,8 @@ setForOnDemandUI;
             
         }
         case 3: {
+            
+            [self decloakForMenu:YES];
             
             event = @"menuSelectionWakeSleep";
             SCPRTimerControlViewController *timer = [[SCPRTimerControlViewController alloc] initWithNibName:@"SCPRTimerControlViewController"

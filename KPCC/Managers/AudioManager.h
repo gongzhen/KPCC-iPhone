@@ -211,6 +211,7 @@ typedef NS_ENUM(NSUInteger, StreamStatus) {
 
 @property (nonatomic, strong) NSTimer *kickstartTimer;
 @property (nonatomic, strong) NSTimer *giveupTimer;
+@property (nonatomic, copy) NSDate *seekTargetReferenceDate;
 
 - (void)updateNowPlayingInfoWithAudio:(id)audio;
 
@@ -218,6 +219,7 @@ typedef NS_ENUM(NSUInteger, StreamStatus) {
 - (void)seekToDate:(NSDate *)date;
 - (void)seekToDate:(NSDate *)date forward:(BOOL)forward failover:(BOOL)failover;
 - (void)specialSeekToDate:(NSDate*)date;
+- (void)recalibrateAfterScrub;
 
 - (void)forwardSeekLiveWithCompletion:(CompletionBlock)completion;
 - (void)forwardSeekThirtySecondsWithCompletion:(CompletionBlock)completion;

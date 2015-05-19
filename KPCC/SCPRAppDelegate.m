@@ -44,8 +44,8 @@
     [[AnalyticsManager shared] setup];
     
 #ifndef PRODUCTION
-    [[UXmanager shared].settings setUserHasViewedOnboarding:YES];
-    [[UXmanager shared].settings setUserHasViewedOnDemandOnboarding:YES];
+    //[[UXmanager shared].settings setUserHasViewedOnboarding:YES];
+    //[[UXmanager shared].settings setUserHasViewedOnDemandOnboarding:YES];
 #ifdef TESTING_SCRUBBER
     [[UXmanager shared].settings setUserHasViewedScrubbingOnboarding:NO];
     [[UXmanager shared].settings setUserHasViewedLiveScrubbingOnboarding:NO];

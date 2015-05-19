@@ -1063,9 +1063,15 @@ static const NSString *ItemStatusContext;
             [NSDate stringFromDate:[[SessionManager shared] vLive]
                               withFormat:@"h:mm:ss a"]);
             
-            [self.audioPlayer.currentItem seekToTime:CMTimeMake(MAXFLOAT * HUGE_VALF, 1) completionHandler:^(BOOL finished) {
-                [self finishSeekToLive];
-            }];
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                [self.audioPlayer.currentItem seekToTime:CMTimeMake(MAXFLOAT * HUGE_VALF, 1) completionHandler:^(BOOL finished) {
+                    [self finishSeekToLive];
+                    if ( completion ) {
+                        dispatch_async(dispatch_get_main_queue(), completion);
+                    }
+                }];
+            });
+
             return;
         }
         
@@ -1102,9 +1108,10 @@ static const NSString *ItemStatusContext;
     [self invalidateTimeObserver];
     [self.audioPlayer.currentItem seekToTime:ct completionHandler:^(BOOL finished) {
         
-        NSDate *landingDate = self.audioPlayer.currentItem.currentDate;
+        __block NSDate *landingDate = self.audioPlayer.currentItem.currentDate;
         NSTimeInterval diff = [landingDate timeIntervalSince1970] - [targetDate timeIntervalSince1970];
         NSLog(@"After 1 attempt the difference between live and target seek is %1.1f",diff);
+        self.seekTargetReferenceDate = targetDate;
         
         if ( fabs(diff) > kVirtualBehindLiveTolerance ) {
             
@@ -1115,17 +1122,23 @@ static const NSString *ItemStatusContext;
             
             [self.audioPlayer pause];
             CMTime ctFail = self.audioPlayer.currentItem.currentTime;
-            ctFail.value += -1.0f*diff*ctFail.timescale;
             
-            [self.audioPlayer.currentItem seekToTime:ctFail completionHandler:^(BOOL finished) {
-                NSTimeInterval failDiff = [landingDate timeIntervalSince1970] - [targetDate timeIntervalSince1970];
-                NSLog(@"After 2 attempts the difference between live and target seek is %1.1f",failDiff);
-                [self finishIntervalSeek:interval completion:completion];
-            }];
+    
+            ctFail.value += -1.0f*diff*ctFail.timescale;
+          
+            
+            NSAssert([NSThread isMainThread],@"Should be main thread");
+            
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                [self.audioPlayer.currentItem seekToTime:ctFail completionHandler:^(BOOL finished) {
+                    self.seekTargetReferenceDate = targetDate;
+                    [self finishIntervalSeek:interval completion:completion];
+                }];
+            });
+
             
             return;
         }
-
 
         [self finishIntervalSeek:interval completion:completion];
         
@@ -1142,7 +1155,14 @@ static const NSString *ItemStatusContext;
     
     [self startObservingTime];
     
+
+    
     dispatch_async(dispatch_get_main_queue(), ^{
+        
+        NSDate *landingDate = self.audioPlayer.currentItem.currentDate;
+        NSTimeInterval failDiff = [landingDate timeIntervalSince1970] - [self.seekTargetReferenceDate timeIntervalSince1970];
+        NSLog(@"After all attempts the difference between live and target seek is %1.1f - %@",failDiff,[NSDate stringFromDate:landingDate
+                                                                                                                 withFormat:@"h:mm:ss a"]);
         
         if ( completion ) {
             completion();
@@ -1151,6 +1171,8 @@ static const NSString *ItemStatusContext;
         ScrubbingType type = interval < 0.0f ? ScrubbingTypeBack30 : ScrubbingTypeFwd30;
         
         [self setSeekWillEffectBuffer:NO];
+        [self recalibrateAfterScrub];
+        
         [[AnalyticsManager shared] trackSeekUsageWithType:type];
         
         
@@ -1174,6 +1196,24 @@ static const NSString *ItemStatusContext;
 - (void)backwardSeekFifteenSecondsWithCompletion:(CompletionBlock)completion {
     NSTimeInterval backward = -15.0f;
     [self intervalSeekWithTimeInterval:backward completion:completion];
+}
+
+- (void)recalibrateAfterScrub {
+    NSDate *vNow = [[SessionManager shared] vNow];
+    Program *cp = [[SessionManager shared] currentProgram];
+    NSTimeInterval vNowInSeconds = [vNow timeIntervalSince1970];
+    NSTimeInterval saInSeconds = [cp.soft_starts_at timeIntervalSince1970];
+    NSTimeInterval eaInSeconds = [cp.ends_at timeIntervalSince1970];
+    
+    if ( vNowInSeconds >= eaInSeconds || vNowInSeconds <= saInSeconds ) {
+        NSLog(@"Scrub will force program update for vNow : %@",[NSDate stringFromDate:vNow
+                                                                           withFormat:@"h:mm:s a"]);
+        
+        
+        [[SessionManager shared] fetchCurrentProgram:^(id returnedObject) {
+            
+        }];
+    }
 }
 
 - (NSString *)currentDateTimeString {
@@ -1630,6 +1670,8 @@ static const NSString *ItemStatusContext;
     [self.audioPlayer pause];
     self.status = StreamStatusPaused;
     self.localBufferSample = nil;
+    
+    //[[SessionManager shared] setLocalLiveTime:0.0f];
     
     if ( self.dropoutOccurred && !self.userPause ) {
         return;

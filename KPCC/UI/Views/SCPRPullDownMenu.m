@@ -315,6 +315,7 @@
                              }
                          }
                          completion:^(BOOL finished){
+                             self.alpha = 0.0f;
                              [delegate pullDownAnimated:fullyOpen];
                          }];
     }

@@ -27,6 +27,8 @@ typedef NS_ENUM(NSUInteger, PauseExplanation) {
 static NSInteger kAllowableDriftCeiling = 180;
 static NSInteger kToleratedIncreaseInDrift = 20;
 static CGFloat kVirtualBehindLiveTolerance = 10.0f;
+static CGFloat kVirtualMediumBehindLiveTolerance = 24.0f;
+static CGFloat kVirtualLargeBehindLiveTolerance = 60.0f*10.0f;
 
 #ifndef PRODUCTION
 static NSInteger kProgramPollingPressure = 5;

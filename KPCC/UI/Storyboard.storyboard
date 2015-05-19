@@ -54,7 +54,7 @@
                             <view hidden="YES" opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Syv-nA-vpR" userLabel="OnDemandView">
                                 <rect key="frame" x="0.0" y="64" width="320" height="504"/>
                                 <subviews>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="GW7-Ev-z6f" userLabel="OnDemandMainDividerView">
+                                    <view contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="GW7-Ev-z6f" userLabel="OnDemandMainDividerView">
                                         <rect key="frame" x="5" y="320" width="310" height="1"/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <constraints>
@@ -77,28 +77,15 @@
                                         <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Daw-6l-gOy" userLabel="ShareButton" customClass="SCPRButton">
-                                        <rect key="frame" x="150" y="464" width="21" height="29"/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="29" id="U9C-rK-Krk"/>
-                                            <constraint firstAttribute="width" constant="21" id="qdI-X2-cLR"/>
-                                        </constraints>
-                                        <state key="normal" image="content-share.png">
-                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                        </state>
-                                    </button>
                                 </subviews>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <constraints>
-                                    <constraint firstItem="Daw-6l-gOy" firstAttribute="top" secondItem="GW7-Ev-z6f" secondAttribute="bottom" constant="143" id="6np-er-gkY"/>
                                     <constraint firstAttribute="trailing" secondItem="J5U-kb-6Je" secondAttribute="trailing" constant="10" id="Asm-d3-Fmk"/>
                                     <constraint firstItem="mV9-FT-8sm" firstAttribute="leading" secondItem="Syv-nA-vpR" secondAttribute="leading" constant="15" id="Cua-1x-0vg"/>
-                                    <constraint firstAttribute="bottom" secondItem="Daw-6l-gOy" secondAttribute="bottom" constant="11" id="DYz-Or-vb7"/>
                                     <constraint firstItem="GW7-Ev-z6f" firstAttribute="leading" secondItem="Syv-nA-vpR" secondAttribute="leading" constant="5" id="EtK-RY-Un6"/>
                                     <constraint firstItem="J5U-kb-6Je" firstAttribute="top" secondItem="mV9-FT-8sm" secondAttribute="bottom" constant="5" id="HVg-du-DZv"/>
                                     <constraint firstItem="J5U-kb-6Je" firstAttribute="leading" secondItem="Syv-nA-vpR" secondAttribute="leading" constant="10" id="UXr-K4-qDI"/>
                                     <constraint firstAttribute="trailing" secondItem="GW7-Ev-z6f" secondAttribute="trailing" constant="5" id="Xxq-3k-NUN"/>
-                                    <constraint firstAttribute="centerX" secondItem="Daw-6l-gOy" secondAttribute="centerX" constant="-0.5" id="mph-0D-cah"/>
                                     <constraint firstAttribute="trailing" secondItem="mV9-FT-8sm" secondAttribute="trailing" constant="8" id="ntt-Jz-yv8"/>
                                     <constraint firstItem="mV9-FT-8sm" firstAttribute="top" secondItem="Syv-nA-vpR" secondAttribute="top" constant="10" id="t9m-Ns-Wkn"/>
                                 </constraints>
@@ -480,6 +467,16 @@
                                     <constraint firstItem="cNC-9f-dth" firstAttribute="leading" secondItem="3ZI-5B-KYM" secondAttribute="leading" constant="28" id="xYw-TV-GsO"/>
                                 </constraints>
                             </view>
+                            <button opaque="NO" contentMode="center" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Daw-6l-gOy" userLabel="ShareButton" customClass="SCPRButton">
+                                <rect key="frame" x="136" y="513" width="49" height="45"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="49" id="7aj-ie-zT8"/>
+                                    <constraint firstAttribute="height" constant="45" id="ExW-RZ-E8B"/>
+                                </constraints>
+                                <state key="normal" image="content-share.png">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                         <constraints>
@@ -489,6 +486,7 @@
                             <constraint firstAttribute="trailing" secondItem="h7q-Bv-fey" secondAttribute="trailing" id="1c0-C9-OYE"/>
                             <constraint firstAttribute="trailing" secondItem="PxA-Ic-P9n" secondAttribute="trailing" constant="5" id="3kl-HI-mw7"/>
                             <constraint firstItem="Nkc-gw-Tz3" firstAttribute="top" secondItem="h7q-Bv-fey" secondAttribute="bottom" id="4Qz-We-nSt"/>
+                            <constraint firstAttribute="centerX" secondItem="Daw-6l-gOy" secondAttribute="centerX" constant="-0.5" id="4d0-MF-FEW"/>
                             <constraint firstItem="LAZ-J2-lj5" firstAttribute="top" secondItem="6Hq-JG-6xh" secondAttribute="bottom" constant="-64" id="9s7-ml-2AL"/>
                             <constraint firstItem="m9x-3i-jkL" firstAttribute="top" secondItem="6Hq-JG-6xh" secondAttribute="bottom" id="AqG-Gv-Fg8"/>
                             <constraint firstItem="Nkc-gw-Tz3" firstAttribute="top" secondItem="sYL-12-Hgi" secondAttribute="bottom" id="DYq-k2-RLl"/>
@@ -523,6 +521,7 @@
                             <constraint firstItem="Nkc-gw-Tz3" firstAttribute="top" secondItem="PxA-Ic-P9n" secondAttribute="bottom" constant="183" id="nYl-Ky-mR1"/>
                             <constraint firstAttribute="centerX" secondItem="3ZI-5B-KYM" secondAttribute="centerX" id="oPy-KY-EOj"/>
                             <constraint firstAttribute="trailing" secondItem="jYj-xG-3QJ" secondAttribute="trailing" id="q8Y-qp-dKl"/>
+                            <constraint firstItem="Nkc-gw-Tz3" firstAttribute="top" secondItem="Daw-6l-gOy" secondAttribute="bottom" constant="10" id="qh2-gQ-O6w"/>
                             <constraint firstAttribute="trailing" secondItem="Syv-nA-vpR" secondAttribute="trailing" id="sXk-p2-nmP"/>
                             <constraint firstItem="Syv-nA-vpR" firstAttribute="top" secondItem="6Hq-JG-6xh" secondAttribute="bottom" id="vd1-cv-nxc"/>
                             <constraint firstItem="Nkc-gw-Tz3" firstAttribute="top" secondItem="jYj-xG-3QJ" secondAttribute="bottom" id="wjX-U9-FSk"/>
