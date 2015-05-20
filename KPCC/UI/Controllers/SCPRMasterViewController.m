@@ -324,6 +324,7 @@ setForOnDemandUI;
     self.letsGoLabel.alpha = 0.0f;
     
     if ( ![[UXmanager shared] userHasSeenOnboarding] ) {
+        self.scrubbingTriggerView.alpha = 0.0f;
         [[UXmanager shared] loadOnboarding];
     } else {
         [[UXmanager shared] quietlyAskForNotificationPermissions];
@@ -781,6 +782,7 @@ setForOnDemandUI;
     [[AudioManager shared] takedownAudioPlayer];
     
     self.initialPlay = YES;
+    self.scrubbingTriggerView.alpha = 1.0f;
     
     [UIView animateWithDuration:0.33 animations:^{
         self.liveDescriptionLabel.alpha = 1.0f;
@@ -900,13 +902,12 @@ setForOnDemandUI;
                     [self playAudio:YES];
                 }
             } else {
+                
                 BOOL hard = [[AudioManager shared] status] == StreamStatusStopped ? YES : NO;
+                self.mainContentScroller.scrollEnabled = YES;
                 [self playAudio:hard];
+                
             }
-            
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                [[SessionManager shared] armProgramUpdater];
-            });
             
         }
     } else {
@@ -929,10 +930,6 @@ setForOnDemandUI;
         [[SessionManager shared] setLastKnownPauseExplanation:PauseExplanationUserHasPausedExplicitly];
         [self pauseAudio];
 #endif
-        
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            [[SessionManager shared] disarmProgramUpdater];
-        });
         
     }
     
@@ -2254,6 +2251,7 @@ setForOnDemandUI;
                     self.playPauseButton.alpha = 0.0f;
                 }
             }
+            
         } completion:^(BOOL finished) {
             POPSpringAnimation *bottomAnim = [POPSpringAnimation animationWithPropertyNamed:kPOPLayoutConstraintConstant];
             bottomAnim.toValue = @(0);
@@ -2311,6 +2309,16 @@ setForOnDemandUI;
                 if ( !self.preRollViewController.tritonAd ) {
                     if ( [[UXmanager shared] userHasSeenOnboarding] ) {
                         self.initialPlay = YES;
+                        
+                        if ( [[UXmanager shared].settings userHasColdStartedAudioOnce] ) {
+                            if ( ![[UXmanager shared].settings userHasViewedScheduleOnboarding] ) {
+                                self.showLiveHelpScreens = YES;
+                            }
+                        } else {
+                            [[UXmanager shared].settings setUserHasColdStartedAudioOnce:YES];
+                            [[UXmanager shared] persist];
+                        }
+                        
                         if ( self.initiateRewind ) {
                             [self activateRewind:RewindDistanceBeginning];
                         } else {
@@ -2319,6 +2327,11 @@ setForOnDemandUI;
                         
                     } else {
                         [[UXmanager shared] beginAudio];
+                    }
+                } else {
+                    if ( ![[UXmanager shared].settings userHasColdStartedAudioOnce] ) {
+                        [[UXmanager shared].settings setUserHasColdStartedAudioOnce:YES];
+                        [[UXmanager shared] persist];
                     }
                 }
                 
@@ -3242,12 +3255,11 @@ setForOnDemandUI;
             [self prettifyBehindLiveStatus];
         }
         
-        if ( !self.trainingUIisExposed && [AudioManager shared].currentAudioMode == AudioModeLive ) {
-            self.trainingUIisExposed = YES;
-            if ( ![[UXmanager shared].settings userHasViewedScheduleOnboarding] ) {
-                SCPRAppDelegate *del = [Utils del];
-                [del onboardForLiveFunctionality];
-            }
+
+        if ( self.showLiveHelpScreens ) {
+            self.showLiveHelpScreens = NO;
+            SCPRAppDelegate *del = [Utils del];
+            [del onboardForLiveFunctionality];
         }
         
         if ( [AudioManager shared].currentAudioMode == AudioModeLive ) {
@@ -3284,6 +3296,7 @@ setForOnDemandUI;
                     }
                 }
             }
+            
         }
         
         

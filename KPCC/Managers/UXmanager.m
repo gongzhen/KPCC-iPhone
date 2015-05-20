@@ -470,6 +470,7 @@
         self.masterCtrl.liveProgressViewController.view.alpha = 0.0f;
         [self showMenuButton];
     } completion:^(BOOL finished) {
+        [self.onboardingCtrl.interactionButton removeFromSuperview];
         [self.masterCtrl onboarding_fin];
     }];
     

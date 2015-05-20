@@ -37,15 +37,11 @@
     NSString *path = [[NSBundle mainBundle] pathForResource:@"Config" ofType:@"plist"];
     NSDictionary *globalConfig = [[NSDictionary alloc] initWithContentsOfFile:path];
     
-#ifdef ENABLE_TESTFLIGHT
-    [TestFlight takeOff: globalConfig[@"TestFlight"][@"AppToken"]];
-#endif
-    
     [[AnalyticsManager shared] setup];
     
 #ifndef PRODUCTION
-    //[[UXmanager shared].settings setUserHasViewedOnboarding:YES];
-    //[[UXmanager shared].settings setUserHasViewedOnDemandOnboarding:YES];
+    [[UXmanager shared].settings setUserHasViewedOnboarding:NO];
+    [[UXmanager shared].settings setUserHasViewedOnDemandOnboarding:NO];
 #ifdef TESTING_SCRUBBER
     [[UXmanager shared].settings setUserHasViewedScrubbingOnboarding:NO];
     [[UXmanager shared].settings setUserHasViewedLiveScrubbingOnboarding:NO];
