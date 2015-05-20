@@ -23,6 +23,7 @@
     self.alarmFireDate = [aDecoder decodeObjectForKey:@"alarmFireDate"];
     self.userHasViewedScrubbingOnboarding = [aDecoder decodeBoolForKey:@"userHasViewedScrubbingOnboarding"];
     self.userHasViewedScheduleOnboarding = [aDecoder decodeBoolForKey:@"userHasViewedScheduleOnboarding"];
+    self.userHasColdStartedAudioOnce = [aDecoder decodeBoolForKey:@"userHasColdStartedAudioOnce"];
     
     [[Utils del] setAlarmDate:self.alarmFireDate];
     
@@ -50,6 +51,8 @@
                 forKey:@"userHasViewedScheduleOnboarding"];
     [aCoder encodeBool:self.userHasViewedScrubbingOnboarding
                 forKey:@"userHasViewedScrubbingOnboarding"];
+    [aCoder encodeBool:self.userHasColdStartedAudioOnce
+                forKey:@"userHasColdStartedAudioOnce"];
 }
 
 @end

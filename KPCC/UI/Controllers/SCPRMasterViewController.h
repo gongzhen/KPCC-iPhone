@@ -145,12 +145,15 @@
 // Onboarding
 @property BOOL automationMode;
 @property BOOL trainingUIisExposed;
+@property BOOL showLiveHelpScreens;
+
 @property (nonatomic,strong) IBOutlet UILabel *letsGoLabel;
 
 - (void)activateRewind:(RewindDistance)distance;
 - (void)activateFastForward;
 - (void)snapJogWheel;
 - (void)specialRewind;
+
 
 // Scrubbing
 - (void)bringUpScrubber;

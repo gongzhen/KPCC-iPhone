@@ -338,7 +338,7 @@
         self.brandingView.alpha = 0.0f;
         self.textCalloutBalloonCtrl.view.alpha = 0.0f;
         self.lensVC.view.alpha = 0.0f;
-        self.view.backgroundColor = [[UIColor virtualBlackColor] translucify:0.88];
+        self.view.backgroundColor = [[UIColor virtualBlackColor] translucify:0.75];
         
         SEL handler = live ? @selector(finishLiveOnboarding) : @selector(dismissOnDemand);
         

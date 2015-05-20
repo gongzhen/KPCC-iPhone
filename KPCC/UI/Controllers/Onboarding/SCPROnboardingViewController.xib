@@ -289,10 +289,10 @@
             <rect key="frame" x="0.0" y="0.0" width="300" height="380"/>
             <subviews>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="d9S-QB-iOW" userLabel="fakeScrubberView">
-                    <rect key="frame" x="4" y="190" width="292" height="4"/>
+                    <rect key="frame" x="4" y="184" width="292" height="10"/>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     <constraints>
-                        <constraint firstAttribute="height" constant="4" id="KUU-Qn-on4"/>
+                        <constraint firstAttribute="height" constant="10" id="KUU-Qn-on4"/>
                     </constraints>
                 </view>
                 <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="onboarding-scrubber.png" translatesAutoresizingMaskIntoConstraints="NO" id="O8b-Zr-HC6">
@@ -321,7 +321,7 @@
                     <nil key="highlightedColor"/>
                 </label>
             </subviews>
-            <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.77000000000000002" colorSpace="calibratedRGB"/>
+            <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="calibratedRGB"/>
             <constraints>
                 <constraint firstItem="zbm-7o-Ncb" firstAttribute="top" secondItem="O8b-Zr-HC6" secondAttribute="bottom" constant="33" id="0ls-nW-jvT"/>
                 <constraint firstItem="8aU-dv-VsH" firstAttribute="top" secondItem="NOv-ZW-7Kr" secondAttribute="top" constant="8" id="4L4-bo-yjD"/>
