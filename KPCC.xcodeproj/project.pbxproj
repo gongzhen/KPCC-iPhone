@@ -2089,7 +2089,6 @@
 					"DEBUG=1",
 					"$(inherited)",
 					"SUPPRESS_AGGRESSIVE_KICKSTART=1",
-					"TESTING_SCRUBBER=1",
 				);
 				INFOPLIST_FILE = "KPCC/KPCC-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;

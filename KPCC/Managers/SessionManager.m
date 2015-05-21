@@ -125,16 +125,12 @@
 }
 
 - (NSTimeInterval)virtualSecondsBehindLive {
-    /*
-    NSDate *cd = [AudioManager shared].audioPlayer.currentItem.currentDate;
-    NSDate *now = [NSDate date];
-    NSTimeInterval mt = [now timeIntervalSince1970];
-    NSTimeInterval ct = [cd timeIntervalSince1970];*/
-    CMTimeRange e = [[AudioManager shared].audioPlayer.currentItem.seekableTimeRanges[0] CMTimeRangeValue];
-    NSInteger mt = CMTimeGetSeconds(CMTimeRangeGetEnd(e));
-    NSInteger ct = CMTimeGetSeconds([AudioManager shared].audioPlayer.currentItem.currentTime);
+    CGFloat sbl = [[[SessionManager shared] vLive] timeIntervalSince1970] - [[[AudioManager shared].audioPlayer.currentItem currentDate] timeIntervalSince1970];
+    if ( sbl < 0.0f ) {
+        sbl = 0.0f;
+    } 
     
-    return (mt - ct) - (self.curDrift - self.minDrift);
+    return (NSTimeInterval)sbl;
 }
 
 - (NSInteger)medianDrift {
@@ -528,10 +524,6 @@
                 touch = YES;
             }
             
-            if ( touch ) {
-                touch = ![self ignoreProgramUpdating];
-            }
-            
             if ( self.genericImageForProgram && programObj ) {
                 touch = YES;
                 self.genericImageForProgram = NO;
@@ -784,25 +776,13 @@
         }
     }
     
+    NSLog(@"Buffer length is %@",[NSDate scientificStringFromSeconds:stableDuration]);
     return stableDuration;
     
 }
 
 - (BOOL)sessionIsBehindLive {
-    
-    NSDate *currentDate = [[AudioManager shared].audioPlayer.currentItem currentDate];
-    if ( !currentDate ) return NO;
-    
-#ifndef SUPPRESS_V_LIVE
-    NSDate *live = [self vLive];
-#else
-    NSDate *live = [NSDate date];
-#endif
-    if ( fabs([live timeIntervalSince1970] - [currentDate timeIntervalSince1970]) > [self medianDrift] ) {
-        return YES;
-    }
-    
-    return NO;
+    return [self virtualSecondsBehindLive] > kVirtualLargeBehindLiveTolerance;
 }
 
 - (BOOL)sessionIsExpired {
@@ -815,16 +795,18 @@
             spd = [[SessionManager shared] sessionLeftDate];
         }
         
+        if ( !spd ) return NO;
+        
         NSDate *cit = [[AudioManager shared].audioPlayer.currentItem currentDate];
         if ( [[AudioManager shared] status] != StreamStatusStopped ) {
             if ( !cit ) {
-                // Some kind of audio abnormality, so expire this sessions
+                // Some kind of audio abnormality, so expire this session
                 return YES;
             }
         }
         
         NSDate *aux = cit ? [spd earlierDate:cit] : spd;
-        if ( !aux || [[NSDate date] timeIntervalSinceDate:aux] > kStreamBufferLimit ) {
+        if ( !aux || [[NSDate date] timeIntervalSinceDate:aux] > [self bufferLength] ) {
             return YES;
         }
     }

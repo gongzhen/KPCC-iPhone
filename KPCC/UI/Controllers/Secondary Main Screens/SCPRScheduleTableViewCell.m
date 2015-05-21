@@ -31,6 +31,8 @@
     [self.programTitleLabel proLightFontize];
     self.programTitleLabel.text = program[@"title"];
     
+    self.selectionStyle = UITableViewCellSelectionStyleNone;
+    
     NSString *startsStr = program[@"starts_at"];
     
     NSDate *startsDate = [Utils dateFromRFCString:startsStr];

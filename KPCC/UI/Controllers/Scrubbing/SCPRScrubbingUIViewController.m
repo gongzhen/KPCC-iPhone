@@ -54,6 +54,7 @@
     [self.currentProgressNeedleView removeFromSuperview];
     [self.currentProgressReadingLabel removeFromSuperview];
     
+    self.sampleTick = -1.0f;
     
     self.liveProgressNeedleView = nil;
     self.liveProgressNeedleReadingLabel = nil;
@@ -480,7 +481,7 @@
     
     self.seeking = NO;
     
-    [(SCPRMasterViewController*)self.parentViewController primeManualControlButton];
+    [(SCPRMasterViewController*)self.parentControlView primeManualControlButton];
     
     [[AnalyticsManager shared] trackSeekUsageWithType:ScrubbingTypeScrubber];
 }
@@ -520,14 +521,16 @@
                 NSString *pretty = [Utils elapsedTimeStringWithPosition:currentTime
                                                             andDuration:duration];
                 [[self scrubbingIndicatorLabel] setText:pretty];
+                
+                double se = [self strokeEndForCurrentTime];
+                [self.scrubberController tick:se];
+                
             }
         } else {
             [self tickLive];
         }
     }
     
-    double se = [self strokeEndForCurrentTime];
-    [self.scrubberController tick:se];
     [self unmuteUI];
     
 }
@@ -624,6 +627,7 @@
             [self behindLiveStatus];
         }
         
+        [self.scrubberController tick:percent];
         
         [self.view layoutIfNeeded];
     }];
@@ -707,11 +711,7 @@
     
     [UIView animateWithDuration:0.25f animations:^{
         
-        CGFloat sbl = [[[SessionManager shared] vLive] timeIntervalSince1970] - [[[AudioManager shared].audioPlayer.currentItem currentDate] timeIntervalSince1970];
-        if ( sbl < 0.0f ) {
-            sbl = 0.0f;
-        }
-        
+        CGFloat sbl = [[SessionManager shared] virtualSecondsBehindLive];
         NSLog(@"Calculated difference : %1.1f",sbl);
         
         if ( sbl > kVirtualMediumBehindLiveTolerance || [AudioManager shared].ignoreDriftTolerance ) {

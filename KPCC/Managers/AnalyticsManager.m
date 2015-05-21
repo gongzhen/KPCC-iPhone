@@ -247,9 +247,6 @@ static AnalyticsManager *singleton = nil;
             
             nParams[@"indicatedBitrate"] = [NSString stringWithFormat:@"%1.1f",event.indicatedBitrate];
             nParams[@"observedBitrate"] =  [NSString stringWithFormat:@"%1.1f",event.observedBitrate];
-            
-            NSLog(@"iBR : %1.1f, oBR : %1.1f",event.indicatedBitrate,event.observedBitrate);
-            
             nParams[@"bytesTransferred"] = @(event.numberOfBytesTransferred);
             
             if ( self.accessLogReceivedAt ) {
@@ -319,6 +316,12 @@ static AnalyticsManager *singleton = nil;
         case ScrubbingTypeBack30:
         case ScrubbingTypeFwd30:
             method = @"button";
+            break;
+        case ScrubbingTypeBackToLive:
+            method = @"back-to-live-button";
+            break;
+        case ScrubbingTypeRewindToStart:
+            method = @"rewind-to-start-button";
             break;
         case ScrubbingTypeUnknown:
         default:

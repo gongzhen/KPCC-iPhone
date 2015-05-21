@@ -41,6 +41,8 @@
 - (BOOL)userHasSeenOnboarding;
 - (BOOL)userHasSeenScrubbingOnboarding;
 
+- (BOOL)onboardingPlaying;
+
 - (void)loadOnboarding;
 - (void)beginOnboarding:(SCPRMasterViewController*)masterCtrl;
 - (void)fadeInBranding;

@@ -40,8 +40,8 @@
     [[AnalyticsManager shared] setup];
     
 #ifndef PRODUCTION
-    [[UXmanager shared].settings setUserHasViewedOnboarding:NO];
-    [[UXmanager shared].settings setUserHasViewedOnDemandOnboarding:NO];
+    //[[UXmanager shared].settings setUserHasViewedOnboarding:YES];
+    //[[UXmanager shared].settings setUserHasViewedOnDemandOnboarding:YES];
 #ifdef TESTING_SCRUBBER
     [[UXmanager shared].settings setUserHasViewedScrubbingOnboarding:NO];
     [[UXmanager shared].settings setUserHasViewedLiveScrubbingOnboarding:NO];
@@ -302,12 +302,7 @@
         [[SessionManager shared] setSessionReturnedDate:[NSDate date]];
         [self.masterViewController determinePlayState];
     }
-    
-    if ( [[AudioManager shared] currentAudioMode] == AudioModeOnboarding ) {
-        if ( [[UXmanager shared] paused] ) {
-            [[UXmanager shared] godPauseOrPlay];
-        }
-    }
+
     
     NSString *push = [[UXmanager shared].settings latestPushJson];
     if ( push && !SEQ(push,@"") ) {
@@ -321,7 +316,7 @@
     [[SessionManager shared] setUserLeavingForClickthrough:NO];
     [[AudioManager shared] stopWaiting];
     [[ContentManager shared] sweepBookmarks];
-    if ( [[AudioManager shared] isPlayingAudio] ) {
+    if ( [[AudioManager shared] isPlayingAudio] && [[AudioManager shared] currentAudioMode] == AudioModeLive ) {
         [[SessionManager shared] checkProgramUpdate:YES];
     }
     

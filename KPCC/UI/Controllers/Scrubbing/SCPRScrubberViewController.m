@@ -305,7 +305,10 @@
     if ( self.panning ) return;
     
     dispatch_async(dispatch_get_main_queue(), ^{
+        self.currentBarLine.opacity = 1.0f;
         self.currentBarLine.strokeEnd = amount;
+        [self.currentBarLine layoutIfNeeded];
+        [self.view.layer layoutIfNeeded];
     });
 }
 

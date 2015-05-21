@@ -22,7 +22,9 @@ typedef NS_ENUM(NSInteger, ScrubbingType) {
     ScrubbingTypeUnknown = 0,
     ScrubbingTypeScrubber,
     ScrubbingTypeBack30,
-    ScrubbingTypeFwd30
+    ScrubbingTypeFwd30,
+    ScrubbingTypeRewindToStart,
+    ScrubbingTypeBackToLive
 };
 
 @interface AnalyticsManager : NSObject
