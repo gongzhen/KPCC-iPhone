@@ -510,8 +510,9 @@
 - (void)fetchCurrentProgram:(CompletionBlockWithValue)completed {
     NSDate *ct = [self vNow];
     [self fetchProgramAtDate:ct completed:^(id returnedObject) {
-
-        NSAssert([NSThread isMainThread],@"Somehow being called on a secondary thread");
+#ifdef TESTING_SCHEDULE
+        returnedObject = nil;
+#endif
         if ( returnedObject ) {
             Program *programObj = (Program*)returnedObject;
             BOOL touch = NO;
@@ -538,11 +539,41 @@
             completed(programObj);
             
         } else {
+            
+            // Create a fake program to simulate live
+            
+            NSDate *now = [self vNow];
+            NSDictionary *bookends = [now bookends];
+            
+            NSString *endsAt = [NSDate stringFromDate:bookends[@"bottom"]
+                                           withFormat:@"yyyy-MM-dd'T'HHmmssZZZ"];
+            NSString *top = [NSDate stringFromDate:bookends[@"top"]
+                                        withFormat:@"yyyy-MM-dd'T'HHmmssZZZ"];
+            
+            Program *gp = [Program insertProgramWithDictionary:@{ @"title" : @"KPCC Live",
+                                                                  @"ends_at" : endsAt,
+                                                                  @"starts_at" : top,
+                                                                  @"soft_starts_at" : top,
+                                                                  @"is_recurring" : @(NO),
+                                                                  @"public_url" : @"http://scpr.org",
+                                                                  @"program" : @{ @"slug" : @"kpcc-live" }
+                                                                  }
+                                        inManagedObjectContext:[[ContentManager shared] managedObjectContext]];
+            
+            [gp setStarts_at:bookends[@"top"]];
+            [gp setEnds_at:bookends[@"bottom"]];
+            [gp setSoft_starts_at:bookends[@"top"]];
+            [gp setTitle:@"KPCC Live"];
+            
+            [[ContentManager shared] saveContext];
+            
+            self.currentProgram = gp;
+            
             [[NSNotificationCenter defaultCenter] postNotificationName:@"program-has-changed"
                                                                 object:nil
                                                               userInfo:nil];
             
-            completed(nil);
+            completed(gp);
             
         }
             
@@ -845,6 +876,15 @@
     NSTimeInterval hardTI = [hard timeIntervalSince1970];
     NSTimeInterval nowTI = [now timeIntervalSince1970];
     if ( nowTI >= hardTI && nowTI <= softTI ) {
+        return YES;
+    }
+    
+    return NO;
+}
+
+- (BOOL)sessionHasNoProgram {
+
+    if ( SEQ(self.currentProgram.program_slug,@"kpcc-live") ) {
         return YES;
     }
     

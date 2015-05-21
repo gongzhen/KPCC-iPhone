@@ -66,6 +66,9 @@
     }
     
     NSDate *cpEndsAt = [program ends_at];
+    NSLog(@"Projected end for program : %@",[NSDate stringFromDate:cpEndsAt
+                                                        withFormat:@"h:mm:ss a"]);
+    
     [[SessionManager shared] fetchProgramAtDate:cpEndsAt completed:^(id returnedObject) {
         
         [self setupWithNextProgram:(Program*)returnedObject];
@@ -78,7 +81,8 @@
     
     self.programTitleLabel.text = [program title];
     
-    NSString *pretty = [NSDate stringFromDate:[program starts_at]
+    NSDate *displayDate = [[SessionManager shared] sessionHasNoProgram] ? [[[SessionManager shared] currentProgram] ends_at] : [program starts_at];
+    NSString *pretty = [NSDate stringFromDate:displayDate
                                    withFormat:@"h:mm a"];
     
     pretty = [pretty lowercaseString];

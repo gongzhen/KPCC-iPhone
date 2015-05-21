@@ -31,6 +31,8 @@
 @property (nonatomic,strong) IBOutlet UIButton *interactionButton;
 @property (nonatomic,strong) IBOutlet NSLayoutConstraint *logoTopAnchor;
 @property (nonatomic,strong) IBOutlet NSLayoutConstraint *sloganTopAnchor;
+@property (nonatomic,strong) IBOutlet NSLayoutConstraint *dividerWidthAnchor;
+
 // Lens
 @property (nonatomic,strong) IBOutlet NSLayoutConstraint *lensTopConstraint;
 @property (nonatomic,strong) IBOutlet NSLayoutConstraint *lenstLeftConstraint;

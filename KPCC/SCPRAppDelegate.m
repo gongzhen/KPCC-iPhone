@@ -43,6 +43,7 @@
     //[[UXmanager shared].settings setUserHasViewedOnboarding:YES];
     //[[UXmanager shared].settings setUserHasViewedOnDemandOnboarding:YES];
 #ifdef TESTING_SCRUBBER
+    [[UXmanager shared].settings setUserHasViewedOnDemandOnboarding:NO];
     [[UXmanager shared].settings setUserHasViewedScrubbingOnboarding:NO];
     [[UXmanager shared].settings setUserHasViewedLiveScrubbingOnboarding:NO];
     [[UXmanager shared].settings setUserHasViewedScheduleOnboarding:NO];

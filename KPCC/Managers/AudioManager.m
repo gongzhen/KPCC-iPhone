@@ -884,11 +884,7 @@ static const NSString *ItemStatusContext;
         NSTimeInterval diff = fabs([landingDate timeIntervalSince1970] - [[[SessionManager shared] vLive] timeIntervalSince1970]);
         if ( diff > kVirtualBehindLiveTolerance ) {
             
-            NSLog(@"Trying again because seek to live came up short ... %@ vs %@",[NSDate stringFromDate:landingDate
-                                                                                              withFormat:@"h:mm:ss a"],
-            [NSDate stringFromDate:[[SessionManager shared] vLive]
-                              withFormat:@"h:mm:ss a"]);
-            
+            NSLog(@"Trying again...");
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                 [self.audioPlayer.currentItem seekToTime:CMTimeMake(MAXFLOAT * HUGE_VALF, 1) completionHandler:^(BOOL finished) {
                     [self finishSeekToLive];
@@ -942,10 +938,7 @@ static const NSString *ItemStatusContext;
         
         if ( fabs(diff) > kVirtualBehindLiveTolerance ) {
             
-            NSLog(@"Trying again because interval seeking came up short ... %@ vs %@",[NSDate stringFromDate:landingDate
-                                                                                              withFormat:@"h:mm:ss a"],
-                  [NSDate stringFromDate:targetDate
-                              withFormat:@"h:mm:ss a"]);
+            NSLog(@"Trying again...");
             
             [self.audioPlayer pause];
             CMTime ctFail = self.audioPlayer.currentItem.currentTime;
@@ -986,8 +979,7 @@ static const NSString *ItemStatusContext;
         
         NSDate *landingDate = self.audioPlayer.currentItem.currentDate;
         NSTimeInterval failDiff = [landingDate timeIntervalSince1970] - [self.seekTargetReferenceDate timeIntervalSince1970];
-        NSLog(@"After all attempts the difference between live and target seek is %1.1f - %@",failDiff,[NSDate stringFromDate:landingDate
-                                                                                                                 withFormat:@"h:mm:ss a"]);
+        NSLog(@"After all attempts the difference between live and target seek is %1.1f - %@",failDiff,[NSDate stringFromDate:landingDate withFormat:@"h:mm:ss a"]);
         
         ScrubbingType type = interval < 0.0f ? ScrubbingTypeBack30 : ScrubbingTypeFwd30;
         if ( interval < -30.0f ) {
@@ -1037,8 +1029,7 @@ static const NSString *ItemStatusContext;
     NSTimeInterval eaInSeconds = [cp.ends_at timeIntervalSince1970];
     
     if ( vNowInSeconds >= eaInSeconds || vNowInSeconds <= saInSeconds ) {
-        NSLog(@"Scrub will force program update for vNow : %@",[NSDate stringFromDate:vNow
-                                                                           withFormat:@"h:mm:s a"]);
+        NSLog(@"Scrub will force program update for vNow : %@",[NSDate stringFromDate:vNow withFormat:@"h:mm:s a"]);
         
         
         [[SessionManager shared] fetchCurrentProgram:^(id returnedObject) {

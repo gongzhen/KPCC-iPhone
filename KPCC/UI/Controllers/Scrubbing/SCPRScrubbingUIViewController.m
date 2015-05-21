@@ -709,6 +709,8 @@
 - (void)behindLiveStatus {
     
     
+    [(SCPRMasterViewController*)self.parentControlView adjustScrubbingState];
+    
     [UIView animateWithDuration:0.25f animations:^{
         
         CGFloat sbl = [[SessionManager shared] virtualSecondsBehindLive];
@@ -732,9 +734,6 @@
             self.currentProgressReadingLabel.alpha = 0.0f;
             self.currentProgressNeedleView.alpha = 0.0f;
             
-            self.fw30Button.alpha = 1.0f;
-            self.fw30Button.userInteractionEnabled = YES;
-            
         } else {
             
             [AudioManager shared].ignoreDriftTolerance = NO;
@@ -742,8 +741,6 @@
             self.currentProgressReadingLabel.alpha = 0.0f;
             self.currentProgressNeedleView.alpha = 0.0f;
             
-            self.fw30Button.alpha = 0.4f;
-            self.fw30Button.userInteractionEnabled = NO;
             
             [self.timeNumericLabel fadeText:@"LIVE"
                                    duration:0.225];

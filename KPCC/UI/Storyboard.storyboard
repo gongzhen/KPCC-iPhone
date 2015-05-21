@@ -54,7 +54,7 @@
                             <view hidden="YES" opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Syv-nA-vpR" userLabel="OnDemandView">
                                 <rect key="frame" x="0.0" y="64" width="320" height="504"/>
                                 <subviews>
-                                    <view contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="GW7-Ev-z6f" userLabel="OnDemandMainDividerView">
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="GW7-Ev-z6f" userLabel="OnDemandMainDividerView">
                                         <rect key="frame" x="5" y="320" width="310" height="1"/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <constraints>
@@ -80,6 +80,7 @@
                                 </subviews>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <constraints>
+                                    <constraint firstAttribute="bottom" secondItem="GW7-Ev-z6f" secondAttribute="bottom" constant="183" id="2J6-sf-Rd0"/>
                                     <constraint firstAttribute="trailing" secondItem="J5U-kb-6Je" secondAttribute="trailing" constant="10" id="Asm-d3-Fmk"/>
                                     <constraint firstItem="mV9-FT-8sm" firstAttribute="leading" secondItem="Syv-nA-vpR" secondAttribute="leading" constant="15" id="Cua-1x-0vg"/>
                                     <constraint firstItem="GW7-Ev-z6f" firstAttribute="leading" secondItem="Syv-nA-vpR" secondAttribute="leading" constant="5" id="EtK-RY-Un6"/>
@@ -368,16 +369,16 @@
                                     <constraint firstItem="tCd-bL-d4d" firstAttribute="top" secondItem="jOK-Q6-eLd" secondAttribute="top" id="zl5-eW-NWl"/>
                                 </constraints>
                             </view>
-                            <progressView hidden="YES" opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="PxA-Ic-P9n">
-                                <rect key="frame" x="5" y="383" width="310" height="2"/>
+                            <progressView hidden="YES" opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="PxA-Ic-P9n">
+                                <rect key="frame" x="5" y="375" width="310" height="10"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="2" id="RAV-w9-VuT"/>
+                                    <constraint firstAttribute="height" constant="10" id="RAV-w9-VuT"/>
                                 </constraints>
                                 <color key="progressTintColor" red="0.97254901959999995" green="0.4941176471" blue="0.12941176469999999" alpha="1" colorSpace="calibratedRGB"/>
                                 <color key="trackTintColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                             </progressView>
                             <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Q1h-II-U3Q" userLabel="TimeLabelOnDemand">
-                                <rect key="frame" x="15" y="352" width="141" height="22"/>
+                                <rect key="frame" x="15" y="344" width="141" height="22"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="22" id="dlN-jG-U6T"/>
                                     <constraint firstAttribute="width" constant="141" id="lXk-B1-VbZ"/>

@@ -50,8 +50,6 @@
                 tomorrowWeekday = 1;
             }
             
-            NSLog(@"Date Components : %@",[comps description]);
-            
             self.programObjects = returnedObject;
             self.todayPrograms = [NSMutableArray new];
             self.tomorrowPrograms = [NSMutableArray new];

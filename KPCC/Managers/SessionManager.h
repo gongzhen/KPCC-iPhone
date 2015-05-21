@@ -151,5 +151,6 @@ static NSInteger kProgramPollingPressure = 5;
 @property (nonatomic,strong) Program *fakeCurrent;
 #endif
 
+- (BOOL)sessionHasNoProgram;
 
 @end

@@ -29,6 +29,13 @@
     
     self.fakeScrubberView.alpha = 0.0f;
     
+    if ( ![Utils isIOS8] ) {
+        NSDictionary *dimensions = [[DesignManager shared] sizeConstraintsForView:self.dividerView];
+        self.dividerWidthAnchor = dimensions[@"width"];
+        self.dividerView.translatesAutoresizingMaskIntoConstraints = NO;
+        [self.dividerView addConstraint:self.dividerWidthAnchor];
+    }
+    
     // Do any additional setup after loading the view from its nib.
 }
 
@@ -131,6 +138,11 @@
     scaleAnimation.fromValue  = [NSValue valueWithCGSize:CGSizeMake(0.025f, 1.0f)];
     scaleAnimation.toValue  = [NSValue valueWithCGSize:CGSizeMake(1.0f, 1.0f)];
     scaleAnimation.duration = 1.0f;
+    if ( ![Utils isIOS8] ) {
+        [scaleAnimation setCompletionBlock:^(POPAnimation *a, BOOL f) {
+            [self.brandingView layoutIfNeeded];
+        }];
+    }
     [self.dividerView.layer pop_addAnimation:scaleAnimation forKey:@"scaleAnimation"];
     
     [UIView animateWithDuration:0.33f animations:^{
@@ -153,6 +165,7 @@
                 completed();
             });
         }];
+        
     }];
 }
 
@@ -233,6 +246,9 @@
 }
 
 - (void)onboardingSwipingAction:(BOOL)schedule {
+    
+    self.scrubbingContainerView.alpha = 0.0f;
+    
     self.view.alpha = 0.0f;
     self.onDemandContainerView.alpha = 1.0f;
     self.notificationsView.alpha = 0.0f;

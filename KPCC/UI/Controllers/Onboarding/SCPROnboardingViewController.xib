@@ -289,7 +289,7 @@
             <rect key="frame" x="0.0" y="0.0" width="300" height="380"/>
             <subviews>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="d9S-QB-iOW" userLabel="fakeScrubberView">
-                    <rect key="frame" x="4" y="184" width="292" height="10"/>
+                    <rect key="frame" x="-4" y="184" width="308" height="10"/>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="10" id="KUU-Qn-on4"/>
@@ -325,7 +325,7 @@
             <constraints>
                 <constraint firstItem="zbm-7o-Ncb" firstAttribute="top" secondItem="O8b-Zr-HC6" secondAttribute="bottom" constant="33" id="0ls-nW-jvT"/>
                 <constraint firstItem="8aU-dv-VsH" firstAttribute="top" secondItem="NOv-ZW-7Kr" secondAttribute="top" constant="8" id="4L4-bo-yjD"/>
-                <constraint firstAttribute="trailing" secondItem="d9S-QB-iOW" secondAttribute="trailing" constant="4" id="8VX-lb-YAH"/>
+                <constraint firstAttribute="trailing" secondItem="d9S-QB-iOW" secondAttribute="trailing" constant="-4" id="8VX-lb-YAH"/>
                 <constraint firstItem="O8b-Zr-HC6" firstAttribute="top" secondItem="8aU-dv-VsH" secondAttribute="bottom" constant="67" id="9ZY-s1-9Uy"/>
                 <constraint firstItem="O8b-Zr-HC6" firstAttribute="top" secondItem="d9S-QB-iOW" secondAttribute="bottom" constant="-17" id="B9N-Ev-5LV"/>
                 <constraint firstAttribute="height" constant="380" id="QB7-Aj-RF9"/>
@@ -335,12 +335,12 @@
                 <constraint firstItem="8aU-dv-VsH" firstAttribute="leading" secondItem="NOv-ZW-7Kr" secondAttribute="leading" constant="36" id="iVK-OT-6wx"/>
                 <constraint firstItem="O8b-Zr-HC6" firstAttribute="leading" secondItem="NOv-ZW-7Kr" secondAttribute="leading" constant="10" id="jqg-9a-yER"/>
                 <constraint firstAttribute="trailing" secondItem="zbm-7o-Ncb" secondAttribute="trailing" constant="10" id="otF-Ua-FSt"/>
-                <constraint firstItem="d9S-QB-iOW" firstAttribute="leading" secondItem="NOv-ZW-7Kr" secondAttribute="leading" constant="4" id="r6o-iU-mqK"/>
+                <constraint firstItem="d9S-QB-iOW" firstAttribute="leading" secondItem="NOv-ZW-7Kr" secondAttribute="leading" constant="-4" id="r6o-iU-mqK"/>
                 <constraint firstAttribute="width" constant="300" id="scz-tf-aNg"/>
             </constraints>
             <nil key="simulatedStatusBarMetrics"/>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
-            <point key="canvasLocation" x="-89" y="-607"/>
+            <point key="canvasLocation" x="-258" y="-504"/>
         </view>
     </objects>
     <resources>

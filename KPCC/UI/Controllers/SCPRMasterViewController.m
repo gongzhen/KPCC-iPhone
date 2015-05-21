@@ -323,8 +323,9 @@ setForOnDemandUI;
     [self.letsGoLabel proMediumFontize];
     self.letsGoLabel.alpha = 0.0f;
     
+    [self adjustScrubbingState];
+    
     if ( ![[UXmanager shared] userHasSeenOnboarding] ) {
-        self.scrubbingTriggerView.alpha = 0.0f;
         [[UXmanager shared] loadOnboarding];
     } else {
         [[UXmanager shared] quietlyAskForNotificationPermissions];
@@ -471,11 +472,11 @@ setForOnDemandUI;
     
     CGFloat heightHint = [Utils isThreePointFive] ? self.view.frame.size.height-64.0f : self.liveStreamView.frame.size.height;
     
-    NSArray *cpSizeConstraints = [[DesignManager shared] sizeConstraintsForView:self.upcomingScreen.view hints:@{ @"height" : @(heightHint),
-                                                                                                            @"width" : @(self.mainContentScroller.frame.size.width)}];
+    NSArray *cpSizeConstraints = [[[DesignManager shared] sizeConstraintsForView:self.upcomingScreen.view hints:@{ @"height" : @(heightHint),
+                                                                                                            @"width" : @(self.mainContentScroller.frame.size.width)}] allValues];
     
-    NSArray *fsSizeConstraints = [[DesignManager shared] sizeConstraintsForView:self.cpFullDetailScreen.view hints:@{ @"height" : @(heightHint),
-                                                                                                            @"width" : @(self.mainContentScroller.frame.size.width)}];
+    NSArray *fsSizeConstraints = [[[DesignManager shared] sizeConstraintsForView:self.cpFullDetailScreen.view hints:@{ @"height" : @(heightHint),
+                                                                                                            @"width" : @(self.mainContentScroller.frame.size.width)}] allValues];
     
     [self.upcomingScreen.view addConstraints:cpSizeConstraints];
     [self.cpFullDetailScreen.view addConstraints:fsSizeConstraints];
@@ -536,7 +537,7 @@ setForOnDemandUI;
                                                       self.liveStreamView.frame.size.height);
     }
     
-    self.mainContentScroller.scrollEnabled = NO;
+    [self adjustScrollingState];
     
 }
 
@@ -784,7 +785,8 @@ setForOnDemandUI;
     [[AudioManager shared] takedownAudioPlayer];
     
     self.initialPlay = YES;
-    self.scrubbingTriggerView.alpha = 1.0f;
+    
+    [self adjustScrubbingState];
     
     [UIView animateWithDuration:0.33 animations:^{
         self.liveDescriptionLabel.alpha = 1.0f;
@@ -831,8 +833,7 @@ setForOnDemandUI;
     
     if ( ![[UXmanager shared].settings userHasViewedOnboarding] ) {
         [[UXmanager shared] fadeOutBrandingWithCompletion:^{
-            [self animatedStateForBackwardButton:NO];
-            [self animatedStateForForwardButton:NO];
+            [self adjustScrubbingState];
             [self moveTextIntoPlace:YES];
             [self primePlaybackUI:YES];
             self.initialPlay = YES;
@@ -1375,7 +1376,8 @@ setForOnDemandUI;
     self.back30VerticalAnchor.constant = [Utils isThreePointFive] ? 28.0 : 40.0f;
     self.fwd30VerticalAnchor.constant = [Utils isThreePointFive] ? 28.0 : 40.0f;
     self.scrubbingUI.parentControlView = self;
-    self.scrubbingTriggerView.alpha = 0.0f;
+    
+    [self adjustScrubbingState];
     
     sUI.view.alpha = 0.0f;
 
@@ -1388,6 +1390,10 @@ setForOnDemandUI;
     
     if ( [[AudioManager shared] currentAudioMode] != AudioModeOnDemand &&
         [[AudioManager shared] currentAudioMode] != AudioModeLive ) {
+        return;
+    }
+    
+    if ( [[SessionManager shared] sessionHasNoProgram] ) {
         return;
     }
     
@@ -1528,6 +1534,20 @@ setForOnDemandUI;
                                                                    multiplier:1.0
                                                                      constant:0.0];
     
+    NSLayoutConstraint *widthAnchor = [NSLayoutConstraint constraintWithItem:self.scrubberCloseButton
+                                                                   attribute:NSLayoutAttributeWidth
+                                                                   relatedBy:NSLayoutRelationEqual
+                                                                      toItem:nil
+                                                                   attribute:NSLayoutAttributeNotAnAttribute
+                                                                  multiplier:1.0f
+                                                                    constant:40.0f];
+    
+#ifdef TESTING_SCRUBBER
+    self.scrubberCloseButton.backgroundColor = [[UIColor kpccPeriwinkleColor] translucify:0.66f];
+#endif
+    
+    [self.scrubberCloseButton addConstraint:widthAnchor];
+    
     CGFloat btnSize = [Utils isThreePointFive] ? 32.0 : 40.0f;
     CGFloat bottomAnchorConstant = [Utils isThreePointFive] ? 8.0 : 14.0f;
     
@@ -1643,11 +1663,14 @@ setForOnDemandUI;
 }
 
 - (void)animatedStateForButton:(UIButton *)button enabled:(BOOL)enabled {
+    
+    CGFloat stateAlpha = button.alpha == 0.0f ? 0.0f : 1.0f;
     [UIView animateWithDuration:0.33f animations:^{
-        button.alpha = enabled ? 1.0f : 0.4f;
+        button.alpha = enabled ? stateAlpha : 0.4f;
     }];
 
     button.userInteractionEnabled = enabled;
+    
 }
 
 - (void)wipeTargetsForScrubButtons {
@@ -1664,8 +1687,7 @@ setForOnDemandUI;
 - (void)prettifyBehindLiveStatus {
     
     if ( [[AudioManager shared] currentAudioMode] == AudioModeOnDemand ) {
-        [self animatedStateForForwardButton:YES];
-        [self animatedStateForBackwardButton:YES];
+        [self adjustScrubbingState];
         return;
     }
     
@@ -1694,7 +1716,7 @@ setForOnDemandUI;
             self.dirtyFromRewind = NO;
         }
         
-        [self animatedStateForForwardButton:NO];
+        [self adjustScrubbingState];
         
         return;
     }
@@ -1705,13 +1727,11 @@ setForOnDemandUI;
         return;
     }
     
-    [self animatedStateForBackwardButton:YES];
-    
     if ( ti > kVirtualMediumBehindLiveTolerance || [[AudioManager shared] ignoreDriftTolerance] ) {
         [self.liveDescriptionLabel fadeText:[NSString stringWithFormat:@"%@ BEHIND LIVE", [NSDate prettyTextFromSeconds:ti]]];
         self.previousRewindThreshold = [[AudioManager shared].audioPlayer.currentItem.currentDate timeIntervalSince1970];
         
-        [self animatedStateForForwardButton:YES];
+
     } else {
         if ( [[SessionManager shared] sessionIsInRecess] ) {
             [self.liveDescriptionLabel fadeText:@"UP NEXT"];
@@ -1719,10 +1739,10 @@ setForOnDemandUI;
             [self.liveDescriptionLabel fadeText:@"LIVE"];
             self.dirtyFromRewind = NO;
         }
-      
-        [self animatedStateForForwardButton:NO];
         
     }
+    
+    [self adjustScrubbingState];
 }
 
 - (void)updateDataForUI {
@@ -1899,6 +1919,8 @@ setForOnDemandUI;
     self.onDemandFailing = NO;
     self.scrubbingUIView.alpha = 0.0f;
     self.queueBlurShown = NO;
+    self.dividerLineRightAnchor.constant = -5.0f;
+    self.dividerLineLeftAnchor.constant = 5.0f;
     
     self.navigationItem.title = @"KPCC Live";
     [self primeRemoteCommandCenter:YES];
@@ -1974,9 +1996,6 @@ setForOnDemandUI;
         [self.progressView setHidden:NO];
     }
     
-    self.scrubbingTriggerView.alpha = 1.0f;
-    self.scrubbingTriggerView.userInteractionEnabled = YES;
-    
     self.onDemandPlayerView.backgroundColor = [UIColor clearColor];
     self.timeLabelOnDemand.text = @"LOADING...";
     self.queueLoading = YES;
@@ -1991,7 +2010,7 @@ setForOnDemandUI;
         self.jogShuttle.view.alpha = 1.0f;
         self.timeLabelOnDemand.alpha = 1.0f;
         self.queueBlurView.layer.opacity = 1.0f;
-        self.scrubbingTriggerView.alpha = 1.0f;
+        
         self.liveProgressViewController.view.alpha = 0.0f;
         [self.liveProgressViewController hide];
         self.shareButton.alpha = 1.0f;
@@ -2012,6 +2031,8 @@ setForOnDemandUI;
         if (self.menuOpen) {
             [self decloakForMenu:NO];
         }
+        
+        [self adjustScrubbingState];
         
         [[SessionManager shared] setCurrentProgram:nil];
         
@@ -2139,8 +2160,8 @@ setForOnDemandUI;
     // Only update background image when we're not in On Demand mode.
     if (!setForOnDemandUI){
         
-        if ( !programObj ) {
-            [self updateUIWithProgram:nil];
+        if ( !programObj || SEQ(programObj.program_slug,@"kpcc-live") ) {
+            [self updateUIWithProgram:programObj];
             [[SessionManager shared] setGenericImageForProgram:YES];
             self.programImageView.image = [UIImage imageNamed:@"program_tile_generic.jpg"];
             [self finishUpdatingForProgram];
@@ -2209,7 +2230,6 @@ setForOnDemandUI;
                                                                    iterations:3
                                                                     tintColor:[UIColor clearColor]];
         
-        NSLog(@"Image : %1.1f, %1.1f",blurry.size.width,blurry.size.height);
         
         self.queueBlurView.image = blurry;
         
@@ -2217,11 +2237,6 @@ setForOnDemandUI;
 }
 
 - (void)updateUIWithProgram:(Program*)program {
-    if (!program) {
-        self.programTitleLabel.text = @"";
-        self.liveDescriptionLabel.text = @"NO NETWORK";
-        return;
-    }
     
     if ([program title]) {
         if ([program title].length <= 14) {
@@ -2233,6 +2248,13 @@ setForOnDemandUI;
         }
         [self.programTitleLabel setText:[program title]];
     }
+    
+    if ( SEQ(program.program_slug,@"kpcc-live") ) {
+        [self primeManualControlButton];
+    }
+    
+    [self adjustScrubbingState];
+    [self adjustScrollingState];
 }
 
 - (void)primePlaybackUI:(BOOL)animated {
@@ -2308,7 +2330,7 @@ setForOnDemandUI;
             fadeControls.toValue = @(0);
             [fadeControls setCompletionBlock:^(POPAnimation *p, BOOL c) {
                 
-                self.scrubbingTriggerView.alpha = 1.0f;
+                [self adjustScrubbingState];
                 
                 if ( !self.preRollViewController.tritonAd ) {
                     if ( [[UXmanager shared] userHasSeenOnboarding] ) {
@@ -2379,6 +2401,11 @@ setForOnDemandUI;
     if ( [[AudioManager shared] prerollPlaying] ) {
         if ( okToShow )
             NSLog(@"Rewind Button - Hiding because preroll");
+        okToShow = NO;
+    }
+    if ( [[SessionManager shared] sessionHasNoProgram] ) {
+        if ( okToShow )
+            NSLog(@"Rewind Button - Hiding because live stream has no clearly defined program");
         okToShow = NO;
     }
     if ( [[AudioManager shared] status] == StreamStatusStopped && [[AudioManager shared] currentAudioMode] == AudioModeOnDemand ) {
@@ -2622,21 +2649,31 @@ setForOnDemandUI;
 }
 
 - (void)pushToHiddenVector:(UIView *)viewToHide {
+    if ( self.hiddenVectorCommitted ) return;
+    
     if ( viewToHide.alpha > 0.0f ) {
         [self.hiddenVector addObject:@{ @"view" : viewToHide, @"alpha" : @(viewToHide.alpha) }];
     }
 }
 
 - (void)commitHiddenVector {
+    
+    if ( self.hiddenVectorCommitted ) return;
+    
     [UIView animateWithDuration:0.275 animations:^{
         for ( NSDictionary *th in self.hiddenVector ) {
             UIView *v2h = th[@"view"];
             v2h.alpha = 0.0f;
         }
+    } completion:^(BOOL finished) {
+        self.hiddenVectorCommitted = YES;
     }];
 }
 
 - (void)popHiddenVector {
+    
+    if ( !self.hiddenVectorCommitted ) return;
+    
     [UIView animateWithDuration:0.275 animations:^{
         for ( NSDictionary *th in self.hiddenVector ) {
             UIView *v2h = th[@"view"];
@@ -2644,7 +2681,88 @@ setForOnDemandUI;
         }
     } completion:^(BOOL finished) {
         [self.hiddenVector removeAllObjects];
+        self.hiddenVectorCommitted = NO;
     }];
+}
+
+- (void)mutePrimaryControls {
+    
+    SCPRAppDelegate *del = (SCPRAppDelegate*)[[UIApplication sharedApplication] delegate];
+    SCPRNavigationController *nav = del.masterNavigationController;
+    self.scrubbingTriggerView.userInteractionEnabled = NO;
+    
+    [self pushToHiddenVector:self.playerControlsView];
+    [self pushToHiddenVector:self.initialControlsView];
+    [self pushToHiddenVector:self.scrubbingTriggerView];
+    [self pushToHiddenVector:nav.menuButton];
+    [self pushToHiddenVector:self.liveRewindAltButton];
+    [self commitHiddenVector];
+    
+}
+
+- (void)unmutePrimaryControls {
+    self.scrubbingTriggerView.userInteractionEnabled = YES;
+    [self popHiddenVector];
+}
+
+- (void)adjustScrollingState {
+    
+    self.mainContentScroller.scrollEnabled = YES;
+    if ( self.menuOpen ) {
+        self.mainContentScroller.scrollEnabled = NO;
+    }
+    if ( self.preRollOpen ) {
+        self.mainContentScroller.scrollEnabled = NO;
+    }
+    if ( !self.initialPlay ) {
+        self.mainContentScroller.scrollEnabled = NO;
+    }
+    if ( [[SessionManager shared] sessionHasNoProgram] ) {
+        self.mainContentScroller.scrollEnabled = NO;
+    }
+    if ( [[AudioManager shared] currentAudioMode] != AudioModeLive ) {
+        self.mainContentScroller.scrollEnabled = NO;
+    }
+    
+}
+
+- (void)adjustScrubbingState {
+    
+    BOOL back30 = YES;
+    BOOL fwd30 = YES;
+    BOOL scrubbing = YES;
+    
+    if ( [[AudioManager shared] currentAudioMode] != AudioModeLive &&
+        [[AudioManager shared] currentAudioMode] != AudioModeOnDemand ) {
+        back30 = NO;
+        fwd30 = NO;
+        scrubbing = NO;
+    }
+    if ( [[SessionManager shared] sessionHasNoProgram] ) {
+        back30 = NO;
+        fwd30 = NO;
+        scrubbing = NO;
+    }
+    if ( ![[SessionManager shared] sessionIsBehindLive] ) {
+        fwd30 = NO;
+    }
+    if ( self.scrubbing ) {
+        scrubbing = NO;
+    }
+    if ( self.mainContentScroller.contentOffset.x > 0.0f ) {
+        scrubbing = NO;
+    }
+    if ( self.menuOpen || self.preRollOpen ) {
+        fwd30 = NO;
+        back30 = NO;
+        scrubbing = NO;
+    }
+    
+    [self animatedStateForBackwardButton:back30];
+    [self animatedStateForForwardButton:fwd30];
+    self.scrubbingTriggerView.alpha = scrubbing ? 1.0f : 0.0f;
+    
+          
 }
 
 #pragma mark - Util
@@ -2719,8 +2837,10 @@ setForOnDemandUI;
     dividerFadeAnim.duration = 0.3;
     [self.horizDividerLine.layer pop_addAnimation:dividerFadeAnim forKey:@"horizDividerOutFadeAnimation"];
     
-    self.scrubbingTriggerView.alpha = 0.0f;
-    self.mainContentScroller.scrollEnabled = NO;
+    
+    [self adjustScrubbingState];
+    [self adjustScrollingState];
+    
     self.shareButton.alpha = 0.0f;
 }
 
@@ -2810,9 +2930,9 @@ setForOnDemandUI;
     }
     
     [self popHiddenVector];
-
-    self.scrubbingTriggerView.alpha = [[AudioManager shared] currentAudioMode] == AudioModeLive || [[AudioManager shared] currentAudioMode] == AudioModeOnDemand ? 1.0f : 0.0f;
-    self.mainContentScroller.scrollEnabled = [[AudioManager shared] isPlayingAudio] && [[AudioManager shared] currentAudioMode] == AudioModeLive;
+    [self adjustScrollingState];
+    [self adjustScrubbingState];
+    
     
 }
 
@@ -2833,6 +2953,7 @@ setForOnDemandUI;
 
 - (void)cloakForPreRoll:(BOOL)animated {
     
+    self.preRollOpen = YES;
     [[AudioManager shared] setCurrentAudioMode:AudioModePreroll];
     [[UXmanager shared] hideMenuButton];
     
@@ -2870,9 +2991,10 @@ setForOnDemandUI;
     [self.programTitleLabel.layer pop_addAnimation:controlsFadeAnimation forKey:@"titleFade"];
     [self.liveDescriptionLabel.layer pop_addAnimation:controlsFadeAnimation forKey:@"statusFade"];
     
-    self.scrubbingTriggerView.alpha = 0.0f;
+    [self adjustScrollingState];
+    [self adjustScrubbingState];
     
-    self.preRollOpen = YES;
+    
     [self.view bringSubviewToFront:self.playerControlsView];
     
 }
@@ -2880,7 +3002,7 @@ setForOnDemandUI;
 - (void)decloakForPreRoll:(BOOL)animated {
     [self removeAllAnimations];
     
-    
+    self.preRollOpen = NO;
     if (setForOnDemandUI){
         POPBasicAnimation *onDemandElementsFade = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
         onDemandElementsFade.toValue = @1;
@@ -2916,15 +3038,14 @@ setForOnDemandUI;
         [self.horizDividerLine.layer pop_addAnimation:dividerFadeAnim forKey:@"horizDividerFadeOutAnimation"];
     }
     
-    self.scrubbingTriggerView.alpha = 0.0f;
+    [self adjustScrubbingState];
+    [self adjustScrollingState];
     
-    self.preRollOpen = NO;
+    
 }
 
 # pragma mark - SCPRPreRollControllerDelegate
 - (void)preRollStartedPlaying {
-    [self animatedStateForBackwardButton:NO];
-    [self animatedStateForForwardButton:NO];
     [self.playPauseButton fadeImage:[UIImage imageNamed:@"btn_pause.png"] duration:0.2];
 }
 
@@ -2968,27 +3089,22 @@ setForOnDemandUI;
     }
     if ( scrollView == self.mainContentScroller ) {
         
-        self.dividerLineRightAnchor.constant = 0.0f;
-        self.dividerLineLeftAnchor.constant = 0.0f;
-        
-        [UIView animateWithDuration:0.25f animations:^{
+        if ( self.mainContentScroller.contentOffset.x == 0.0f ) {
             
-            [self.liveStreamView layoutIfNeeded];
+            self.dividerLineRightAnchor.constant = 0.0f;
+            self.dividerLineLeftAnchor.constant = 0.0f;
             
-            SCPRAppDelegate *del = (SCPRAppDelegate*)[[UIApplication sharedApplication] delegate];
-            SCPRNavigationController *nav = del.masterNavigationController;
+            [UIView animateWithDuration:0.25f animations:^{
+                
+                [self.liveStreamView layoutIfNeeded];
+                self.queueBlurView.alpha = 1.0f;
+                self.queueDarkBgView.alpha = 0.4f;
+                
+                [self mutePrimaryControls];
+                
+            }];
             
-            self.queueBlurView.alpha = 1.0f;
-            self.queueDarkBgView.alpha = 0.4f;
-            
-            [self pushToHiddenVector:self.playerControlsView];
-            [self pushToHiddenVector:self.initialControlsView];
-            [self pushToHiddenVector:self.scrubbingTriggerView];
-            [self pushToHiddenVector:nav.menuButton];
-            
-            [self commitHiddenVector];
-            
-        }];
+        }
     }
 }
 
@@ -3034,7 +3150,9 @@ setForOnDemandUI;
                 self.dividerLineRightAnchor.constant = -5.0f;
                 self.dividerLineLeftAnchor.constant = 5.0f;
                 [self.liveStreamView layoutIfNeeded];
-                [self popHiddenVector];
+                [self unmutePrimaryControls];
+            } else {
+                [self mutePrimaryControls];
             }
         }];
     }
@@ -3264,6 +3382,8 @@ setForOnDemandUI;
             [del onboardForLiveFunctionality];
         }
         
+        [self adjustScrollingState];
+        
         if ( [AudioManager shared].currentAudioMode == AudioModeLive ) {
             if ( self.liveRewindAltButton.alpha == 1.0 || self.liveRewindAltButton.layer.opacity == 1.0 )
                 [self primeManualControlButton];
@@ -3277,13 +3397,12 @@ setForOnDemandUI;
                     
 
                 }
-                self.mainContentScroller.scrollEnabled = YES;
+                
             }
         }
         
         if ( [[AudioManager shared] currentAudioMode] == AudioModeOnDemand ) {
             [self.progressView pop_removeAllAnimations];
-            self.mainContentScroller.scrollEnabled = NO;
         } else {
             
             if ( [[AudioManager shared] currentAudioMode] == AudioModeLive ||

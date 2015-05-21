@@ -65,8 +65,6 @@
 @property (nonatomic,strong) NSArray *queueContents;
 @property (nonatomic,strong) NSMutableArray *queueUIContents;
 
-
-
 // Major holder views for different playback states.
 @property IBOutlet UIView *liveStreamView;
 @property IBOutlet UIView *onDemandPlayerView;
@@ -104,6 +102,7 @@
 @property IBOutlet NSLayoutConstraint *horizontalDividerPush;
 @property (nonatomic,strong) IBOutlet SCPRButton *mainBackward30Button;
 @property (nonatomic,strong) IBOutlet SCPRButton *mainForward30Button;
+@property (nonatomic,strong) NSTimer *liveScrollTimer;
 
 // Pre-Roll
 - (void)handlePreRollControl:(BOOL)paused;
@@ -115,7 +114,6 @@
 // Rewinding UI
 @property (nonatomic,strong) SCPRJogShuttleViewController *jogShuttle;
 @property (nonatomic,strong) IBOutlet UIView *rewindView;
-
 @property (nonatomic,strong) NSMutableDictionary *originalFrames;
 
 @property (nonatomic, strong) IBOutlet NSLayoutConstraint *liveRewindBottomYConstraint;
@@ -154,6 +152,8 @@
 - (void)snapJogWheel;
 - (void)specialRewind;
 
+- (void)adjustScrollingState;
+- (void)adjustScrubbingState;
 
 // Scrubbing
 - (void)bringUpScrubber;
@@ -208,7 +208,7 @@
 
 @property BOOL scrubbing;
 @property BOOL viewHasAppeared;
-
+@property BOOL hiddenVectorCommitted;
 
 // Sleep Timer
 @property (nonatomic, strong) IBOutlet UIView *sleepTimerContainerView;
@@ -216,9 +216,9 @@
 @property (nonatomic, strong) IBOutlet UIImageView *clockIconImageView;
 @property (nonatomic, strong) IBOutlet UILabel *plainTextCountdownLabel;
 @property (nonatomic, strong) IBOutlet UIButton *cancelSleepTimerButton;
+
 - (void)setupTimerControls;
 - (void)cancelSleepTimerAction;
-
 - (void)remoteControlPlayOrPause;
 
 
@@ -239,6 +239,9 @@
 - (void)primeManualControlButton;
 - (void)treatUIforProgram;
 - (void)determinePlayState;
+
+- (void)mutePrimaryControls;
+- (void)unmutePrimaryControls;
 
 - (void)handleAlarmClock;
 
