@@ -3388,9 +3388,7 @@ setForOnDemandUI;
         return;
     }
     
-    NSAssert([NSThread isMainThread],@"This is not the main thread...");
-    
-    [self.mainContentScroller setContentOffset:CGPointMake(self.liveStreamView.frame.size.width,0.0)];
+    NSAssert([NSThread isMainThread],@"This is not the main thread..."); 
     
     if ( [[AudioManager shared] frameCount] % 10 == 0 ) {
         if ( !self.menuOpen ) {
@@ -3432,7 +3430,6 @@ setForOnDemandUI;
         if ( [[AudioManager shared] currentAudioMode] == AudioModeOnDemand ) {
             [self.progressView pop_removeAllAnimations];
         } else {
-            
             if ( [[AudioManager shared] currentAudioMode] == AudioModeLive ||
                 [[AudioManager shared] currentAudioMode] == AudioModeOnboarding ) {
                 if ( !self.menuOpen && ![[UXmanager shared] notificationsPromptDisplaying] ) {
@@ -3449,7 +3446,6 @@ setForOnDemandUI;
                     }
                 }
             }
-            
         }
         
         
