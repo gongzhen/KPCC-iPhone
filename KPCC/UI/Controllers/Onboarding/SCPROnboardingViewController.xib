@@ -75,10 +75,11 @@
                     <constraints>
                         <constraint firstAttribute="height" constant="107" id="8lx-3n-C4L"/>
                         <constraint firstItem="h2N-Bf-oxo" firstAttribute="width" secondItem="BF9-6O-t4a" secondAttribute="width" id="FgC-xf-KAr"/>
+                        <constraint firstItem="h2N-Bf-oxo" firstAttribute="leading" secondItem="3aK-j3-aRR" secondAttribute="leading" constant="36" id="Lju-TL-wnK"/>
                         <constraint firstItem="ky3-rC-tNp" firstAttribute="top" secondItem="3aK-j3-aRR" secondAttribute="top" constant="-50" id="MGw-hx-ukU"/>
                         <constraint firstItem="BF9-6O-t4a" firstAttribute="top" secondItem="h2N-Bf-oxo" secondAttribute="bottom" constant="65" id="UFB-bS-uZZ"/>
                         <constraint firstAttribute="centerY" secondItem="h2N-Bf-oxo" secondAttribute="centerY" constant="4" id="WXe-sb-FS7"/>
-                        <constraint firstAttribute="centerX" secondItem="h2N-Bf-oxo" secondAttribute="centerX" id="j9d-Xf-exT"/>
+                        <constraint firstAttribute="trailing" secondItem="h2N-Bf-oxo" secondAttribute="trailing" constant="36" id="kwI-KR-nrc"/>
                         <constraint firstAttribute="centerX" secondItem="ky3-rC-tNp" secondAttribute="centerX" id="tC5-DH-8o8"/>
                         <constraint firstAttribute="width" constant="300" id="vPe-Sq-s9f"/>
                         <constraint firstAttribute="centerX" secondItem="BF9-6O-t4a" secondAttribute="centerX" constant="-0.5" id="yrP-jE-pCs"/>

@@ -366,6 +366,11 @@
 }
 
 - (void)askForPushNotifications {
+    
+    if ( ![Utils isIOS8] ) {
+        self.suppressBalloon = YES;
+    }
+    
     self.notificationsPromptDisplaying = YES;
     self.listeningForQueues = NO;
     if ( self.observerTimer ) {
@@ -395,8 +400,8 @@
     [UIView animateWithDuration:0.5 animations:^{
         [self.masterCtrl.darkBgView.layer setOpacity:0.0];
         self.masterCtrl.playerControlsView.alpha = 1.0f;
-        [self.masterCtrl.liveStreamView setAlpha:1.0];
-        [self.masterCtrl.liveProgressViewController.view setAlpha:1.0];
+        [self.masterCtrl.liveStreamView setAlpha:1.0f];
+        [self.masterCtrl.liveProgressViewController.view setAlpha:1.0f];
     } completion:^(BOOL finished) {
         
         self.notificationsPromptDisplaying = NO;
@@ -405,6 +410,7 @@
         } else {
             [self closeOutOnboarding];
         }
+        
     }];
 }
 
@@ -486,6 +492,7 @@
         [player stop];
         return;
     }
+    
     NSBlockOperation *block = [NSBlockOperation blockOperationWithBlock:^{
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             [player setVolume:(player.volume-0.05)];

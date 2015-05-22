@@ -443,7 +443,7 @@ static const NSString *ItemStatusContext;
     self.localBufferSample = nil;
     self.dropoutOccurred = NO;
     
-    NSLog(@"AVPlayerItem - Stream likely to return after interrupt (preferred BR : %1.6f...)",self.audioPlayer.currentItem.preferredPeakBitRate);
+    //NSLog(@"AVPlayerItem - Stream likely to return after interrupt (preferred BR : %1.6f...)",self.audioPlayer.currentItem.preferredPeakBitRate);
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         [[AnalyticsManager shared] clearLogs];
         [[AnalyticsManager shared] logEvent:@"streamRecovered"
@@ -719,7 +719,9 @@ static const NSString *ItemStatusContext;
         if ( weakSelf.dropoutOccurred ) {
             weakSelf.dropoutOccurred = NO;
 #ifndef SUPPRESS_BITRATE_THROTTLING
-            weakSelf.audioPlayer.currentItem.preferredPeakBitRate = kPreferredPeakBitRateTolerance;
+            if ( [Utils isIOS8] ) {
+                weakSelf.audioPlayer.currentItem.preferredPeakBitRate = kPreferredPeakBitRateTolerance;
+            }
 #endif
         }
         weakSelf.bufferEmpty = NO;

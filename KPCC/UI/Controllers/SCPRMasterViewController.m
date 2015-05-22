@@ -431,6 +431,7 @@ setForOnDemandUI;
     
     self.viewHasAppeared = YES;
     
+
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -456,7 +457,6 @@ setForOnDemandUI;
 - (void)setupScroller {
     
     self.mainContentScroller.translatesAutoresizingMaskIntoConstraints = NO;
-
     self.mainContentScroller.pagingEnabled = YES;
     
     
@@ -472,30 +472,40 @@ setForOnDemandUI;
     
     CGFloat heightHint = [Utils isThreePointFive] ? self.view.frame.size.height-64.0f : self.liveStreamView.frame.size.height;
     
+    UIView *v2u = [Utils isIOS8] ? self.mainContentScroller : self.liveStreamView;
+    [v2u printDimensionsWithIdentifier:@">>>>>>>>>>>>>>>>>>>>>>>>>> Basis for scroll content"];
+    
+
+    
     NSArray *cpSizeConstraints = [[[DesignManager shared] sizeConstraintsForView:self.upcomingScreen.view hints:@{ @"height" : @(heightHint),
-                                                                                                            @"width" : @(self.mainContentScroller.frame.size.width)}] allValues];
+                                                                                                            @"width" : @(v2u.frame.size.width)}] allValues];
     
     NSArray *fsSizeConstraints = [[[DesignManager shared] sizeConstraintsForView:self.cpFullDetailScreen.view hints:@{ @"height" : @(heightHint),
-                                                                                                            @"width" : @(self.mainContentScroller.frame.size.width)}] allValues];
-    
+                                                                                                            @"width" : @(v2u.frame.size.width)}] allValues];
+    self.upcomingScreen.view.translatesAutoresizingMaskIntoConstraints = NO;
+    self.cpFullDetailScreen.view.translatesAutoresizingMaskIntoConstraints = NO;
+    self.liveStreamView.translatesAutoresizingMaskIntoConstraints = NO;
+
+
     [self.upcomingScreen.view addConstraints:cpSizeConstraints];
     [self.cpFullDetailScreen.view addConstraints:fsSizeConstraints];
+    
     
     [self.mainContentScroller addSubview:self.upcomingScreen.view];
     [self.mainContentScroller addSubview:self.cpFullDetailScreen.view];
     
-    self.upcomingScreen.view.translatesAutoresizingMaskIntoConstraints = NO;
-    self.cpFullDetailScreen.view.translatesAutoresizingMaskIntoConstraints = NO;
-    self.liveStreamView.translatesAutoresizingMaskIntoConstraints = NO;
-    
-    NSArray *fConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[mainView][upcomingScreen][cpFull]"
+
+ 
+    NSString *fmt = [Utils isIOS8] ? @"H:|[mainView][upcomingScreen][cpFull]" : @"H:|[mainView][upcomingScreen][cpFull]|";
+    NSArray *fConstraints = [NSLayoutConstraint constraintsWithVisualFormat:fmt
                                                                     options:0
                                                                     metrics:nil
                                                                       views:@{ @"mainView" : self.liveStreamView,
                                                                                @"upcomingScreen" : self.upcomingScreen.view,
                                                                                @"cpFull" : self.cpFullDetailScreen.view }];
     
-    NSArray *fVConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|[upcomingScreen]"
+    NSString *usVfmt = [Utils isIOS8] ? @"V:|[upcomingScreen]" : @"V:|[upcomingScreen]|";
+    NSArray *fVConstraints = [NSLayoutConstraint constraintsWithVisualFormat:usVfmt
                                                                     options:0
                                                                     metrics:nil
                                                                       views:@{ @"upcomingScreen" : self.upcomingScreen.view }];
@@ -506,37 +516,47 @@ setForOnDemandUI;
                                                                        views:@{ @"upcomingScreen" : self.upcomingScreen.view,
                                                                                 @"cpFull" : self.cpFullDetailScreen.view }];*/
     
-    NSArray *fullScheduleV = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|[cpFull]"
+    NSString *cpVfmt = [Utils isIOS8] ? @"V:|[cpFull]" : @"V:|[cpFull]|";
+    NSArray *fullScheduleV = [NSLayoutConstraint constraintsWithVisualFormat:cpVfmt
                                                                      options:0
                                                                      metrics:nil
                                                                        views:@{ @"cpFull" : self.cpFullDetailScreen.view }];
+
     
     [self.mainContentScroller addConstraints:fConstraints];
     [self.mainContentScroller addConstraints:fVConstraints];
     [self.mainContentScroller addConstraints:fullScheduleV];
     
+
+    if ( [Utils isIOS8] ) {
+        if ( [Utils isThreePointFive] ) {
+            self.mainContentScroller.contentSize = CGSizeMake(self.mainContentScroller.frame.size.width*3.0,
+                                                              self.view.frame.size.height-64.0f);
+        } else {
+            self.mainContentScroller.contentSize = CGSizeMake(self.mainContentScroller.frame.size.width*3.0,
+                                                              self.liveStreamView.frame.size.height);
+        }
+    }
+    
     [self.upcomingScreen.view layoutIfNeeded];
     [self.cpFullDetailScreen.view layoutIfNeeded];
     [self.upcomingScreen.view updateConstraintsIfNeeded];
     [self.cpFullDetailScreen.view updateConstraintsIfNeeded];
-    [self.mainContentScroller layoutIfNeeded];
-    [self.mainContentScroller updateConstraintsIfNeeded];
+    [self.mainContentScroller layoutSubviews];
+    [self.mainContentScroller updateConstraints];
     
     [self.upcomingScreen.view printDimensionsWithIdentifier:@"Current Program View"];
     [self.cpFullDetailScreen.view printDimensionsWithIdentifier:@"Full Schedule View"];
     
     self.upcomingScreen.tableToScroll = self.mainContentScroller;
-    
     self.mainContentScroller.delegate = self;
+
+    [self.mainContentScroller layoutIfNeeded];
     
-    if ( [Utils isThreePointFive] ) {
-        self.mainContentScroller.contentSize = CGSizeMake(self.mainContentScroller.frame.size.width*3.0,
-                                                          self.view.frame.size.height-64.0f);
-    } else {
-        self.mainContentScroller.contentSize = CGSizeMake(self.mainContentScroller.frame.size.width*3.0,
-                                                      self.liveStreamView.frame.size.height);
-    }
+    NSLog(@"Main Content Scroller Contnet Size : %1.1f width, %1.1f height",self.mainContentScroller.contentSize.width,
+          self.mainContentScroller.contentSize.height);
     
+    [self.mainContentScroller printDimensionsWithIdentifier:@"Main Content Scroller"];
     [self adjustScrollingState];
     
 }
@@ -3370,6 +3390,8 @@ setForOnDemandUI;
     
     NSAssert([NSThread isMainThread],@"This is not the main thread...");
     
+    [self.mainContentScroller setContentOffset:CGPointMake(self.liveStreamView.frame.size.width,0.0)];
+    
     if ( [[AudioManager shared] frameCount] % 10 == 0 ) {
         if ( !self.menuOpen ) {
             [self prettifyBehindLiveStatus];
@@ -3383,6 +3405,12 @@ setForOnDemandUI;
         }
         
         [self adjustScrollingState];
+        
+        if ( self.mainContentScroller.scrollEnabled && self.mainContentScroller.userInteractionEnabled ) {
+            NSLog(@"Scroll enabled as expected");
+        } else {
+            NSLog(@" ******************* SCROLL DISABLED ******************* ");
+        }
         
         if ( [AudioManager shared].currentAudioMode == AudioModeLive ) {
             if ( self.liveRewindAltButton.alpha == 1.0 || self.liveRewindAltButton.layer.opacity == 1.0 )

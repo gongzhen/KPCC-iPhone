@@ -132,18 +132,16 @@
 - (void)revealBrandingWithCompletion:(CompletionBlock)completed {
     self.brandingView.clipsToBounds = YES;
     
-    self.dividerView.layer.transform = CATransform3DMakeScale(0.025f, 1.0f, 1.0f);
-    self.dividerView.layer.opacity = 0.4;
-    POPBasicAnimation *scaleAnimation = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerScaleXY];
-    scaleAnimation.fromValue  = [NSValue valueWithCGSize:CGSizeMake(0.025f, 1.0f)];
-    scaleAnimation.toValue  = [NSValue valueWithCGSize:CGSizeMake(1.0f, 1.0f)];
-    scaleAnimation.duration = 1.0f;
-    if ( ![Utils isIOS8] ) {
-        [scaleAnimation setCompletionBlock:^(POPAnimation *a, BOOL f) {
-            [self.brandingView layoutIfNeeded];
-        }];
+    if ( [Utils isIOS8] ) {
+        self.dividerView.layer.transform = CATransform3DMakeScale(0.025f, 1.0f, 1.0f);
+        self.dividerView.layer.opacity = 0.4;
+        POPBasicAnimation *scaleAnimation = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerScaleXY];
+        scaleAnimation.fromValue  = [NSValue valueWithCGSize:CGSizeMake(0.025f, 1.0f)];
+        scaleAnimation.toValue  = [NSValue valueWithCGSize:CGSizeMake(1.0f, 1.0f)];
+        scaleAnimation.duration = 1.0f;
+
+        [self.dividerView.layer pop_addAnimation:scaleAnimation forKey:@"scaleAnimation"];
     }
-    [self.dividerView.layer pop_addAnimation:scaleAnimation forKey:@"scaleAnimation"];
     
     [UIView animateWithDuration:0.33f animations:^{
         self.dividerView.alpha = 1.0f;
