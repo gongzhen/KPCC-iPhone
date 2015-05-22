@@ -63,6 +63,8 @@
 @property (nonatomic,strong) UISwipeGestureRecognizer *scrubbingSwiper;
 @property (nonatomic,strong) IBOutlet UIView *fakeScrubberView;
 @property (nonatomic,strong) IBOutlet NSLayoutConstraint *topAnchorScrubbingConstraint;
+@property (nonatomic,strong) IBOutlet NSLayoutConstraint *topAnchorForFingerAndBar;
+
 @property BOOL dontFade;
 
 // Backdoor

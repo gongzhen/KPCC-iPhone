@@ -373,6 +373,12 @@
         [self.scrubbingGotItButton setTitleColor:[UIColor kpccPeriwinkleColor]
                                         forState:UIControlStateHighlighted];
         
+        if ( [Utils isThreePointFive] ) {
+            if ( live ) {
+                self.topAnchorForFingerAndBar.constant = 85.0f;
+            }
+        }
+        
         BOOL fadeUpScrubbingView = NO;
         if ( !self.view.superview ) {
             self.view.alpha = 0.0f;
@@ -416,7 +422,6 @@
                    range:r];
         
         self.scrubbingSwipeToSkipLabel.attributedText = s;
-        
         [self.scrubbingGotItButton addTarget:self
                                       action:handler
                             forControlEvents:UIControlEventTouchUpInside

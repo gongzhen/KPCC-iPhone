@@ -475,8 +475,6 @@ setForOnDemandUI;
     UIView *v2u = [Utils isIOS8] ? self.mainContentScroller : self.liveStreamView;
     [v2u printDimensionsWithIdentifier:@">>>>>>>>>>>>>>>>>>>>>>>>>> Basis for scroll content"];
     
-
-    
     NSArray *cpSizeConstraints = [[[DesignManager shared] sizeConstraintsForView:self.upcomingScreen.view hints:@{ @"height" : @(heightHint),
                                                                                                             @"width" : @(v2u.frame.size.width)}] allValues];
     
@@ -489,13 +487,9 @@ setForOnDemandUI;
 
     [self.upcomingScreen.view addConstraints:cpSizeConstraints];
     [self.cpFullDetailScreen.view addConstraints:fsSizeConstraints];
-    
-    
     [self.mainContentScroller addSubview:self.upcomingScreen.view];
     [self.mainContentScroller addSubview:self.cpFullDetailScreen.view];
     
-
- 
     NSString *fmt = [Utils isIOS8] ? @"H:|[mainView][upcomingScreen][cpFull]" : @"H:|[mainView][upcomingScreen][cpFull]|";
     NSArray *fConstraints = [NSLayoutConstraint constraintsWithVisualFormat:fmt
                                                                     options:0
@@ -510,11 +504,6 @@ setForOnDemandUI;
                                                                     metrics:nil
                                                                       views:@{ @"upcomingScreen" : self.upcomingScreen.view }];
     
-    /*NSArray *fullScheduleH = [NSLayoutConstraint constraintsWithVisualFormat:@"H:[upcomingScreen][cpFull]|"
-                                                                     options:0
-                                                                     metrics:nil
-                                                                       views:@{ @"upcomingScreen" : self.upcomingScreen.view,
-                                                                                @"cpFull" : self.cpFullDetailScreen.view }];*/
     
     NSString *cpVfmt = [Utils isIOS8] ? @"V:|[cpFull]" : @"V:|[cpFull]|";
     NSArray *fullScheduleV = [NSLayoutConstraint constraintsWithVisualFormat:cpVfmt
@@ -528,6 +517,15 @@ setForOnDemandUI;
     [self.mainContentScroller addConstraints:fullScheduleV];
     
 
+
+    
+    [self.upcomingScreen.view layoutIfNeeded];
+    [self.cpFullDetailScreen.view layoutIfNeeded];
+    [self.upcomingScreen.view updateConstraintsIfNeeded];
+    [self.cpFullDetailScreen.view updateConstraintsIfNeeded];
+    [self.mainContentScroller layoutSubviews];
+    [self.mainContentScroller updateConstraints];
+    
     if ( [Utils isIOS8] ) {
         if ( [Utils isThreePointFive] ) {
             self.mainContentScroller.contentSize = CGSizeMake(self.mainContentScroller.frame.size.width*3.0,
@@ -538,13 +536,6 @@ setForOnDemandUI;
         }
     }
     
-    [self.upcomingScreen.view layoutIfNeeded];
-    [self.cpFullDetailScreen.view layoutIfNeeded];
-    [self.upcomingScreen.view updateConstraintsIfNeeded];
-    [self.cpFullDetailScreen.view updateConstraintsIfNeeded];
-    [self.mainContentScroller layoutSubviews];
-    [self.mainContentScroller updateConstraints];
-    
     [self.upcomingScreen.view printDimensionsWithIdentifier:@"Current Program View"];
     [self.cpFullDetailScreen.view printDimensionsWithIdentifier:@"Full Schedule View"];
     
@@ -553,7 +544,7 @@ setForOnDemandUI;
 
     [self.mainContentScroller layoutIfNeeded];
     
-    NSLog(@"Main Content Scroller Contnet Size : %1.1f width, %1.1f height",self.mainContentScroller.contentSize.width,
+    NSLog(@"Main Content Scroller Content Size : %1.1f width, %1.1f height",self.mainContentScroller.contentSize.width,
           self.mainContentScroller.contentSize.height);
     
     [self.mainContentScroller printDimensionsWithIdentifier:@"Main Content Scroller"];
@@ -1386,7 +1377,7 @@ setForOnDemandUI;
     lpgr.minimumPressDuration = 0.25;
     [self.scrubbingTriggerView addGestureRecognizer:lpgr];
     
-    CGFloat adjustment = [Utils isThreePointFive] ? 90.0 : 0.0f;
+    CGFloat adjustment = [Utils isThreePointFive] ? 70.0 : 0.0f;
     self.scrubbingTriggerView.frame = CGRectMake(0.0, self.progressView.frame.origin.y-self.scrubbingTriggerView.frame.size.height+20.0-adjustment,
                                                  self.scrubbingTriggerView.frame.size.width,
                                                  self.scrubbingTriggerView.frame.size.height);
@@ -3388,7 +3379,7 @@ setForOnDemandUI;
         return;
     }
     
-    NSAssert([NSThread isMainThread],@"This is not the main thread..."); 
+    NSAssert([NSThread isMainThread],@"This is not the main thread...");
     
     if ( [[AudioManager shared] frameCount] % 10 == 0 ) {
         if ( !self.menuOpen ) {
@@ -3403,12 +3394,6 @@ setForOnDemandUI;
         }
         
         [self adjustScrollingState];
-        
-        if ( self.mainContentScroller.scrollEnabled && self.mainContentScroller.userInteractionEnabled ) {
-            NSLog(@"Scroll enabled as expected");
-        } else {
-            NSLog(@" ******************* SCROLL DISABLED ******************* ");
-        }
         
         if ( [AudioManager shared].currentAudioMode == AudioModeLive ) {
             if ( self.liveRewindAltButton.alpha == 1.0 || self.liveRewindAltButton.layer.opacity == 1.0 )
@@ -3448,8 +3433,6 @@ setForOnDemandUI;
             }
         }
         
-        
-
     }
     
     [self.liveProgressViewController tick];

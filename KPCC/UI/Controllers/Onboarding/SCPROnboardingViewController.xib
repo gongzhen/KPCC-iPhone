@@ -32,6 +32,7 @@
                 <outlet property="sloganTopAnchor" destination="UFB-bS-uZZ" id="EG1-1V-yvX"/>
                 <outlet property="swipeToSkipLabel" destination="boP-gT-EsI" id="tcV-Qf-7Bj"/>
                 <outlet property="textCalloutBalloonCtrl" destination="eO6-rQ-D6u" id="dr6-C6-Ekh"/>
+                <outlet property="topAnchorForFingerAndBar" destination="9ZY-s1-9Uy" id="3BZ-ct-OTz"/>
                 <outlet property="topAnchorScrubbingConstraint" destination="4L4-bo-yjD" id="9W2-Vc-dLI"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
                 <outlet property="welcomeLabel" destination="BF9-6O-t4a" id="cyR-cO-m4p"/>
