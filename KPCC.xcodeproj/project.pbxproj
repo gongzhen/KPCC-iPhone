@@ -33,6 +33,7 @@
 		258BB03E1A1C083B00B8FCFE /* Settings.m in Sources */ = {isa = PBXBuildFile; fileRef = 258BB03D1A1C083B00B8FCFE /* Settings.m */; };
 		258BD3AE1A0BF65200E7560F /* UIButton+Additions.m in Sources */ = {isa = PBXBuildFile; fileRef = 258BD3AD1A0BF65200E7560F /* UIButton+Additions.m */; };
 		258BD3B11A0C0FFF00E7560F /* SCPRProgressViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 258BD3B01A0C0FFF00E7560F /* SCPRProgressViewController.m */; };
+		258C5D261B10048A00C19BE0 /* SCPRUpcomingProgramViewController7.xib in Resources */ = {isa = PBXBuildFile; fileRef = 258C5D251B10048A00C19BE0 /* SCPRUpcomingProgramViewController7.xib */; };
 		258CA0FD1A09636900A3C8DB /* SessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 258CA0FC1A09636900A3C8DB /* SessionManager.m */; };
 		258CA1001A0982ED00A3C8DB /* SCPRCloakViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 258CA0FF1A0982ED00A3C8DB /* SCPRCloakViewController.m */; };
 		258E239F1A13FA84009F8F97 /* DataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 258E239C1A13FA84009F8F97 /* DataModel.xcdatamodeld */; };
@@ -329,6 +330,7 @@
 		258BD3AD1A0BF65200E7560F /* UIButton+Additions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIButton+Additions.m"; sourceTree = "<group>"; };
 		258BD3AF1A0C0FFF00E7560F /* SCPRProgressViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCPRProgressViewController.h; sourceTree = "<group>"; };
 		258BD3B01A0C0FFF00E7560F /* SCPRProgressViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SCPRProgressViewController.m; sourceTree = "<group>"; };
+		258C5D251B10048A00C19BE0 /* SCPRUpcomingProgramViewController7.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = SCPRUpcomingProgramViewController7.xib; path = "Secondary Main Screens/SCPRUpcomingProgramViewController7.xib"; sourceTree = "<group>"; };
 		258CA0FB1A09636900A3C8DB /* SessionManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SessionManager.h; path = Managers/SessionManager.h; sourceTree = "<group>"; };
 		258CA0FC1A09636900A3C8DB /* SessionManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SessionManager.m; path = Managers/SessionManager.m; sourceTree = "<group>"; };
 		258CA0FE1A0982ED00A3C8DB /* SCPRCloakViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCPRCloakViewController.h; sourceTree = "<group>"; };
@@ -821,6 +823,7 @@
 				25F30AE91AFAB6B700F27187 /* SCPRUpcomingProgramViewController.h */,
 				25F30AEA1AFAB6B700F27187 /* SCPRUpcomingProgramViewController.m */,
 				25F30AEB1AFAB6B700F27187 /* SCPRUpcomingProgramViewController.xib */,
+				258C5D251B10048A00C19BE0 /* SCPRUpcomingProgramViewController7.xib */,
 			);
 			name = "Upcoming Program";
 			sourceTree = "<group>";
@@ -1553,6 +1556,7 @@
 				B5F9F7491ABCE8FD00115DB3 /* icon-clock.png in Resources */,
 				52EFF79B19C3688D0059A0E3 /* menu-settings.png in Resources */,
 				76A308D118C8FB940065D4B1 /* InfoPlist.strings in Resources */,
+				258C5D261B10048A00C19BE0 /* SCPRUpcomingProgramViewController7.xib in Resources */,
 				25F30AFF1B0A9B5500F27187 /* onboarding-schedule-swipe-left.png in Resources */,
 				25F2BC831A3BB61300108F73 /* onboarding-voiceover.m4a in Resources */,
 				768C06581995905D00F829EB /* btn_pause@2x.png in Resources */,
@@ -2089,7 +2093,6 @@
 					"DEBUG=1",
 					"$(inherited)",
 					"SUPPRESS_AGGRESSIVE_KICKSTART=1",
-					"TESTING_SCRUBBER=1",
 				);
 				INFOPLIST_FILE = "KPCC/KPCC-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;

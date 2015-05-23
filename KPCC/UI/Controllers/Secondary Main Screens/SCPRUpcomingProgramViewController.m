@@ -117,7 +117,12 @@
 
 - (void)alignDividerToValue:(CGFloat)yCoordinate {
     self.verticalPushAnchor.constant = yCoordinate;
-    [self.view layoutIfNeeded];
+    if ( ![Utils isIOS8] ) {
+        self.verticalPushAnchor.constant = self.view.frame.size.height - yCoordinate;
+        self.view.translatesAutoresizingMaskIntoConstraints = YES;
+    }
+    [self.view layoutSubviews];
+    [self.view updateConstraints];
 }
 
 - (void)didReceiveMemoryWarning {

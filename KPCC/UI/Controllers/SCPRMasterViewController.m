@@ -454,19 +454,36 @@ setForOnDemandUI;
     self.navigationItem.title = @"KPCC Live";
 }
 
+- (void)setupScroller7 {
+    self.mainContentScroller.translatesAutoresizingMaskIntoConstraints = NO;
+    self.mainContentScroller.pagingEnabled = YES;
+    self.upcomingScreen = [[SCPRUpcomingProgramViewController alloc] initWithNibName:@"SCPRUpcomingProgramViewController"
+                                                                              bundle:nil];
+    self.cpFullDetailScreen = [[SCPRCompleteScheduleViewController alloc] initWithNibName:@"SCPRCompleteScheduleViewController"
+                                                                                   bundle:nil];
+    
+    
+    self.upcomingScreen.view.frame = self.upcomingScreen.view.frame;
+    self.cpFullDetailScreen.view.frame = self.cpFullDetailScreen.view.frame;
+    
+    UIView *contentView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0,
+                                                                   self.mainContentScroller.frame.size.width*3.0,
+                                                                   self.view.frame.size.height-64.0)];
+    [self.mainContentScroller addSubview:contentView];
+}
+
 - (void)setupScroller {
     
     self.mainContentScroller.translatesAutoresizingMaskIntoConstraints = NO;
     self.mainContentScroller.pagingEnabled = YES;
     
-    
-    self.upcomingScreen = [[SCPRUpcomingProgramViewController alloc] initWithNibName:@"SCPRUpcomingProgramViewController"
+    NSString *xib = [Utils isIOS8] ? @"SCPRUpcomingProgramViewController" : @"SCPRUpcomingProgramViewController7";
+    self.upcomingScreen = [[SCPRUpcomingProgramViewController alloc] initWithNibName:xib
                                                                        bundle:nil];
     self.cpFullDetailScreen = [[SCPRCompleteScheduleViewController alloc] initWithNibName:@"SCPRCompleteScheduleViewController"
                                                                                    bundle:nil];
     
 
-    
     self.upcomingScreen.view.frame = self.upcomingScreen.view.frame;
     self.cpFullDetailScreen.view.frame = self.cpFullDetailScreen.view.frame;
     
@@ -483,14 +500,28 @@ setForOnDemandUI;
     self.upcomingScreen.view.translatesAutoresizingMaskIntoConstraints = NO;
     self.cpFullDetailScreen.view.translatesAutoresizingMaskIntoConstraints = NO;
     self.liveStreamView.translatesAutoresizingMaskIntoConstraints = NO;
-
-
+    
+    UIView *contentView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0,
+                                                                   self.mainContentScroller.frame.size.width*3.0,
+                                                                   self.view.frame.size.height-64.0)];
+    contentView.backgroundColor = [UIColor clearColor];
+    UIView *cv2u = [Utils isIOS8] ? self.mainContentScroller : contentView;
+    if ( ![Utils isIOS8] ) {
+        [self.liveStreamView removeFromSuperview];
+        [contentView addSubview:self.liveStreamView];
+        NSArray *lsSizeConstraints = [[[DesignManager shared] sizeConstraintsForView:self.liveStreamView hints:@{ @"height" : @(heightHint),
+                                                                                                                           @"width" : @(v2u.frame.size.width)}] allValues];
+        [self.liveStreamView addConstraints:lsSizeConstraints];
+        [self.mainContentScroller addSubview:contentView];
+    }
+    [cv2u addSubview:self.upcomingScreen.view];
+    [cv2u addSubview:self.cpFullDetailScreen.view];
+   
     [self.upcomingScreen.view addConstraints:cpSizeConstraints];
     [self.cpFullDetailScreen.view addConstraints:fsSizeConstraints];
-    [self.mainContentScroller addSubview:self.upcomingScreen.view];
-    [self.mainContentScroller addSubview:self.cpFullDetailScreen.view];
     
-    NSString *fmt = [Utils isIOS8] ? @"H:|[mainView][upcomingScreen][cpFull]" : @"H:|[mainView][upcomingScreen][cpFull]|";
+    
+    NSString *fmt = [Utils isIOS8] ? @"H:|[mainView][upcomingScreen][cpFull]" : @"H:|[mainView][upcomingScreen][cpFull]";
     NSArray *fConstraints = [NSLayoutConstraint constraintsWithVisualFormat:fmt
                                                                     options:0
                                                                     metrics:nil
@@ -498,7 +529,7 @@ setForOnDemandUI;
                                                                                @"upcomingScreen" : self.upcomingScreen.view,
                                                                                @"cpFull" : self.cpFullDetailScreen.view }];
     
-    NSString *usVfmt = [Utils isIOS8] ? @"V:|[upcomingScreen]" : @"V:|[upcomingScreen]|";
+    NSString *usVfmt = [Utils isIOS8] ? @"V:|[upcomingScreen]" : @"V:|[upcomingScreen]";
     NSArray *fVConstraints = [NSLayoutConstraint constraintsWithVisualFormat:usVfmt
                                                                     options:0
                                                                     metrics:nil
@@ -511,13 +542,11 @@ setForOnDemandUI;
                                                                      metrics:nil
                                                                        views:@{ @"cpFull" : self.cpFullDetailScreen.view }];
 
-    
-    [self.mainContentScroller addConstraints:fConstraints];
-    [self.mainContentScroller addConstraints:fVConstraints];
-    [self.mainContentScroller addConstraints:fullScheduleV];
-    
 
-
+    [cv2u addConstraints:fConstraints];
+    [cv2u addConstraints:fVConstraints];
+    [cv2u addConstraints:fullScheduleV];
+    
     
     [self.upcomingScreen.view layoutIfNeeded];
     [self.cpFullDetailScreen.view layoutIfNeeded];
@@ -529,10 +558,20 @@ setForOnDemandUI;
     if ( [Utils isIOS8] ) {
         if ( [Utils isThreePointFive] ) {
             self.mainContentScroller.contentSize = CGSizeMake(self.mainContentScroller.frame.size.width*3.0,
-                                                              self.view.frame.size.height-64.0f);
+                                                              heightHint);
         } else {
             self.mainContentScroller.contentSize = CGSizeMake(self.mainContentScroller.frame.size.width*3.0,
                                                               self.liveStreamView.frame.size.height);
+        }
+    } else {
+        if ( [Utils isThreePointFive] ) {
+            self.mainContentScroller.contentSize = CGSizeMake(self.view.frame.size.width*3.0f,
+                                                              heightHint);
+        } else {
+            self.mainContentScroller.contentSize = CGSizeMake(self.view.frame.size.width*3.0f,
+                                                              self.liveStreamView.frame.size.height);
+            NSLog(@"Main Content Scroller Content Size : %1.1f width, %1.1f height",self.mainContentScroller.contentSize.width,
+                  self.mainContentScroller.contentSize.height);
         }
     }
     
@@ -541,15 +580,18 @@ setForOnDemandUI;
     
     self.upcomingScreen.tableToScroll = self.mainContentScroller;
     self.mainContentScroller.delegate = self;
-
-    [self.mainContentScroller layoutIfNeeded];
     
-    NSLog(@"Main Content Scroller Content Size : %1.1f width, %1.1f height",self.mainContentScroller.contentSize.width,
+    
+    NSLog(@"Main Content Scroller Content Size After Layout : %1.1f width, %1.1f height",self.mainContentScroller.contentSize.width,
           self.mainContentScroller.contentSize.height);
     
     [self.mainContentScroller printDimensionsWithIdentifier:@"Main Content Scroller"];
     [self adjustScrollingState];
     
+}
+
+- (void)scrollerTapped {
+    NSLog(@" ••• TAP ••• ");
 }
 
 - (void)addPreRollController {
@@ -3104,7 +3146,9 @@ setForOnDemandUI;
             
             self.dividerLineRightAnchor.constant = 0.0f;
             self.dividerLineLeftAnchor.constant = 0.0f;
-            
+            if ( ![Utils isIOS8] ) {
+                [self.upcomingScreen alignDividerToValue:0.0f];
+            }
             [UIView animateWithDuration:0.25f animations:^{
                 
                 [self.liveStreamView layoutIfNeeded];
