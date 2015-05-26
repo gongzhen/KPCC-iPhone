@@ -463,6 +463,11 @@ setForOnDemandUI;
 }
 
 - (void)superPop {
+    
+    if ( self.menuOpen ) {
+        [self decloakForMenu:YES];
+    }
+    
     [self.navigationController popToRootViewControllerAnimated:YES];
     
     self.navigationItem.title = @"KPCC Live";
@@ -510,9 +515,9 @@ setForOnDemandUI;
     }
     
 #ifdef DEBUG
-    self.liveStreamView.backgroundColor = [[UIColor kpccPeriwinkleColor] translucify:0.75f];
-    self.upcomingScreen.view.backgroundColor = [[UIColor kpccOrangeColor] translucify:0.75f];
-    self.cpFullDetailScreen.view.backgroundColor = [[UIColor kpccSlateColor] translucify:0.75f];
+    //self.liveStreamView.backgroundColor = [[UIColor kpccPeriwinkleColor] translucify:0.75f];
+    //self.upcomingScreen.view.backgroundColor = [[UIColor kpccOrangeColor] translucify:0.75f];
+    //self.cpFullDetailScreen.view.backgroundColor = [[UIColor kpccSlateColor] translucify:0.75f];
 #endif
 
     UIView *v2u = [Utils isIOS8] ? self.mainContentScroller : self.liveStreamView;
@@ -2377,6 +2382,10 @@ setForOnDemandUI;
                     
                     bottomAnim.toValue = @(60.0);
                     suppressDivider = YES;
+                    if ( self.menuOpen ) {
+                        [self decloakForMenu:YES];
+                    }
+                    
                     
                 } else {
                     bottomAnim.toValue = @(self.threePointFivePlayControlsConstant);
@@ -2749,7 +2758,7 @@ setForOnDemandUI;
     
     if ( self.hiddenVectorCommitted ) return;
     
-    [UIView animateWithDuration:0.275 animations:^{
+    [UIView animateWithDuration:0.1f animations:^{
         for ( NSDictionary *th in self.hiddenVector ) {
             UIView *v2h = th[@"view"];
             v2h.alpha = 0.0f;
@@ -2763,7 +2772,7 @@ setForOnDemandUI;
     
     if ( !self.hiddenVectorCommitted ) return;
     
-    [UIView animateWithDuration:0.275 animations:^{
+    [UIView animateWithDuration:0.1f animations:^{
         for ( NSDictionary *th in self.hiddenVector ) {
             UIView *v2h = th[@"view"];
             v2h.alpha = [th[@"alpha"] floatValue];
@@ -2775,6 +2784,8 @@ setForOnDemandUI;
 }
 
 - (void)mutePrimaryControls {
+    
+    if ( self.hiddenVectorCommitted ) return;
     
     SCPRAppDelegate *del = (SCPRAppDelegate*)[[UIApplication sharedApplication] delegate];
     SCPRNavigationController *nav = del.masterNavigationController;
@@ -2790,6 +2801,9 @@ setForOnDemandUI;
 }
 
 - (void)unmutePrimaryControls {
+    
+    if ( !self.hiddenVectorCommitted ) return;
+    
     self.scrubbingTriggerView.userInteractionEnabled = YES;
     [self popHiddenVector];
 }
@@ -3234,7 +3248,29 @@ setForOnDemandUI;
                                                                 repeats:NO];
     }
     if ( scrollView == self.mainContentScroller ) {
-        [UIView animateWithDuration:0.25f animations:^{
+      
+        NSLog(@"***** Scroll View Did End Decelerating *****");
+        [UIView animateWithDuration:0.18f animations:^{
+            if ( self.mainContentScroller.contentOffset.x == 0.0f ) {
+                self.queueBlurView.alpha = 0.0f;
+                self.queueDarkBgView.alpha = 0.0f;
+                self.dividerLineRightAnchor.constant = -5.0f;
+                self.dividerLineLeftAnchor.constant = 5.0f;
+                [self.liveStreamView layoutIfNeeded];
+                [self unmutePrimaryControls];
+            } else {
+                [self mutePrimaryControls];
+            }
+        }];
+        
+    }
+}
+
+
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
+    NSLog(@"***** Scroll View Did End Dragging *****");
+    if ( scrollView == self.mainContentScroller ) {
+        [UIView animateWithDuration:0.18f animations:^{
             if ( self.mainContentScroller.contentOffset.x == 0.0f ) {
                 self.queueBlurView.alpha = 0.0f;
                 self.queueDarkBgView.alpha = 0.0f;
@@ -3247,10 +3283,6 @@ setForOnDemandUI;
             }
         }];
     }
-}
-
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-    
 }
 
 #pragma mark - On demand loading transitions
@@ -3385,7 +3417,7 @@ setForOnDemandUI;
         }
         case 3: {
             
-            [self decloakForMenu:YES];
+            //[self decloakForMenu:YES];
             
             event = @"menuSelectionWakeSleep";
             SCPRTimerControlViewController *timer = [[SCPRTimerControlViewController alloc] initWithNibName:@"SCPRTimerControlViewController"
