@@ -211,6 +211,7 @@
 @property BOOL viewHasAppeared;
 @property BOOL hiddenVectorCommitted;
 @property BOOL lockUIFromDeceleration;
+@property BOOL restoreTitle;
 
 // Sleep Timer
 @property (nonatomic, strong) IBOutlet UIView *sleepTimerContainerView;

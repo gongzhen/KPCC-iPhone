@@ -441,6 +441,11 @@ setForOnDemandUI;
         });
     }
     
+    if ( self.restoreTitle ) {
+        self.restoreTitle = NO;
+        self.navigationItem.title = @"KPCC Live";
+    }
+    
     self.viewHasAppeared = YES;
     
 
@@ -464,9 +469,10 @@ setForOnDemandUI;
 
 - (void)superPop {
     
-    if ( self.menuOpen ) {
+    /*if ( self.menuOpen ) {
         [self decloakForMenu:YES];
     }
+    */
     
     [self.navigationController popToRootViewControllerAnimated:YES];
     
@@ -3417,7 +3423,8 @@ setForOnDemandUI;
         }
         case 3: {
             
-            //[self decloakForMenu:YES];
+            [self decloakForMenu:YES];
+            
             
             event = @"menuSelectionWakeSleep";
             SCPRTimerControlViewController *timer = [[SCPRTimerControlViewController alloc] initWithNibName:@"SCPRTimerControlViewController"
@@ -3431,6 +3438,8 @@ setForOnDemandUI;
                                                  animated:YES];
             
             [timer setup];
+            
+            self.restoreTitle = YES;
             
             break;
         }
