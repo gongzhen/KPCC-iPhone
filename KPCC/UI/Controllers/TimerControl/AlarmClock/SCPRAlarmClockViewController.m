@@ -63,6 +63,11 @@
     self.willWakeLabel.text = @"WILL WAKE ON:";
     
     self.inbetweenAnchor.constant = [Utils isThreePointFive] ? 6.0f : 31.0f;
+    if ( [Utils isThreePointFive] && ![Utils isIOS8] ) {
+        self.inbetweenAnchor.constant = 0.0f;
+        self.topAnchor.constant = 126.0f;
+    }
+    
     self.bottomAnchor.constant = [Utils isThreePointFive] ? 12.0f : 32.0f;
     
     NSString *pretty = [NSDate stringFromDate:self.armDate
@@ -90,7 +95,8 @@
     
     
     
-    
+    [self.view layoutSubviews];
+    [self.view updateConstraints];
 }
 
 #pragma mark - Action

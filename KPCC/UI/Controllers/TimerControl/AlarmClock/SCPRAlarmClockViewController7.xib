@@ -27,7 +27,7 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="4:50 AM" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2og-4H-7S2" userLabel="scrubberValueLabel">
-                    <rect key="frame" x="20" y="156" width="551" height="58"/>
+                    <rect key="frame" x="20" y="126" width="551" height="58"/>
                     <fontDescription key="fontDescription" type="system" pointSize="48"/>
                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                     <nil key="highlightedColor"/>
@@ -45,7 +45,7 @@
                     </state>
                 </button>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="midnight" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZTc-uA-3aV" userLabel="midnightLabel">
-                    <rect key="frame" x="20" y="245" width="551" height="21"/>
+                    <rect key="frame" x="20" y="186" width="551" height="21"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="21" id="FpH-Mc-G6K"/>
                     </constraints>
@@ -54,7 +54,7 @@
                     <nil key="highlightedColor"/>
                 </label>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="WILL WAKE AT:" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0Jc-TA-Wkp" userLabel="willWakeAtLabel">
-                    <rect key="frame" x="20" y="133" width="551" height="21"/>
+                    <rect key="frame" x="20" y="103" width="551" height="21"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="21" id="Y7h-tR-Mik"/>
                     </constraints>
@@ -63,7 +63,7 @@
                     <nil key="highlightedColor"/>
                 </label>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="noon" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dMo-yx-Y3n" userLabel="noonLabel">
-                    <rect key="frame" x="20" y="459" width="551" height="21"/>
+                    <rect key="frame" x="20" y="400" width="551" height="21"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="21" id="dVD-Ef-z0b"/>
                     </constraints>
@@ -72,7 +72,7 @@
                     <nil key="highlightedColor"/>
                 </label>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="89A-V8-Iun" userLabel="dialView" customClass="SCPRTouchableScrubberView">
-                    <rect key="frame" x="211" y="278" width="168" height="168"/>
+                    <rect key="frame" x="211" y="219" width="168" height="168"/>
                     <subviews>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ig1-jG-GQc" userLabel="degreeReading">
                             <rect key="frame" x="80" y="66" width="42" height="21"/>
@@ -104,7 +104,7 @@
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
             <constraints>
                 <constraint firstItem="0Jc-TA-Wkp" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="20" id="28L-Dd-AKa"/>
-                <constraint firstItem="2og-4H-7S2" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="156" id="3mC-MD-3OB"/>
+                <constraint firstItem="2og-4H-7S2" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="126" id="3mC-MD-3OB"/>
                 <constraint firstItem="2og-4H-7S2" firstAttribute="top" secondItem="0Jc-TA-Wkp" secondAttribute="bottom" constant="2" id="6j0-ca-Xr3"/>
                 <constraint firstAttribute="centerX" secondItem="89A-V8-Iun" secondAttribute="centerX" constant="5" id="8ML-Vw-qsY"/>
                 <constraint firstAttribute="bottom" secondItem="17c-Ik-Srn" secondAttribute="bottom" constant="32" id="8No-F7-QB2"/>
@@ -120,7 +120,7 @@
                 <constraint firstAttribute="trailing" secondItem="ZTc-uA-3aV" secondAttribute="trailing" constant="29" id="s8p-fz-GWP"/>
                 <constraint firstItem="ZTc-uA-3aV" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="20" id="tIS-a6-8li"/>
                 <constraint firstAttribute="trailing" secondItem="2og-4H-7S2" secondAttribute="trailing" constant="29" id="tdn-68-XFJ"/>
-                <constraint firstItem="ZTc-uA-3aV" firstAttribute="top" secondItem="2og-4H-7S2" secondAttribute="bottom" constant="31" id="wvt-9h-pjA"/>
+                <constraint firstItem="ZTc-uA-3aV" firstAttribute="top" secondItem="2og-4H-7S2" secondAttribute="bottom" constant="2" id="wvt-9h-pjA"/>
                 <constraint firstItem="17c-Ik-Srn" firstAttribute="centerY" secondItem="nU7-Hs-qSo" secondAttribute="centerY" id="xMr-eh-KDV"/>
             </constraints>
             <point key="canvasLocation" x="451" y="128"/>

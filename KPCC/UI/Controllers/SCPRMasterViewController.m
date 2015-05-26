@@ -195,23 +195,29 @@ setForOnDemandUI;
     self.darkBgView.alpha = 1.0f;
     self.onDemandMainDividerView.alpha = 0.4f;
 
-    self.deployedProgramTitleConstant = [Utils isThreePointFive] ? 143.0f : 200.0f;
+    self.deployedProgramTitleConstant = [Utils isThreePointFive] ? 143.0f : 220.0f;
     self.initialProgramTitleConstant = [Utils isThreePointFive] ? 56.0f : 118.0f;
+    
     self.threePointFivePlayControlsConstant = 10.0f;
     
     if ( [Utils isThreePointFive] ) {
         if ( [Utils isIOS8] ) {
             [self.initialControlsYConstraint setConstant:151.0];
             [self.playerControlsTopYConstraint setConstant:288.0];
+            if ( [[UXmanager shared].settings userHasViewedOnboarding] ) {
+                self.initialProgramTitleConstant = 148.0f;
+            } else {
+                self.initialProgramTitleConstant = 200.0f;
+            }
+            self.deployedProgramTitleConstant = 220.0f;
             [self.programTitleYConstraint setConstant:self.initialProgramTitleConstant];
         } else {
-            [self.initialControlsYConstraint setConstant:101.0];
+            [self.initialControlsYConstraint setConstant:151.0];
             [self.playerControlsTopYConstraint setConstant:258.0];
+            self.liveRewindBottomYConstraint.constant = 10.0f;
             [self.programTitleYConstraint setConstant:self.initialProgramTitleConstant];
+            self.deployedProgramTitleConstant = 113.0f;
         }
-        
-        [self.horizontalDividerPush setConstant:253.0f];
-        
     } else {
         [self.programTitleYConstraint setConstant:self.initialProgramTitleConstant];
     }
@@ -450,7 +456,9 @@ setForOnDemandUI;
 
 - (void)viewDidLayoutSubviews {
 
+
     [self.upcomingScreen alignDividerToValue:self.horizDividerLine.frame.origin.y];
+    
     
 }
 
@@ -493,8 +501,20 @@ setForOnDemandUI;
     self.upcomingScreen.view.frame = self.upcomingScreen.view.frame;
     self.cpFullDetailScreen.view.frame = self.cpFullDetailScreen.view.frame;
     
+    CGFloat mod = 64.0f;
+    CGFloat push = 0.0f;
     CGFloat heightHint = [Utils isThreePointFive] ? self.view.frame.size.height-64.0f : self.liveStreamView.frame.size.height;
+    if ( [Utils isThreePointFive] ) {
+        mod = 64.0f;
+        push = 88.0f;
+    }
     
+#ifdef DEBUG
+    self.liveStreamView.backgroundColor = [[UIColor kpccPeriwinkleColor] translucify:0.75f];
+    self.upcomingScreen.view.backgroundColor = [[UIColor kpccOrangeColor] translucify:0.75f];
+    self.cpFullDetailScreen.view.backgroundColor = [[UIColor kpccSlateColor] translucify:0.75f];
+#endif
+
     UIView *v2u = [Utils isIOS8] ? self.mainContentScroller : self.liveStreamView;
     [v2u printDimensionsWithIdentifier:@">>>>>>>>>>>>>>>>>>>>>>>>>> Basis for scroll content"];
     
@@ -507,9 +527,11 @@ setForOnDemandUI;
     self.cpFullDetailScreen.view.translatesAutoresizingMaskIntoConstraints = NO;
     self.liveStreamView.translatesAutoresizingMaskIntoConstraints = NO;
     
+
+    
     UIView *contentView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0,
                                                                    self.mainContentScroller.frame.size.width*3.0,
-                                                                   self.view.frame.size.height-64.0)];
+                                                                   self.view.frame.size.height)];
     contentView.backgroundColor = [UIColor clearColor];
     UIView *cv2u = [Utils isIOS8] ? self.mainContentScroller : contentView;
     if ( ![Utils isIOS8] ) {
@@ -519,6 +541,14 @@ setForOnDemandUI;
                                                                                                                            @"width" : @(v2u.frame.size.width)}] allValues];
         [self.liveStreamView addConstraints:lsSizeConstraints];
         [self.mainContentScroller addSubview:contentView];
+        
+        NSString *usVfmt = [NSString stringWithFormat:@"V:|-%1.1f-[live]",push];
+        NSArray *fVConstraints = [NSLayoutConstraint constraintsWithVisualFormat:usVfmt
+                                                                         options:0
+                                                                         metrics:nil
+                                                                           views:@{ @"live" : self.liveStreamView }];
+        [contentView addConstraints:fVConstraints];
+        
     }
     [cv2u addSubview:self.upcomingScreen.view];
     [cv2u addSubview:self.cpFullDetailScreen.view];
@@ -535,14 +565,14 @@ setForOnDemandUI;
                                                                                @"upcomingScreen" : self.upcomingScreen.view,
                                                                                @"cpFull" : self.cpFullDetailScreen.view }];
     
-    NSString *usVfmt = [Utils isIOS8] ? @"V:|[upcomingScreen]" : @"V:|[upcomingScreen]";
+    NSString *usVfmt = [NSString stringWithFormat:@"V:|-%1.1f-[upcomingScreen]",push];
     NSArray *fVConstraints = [NSLayoutConstraint constraintsWithVisualFormat:usVfmt
                                                                     options:0
                                                                     metrics:nil
                                                                       views:@{ @"upcomingScreen" : self.upcomingScreen.view }];
     
     
-    NSString *cpVfmt = [Utils isIOS8] ? @"V:|[cpFull]" : @"V:|[cpFull]|";
+    NSString *cpVfmt = [NSString stringWithFormat:@"V:|-%1.1f-[cpFull]",push];
     NSArray *fullScheduleV = [NSLayoutConstraint constraintsWithVisualFormat:cpVfmt
                                                                      options:0
                                                                      metrics:nil
@@ -1842,7 +1872,7 @@ setForOnDemandUI;
 
 - (void)moveTextIntoPlace:(BOOL)animated {
     
-    CGFloat constant = [Utils isThreePointFive] ? 133.0f : 200.0f;
+    CGFloat constant = self.initialProgramTitleConstant;
     if ( self.programTitleYConstraint.constant == constant ) return;
     if ( !animated ) {
         [self.programTitleYConstraint setConstant:constant];

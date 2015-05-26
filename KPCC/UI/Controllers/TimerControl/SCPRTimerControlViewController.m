@@ -12,6 +12,7 @@
 #import "UIColor+UICustom.h"
 #import "SCPRSleepViewController.h"
 #import "SCPRAlarmClockViewController.h"
+#import "Utils.h"
 
 @interface SCPRTimerControlViewController ()
 
@@ -71,8 +72,12 @@
                                                                           bundle:nil];
     self.sleepTimerController.view.frame = self.sleepTimerController.view.frame;
     
+    NSString *xib = @"SCPRAlarmClockViewController";
+    if ( [Utils isThreePointFive] && ![Utils isIOS8] ) {
+        xib = @"SCPRAlarmClockViewController7";
+    }
     
-    self.alarmClockController = [[SCPRAlarmClockViewController alloc] initWithNibName:@"SCPRAlarmClockViewController"
+    self.alarmClockController = [[SCPRAlarmClockViewController alloc] initWithNibName:xib
                                                                                bundle:nil];
     
     self.alarmClockController.view.frame = self.alarmClockController.view.frame;
@@ -135,6 +140,10 @@
     [st addConstraint:heightV1];
     [ac addConstraint:heightV2];
     
+    if ( ![Utils isIOS8] ) {
+        self.alarmClockController.view.alpha = 0.0f;
+    }
+    
     [self.view layoutIfNeeded];
     
     [self.chromaKeyView setBackgroundColor:[[UIColor virtualBlackColor] translucify:0.5f]];
@@ -169,6 +178,8 @@
                                                           constant:0.0];
     [self.buttonSeatView addConstraint:self.ddgCenterXAnchor];
 
+    self.alarmClockController.view.alpha = 1.0f;
+    
     [UIView animateWithDuration:0.33 animations:^{
         self.toggleScroller.contentOffset = CGPointMake(offset,0.0f);
         [self.buttonSeatView layoutIfNeeded];

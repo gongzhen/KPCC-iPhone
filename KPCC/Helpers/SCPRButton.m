@@ -9,6 +9,7 @@
 #import "SCPRButton.h"
 #import <POP/POP.h>
 #import "UIColor+UICustom.h"
+#import "Utils.h"
 
 @implementation SCPRButton
 
@@ -21,12 +22,19 @@
 */
 
 - (void)addTarget:(id)target action:(SEL)action forControlEvents:(UIControlEvents)controlEvents special:(BOOL)special {
-    self.target = target;
-    self.postPushMethod = action;
-    [self addTarget:self
-             action:@selector(squeeze) forControlEvents:UIControlEventTouchDown];
-    [self addTarget:self
-             action:@selector(expand) forControlEvents:UIControlEventTouchUpInside];
+    
+    if ( [Utils isIOS8] ) {
+        self.target = target;
+        self.postPushMethod = action;
+        [self addTarget:self
+                 action:@selector(squeeze) forControlEvents:UIControlEventTouchDown];
+        [self addTarget:self
+                 action:@selector(expand) forControlEvents:UIControlEventTouchUpInside];
+    } else {
+        [super addTarget:target
+                  action:action
+        forControlEvents:controlEvents];
+    }
 }
 
 - (void)squeeze {

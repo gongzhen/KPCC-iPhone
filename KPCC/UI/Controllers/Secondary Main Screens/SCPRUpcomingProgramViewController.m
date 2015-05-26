@@ -117,9 +117,8 @@
 
 - (void)alignDividerToValue:(CGFloat)yCoordinate {
     self.verticalPushAnchor.constant = yCoordinate;
-    if ( ![Utils isIOS8] ) {
-        self.verticalPushAnchor.constant = self.view.frame.size.height - yCoordinate;
-        self.view.translatesAutoresizingMaskIntoConstraints = YES;
+    if ( /*[Utils isIOS8] &&*/ [Utils isThreePointFive] ) {
+        self.verticalPushAnchor.constant -= 88.0f;
     }
     [self.view layoutSubviews];
     [self.view updateConstraints];
