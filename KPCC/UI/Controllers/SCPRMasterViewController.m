@@ -341,10 +341,16 @@ setForOnDemandUI;
                    forControlEvents:UIControlEventTouchUpInside
                             special:YES];
     
-    [self.shareButton addTarget:self
-                         action:@selector(shareButtonTapped:)
-               forControlEvents:UIControlEventTouchUpInside
-                        special:YES];
+    if ( [Utils isIOS8] ) {
+        [self.shareButton addTarget:self
+                             action:@selector(shareButtonTapped:)
+                   forControlEvents:UIControlEventTouchUpInside
+                            special:YES];
+    } else {
+        [self.shareButton addTarget:self
+                             action:@selector(shareButtonTapped:)
+                   forControlEvents:UIControlEventTouchUpInside];
+    }
     
     [self.cancelSleepTimerButton addTarget:self
                                     action:@selector(cancelSleepTimerAction)
