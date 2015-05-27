@@ -19,11 +19,37 @@ static char *alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz012
 }
 
 + (CGFloat)degreesToRadians:(CGFloat) degrees {
-    return degrees * M_PI / 180.0;
+    return degrees * M_PI / 180.0f;
 }
 
 + (CGFloat)radiansToDegrees:(CGFloat)radians {
     return radians * 180 / M_PI;
+}
+
++ (NSString*)formatOfInterestFromDate:rawDate startDate:(BOOL)startDate gapped:(BOOL)gapped {
+    
+    NSDateComponents *startComps = [[NSCalendar currentCalendar] components:NSCalendarUnitMinute
+                                                                   fromDate:rawDate];
+    NSString *dFmt = @"";
+    if ( [startComps minute] == 0 ) {
+        dFmt = @"h";
+    } else {
+        dFmt = @"h:mm";
+    }
+    
+    if ( !startDate ) {
+        if ( gapped ) {
+            dFmt = [dFmt stringByAppendingString:@" a"];
+        } else {
+            dFmt = [dFmt stringByAppendingString:@"a"];
+        }
+    }
+    
+    return dFmt;
+}
+
++ (NSString*)formatOfInterestFromDate:rawDate startDate:(BOOL)startDate {
+    return [Utils formatOfInterestFromDate:rawDate startDate:startDate gapped:YES];
 }
 
 + (NSDate*)dateFromRFCString:(NSString*)dateString {
@@ -142,7 +168,7 @@ static char *alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz012
 }
 
 + (BOOL)isThreePointFive {
-    return [[UIScreen mainScreen] bounds].size.height < 568.0;
+    return [[UIScreen mainScreen] bounds].size.height < 568.0f;
 }
 
 +(NSString *)base64:(NSData *)input {

@@ -24,8 +24,10 @@
 #import "SCPRButton.h"
 #import "SCPRScrubbingUIViewController.h"
 #import "SCPRTouchableScrubberView.h"
+#import "SCPRUpcomingProgramViewController.h"
+#import "SCPRCompleteScheduleViewController.h"
 
-@interface SCPRMasterViewController : UIViewController<SCPRMenuDelegate,UIAlertViewDelegate>
+@interface SCPRMasterViewController : UIViewController<SCPRMenuDelegate,UIAlertViewDelegate,UIScrollViewDelegate>
 
 @property IBOutlet UILabel *programTitleLabel;
 @property IBOutlet UIImageView *programImageView;
@@ -39,7 +41,18 @@
 @property IBOutlet FXBlurView *blurView;
 @property IBOutlet UIView *darkBgView;
 
+
+@property IBOutlet UIScrollView *mainContentScroller;
+@property (nonatomic, strong) IBOutlet NSLayoutConstraint *mainHeightConstraint;
+@property (nonatomic, strong) IBOutlet NSLayoutConstraint *cpHeightConstraint;
+@property (nonatomic, strong) IBOutlet NSLayoutConstraint *fsHeightConstraint;
+@property (nonatomic, strong) IBOutlet NSLayoutConstraint *cpWidthConstraint;
+@property (nonatomic, strong) IBOutlet NSLayoutConstraint *fsWidthConstraint;
+
+@property (nonatomic, strong) IBOutlet SCPRUpcomingProgramViewController *upcomingScreen;
+@property (nonatomic, strong) IBOutlet SCPRCompleteScheduleViewController *cpFullDetailScreen;
 @property (nonatomic,strong) MPVolumeView *mpvv;
+- (void)setupScroller;
 
 @property NSInteger tickCounter;
 
@@ -51,8 +64,6 @@
 @property (nonatomic,strong) NSTimer *queueScrollTimer;
 @property (nonatomic,strong) NSArray *queueContents;
 @property (nonatomic,strong) NSMutableArray *queueUIContents;
-@property (nonatomic,strong) UIView *scrubbingTriggerView;
-
 
 // Major holder views for different playback states.
 @property IBOutlet UIView *liveStreamView;
@@ -67,6 +78,7 @@
 @property IBOutlet UILabel *timeLabelOnDemand;
 @property IBOutlet SCPRButton *shareButton;
 @property IBOutlet UIProgressView *progressView;
+@property IBOutlet UIView *onDemandMainDividerView;
 
 - (void)onDemandFadeDown;
 
@@ -87,19 +99,21 @@
 @property (nonatomic,strong) IBOutlet UIView *liveProgressView;
 @property (nonatomic,strong) IBOutlet UIView *currentProgressBarView;
 @property (nonatomic,strong) IBOutlet UIView *liveProgressBarView;
+@property IBOutlet NSLayoutConstraint *horizontalDividerPush;
+@property (nonatomic,strong) IBOutlet SCPRButton *mainBackward30Button;
+@property (nonatomic,strong) IBOutlet SCPRButton *mainForward30Button;
+@property (nonatomic,strong) NSTimer *liveScrollTimer;
 
 // Pre-Roll
 - (void)handlePreRollControl:(BOOL)paused;
 
 @property (nonatomic,strong) SCPRPreRollViewController *preRollViewController;
 @property BOOL lockPreroll;
-
 @property BOOL updaterArmed;
 
 // Rewinding UI
 @property (nonatomic,strong) SCPRJogShuttleViewController *jogShuttle;
 @property (nonatomic,strong) IBOutlet UIView *rewindView;
-
 @property (nonatomic,strong) NSMutableDictionary *originalFrames;
 
 @property (nonatomic, strong) IBOutlet NSLayoutConstraint *liveRewindBottomYConstraint;
@@ -119,17 +133,27 @@
 @property BOOL onDemandPanning;
 @property BOOL onDemandFailing;
 
+@property CGFloat initialProgramTitleConstant;
+@property CGFloat deployedProgramTitleConstant;
+@property CGFloat threePointFivePlayControlsConstant;
+
 @property NSInteger onDemandGateCount;
 @property NSInteger previousRewindThreshold;
 
 // Onboarding
 @property BOOL automationMode;
+@property BOOL trainingUIisExposed;
+@property BOOL showLiveHelpScreens;
+
 @property (nonatomic,strong) IBOutlet UILabel *letsGoLabel;
 
 - (void)activateRewind:(RewindDistance)distance;
 - (void)activateFastForward;
 - (void)snapJogWheel;
 - (void)specialRewind;
+
+- (void)adjustScrollingState;
+- (void)adjustScrubbingState;
 
 // Scrubbing
 - (void)bringUpScrubber;
@@ -142,17 +166,10 @@
 - (void)tickOnDemand;
 - (void)beginScrubbingWaitMode;
 - (void)endScrubbingWaitMode;
-
-// Sleep Timer
-@property (nonatomic, strong) IBOutlet UIView *sleepTimerContainerView;
-@property (nonatomic, strong) IBOutlet UIProgressView *sleepTimerCountdownProgress;
-@property (nonatomic, strong) IBOutlet UIImageView *clockIconImageView;
-@property (nonatomic, strong) IBOutlet UILabel *plainTextCountdownLabel;
-@property (nonatomic, strong) IBOutlet UIButton *cancelSleepTimerButton;
-- (void)setupTimerControls;
-- (void)cancelSleepTimerAction;
-
-- (void)remoteControlPlayOrPause;
+- (void)animatedStateForButton:(UIButton*)button enabled:(BOOL)enabled;
+- (void)animatedStateForForwardButton:(BOOL)enabled;
+- (void)animatedStateForBackwardButton:(BOOL)enabled;
+- (void)wipeTargetsForScrubButtons;
 
 @property (nonatomic, strong) SCPRScrubbingUIViewController *scrubbingUI;
 @property (nonatomic, strong) SCPRButton *scrubberCloseButton;
@@ -162,12 +179,55 @@
 @property (nonatomic, strong) IBOutlet UIView *scrubberControlView;
 @property (nonatomic, strong) IBOutlet UILabel *scrubberTimeLabel;
 @property (nonatomic, strong) IBOutlet SCPRTouchableScrubberView *touchableScrubberView;
-@property (nonatomic,strong) IBOutlet NSLayoutConstraint *topYScrubbingAnchor;
+@property (nonatomic, strong) IBOutlet NSLayoutConstraint *topYScrubbingAnchor;
 @property (nonatomic, strong) IBOutlet NSLayoutConstraint *back30VerticalAnchor;
 @property (nonatomic, strong) IBOutlet NSLayoutConstraint *fwd30VerticalAnchor;
+@property (nonatomic, strong) IBOutlet UILabel *lowerBoundScrubberLabel;
+@property (nonatomic, strong) IBOutlet UILabel *upperBoundScrubberLabel;
+@property (nonatomic, strong) IBOutlet UILabel *timeBehindLiveScrubberLabel;
+@property (nonatomic, strong) IBOutlet UILabel *timeNumbericScrubberLabel;
+@property (nonatomic, strong) IBOutlet UIView *liveProgressScrubberView;
+@property (nonatomic, strong) IBOutlet NSLayoutConstraint *liveProgressScrubberAnchor;
+@property (nonatomic, strong) IBOutlet UIView *liveProgressNeedleView;
+@property (nonatomic, strong) IBOutlet UILabel *liveProgressNeedleReadingLabel;
+@property (nonatomic, strong) IBOutlet UIView *currentProgressNeedleView;
+@property (nonatomic, strong) IBOutlet UILabel *currentProgressNeedleReadingLabel;
+@property IBOutlet NSLayoutConstraint *cpFlagAnchor;
+@property IBOutlet NSLayoutConstraint *cpLeftAnchor;
+@property IBOutlet NSLayoutConstraint *topGapScrubbingAnchor;
+@property IBOutlet NSLayoutConstraint *flagAnchor;
+@property IBOutlet NSLayoutConstraint *dividerLineLeftAnchor;
+@property IBOutlet NSLayoutConstraint *dividerLineRightAnchor;
+@property IBOutlet NSLayoutConstraint *scrollerTopConstraint;
+
+@property (nonatomic, strong) NSMutableArray *hiddenVector;
+- (void)pushToHiddenVector:(UIView*)viewToHide;
+- (void)commitHiddenVector;
+- (void)popHiddenVector;
+
+@property (nonatomic,strong) UIView *scrubbingTriggerView;
 
 @property BOOL scrubbing;
 @property BOOL viewHasAppeared;
+@property BOOL hiddenVectorCommitted;
+@property BOOL lockUIFromDeceleration;
+@property BOOL restoreTitle;
+
+// Sleep Timer
+@property (nonatomic, strong) IBOutlet UIView *sleepTimerContainerView;
+@property (nonatomic, strong) IBOutlet UIProgressView *sleepTimerCountdownProgress;
+@property (nonatomic, strong) IBOutlet UIImageView *clockIconImageView;
+@property (nonatomic, strong) IBOutlet UILabel *plainTextCountdownLabel;
+@property (nonatomic, strong) IBOutlet UIButton *cancelSleepTimerButton;
+
+- (void)setupTimerControls;
+- (void)cancelSleepTimerAction;
+- (void)remoteControlPlayOrPause;
+
+
+
+
+
 
 @property (NS_NONATOMIC_IOSONLY, readonly) BOOL uiIsJogging;
 @property (NS_NONATOMIC_IOSONLY, readonly) NSTimeInterval rewindAgainstStreamDelta;
@@ -182,6 +242,9 @@
 - (void)primeManualControlButton;
 - (void)treatUIforProgram;
 - (void)determinePlayState;
+
+- (void)mutePrimaryControls;
+- (void)unmutePrimaryControls;
 
 - (void)handleAlarmClock;
 
@@ -206,6 +269,8 @@
 
 @property BOOL genericImageForProgram;
 @property BOOL onboardingRewindButtonShown;
+
+- (BOOL)cloaked;
 
 - (void)rollInterferenceText;
 - (void)showOnDemandOnboarding;

@@ -55,4 +55,6 @@
 
 + (NSString*)prettyUSTimeFromSeconds:(NSInteger)seconds;
 
+- (NSDictionary*)bookends;
+
 @end

@@ -32,8 +32,8 @@ typedef NS_ENUM(NSInteger, SculptingStyle) {
 
 // Layouts
 - (NSArray*)typicalConstraints:(UIView *)view withTopOffset:(CGFloat)topOffset fullscreen:(BOOL)fullscreen;
-- (NSArray*)sizeConstraintsForView:(UIView *)view;
-- (NSArray*)sizeConstraintsForView:(UIView *)view hints:(NSDictionary*)hints;
+- (NSDictionary*)sizeConstraintsForView:(UIView *)view;
+- (NSDictionary*)sizeConstraintsForView:(UIView *)view hints:(NSDictionary*)hints;
 - (NSDictionary*)centeredConstraintsForView:(UIView *)view withinParent:(UIView*)parent;
 
 - (NSLayoutConstraint*)snapView:(id)view toContainer:(id)container withTopOffset:(CGFloat)topOffset;

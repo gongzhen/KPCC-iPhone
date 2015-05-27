@@ -30,7 +30,7 @@
 - (UIImage*)avatarFromProgram:(Program *)program {
     
     CGFloat scale = [[UIScreen mainScreen] scale];
-    self.view.alpha = 1.0;
+    self.view.alpha = 1.0f;
     UIGraphicsBeginImageContextWithOptions(self.view.frame.size, YES, scale);
     [self.view.layer.superlayer renderInContext:UIGraphicsGetCurrentContext()];
     UIImage *resultingImage = UIGraphicsGetImageFromCurrentImageContext();
@@ -42,7 +42,7 @@
 
 - (void)setupWithProgram:(Program *)program {
     self.view.backgroundColor = [UIColor clearColor];
-    self.seatView.layer.cornerRadius = self.view.frame.size.width / 2.0;
+    self.seatView.layer.cornerRadius = self.view.frame.size.width / 2.0f;
     self.seatView.backgroundColor = [UIColor kpccSlateColor];
     [self.initialLetter proBookFontize];
     self.initialLetter.textColor = [UIColor whiteColor];
@@ -50,7 +50,7 @@
     NSString *name = program.title;
     NSString *actionWord;
     NSString *actionLetter = @"";
-    if ( [name rangeOfString:@"The"].location == 0 ) {
+    if ( [name rangeOfString:@"The "].location == 0 ) {
         NSArray *splitty = [name componentsSeparatedByString:@" "];
         if ( [splitty count] > 1 ) {
             actionWord = splitty[1];

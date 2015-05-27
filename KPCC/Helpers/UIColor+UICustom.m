@@ -19,7 +19,7 @@
 
 - (UIColor*)intensify {
     const CGFloat *cdata = CGColorGetComponents(self.CGColor);
-    CGFloat max = 0.0;
+    CGFloat max = 0.0f;
     NSInteger index = 0;
     for ( unsigned i = 0; i < 3; i++ ) {
         CGFloat val = cdata[i];
@@ -93,6 +93,13 @@
     return [UIColor colorWithRed:34.0/255.0
                            green:38.0/255.0
                             blue:40.0/255.0
+                           alpha:1.0];
+}
+
++ (UIColor*)kpccSubtleGrayColor {
+    return [UIColor colorWithRed:151.0/255.0
+                           green:151.0/255.0
+                            blue:151.0/255.0
                            alpha:1.0];
 }
 

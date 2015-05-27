@@ -37,17 +37,16 @@
     NSString *path = [[NSBundle mainBundle] pathForResource:@"Config" ofType:@"plist"];
     NSDictionary *globalConfig = [[NSDictionary alloc] initWithContentsOfFile:path];
     
-#ifdef ENABLE_TESTFLIGHT
-    [TestFlight takeOff: globalConfig[@"TestFlight"][@"AppToken"]];
-#endif
-    
     [[AnalyticsManager shared] setup];
     
 #ifndef PRODUCTION
     //[[UXmanager shared].settings setUserHasViewedOnboarding:YES];
     //[[UXmanager shared].settings setUserHasViewedOnDemandOnboarding:YES];
 #ifdef TESTING_SCRUBBER
+    [[UXmanager shared].settings setUserHasViewedOnDemandOnboarding:NO];
     [[UXmanager shared].settings setUserHasViewedScrubbingOnboarding:NO];
+    [[UXmanager shared].settings setUserHasViewedLiveScrubbingOnboarding:NO];
+    [[UXmanager shared].settings setUserHasViewedScheduleOnboarding:NO];
 #endif
     [[UXmanager shared] persist];
 #endif
@@ -129,6 +128,7 @@
 
 - (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error {
     NSLog(@"•••• FAILED REGISTERING FOR PUSH ••••");
+    
     if ( ![[UXmanager shared] userHasSeenOnboarding] ) {
         [[UXmanager shared] closeOutOnboarding];
     }
@@ -142,6 +142,8 @@
 }
 
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
+    
+    
     const unsigned *tokenBytes = [deviceToken bytes];
     NSString *hexToken = [NSString stringWithFormat:@"%08x%08x%08x%08x%08x%08x%08x%08x",
                           ntohl(tokenBytes[0]), ntohl(tokenBytes[1]), ntohl(tokenBytes[2]),
@@ -304,12 +306,7 @@
         [[SessionManager shared] setSessionReturnedDate:[NSDate date]];
         [self.masterViewController determinePlayState];
     }
-    
-    if ( [[AudioManager shared] currentAudioMode] == AudioModeOnboarding ) {
-        if ( [[UXmanager shared] paused] ) {
-            [[UXmanager shared] godPauseOrPlay];
-        }
-    }
+
     
     NSString *push = [[UXmanager shared].settings latestPushJson];
     if ( push && !SEQ(push,@"") ) {
@@ -323,7 +320,7 @@
     [[SessionManager shared] setUserLeavingForClickthrough:NO];
     [[AudioManager shared] stopWaiting];
     [[ContentManager shared] sweepBookmarks];
-    if ( [[AudioManager shared] isPlayingAudio] ) {
+    if ( [[AudioManager shared] isPlayingAudio] && [[AudioManager shared] currentAudioMode] == AudioModeLive ) {
         [[SessionManager shared] checkProgramUpdate:YES];
     }
     
@@ -363,6 +360,11 @@
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
 }
 
+#pragma mark - Training
+- (void)onboardForLiveFunctionality {
+    [self.onboardingController onboardingSwipingAction:YES];
+}
+
 
 # pragma mark - Stylesheet
 
@@ -396,7 +398,7 @@
     
     [[UIApplication sharedApplication] setIdleTimerDisabled:YES];
     
-    NSInteger tisn = abs([self.alarmDate timeIntervalSinceNow]);
+    NSInteger tisn = fabs([self.alarmDate timeIntervalSinceNow]);
     NSLog(@"Will fire in %ld seconds",(long)tisn);
     self.timer = [NSTimer scheduledTimerWithTimeInterval:tisn
                                                   target:self

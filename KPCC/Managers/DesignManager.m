@@ -70,7 +70,7 @@ static DesignManager *singleton = nil;
             self.displayingStockPhoto = NO;
             dispatch_async(dispatch_get_main_queue(), ^{
                 imageView.image = image;
-                imageView.alpha = 1.0;
+                imageView.alpha = 1.0f;
                 CATransition *transition = [CATransition animation];
                 transition.duration = kFadeDuration;
                 transition.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
@@ -95,7 +95,7 @@ static DesignManager *singleton = nil;
     
     self.displayingStockPhoto = YES;
     [imageView setImage:[UIImage imageNamed:@"program_tile_generic.jpg"]];
-    imageView.alpha = 1.0;
+    imageView.alpha = 1.0f;
     CATransition *transition = [CATransition animation];
     transition.duration = kFadeDuration;
     transition.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
@@ -130,7 +130,7 @@ static DesignManager *singleton = nil;
     return [NSArray arrayWithArray:total];
 }
 
-- (NSArray*)sizeConstraintsForView:(UIView *)view hints:(NSDictionary*)hints {
+- (NSDictionary*)sizeConstraintsForView:(UIView *)view hints:(NSDictionary*)hints {
     
     CGFloat wConstant = hints ? [hints[@"width"] floatValue] : view.frame.size.width;
     CGFloat hConstant = hints ? [hints[@"height"] floatValue] : view.frame.size.height;
@@ -151,11 +151,12 @@ static DesignManager *singleton = nil;
                                                                   multiplier:1.0
                                                                     constant:wConstant];
     
-    return @[ hConstraint, wConstraint ];
+    return @{ @"height" : hConstraint,
+              @"width" : wConstraint };
     
 }
 
-- (NSArray*)sizeConstraintsForView:(UIView *)view {
+- (NSDictionary*)sizeConstraintsForView:(UIView *)view {
     return [self sizeConstraintsForView:view hints:nil];
 }
 
@@ -196,10 +197,10 @@ static DesignManager *singleton = nil;
     
     if ( fullscreen ) {
         
-        NSArray *constraints = [self sizeConstraintsForView:v2u
+        NSDictionary *constraints = [self sizeConstraintsForView:v2u
                                                       hints:@{ @"width" : @(expectedWidth),
                                                                @"height" : @(expectedHeight) }];
-        [v2u addConstraints:constraints];
+        [v2u addConstraints:[constraints allValues]];
     }
     
     [c2u setTranslatesAutoresizingMaskIntoConstraints:NO];
@@ -299,7 +300,7 @@ static DesignManager *singleton = nil;
         {
             button.backgroundColor = [UIColor clearColor];
             button.layer.borderColor = [[UIColor virtualWhiteColor] translucify:0.46f].CGColor;
-            button.layer.borderWidth = 1.0;
+            button.layer.borderWidth = 1.0f;
             [button setTitleColor:[UIColor whiteColor]
                          forState:UIControlStateNormal];
             [button setTitleColor:[[UIColor virtualWhiteColor] translucify:0.75]
@@ -321,7 +322,7 @@ static DesignManager *singleton = nil;
         UIImage *img = [UIImage imageNamed:iconName];
         UIImageView *imgView = [[UIImageView alloc] initWithImage:img];
         imgView.contentMode = UIViewContentModeCenter;
-        NSArray *sizeC = [self sizeConstraintsForView:imgView];
+        NSArray *sizeC = [[self sizeConstraintsForView:imgView] allValues];
         imgView.translatesAutoresizingMaskIntoConstraints = NO;
         [imgView addConstraints:sizeC];
         
@@ -390,6 +391,10 @@ static DesignManager *singleton = nil;
 }
 
 - (NSAttributedString*)standardTimeFormatWithString:(NSString *)timeString attributes:(NSDictionary *)attributes {
+    if ( !timeString ) {
+        return [[NSAttributedString alloc] initWithString:@""
+                                               attributes:nil];
+    }
     NSMutableAttributedString *lowerBoundString = [[NSMutableAttributedString alloc] initWithString:timeString
                                                                                          attributes:nil];
     

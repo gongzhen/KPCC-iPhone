@@ -71,7 +71,7 @@
     self.genAvatar.view.frame = CGRectMake(0.0,64.0,
                                            self.genAvatar.view.frame.size.width,
                                            self.genAvatar.view.frame.size.height);
-    self.genAvatar.view.alpha = 0.0;
+    self.genAvatar.view.alpha = 0.0f;
     [self.view addSubview:self.genAvatar.view];*/
     
     [[DesignManager shared] loadProgramImage:_currentProgram.program_slug
@@ -145,13 +145,13 @@
         UIImage *iconImg = [UIImage imageNamed:[NSString stringWithFormat:@"program_avatar_%@", iconNamed]];
         if ( !iconImg ) {
             [cell.gav setupWithProgram:self.programsList[indexPath.row]];
-            cell.gav.view.alpha = 1.0;
-            cell.iconImageView.alpha = 0.0;
+            cell.gav.view.alpha = 1.0f;
+            cell.iconImageView.alpha = 0.0f;
         } else {
         
             [cell.iconImageView setImage:iconImg];
-            cell.gav.view.alpha = 0.0;
-            cell.iconImageView.alpha = 1.0;
+            cell.gav.view.alpha = 0.0f;
+            cell.iconImageView.alpha = 1.0f;
             
         }
     }

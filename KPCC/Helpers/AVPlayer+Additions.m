@@ -14,21 +14,21 @@
     if (self.currentItem.accessLog.events.lastObject){
         return [self.currentItem.accessLog.events.lastObject indicatedBitrate];
     }
-    return 0.0;
+    return 0.0f;
 }
 
 - (double)observedMaxBitrate {
     if (self.currentItem.accessLog.events.lastObject){
         return [self.currentItem.accessLog.events.lastObject observedMaxBitrate];
     }
-    return 0.0;
+    return 0.0f;
 }
 
 - (double)observedMinBitrate {
     if (self.currentItem.accessLog.events.lastObject){
         return [self.currentItem.accessLog.events.lastObject observedMinBitrate];
     }
-    return 0.0;
+    return 0.0f;
 }
 
 @end

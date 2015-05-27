@@ -31,6 +31,8 @@
 @property (nonatomic,strong) IBOutlet UIButton *interactionButton;
 @property (nonatomic,strong) IBOutlet NSLayoutConstraint *logoTopAnchor;
 @property (nonatomic,strong) IBOutlet NSLayoutConstraint *sloganTopAnchor;
+@property (nonatomic,strong) IBOutlet NSLayoutConstraint *dividerWidthAnchor;
+
 // Lens
 @property (nonatomic,strong) IBOutlet NSLayoutConstraint *lensTopConstraint;
 @property (nonatomic,strong) IBOutlet NSLayoutConstraint *lenstLeftConstraint;
@@ -61,6 +63,8 @@
 @property (nonatomic,strong) UISwipeGestureRecognizer *scrubbingSwiper;
 @property (nonatomic,strong) IBOutlet UIView *fakeScrubberView;
 @property (nonatomic,strong) IBOutlet NSLayoutConstraint *topAnchorScrubbingConstraint;
+@property (nonatomic,strong) IBOutlet NSLayoutConstraint *topAnchorForFingerAndBar;
+
 @property BOOL dontFade;
 
 // Backdoor
@@ -74,9 +78,13 @@
 - (void)hideLens;
 - (void)showCalloutWithText:(NSString*)text pointerPosition:(CGFloat)pointer position:(CGPoint)position;
 - (void)hideCallout;
-- (void)ondemandMode;
-- (void)scrubbingMode;
+- (void)onboardingSwipingAction:(BOOL)schedule;
+- (void)onboardingScrubbingAction;
+- (void)onboardingScrubbingAction:(BOOL)live;
+
 - (void)dismissOnDemand;
+- (void)dismissLiveScrubbing;
+- (void)dismissSchedule;
 - (void)repurposeButton;
 
 // User responses

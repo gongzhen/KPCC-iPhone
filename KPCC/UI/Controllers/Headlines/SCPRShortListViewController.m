@@ -64,7 +64,7 @@ static NSString *kShortListMenuURL = @"http://www.scpr.org/short-list/latest#no-
     
     NSURLRequest *rq = [[NSURLRequest alloc] initWithURL:[NSURL URLWithString:kShortListMenuURL]];
     //self.slWebView.transform = CGAffineTransformMakeScale(0.1, 0.1);
-    self.slWebView.layer.opacity = 0.0;
+    self.slWebView.layer.opacity = 0.0f;
     
     //self.detailWebView.transform = CGAffineTransformMakeScale(0.1, 0.1);
     

@@ -8,10 +8,9 @@ pod 'XMLDictionary', '~> 1.4'
 pod 'FlurrySDK/FlurrySDK', '~> 6.0'
 pod 'Parse', '~> 1.6'
 pod 'Mixpanel', '~> 2.7'
-#pod 'TestFlightSDK'
 pod 'KSReachability'
 pod 'Kochava'
 pod 'NewRelicAgent'
 pod 'ParseCrashReporting'
 
-link_with ['KPCC', 'KPCC-TestFlight']
+link_with ['KPCC', 'KPCCTests']

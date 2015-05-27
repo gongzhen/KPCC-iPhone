@@ -21,6 +21,9 @@
     self.userHasConnectedWithKochava = [aDecoder decodeBoolForKey:@"userHasConnectedWithKochava"];
     self.lastBookmarkSweep = [aDecoder decodeObjectForKey:@"lastBookmarkSweep"];
     self.alarmFireDate = [aDecoder decodeObjectForKey:@"alarmFireDate"];
+    self.userHasViewedLiveScrubbingOnboarding = [aDecoder decodeBoolForKey:@"userHasViewedLiveScrubbingOnboarding"];
+    self.userHasViewedScheduleOnboarding = [aDecoder decodeBoolForKey:@"userHasViewedScheduleOnboarding"];
+    self.userHasColdStartedAudioOnce = [aDecoder decodeBoolForKey:@"userHasColdStartedAudioOnce"];
     
     [[Utils del] setAlarmDate:self.alarmFireDate];
     
@@ -44,8 +47,12 @@
                   forKey:@"lastBookmarkSweep"];
     [aCoder encodeObject:self.alarmFireDate
                   forKey:@"alarmFireDate"];
-    
-    
+    [aCoder encodeBool:self.userHasViewedScheduleOnboarding
+                forKey:@"userHasViewedScheduleOnboarding"];
+    [aCoder encodeBool:self.userHasViewedLiveScrubbingOnboarding
+                forKey:@"userHasViewedLiveScrubbingOnboarding"];
+    [aCoder encodeBool:self.userHasColdStartedAudioOnce
+                forKey:@"userHasColdStartedAudioOnce"];
 }
 
 @end

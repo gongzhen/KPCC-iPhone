@@ -256,6 +256,29 @@
     return completeAtt;
 }
 
+- (NSDictionary*)bookends {
+    NSDateComponents *comps = [[NSCalendar currentCalendar] components:NSCalendarUnitHour|NSCalendarUnitMinute|NSCalendarUnitDay|NSCalendarUnitSecond|NSCalendarUnitMonth|NSCalendarUnitYear|NSCalendarUnitWeekOfYear
+                                                              fromDate:self];
+    
+    NSInteger originalMinute = [comps minute];
+    [comps setSecond:0];
+    [comps setMinute:0];
+    
+    NSDate *top = [[NSCalendar currentCalendar] dateFromComponents:comps];
+    
+    if ( originalMinute < 30 ) {
+        [comps setMinute:30];
+    } else {
+        [comps setMinute:59];
+    }
+    
+    NSDate *bottom = [[NSCalendar currentCalendar] dateFromComponents:comps];
+    
+    return @{ @"top" : top,
+              @"bottom" : bottom };
+    
+}
+
 + (NSString*)prettyUSTimeFromSeconds:(NSInteger)seconds {
     NSInteger minutes = ceil(seconds/60);
     NSInteger hours = 0;
@@ -346,7 +369,7 @@
 }
 
 - (BOOL)isWithinTimeFrame:(NSInteger)seconds ofDate:(NSDate *)date {
-    if ( abs([date timeIntervalSince1970] - [self timeIntervalSince1970]) <= seconds ) {
+    if ( fabs([date timeIntervalSince1970] - [self timeIntervalSince1970]) <= seconds ) {
         return YES;
     }
     

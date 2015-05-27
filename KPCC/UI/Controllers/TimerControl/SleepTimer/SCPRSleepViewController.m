@@ -32,15 +32,20 @@
 - (void)setup {
     [self.view layoutIfNeeded];
     
+    self.maxPercentage = MAXFLOAT;
+    
     if ( [Utils isThreePointFive] ) {
         self.globalTopAnchor.constant = 178.0f;
+        if ( ![Utils isIOS8] ) {
+            self.globalTopAnchor.constant = 208.0f;
+        }
         self.bottomAnchor.constant = 12.0f;
     } else {
         self.globalTopAnchor.constant = 228.0f;
         self.bottomAnchor.constant = 32.0f;
     }
     
-    self.spinner.alpha = 0.0;
+    self.spinner.alpha = 0.0f;
     self.armableSeconds = 300;
     
     [self.scrubber setupWithDelegate:self];
@@ -63,8 +68,8 @@
 
 - (void)zero {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
-    self.spinner.alpha = 0.0;
-    self.startButton.alpha = 1.0;
+    self.spinner.alpha = 0.0f;
+    self.startButton.alpha = 1.0f;
 
     [self actionOfInterestWithPercentage:0.0];
     [self.startButton removeTarget:nil
@@ -81,11 +86,14 @@
                                  andText:@"Start Sleep Timer"
      iconName:@"icon-stopwatch.png"];
     
-    self.scrubbingSeatView.alpha = 1.0;
+    self.scrubbingSeatView.alpha = 1.0f;
     self.indicatorTopAnchor.constant = 38.0f;
-    self.remainingLabel.alpha = 0.0;
+
+    [self.view layoutIfNeeded];
+    
+    self.remainingLabel.alpha = 0.0f;
     self.indicatorLabel.attributedText = [NSDate prettyAttributedFromSeconds:300 includeSeconds:NO];
-    self.indicatorLabel.alpha = 1.0;
+    self.indicatorLabel.alpha = 1.0f;
     [self.startButton addTarget:self
                          action:@selector(armSleepTimer)
                forControlEvents:UIControlEventTouchUpInside
@@ -110,9 +118,12 @@
                                withStyle:SculptingStyleClearWithBorder
                                  andText:@"Cancel Sleep Timer"];
     
-    self.scrubbingSeatView.alpha = 0.0;
+    self.scrubbingSeatView.alpha = 0.0f;
     self.indicatorTopAnchor.constant = 13.0f;
-    self.remainingLabel.alpha = 1.0;
+    if ( [Utils isThreePointFive] && ![Utils isIOS8] ) {
+        self.indicatorTopAnchor.constant = 43.0f;
+    }
+    self.remainingLabel.alpha = 1.0f;
     
     [self.startButton addTarget:self
                          action:@selector(disarmSleepTimer)
@@ -243,6 +254,10 @@
     NSLog(@"Seconds : %ld",(long)seconds);
     self.armableSeconds = seconds;
     self.indicatorLabel.attributedText = [NSDate prettyAttributedFromSeconds:seconds includeSeconds:NO];
+}
+
+- (void)actionOfInterestOnScrubBegin {
+    
 }
 
 - (UILabel*)scrubbingIndicatorLabel {

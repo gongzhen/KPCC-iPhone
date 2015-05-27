@@ -13,6 +13,7 @@
 #import "Utils.h"
 #import "POP.h"
 #import "QueueManager.h"
+#import "SessionManager.h"
 
 @interface SCPRScrubberViewController ()
 
@@ -42,7 +43,7 @@
     [self.radiusTerminusView removeFromSuperview];
     [self.degreesLabel removeFromSuperview];
 #else
-    self.radiusTerminusView.layer.cornerRadius = self.radiusTerminusView.frame.size.width / 2.0;
+    self.radiusTerminusView.layer.cornerRadius = self.radiusTerminusView.frame.size.width / 2.0f;
     self.radiusTerminusView.clipsToBounds = YES;
     self.radiusTerminusView.layer.borderColor = [UIColor blackColor].CGColor;
     self.radiusTerminusView.layer.borderWidth = 1.0f;
@@ -61,7 +62,7 @@
     CGFloat width = self.viewAsTouchableScrubberView.frame.size.width;
     NSLog(@"Scrubber Thinks the Width is %1.1f",width);
     CGMutablePathRef currentLinePath = CGPathCreateMutable();
-    CGFloat lineWidth = 0.0;
+    CGFloat lineWidth = 0.0f;
     if ( !circular ) {
         lineWidth = self.view.frame.size.height*2.0f;
         CGPoint lPts[2];
@@ -99,9 +100,9 @@
         self.containerBarLine = [CAShapeLayer layer];
         self.containerBarLine.path = seatLinePath;
         self.containerBarLine.strokeColor = self.containerTintColor.CGColor;
-        self.containerBarLine.strokeStart = 0.0;
-        self.containerBarLine.strokeEnd = 1.0;
-        self.containerBarLine.opacity = 1.0;
+        self.containerBarLine.strokeStart = 0.0f;
+        self.containerBarLine.strokeEnd = 1.0f;
+        self.containerBarLine.opacity = 1.0f;
         self.containerBarLine.fillColor = [UIColor clearColor].CGColor;
         self.containerBarLine.lineWidth = lineWidth;
         self.view.backgroundColor = [UIColor clearColor];
@@ -112,9 +113,9 @@
     self.currentBarLine = [CAShapeLayer layer];
     self.currentBarLine.path = currentLinePath;
     self.currentBarLine.strokeColor = self.currentTintColor.CGColor;
-    self.currentBarLine.strokeStart = 0.0;
-    self.currentBarLine.strokeEnd = 0.0;
-    self.currentBarLine.opacity = 1.0;
+    self.currentBarLine.strokeStart = 0.0f;
+    self.currentBarLine.strokeEnd = 0.0f;
+    self.currentBarLine.opacity = 1.0f;
     self.currentBarLine.fillColor = [UIColor clearColor].CGColor;
     self.currentBarLine.lineWidth = lineWidth;
     
@@ -153,8 +154,11 @@
 - (void)userTouched:(NSSet *)touches event:(UIEvent *)event {
     self.firstTouch = [(UITouch*)[touches anyObject] locationInView:self.view];
     self.previousPoint = self.firstTouch;
+    
     [self trackForPoint:self.firstTouch];
     self.panning = YES;
+    
+    [self.scrubbingDelegate actionOfInterestOnScrubBegin];
 }
 
 - (void)userPanned:(NSSet *)touches event:(UIEvent *)event {
@@ -178,6 +182,9 @@
     CGFloat dX = touchPoint.x;
     CGFloat basis = self.view.frame.size.width;
     double se = 0.0f;
+    
+    BOOL puntScrub = NO;
+    
     if ( self.circular ) {
         
 #ifdef USE_ATAN2
@@ -228,10 +235,21 @@
         
     } else {
         se = ( dX / basis )*1.0f;
+        CGFloat max = [self.scrubbingDelegate maxPercentage];
+        if ( se > max ) {
+            if ( ![[SessionManager shared] sessionIsBehindLive] ) {
+                puntScrub = YES;
+            }
+        }
+        se = fminf(max, se);
+        se = fmaxf(0.0f, se);
     }
     
     self.currentBarLine.strokeEnd = se;
-    [self.scrubbingDelegate actionOfInterestWithPercentage:(CGFloat)se];
+    
+    if ( !puntScrub ) {
+        [self.scrubbingDelegate actionOfInterestWithPercentage:(CGFloat)se];
+    }
 }
 
 - (CGPoint)extendPoint:(CGPoint)touchPoint toEdge:(CGPoint)bound {
@@ -287,7 +305,10 @@
     if ( self.panning ) return;
     
     dispatch_async(dispatch_get_main_queue(), ^{
+        self.currentBarLine.opacity = 1.0f;
         self.currentBarLine.strokeEnd = amount;
+        [self.currentBarLine layoutIfNeeded];
+        [self.view.layer layoutIfNeeded];
     });
 }
 

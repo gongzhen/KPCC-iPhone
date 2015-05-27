@@ -34,13 +34,7 @@
     return mgr;
 }
 
-- (void)startAudioSession {
-    if ( [[AudioManager shared] currentAudioMode] == AudioModeLive ) {
-        [self startLiveSession];
-    } else if ( [[AudioManager shared] currentAudioMode] == AudioModeOnDemand ) {
-        [self startOnDemandSession];
-    }
-}
+
 
 - (NSString*)prettyStringForPauseExplanation:(PauseExplanation)explanation {
     switch (explanation) {
@@ -63,20 +57,31 @@
 
 #pragma mark - Session Mgmt
 - (NSDate*)vLive {
-    NSDate *live = [NSDate date];
+    
+    
+    NSDate *live = [[NSDate date] dateByAddingTimeInterval:-90.0f]; // Add in what we know is going to be slightly behind live
+    if ( [[AudioManager shared] maxSeekableDate] ) {
+        live = [[AudioManager shared] maxSeekableDate];
+    }
+    if ( self.localLiveTime > 0.0f ) {
+        live = [NSDate dateWithTimeIntervalSince1970:self.localLiveTime];
+    }
+    
     if ( [AudioManager shared].audioPlayer.currentItem ) {
         NSDate *msd = [[AudioManager shared].audioPlayer.currentItem currentDate];
         if ( msd ) {
-            if ( [msd isWithinTimeFrame:self.peakDrift ofDate:[NSDate date]] ) {
-                if ( abs([live timeIntervalSinceDate:msd]) > [[SessionManager shared] peakDrift] ) {
+           /* if ( [msd isWithinTimeFrame:self.peakDrift ofDate:[NSDate date]] ) {
+                if ( fabs([live timeIntervalSinceDate:msd]) > [[SessionManager shared] peakDrift] ) {
                     live = msd;
-                    self.latestDriftValue = abs([live timeIntervalSinceDate:msd]);
+                    self.latestDriftValue = fabs([live timeIntervalSinceDate:msd]);
                 }
             } else {
                 return live;
-            }
+            } */
+            // Make this a no-op for now
+            
         } else {
-            // AVPlayer has no current date, so it's probably paused
+            // AVPlayer has no current date, so it's probably stopped
             return [[NSDate date] dateByAddingTimeInterval:60*60*24*10];
         }
     }
@@ -84,8 +89,20 @@
     return live;
 }
 
+- (NSDate*)vNow {
+    if ( [[AudioManager shared].audioPlayer.currentItem currentDate] ) {
+        return [[AudioManager shared].audioPlayer.currentItem currentDate];
+    }
+    
+    if ( self.localLiveTime > 0.0f ) {
+        return [NSDate dateWithTimeIntervalSince1970:self.localLiveTime];
+    }
+    
+    return [NSDate date];
+}
+
 - (NSInteger)calculatedDriftValue {
-    /*NSInteger vDrift = abs([[NSDate date] timeIntervalSinceDate:[[AudioManager shared] maxSeekableDate]]);
+    /*NSInteger vDrift = fabs([[NSDate date] timeIntervalSinceDate:[[AudioManager shared] maxSeekableDate]]);
     NSLog(@"Current Drift Value : %ld",(long)vDrift);
     return vDrift / 2.0 < [[SessionManager shared] peakDrift] ? vDrift / 2.0 : [[SessionManager shared] peakDrift];*/
     return 2;
@@ -103,8 +120,29 @@
     
     NSTimeInterval ctTI = [currentTime timeIntervalSince1970];
     NSTimeInterval msdTI = [msd timeIntervalSince1970];
-    NSTimeInterval seconds = abs(ctTI - msdTI);
+    NSTimeInterval seconds = fabs(ctTI - msdTI);
     return seconds;
+}
+
+- (NSTimeInterval)virtualSecondsBehindLive {
+    CGFloat sbl = [[[SessionManager shared] vLive] timeIntervalSince1970] - [[[AudioManager shared].audioPlayer.currentItem currentDate] timeIntervalSince1970];
+    if ( sbl < 0.0f ) {
+        sbl = 0.0f;
+    } 
+    
+    return (NSTimeInterval)sbl;
+}
+
+- (NSInteger)medianDrift {
+    return floor((self.minDrift + self.peakDrift)/2.0);
+}
+
+- (void)startAudioSession {
+    if ( [[AudioManager shared] currentAudioMode] == AudioModeLive ) {
+        [self startLiveSession];
+    } else if ( [[AudioManager shared] currentAudioMode] == AudioModeOnDemand ) {
+        [self startOnDemandSession];
+    }
 }
 
 - (NSString*)startLiveSession {
@@ -139,7 +177,7 @@
     }
     
     NSTimeInterval now = [[NSDate date] timeIntervalSince1970];
-    NSTimeInterval sessionLength = abs(now - self.liveStreamSessionBegan);
+    NSTimeInterval sessionLength = fabs(now - self.liveStreamSessionBegan);
     NSString *pt = [NSDate prettyTextFromSeconds:sessionLength];
     if ( sessionLength > 30000 ) return @"";
     
@@ -173,7 +211,7 @@
     
     NSTimeInterval seconds = [self secondsBehindLive];
     NSString *pt = @"";
-    if ( seconds > 60 ) {
+    if ( seconds > kAllowableDriftCeiling ) {
         pt = [NSDate prettyTextFromSeconds:seconds];
     } else {
         pt = @"LIVE";
@@ -222,6 +260,7 @@
     
     NSString *ct = [NSString stringWithFormat:@"%ld",(long)[[NSDate date] timeIntervalSince1970]];
     NSString *sid = [Utils sha1:ct];
+    
     self.odSessionID = sid;
     @synchronized(self) {
         self.odSessionIsHot = YES;
@@ -237,7 +276,7 @@
     if ( !self.odSessionIsHot ) return @"";
 
     NSTimeInterval now = [[NSDate date] timeIntervalSince1970];
-    NSTimeInterval sessionLength = abs(now - self.onDemandSessionBegan);
+    NSTimeInterval sessionLength = fabs(now - self.onDemandSessionBegan);
     NSString *pt = [NSDate prettyTextFromSeconds:sessionLength];
     
     NSString *sid = self.odSessionID;
@@ -430,7 +469,7 @@
 #ifdef TESTING_PROGRAM_CHANGE
     Program *p = [self fakeProgram];
     self.currentProgram = p;
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"program_has_changed"
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"program-has-changed"
                                                         object:nil
                                                       userInfo:nil];
     
@@ -446,51 +485,22 @@
     [[NetworkManager shared] requestFromSCPRWithEndpoint:urlString completion:^(id returnedObject) {
         // Create Program and insert into managed object context
         if ( returnedObject && [(NSDictionary*)returnedObject count] > 0 ) {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                Program *programObj = [Program insertProgramWithDictionary:returnedObject
-                                                    inManagedObjectContext:[[ContentManager shared] managedObjectContext]];
-                
-                [[ContentManager shared] saveContext];
-                
-                BOOL touch = NO;
-                if ( self.currentProgram ) {
-                    if ( !SEQ(self.currentProgram.program_slug,
-                              programObj.program_slug) ) {
-                        touch = YES;
-                    }
-                } else if ( programObj ) {
-                    touch = YES;
-                }
-                
-#ifdef TEST_PROGRAM_IMAGE
-                touch = YES;
-#endif
-                if ( touch ) {
-                    touch = ![self ignoreProgramUpdating];
-                }
-                
-                if ( self.genericImageForProgram && programObj ) {
-                    touch = YES;
-                    self.genericImageForProgram = NO;
-                }
-                
-                self.currentProgram = programObj;
-                if ( touch ) {
-                    [[NSNotificationCenter defaultCenter] postNotificationName:@"program_has_changed"
-                                                                        object:nil
-                                                                      userInfo:nil];
-                }
-                completed(programObj);
-                
-                
-            });
+            if ( completed ) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    
+                    Program *programObj = [Program insertProgramWithDictionary:returnedObject
+                                                        inManagedObjectContext:[[ContentManager shared] managedObjectContext]];
+                    
+                    [[ContentManager shared] saveContext];
+                    
+                    completed(programObj);
+                });
+            }
         } else {
             dispatch_async(dispatch_get_main_queue(), ^{
-                [[NSNotificationCenter defaultCenter] postNotificationName:@"program_has_changed"
-                                                                    object:nil
-                                                                  userInfo:nil];
-                
-                completed(nil);
+                if ( completed ) {
+                    completed(nil);
+                }
             });
         }
     }];
@@ -498,30 +508,109 @@
 }
 
 - (void)fetchCurrentProgram:(CompletionBlockWithValue)completed {
-#ifdef LEGACY_TIMER
-    NSDate *d2u = [NSDate date];
-    if ( [self sessionIsBehindLive] && ![self seekForwardRequested] && !self.expiring ) {
-        d2u = [[AudioManager shared].audioPlayer.currentItem currentDate];
-        d2u = [d2u minuteRoundedUpByThreshold:3];
-        NSLog(@"Adjusted time to fetch program : %@",[NSDate stringFromDate:d2u
-                                                                 withFormat:@"hh:mm:ss a"]);
-    }
-    
-    if ( !d2u ) {
-        completed(nil);
-        return;
-    }
-    
-    [self fetchProgramAtDate:d2u completed:completed];
-#else
-    NSDate *ct = [[AudioManager shared].audioPlayer.currentItem currentDate];
-    if ( ct ) {
-        [self fetchProgramAtDate:ct completed:completed];
-    } else {
-        [self fetchProgramAtDate:[NSDate date]
-                       completed:completed];
-    }
+    NSDate *ct = [self vNow];
+    [self fetchProgramAtDate:ct completed:^(id returnedObject) {
+#ifdef TESTING_SCHEDULE
+        returnedObject = nil;
 #endif
+        if ( returnedObject ) {
+            Program *programObj = (Program*)returnedObject;
+            BOOL touch = NO;
+            if ( self.currentProgram ) {
+                if ( !SEQ(self.currentProgram.program_slug,
+                          programObj.program_slug) ) {
+                    touch = YES;
+                }
+            } else if ( programObj ) {
+                touch = YES;
+            }
+            
+            if ( self.genericImageForProgram && programObj ) {
+                touch = YES;
+                self.genericImageForProgram = NO;
+            }
+            
+            self.currentProgram = programObj;
+            if ( touch ) {
+                [[NSNotificationCenter defaultCenter] postNotificationName:@"program-has-changed"
+                                                                    object:nil
+                                                                  userInfo:nil];
+            }
+            completed(programObj);
+            
+        } else {
+            
+            // Create a fake program to simulate live
+            
+            NSDate *now = [self vNow];
+            NSDictionary *bookends = [now bookends];
+            
+            NSString *endsAt = [NSDate stringFromDate:bookends[@"bottom"]
+                                           withFormat:@"yyyy-MM-dd'T'HHmmssZZZ"];
+            NSString *top = [NSDate stringFromDate:bookends[@"top"]
+                                        withFormat:@"yyyy-MM-dd'T'HHmmssZZZ"];
+            
+            Program *gp = [Program insertProgramWithDictionary:@{ @"title" : @"KPCC Live",
+                                                                  @"ends_at" : endsAt,
+                                                                  @"starts_at" : top,
+                                                                  @"soft_starts_at" : top,
+                                                                  @"is_recurring" : @(NO),
+                                                                  @"public_url" : @"http://scpr.org",
+                                                                  @"program" : @{ @"slug" : @"kpcc-live" }
+                                                                  }
+                                        inManagedObjectContext:[[ContentManager shared] managedObjectContext]];
+            
+            [gp setStarts_at:bookends[@"top"]];
+            [gp setEnds_at:bookends[@"bottom"]];
+            [gp setSoft_starts_at:bookends[@"top"]];
+            [gp setTitle:@"KPCC Live"];
+            
+            [[ContentManager shared] saveContext];
+            
+            self.currentProgram = gp;
+            
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"program-has-changed"
+                                                                object:nil
+                                                              userInfo:nil];
+            
+            completed(gp);
+            
+        }
+            
+
+    }];
+
+}
+
+- (void)fetchScheduleForTodayAndTomorrow:(CompletionBlockWithValue)completed {
+    
+    NSDate *now = [[AudioManager shared].audioPlayer.currentItem currentDate];
+    if ( !now ) {
+        now = [NSDate date];
+    }
+    
+    NSDateComponents *comps = [[NSCalendar currentCalendar] components:NSCalendarUnitYear|NSCalendarUnitDay|NSCalendarUnitMonth|NSCalendarUnitHour|NSCalendarUnitMinute|NSCalendarUnitSecond
+                                                              fromDate:now];
+    [comps setHour:23];
+    [comps setMinute:59];
+    [comps setMinute:59];
+    
+    NSDate *tonight = [[NSCalendar currentCalendar] dateFromComponents:comps];
+    NSTimeInterval timeUntilMidnight = [tonight timeIntervalSince1970] - [now timeIntervalSince1970];
+    timeUntilMidnight += 60*60*24;
+    
+    NSString *endpoint = [NSString stringWithFormat:@"%@/schedule?start_time=%ld&length=%ld",kServerBase,(long)[now timeIntervalSince1970],(long)timeUntilMidnight];
+    [[NetworkManager shared] requestFromSCPRWithEndpoint:endpoint completion:^(id returnedObject) {
+        
+        if ( completed ) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                completed(returnedObject);
+            });
+        }
+        
+    }];
+    
+    
 }
 
 - (void)armProgramUpdater {
@@ -568,7 +657,7 @@
     
     NSTimeInterval nowTI = [now timeIntervalSince1970];
     NSTimeInterval thenTI = [then timeIntervalSince1970];
-    if ( abs(thenTI - nowTI) < 60 ) {
+    if ( fabs(thenTI - nowTI) < 60 ) {
         then = [NSDate dateWithTimeInterval:30*60
                                   sinceDate:then];
     }
@@ -677,39 +766,19 @@
 
     if ( [[AudioManager shared] currentAudioMode] == AudioModeOnDemand ) return;
     
-    NSDate *ct = [[AudioManager shared].audioPlayer.currentItem currentDate];
-    if ( ct ) {
-        NSDateComponents *comps = [[NSCalendar currentCalendar] components:NSCalendarUnitMinute|NSCalendarUnitSecond
-                                                                  fromDate:ct];
-        if ( [comps minute] == 6 || [comps minute] % kProgramPollingPressure == 0 || force ) {
-            
-            if ( [comps minute] == self.prevCheckedMinute ) return;
-            self.prevCheckedMinute = [comps minute];
-            
-            if ( [self updaterArmed] ) {
-                return;
-            } else {
-                
-                self.prevCheckedMinute = [comps minute];
-                NSLog(@"Checking program : %@ (%ld)",[NSDate stringFromDate:ct
-                                                                 withFormat:@"hh:mm a"],(long)[ct timeIntervalSince1970]);
-                [self processTimer:nil];
-                
-            }
-            
-        } else {
-            [self setUpdaterArmed:NO];
-        }
-        
-    } else {
-        if ( force ) {
-            if ( [self updaterArmed] ) {
-                return;
-            } else {
-                [self processTimer:nil];
-            }
-        } else {
-            [self setUpdaterArmed:NO];
+    if ( force ) {
+        [self processTimer:nil];
+        return;
+    }
+    
+    NSDate *ct = [self vNow];
+    NSTimeInterval ctInSeconds = [ct timeIntervalSince1970];
+    Program *p = self.currentProgram;
+    if ( p ) {
+        NSDate *ends = p.ends_at;
+        NSTimeInterval eaInSeconds = [ends timeIntervalSince1970];
+        if ( (ctInSeconds*1.0f) >= eaInSeconds ) {
+            [self processTimer:nil];
         }
     }
     
@@ -738,29 +807,16 @@
         }
     }
     
+    NSLog(@"Buffer length is %@",[NSDate scientificStringFromSeconds:stableDuration]);
     return stableDuration;
     
 }
 
 - (BOOL)sessionIsBehindLive {
-    
-    NSDate *currentDate = [[AudioManager shared].audioPlayer.currentItem currentDate];
-    if ( !currentDate ) return NO;
-    
-#ifndef SUPPRESS_V_LIVE
-    NSDate *live = [self vLive];
-#else
-    NSDate *live = [NSDate date];
-#endif
-    if ( abs([live timeIntervalSince1970] - [currentDate timeIntervalSince1970]) > [[SessionManager shared] peakDrift] ) {
-        return YES;
-    }
-    
-    return NO;
+    return [self virtualSecondsBehindLive] > kVirtualLargeBehindLiveTolerance;
 }
 
 - (BOOL)sessionIsExpired {
-    
     
     if ( [[AudioManager shared] currentAudioMode] == AudioModeOnDemand ) return NO;
     if ( [[AudioManager shared] status] == StreamStatusPaused ||
@@ -770,21 +826,24 @@
             spd = [[SessionManager shared] sessionLeftDate];
         }
         
+        if ( !spd ) return NO;
+        
         NSDate *cit = [[AudioManager shared].audioPlayer.currentItem currentDate];
         if ( [[AudioManager shared] status] != StreamStatusStopped ) {
             if ( !cit ) {
-                // Some kind of audio abnormality, so expire this sessions
+                // Some kind of audio abnormality, so expire this session
                 return YES;
             }
         }
         
         NSDate *aux = cit ? [spd earlierDate:cit] : spd;
-        if ( !aux || [[NSDate date] timeIntervalSinceDate:aux] > kStreamBufferLimit ) {
+        if ( !aux || [[NSDate date] timeIntervalSinceDate:aux] > [self bufferLength] ) {
             return YES;
         }
     }
 
     return NO;
+    
 }
 
 - (BOOL)sessionIsInRecess {
@@ -823,6 +882,15 @@
     return NO;
 }
 
+- (BOOL)sessionHasNoProgram {
+
+    if ( SEQ(self.currentProgram.program_slug,@"kpcc-live") ) {
+        return YES;
+    }
+    
+    return NO;
+}
+
 - (void)invalidateSession {
     if ( [[AudioManager shared] currentAudioMode] == AudioModeOnDemand ) return;
     [self armProgramUpdater];
@@ -842,8 +910,6 @@
 
 - (void)processNotification:(UILocalNotification*)programUpdate {
     
-    if ( [self ignoreProgramUpdating] ) return;
-    
     if ( SEQ([programUpdate alertBody],kUpdateProgramKey) ) {
         [self fetchCurrentProgram:^(id returnedObject) {
             
@@ -852,9 +918,7 @@
 }
 
 - (void)processTimer:(NSTimer*)timer {
-    
-    if ( [self ignoreProgramUpdating] ) return;
-    
+
     [self setUpdaterArmed:YES];
     [self fetchCurrentProgram:^(id returnedObject) {
         
@@ -872,19 +936,7 @@
         
     } else {
         if ( [[AudioManager shared] status] != StreamStatusPaused ) {
-#ifdef LEGACY_TIMER
-            if ( [self sessionIsBehindLive] ) {
-                [self fetchProgramAtDate:[[AudioManager shared].audioPlayer.currentItem currentDate] completed:^(id returnedObject) {
-                    self.sessionReturnedDate = nil;
-                }];
-            } else {
-                [self fetchCurrentProgram:^(id returnedObject) {
-                    self.sessionReturnedDate = nil;
-                }];
-            }
-#else
             [self checkProgramUpdate:YES];
-#endif
         }
     }
 }

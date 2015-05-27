@@ -216,8 +216,8 @@
         cell.userInteractionEnabled = NO;
         [cell.rightChevronImageView setHidden:YES];
     } else {
-        cell.menuItemLabel.alpha = 1.0;
-        cell.iconImageView.alpha = 1.0;
+        cell.menuItemLabel.alpha = 1.0f;
+        cell.iconImageView.alpha = 1.0f;
         cell.userInteractionEnabled = YES;
         [cell.rightChevronImageView setHidden:chevronStatus];
     }
@@ -315,6 +315,7 @@
                              }
                          }
                          completion:^(BOOL finished){
+                             self.alpha = 0.0f;
                              [delegate pullDownAnimated:fullyOpen];
                          }];
     }

@@ -52,7 +52,7 @@
     cloak.view.frame = CGRectMake(0.0,0.0,
                                   window.frame.size.width,
                                   window.frame.size.height);
-    cloak.view.alpha = 0.0;
+    cloak.view.alpha = 0.0f;
     
     BOOL spinner = useSpinner;
     if ( customView ) {

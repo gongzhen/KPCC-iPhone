@@ -24,9 +24,11 @@ typedef NS_ENUM(NSUInteger, PauseExplanation) {
     PauseExplanationAppIsRespondingToPush = 4
 };
 
-static NSInteger kStreamIsLiveTolerance = 120;
-static NSInteger kAllowableDriftCeiling = 270;
+static NSInteger kAllowableDriftCeiling = 180;
 static NSInteger kToleratedIncreaseInDrift = 20;
+static CGFloat kVirtualBehindLiveTolerance = 10.0f;
+static CGFloat kVirtualMediumBehindLiveTolerance = 24.0f;
+static CGFloat kVirtualLargeBehindLiveTolerance = 120.0f;
 
 #ifndef PRODUCTION
 static NSInteger kProgramPollingPressure = 5;
@@ -54,6 +56,7 @@ static NSInteger kProgramPollingPressure = 5;
 @property NSTimer *sleepTimer;
 
 @property NSInteger prevCheckedMinute;
+@property NSTimeInterval localLiveTime;
 
 @property int64_t liveStreamSessionBegan;
 @property int64_t liveStreamSessionEnded;
@@ -72,18 +75,20 @@ static NSInteger kProgramPollingPressure = 5;
 @property (atomic) BOOL userIsViewingHeadlines;
 @property PauseExplanation lastKnownPauseExplanation;
 @property NSInteger peakDrift;
+@property NSInteger minDrift;
+@property NSInteger curDrift;
 @property (nonatomic, strong) Program *currentProgram;
 
 - (void)fetchCurrentProgram:(CompletionBlockWithValue)completed;
 - (void)fetchProgramAtDate:(NSDate*)date completed:(CompletionBlockWithValue)completed;
+- (void)fetchScheduleForTodayAndTomorrow:(CompletionBlockWithValue)completed;
+
 - (void)fetchOnboardingProgramWithSegment:(NSInteger)segment completed:(CompletionBlockWithValue)completed;
 
 - (void)armProgramUpdater;
 - (void)disarmProgramUpdater;
 - (void)resetCache;
 - (void)checkProgramUpdate:(BOOL)force;
-
-- (BOOL)alarmExpired;
 
 - (BOOL)sleepTimerActive;
 - (void)armSleepTimerWithSeconds:(NSInteger)seconds completed:(CompletionBlock)completed;
@@ -95,9 +100,12 @@ static NSInteger kProgramPollingPressure = 5;
 
 // Drift
 - (NSDate*)vLive;
+- (NSDate*)vNow;
 - (NSInteger)calculatedDriftValue;
 
 - (NSTimeInterval)secondsBehindLive;
+- (NSTimeInterval)virtualSecondsBehindLive;
+- (NSInteger)medianDrift;
 
 - (void)processNotification:(UILocalNotification*)programUpdate;
 @property (NS_NONATOMIC_IOSONLY) BOOL ignoreProgramUpdating;
@@ -127,6 +135,7 @@ static NSInteger kProgramPollingPressure = 5;
 - (void)trackLiveSession;
 - (void)trackRewindSession;
 
+
 - (NSString*)startOnDemandSession;
 - (NSString*)endOnDemandSessionWithReason:(OnDemandFinishedReason)reason;
 - (void)trackOnDemandSession;
@@ -142,5 +151,6 @@ static NSInteger kProgramPollingPressure = 5;
 @property (nonatomic,strong) Program *fakeCurrent;
 #endif
 
+- (BOOL)sessionHasNoProgram;
 
 @end

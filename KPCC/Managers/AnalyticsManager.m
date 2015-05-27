@@ -247,9 +247,6 @@ static AnalyticsManager *singleton = nil;
             
             nParams[@"indicatedBitrate"] = [NSString stringWithFormat:@"%1.1f",event.indicatedBitrate];
             nParams[@"observedBitrate"] =  [NSString stringWithFormat:@"%1.1f",event.observedBitrate];
-            
-            NSLog(@"iBR : %1.1f, oBR : %1.1f",event.indicatedBitrate,event.observedBitrate);
-            
             nParams[@"bytesTransferred"] = @(event.numberOfBytesTransferred);
             
             if ( self.accessLogReceivedAt ) {
@@ -305,6 +302,54 @@ static AnalyticsManager *singleton = nil;
     }
     
     return english;
+}
+
+#pragma mark - Events
+
+- (void)trackSeekUsageWithType:(ScrubbingType)type {
+    NSString *eventName = @"";
+    NSString *method = @"";
+    switch (type) {
+        case ScrubbingTypeScrubber:
+            method = @"scrubber";
+            break;
+        case ScrubbingTypeBack30:
+        case ScrubbingTypeFwd30:
+            method = @"button";
+            break;
+        case ScrubbingTypeBackToLive:
+            method = @"back-to-live-button";
+            break;
+        case ScrubbingTypeRewindToStart:
+            method = @"rewind-to-start-button";
+            break;
+        case ScrubbingTypeUnknown:
+        default:
+            method = @"unknown";
+            break;
+    }
+    
+    if ( [[AudioManager shared] currentAudioMode] == AudioModeLive ) {
+        eventName = @"liveStreamScrubbed";
+    }
+    if ( [[AudioManager shared] currentAudioMode] == AudioModeOnDemand ) {
+        eventName = @"onDemandAudioScrubbed";
+    }
+    
+    NSString *direction = @"";
+    if ( [[AudioManager shared] newPositionDelta] < 0 ) {
+        direction = @"Backward";
+    } else {
+        direction = @"Forward";
+    }
+    
+    [[AnalyticsManager shared] logEvent:eventName
+                         withParameters:@{
+                                          @"method" : method,
+                                          @"amount" : [NSString stringWithFormat:@"%@ %1.1f",direction,fabs([[AudioManager shared] newPositionDelta])]
+                                          }];
+    
+    NSLog(@"%@ : method : %@, amount : %@ %1.1f",eventName,method,direction,fabs([[AudioManager shared] newPositionDelta]));
 }
 
 @end

@@ -69,12 +69,12 @@
     //[self addConstraint:height];
     
     //self.topMargin = top;
-    CGFloat constant = [Utils isIOS8] ? 64.0 : 225.0;
+    CGFloat constant = [Utils isIOS8] ? 64.0 : 225.0f;
     
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.15 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         [UIView animateWithDuration:0.33 delay:0.0 options:UIViewAnimationOptionCurveEaseOut animations:^{
             [self.topMargin setConstant:constant];
-            self.alpha = 1.0;
+            self.alpha = 1.0f;
             [controller.view layoutIfNeeded];
         } completion:^(BOOL finished) {
             

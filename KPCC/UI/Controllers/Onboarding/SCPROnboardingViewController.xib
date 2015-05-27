@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6254" systemVersion="14C1510" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="7702" systemVersion="14D136" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6247"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7701"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="SCPROnboardingViewController">
@@ -32,6 +32,7 @@
                 <outlet property="sloganTopAnchor" destination="UFB-bS-uZZ" id="EG1-1V-yvX"/>
                 <outlet property="swipeToSkipLabel" destination="boP-gT-EsI" id="tcV-Qf-7Bj"/>
                 <outlet property="textCalloutBalloonCtrl" destination="eO6-rQ-D6u" id="dr6-C6-Ekh"/>
+                <outlet property="topAnchorForFingerAndBar" destination="9ZY-s1-9Uy" id="3BZ-ct-OTz"/>
                 <outlet property="topAnchorScrubbingConstraint" destination="4L4-bo-yjD" id="9W2-Vc-dLI"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
                 <outlet property="welcomeLabel" destination="BF9-6O-t4a" id="cyR-cO-m4p"/>
@@ -75,10 +76,11 @@
                     <constraints>
                         <constraint firstAttribute="height" constant="107" id="8lx-3n-C4L"/>
                         <constraint firstItem="h2N-Bf-oxo" firstAttribute="width" secondItem="BF9-6O-t4a" secondAttribute="width" id="FgC-xf-KAr"/>
+                        <constraint firstItem="h2N-Bf-oxo" firstAttribute="leading" secondItem="3aK-j3-aRR" secondAttribute="leading" constant="36" id="Lju-TL-wnK"/>
                         <constraint firstItem="ky3-rC-tNp" firstAttribute="top" secondItem="3aK-j3-aRR" secondAttribute="top" constant="-50" id="MGw-hx-ukU"/>
                         <constraint firstItem="BF9-6O-t4a" firstAttribute="top" secondItem="h2N-Bf-oxo" secondAttribute="bottom" constant="65" id="UFB-bS-uZZ"/>
                         <constraint firstAttribute="centerY" secondItem="h2N-Bf-oxo" secondAttribute="centerY" constant="4" id="WXe-sb-FS7"/>
-                        <constraint firstAttribute="centerX" secondItem="h2N-Bf-oxo" secondAttribute="centerX" id="j9d-Xf-exT"/>
+                        <constraint firstAttribute="trailing" secondItem="h2N-Bf-oxo" secondAttribute="trailing" constant="36" id="kwI-KR-nrc"/>
                         <constraint firstAttribute="centerX" secondItem="ky3-rC-tNp" secondAttribute="centerX" id="tC5-DH-8o8"/>
                         <constraint firstAttribute="width" constant="300" id="vPe-Sq-s9f"/>
                         <constraint firstAttribute="centerX" secondItem="BF9-6O-t4a" secondAttribute="centerX" constant="-0.5" id="yrP-jE-pCs"/>
@@ -214,10 +216,9 @@
                                 <constraint firstAttribute="height" constant="80" id="HMO-jk-hZB"/>
                             </constraints>
                         </imageView>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Swipe to skip episodes" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="boP-gT-EsI">
-                            <rect key="frame" x="8" y="142" width="284" height="31"/>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Swipe to skip episodes" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="boP-gT-EsI">
+                            <rect key="frame" x="8" y="142" width="284" height="29"/>
                             <constraints>
-                                <constraint firstAttribute="height" constant="31" id="B95-96-JDf"/>
                                 <constraint firstAttribute="width" constant="284" id="p1j-La-rPX"/>
                             </constraints>
                             <fontDescription key="fontDescription" type="system" pointSize="24"/>
@@ -225,7 +226,7 @@
                             <nil key="highlightedColor"/>
                         </label>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="idU-cI-SgA" customClass="SCPRButton">
-                            <rect key="frame" x="10" y="199" width="280" height="57"/>
+                            <rect key="frame" x="10" y="197" width="280" height="57"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="57" id="AAb-0B-C6z"/>
                                 <constraint firstAttribute="width" constant="280" id="eyN-Wb-3o5"/>
@@ -290,10 +291,10 @@
             <rect key="frame" x="0.0" y="0.0" width="300" height="380"/>
             <subviews>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="d9S-QB-iOW" userLabel="fakeScrubberView">
-                    <rect key="frame" x="4" y="190" width="292" height="4"/>
+                    <rect key="frame" x="-4" y="184" width="308" height="10"/>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     <constraints>
-                        <constraint firstAttribute="height" constant="4" id="KUU-Qn-on4"/>
+                        <constraint firstAttribute="height" constant="10" id="KUU-Qn-on4"/>
                     </constraints>
                 </view>
                 <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="onboarding-scrubber.png" translatesAutoresizingMaskIntoConstraints="NO" id="O8b-Zr-HC6">
@@ -322,11 +323,11 @@
                     <nil key="highlightedColor"/>
                 </label>
             </subviews>
-            <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.77000000000000002" colorSpace="calibratedRGB"/>
+            <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="calibratedRGB"/>
             <constraints>
                 <constraint firstItem="zbm-7o-Ncb" firstAttribute="top" secondItem="O8b-Zr-HC6" secondAttribute="bottom" constant="33" id="0ls-nW-jvT"/>
                 <constraint firstItem="8aU-dv-VsH" firstAttribute="top" secondItem="NOv-ZW-7Kr" secondAttribute="top" constant="8" id="4L4-bo-yjD"/>
-                <constraint firstAttribute="trailing" secondItem="d9S-QB-iOW" secondAttribute="trailing" constant="4" id="8VX-lb-YAH"/>
+                <constraint firstAttribute="trailing" secondItem="d9S-QB-iOW" secondAttribute="trailing" constant="-4" id="8VX-lb-YAH"/>
                 <constraint firstItem="O8b-Zr-HC6" firstAttribute="top" secondItem="8aU-dv-VsH" secondAttribute="bottom" constant="67" id="9ZY-s1-9Uy"/>
                 <constraint firstItem="O8b-Zr-HC6" firstAttribute="top" secondItem="d9S-QB-iOW" secondAttribute="bottom" constant="-17" id="B9N-Ev-5LV"/>
                 <constraint firstAttribute="height" constant="380" id="QB7-Aj-RF9"/>
@@ -336,12 +337,12 @@
                 <constraint firstItem="8aU-dv-VsH" firstAttribute="leading" secondItem="NOv-ZW-7Kr" secondAttribute="leading" constant="36" id="iVK-OT-6wx"/>
                 <constraint firstItem="O8b-Zr-HC6" firstAttribute="leading" secondItem="NOv-ZW-7Kr" secondAttribute="leading" constant="10" id="jqg-9a-yER"/>
                 <constraint firstAttribute="trailing" secondItem="zbm-7o-Ncb" secondAttribute="trailing" constant="10" id="otF-Ua-FSt"/>
-                <constraint firstItem="d9S-QB-iOW" firstAttribute="leading" secondItem="NOv-ZW-7Kr" secondAttribute="leading" constant="4" id="r6o-iU-mqK"/>
+                <constraint firstItem="d9S-QB-iOW" firstAttribute="leading" secondItem="NOv-ZW-7Kr" secondAttribute="leading" constant="-4" id="r6o-iU-mqK"/>
                 <constraint firstAttribute="width" constant="300" id="scz-tf-aNg"/>
             </constraints>
             <nil key="simulatedStatusBarMetrics"/>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
-            <point key="canvasLocation" x="-89" y="-607"/>
+            <point key="canvasLocation" x="-258" y="-504"/>
         </view>
     </objects>
     <resources>

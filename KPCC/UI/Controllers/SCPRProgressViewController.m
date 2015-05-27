@@ -70,11 +70,11 @@
     CGMutablePathRef currentLinePath = CGPathCreateMutable();
     self.liveBarLine.path = liveLinePath;
     self.liveBarLine.strokeColor = self.liveTintColor.CGColor;
-    self.liveBarLine.strokeStart = 0.0;
-    self.liveBarLine.strokeEnd = 0.0;
-    self.liveBarLine.opacity = 1.0;
+    self.liveBarLine.strokeStart = 0.0f;
+    self.liveBarLine.strokeEnd = 0.0f;
+    self.liveBarLine.opacity = 1.0f;
     self.liveBarLine.fillColor = self.liveTintColor.CGColor;
-    self.liveBarLine.lineWidth = 6.0;
+    self.liveBarLine.lineWidth = self.view.frame.size.height*2.0f;
     
     CGPoint lPts[2];
     lPts[0] = CGPointMake(0.0, 0.0);
@@ -83,11 +83,11 @@
     
     self.currentBarLine.path = currentLinePath;
     self.currentBarLine.strokeColor = self.currentTintColor.CGColor;
-    self.currentBarLine.strokeStart = 0.0;
-    self.currentBarLine.strokeEnd = 0.0;
-    self.currentBarLine.opacity = 1.0;
+    self.currentBarLine.strokeStart = 0.0f;
+    self.currentBarLine.strokeEnd = 0.0f;
+    self.currentBarLine.opacity = 1.0f;
     self.currentBarLine.fillColor = self.currentTintColor.CGColor;
-    self.currentBarLine.lineWidth = 6.0;
+    self.currentBarLine.lineWidth = self.view.frame.size.height*2.0f;
     
     [self.liveProgressView.layer addSublayer:self.liveBarLine];
     [self.currentProgressView.layer addSublayer:self.currentBarLine];
@@ -110,14 +110,14 @@
     self.liveProgressView.backgroundColor = [UIColor clearColor];
     self.currentTintColor = [UIColor kpccOrangeColor];
     self.currentProgressView.backgroundColor = [UIColor clearColor];
-    self.lastLiveValue = 0.0;
-    self.lastCurrentValue = 0.0;
+    self.lastLiveValue = 0.0f;
+    self.lastCurrentValue = 0.0f;
     self.liveProgressView.clipsToBounds = YES;
     self.currentProgressView.clipsToBounds = YES;
-    self.currentProgressView.alpha = 0.0;
-    self.liveProgressView.alpha = 0.0;
+    self.currentProgressView.alpha = 0.0f;
+    self.liveProgressView.alpha = 0.0f;
     self.uiHidden = YES;
-    self.view.alpha = 0.0;
+    self.view.alpha = 0.0f;
     self.view.backgroundColor = [UIColor clearColor];
 }
 
@@ -158,14 +158,14 @@
 
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         [UIView animateWithDuration:0.25 animations:^{
-            self.view.layer.opacity = 1.0;
+            self.view.layer.opacity = 1.0f;
             [self.view setAlpha:1.0];
         } completion:^(BOOL finished) {
             [UIView animateWithDuration:0.25 animations:^{
-                self.liveProgressView.alpha = 1.0;
+                self.liveProgressView.alpha = 1.0f;
             } completion:^(BOOL finished) {
                 [UIView animateWithDuration:0.25 animations:^{
-                    self.currentProgressView.alpha = 1.0;
+                    self.currentProgressView.alpha = 1.0f;
                 } completion:^(BOOL finished) {
                     
                 }];
@@ -184,7 +184,7 @@
 #ifdef DONT_USE_LATENCY_CORRECTION
     CGFloat vBeginning = 0.1;
 #else
-    CGFloat vBeginning = 0.0;
+    CGFloat vBeginning = 0.0f;
 #endif
     
     [CATransaction begin]; {
@@ -284,9 +284,9 @@
     NSTimeInterval live = [[NSDate date] timeIntervalSince1970];
 #endif
 
-    if ( [[SessionManager shared] secondsBehindLive] <= [[SessionManager shared] peakDrift] ) {
+    /*if ( [[SessionManager shared] secondsBehindLive] <= [[SessionManager shared] peakDrift] ) {
         live -= [[SessionManager shared] secondsBehindLive];
-    }
+    }*/
     
     if ( [[AudioManager shared] currentAudioMode] == AudioModeOnboarding ) {
         live = CMTimeGetSeconds([AudioManager shared].audioPlayer.currentItem.currentTime);
@@ -311,7 +311,7 @@
 
 - (void)reset {
     self.counter = 0;
-    self.currentBarLine.strokeEnd = 0.0;
+    self.currentBarLine.strokeEnd = 0.0f;
 }
 
 - (void)finishReveal {
