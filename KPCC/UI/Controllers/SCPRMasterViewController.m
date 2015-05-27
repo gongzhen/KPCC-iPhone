@@ -1217,7 +1217,6 @@ setForOnDemandUI;
     
     [self.jogShuttle endAnimations];
     
-    
     [[SessionManager shared] fetchCurrentProgram:^(id returnedObject) {
         
         [self setLiveStreamingUI:YES];
@@ -2051,6 +2050,15 @@ setForOnDemandUI;
     setForLiveStreamUI = YES;
     
     [self moveTextIntoPlace:NO];
+    
+    [self.view layoutIfNeeded];
+    
+    
+    if ( self.initialPlay ) {
+        self.programTitleYConstraint.constant = self.deployedProgramTitleConstant;
+    } else {
+        self.programTitleYConstraint.constant = self.initialProgramTitleConstant;
+    }
     
     [self.view layoutIfNeeded];
     
@@ -3102,7 +3110,6 @@ setForOnDemandUI;
     
     [self adjustScrollingState];
     [self adjustScrubbingState];
-    
     
     [self.view bringSubviewToFront:self.playerControlsView];
     
