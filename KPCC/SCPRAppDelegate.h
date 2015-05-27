@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "Program.h"
-
+#import "SCPRXFSViewController.h"
 
 
 #define TICK   NSDate *startTime = [NSDate date]
@@ -44,6 +44,7 @@
 @property (strong, nonatomic) NSDate *alarmDate;
 @property (strong, nonatomic) NSTimer *initialCheckTimer;
 @property (strong, nonatomic) NSTimer *alarmTimer;
+@property (strong, nonatomic) SCPRXFSViewController *xfsInterface;
 
 @property UIBackgroundFetchResult alarmResults;
 
@@ -63,5 +64,9 @@
 - (void)manuallyCheckAlarm;
 - (void)killBackgroundTask;
 - (void)onboardForLiveFunctionality;
+
+// XFS
+- (void)applyXFSButton;
+- (void)controlXFSVisibility:(BOOL)visible;
 
 @end

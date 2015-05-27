@@ -86,6 +86,8 @@
     self.window.rootViewController = navigationController;
     navigationController.navigationBarHidden = YES;
 
+    
+    
     NSString *ua = kHLSLiveStreamURL;
     NSLog(@"URL : %@",ua);
     
@@ -581,6 +583,32 @@
     [[UIApplication sharedApplication] endBackgroundTask:self.alarmTask];
     self.alarmTask = 0;
 }
+
+#pragma mark - XFS
+- (void)applyXFSButton {
+    if ( !self.xfsInterface ) {
+        self.xfsInterface = [[SCPRXFSViewController alloc]
+                             initWithNibName:@"SCPRXFSViewController"
+                             bundle:nil];
+        self.xfsInterface.view = self.xfsInterface.view;
+        self.xfsInterface.view.frame = CGRectMake(0.0,0.0,self.window.frame.size.width,
+                                                  self.masterNavigationController.navigationBar.frame.size.height+20.0f);
+        [self.window addSubview:self.xfsInterface.view];
+        
+    }
+}
+
+- (void)controlXFSVisibility:(BOOL)visible {
+    self.xfsInterface.deployButton.alpha = visible ? 1.0f : 0.0f;
+    CGFloat height = visible ? self.window.frame.size.height : self.masterNavigationController.navigationBar.frame.size.height+20.0f;
+    [self.xfsInterface applyHeight:height];
+    
+    NSString *message = visible ? @"xfs-shown" : @"xfs-hidden";
+    [[NSNotificationCenter defaultCenter] postNotificationName:message
+                                                        object:nil];
+    
+}
+
 
 #pragma mark - ContentProcessor
 

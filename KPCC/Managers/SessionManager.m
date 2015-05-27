@@ -785,6 +785,10 @@
 }
 
 #pragma mark - State handling
+- (BOOL)xFreeStreamIsAvailable {
+    return YES;
+}
+
 - (void)setLastKnownBitrate:(double)lastKnownBitrate {
     double replacedBitrate = _lastKnownBitrate;
     _lastKnownBitrate = lastKnownBitrate;

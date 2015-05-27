@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="7702" systemVersion="14D136" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7701"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="SCPRXFSViewController">
+            <connections>
+                <outlet property="chevronImage" destination="FTz-gP-UDR" id="D74-9U-Pru"/>
+                <outlet property="deployButton" destination="L7W-v0-svq" id="xLg-Bm-5W9"/>
+                <outlet property="leftButton" destination="Olh-NJ-d78" id="NSc-l4-uaH"/>
+                <outlet property="optionsTable" destination="7Zk-ch-gGs" id="TwR-hO-Q7e"/>
+                <outlet property="rightButton" destination="fYl-BR-WED" id="8dG-pY-zoV"/>
+                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="chevron_down.png" translatesAutoresizingMaskIntoConstraints="NO" id="FTz-gP-UDR">
+                    <rect key="frame" x="207" y="26" width="32" height="32"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="32" id="WyV-Fg-PZM"/>
+                        <constraint firstAttribute="width" constant="32" id="bqH-6n-5qk"/>
+                    </constraints>
+                </imageView>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="L7W-v0-svq">
+                    <rect key="frame" x="50" y="0.0" width="220" height="64"/>
+                    <color key="backgroundColor" red="0.25802108281898045" green="0.85850694444444442" blue="0.81981285048327457" alpha="0.39000000000000001" colorSpace="calibratedRGB"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="64" id="0aN-Z6-DN8"/>
+                        <constraint firstAttribute="width" constant="220" id="Z1Z-OM-7Tz"/>
+                    </constraints>
+                    <state key="normal">
+                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                    </state>
+                </button>
+                <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="7Zk-ch-gGs">
+                    <rect key="frame" x="0.0" y="65" width="320" height="503"/>
+                    <color key="backgroundColor" white="1" alpha="0.0" colorSpace="calibratedWhite"/>
+                    <color key="sectionIndexBackgroundColor" red="0.25802108281898045" green="0.85850694444444442" blue="0.81981285048327457" alpha="0.0" colorSpace="calibratedRGB"/>
+                </tableView>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Olh-NJ-d78" userLabel="leftButton">
+                    <rect key="frame" x="0.0" y="0.0" width="50" height="64"/>
+                    <state key="normal">
+                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                    </state>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fYl-BR-WED" userLabel="rightButton">
+                    <rect key="frame" x="270" y="0.0" width="50" height="64"/>
+                    <state key="normal">
+                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                    </state>
+                </button>
+            </subviews>
+            <color key="backgroundColor" red="0.16546322601010099" green="0.16546322601010099" blue="0.16546322601010099" alpha="0.0" colorSpace="calibratedRGB"/>
+            <constraints>
+                <constraint firstAttribute="trailing" secondItem="fYl-BR-WED" secondAttribute="trailing" id="8UG-Xb-UDV"/>
+                <constraint firstItem="Olh-NJ-d78" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="Cwg-r4-fXY"/>
+                <constraint firstItem="fYl-BR-WED" firstAttribute="leading" secondItem="L7W-v0-svq" secondAttribute="trailing" id="Cxh-cy-ERh"/>
+                <constraint firstItem="L7W-v0-svq" firstAttribute="trailing" secondItem="FTz-gP-UDR" secondAttribute="trailing" constant="31" id="IHl-Be-AlI"/>
+                <constraint firstAttribute="bottom" secondItem="7Zk-ch-gGs" secondAttribute="bottom" id="IQ0-wo-V2S"/>
+                <constraint firstItem="7Zk-ch-gGs" firstAttribute="top" secondItem="fYl-BR-WED" secondAttribute="bottom" constant="1" id="KXQ-4L-XsR"/>
+                <constraint firstItem="7Zk-ch-gGs" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="MPA-B3-hLA"/>
+                <constraint firstAttribute="centerX" secondItem="L7W-v0-svq" secondAttribute="centerX" id="Nbc-4f-5f3"/>
+                <constraint firstItem="Olh-NJ-d78" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="Tf3-bX-P2K"/>
+                <constraint firstItem="L7W-v0-svq" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="URB-2F-rLS"/>
+                <constraint firstItem="7Zk-ch-gGs" firstAttribute="top" secondItem="L7W-v0-svq" secondAttribute="bottom" constant="1" id="Ukx-Na-Hug"/>
+                <constraint firstItem="fYl-BR-WED" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="ad5-Lb-JbM"/>
+                <constraint firstItem="L7W-v0-svq" firstAttribute="top" secondItem="FTz-gP-UDR" secondAttribute="top" constant="-26" id="axD-lv-ejX"/>
+                <constraint firstItem="L7W-v0-svq" firstAttribute="leading" secondItem="Olh-NJ-d78" secondAttribute="trailing" id="gcT-GL-rcF"/>
+                <constraint firstAttribute="trailing" secondItem="7Zk-ch-gGs" secondAttribute="trailing" id="qzD-lX-GjQ"/>
+                <constraint firstItem="7Zk-ch-gGs" firstAttribute="top" secondItem="Olh-NJ-d78" secondAttribute="bottom" constant="1" id="uvy-B9-qnr"/>
+            </constraints>
+            <nil key="simulatedStatusBarMetrics"/>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <point key="canvasLocation" x="249" y="213"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="chevron_down.png" width="15" height="9"/>
+    </resources>
+</document>

@@ -83,6 +83,10 @@
     }
 }
 
+- (void)leftButtonTapped {
+    [self.menuButton touchUpInsideHandler:self.menuButton];
+}
+
 
 #pragma mark - UINavigationControllerDelegate
 

@@ -234,6 +234,7 @@
 
 // Instance methods.
 - (void)cloakForMenu:(BOOL)animated;
+- (void)cloakForMenu:(BOOL)animated suppressDropdown:(BOOL)suppressDropdown;
 - (void)decloakForMenu:(BOOL)animated;
 
 - (void)setOnDemandUI:(BOOL)animated forProgram:(Program*)program withAudio:(NSArray*)array atCurrentIndex:(int)index;

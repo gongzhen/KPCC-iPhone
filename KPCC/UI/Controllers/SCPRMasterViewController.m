@@ -247,7 +247,10 @@ setForOnDemandUI;
                                                  name:@"sleep-timer-fired"
                                                object:nil];
     
-
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(xfsHidden)
+                                                 name:@"xfs-hidden"
+                                               object:nil];
     
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
     
@@ -448,6 +451,12 @@ setForOnDemandUI;
     
     self.viewHasAppeared = YES;
     
+    if ( [[SessionManager shared] xFreeStreamIsAvailable] ) {
+        SCPRAppDelegate *del = [Utils del];
+        [del applyXFSButton];
+    } else {
+        // Take away XFS button
+    }
 
 }
 
@@ -464,6 +473,10 @@ setForOnDemandUI;
 
     [self.upcomingScreen alignDividerToValue:self.horizDividerLine.frame.origin.y];
     
+    
+}
+
+- (void)didMoveToParentViewController:(UIViewController *)parent {
     
 }
 
@@ -1568,6 +1581,7 @@ setForOnDemandUI;
     [self pushToHiddenVector:self.liveRewindAltButton];
     [self pushToHiddenVector:self.shareButton];
     [self pushToHiddenVector:self.sleepTimerContainerView];
+    [self pushToHiddenVector:[[[Utils del] xfsInterface] view]];
     
     [UIView animateWithDuration:0.25 animations:^{
         self.queueBlurView.alpha = 1.0f;
@@ -2888,9 +2902,17 @@ setForOnDemandUI;
     return (self.scrubbing || self.preRollOpen || self.menuOpen);
 }
 
-#pragma mark - Menu control
+- (void)xfdHidden {
+    [self decloakForMenu:YES];
+}
 
+#pragma mark - Menu control
 - (void)cloakForMenu:(BOOL)animated {
+    [self cloakForMenu:animated
+      suppressDropdown:NO];
+}
+
+- (void)cloakForMenu:(BOOL)animated suppressDropdown:(BOOL)suppressDropdown {
     
     if ( [AudioManager shared].currentAudioMode == AudioModePreroll ) return;
     
@@ -2902,10 +2924,13 @@ setForOnDemandUI;
     [self.liveProgressViewController hide];
     
     self.navigationItem.title = @"Menu";
-    if (animated) {
-        [pulldownMenu openDropDown:YES];
-    } else {
-        [pulldownMenu openDropDown:NO];
+    
+    if ( !suppressDropdown ) {
+        if (animated) {
+            [pulldownMenu openDropDown:YES];
+        } else {
+            [pulldownMenu openDropDown:NO];
+        }
     }
     
     if (setForOnDemandUI){
@@ -2947,6 +2972,7 @@ setForOnDemandUI;
     }
     
     [self pushToHiddenVector:self.liveRewindAltButton];
+    [self pushToHiddenVector:[[[Utils del] xfsInterface] view]];
     [self commitHiddenVector];
     
     POPBasicAnimation *dividerFadeAnim = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
@@ -3108,6 +3134,9 @@ setForOnDemandUI;
     [self.programTitleLabel.layer pop_addAnimation:controlsFadeAnimation forKey:@"titleFade"];
     [self.liveDescriptionLabel.layer pop_addAnimation:controlsFadeAnimation forKey:@"statusFade"];
     
+    [self pushToHiddenVector:[[[Utils del] xfsInterface] view]];
+    [self commitHiddenVector];
+    
     [self adjustScrollingState];
     [self adjustScrubbingState];
     
@@ -3153,6 +3182,8 @@ setForOnDemandUI;
         dividerFadeAnim.duration = 0.3;
         [self.horizDividerLine.layer pop_addAnimation:dividerFadeAnim forKey:@"horizDividerFadeOutAnimation"];
     }
+    
+    [self popHiddenVector];
     
     [self adjustScrubbingState];
     [self adjustScrollingState];
