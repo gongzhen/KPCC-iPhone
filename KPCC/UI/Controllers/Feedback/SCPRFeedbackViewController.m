@@ -56,7 +56,7 @@ static NSString *kCommentsPlaceholder = @"... Add your comments here";
     NSString *versionText = [NSString stringWithFormat:@"KPCC iPhone v%@",[Utils prettyVersion]];
     
 #ifndef PRODUCTION
-    NSURL *url = [NSURL URLWithString:kHLSLiveStreamURL];
+    NSURL *url = [NSURL URLWithString:kHLS];
     NSString *server = [url host];
 #ifdef BETA
     NSString *beta = [NSString stringWithFormat:@" BETA : %@",server];
@@ -182,7 +182,10 @@ static NSString *kCommentsPlaceholder = @"... Add your comments here";
      object:nil];
     
     [[FeedbackManager shared] validateCustomer:@{ @"message" : self.descriptionInputView.text,
-                                                  @"email" : self.emailTextField.text, @"date" : [NSDate date], @"name" : self.nameTextField.text, @"type" : self.currentReason }];
+                                                  @"email" : self.emailTextField.text,
+                                                  @"date" : [NSDate date],
+                                                  @"name" : self.nameTextField.text,
+                                                  @"type" : self.currentReason }];
 }
 
 - (void)failWithValidationResult:(ValidationResult)reason {

@@ -13,6 +13,11 @@
 static char *alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 
 @implementation Utils
++ (NSDictionary*)globalConfig {
+    NSString *path = [[NSBundle mainBundle] pathForResource:@"Config" ofType:@"plist"];
+    NSDictionary *globalConfig = [[NSDictionary alloc] initWithContentsOfFile:path];
+    return globalConfig;
+}
 
 + (SCPRAppDelegate*)del {
     return (SCPRAppDelegate*)[UIApplication sharedApplication].delegate;

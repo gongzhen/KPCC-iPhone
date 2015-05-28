@@ -11,8 +11,9 @@
 #import "UIColor+UICustom.h"
 #import "AnalyticsManager.h"
 #import "NetworkManager.h"
+#import "DesignManager.h"
 
-#define kMenuItemKPCCLive   @"KPCC Live"
+#define kMenuItemKPCCLive   kMainLiveStreamTitle
 #define kMenuItemPrograms   @"Programs"
 #define kMenuItemShortList  @"Headlines"
 #define kMenuItemAlarm      @"Wake / Sleep"

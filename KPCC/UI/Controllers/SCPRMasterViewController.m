@@ -252,6 +252,11 @@ setForOnDemandUI;
                                                  name:@"xfs-hidden"
                                                object:nil];
     
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(xfsShown)
+                                                 name:@"xfs-shown"
+                                               object:nil];
+    
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
     
     self.liveProgressViewController = [[SCPRProgressViewController alloc] init];
@@ -390,7 +395,8 @@ setForOnDemandUI;
 
     [self primeScrubber];
     [self setupScroller];
-
+    [[Utils del] applyXFSButton];
+    
     [SCPRCloakViewController cloakWithCustomCenteredView:nil cloakAppeared:^{
         if ( [[UXmanager shared] userHasSeenOnboarding] ) {
             
@@ -446,17 +452,13 @@ setForOnDemandUI;
     
     if ( self.restoreTitle ) {
         self.restoreTitle = NO;
-        self.navigationItem.title = @"KPCC Live";
+        self.navigationItem.title = kMainLiveStreamTitle;
     }
     
     self.viewHasAppeared = YES;
     
-    if ( [[SessionManager shared] xFreeStreamIsAvailable] ) {
-        SCPRAppDelegate *del = [Utils del];
-        [del applyXFSButton];
-    } else {
-        // Take away XFS button
-    }
+
+    [[Utils del] controlXFSAvailability:[[SessionManager shared] xFreeStreamIsAvailable]];
 
 }
 
@@ -477,7 +479,11 @@ setForOnDemandUI;
 }
 
 - (void)didMoveToParentViewController:(UIViewController *)parent {
-    
+    if ( SEQ(self.navigationItem.title,kMainLiveStreamTitle) ) {
+        [[Utils del] controlXFSAvailability:[[SessionManager shared] xFreeStreamIsAvailable]];
+    } else {
+        [[Utils del] controlXFSAvailability:NO];
+    }
 }
 
 - (void)superPop {
@@ -489,7 +495,7 @@ setForOnDemandUI;
     
     [self.navigationController popToRootViewControllerAnimated:YES];
     
-    self.navigationItem.title = @"KPCC Live";
+    self.navigationItem.title = kMainLiveStreamTitle;
 }
 
 - (void)setupScroller7 {
@@ -708,7 +714,7 @@ setForOnDemandUI;
             [self.preRollViewController removeFromParentViewController];
             self.preRollViewController = nil;
             
-            self.navigationItem.title = @"KPCC Live";
+            self.navigationItem.title = kMainLiveStreamTitle;
             
             [self determinePlayState];
             
@@ -1035,7 +1041,7 @@ setForOnDemandUI;
             if ( [[AudioManager shared] dropoutOccurred] ) {
                 [[AudioManager shared] stopAllAudio];
                 [[AudioManager shared] takedownAudioPlayer];
-                [[AudioManager shared] buildStreamer:kHLSLiveStreamURL];
+                [[AudioManager shared] buildStreamer:kHLS];
             } else {
                 [self pauseAudio];
             }
@@ -2035,7 +2041,7 @@ setForOnDemandUI;
     self.dividerLineRightAnchor.constant = -5.0f;
     self.dividerLineLeftAnchor.constant = 5.0f;
     
-    self.navigationItem.title = @"KPCC Live";
+    self.navigationItem.title = kMainLiveStreamTitle;
     [self primeRemoteCommandCenter:YES];
     
     self.mainContentScroller.alpha = 1.0f;
@@ -2896,15 +2902,44 @@ setForOnDemandUI;
           
 }
 
+#pragma mark - XFS
+- (void)cloakForXFS {
+    [self pushToHiddenVector:self.mainContentScroller];
+    [self pushToHiddenVector:self.initialControlsView];
+    [self pushToHiddenVector:self.playerControlsView];
+    [self pushToHiddenVector:self.liveProgressViewController.view];
+    
+    [UIView animateWithDuration:0.33f animations:^{
+        self.queueBlurView.alpha = 1.0f;
+        self.queueDarkBgView.alpha = 0.4f;
+    }];
+    
+    [self commitHiddenVector];
+}
+
+- (void)decloakForXFS {
+    [self popHiddenVector];
+    
+    [UIView animateWithDuration:0.33f animations:^{
+        self.queueBlurView.alpha = 0.0f;
+        self.queueDarkBgView.alpha = 0.0f;
+    }];
+}
+
+- (void)xfsHidden {
+    [self decloakForXFS];
+}
+
+- (void)xfsShown {
+    [self cloakForXFS];
+}
+
 #pragma mark - Util
 
 - (BOOL)cloaked {
     return (self.scrubbing || self.preRollOpen || self.menuOpen);
 }
 
-- (void)xfdHidden {
-    [self decloakForMenu:YES];
-}
 
 #pragma mark - Menu control
 - (void)cloakForMenu:(BOOL)animated {
@@ -3000,7 +3035,7 @@ setForOnDemandUI;
     if (setForOnDemandUI) {
         self.navigationItem.title = @"Programs";
     } else {
-        self.navigationItem.title = @"KPCC Live";
+        self.navigationItem.title = kMainLiveStreamTitle;
     }
     
     if (animated) {
@@ -3447,6 +3482,7 @@ setForOnDemandUI;
             [[DesignManager shared] setProtectBlurredImage:YES];
             SCPRProgramsListViewController *vc = [[SCPRProgramsListViewController alloc] initWithBackgroundProgram:prog];
             [self.navigationController pushViewController:vc animated:YES];
+            
             break;
         }
             
@@ -3455,6 +3491,7 @@ setForOnDemandUI;
             event = @"menuSelectionHeadlines";
             SCPRShortListViewController *slVC = [[SCPRShortListViewController alloc] initWithNibName:@"SCPRShortListViewController"
                                                                                               bundle:nil];
+            slVC.view = slVC.view;
             [self.navigationController pushViewController:slVC animated:YES];
             break;
             
@@ -3470,7 +3507,6 @@ setForOnDemandUI;
             
             CGSize bounds = [[UIScreen mainScreen] bounds].size;
             timer.view.frame = CGRectMake(0.0,0.0,bounds.width,bounds.height);
-            
             
             [self.navigationController pushViewController:timer
                                                  animated:YES];

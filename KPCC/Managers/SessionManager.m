@@ -550,7 +550,7 @@
             NSString *top = [NSDate stringFromDate:bookends[@"top"]
                                         withFormat:@"yyyy-MM-dd'T'HHmmssZZZ"];
             
-            Program *gp = [Program insertProgramWithDictionary:@{ @"title" : @"KPCC Live",
+            Program *gp = [Program insertProgramWithDictionary:@{ @"title" : kMainLiveStreamTitle,
                                                                   @"ends_at" : endsAt,
                                                                   @"starts_at" : top,
                                                                   @"soft_starts_at" : top,
@@ -563,7 +563,7 @@
             [gp setStarts_at:bookends[@"top"]];
             [gp setEnds_at:bookends[@"bottom"]];
             [gp setSoft_starts_at:bookends[@"top"]];
-            [gp setTitle:@"KPCC Live"];
+            [gp setTitle:kMainLiveStreamTitle];
             
             [[ContentManager shared] saveContext];
             
@@ -788,6 +788,7 @@
 - (BOOL)xFreeStreamIsAvailable {
     return YES;
 }
+
 
 - (void)setLastKnownBitrate:(double)lastKnownBitrate {
     double replacedBitrate = _lastKnownBitrate;

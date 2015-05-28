@@ -22,9 +22,9 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
     [self.view layoutIfNeeded];
     
+    self.navigationItem.title = @"Wake / Sleep";
     // Do any additional setup after loading the view from its nib.
 }
 
@@ -43,7 +43,6 @@
     [self.view printDimensionsWithIdentifier:@"Timer Container View"];
     [self.toggleScroller printDimensionsWithIdentifier:@"Timer Scroller View"];
     
-    self.navigationItem.title = @"Wake / Sleep";
     
     self.toggleScroller.translatesAutoresizingMaskIntoConstraints = NO;
     

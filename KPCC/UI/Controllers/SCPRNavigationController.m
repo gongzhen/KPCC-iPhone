@@ -47,9 +47,14 @@
                                                   name:@"pull_down_menu_closed"
                                                 object:nil];
 
+    
     for (UIViewController* viewController in self.viewControllers){
         [self addButton:viewController.navigationItem];
     }
+}
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
+    NSLog(@">>>> TITLE HAS CHANGED : %@",self.navigationItem.title);
 }
 
 - (void)applyCustomLeftBarItem:(CustomLeftBarItem)leftBarItemType proxyDelegate:(id<MenuButtonDelegate>)proxyDelegate {
@@ -86,7 +91,6 @@
 - (void)leftButtonTapped {
     [self.menuButton touchUpInsideHandler:self.menuButton];
 }
-
 
 #pragma mark - UINavigationControllerDelegate
 

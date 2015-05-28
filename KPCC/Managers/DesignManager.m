@@ -12,6 +12,7 @@
 #import "UIImageView+AFNetworking.h"
 #import <POP/POP.h>
 #import "SCPRAppDelegate.h"
+#import "UXmanager.h"
 
 @import MessageUI;
 
@@ -104,6 +105,14 @@ static DesignManager *singleton = nil;
     [imageView.layer addAnimation:transition
                            forKey:nil];
     
+}
+
+- (NSString*)mainLiveStreamTitle {
+    if ( [[UXmanager shared].settings userHasSelectedXFS] ) {
+        return @"X-Free Stream";
+    }
+    
+    return @"KPCC Live";
 }
 
 #pragma mark - Layouts

@@ -17,6 +17,7 @@
 @property BOOL userHasViewedLiveScrubbingOnboarding;
 @property BOOL userHasViewedScheduleOnboarding;
 @property BOOL userHasColdStartedAudioOnce;
+@property BOOL userHasSelectedXFS;
 
 @property (nonatomic, strong) NSData *pushTokenData;
 @property (nonatomic, strong) NSString *pushTokenString;

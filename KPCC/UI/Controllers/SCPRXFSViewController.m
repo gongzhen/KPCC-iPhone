@@ -12,6 +12,8 @@
 #import "SCPRAppDelegate.h"
 #import "Utils.h"
 #import "SCPRNavigationController.h"
+#import "pop.h"
+#import "SCPRMenuCell.h"
 
 @interface SCPRXFSViewController ()
 
@@ -30,11 +32,20 @@
                         action:@selector(leftButtonTapped)
               forControlEvents:UIControlEventTouchUpInside];
     
+    [self.deployButton addTarget:self
+                          action:@selector(toggleDropdown)
+                forControlEvents:UIControlEventTouchUpInside];
+    
+    
     // Do any additional setup after loading the view from its nib.
 }
 
+- (void)toggleDropdown {
+    [self controlVisibility:!self.deployed];
+}
+
 - (void)applyHeight:(CGFloat)height {
-    [UIView animateWithDuration:0.25f animations:^{
+    [UIView animateWithDuration:0.35f animations:^{
         self.view.frame = CGRectMake(self.view.frame.origin.x,
                                      self.view.frame.origin.y,
                                      self.view.frame.size.width,
@@ -42,8 +53,51 @@
     }];
 }
 
+- (void)openDropdown {
+    
+    [self controlVisibility:YES];
+    
+}
+
+- (void)closeDropdown {
+    
+    [self controlVisibility:NO];
+    
+}
+
+- (void)controlVisibility:(BOOL)visible {
+    if ( self.deployed == visible ) return;
+    
+    NSNumber *x = visible ? @([Utils degreesToRadians:180.0f]) : @(0.0f);
+    POPSpringAnimation *rotation = [POPSpringAnimation animationWithPropertyNamed:kPOPLayerRotation];
+    [rotation setToValue:x];
+    [rotation setSpringBounciness:1.65f];
+    [rotation setSpringSpeed:.64f];
+    
+    [self.chevronImage.layer pop_addAnimation:rotation forKey:@"rotate"];
+    self.deployed = visible;
+    
+    CGFloat h = !visible ? [[[Utils del] masterNavigationController] navigationBar].frame.size.height+20.0f : [[Utils del] window].frame.size.height;
+    
+    NSString *message = visible ? @"xfs-shown" : @"xfs-hidden";
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:message
+                                                        object:nil];
+    
+    [self applyHeight:h];
+}
+
 - (void)leftButtonTapped {
     [[[Utils del] masterNavigationController] leftButtonTapped];
+}
+
+#pragma mark - UITableVIew
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+    return 1;
+}
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    return 3;
 }
 
 - (void)didReceiveMemoryWarning {

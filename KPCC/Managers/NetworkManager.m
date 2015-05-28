@@ -74,7 +74,7 @@ static NetworkManager *singleton = nil;
     self.anchoredReachability = [KSReachability reachabilityToLocalNetwork];
     [self applyNotifiersToReachability:self.anchoredReachability];
     [self applyNotifiersToReachability:self.anchoredStaticContentReachability];
-    [self setupFloatingReachabilityWithHost:[[NSURL URLWithString:kHLSLiveStreamURL] host]];
+    [self setupFloatingReachabilityWithHost:[[NSURL URLWithString:kHLS] host]];
     
     self.basicReachability = [Reachability reachabilityForInternetConnection];
     

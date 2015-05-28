@@ -54,6 +54,49 @@ static const NSString *ItemStatusContext;
     return singleton;
 }
 
+- (NSString*)standardHlsStream {
+    return [self streamingURL:YES
+                      preskip:NO
+                          mp3:NO];
+}
+
+- (NSString*)streamingURL:(BOOL)hls preskip:(BOOL)preskip mp3:(BOOL)mp3 {
+    
+    NSDictionary *streams = [[Utils globalConfig] objectForKey:@"StreamMachine"];
+    NSString *streamURL = @"";
+    if ( hls ) {
+        
+        if ( [[UXmanager shared].settings userHasSelectedXFS] ) {
+            streamURL = streams[@"xfs"];
+        } else {
+            streamURL = streams[@"standard"];
+        }
+        streamURL = [NSString stringWithFormat:@"%@?ua=KPCCiPhone-%@",streamURL,[Utils urlSafeVersion]];
+        
+    } else {
+        
+        NSString *keybase = @"xcast-";
+        if ( mp3 ) {
+            keybase = [keybase stringByAppendingString:@"mp3"];
+        } else {
+            keybase = [keybase stringByAppendingString:@"aac"];
+        }
+        streamURL = streams[keybase];
+
+        if ( preskip ) {
+            streamURL = [streamURL stringByAppendingString:@"?preskip=true"];
+        }
+        
+    }
+
+#ifdef SANITY_STREAM_TEST
+    streamURL = streams[@"external-test"];
+#endif
+    
+    return streamURL;
+    
+}
+
 - (void)audioHardwareRouteChanged:(NSNotification*)note {
     NSLog(@"Received external audio route change notification...");
     NSLog(@"User Info : %@",[[note userInfo] description]);
@@ -457,7 +500,7 @@ static const NSString *ItemStatusContext;
     if ( [self.audioPlayer rate] > 0.0 && self.dropoutOccurred ) {
         [self.audioPlayer pause];
         [self takedownAudioPlayer];
-        [self buildStreamer:kHLSLiveStreamURL];
+        [self buildStreamer:kHLS];
     }
 #endif
 }
@@ -839,7 +882,7 @@ static const NSString *ItemStatusContext;
         self.waitForSeek = YES;
         self.audioPlayer.volume = 0.0f;
         self.savedVolume = 1.0f;
-        [self buildStreamer:kHLSLiveStreamURL];
+        [self buildStreamer:kHLS];
         return;
     }
     
@@ -869,7 +912,7 @@ static const NSString *ItemStatusContext;
 
 - (void)forwardSeekLiveWithCompletion:(CompletionBlock)completion {
     if (!self.audioPlayer) {
-        [self buildStreamer:kHLSLiveStreamURL];
+        [self buildStreamer:kHLS];
     }
     
     self.seekWillEffectBuffer = YES;
@@ -1090,7 +1133,6 @@ static const NSString *ItemStatusContext;
         [[QueueManager shared] playNext];
     } else {
         [self takedownAudioPlayer];
-        //[self buildStreamer:kHLSLiveStreamURL];
         [self playAudio];
     }
 }
@@ -1114,7 +1156,7 @@ static const NSString *ItemStatusContext;
             return [NSString stringWithFormat:@"%@",[self.audioPlayer.currentItem.accessLog.events.lastObject URI]];
         }
     }
-    return kHLSLiveStreamURL;
+    return kHLS;
 
     // Old.. used for playing pre-roll after given threshold on playback start. May be useful in the future.
 /*
@@ -1201,8 +1243,8 @@ static const NSString *ItemStatusContext;
     if ( !urlString ) {
         urlString = self.previousUrl;
     }
-    if ( urlString == nil || SEQ(urlString, kHLSLiveStreamURL) ) {
-        url = [NSURL URLWithString:kHLSLiveStreamURL];
+    if ( urlString == nil || SEQ(urlString, kHLS) ) {
+        url = [NSURL URLWithString:kHLS];
         self.currentAudioMode = AudioModeLive;
     } else {
         url = [NSURL URLWithString:urlString];
@@ -1325,7 +1367,7 @@ static const NSString *ItemStatusContext;
 
 - (void)resetPlayer {
     [self takedownAudioPlayer];
-    [self buildStreamer:kHLSLiveStreamURL];
+    [self buildStreamer:kHLS];
 }
 
 - (void)sanitizeFromOnboarding {
@@ -1393,7 +1435,7 @@ static const NSString *ItemStatusContext;
     [[QueueManager shared] setCurrentBookmark:nil];
     
     [self stopAllAudio];
-    [self buildStreamer:kHLSLiveStreamURL];
+    [self buildStreamer:kHLS];
     [self playAudio];
 }
 
@@ -1433,7 +1475,7 @@ static const NSString *ItemStatusContext;
     
     self.beginNormally = YES;
     if (!self.audioPlayer) {
-        [self buildStreamer:kHLSLiveStreamURL];
+        [self buildStreamer:kHLS];
     }
     
     if ( [self currentAudioMode] == AudioModeOnboarding ) {

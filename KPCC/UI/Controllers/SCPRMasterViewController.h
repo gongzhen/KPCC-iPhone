@@ -224,11 +224,6 @@
 - (void)cancelSleepTimerAction;
 - (void)remoteControlPlayOrPause;
 
-
-
-
-
-
 @property (NS_NONATOMIC_IOSONLY, readonly) BOOL uiIsJogging;
 @property (NS_NONATOMIC_IOSONLY, readonly) NSTimeInterval rewindAgainstStreamDelta;
 
@@ -236,6 +231,9 @@
 - (void)cloakForMenu:(BOOL)animated;
 - (void)cloakForMenu:(BOOL)animated suppressDropdown:(BOOL)suppressDropdown;
 - (void)decloakForMenu:(BOOL)animated;
+
+- (void)cloakForXFS;
+- (void)decloakForXFS;
 
 - (void)setOnDemandUI:(BOOL)animated forProgram:(Program*)program withAudio:(NSArray*)array atCurrentIndex:(int)index;
 - (void)setLiveStreamingUI:(BOOL)animated;

@@ -118,6 +118,7 @@ static NSInteger kProgramPollingPressure = 5;
 
 - (BOOL)xFreeStreamIsAvailable;
 
+
 @property BOOL sessionIsHot;
 @property BOOL rewindSessionIsHot;
 @property BOOL rewindSessionWillBegin;

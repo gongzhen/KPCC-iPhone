@@ -88,7 +88,7 @@
 
     
     
-    NSString *ua = kHLSLiveStreamURL;
+    NSString *ua = kHLS;
     NSLog(@"URL : %@",ua);
     
     [[AnalyticsManager shared] kTrackSession:@"began"];
@@ -594,18 +594,21 @@
         self.xfsInterface.view.frame = CGRectMake(0.0,0.0,self.window.frame.size.width,
                                                   self.masterNavigationController.navigationBar.frame.size.height+20.0f);
         [self.window addSubview:self.xfsInterface.view];
+        self.xfsInterface.view.alpha = 0.0f;
         
     }
 }
 
+- (void)controlXFSAvailability:(BOOL)available {
+    self.xfsInterface.view.alpha = available ? 1.0f : 0.0f;
+}
+
 - (void)controlXFSVisibility:(BOOL)visible {
-    self.xfsInterface.deployButton.alpha = visible ? 1.0f : 0.0f;
+    
     CGFloat height = visible ? self.window.frame.size.height : self.masterNavigationController.navigationBar.frame.size.height+20.0f;
     [self.xfsInterface applyHeight:height];
     
-    NSString *message = visible ? @"xfs-shown" : @"xfs-hidden";
-    [[NSNotificationCenter defaultCenter] postNotificationName:message
-                                                        object:nil];
+
     
 }
 

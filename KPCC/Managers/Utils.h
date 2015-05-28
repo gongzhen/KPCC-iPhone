@@ -24,6 +24,7 @@
 #define kUpdateProgramKey @":UPDATE-PROGRAM:"
 #define SEQ(a,b) [a isEqualToString:b]
 #define kFadeDuration 0.5
+#define kMainLiveStreamTitle [[DesignManager shared] mainLiveStreamTitle]
 
 static NSString *kPotentialElements = @"date time uri cs-guid s-ip s-ip-changes sc-count c-duration-downloaded c-start-time c-duration-watched bytes c-observed-bitrate sc-indicated-bitrate c-stalls c-frames-dropped c-startup-time c-overdue c-reason c-observed-min-bitrate c-observed-max-bitrate c-observed-bitrate-sd s-playback-type sc-wwan-count c-switch-bitrate";
 
@@ -58,5 +59,6 @@ static NSString *kPotentialElements = @"date time uri cs-guid s-ip s-ip-changes 
 + (void)crash;
 + (NSString*)formatOfInterestFromDate:(NSDate*)rawDate startDate:(BOOL)startDate;
 + (NSString*)formatOfInterestFromDate:(NSDate*)rawDate startDate:(BOOL)startDate gapped:(BOOL)gapped;
++ (NSDictionary*)globalConfig;
 
 @end

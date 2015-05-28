@@ -53,8 +53,7 @@ static AnalyticsManager *singleton = nil;
     mixPanelToken = @"BetaToken";
 #endif
     
-    NSString *path = [[NSBundle mainBundle] pathForResource:@"Config" ofType:@"plist"];
-    NSDictionary *globalConfig = [[NSDictionary alloc] initWithContentsOfFile:path];
+    NSDictionary *globalConfig = [Utils globalConfig];
     
 #ifndef TURN_OFF_SANDBOX_CONFIG
     [Flurry setCrashReportingEnabled:YES];
@@ -284,7 +283,7 @@ static AnalyticsManager *singleton = nil;
     NSString *english = @"";
     switch (cause) {
         case NetworkHealthStreamingServerDown:
-            english = [NSString stringWithFormat:@"Device could not communicate with streaming server : %@",kHLSLiveStreamURL];
+            english = [NSString stringWithFormat:@"Device could not communicate with streaming server : %@",kHLS];
             break;
         case NetworkHealthContentServerDown:
             english = [NSString stringWithFormat:@"Device could not communicate with content server : %@",kServerBase];

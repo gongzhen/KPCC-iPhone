@@ -22,6 +22,8 @@ static long kStreamCorrectionTolerance = 60*5;
 #define kLargeSkipInterval 60*10
 #define kSmallSkipInterval 20.0
 
+#define kHLS [[AudioManager shared] standardHlsStream]
+/*
 #ifdef USE_TEST_STREAM
 #define kHLSLiveStreamURL @"http://hls.kqed.org/hls/smil:itunes.smil/playlist.m3u8"
 #else
@@ -42,7 +44,8 @@ static long kStreamCorrectionTolerance = 60*5;
 #define kLiveStreamURL @"http://live.scpr.org/kpcclive"
 #define kLiveStreamNoPreRollURL @"http://live.scpr.org/kpcclive?preskip=true"
 #define kLiveStreamAACURL @"http://live.scpr.org/aac"
-#define kLiveStreamAACNoPreRollURL @"http://live.scpr.org/aac?preskip=true"
+#define kLiveStreamAACNoPreRollURL @"http://live.scpr.org/aac?preskip=true"*/
+
 #define kLiveStreamPreRollThreshold 3600
 
 #define kFailedConnectionAudioFile @"Wood_Crash"
@@ -168,6 +171,9 @@ typedef NS_ENUM(NSUInteger, StreamStatus) {
 
 @property NSInteger onboardingSegment;
 @property (nonatomic) AudioMode currentAudioMode;
+
+- (NSString*)standardHlsStream;
+- (NSString*)streamingURL:(BOOL)hls preskip:(BOOL)preskip mp3:(BOOL)mp3;
 
 - (void)playQueueItemWithUrl:(NSString *)url;
 - (void)playQueueItem:(AudioChunk*)chunk;
