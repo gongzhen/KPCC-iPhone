@@ -15,5 +15,7 @@
 @property (nonatomic,strong) UIImageView* rightChevronImageView;
 
 - (void)nudge;
+- (void)shiftForIconWithImage:(UIImage*)image;
+- (void)unshiftForIcon;
 
 @end

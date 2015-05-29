@@ -90,6 +90,7 @@
 @property (nonatomic,strong) SCPRPullDownMenu *pulldownMenu;
 @property (nonatomic) BOOL menuOpen;
 @property (nonatomic) BOOL preRollOpen;
+@property (nonatomic) BOOL streamSelectorOpen;
 
 // Controllable Constraints
 @property (nonatomic,strong) IBOutlet NSLayoutConstraint *initialControlsYConstraint;

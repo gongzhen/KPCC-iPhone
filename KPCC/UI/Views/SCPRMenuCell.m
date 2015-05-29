@@ -26,6 +26,37 @@
     return self;
 }
 
+- (void)shiftForIconWithImage:(UIImage *)image {
+    [self.iconImageView setImage:image];
+    self.iconImageView.frame = CGRectMake(8.0, 8.0,
+                                          44.0,
+                                          44.0);
+    
+    self.iconImageView.contentMode = UIViewContentModeCenter;
+    self.iconImageView.alpha = 0.0f;
+    
+    [UIView animateWithDuration:0.25f animations:^{
+        self.iconImageView.alpha = 1.0f;
+        self.menuItemLabel.frame = CGRectMake(self.iconImageView.frame.origin.x+self.iconImageView.frame.size.width+10.0f,
+                                              self.menuItemLabel.frame.origin.y,
+                                              self.menuItemLabel.frame.size.width,
+                                              self.menuItemLabel.frame.size.height);
+    }];
+    
+
+    
+}
+
+- (void)unshiftForIcon {
+    [UIView animateWithDuration:0.25f animations:^{
+        self.iconImageView.alpha = 0.0f;
+        self.menuItemLabel.frame = CGRectMake(8.0f,
+                                              self.menuItemLabel.frame.origin.y,
+                                              self.menuItemLabel.frame.size.width,
+                                              self.menuItemLabel.frame.size.height);
+    }];
+}
+
 - (void)nudge {
     self.iconImageView.frame = CGRectMake(20, CGRectGetMidY(self.frame), self.iconImageView.frame.size.width,
                                           self.iconImageView.frame.size.height);

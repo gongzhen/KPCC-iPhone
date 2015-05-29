@@ -67,6 +67,8 @@
 		25A6534B1AAE2BA300ABAAD6 /* Bookmark.m in Sources */ = {isa = PBXBuildFile; fileRef = 25A6534A1AAE2BA300ABAAD6 /* Bookmark.m */; };
 		25B25B9B1B17DEF600ABE8B4 /* chevron_up.png in Resources */ = {isa = PBXBuildFile; fileRef = 25B25B991B17DEF600ABE8B4 /* chevron_up.png */; };
 		25B25B9C1B17DEF600ABE8B4 /* chevron_up@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 25B25B9A1B17DEF600ABE8B4 /* chevron_up@2x.png */; };
+		25B25B9F1B190EE200ABE8B4 /* SCPRXFSHeaderCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 25B25B9E1B190EE200ABE8B4 /* SCPRXFSHeaderCell.m */; };
+		25B25BA11B190F1200ABE8B4 /* SCPRXFSHeaderCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 25B25BA01B190F1200ABE8B4 /* SCPRXFSHeaderCell.xib */; };
 		25B59A5619FEF93700D4885C /* SCPRShortListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 25B59A5419FEF93700D4885C /* SCPRShortListViewController.m */; };
 		25B59A5719FEF93700D4885C /* SCPRShortListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 25B59A5519FEF93700D4885C /* SCPRShortListViewController.xib */; };
 		25BBCD6E1A85867F0015071E /* NSError+PrettyAnalytics.m in Sources */ = {isa = PBXBuildFile; fileRef = 25BBCD6D1A85867F0015071E /* NSError+PrettyAnalytics.m */; };
@@ -390,6 +392,9 @@
 		25A6534A1AAE2BA300ABAAD6 /* Bookmark.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Bookmark.m; sourceTree = "<group>"; };
 		25B25B991B17DEF600ABE8B4 /* chevron_up.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = chevron_up.png; sourceTree = "<group>"; };
 		25B25B9A1B17DEF600ABE8B4 /* chevron_up@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "chevron_up@2x.png"; sourceTree = "<group>"; };
+		25B25B9D1B190EE200ABE8B4 /* SCPRXFSHeaderCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCPRXFSHeaderCell.h; sourceTree = "<group>"; };
+		25B25B9E1B190EE200ABE8B4 /* SCPRXFSHeaderCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SCPRXFSHeaderCell.m; sourceTree = "<group>"; };
+		25B25BA01B190F1200ABE8B4 /* SCPRXFSHeaderCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SCPRXFSHeaderCell.xib; sourceTree = "<group>"; };
 		25B59A5319FEF93700D4885C /* SCPRShortListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCPRShortListViewController.h; path = Headlines/SCPRShortListViewController.h; sourceTree = "<group>"; };
 		25B59A5419FEF93700D4885C /* SCPRShortListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SCPRShortListViewController.m; path = Headlines/SCPRShortListViewController.m; sourceTree = "<group>"; };
 		25B59A5519FEF93700D4885C /* SCPRShortListViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = SCPRShortListViewController.xib; path = Headlines/SCPRShortListViewController.xib; sourceTree = "<group>"; };
@@ -1126,6 +1131,9 @@
 				254831C01A41555700963078 /* UIView+PrintDimensions.m */,
 				258C5D361B1678ED00C19BE0 /* SCPRCornerMaskView.h */,
 				258C5D371B1678ED00C19BE0 /* SCPRCornerMaskView.m */,
+				25B25B9D1B190EE200ABE8B4 /* SCPRXFSHeaderCell.h */,
+				25B25B9E1B190EE200ABE8B4 /* SCPRXFSHeaderCell.m */,
+				25B25BA01B190F1200ABE8B4 /* SCPRXFSHeaderCell.xib */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -1568,6 +1576,7 @@
 				52EFF85C19C368C00059A0E3 /* program_avatar_this-american-life@2x.png in Resources */,
 				254CC69A1A23A7A600560805 /* onboarding-tile.jpg in Resources */,
 				52EFF85419C368C00059A0E3 /* program_avatar_ted-radio-hour@2x.png in Resources */,
+				25B25BA11B190F1200ABE8B4 /* SCPRXFSHeaderCell.xib in Resources */,
 				258C5D301B164C2100C19BE0 /* stream-antenna@2x.png in Resources */,
 				52EFF81019C368C00059A0E3 /* program_avatar_latino-usa@2x.png in Resources */,
 				52EFF82219C368C00059A0E3 /* program_avatar_morning-edition.png in Resources */,
@@ -1759,6 +1768,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				25B25B9F1B190EE200ABE8B4 /* SCPRXFSHeaderCell.m in Sources */,
 				25F30AEE1AFAB6B700F27187 /* SCPRUpcomingProgramViewController.m in Sources */,
 				258E8DFB1A16A6E800675E68 /* FeedbackManager.m in Sources */,
 				76658AB518DCB0DC00026176 /* AnalyticsManager.m in Sources */,
