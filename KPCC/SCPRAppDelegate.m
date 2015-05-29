@@ -595,7 +595,6 @@
                                                   self.masterNavigationController.navigationBar.frame.size.height+20.0f);
         [self.window addSubview:self.xfsInterface.view];
         self.xfsInterface.view.alpha = 0.0f;
-        
     }
 }
 
@@ -604,12 +603,12 @@
 }
 
 - (void)controlXFSVisibility:(BOOL)visible {
-    
+#ifdef OVERLAY_XFS_INTERFACE
     CGFloat height = visible ? self.window.frame.size.height : self.masterNavigationController.navigationBar.frame.size.height+20.0f;
     [self.xfsInterface applyHeight:height];
+#else
     
-
-    
+#endif
 }
 
 

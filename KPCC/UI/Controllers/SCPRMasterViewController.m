@@ -276,6 +276,8 @@ setForOnDemandUI;
     pulldownMenu.delegate = self;
     [self.view addSubview:pulldownMenu];
     [pulldownMenu loadMenu];
+    [pulldownMenu primeWithType:MenuTypeStandard];
+    
     self.pulldownMenu.alpha = 0.0f;
     
     // Set up pre-roll child view controller.
@@ -479,11 +481,11 @@ setForOnDemandUI;
 }
 
 - (void)didMoveToParentViewController:(UIViewController *)parent {
-    if ( SEQ(self.navigationItem.title,kMainLiveStreamTitle) ) {
+    /*if ( SEQ(self.navigationItem.title,kMainLiveStreamTitle) ) {
         [[Utils del] controlXFSAvailability:[[SessionManager shared] xFreeStreamIsAvailable]];
     } else {
         [[Utils del] controlXFSAvailability:NO];
-    }
+    }*/
 }
 
 - (void)superPop {
@@ -2904,25 +2906,38 @@ setForOnDemandUI;
 
 #pragma mark - XFS
 - (void)cloakForXFS {
+    self.pulldownMenu.alpha = 1.0f;
+    
     [self pushToHiddenVector:self.mainContentScroller];
     [self pushToHiddenVector:self.initialControlsView];
     [self pushToHiddenVector:self.playerControlsView];
     [self pushToHiddenVector:self.liveProgressViewController.view];
     
+    [self.pulldownMenu primeWithType:MenuTypeXFS];
+    [self.pulldownMenu openDropDown:YES];
+    
     [UIView animateWithDuration:0.33f animations:^{
         self.queueBlurView.alpha = 1.0f;
         self.queueDarkBgView.alpha = 0.4f;
+    } completion:^(BOOL finished) {
+        self.streamSelectorOpen = YES;
     }];
     
     [self commitHiddenVector];
 }
 
 - (void)decloakForXFS {
+    
     [self popHiddenVector];
+    [self.pulldownMenu closeDropDown:YES];
     
     [UIView animateWithDuration:0.33f animations:^{
         self.queueBlurView.alpha = 0.0f;
         self.queueDarkBgView.alpha = 0.0f;
+    } completion:^(BOOL finished) {
+        [self.pulldownMenu primeWithType:MenuTypeStandard];
+        self.streamSelectorOpen = NO;
+        self.pulldownMenu.alpha = 0.0f;
     }];
 }
 
@@ -2937,7 +2952,7 @@ setForOnDemandUI;
 #pragma mark - Util
 
 - (BOOL)cloaked {
-    return (self.scrubbing || self.preRollOpen || self.menuOpen);
+    return (self.scrubbing || self.preRollOpen || self.menuOpen || self.streamSelectorOpen );
 }
 
 
@@ -2961,11 +2976,7 @@ setForOnDemandUI;
     self.navigationItem.title = @"Menu";
     
     if ( !suppressDropdown ) {
-        if (animated) {
-            [pulldownMenu openDropDown:YES];
-        } else {
-            [pulldownMenu openDropDown:NO];
-        }
+        [pulldownMenu openDropDown:animated];
     }
     
     if (setForOnDemandUI){
@@ -3039,9 +3050,7 @@ setForOnDemandUI;
     }
     
     if (animated) {
-        [pulldownMenu closeDropDown:YES];
-    } else {
-        [pulldownMenu closeDropDown:NO];
+        [pulldownMenu closeDropDown:animated];
     }
     
     NSNumber *restoredAlpha = [[NetworkManager shared] networkDown] ? @.45f : @1;

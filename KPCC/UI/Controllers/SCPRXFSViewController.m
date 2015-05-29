@@ -77,14 +77,16 @@
     [self.chevronImage.layer pop_addAnimation:rotation forKey:@"rotate"];
     self.deployed = visible;
     
-    CGFloat h = !visible ? [[[Utils del] masterNavigationController] navigationBar].frame.size.height+20.0f : [[Utils del] window].frame.size.height;
-    
     NSString *message = visible ? @"xfs-shown" : @"xfs-hidden";
     
     [[NSNotificationCenter defaultCenter] postNotificationName:message
                                                         object:nil];
     
+#ifdef OVERLAY_XFS_INTERFACE
+    CGFloat h = !visible ? [[[Utils del] masterNavigationController] navigationBar].frame.size.height+20.0f : [[Utils del] window].frame.size.height;
     [self applyHeight:h];
+#endif
+    
 }
 
 - (void)leftButtonTapped {

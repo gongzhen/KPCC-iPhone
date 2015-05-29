@@ -34,6 +34,7 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
 
+
     [self.cancelButton setAction:@selector(hideUserReportView)];
     [self.sendReportButton addTarget:self action:@selector(sendUserReportAction) forControlEvents:UIControlEventTouchUpInside];
 
