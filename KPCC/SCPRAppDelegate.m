@@ -40,8 +40,8 @@
     [[AnalyticsManager shared] setup];
     
 #ifndef PRODUCTION
-    //[[UXmanager shared].settings setUserHasViewedOnboarding:YES];
-    //[[UXmanager shared].settings setUserHasViewedOnDemandOnboarding:YES];
+    [[UXmanager shared].settings setUserHasViewedOnboarding:YES];
+    [[UXmanager shared].settings setUserHasViewedOnDemandOnboarding:YES];
 #ifdef TESTING_SCRUBBER
     [[UXmanager shared].settings setUserHasViewedOnDemandOnboarding:NO];
     [[UXmanager shared].settings setUserHasViewedScrubbingOnboarding:NO];
@@ -591,10 +591,37 @@
                              initWithNibName:@"SCPRXFSViewController"
                              bundle:nil];
         self.xfsInterface.view = self.xfsInterface.view;
-        self.xfsInterface.view.frame = CGRectMake(0.0,0.0,self.window.frame.size.width,
-                                                  self.masterNavigationController.navigationBar.frame.size.height+20.0f);
+        CGFloat h = self.masterNavigationController.navigationBar.frame.size.height+20.0f;
+        
         [self.window addSubview:self.xfsInterface.view];
+        
+        NSLayoutConstraint *height = [NSLayoutConstraint constraintWithItem:self.xfsInterface.view
+                                                                  attribute:NSLayoutAttributeHeight
+                                                                  relatedBy:NSLayoutRelationEqual
+                                                                     toItem:nil
+                                                                  attribute:NSLayoutAttributeNotAnAttribute
+                                                                 multiplier:1.0
+                                                                   constant:h];
+        
+        NSArray *locks = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[xfs]|"
+                                                                 options:0
+                                                                 metrics:nil
+                                                                   views:@{ @"xfs" : self.xfsInterface.view }];
+        
+        NSArray *vLocks = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|[xfs]"
+                                                                  options:0
+                                                                  metrics:nil
+                                                                    views:@{ @"xfs" : self.xfsInterface.view }];
+        
+        self.xfsInterface.heightAnchor = height;
+        [self.xfsInterface.view addConstraint:height];
+        [self.window addConstraints:vLocks];
+        [self.window addConstraints:locks];
+        
+        [self.xfsInterface applyHeight:h];
+        
         self.xfsInterface.view.alpha = 0.0f;
+        
     }
 }
 
@@ -609,6 +636,10 @@
 #else
     
 #endif
+}
+
+- (void)showCoachingBalloon {
+    [self.xfsInterface showCoachingBalloon];
 }
 
 

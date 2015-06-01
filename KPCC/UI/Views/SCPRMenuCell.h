@@ -16,6 +16,8 @@
 
 - (void)nudge;
 - (void)shiftForIconWithImage:(UIImage*)image;
+- (void)shiftForIconWithImage:(UIImage *)image animated:(BOOL)animated;
 - (void)unshiftForIcon;
+- (void)unshiftForIconWithAnimated:(BOOL)animated;
 
 @end

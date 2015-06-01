@@ -115,4 +115,16 @@
     return [UIColor colorWithHex:0x32ACD5];
 }
 
++ (UIColor*)kpccBalloonBlueColor {
+    return [UIColor colorWithHex:0x33AAD5];
+}
+
++ (UIColor*)number2pencilColor {
+    return [UIColor colorWithHex:0x6C7579];
+}
+
++ (UIColor*)kpccDividerGrayColor {
+    return [UIColor colorWithHex:0xE3E3E3];
+}
+
 @end

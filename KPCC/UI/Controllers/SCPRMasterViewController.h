@@ -26,6 +26,7 @@
 #import "SCPRTouchableScrubberView.h"
 #import "SCPRUpcomingProgramViewController.h"
 #import "SCPRCompleteScheduleViewController.h"
+#import "SCPRBalloonViewController.h"
 
 @interface SCPRMasterViewController : UIViewController<SCPRMenuDelegate,UIAlertViewDelegate,UIScrollViewDelegate>
 
@@ -233,8 +234,7 @@
 - (void)cloakForMenu:(BOOL)animated suppressDropdown:(BOOL)suppressDropdown;
 - (void)decloakForMenu:(BOOL)animated;
 
-- (void)cloakForXFS;
-- (void)decloakForXFS;
+
 
 - (void)setOnDemandUI:(BOOL)animated forProgram:(Program*)program withAudio:(NSArray*)array atCurrentIndex:(int)index;
 - (void)setLiveStreamingUI:(BOOL)animated;
@@ -276,5 +276,12 @@
 - (void)showOnDemandOnboarding;
 - (void)prettifyBehindLiveStatus;
 - (void)handleResponseForNotification;
+
+// XFS
+- (void)cloakForXFS;
+- (void)decloakForXFS;
+- (void)showBalloon;
+
+
 
 @end

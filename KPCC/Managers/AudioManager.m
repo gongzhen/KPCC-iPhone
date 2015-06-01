@@ -780,7 +780,7 @@ static const NSString *ItemStatusContext;
             
             if ( weakSelf.smooth ) {
                 [weakSelf adjustAudioWithValue:0.0045 completion:^{
-                    weakSelf.smooth = NO;
+                    
                 }];
             }
             
@@ -1593,14 +1593,17 @@ static const NSString *ItemStatusContext;
 
 - (void)threadedAdjustWithValue:(CGFloat)increment completion:(void (^)(void))completion {
     
-    //NSLog(@"Fading in audio : %1.2f",self.audioPlayer.volume);
     
     BOOL basecase = NO;
     BOOL increasing = NO;
     if ( increment < 0.0000f ) {
         basecase = self.audioPlayer.volume <= 0.0f;
     } else {
-        basecase = self.audioPlayer.volume >= self.savedVolume;
+        if ( self.smooth ) {
+            basecase = self.audioPlayer.volume >= 1.0f;
+        } else {
+            basecase = self.audioPlayer.volume >= self.savedVolume;
+        }
         increasing = YES;
     }
     
@@ -1611,6 +1614,9 @@ static const NSString *ItemStatusContext;
         } else {
             self.autoMuted = YES;
         }
+        
+        self.smooth = NO;
+        
         if ( completion ) {
             dispatch_async(dispatch_get_main_queue(), completion);
         }

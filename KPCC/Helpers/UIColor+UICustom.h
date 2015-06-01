@@ -21,5 +21,8 @@
 + (UIColor*)kpccAsphaltColor;
 + (UIColor*)kpccSoftOrangeColor;
 + (UIColor*)kpccSubtleGrayColor;
++ (UIColor*)kpccBalloonBlueColor;
++ (UIColor*)number2pencilColor;
++ (UIColor*)kpccDividerGrayColor;
 
 @end

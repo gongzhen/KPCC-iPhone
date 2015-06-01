@@ -25,6 +25,7 @@
 #import "UIView+PrintDimensions.h"
 #import "SCPRScrubbingUIViewController.h"
 #import "SCPRTimerControlViewController.h"
+#import "SCPRPledgePINViewController.h"
 
 @import MessageUI;
 
@@ -257,6 +258,21 @@ setForOnDemandUI;
                                                  name:@"xfs-shown"
                                                object:nil];
     
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(xfsToggle)
+                                                 name:@"xfs-toggle"
+                                               object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(xfsConfirm)
+                                                 name:@"xfs-confirmation-entry"
+                                               object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(xfsExit)
+                                                 name:@"xfs-confirmation-exit"
+                                               object:nil];
+    
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
     
     self.liveProgressViewController = [[SCPRProgressViewController alloc] init];
@@ -394,7 +410,8 @@ setForOnDemandUI;
     [[NetworkManager shared] setupReachability];
     
     self.originalFrames = [NSMutableDictionary new];
-
+    self.navigationItem.title = kMainLiveStreamTitle;
+    
     [self primeScrubber];
     [self setupScroller];
     [[Utils del] applyXFSButton];
@@ -414,6 +431,13 @@ setForOnDemandUI;
             self.originalFrames[@"playerControls"] = @(self.playerControlsBottomYConstraint.constant);
             self.originalFrames[@"programTitle"] = @(self.programTitleYConstraint.constant);
             self.originalFrames[@"liveRewind"] = @(self.liveRewindBottomYConstraint.constant);
+            
+            if ( ![[UXmanager shared].settings userHasViewedXFSOnboarding] ) {
+                if ( [[SessionManager shared] xFreeStreamIsAvailable] ) {
+                    [self showBalloon];
+                }
+                
+            }
             
         }
     }];
@@ -731,6 +755,10 @@ setForOnDemandUI;
         }];
         
     }];
+}
+
+- (UIStatusBarStyle)preferredStatusBarStyle {
+    return UIStatusBarStyleLightContent;
 }
 
 #pragma mark - Sleep Timer
@@ -2913,6 +2941,8 @@ setForOnDemandUI;
     [self pushToHiddenVector:self.playerControlsView];
     [self pushToHiddenVector:self.liveProgressViewController.view];
     
+    [[UXmanager shared] hideMenuButton];
+    
     [self.pulldownMenu primeWithType:MenuTypeXFS];
     [self.pulldownMenu openDropDown:YES];
     
@@ -2935,6 +2965,9 @@ setForOnDemandUI;
         self.queueBlurView.alpha = 0.0f;
         self.queueDarkBgView.alpha = 0.0f;
     } completion:^(BOOL finished) {
+        
+        [[UXmanager shared] showMenuButton];
+        
         [self.pulldownMenu primeWithType:MenuTypeStandard];
         self.streamSelectorOpen = NO;
         self.pulldownMenu.alpha = 0.0f;
@@ -2947,6 +2980,33 @@ setForOnDemandUI;
 
 - (void)xfsShown {
     [self cloakForXFS];
+}
+
+- (void)xfsToggle {
+    self.navigationItem.title = kMainLiveStreamTitle;
+}
+
+- (void)showBalloon {
+    [[Utils del] showCoachingBalloon];
+}
+
+- (void)xfsConfirm {
+    
+    [[[Utils del] xfsInterface] grayInterface];
+    
+    SCPRPledgePINViewController *pin = [[SCPRPledgePINViewController alloc]
+                                        initWithNibName:@"SCPRPledgePINViewController"
+                                        bundle:nil];
+    pin.view = pin.view;
+    
+    [self.navigationController pushViewController:pin
+                                         animated:YES];
+    
+}
+
+- (void)xfsExit {
+    self.navigationItem.title = kMainLiveStreamTitle;
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 #pragma mark - Util

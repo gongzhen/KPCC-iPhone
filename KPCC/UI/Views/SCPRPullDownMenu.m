@@ -206,9 +206,18 @@
             xfs = YES;
         }
         
-        [[UXmanager shared].settings setUserHasSelectedXFS:xfs];
-        [[UXmanager shared] persist];
-        [self.menuList reloadData];
+        if ( xfs && ![[UXmanager shared].settings userHasConfirmedXFSToken] ) {
+            
+            NSAssert([NSThread isMainThread],@"Must be main thread");
+            
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"xfs-confirmation-entry"
+                                                                object:nil];
+            
+        } else {
+            [[UXmanager shared].settings setUserHasSelectedXFS:xfs];
+            [[UXmanager shared] persist];
+            [self.menuList reloadData];
+        }
     }
 }
 
