@@ -290,6 +290,7 @@ static DesignManager *singleton = nil;
                andText:text
               iconName:nil];
 }
+
 - (void)sculptButton:(UIButton *)button withStyle:(SculptingStyle)style andText:(NSString *)text iconName:(NSString *)iconName {
     [button setTitle:text forState:UIControlStateNormal];
     [button setTitle:text forState:UIControlStateHighlighted];

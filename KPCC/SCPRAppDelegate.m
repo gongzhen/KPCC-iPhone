@@ -42,6 +42,8 @@
 #ifndef PRODUCTION
     [[UXmanager shared].settings setUserHasViewedOnboarding:YES];
     [[UXmanager shared].settings setUserHasViewedOnDemandOnboarding:YES];
+    [[UXmanager shared].settings setUserHasSelectedXFS:NO];
+    [[UXmanager shared].settings setXfsToken:@""];
 #ifdef TESTING_SCRUBBER
     [[UXmanager shared].settings setUserHasViewedOnDemandOnboarding:NO];
     [[UXmanager shared].settings setUserHasViewedScrubbingOnboarding:NO];
@@ -86,8 +88,6 @@
     self.window.rootViewController = navigationController;
     navigationController.navigationBarHidden = YES;
 
-    
-    
     NSString *ua = kHLS;
     NSLog(@"URL : %@",ua);
     
@@ -613,13 +613,16 @@
                                                                   metrics:nil
                                                                     views:@{ @"xfs" : self.xfsInterface.view }];
         
+        self.xfsInterface.view.translatesAutoresizingMaskIntoConstraints = NO;
+        
         self.xfsInterface.heightAnchor = height;
         [self.xfsInterface.view addConstraint:height];
         [self.window addConstraints:vLocks];
         [self.window addConstraints:locks];
+        [self.window layoutIfNeeded];
         
         [self.xfsInterface applyHeight:h];
-        
+ 
         self.xfsInterface.view.alpha = 0.0f;
         
     }

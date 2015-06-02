@@ -10,6 +10,10 @@
 #import "UILabel+Additions.h"
 #import "UIColor+UICustom.h"
 #import "DesignManager.h"
+#import "Utils.h"
+#import "UXmanager.h"
+#import "SessionManager.h"
+#import "SCPRXFSViewController.h"
 
 @interface SCPRPledgePINViewController ()
 
@@ -36,18 +40,111 @@
     [self.tokenTable reloadData];
     
     self.tokenField.delegate = self;
+    self.tokenField.text = kPlaceholderPINString;
+    self.pinNumber = @"";
     
     [self.tokenField becomeFirstResponder];
+    
+    self.submitButton.alpha = 0.4f;
+    self.submitButton.userInteractionEnabled = YES;
     
     [self.submitButton addTarget:self
                           action:@selector(submitButtonTapped)
                 forControlEvents:UIControlEventTouchUpInside];
     
+    [self examineAndApplyStyle];
+    
     // Do any additional setup after loading the view from its nib.
 }
 
 - (void)submitButtonTapped {
-    
+    if ( self.confirmed ) {
+
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"xfs-confirmation-exit"
+                                                            object:nil];
+        
+    } else {
+        [self.spinner startAnimating];
+        [UIView animateWithDuration:0.25f animations:^{
+            [[DesignManager shared] sculptButton:self.submitButton
+                                       withStyle:SculptingStylePeriwinkle
+                                         andText:@""];
+            self.spinner.alpha = 1.0f;
+        } completion:^(BOOL finished) {
+            [[SessionManager shared] validateXFSToken:self.pinNumber completion:^(id returnedObject) {
+                if ( [returnedObject isKindOfClass:[NSNumber class]] ) {
+                    NSNumber *result = (NSNumber*)returnedObject;
+                    SCPRXFSViewController *svc = (SCPRXFSViewController*)self.parentXFSViewController;
+                    if ( [result boolValue] ) {
+                        self.confirmed = YES;
+                        
+                        [[UXmanager shared].settings setUserHasSelectedXFS:YES];
+                        [[UXmanager shared].settings setXfsToken:self.pinNumber];
+                        [[UXmanager shared] persist];
+                        
+                        [self.tokenTable reloadData];
+                        [UIView animateWithDuration:0.25f animations:^{
+                            self.spinner.alpha = 0.0f;
+                            svc.cancelButton.alpha = 0.0f;
+                        } completion:^(BOOL finished) {
+                            
+                        }];
+                        
+                    } else {
+                        [UIView animateWithDuration:0.25f animations:^{
+                            self.spinner.alpha = 0.0f;
+                            svc.cancelButton.alpha = 0.0f;
+                        } completion:^(BOOL finished) {
+                            UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Uh-oh! We can't seem to find a match"
+                                                                                           message:@"The token you entered wasn't found in our system. Please try again or get in touch with our membership help desk."
+                                                                                    preferredStyle:UIAlertControllerStyleAlert];
+                            UIAlertAction *contactUs = [UIAlertAction actionWithTitle:@"Contact Us:"
+                                                                                style:UIAlertActionStyleDefault
+                                                                              handler:^(UIAlertAction *action) {
+                                                                                  
+                                                                              }];
+                            UIAlertAction *ok = [UIAlertAction actionWithTitle:@"OK"
+                                                                         style:UIAlertActionStyleDestructive
+                                                                       handler:^(UIAlertAction *action) {
+                                                                           
+                                                                       }];
+                            [alert addAction:ok];
+                            [alert addAction:contactUs];
+                            [self presentViewController:alert
+                                               animated:YES
+                                             completion:nil];
+                            
+                        }];
+                    }
+                }
+            }];
+        }];
+
+    }
+}
+
+- (void)examineAndApplyStyle {
+    if ( SEQ(@"",self.pinNumber) ) {
+        self.tokenField.textColor = [UIColor kpccSubtleGrayColor];
+        self.tokenField.text = kPlaceholderPINString;
+        UITextPosition *beginning = [self.tokenField beginningOfDocument];
+        [self.tokenField setSelectedTextRange:[self.tokenField textRangeFromPosition:beginning
+                                                              toPosition:beginning]];
+        
+        [UIView animateWithDuration:0.25f animations:^{
+            self.submitButton.alpha = 0.4f;
+        } completion:^(BOOL finished) {
+            self.submitButton.userInteractionEnabled = NO;
+        }];
+        
+    } else {
+        self.tokenField.textColor = [UIColor blackColor];
+        [UIView animateWithDuration:0.25f animations:^{
+            self.submitButton.alpha = 1.0f;
+        } completion:^(BOOL finished) {
+            self.submitButton.userInteractionEnabled = YES;
+        }];
+    }
 }
 
 #pragma mark - UITableView
@@ -136,6 +233,29 @@
     // Dispose of any resources that can be recreated.
 }
 
+#pragma mark - UITextField
+- (void)textFieldDidBeginEditing:(UITextField *)textField {
+    UITextPosition *beginning = [textField beginningOfDocument];
+    [textField setSelectedTextRange:[textField textRangeFromPosition:beginning
+                                                          toPosition:beginning]];
+}
+
+- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
+    if ( SEQ(string,@"") ) {
+        if ( !SEQ(self.pinNumber,@"") ) {
+            self.pinNumber = [self.pinNumber substringToIndex:self.pinNumber.length-1];
+        }
+    } else {
+        if ( SEQ(self.pinNumber,@"") ) {
+            textField.text = @"";
+        }
+        self.pinNumber = [self.pinNumber stringByAppendingString:string];
+    }
+    
+    [self examineAndApplyStyle];
+    
+    return YES;
+}
 /*
 #pragma mark - Navigation
 

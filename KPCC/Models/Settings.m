@@ -26,7 +26,7 @@
     self.userHasColdStartedAudioOnce = [aDecoder decodeBoolForKey:@"userHasColdStartedAudioOnce"];
     self.userHasSelectedXFS = [aDecoder decodeBoolForKey:@"userHasSelectedXFS"];
     self.userHasViewedXFSOnboarding = [aDecoder decodeBoolForKey:@"userHasViewedXFSOnboarding"];
-    self.userHasConfirmedXFSToken = [aDecoder decodeBoolForKey:@"userHasConfirmedXFSToken"];
+    self.xfsToken = [aDecoder decodeObjectForKey:@"xfsToken"];
     
     [[Utils del] setAlarmDate:self.alarmFireDate];
     
@@ -60,8 +60,8 @@
                 forKey:@"userHasSelectedXFS"];
     [aCoder encodeBool:self.userHasViewedXFSOnboarding
                 forKey:@"userHasViewedXFSOnboarding"];
-    [aCoder encodeBool:self.userHasConfirmedXFSToken
-                forKey:@"userHasConfirmedXFSToken"];
+    [aCoder encodeObject:self.xfsToken
+                  forKey:@"xfsToken"];
 }
 
 - (void)setUserHasSelectedXFS:(BOOL)userHasSelectedXFS {

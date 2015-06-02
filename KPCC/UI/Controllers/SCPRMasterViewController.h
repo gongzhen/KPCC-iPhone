@@ -172,6 +172,7 @@
 - (void)animatedStateForForwardButton:(BOOL)enabled;
 - (void)animatedStateForBackwardButton:(BOOL)enabled;
 - (void)wipeTargetsForScrubButtons;
+- (void)dismissXFSCoachingBalloon;
 
 @property (nonatomic, strong) SCPRScrubbingUIViewController *scrubbingUI;
 @property (nonatomic, strong) SCPRButton *scrubberCloseButton;

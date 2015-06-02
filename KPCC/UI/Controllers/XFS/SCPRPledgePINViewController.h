@@ -11,6 +11,8 @@
 #define kTallSpacing 36.0f
 #define kShortSpacing 8.0f
 
+#define kPlaceholderPINString @"Enter your token"
+
 @interface SCPRPledgePINViewController : UIViewController<UITableViewDataSource,UITableViewDelegate,UITextFieldDelegate>
 
 @property (nonatomic, strong) IBOutlet UITableViewCell *headerCell;
@@ -24,6 +26,12 @@
 @property (nonatomic, strong) IBOutlet UIButton *submitButton;
 @property (nonatomic, strong) IBOutlet UIActivityIndicatorView *spinner;
 @property (nonatomic, strong) IBOutlet UITableView *tokenTable;
+
+@property (nonatomic, weak) id parentXFSViewController;
+
+@property NSString *pinNumber;
+
+- (void)examineAndApplyStyle;
 
 @property BOOL confirmed;
 

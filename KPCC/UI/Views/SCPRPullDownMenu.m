@@ -206,9 +206,8 @@
             xfs = YES;
         }
         
-        if ( xfs && ![[UXmanager shared].settings userHasConfirmedXFSToken] ) {
-            
-            NSAssert([NSThread isMainThread],@"Must be main thread");
+        NSString *token = [[UXmanager shared].settings xfsToken];
+        if ( xfs && (!token || SEQ(token,@""))  ) {
             
             [[NSNotificationCenter defaultCenter] postNotificationName:@"xfs-confirmation-entry"
                                                                 object:nil];

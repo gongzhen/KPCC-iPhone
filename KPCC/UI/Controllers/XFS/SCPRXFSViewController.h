@@ -30,9 +30,13 @@
 - (void)openDropdown;
 - (void)closeDropdown;
 - (void)controlVisibility:(BOOL)visible;
+
 - (void)showCoachingBalloon;
+- (void)dismissCoachingBalloon;
+
 - (void)orangeInterface;
 - (void)grayInterface;
 - (void)adjustInterface;
+
 
 @end

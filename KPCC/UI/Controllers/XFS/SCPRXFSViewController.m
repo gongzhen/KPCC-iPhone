@@ -30,6 +30,8 @@
     self.view.clipsToBounds = YES;
     self.view.backgroundColor = [UIColor clearColor];
     
+    
+    
     [self.leftButton addTarget:self
                         action:@selector(leftButtonTapped)
               forControlEvents:UIControlEventTouchUpInside];
@@ -45,6 +47,7 @@
     
     [self positionChevron];
     
+    
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(positionChevron)
                                                  name:@"xfs-toggle"
@@ -59,6 +62,8 @@
     [self orangeInterface];
     // Do any additional setup after loading the view from its nib.
 }
+
+
 
 - (UIStatusBarStyle)preferredStatusBarStyle {
     return self.isGrayInterface ? UIStatusBarStyleDefault : UIStatusBarStyleLightContent;
@@ -84,16 +89,21 @@
 
 - (void)adjustInterface {
     [UIView animateWithDuration:0.33f animations:^{
+        
         self.view.backgroundColor = self.isGrayInterface ? [UIColor paleHorseColor] : [UIColor clearColor];
         self.deployButton.alpha = self.isGrayInterface ? 0.0f : 1.0f;
         self.chevronImage.alpha = self.isGrayInterface ? 0.0f : 1.0f;
         self.cancelButton.alpha = self.isGrayInterface ? 1.0f : 0.0f;
-        self.dividerView.backgroundColor = [UIColor cloudColor];
+        self.dividerView.backgroundColor = [UIColor angryCloudColor];
         self.dividerView.alpha = self.isGrayInterface ? 1.0f : 0.0f;
-        UIStatusBarStyle sbs = self.isGrayInterface ? UIStatusBarStyleDefault : UIStatusBarStyleLightContent;
         
+        UIStatusBarStyle sbs = self.isGrayInterface ? UIStatusBarStyleDefault : UIStatusBarStyleLightContent;
         [[UIApplication sharedApplication] setStatusBarStyle:sbs];
         [self setNeedsStatusBarAppearanceUpdate];
+        
+#ifdef DEBUG
+        //self.view.backgroundColor = [[UIColor kpccSlateColor] translucify:0.85f];
+#endif
     }];
 }
 
@@ -198,6 +208,12 @@
     
 }
 
+- (void)dismissCoachingBalloon {
+    if ( self.xfsBalloon ) {
+        [self.xfsBalloon closeSelf];
+    }
+}
+
 - (void)coachingBalloonDismissed {
     
     [[NSNotificationCenter defaultCenter] removeObserver:self];
@@ -207,6 +223,10 @@
     SCPRAppDelegate *del = [Utils del];
     CGFloat height = [[del masterViewController].navigationController navigationBar].frame.size.height + 20.0f;
     [self applyHeight:height];
+    
+    [[UXmanager shared].settings setUserHasViewedXFSOnboarding:YES];
+    [[UXmanager shared] persist];
+    
 }
 
 - (void)leftButtonTapped {

@@ -26,6 +26,7 @@
 #import "SCPRScrubbingUIViewController.h"
 #import "SCPRTimerControlViewController.h"
 #import "SCPRPledgePINViewController.h"
+#import "SCPRBalloonViewController.h"
 
 @import MessageUI;
 
@@ -2936,6 +2937,8 @@ setForOnDemandUI;
 - (void)cloakForXFS {
     self.pulldownMenu.alpha = 1.0f;
     
+    [self dismissXFSCoachingBalloon];
+    
     [self pushToHiddenVector:self.mainContentScroller];
     [self pushToHiddenVector:self.initialControlsView];
     [self pushToHiddenVector:self.playerControlsView];
@@ -2990,6 +2993,11 @@ setForOnDemandUI;
     [[Utils del] showCoachingBalloon];
 }
 
+- (void)dismissXFSCoachingBalloon {
+    SCPRXFSViewController *xfsvc = [[Utils del] xfsInterface];
+    [xfsvc dismissCoachingBalloon];
+}
+
 - (void)xfsConfirm {
     
     [[[Utils del] xfsInterface] grayInterface];
@@ -2998,6 +3006,7 @@ setForOnDemandUI;
                                         initWithNibName:@"SCPRPledgePINViewController"
                                         bundle:nil];
     pin.view = pin.view;
+    pin.parentXFSViewController = [[Utils del] xfsInterface];
     
     [self.navigationController pushViewController:pin
                                          animated:YES];
@@ -3007,6 +3016,10 @@ setForOnDemandUI;
 - (void)xfsExit {
     self.navigationItem.title = kMainLiveStreamTitle;
     [self.navigationController popViewControllerAnimated:YES];
+    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent
+                                                animated:YES];
+    
+    [self.pulldownMenu.menuList reloadData];
 }
 
 #pragma mark - Util
@@ -3033,12 +3046,15 @@ setForOnDemandUI;
     self.pulldownMenu.alpha = 1.0f;
     [self.liveProgressViewController hide];
     
+    [self dismissXFSCoachingBalloon];
+    
     self.navigationItem.title = @"Menu";
     
     if ( !suppressDropdown ) {
         [pulldownMenu openDropDown:animated];
     }
     
+  
     if (setForOnDemandUI){
         POPBasicAnimation *onDemandElementsFade = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
         onDemandElementsFade.toValue = @0;
@@ -3205,6 +3221,8 @@ setForOnDemandUI;
     [[UXmanager shared] hideMenuButton];
     
     [self removeAllAnimations];
+    
+    [self dismissXFSCoachingBalloon];
     
     if (setForOnDemandUI){
         POPBasicAnimation *onDemandElementsFade = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];

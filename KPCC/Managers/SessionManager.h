@@ -116,8 +116,9 @@ static NSInteger kProgramPollingPressure = 5;
 - (BOOL)sessionIsInRecess;
 - (BOOL)sessionIsInRecess:(BOOL)respectPause;
 
+// XFS
 - (BOOL)xFreeStreamIsAvailable;
-
+- (void)validateXFSToken:(NSString*)token completion:(CompletionBlockWithValue)completion;
 
 @property BOOL sessionIsHot;
 @property BOOL rewindSessionIsHot;
