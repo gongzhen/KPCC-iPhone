@@ -67,8 +67,12 @@
 - (void)submitButtonTapped {
     if ( self.confirmed ) {
 
+        SCPRXFSViewController *xfs = [[Utils del] xfsInterface];
+        [xfs orangeInterface];
+        
         [[NSNotificationCenter defaultCenter] postNotificationName:@"xfs-confirmation-exit"
                                                             object:nil];
+        
         
     } else {
         [self.spinner startAnimating];
@@ -83,6 +87,7 @@
                 NSDictionary *result = (NSDictionary*)returnedObject;
                 SCPRXFSViewController *svc = (SCPRXFSViewController*)self.parentXFSViewController;
                 if ( result[@"success"] ) {
+                    
                     self.confirmed = YES;
                     
                     PFObject *pfsu = result[@"success"];

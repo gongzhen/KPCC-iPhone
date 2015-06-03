@@ -445,12 +445,7 @@ setForOnDemandUI;
             self.originalFrames[@"programTitle"] = @(self.programTitleYConstraint.constant);
             self.originalFrames[@"liveRewind"] = @(self.liveRewindBottomYConstraint.constant);
             
-            if ( ![[UXmanager shared].settings userHasViewedXFSOnboarding] ) {
-                if ( [[SessionManager shared] xFreeStreamIsAvailable] ) {
-                    [self showBalloon];
-                }
-                
-            }
+
             
         }
     }];
@@ -493,6 +488,8 @@ setForOnDemandUI;
         self.restoreTitle = NO;
         self.navigationItem.title = kMainLiveStreamTitle;
     }
+    
+
     
     self.viewHasAppeared = YES;
 
@@ -3068,7 +3065,13 @@ setForOnDemandUI;
             [[AudioManager shared] switchPlusMinusStreams];
         }
         
+    } else {
+        if ( ![[UXmanager shared].settings userHasViewedXFSOnboarding] ) {
+            [self showBalloon];
+        }
     }
+    
+
     
 }
 
