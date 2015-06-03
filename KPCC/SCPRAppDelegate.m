@@ -633,15 +633,6 @@
     self.xfsInterface.view.alpha = available ? 1.0f : 0.0f;
 }
 
-- (void)controlXFSVisibility:(BOOL)visible {
-#ifdef OVERLAY_XFS_INTERFACE
-    CGFloat height = visible ? self.window.frame.size.height : self.masterNavigationController.navigationBar.frame.size.height+20.0f;
-    [self.xfsInterface applyHeight:height];
-#else
-    
-#endif
-}
-
 - (void)showCoachingBalloon {
     [self.xfsInterface showCoachingBalloon];
 }

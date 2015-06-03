@@ -67,7 +67,6 @@
 
 // XFS
 - (void)applyXFSButton;
-- (void)controlXFSVisibility:(BOOL)visible;
 - (void)controlXFSAvailability:(BOOL)available;
 - (void)showCoachingBalloon;
 

@@ -39,7 +39,7 @@
 }
 
 - (void)closeSelf {
-    [UIView animateWithDuration:0.33f animations:^{
+    [UIView animateWithDuration:0.15f animations:^{
         self.view.alpha = 0.0f;
     } completion:^(BOOL finished) {
         [self.view removeFromSuperview];

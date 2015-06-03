@@ -817,12 +817,12 @@
                                        [self setXFreeStreamIsAvailable:updated];
                                        
                                        
-                                       if ( incumbent != updated ) {
-                                           dispatch_async(dispatch_get_main_queue(), ^{
-                                               [[NSNotificationCenter defaultCenter] postNotificationName:@"pledge-drive-status-updated"
-                                                                                                   object:nil];
-                                           });
-                                       }
+                                       //if ( incumbent != updated ) {
+                                       dispatch_async(dispatch_get_main_queue(), ^{
+                                           [[NSNotificationCenter defaultCenter] postNotificationName:@"pledge-drive-status-updated"
+                                                                                               object:nil];
+                                       });
+                                       //}
                                        
                                    } else {
                                        

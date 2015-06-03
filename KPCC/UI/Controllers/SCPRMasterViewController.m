@@ -2169,6 +2169,8 @@ setForOnDemandUI;
     self.timeLabelOnDemand.text = @"LOADING...";
     self.queueLoading = YES;
     
+    [[Utils del] controlXFSAvailability:NO];
+    
     [[SessionManager shared] setLocalLiveTime:0.0f];
     
     UIImage *img = [[DesignManager shared] currentBlurredImage];
@@ -3245,6 +3247,8 @@ setForOnDemandUI;
     }
     
     [self popHiddenVector];
+    
+    [[Utils del] controlXFSAvailability:([AudioManager shared].currentAudioMode == AudioModeLive)];
     [self adjustScrollingState];
     [self adjustScrubbingState];
     
