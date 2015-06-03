@@ -805,13 +805,13 @@
                                if (responseObject[@"meta"] && [responseObject[@"meta"][@"status"][@"code"] intValue] == 200) {
                                    
 #ifdef DEBUG
-                                   NSMutableDictionary *ro = [NSMutableDictionary dictionaryWithDictionary:responseObject];
-                                   ro[@"pledge_drive"] = @(YES);
-                                   responseObject = [NSDictionary dictionaryWithDictionary:ro];
+                                   //NSMutableDictionary *ro = [NSMutableDictionary dictionaryWithDictionary:responseObject];
+                                   //ro[@"pledge_drive"] = @(YES);
+                                   //responseObject = [NSDictionary dictionaryWithDictionary:ro];
 #endif
                                    if ( responseObject[@"pledge_drive"] ) {
                                        
-                                       BOOL incumbent = [self xFreeStreamIsAvailable];
+                                       //BOOL incumbent = [self xFreeStreamIsAvailable];
                                        BOOL updated = [responseObject[@"pledge_drive"] boolValue];
 
                                        [self setXFreeStreamIsAvailable:updated];

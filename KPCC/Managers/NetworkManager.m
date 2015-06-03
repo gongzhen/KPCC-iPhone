@@ -162,8 +162,11 @@ static NetworkManager *singleton = nil;
             NSString *responseKey;
             for (NSString *key in keys) {
                 if (![key isEqualToString:@"meta"]) {
-                    responseKey = key;
-                    break;
+                    id thing = responseObject[key];
+                    if ( [thing isKindOfClass:[NSDictionary class]] || [thing isKindOfClass:[NSArray class]] ) {
+                        responseKey = key;
+                        break;
+                    }
                 }
             }
             
