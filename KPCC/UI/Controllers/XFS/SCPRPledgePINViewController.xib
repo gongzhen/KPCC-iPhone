@@ -78,14 +78,14 @@
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="icon-lock.png" translatesAutoresizingMaskIntoConstraints="NO" id="MDg-B5-Frb">
-                        <rect key="frame" x="0.0" y="0.0" width="43" height="43"/>
+                        <rect key="frame" x="6" y="0.0" width="42" height="42"/>
                         <constraints>
-                            <constraint firstAttribute="width" constant="43" id="2c9-Ih-s3O"/>
-                            <constraint firstAttribute="height" constant="43" id="9iI-mf-dzS"/>
+                            <constraint firstAttribute="width" constant="42" id="2c9-Ih-s3O"/>
+                            <constraint firstAttribute="height" constant="42" id="9iI-mf-dzS"/>
                         </constraints>
                     </imageView>
                     <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="KeW-eV-ePJ">
-                        <rect key="frame" x="46" y="7" width="264" height="30"/>
+                        <rect key="frame" x="51" y="7" width="259" height="30"/>
                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                         <textInputTraits key="textInputTraits"/>
                     </textField>
@@ -93,10 +93,10 @@
                 <constraints>
                     <constraint firstItem="KeW-eV-ePJ" firstAttribute="top" secondItem="paF-NN-f8t" secondAttribute="topMargin" constant="-1" id="5Jm-F2-1m8"/>
                     <constraint firstAttribute="trailingMargin" secondItem="KeW-eV-ePJ" secondAttribute="trailing" constant="2" id="RKB-lO-Ldx"/>
-                    <constraint firstItem="MDg-B5-Frb" firstAttribute="leading" secondItem="paF-NN-f8t" secondAttribute="leadingMargin" constant="-8" id="UtD-PB-H34"/>
+                    <constraint firstItem="MDg-B5-Frb" firstAttribute="leading" secondItem="paF-NN-f8t" secondAttribute="leading" constant="6" id="UtD-PB-H34"/>
                     <constraint firstItem="KeW-eV-ePJ" firstAttribute="leading" secondItem="MDg-B5-Frb" secondAttribute="trailing" constant="3" id="gWJ-eJ-v8M"/>
                     <constraint firstAttribute="bottomMargin" secondItem="KeW-eV-ePJ" secondAttribute="bottom" constant="-2" id="slY-eD-ed3"/>
-                    <constraint firstItem="MDg-B5-Frb" firstAttribute="top" secondItem="paF-NN-f8t" secondAttribute="topMargin" constant="-8" id="zB1-Cm-yM1"/>
+                    <constraint firstItem="MDg-B5-Frb" firstAttribute="top" secondItem="paF-NN-f8t" secondAttribute="top" id="zB1-Cm-yM1"/>
                 </constraints>
             </tableViewCellContentView>
             <point key="canvasLocation" x="237" y="274"/>

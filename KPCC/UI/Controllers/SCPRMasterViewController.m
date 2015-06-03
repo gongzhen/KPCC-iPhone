@@ -2873,6 +2873,8 @@ setForOnDemandUI;
     [self pushToHiddenVector:self.scrubbingTriggerView];
     [self pushToHiddenVector:nav.menuButton];
     [self pushToHiddenVector:self.liveRewindAltButton];
+    [self pushToHiddenVector:[[[Utils del] xfsInterface] view]];
+    
     [self commitHiddenVector];
     
 }
