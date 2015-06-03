@@ -107,6 +107,11 @@ static AnalyticsManager *singleton = nil;
 
 
 - (void)logEvent:(NSString *)event withParameters:(NSDictionary *)parameters {
+    
+#if TARGET_IPHONE_SIMULATOR
+    return;
+#endif
+    
     NSMutableDictionary *userInfo = [[NSMutableDictionary alloc] init];
     
     NSMutableDictionary *mParams = [parameters mutableCopy];

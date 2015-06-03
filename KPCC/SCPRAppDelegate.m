@@ -44,6 +44,7 @@
     [[UXmanager shared].settings setUserHasViewedOnDemandOnboarding:YES];
     [[UXmanager shared].settings setUserHasSelectedXFS:NO];
     [[UXmanager shared].settings setXfsToken:@""];
+    [[UXmanager shared].settings setUserHasViewedXFSOnboarding:NO];
 #ifdef TESTING_SCRUBBER
     [[UXmanager shared].settings setUserHasViewedOnDemandOnboarding:NO];
     [[UXmanager shared].settings setUserHasViewedScrubbingOnboarding:NO];

@@ -28,7 +28,9 @@
 #import "SCPRCompleteScheduleViewController.h"
 #import "SCPRBalloonViewController.h"
 
-@interface SCPRMasterViewController : UIViewController<SCPRMenuDelegate,UIAlertViewDelegate,UIScrollViewDelegate>
+@import MessageUI;
+
+@interface SCPRMasterViewController : UIViewController<SCPRMenuDelegate,UIAlertViewDelegate,UIScrollViewDelegate,MFMailComposeViewControllerDelegate>
 
 @property IBOutlet UILabel *programTitleLabel;
 @property IBOutlet UIImageView *programImageView;
@@ -283,6 +285,6 @@
 - (void)decloakForXFS;
 - (void)showBalloon;
 
-
+- (void)composeMail:(NSNotification*)note;
 
 @end

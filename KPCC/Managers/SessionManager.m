@@ -536,6 +536,9 @@
                                                                     object:nil
                                                                   userInfo:nil];
             }
+            
+            [self xFreeStreamIsAvailableWithCompletion:nil];
+            
             completed(programObj);
             
         } else {
@@ -785,23 +788,99 @@
 }
 
 #pragma mark - XFS
-- (BOOL)xFreeStreamIsAvailable {
-    return YES;
+- (void)xFreeStreamIsAvailableWithCompletion:(CompletionBlock)completion {
+    NSTimeInterval now = [[NSDate date] timeIntervalSince1970];
+    NSString *endpoint = [NSString stringWithFormat:@"%@/schedule?starts_at=%ld&length=14400",kServerBase,(long)now];
+    NSURL *url = [NSURL URLWithString:endpoint];
+    NSURLRequest *request = [NSURLRequest requestWithURL:url];
+    [NSURLConnection sendAsynchronousRequest:request
+                                       queue:[[NSOperationQueue alloc] init]
+                           completionHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError) {
+                               
+                               NSError *jsonError = nil;
+                               NSDictionary *responseObject = [NSJSONSerialization JSONObjectWithData:data
+                                                                                              options:NSJSONReadingMutableLeaves
+                                                                                                error:&jsonError];
+                               
+                               if (responseObject[@"meta"] && [responseObject[@"meta"][@"status"][@"code"] intValue] == 200) {
+                                   
+#ifdef DEBUG
+                                   NSMutableDictionary *ro = [NSMutableDictionary dictionaryWithDictionary:responseObject];
+                                   ro[@"pledge_drive"] = @(YES);
+                                   responseObject = [NSDictionary dictionaryWithDictionary:ro];
+#endif
+                                   if ( responseObject[@"pledge_drive"] ) {
+                                       
+                                       BOOL incumbent = [self xFreeStreamIsAvailable];
+                                       BOOL updated = [responseObject[@"pledge_drive"] boolValue];
+
+                                       [self setXFreeStreamIsAvailable:updated];
+                                       
+                                       
+                                       if ( incumbent != updated ) {
+                                           dispatch_async(dispatch_get_main_queue(), ^{
+                                               [[NSNotificationCenter defaultCenter] postNotificationName:@"pledge-drive-status-updated"
+                                                                                                   object:nil];
+                                           });
+                                       }
+                                       
+                                   } else {
+                                       
+                                       [self setXFreeStreamIsAvailable:NO];
+                                 
+                                       
+                                       dispatch_async(dispatch_get_main_queue(), ^{
+                                           [[NSNotificationCenter defaultCenter] postNotificationName:@"pledge-drive-status-updated"
+                                                                                               object:nil];
+                                       });
+                                       
+                                   }
+                               }
+                               
+                           }];
+    
 }
 
 - (void)validateXFSToken:(NSString *)token completion:(CompletionBlockWithValue)completion {
     
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.5f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-         completion(@(YES));
-    });
+    PFQuery *q = [PFQuery queryWithClassName:@"PfsUser"];
+    [q whereKey:@"pledgeToken" equalTo:token];
+    [q findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        
+        if ( error || objects.count == 0 ) {
+            if ( completion ) {
+                completion(@{ @"error" : @"no-match" });
+            }
+            return;
+        }
+        
+        if ( completion ) {
+            PFObject *pfsu = objects.firstObject;
+            if ( [pfsu[@"viewsLeft"] intValue] <= 0 ) {
+                completion(@{ @"error" : @"no-views-left" });
+                return;
+            }
+            
+            completion(@{ @"success" : objects.firstObject });
+        }
+        
+    }];
    
     
 }
 
+#pragma mark - Error Handling
+- (NSDictionary*)parseErrors {
+    NSData *parseErrors = [NSData dataWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"pfsu-errors"
+                                                                                         ofType:@"json"]];
+    NSError *jsonError = nil;
+    NSDictionary *errors = [NSJSONSerialization JSONObjectWithData:parseErrors
+                                                           options:NSJSONReadingMutableLeaves
+                                                             error:&jsonError];
+    return errors;
+}
+
 #pragma mark - State handling
-
-
-
 - (void)setLastKnownBitrate:(double)lastKnownBitrate {
     double replacedBitrate = _lastKnownBitrate;
     _lastKnownBitrate = lastKnownBitrate;

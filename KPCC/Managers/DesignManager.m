@@ -109,7 +109,7 @@ static DesignManager *singleton = nil;
 
 - (NSString*)mainLiveStreamTitle {
     if ( [[UXmanager shared].settings userHasSelectedXFS] ) {
-        return @"X-Free Stream";
+        return @"KPCC Plus";
     }
     
     return @"KPCC Live";

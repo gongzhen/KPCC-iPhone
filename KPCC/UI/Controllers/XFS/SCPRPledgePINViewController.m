@@ -14,6 +14,7 @@
 #import "UXmanager.h"
 #import "SessionManager.h"
 #import "SCPRXFSViewController.h"
+#import "AnalyticsManager.h"
 
 @interface SCPRPledgePINViewController ()
 
@@ -51,9 +52,15 @@
     [self.submitButton addTarget:self
                           action:@selector(submitButtonTapped)
                 forControlEvents:UIControlEventTouchUpInside];
+
+#ifdef DEBUG
+    self.tokenField.text = @"49dd5kAOTgV";
+    self.pinNumber = @"49dd5kAOTgV";
+#endif
     
     [self examineAndApplyStyle];
     
+
     // Do any additional setup after loading the view from its nib.
 }
 
@@ -72,51 +79,115 @@
             self.spinner.alpha = 1.0f;
         } completion:^(BOOL finished) {
             [[SessionManager shared] validateXFSToken:self.pinNumber completion:^(id returnedObject) {
-                if ( [returnedObject isKindOfClass:[NSNumber class]] ) {
-                    NSNumber *result = (NSNumber*)returnedObject;
-                    SCPRXFSViewController *svc = (SCPRXFSViewController*)self.parentXFSViewController;
-                    if ( [result boolValue] ) {
-                        self.confirmed = YES;
+           
+                NSDictionary *result = (NSDictionary*)returnedObject;
+                SCPRXFSViewController *svc = (SCPRXFSViewController*)self.parentXFSViewController;
+                if ( result[@"success"] ) {
+                    self.confirmed = YES;
+                    
+                    PFObject *pfsu = result[@"success"];
+#ifndef DEBUG
+                    NSInteger viewsLeft = [pfsu[@"viewsLeft"] intValue];
+                    viewsLeft--;
+                    pfsu[@"viewsLeft"] = @(viewsLeft);
+#endif
+                    [[SessionManager shared] setUserIsSwitchingToKPCCPlus:YES];
+                    [[UXmanager shared].settings setUserHasSelectedXFS:YES];
+                    [[UXmanager shared].settings setXfsToken:self.pinNumber];
+                    [[UXmanager shared] persist];
+                    
+                    [self.tokenTable reloadData];
+                    [UIView animateWithDuration:0.25f animations:^{
+                        self.spinner.alpha = 0.0f;
+                        svc.cancelButton.alpha = 0.0f;
+                    } completion:^(BOOL finished) {
+                        [pfsu saveInBackground];
                         
-                        [[UXmanager shared].settings setUserHasSelectedXFS:YES];
-                        [[UXmanager shared].settings setXfsToken:self.pinNumber];
-                        [[UXmanager shared] persist];
+                        [[AnalyticsManager shared] logEvent:@"member-token-success"
+                                             withParameters:@{ @"token" : self.pinNumber }];
                         
-                        [self.tokenTable reloadData];
+                    }];
+                    
+                } else {
+                    
+                    if ( result[@"error"] ) {
+                        
+                        NSString *titleKey = [NSString stringWithFormat:@"%@-title",result[@"error"]];
+                        NSString *bodyKey = [NSString stringWithFormat:@"%@-body",result[@"error"]];
+                        NSString *emailSubjectKey = [NSString stringWithFormat:@"%@-email-subject",result[@"error"]];
+                        NSString *emailBodyKey = [NSString stringWithFormat:@"%@-email-body",result[@"error"]];
+                        
+                        NSDictionary *errors = [[SessionManager shared] parseErrors];
+                        
+                        NSString *errorTitle = errors[titleKey];
+                        NSString *errorBody = errors[bodyKey];
+                        NSString *errorEmailSubject = errors[emailSubjectKey];
+                        NSString *errorEmailBody = errors[emailBodyKey];
+                        
+                        if ( !errorTitle ) {
+                            errorTitle = @"Uh-Oh, something went wrong";
+                        }
+                        if ( !errorBody ) {
+                            errorBody = @"We're very sorry, but something unknown has prevented that token from processing. Please try again in a minute or contact us.";
+                        }
+                        if ( !errorEmailSubject ) {
+                            errorEmailSubject = @"I'm having issues with the iPhone app!";
+                        }
+                        if ( !errorEmailBody ) {
+                            errorEmailBody = @"Hello, I ran into some trouble while using the iPhone app and would appreciate some help.";
+                        }
+                        
                         [UIView animateWithDuration:0.25f animations:^{
                             self.spinner.alpha = 0.0f;
                             svc.cancelButton.alpha = 0.0f;
+                            
                         } completion:^(BOOL finished) {
                             
-                        }];
-                        
-                    } else {
-                        [UIView animateWithDuration:0.25f animations:^{
-                            self.spinner.alpha = 0.0f;
-                            svc.cancelButton.alpha = 0.0f;
-                        } completion:^(BOOL finished) {
-                            UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Uh-oh! We can't seem to find a match"
-                                                                                           message:@"The token you entered wasn't found in our system. Please try again or get in touch with our membership help desk."
+                            [self.tokenTable reloadData];
+                            
+                            UIAlertController *alert = [UIAlertController alertControllerWithTitle:errorTitle
+                                                                                           message:errorBody
                                                                                     preferredStyle:UIAlertControllerStyleAlert];
-                            UIAlertAction *contactUs = [UIAlertAction actionWithTitle:@"Contact Us:"
-                                                                                style:UIAlertActionStyleDefault
-                                                                              handler:^(UIAlertAction *action) {
-                                                                                  
-                                                                              }];
+                            
+                            if ( [MFMailComposeViewController canSendMail] ) {
+                                UIAlertAction *contactUs = [UIAlertAction actionWithTitle:@"Contact Us"
+                                                                                    style:UIAlertActionStyleDefault
+                                                                                  handler:^(UIAlertAction *action) {
+                                                                                      
+                                                                                      [[NSNotificationCenter defaultCenter] postNotificationName:@"xfs-confirmation-exit"
+                                                                                                                                          object:nil];
+                                                                                      
+                                                                                      [[NSNotificationCenter defaultCenter]
+                                                                                       postNotificationName:@"compose-mail"
+                                                                                       object:nil
+                                                                                       userInfo:@{ @"subject" : errorEmailSubject,
+                                                                                                   @"body" : errorEmailBody,
+                                                                                                   @"email" : @"membership@kpcc.org",
+                                                                                                   @"subtext" : @{ @"Token" : self.pinNumber,
+                                                                                                                   @"UID" : [[[UIDevice currentDevice] identifierForVendor] UUIDString] }}];
+                                                                                      
+                                                                                  }];
+                                [alert addAction:contactUs];
+                            }
+                            
                             UIAlertAction *ok = [UIAlertAction actionWithTitle:@"OK"
-                                                                         style:UIAlertActionStyleDestructive
+                                                                         style:UIAlertActionStyleCancel
                                                                        handler:^(UIAlertAction *action) {
                                                                            
                                                                        }];
                             [alert addAction:ok];
-                            [alert addAction:contactUs];
+                            
                             [self presentViewController:alert
                                                animated:YES
                                              completion:nil];
                             
+                            [[AnalyticsManager shared] logEvent:@"member-token-failure"
+                                                 withParameters:@{ @"token" : self.pinNumber }];
+                            
                         }];
                     }
                 }
+             
             }];
         }];
 

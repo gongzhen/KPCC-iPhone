@@ -43,7 +43,7 @@
     [self.cancelButton addTarget:self
                           action:@selector(cancelTapped)
                 forControlEvents:UIControlEventTouchUpInside];
-    [self.cancelButton.titleLabel proSemiBoldFontize];
+    [self.cancelButton.titleLabel proMediumFontize];
     
     [self positionChevron];
     
@@ -109,7 +109,7 @@
 
 - (void)positionChevron {
     if ( [[UXmanager shared].settings userHasSelectedXFS] ) {
-        self.chevronHorizontalAnchor.constant = 64.0f;
+        self.chevronHorizontalAnchor.constant = 80.0f;
     } else {
         self.chevronHorizontalAnchor.constant = 80.0f;
     }
@@ -233,7 +233,48 @@
     [[[Utils del] masterNavigationController] leftButtonTapped];
 }
 
+#pragma mark - Pull Down Menu
+- (void)menuItemSelected:(NSIndexPath *)indexPath {
+    if ( indexPath.row == 0 ) return;
+    
+    BOOL xfs = NO;
+    if ( indexPath.row == 1 ) {
+        xfs = NO;
+    } else {
+        xfs = YES;
+    }
+    
+    NSString *token = [[UXmanager shared].settings xfsToken];
+    NSString *eventToken = token ? token : @"unauthed";
+    
+    if ( xfs ) {
+        [[AnalyticsManager shared] logEvent:@"kpcc-plus-selected"
+                         withParameters:@{ @"token-status" : eventToken }];
+    }
+    
+    
+    if ( xfs && (!token || SEQ(token,@""))  ) {
+        
+        [self controlVisibility:NO];
+        
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"xfs-confirmation-entry"
+                                                            object:nil];
+    } else {
+        
+        BOOL incumbent = [[UXmanager shared].settings userHasSelectedXFS];
+        [[UXmanager shared].settings setUserHasSelectedXFS:xfs];
+        [[UXmanager shared] persist];
+        
+        if ( incumbent != xfs ) {
+            [[AudioManager shared] switchPlusMinusStreams];
+        }
+        
+    }
+}
 
+- (void)pullDownAnimated:(BOOL)open {
+    
+}
 
 /*
 #pragma mark - Navigation

@@ -193,31 +193,10 @@
 # pragma mark - TableView delegate
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     
-    if ( self.type == MenuTypeStandard ) {
-        [tableView deselectRowAtIndexPath:indexPath animated:YES];
-        [self.delegate menuItemSelected:indexPath];
-    } else {
-        if ( indexPath.row == 0 ) return;
-        
-        BOOL xfs = NO;
-        if ( indexPath.row == 1 ) {
-            xfs = NO;
-        } else {
-            xfs = YES;
-        }
-        
-        NSString *token = [[UXmanager shared].settings xfsToken];
-        if ( xfs && (!token || SEQ(token,@""))  ) {
-            
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"xfs-confirmation-entry"
-                                                                object:nil];
-            
-        } else {
-            [[UXmanager shared].settings setUserHasSelectedXFS:xfs];
-            [[UXmanager shared] persist];
-            [self.menuList reloadData];
-        }
-    }
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    [self.delegate menuItemSelected:indexPath];
+    [self.menuList reloadData];
+    
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {

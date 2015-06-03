@@ -8,9 +8,10 @@
 
 #import <UIKit/UIKit.h>
 
+@import MessageUI;
+
 #define kTallSpacing 36.0f
 #define kShortSpacing 8.0f
-
 #define kPlaceholderPINString @"Enter your token"
 
 @interface SCPRPledgePINViewController : UIViewController<UITableViewDataSource,UITableViewDelegate,UITextFieldDelegate>

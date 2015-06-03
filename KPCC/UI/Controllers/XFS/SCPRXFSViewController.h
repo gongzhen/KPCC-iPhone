@@ -8,8 +8,9 @@
 
 #import <UIKit/UIKit.h>
 #import "SCPRBalloonViewController.h"
+#import "SCPRPullDownMenu.h"
 
-@interface SCPRXFSViewController : UIViewController
+@interface SCPRXFSViewController : UIViewController<SCPRMenuDelegate>
 
 @property (nonatomic, strong) IBOutlet UIImageView *chevronImage;
 @property (nonatomic, strong) IBOutlet UIButton *deployButton;

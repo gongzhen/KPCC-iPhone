@@ -1465,6 +1465,11 @@ static const NSString *ItemStatusContext;
     return [self.audioPlayer rate] > 0.0f;
 }
 
+- (BOOL)isActiveForAudioMode:(AudioMode)mode {
+    if ( self.currentAudioMode != mode ) return NO;
+    return self.status == StreamStatusPaused || self.status == StreamStatusPlaying;
+}
+
 - (void)startStream {
     [self playAudio];
 }
@@ -1530,6 +1535,17 @@ static const NSString *ItemStatusContext;
         }
     }
 
+}
+
+- (void)switchPlusMinusStreams {
+    if ( [self isActiveForAudioMode:AudioModeLive] ) {
+        [self adjustAudioWithValue:-0.1f
+                                         completion:^{
+                                             [[AudioManager shared] stopAudio];
+                                             [[AudioManager shared] setSmooth:YES];
+                                             [[AudioManager shared] playAudio];
+                                         }];
+    }
 }
 
 - (void)pauseAudio {

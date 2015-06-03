@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "Utils.h"
 #import "Program.h"
+#import "Parse.h"
 
 typedef NS_ENUM(NSUInteger, OnDemandFinishedReason) {
     OnDemandFinishedReasonEpisodeEnd = 0,
@@ -69,6 +70,7 @@ static NSInteger kProgramPollingPressure = 5;
 @property BOOL userLeavingForClickthrough;
 @property BOOL updaterArmed;
 @property BOOL sleepTimerArmed;
+@property BOOL xFreeStreamIsAvailable;
 
 @property (nonatomic) double lastKnownBitrate;
 @property NSInteger latestDriftValue;
@@ -117,7 +119,7 @@ static NSInteger kProgramPollingPressure = 5;
 - (BOOL)sessionIsInRecess:(BOOL)respectPause;
 
 // XFS
-- (BOOL)xFreeStreamIsAvailable;
+- (void)xFreeStreamIsAvailableWithCompletion:(CompletionBlock)completion;
 - (void)validateXFSToken:(NSString*)token completion:(CompletionBlockWithValue)completion;
 
 @property BOOL sessionIsHot;
@@ -127,6 +129,7 @@ static NSInteger kProgramPollingPressure = 5;
 @property BOOL seekForwardRequested;
 @property BOOL prerollDirty;
 @property BOOL genericImageForProgram;
+@property BOOL userIsSwitchingToKPCCPlus;
 
 - (void)handleSessionReactivation;
 - (void)invalidateSession;
@@ -148,6 +151,8 @@ static NSInteger kProgramPollingPressure = 5;
 - (NSString*)prettyStringForPauseExplanation:(PauseExplanation)explanation;
 
 - (long)bufferLength;
+
+- (NSDictionary*)parseErrors;
 
 #ifdef TESTING_PROGRAM_CHANGE
 @property (NS_NONATOMIC_IOSONLY, readonly, strong) Program *fakeProgram;

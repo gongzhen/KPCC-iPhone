@@ -224,6 +224,8 @@ setForOnDemandUI;
         [self.programTitleYConstraint setConstant:self.initialProgramTitleConstant];
     }
     
+    [[Utils del] applyXFSButton];
+    
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(lockUI:)
                                                  name:@"network-status-fail"
@@ -272,6 +274,11 @@ setForOnDemandUI;
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(xfsExit)
                                                  name:@"xfs-confirmation-exit"
+                                               object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(composeMail:)
+                                                 name:@"compose-mail"
                                                object:nil];
     
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
@@ -348,6 +355,11 @@ setForOnDemandUI;
                                                  name:@"program-has-changed"
                                                object:nil];
     
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(xfsAvailability)
+                                                 name:@"pledge-drive-status-updated"
+                                               object:nil];
+    
     [self.queueBlurView setAlpha:0.0];
     [self.queueBlurView setTintColor:[UIColor clearColor]];
     [self.queueDarkBgView setAlpha:0.0];
@@ -415,7 +427,7 @@ setForOnDemandUI;
     
     [self primeScrubber];
     [self setupScroller];
-    [[Utils del] applyXFSButton];
+    
     
     [SCPRCloakViewController cloakWithCustomCenteredView:nil cloakAppeared:^{
         if ( [[UXmanager shared] userHasSeenOnboarding] ) {
@@ -483,9 +495,6 @@ setForOnDemandUI;
     }
     
     self.viewHasAppeared = YES;
-    
-
-    [[Utils del] controlXFSAvailability:[[SessionManager shared] xFreeStreamIsAvailable]];
 
 }
 
@@ -1266,6 +1275,10 @@ setForOnDemandUI;
     self.lockPlayback = !play;
     
     [self.jogShuttle endAnimations];
+    
+    if ( [self cloaked] ) {
+        [self decloakForXFS];
+    }
     
     [[SessionManager shared] fetchCurrentProgram:^(id returnedObject) {
         
@@ -2947,6 +2960,7 @@ setForOnDemandUI;
     [[UXmanager shared] hideMenuButton];
     
     [self.pulldownMenu primeWithType:MenuTypeXFS];
+    [self.pulldownMenu setDelegate:[[Utils del] xfsInterface]];
     [self.pulldownMenu openDropDown:YES];
     
     [UIView animateWithDuration:0.33f animations:^{
@@ -2972,6 +2986,8 @@ setForOnDemandUI;
         [[UXmanager shared] showMenuButton];
         
         [self.pulldownMenu primeWithType:MenuTypeStandard];
+        [self.pulldownMenu setDelegate:self];
+        
         self.streamSelectorOpen = NO;
         self.pulldownMenu.alpha = 0.0f;
     }];
@@ -2979,10 +2995,16 @@ setForOnDemandUI;
 
 - (void)xfsHidden {
     [self decloakForXFS];
+    
+    [[AnalyticsManager shared] logEvent:@"stream-selector-closed"
+                         withParameters:nil];
 }
 
 - (void)xfsShown {
     [self cloakForXFS];
+    
+    [[AnalyticsManager shared] logEvent:@"stream-selector-opened"
+                         withParameters:nil];
 }
 
 - (void)xfsToggle {
@@ -3020,6 +3042,34 @@ setForOnDemandUI;
                                                 animated:YES];
     
     [self.pulldownMenu.menuList reloadData];
+    
+    if ( [[SessionManager shared] userIsSwitchingToKPCCPlus] ) {
+        [[SessionManager shared] setUserIsSwitchingToKPCCPlus:NO];
+        if ( [[AudioManager shared] isActiveForAudioMode:AudioModeLive] ) {
+            [[AudioManager shared] switchPlusMinusStreams];
+        } else {
+            [self goLive:YES];
+        }
+    }
+}
+
+- (void)xfsAvailability {
+    BOOL available = [[SessionManager shared] xFreeStreamIsAvailable];
+    [[Utils del] controlXFSAvailability:available];
+    
+    if ( !available ) {
+        
+        BOOL xfs = [[UXmanager shared].settings userHasSelectedXFS];
+        [[UXmanager shared].settings setUserHasSelectedXFS:NO];
+        [[UXmanager shared].settings setXfsToken:nil];
+        [[UXmanager shared] persist];
+        
+        if ( xfs ) {
+            [[AudioManager shared] switchPlusMinusStreams];
+        }
+        
+    }
+    
 }
 
 #pragma mark - Util
@@ -3053,7 +3103,6 @@ setForOnDemandUI;
     if ( !suppressDropdown ) {
         [pulldownMenu openDropDown:animated];
     }
-    
   
     if (setForOnDemandUI){
         POPBasicAnimation *onDemandElementsFade = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
@@ -3125,9 +3174,9 @@ setForOnDemandUI;
         self.navigationItem.title = kMainLiveStreamTitle;
     }
     
-    if (animated) {
-        [pulldownMenu closeDropDown:animated];
-    }
+
+    [pulldownMenu closeDropDown:animated];
+    
     
     NSNumber *restoredAlpha = [[NetworkManager shared] networkDown] ? @.45f : @1;
     
@@ -3895,6 +3944,59 @@ setForOnDemandUI;
         [self updateDataForUI];
     }
     
+}
+
+#pragma mark - Compose Mail
+- (void)composeMail:(NSNotification *)note {
+    if ( [MFMailComposeViewController canSendMail] ) {
+        
+        MFMailComposeViewController *compose = [[MFMailComposeViewController alloc] init];
+        NSDictionary *ui = [note userInfo];
+        if ( ui[@"subject"] ) {
+            [compose setSubject:ui[@"subject"]];
+        }
+        
+        NSString *body = ui[@"body"];
+        if ( body ) {
+            if ( ui[@"subtext"] ) {
+                NSDictionary *st = ui[@"subtext"];
+                NSString *total = @"";
+                for ( NSString *key in st.allKeys ) {
+                    total = [total stringByAppendingFormat:@"%@ - %@\n",key,st[key]];
+                }
+                body = [body stringByAppendingFormat:@"\n\n%@",total];
+            }
+            [compose setMessageBody:body
+                             isHTML:NO];
+        }
+        
+        NSString *email = ui[@"email"];
+        if ( email ) {
+            [compose setToRecipients:@[email]];
+        }
+        
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"mail-compose-will-appear"
+                                                            object:nil];
+        
+
+        
+        
+        [self presentViewController:compose
+                           animated:YES
+                         completion:^{
+                             [self pushToHiddenVector:[[[Utils del] xfsInterface] view]];
+                             [self commitHiddenVector];
+                         }];
+        
+        compose.navigationBar.tintColor = [UIColor whiteColor];
+        
+    }
+}
+
+- (void)mailComposeController:(MFMailComposeViewController *)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError *)error {
+    [self popHiddenVector];
+    
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 /*

@@ -67,6 +67,5 @@ typedef NS_ENUM(NSInteger, NetworkHealth) {
 - (void)setupFloatingReachabilityWithHost:(NSString*)host;
 - (void)applyNotifiersToReachability:(KSReachability*)reachability;
 
-- (BOOL)wifi;
 
 @end
