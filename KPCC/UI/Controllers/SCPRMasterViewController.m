@@ -495,10 +495,6 @@ setForOnDemandUI;
 
 }
 
-- (void)viewWillDisappear:(BOOL)animated {
-    
-}
-
 - (void)viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
 }
@@ -564,11 +560,10 @@ setForOnDemandUI;
     self.upcomingScreen.view.frame = self.upcomingScreen.view.frame;
     self.cpFullDetailScreen.view.frame = self.cpFullDetailScreen.view.frame;
     
-    CGFloat mod = 64.0f;
+
     CGFloat push = 0.0f;
     CGFloat heightHint = [Utils isThreePointFive] ? self.view.frame.size.height-64.0f : self.liveStreamView.frame.size.height;
     if ( [Utils isThreePointFive] ) {
-        mod = 64.0f;
         push = 88.0f;
     }
     
@@ -1381,12 +1376,7 @@ setForOnDemandUI;
             case RewindDistanceBeginning:
             default:
                 if (cProgram) {
-                    if ( self.dirtyFromRewind ) {
-                        [[AudioManager shared] specialSeekToDate:cProgram.soft_starts_at];
-                    } else {
-                        //[[AudioManager shared] seekToDate:[cProgram.soft_starts_at dateByAddingTimeInterval:30.0f] forward:NO failover:NO];
-                        [[AudioManager shared] backwardSeekToBeginningOfProgram];
-                    }
+                    [[AudioManager shared] backwardSeekToBeginningOfProgram];
                 } 
                 break;
                 

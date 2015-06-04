@@ -87,6 +87,8 @@
                                                      startAngle:startAngle
                                                        endAngle:endAngle
                                                       clockwise:YES];
+        
+        CGPathRelease(currentLinePath);
         currentLinePath = CGPathCreateMutableCopy(circlePath.CGPath);
         
         UIBezierPath *circleSeatPath = [UIBezierPath bezierPathWithArcCenter:arcCenter
@@ -99,6 +101,8 @@
         
         self.containerBarLine = [CAShapeLayer layer];
         self.containerBarLine.path = seatLinePath;
+        CGPathRelease(seatLinePath);
+        
         self.containerBarLine.strokeColor = self.containerTintColor.CGColor;
         self.containerBarLine.strokeStart = 0.0f;
         self.containerBarLine.strokeEnd = 1.0f;
@@ -112,6 +116,8 @@
     
     self.currentBarLine = [CAShapeLayer layer];
     self.currentBarLine.path = currentLinePath;
+    CGPathRelease(currentLinePath);
+    
     self.currentBarLine.strokeColor = self.currentTintColor.CGColor;
     self.currentBarLine.strokeStart = 0.0f;
     self.currentBarLine.strokeEnd = 0.0f;
@@ -130,6 +136,9 @@
     self.viewAsTouchableScrubberView.parentScrubberController = self;
     
     self.view.backgroundColor = circular ? [UIColor clearColor] : [[UIColor virtualWhiteColor] translucify:0.2];
+    
+    
+
 }
 
 - (void)applyPercentageToScrubber:(CGFloat)percentage {

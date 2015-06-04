@@ -36,20 +36,7 @@
 }
 
 - (void)viewDidAppear:(BOOL)animated {
-    
-    /*UIUserNotificationSettings *settings = [[UIApplication sharedApplication] currentUserNotificationSettings];
-    if ( settings.types == UIUserNotificationTypeNone ) {
-        [[[UIAlertView alloc] initWithTitle:@"Push Notifications Required"
-                                    message:@"To use this feature, please enable push notifications for KPCC in your settings"
-                                   delegate:nil
-                          cancelButtonTitle:@"OK"
-                          otherButtonTitles:nil] show];
-        self.scheduleButton.alpha = 0.45;
-        self.scheduleButton.enabled = NO;
-    } else {
-        self.scheduleButton.alpha = 1.0f;
-        self.scheduleButton.enabled = YES;
-    }*/
+    [super viewDidAppear:animated];
 
 }
 
@@ -251,6 +238,10 @@
 
 - (SCPRTouchableScrubberView*)scrubbableView {
     return self.scrubbingSurface;
+}
+
+- (double)maxPercentage {
+    return 1.0f;
 }
 
 - (void)didReceiveMemoryWarning {

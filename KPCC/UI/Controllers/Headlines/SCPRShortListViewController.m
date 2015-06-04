@@ -97,6 +97,7 @@ static NSString *kShortListMenuURL = @"http://www.scpr.org/short-list/latest#no-
 }
 
 - (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
     [[DesignManager shared] treatBar];
 }
 

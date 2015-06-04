@@ -224,9 +224,12 @@ typedef NS_ENUM(NSUInteger, StreamStatus) {
 - (void)updateNowPlayingInfoWithAudio:(id)audio;
 
 - (void)seekToPercent:(CGFloat)percent;
+
+/*
 - (void)seekToDate:(NSDate *)date;
 - (void)seekToDate:(NSDate *)date forward:(BOOL)forward failover:(BOOL)failover;
-- (void)specialSeekToDate:(NSDate*)date;
+- (void)specialSeekToDate:(NSDate*)date;*/
+
 - (void)recalibrateAfterScrub;
 
 - (void)forwardSeekLiveWithCompletion:(CompletionBlock)completion;
@@ -249,7 +252,7 @@ typedef NS_ENUM(NSUInteger, StreamStatus) {
 
 - (BOOL)isPlayingAudio;
 - (BOOL)isActiveForAudioMode:(AudioMode)mode;
-- (BOOL)verifyPositionAuthenticity;
+//- (BOOL)verifyPositionAuthenticity;
 - (void)invalidateTimeObserver;
 - (void)startObservingTime;
 

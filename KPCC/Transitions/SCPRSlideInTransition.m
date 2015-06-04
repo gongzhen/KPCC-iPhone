@@ -30,7 +30,6 @@
     CGRect menuFrameOffScreen;
     CGRect menuFrameInScreen;
     CGRect programsFrameOffScreen;
-    CGRect programsFrameInScreen;
 
     // Grab reference to Menu
     UIView *menuView;
@@ -66,7 +65,7 @@
         centerOffScreen = inView.center;
         centerOffScreen.x = (-1)*inView.frame.size.width;
 
-        programsFrameInScreen = programsTableView.frame;
+        //programsFrameInScreen = programsTableView.frame;
         programsFrameOffScreen = programsTableView.frame;
         programsFrameOffScreen.origin.x = programsTableView.frame.size.width;
 

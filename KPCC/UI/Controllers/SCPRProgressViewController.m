@@ -69,6 +69,8 @@
     
     CGMutablePathRef currentLinePath = CGPathCreateMutable();
     self.liveBarLine.path = liveLinePath;
+    CGPathRelease(liveLinePath);
+    
     self.liveBarLine.strokeColor = self.liveTintColor.CGColor;
     self.liveBarLine.strokeStart = 0.0f;
     self.liveBarLine.strokeEnd = 0.0f;
@@ -82,6 +84,8 @@
     CGPathAddLines(currentLinePath, nil, lPts, 2);
     
     self.currentBarLine.path = currentLinePath;
+    CGPathRelease(currentLinePath);
+    
     self.currentBarLine.strokeColor = self.currentTintColor.CGColor;
     self.currentBarLine.strokeStart = 0.0f;
     self.currentBarLine.strokeEnd = 0.0f;
@@ -98,6 +102,7 @@
     
     //self.currentProgressView.backgroundColor = [UIColor greenColor];
     //self.liveProgressView.backgroundColor = [UIColor blueColor];
+    
     
     [self.view layoutIfNeeded];
     
