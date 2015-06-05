@@ -61,6 +61,8 @@
     [self examineAndApplyStyle];
     
 
+    self.tokenField.returnKeyType = UIReturnKeyDone;
+    
     // Do any additional setup after loading the view from its nib.
 }
 
@@ -312,6 +314,11 @@
 }
 
 #pragma mark - UITextField
+- (BOOL)textFieldShouldReturn:(UITextField *)textField {
+    [textField resignFirstResponder];
+    return YES;
+}
+
 - (void)textFieldDidBeginEditing:(UITextField *)textField {
     UITextPosition *beginning = [textField beginningOfDocument];
     [textField setSelectedTextRange:[textField textRangeFromPosition:beginning
