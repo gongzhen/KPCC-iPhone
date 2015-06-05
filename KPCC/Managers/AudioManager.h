@@ -252,7 +252,6 @@ typedef NS_ENUM(NSUInteger, StreamStatus) {
 
 - (BOOL)isPlayingAudio;
 - (BOOL)isActiveForAudioMode:(AudioMode)mode;
-//- (BOOL)verifyPositionAuthenticity;
 - (void)invalidateTimeObserver;
 - (void)startObservingTime;
 

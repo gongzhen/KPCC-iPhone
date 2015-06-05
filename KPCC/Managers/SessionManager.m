@@ -789,8 +789,8 @@
 
 #pragma mark - XFS
 - (void)xFreeStreamIsAvailableWithCompletion:(CompletionBlock)completion {
-    NSTimeInterval now = [[NSDate date] timeIntervalSince1970];
-    NSString *endpoint = [NSString stringWithFormat:@"%@/schedule?starts_at=%ld&length=14400",kServerBase,(long)now];
+ 
+    NSString *endpoint = [NSString stringWithFormat:@"%@/schedule?pledge_status=true",kServerBase];
     NSURL *url = [NSURL URLWithString:endpoint];
     NSURLRequest *request = [NSURLRequest requestWithURL:url];
     [NSURLConnection sendAsynchronousRequest:request
@@ -811,18 +811,13 @@
 #endif
                                    if ( responseObject[@"pledge_drive"] ) {
                                        
-                                       //BOOL incumbent = [self xFreeStreamIsAvailable];
                                        BOOL updated = [responseObject[@"pledge_drive"] boolValue];
 
                                        [self setXFreeStreamIsAvailable:updated];
-                                       
-                                       
-                                       //if ( incumbent != updated ) {
                                        dispatch_async(dispatch_get_main_queue(), ^{
                                            [[NSNotificationCenter defaultCenter] postNotificationName:@"pledge-drive-status-updated"
                                                                                                object:nil];
                                        });
-                                       //}
                                        
                                    } else {
                                        
