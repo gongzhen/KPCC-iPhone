@@ -75,7 +75,7 @@ static AnalyticsManager *singleton = nil;
         self.kTracker = [[KochavaTracker alloc] initKochavaWithParams:kDict];
     }
     
-    [NewRelicAgent startWithApplicationToken:@"AA04eae1ca71c7b69963c9495552336ff578454833"];
+    [NewRelicAgent startWithApplicationToken:globalConfig[@"NewRelic"][@"production"]];
     
 #endif
     

@@ -814,6 +814,7 @@
                                        BOOL updated = [responseObject[@"pledge_drive"] boolValue];
 
                                        [self setXFreeStreamIsAvailable:updated];
+                                       
                                        dispatch_async(dispatch_get_main_queue(), ^{
                                            [[NSNotificationCenter defaultCenter] postNotificationName:@"pledge-drive-status-updated"
                                                                                                object:nil];
@@ -823,7 +824,6 @@
                                        
                                        [self setXFreeStreamIsAvailable:NO];
                                  
-                                       
                                        dispatch_async(dispatch_get_main_queue(), ^{
                                            [[NSNotificationCenter defaultCenter] postNotificationName:@"pledge-drive-status-updated"
                                                                                                object:nil];
