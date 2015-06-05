@@ -2159,7 +2159,7 @@ setForOnDemandUI;
     self.timeLabelOnDemand.text = @"LOADING...";
     self.queueLoading = YES;
     
-    [[Utils del] controlXFSAvailability:NO];
+
     
     [[SessionManager shared] setLocalLiveTime:0.0f];
     
@@ -2193,6 +2193,7 @@ setForOnDemandUI;
             [self decloakForMenu:NO];
         }
         
+        [[Utils del] controlXFSAvailability:NO];
         [self adjustScrubbingState];
         
         [[SessionManager shared] setCurrentProgram:nil];

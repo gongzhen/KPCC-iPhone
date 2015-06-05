@@ -25,12 +25,6 @@
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vNz-bv-wIF" userLabel="textContainerView">
                     <rect key="frame" x="0.0" y="16" width="600" height="52"/>
                     <subviews>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="It's pledge-drive time! KPCC members can tap here to access the x-free stream." lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="InM-hx-3Hg">
-                            <rect key="frame" x="8" y="4" width="523" height="44"/>
-                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                            <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                            <nil key="highlightedColor"/>
-                        </label>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="PE3-xB-Vaj" userLabel="dividerView">
                             <rect key="frame" x="549" y="10" width="1" height="36"/>
                             <color key="backgroundColor" white="1" alpha="0.40000000000000002" colorSpace="calibratedWhite"/>
@@ -52,6 +46,12 @@
                                 <constraint firstAttribute="width" constant="48" id="x4b-8b-3p3"/>
                             </constraints>
                         </imageView>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="It's pledge-drive time! KPCC members can tap here to access KPCC Plus." lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="InM-hx-3Hg">
+                            <rect key="frame" x="8" y="4" width="523" height="44"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                            <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                            <nil key="highlightedColor"/>
+                        </label>
                     </subviews>
                     <color key="backgroundColor" red="0.24812564577554086" green="0.70394632596636098" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                     <constraints>
