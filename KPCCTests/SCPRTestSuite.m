@@ -30,6 +30,7 @@
     [super tearDown];
 }
 
+/*
 - (void)testInitialAudioMode {
     // This is an example of a functional test case.
     XCTAssert([[AudioManager shared] currentAudioMode] == AudioModeNeutral, @"On launch, the initial audio mode is neutral");
@@ -52,5 +53,6 @@
         // Put the code you want to measure the time of here.
     }];
 }
+*/
 
 @end
