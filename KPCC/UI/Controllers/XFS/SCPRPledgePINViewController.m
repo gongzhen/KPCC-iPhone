@@ -144,8 +144,6 @@
                         
                         [UIView animateWithDuration:0.25f animations:^{
                             self.spinner.alpha = 0.0f;
-                            svc.cancelButton.alpha = 0.0f;
-                            
                         } completion:^(BOOL finished) {
                             
                             [self.tokenTable reloadData];
