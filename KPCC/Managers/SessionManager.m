@@ -876,6 +876,10 @@
 }
 
 #pragma mark - State handling
+- (BOOL)virtualLiveAudioMode {
+    return ([[AudioManager shared] currentAudioMode] == AudioModeLive || [[AudioManager shared] currentAudioMode] == AudioModeNeutral);
+}
+
 - (void)setLastKnownBitrate:(double)lastKnownBitrate {
     double replacedBitrate = _lastKnownBitrate;
     _lastKnownBitrate = lastKnownBitrate;

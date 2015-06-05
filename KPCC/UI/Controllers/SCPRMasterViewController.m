@@ -3240,7 +3240,7 @@ setForOnDemandUI;
     
     [self popHiddenVector];
     
-    [[Utils del] controlXFSAvailability:([AudioManager shared].currentAudioMode == AudioModeLive)];
+    [[Utils del] controlXFSAvailability:[[SessionManager shared] virtualLiveAudioMode]];
     [self adjustScrollingState];
     [self adjustScrubbingState];
     

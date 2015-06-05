@@ -250,6 +250,8 @@
             self.headDescriptionLabel.text = @"Enter your pledge drive token to gain access to the pledge-free stream";
         }
         
+        self.headerCell.selectionStyle = UITableViewCellSelectionStyleNone;
+        
         [self.headerCell layoutIfNeeded];
         return self.headerCell;
     }
@@ -259,6 +261,7 @@
                                        withStyle:SculptingStylePeriwinkle
                                          andText:@"Close and start listening"];
             
+            self.submitCell.selectionStyle = UITableViewCellSelectionStyleNone;
             return self.submitCell;
         }
         
@@ -267,10 +270,11 @@
                                      andText:@"Submit"];
         
 
-        
+        self.entryCell.selectionStyle = UITableViewCellSelectionStyleNone;
         return self.entryCell;
     }
     
+    self.submitCell.selectionStyle = UITableViewCellSelectionStyleNone;
     return self.submitCell;
     
 }

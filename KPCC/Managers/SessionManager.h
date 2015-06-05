@@ -131,6 +131,8 @@ static NSInteger kProgramPollingPressure = 5;
 @property BOOL genericImageForProgram;
 @property BOOL userIsSwitchingToKPCCPlus;
 
+- (BOOL)virtualLiveAudioMode;
+
 - (void)handleSessionReactivation;
 - (void)invalidateSession;
 - (void)expireSession;
