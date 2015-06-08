@@ -230,6 +230,7 @@
 
     [cell.menuItemLabel setTextColor:[self cellTextColor]];
     cell.menuItemLabel.font = [self cellFontForIndex:indexPath.row];
+    cell.parentMenuTable = self;
     
     if ( self.type == MenuTypeStandard ) {
         

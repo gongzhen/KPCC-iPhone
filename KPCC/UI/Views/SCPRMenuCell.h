@@ -8,11 +8,14 @@
 
 #import <UIKit/UIKit.h>
 
+@class SCPRPullDownMenu;
+
 @interface SCPRMenuCell : UITableViewCell
 
 @property (nonatomic,strong) UILabel* menuItemLabel;
 @property (nonatomic,strong) UIImageView* iconImageView;
 @property (nonatomic,strong) UIImageView* rightChevronImageView;
+@property (nonatomic,weak) SCPRPullDownMenu *parentMenuTable;
 
 - (void)nudge;
 - (void)shiftForIconWithImage:(UIImage*)image;
