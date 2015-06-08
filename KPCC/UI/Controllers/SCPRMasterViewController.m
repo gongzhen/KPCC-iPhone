@@ -489,8 +489,6 @@ setForOnDemandUI;
         self.navigationItem.title = kMainLiveStreamTitle;
     }
     
-
-    
     self.viewHasAppeared = YES;
 
 }
@@ -3948,9 +3946,14 @@ setForOnDemandUI;
 
 #pragma mark - Compose Mail
 - (void)composeMail:(NSNotification *)note {
+    
+    if ( self.mailCompositionDisplaying ) return;
+    
     if ( [MFMailComposeViewController canSendMail] ) {
+        self.mailCompositionDisplaying = YES;
+        self.mComposer = [[MFMailComposeViewController alloc] init];
+        MFMailComposeViewController *compose = self.mComposer;
         
-        MFMailComposeViewController *compose = [[MFMailComposeViewController alloc] init];
         NSDictionary *ui = [note userInfo];
         if ( ui[@"subject"] ) {
             [compose setSubject:ui[@"subject"]];
@@ -3979,7 +3982,7 @@ setForOnDemandUI;
                                                             object:nil];
         
 
-        
+        compose.mailComposeDelegate = self;
         
         [self presentViewController:compose
                            animated:YES
@@ -3996,8 +3999,14 @@ setForOnDemandUI;
 - (void)mailComposeController:(MFMailComposeViewController *)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError *)error {
     [self popHiddenVector];
     
-    [self dismissViewControllerAnimated:YES completion:nil];
+    [[[Utils del] xfsInterface] orangeInterface];
+    
+    [self dismissViewControllerAnimated:YES completion:^{
+        self.mComposer = nil;
+        self.mailCompositionDisplaying = NO;
+    }];
 }
+
 
 /*
  #pragma mark - Navigation

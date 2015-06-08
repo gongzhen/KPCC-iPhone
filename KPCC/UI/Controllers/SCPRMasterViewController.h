@@ -285,5 +285,7 @@
 - (void)showBalloon;
 
 - (void)composeMail:(NSNotification*)note;
+@property (nonatomic, strong) MFMailComposeViewController *mComposer;
+@property BOOL mailCompositionDisplaying;
 
 @end

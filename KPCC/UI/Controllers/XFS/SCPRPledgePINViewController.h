@@ -28,6 +28,7 @@
 @property (nonatomic, strong) IBOutlet UIActivityIndicatorView *spinner;
 @property (nonatomic, strong) IBOutlet UITableView *tokenTable;
 
+
 @property (nonatomic, weak) id parentXFSViewController;
 
 @property NSString *pinNumber;
