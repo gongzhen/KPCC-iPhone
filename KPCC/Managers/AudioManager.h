@@ -231,7 +231,6 @@ typedef NS_ENUM(NSUInteger, StreamStatus) {
 - (void)startObservingTime;
 
 - (NSString*)avPlayerSessionString;
-
 - (NSDate*)cookDateForActualSchedule:(NSDate*)date;
 
 #ifdef DEBUG

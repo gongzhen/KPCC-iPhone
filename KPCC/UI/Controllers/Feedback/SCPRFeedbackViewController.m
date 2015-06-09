@@ -42,9 +42,19 @@ static NSString *kCommentsPlaceholder = @"... Add your comments here";
     self.descriptionInputView.delegate = self;
     self.emailTextField.delegate = self;
     self.splashBlurView.blurRadius = 7.0f;
-    self.splashView.image = [UIImage imageNamed:@"onboarding-tile.jpg"];
+    
+    UIImage *img = [[DesignManager shared] currentBlurredLiveImage];
+    if ( [[AudioManager shared] currentAudioMode] == AudioModeOnDemand ) {
+        UIImage *odImg = [[DesignManager shared] currentBlurredImage];
+        if ( odImg ) {
+            img = odImg;
+        }
+    }
+    
+    self.splashView.image = img;
+    
     self.navigationItem.title = @"Feedback";
-    self.splashView.alpha = 0.33;
+    self.splashView.alpha = 1.0f;
     
     self.feedbackTable.separatorColor = [UIColor lightGrayColor];
     
