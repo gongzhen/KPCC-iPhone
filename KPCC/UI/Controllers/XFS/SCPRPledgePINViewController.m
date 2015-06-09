@@ -228,11 +228,7 @@
 
 - (void)examineAndApplyStyle {
     self.tokenField.textColor = [UIColor blackColor];
-    if ( SEQ(@"",self.tokenField.text) ) {
-        UITextPosition *beginning = [self.tokenField beginningOfDocument];
-        [self.tokenField setSelectedTextRange:[self.tokenField textRangeFromPosition:beginning
-                                                              toPosition:beginning]];
-        
+    if ( SEQ(@"",self.pinNumber) ) {
         [UIView animateWithDuration:0.25f animations:^{
             self.submitButton.alpha = 0.4f;
         } completion:^(BOOL finished) {
@@ -240,7 +236,6 @@
         }];
         
     } else {
-        
         [UIView animateWithDuration:0.25f animations:^{
             self.submitButton.alpha = 1.0f;
         } completion:^(BOOL finished) {
@@ -364,18 +359,14 @@
 }
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
-    /*if ( SEQ(string,@"") ) {
-        if ( !SEQ(self.pinNumber,@"") ) {
-            self.pinNumber = [self.pinNumber substringToIndex:self.pinNumber.length-1];
-        }
+    
+    self.pinNumber = textField.text;
+    if ( SEQ(string,@"") ) {
+        self.pinNumber = [self.pinNumber substringToIndex:[self.pinNumber length]-1];
     } else {
-        if ( SEQ(self.pinNumber,@"") ) {
-            textField.text = @"";
-        }
         self.pinNumber = [self.pinNumber stringByAppendingString:string];
     }
-    
-    [self examineAndApplyStyle];*/
+    [self examineAndApplyStyle];
     
     return YES;
 }
