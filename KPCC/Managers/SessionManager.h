@@ -121,6 +121,9 @@ static NSInteger kProgramPollingPressure = 5;
 // XFS
 - (void)xFreeStreamIsAvailableWithCompletion:(CompletionBlock)completion;
 - (void)validateXFSToken:(NSString*)token completion:(CompletionBlockWithValue)completion;
+#ifdef DEBUG
+@property NSInteger numberOfChecks;
+#endif
 
 @property BOOL sessionIsHot;
 @property BOOL rewindSessionIsHot;

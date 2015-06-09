@@ -68,6 +68,6 @@
 // XFS
 - (void)applyXFSButton;
 - (void)controlXFSAvailability:(BOOL)available;
-- (void)showCoachingBalloon;
+- (void)showCoachingBalloonWithText:(NSString*)text;
 
 @end

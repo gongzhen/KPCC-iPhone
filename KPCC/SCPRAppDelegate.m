@@ -630,11 +630,17 @@
 }
 
 - (void)controlXFSAvailability:(BOOL)available {
+    
+    // Override here, kind of kludgy, but...
+    if ( ![[SessionManager shared] xFreeStreamIsAvailable] ) {
+        available = NO;
+    }
+    
     self.xfsInterface.view.alpha = available ? 1.0f : 0.0f;
 }
 
-- (void)showCoachingBalloon {
-    [self.xfsInterface showCoachingBalloon];
+- (void)showCoachingBalloonWithText:(NSString *)text {
+    [self.xfsInterface showCoachingBalloonWithText:text];
 }
 
 

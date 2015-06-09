@@ -47,7 +47,7 @@
                             </constraints>
                         </imageView>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="It's pledge-drive time! KPCC members can tap here to access KPCC Plus." lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="InM-hx-3Hg">
-                            <rect key="frame" x="8" y="4" width="523" height="44"/>
+                            <rect key="frame" x="8" y="4" width="533" height="44"/>
                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
                             <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                             <nil key="highlightedColor"/>
@@ -66,7 +66,7 @@
                         <constraint firstItem="InM-hx-3Hg" firstAttribute="top" secondItem="vNz-bv-wIF" secondAttribute="top" constant="4" id="fL8-zl-6jF"/>
                         <constraint firstAttribute="bottom" secondItem="InM-hx-3Hg" secondAttribute="bottom" constant="4" id="fci-8V-mu4"/>
                         <constraint firstAttribute="height" constant="52" id="gs8-w3-CzH"/>
-                        <constraint firstItem="PE3-xB-Vaj" firstAttribute="leading" secondItem="InM-hx-3Hg" secondAttribute="trailing" constant="18" id="uyJ-If-3Dq"/>
+                        <constraint firstItem="PE3-xB-Vaj" firstAttribute="leading" secondItem="InM-hx-3Hg" secondAttribute="trailing" constant="8" id="uyJ-If-3Dq"/>
                         <constraint firstItem="t7e-Ig-hJK" firstAttribute="top" secondItem="wB5-wu-bVT" secondAttribute="top" id="yNW-pO-ndc"/>
                     </constraints>
                 </view>

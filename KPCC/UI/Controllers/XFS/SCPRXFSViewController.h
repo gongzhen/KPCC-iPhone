@@ -26,13 +26,15 @@
 
 @property BOOL deployed;
 @property BOOL isGrayInterface;
+@property BOOL removeOnBalloonDismissal;
 
 - (void)applyHeight:(CGFloat)height;
 - (void)openDropdown;
 - (void)closeDropdown;
 - (void)controlVisibility:(BOOL)visible;
+- (void)partialRemoval;
 
-- (void)showCoachingBalloon;
+- (void)showCoachingBalloonWithText:(NSString*)text;
 - (void)dismissCoachingBalloon;
 
 - (void)orangeInterface;

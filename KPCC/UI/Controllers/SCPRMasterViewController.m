@@ -3001,8 +3001,8 @@ setForOnDemandUI;
     self.navigationItem.title = kMainLiveStreamTitle;
 }
 
-- (void)showBalloon {
-    [[Utils del] showCoachingBalloon];
+- (void)showBalloonWithText:(NSString *)text {
+    [[Utils del] showCoachingBalloonWithText:text];
 }
 
 - (void)dismissXFSCoachingBalloon {
@@ -3044,9 +3044,8 @@ setForOnDemandUI;
 }
 
 - (void)xfsAvailability {
+
     BOOL available = [[SessionManager shared] xFreeStreamIsAvailable];
-    [[Utils del] controlXFSAvailability:available];
-    
     if ( !available ) {
         
         BOOL xfs = [[UXmanager shared].settings userHasSelectedXFS];
@@ -3055,17 +3054,20 @@ setForOnDemandUI;
         [[UXmanager shared] persist];
         
         if ( xfs ) {
+            [self showBalloonWithText:@"KPCC Plus will return for the next pledge drive. Thanks for your support as a member!"];
             [[AudioManager shared] switchPlusMinusStreams];
+            [[[Utils del] xfsInterface] partialRemoval];
+        } else {
+            [[Utils del] controlXFSAvailability:available];
         }
         
     } else {
         if ( ![[UXmanager shared].settings userHasViewedXFSOnboarding] ) {
-            [self showBalloon];
+            [self showBalloonWithText:@"It's pledge-drive time! KPCC members can tap here to access KPCC Plus."];
         }
+        [[Utils del] controlXFSAvailability:available];
     }
-    
-
-    
+ 
 }
 
 #pragma mark - Util
@@ -3139,7 +3141,9 @@ setForOnDemandUI;
     }
     
     [self pushToHiddenVector:self.liveRewindAltButton];
+    [[Utils del] controlXFSAvailability:[[SessionManager shared] xFreeStreamIsAvailable]];
     [self pushToHiddenVector:[[[Utils del] xfsInterface] view]];
+    [self pushToHiddenVector:self.shareButton];
     [self commitHiddenVector];
     
     POPBasicAnimation *dividerFadeAnim = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
@@ -3151,7 +3155,6 @@ setForOnDemandUI;
     [self adjustScrubbingState];
     [self adjustScrollingState];
     
-    self.shareButton.alpha = 0.0f;
 }
 
 - (void)decloakForMenu:(BOOL)animated {

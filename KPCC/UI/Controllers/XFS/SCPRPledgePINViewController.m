@@ -16,6 +16,10 @@
 #import "SCPRXFSViewController.h"
 #import "AnalyticsManager.h"
 
+#define kTallSpacing 16.0f
+#define kShortSpacing 8.0f
+#define kPlaceholderPINString @"Enter your token"
+
 @interface SCPRPledgePINViewController ()
 
 @end
@@ -31,6 +35,8 @@
     self.headDescriptionLabel.textColor = [UIColor number2pencilColor];
     [self.headDescriptionLabel proBookFontize];
     
+    [self setupHeadlinesForState];
+    
     self.tokenField.font = self.headDescriptionLabel.font;
     
     self.tokenTable.separatorColor = [UIColor kpccDividerGrayColor];
@@ -41,10 +47,8 @@
     [self.tokenTable reloadData];
     
     self.tokenField.delegate = self;
-    self.tokenField.text = kPlaceholderPINString;
+    self.tokenField.placeholder = kPlaceholderPINString;
     self.pinNumber = @"";
-    
-    [self.tokenField becomeFirstResponder];
     
     self.submitButton.alpha = 0.4f;
     self.submitButton.userInteractionEnabled = YES;
@@ -52,7 +56,18 @@
     [self.submitButton addTarget:self
                           action:@selector(submitButtonTapped)
                 forControlEvents:UIControlEventTouchUpInside];
+    
+    [self.headerCell layoutIfNeeded];
 
+    [self.faqLinkButton addTarget:self
+                           action:@selector(puntToFAQ)
+                 forControlEvents:UIControlEventTouchUpInside];
+    
+    [self.faqLinkButton setTitleColor:[UIColor kpccPeriwinkleColor]
+                             forState:UIControlStateNormal];
+    [self.faqLinkButton setTitleColor:[[UIColor kpccPeriwinkleColor] translucify:0.55f]
+                             forState:UIControlStateHighlighted];
+    
 #ifdef DEBUG
     self.tokenField.text = @"49dd5kAOTgV";
     self.pinNumber = @"49dd5kAOTgV";
@@ -66,7 +81,19 @@
     // Do any additional setup after loading the view from its nib.
 }
 
+- (void)puntToFAQ {
+    
+    [[AnalyticsManager shared] logEvent:@"userLeavingToViewPlusFAQ"
+                         withParameters:nil];
+    
+    NSString *urlStr = @"http://www.scpr.org/pledge-free";
+    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:urlStr]];
+}
+
 - (void)submitButtonTapped {
+    
+    self.pinNumber = self.tokenField.text;
+    
     if ( self.confirmed ) {
 
         SCPRXFSViewController *xfs = [[Utils del] xfsInterface];
@@ -168,7 +195,7 @@
                                                                                        userInfo:@{ @"subject" : errorEmailSubject,
                                                                                                    @"body" : errorEmailBody,
                                                                                                    @"email" : @"membership@kpcc.org",
-                                                                                                   @"subtext" : @{ @"Token" : self.pinNumber,
+                                                                                                   @"subtext" : @{ @"Pledge Token" : self.pinNumber,
                                                                                                                    @"UID" : [[[UIDevice currentDevice] identifierForVendor] UUIDString] }}];
                                                                                       
                                                                                   }];
@@ -200,7 +227,7 @@
 }
 
 - (void)examineAndApplyStyle {
-    if ( SEQ(@"",self.pinNumber) ) {
+    if ( SEQ(@"",self.tokenField.text) ) {
         self.tokenField.textColor = [UIColor kpccSubtleGrayColor];
         self.tokenField.text = kPlaceholderPINString;
         UITextPosition *beginning = [self.tokenField beginningOfDocument];
@@ -223,6 +250,24 @@
     }
 }
 
+- (void)setupHeadlinesForState {
+    if ( self.confirmed ) {
+        self.headSpacing.constant = kShortSpacing;
+        self.headCaptionLabel.text = @"Success!";
+        self.headDescriptionLabel.text = @"You've unlocked your access to KPCC Plus. Enjoy!";
+        self.faqLinkButton.alpha = 0.0f;
+    } else {
+        self.headSpacing.constant = kTallSpacing;
+        self.headCaptionLabel.text = @"Are you a KPCC Member?";
+        self.headDescriptionLabel.text = @"We'll e-mail all qualifying members a unique code to gain access to KPCC Plus, a stream without fundraising interruptions.\n\nIf you need more information on how to get an access code please visit the link below:";
+        self.faqLinkButton.alpha = 1.0f;
+    }
+    
+    self.headerCell.selectionStyle = UITableViewCellSelectionStyleNone;
+    
+    [self.headerCell layoutIfNeeded];
+}
+
 #pragma mark - UITableView
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     return 1;
@@ -240,19 +285,9 @@
 - (UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     
     if ( indexPath.row == 0 ) {
-        if ( self.confirmed ) {
-            self.headSpacing.constant = kShortSpacing;
-            self.headCaptionLabel.text = @"Success!";
-            self.headDescriptionLabel.text = @"You've unlocked your access to the KPCC pledge-free stream. Enjoy!";
-        } else {
-            self.headSpacing.constant = kTallSpacing;
-            self.headCaptionLabel.text = @"Are you a KPCC Member?";
-            self.headDescriptionLabel.text = @"Enter your pledge drive token to gain access to the pledge-free stream";
-        }
+
+        [self setupHeadlinesForState];
         
-        self.headerCell.selectionStyle = UITableViewCellSelectionStyleNone;
-        
-        [self.headerCell layoutIfNeeded];
         return self.headerCell;
     }
     if ( indexPath.row == 1 ) {
@@ -282,12 +317,10 @@
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     if ( indexPath.row == 0 ) {
         
-        CGFloat variable = kTallSpacing;
-        if ( self.confirmed ) {
-            variable = kShortSpacing;
-        }
+        [self setupHeadlinesForState];
         
-        return self.headCaptionLabel.frame.origin.y+self.headCaptionLabel.frame.size.height+variable+self.headDescriptionLabel.frame.size.height+10.0f;
+        return self.headerCell.frame.size.height;
+        
     }
     if ( indexPath.row == 1 ) {
         if ( self.confirmed ) {
@@ -320,13 +353,19 @@
 }
 
 - (void)textFieldDidBeginEditing:(UITextField *)textField {
-    UITextPosition *beginning = [textField beginningOfDocument];
-    [textField setSelectedTextRange:[textField textRangeFromPosition:beginning
-                                                          toPosition:beginning]];
+    [UIView animateWithDuration:0.33f animations:^{
+        self.tokenTable.contentOffset = CGPointMake(0.0,200.0f);
+    }];
+}
+
+- (void)textFieldDidEndEditing:(UITextField *)textField {
+    [UIView animateWithDuration:0.33f animations:^{
+        self.tokenTable.contentOffset = CGPointMake(0.0,-64.0f);
+    }];
 }
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
-    if ( SEQ(string,@"") ) {
+    /*if ( SEQ(string,@"") ) {
         if ( !SEQ(self.pinNumber,@"") ) {
             self.pinNumber = [self.pinNumber substringToIndex:self.pinNumber.length-1];
         }
@@ -337,7 +376,7 @@
         self.pinNumber = [self.pinNumber stringByAppendingString:string];
     }
     
-    [self examineAndApplyStyle];
+    [self examineAndApplyStyle];*/
     
     return YES;
 }

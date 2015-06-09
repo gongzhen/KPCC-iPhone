@@ -282,7 +282,7 @@
 // XFS
 - (void)cloakForXFS;
 - (void)decloakForXFS;
-- (void)showBalloon;
+- (void)showBalloonWithText:(NSString*)text;
 
 - (void)composeMail:(NSNotification*)note;
 @property (nonatomic, strong) MFMailComposeViewController *mComposer;

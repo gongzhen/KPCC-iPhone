@@ -790,6 +790,23 @@
 #pragma mark - XFS
 - (void)xFreeStreamIsAvailableWithCompletion:(CompletionBlock)completion {
  
+#ifdef DEBUG
+    
+    if ( self.numberOfChecks == 2 ) {
+        [self setXFreeStreamIsAvailable:NO];
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"pledge-drive-status-updated"
+                                                            object:nil];
+    } else if ( self.numberOfChecks < 2 ) {
+        self.numberOfChecks++;
+        [self setXFreeStreamIsAvailable:YES];
+        
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"pledge-drive-status-updated"
+                                                            object:nil];
+    }
+    
+
+    
+#else
     NSString *endpoint = [NSString stringWithFormat:@"%@/schedule?pledge_status=true",kServerBase];
     NSURL *url = [NSURL URLWithString:endpoint];
     NSURLRequest *request = [NSURLRequest requestWithURL:url];
@@ -804,11 +821,6 @@
                                
                                if (responseObject[@"meta"] && [responseObject[@"meta"][@"status"][@"code"] intValue] == 200) {
                                    
-#ifdef DEBUG
-                                   //NSMutableDictionary *ro = [NSMutableDictionary dictionaryWithDictionary:responseObject];
-                                   //ro[@"pledge_drive"] = @(YES);
-                                   //responseObject = [NSDictionary dictionaryWithDictionary:ro];
-#endif
                                    if ( responseObject[@"pledge_drive"] ) {
                                        
                                        BOOL updated = [responseObject[@"pledge_drive"] boolValue];
@@ -833,6 +845,7 @@
                                }
                                
                            }];
+#endif
     
 }
 

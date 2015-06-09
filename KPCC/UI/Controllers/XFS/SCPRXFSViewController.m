@@ -16,6 +16,7 @@
 #import "SCPRMenuCell.h"
 #import "UXmanager.h"
 #import "SCPRMasterViewController.h"
+#import "SessionManager.h"
 
 @interface SCPRXFSViewController ()
 
@@ -141,6 +142,8 @@
 }
 
 - (void)controlVisibility:(BOOL)visible {
+    
+
     if ( self.deployed == visible ) return;
     
     NSNumber *x = visible ? @([Utils degreesToRadians:180.0f]) : @(0.0f);
@@ -169,7 +172,17 @@
     
 }
 
-- (void)showCoachingBalloon {
+- (void)partialRemoval {
+    self.removeOnBalloonDismissal = YES;
+    self.chevronImage.alpha = 0.0f;
+    self.deployButton.alpha = 0.0f;
+}
+
+- (void)showCoachingBalloonWithText:(NSString *)text {
+    
+    if ( self.xfsBalloon ) {
+        [self.xfsBalloon.view removeFromSuperview];
+    }
     
     self.xfsBalloon = [[SCPRBalloonViewController alloc]
                        initWithNibName:@"SCPRBalloonViewController"
@@ -191,13 +204,18 @@
                                                                    metrics:nil
                                                                      views:@{ @"balloon" : self.xfsBalloon.view}];
     
-    [self.xfsBalloon prime];
+    [self.xfsBalloon primeWithText:text];
     
     [self.view addConstraints:xfsAnchors];
     [self.view addConstraints:xfsXanchors];
     [self.view layoutIfNeeded];
     
     self.xfsBalloon.triangleHorizontalAnchor.constant = self.view.frame.size.width / 2.0 - self.xfsBalloon.triangleView.frame.size.width / 2.0f;
+    [self.xfsBalloon.view layoutIfNeeded];
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:@"balloon-dismissed"
+                                                  object:nil];
     
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(coachingBalloonDismissed)
@@ -211,6 +229,12 @@
 - (void)dismissCoachingBalloon {
     if ( self.xfsBalloon ) {
         [self.xfsBalloon closeSelf];
+    }
+    if ( self.removeOnBalloonDismissal ) {
+        [self controlVisibility:NO];
+        self.chevronImage.alpha = 1.0f;
+        self.deployButton.alpha = 1.0f;
+        self.removeOnBalloonDismissal = NO;
     }
 }
 

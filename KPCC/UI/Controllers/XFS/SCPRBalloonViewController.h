@@ -20,5 +20,6 @@
 @property (nonatomic, strong) IBOutlet NSLayoutConstraint *triangleHorizontalAnchor;
 
 - (void)prime;
+- (void)primeWithText:(NSString*)text;
 - (void)closeSelf;
 @end

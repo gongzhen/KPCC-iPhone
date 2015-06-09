@@ -9,6 +9,7 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="SCPRPledgePINViewController">
             <connections>
                 <outlet property="entryCell" destination="lko-hu-g64" id="bcK-PC-bxH"/>
+                <outlet property="faqLinkButton" destination="hf1-F5-eyI" id="rfv-DO-WbA"/>
                 <outlet property="headCaptionLabel" destination="THZ-vQ-xjQ" id="uRh-ey-4QA"/>
                 <outlet property="headDescriptionLabel" destination="9dA-NO-Ma6" id="jiV-Dc-7kp"/>
                 <outlet property="headSpacing" destination="M01-xs-mIM" id="AfQ-x0-Slx"/>
@@ -41,35 +42,53 @@
             </constraints>
             <point key="canvasLocation" x="581" y="637"/>
         </view>
-        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="148" id="L3W-zu-laB">
-            <rect key="frame" x="0.0" y="0.0" width="320" height="148"/>
+        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="271" id="L3W-zu-laB">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="271"/>
             <autoresizingMask key="autoresizingMask"/>
             <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="L3W-zu-laB" id="avr-bT-1gO">
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Are you a KPCC Member?" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="THZ-vQ-xjQ">
                         <rect key="frame" x="16" y="26" width="289" height="29"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="29" id="Sr1-Ke-gdv"/>
+                        </constraints>
                         <fontDescription key="fontDescription" type="system" pointSize="24"/>
                         <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                         <nil key="highlightedColor"/>
                     </label>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Enter your pledge drive token to gain access to the x-free stream." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9dA-NO-Ma6">
-                        <rect key="frame" x="16" y="91" width="289" height="39"/>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="252" verticalCompressionResistancePriority="754" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9dA-NO-Ma6">
+                        <rect key="frame" x="16" y="71" width="289" height="153"/>
+                        <string key="text">We'll e-mail all qualifying members a unique code to gain access to KPCC Plus, a stream without fundraising interruptions.
+
+If you need more information on how to get an access code please visit the link below</string>
                         <fontDescription key="fontDescription" type="system" pointSize="16"/>
                         <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                         <nil key="highlightedColor"/>
                     </label>
+                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hf1-F5-eyI">
+                        <rect key="frame" x="16" y="226" width="289" height="30"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="30" id="OGe-3U-bdu"/>
+                        </constraints>
+                        <state key="normal" title="KPCC Plus FAQ">
+                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                        </state>
+                    </button>
                 </subviews>
                 <constraints>
                     <constraint firstAttribute="trailingMargin" secondItem="THZ-vQ-xjQ" secondAttribute="trailing" constant="7" id="BEI-9i-is3"/>
+                    <constraint firstItem="hf1-F5-eyI" firstAttribute="leading" secondItem="avr-bT-1gO" secondAttribute="leadingMargin" constant="8" id="BWX-L3-D7f"/>
                     <constraint firstAttribute="trailingMargin" secondItem="9dA-NO-Ma6" secondAttribute="trailing" constant="7" id="HK4-uW-ocP"/>
-                    <constraint firstItem="9dA-NO-Ma6" firstAttribute="top" secondItem="THZ-vQ-xjQ" secondAttribute="bottom" constant="36" id="M01-xs-mIM"/>
+                    <constraint firstAttribute="trailingMargin" secondItem="hf1-F5-eyI" secondAttribute="trailing" constant="7" id="Kdw-Vc-zgY"/>
+                    <constraint firstItem="9dA-NO-Ma6" firstAttribute="top" secondItem="THZ-vQ-xjQ" secondAttribute="bottom" constant="16" id="M01-xs-mIM"/>
                     <constraint firstItem="THZ-vQ-xjQ" firstAttribute="top" secondItem="avr-bT-1gO" secondAttribute="topMargin" constant="18" id="MGH-gt-Y0e"/>
                     <constraint firstItem="9dA-NO-Ma6" firstAttribute="leading" secondItem="avr-bT-1gO" secondAttribute="leadingMargin" constant="8" id="g4J-hQ-pJn"/>
+                    <constraint firstItem="hf1-F5-eyI" firstAttribute="top" secondItem="9dA-NO-Ma6" secondAttribute="bottom" constant="2" id="gHg-E1-QAC"/>
                     <constraint firstItem="THZ-vQ-xjQ" firstAttribute="leading" secondItem="avr-bT-1gO" secondAttribute="leadingMargin" constant="8" id="yjz-AQ-sCp"/>
                 </constraints>
             </tableViewCellContentView>
-            <point key="canvasLocation" x="237" y="137"/>
+            <point key="canvasLocation" x="23" y="-80.5"/>
         </tableViewCell>
         <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="lko-hu-g64">
             <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
@@ -99,7 +118,7 @@
                     <constraint firstItem="MDg-B5-Frb" firstAttribute="top" secondItem="paF-NN-f8t" secondAttribute="top" id="zB1-Cm-yM1"/>
                 </constraints>
             </tableViewCellContentView>
-            <point key="canvasLocation" x="237" y="274"/>
+            <point key="canvasLocation" x="-13" y="359"/>
         </tableViewCell>
         <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="97" id="7Id-0r-DgB">
             <rect key="frame" x="0.0" y="0.0" width="320" height="97"/>
@@ -128,7 +147,7 @@
                     <constraint firstItem="Y0j-ve-mmB" firstAttribute="centerY" secondItem="qWI-iJ-fDn" secondAttribute="centerY" id="YkV-fd-Vd9"/>
                 </constraints>
             </tableViewCellContentView>
-            <point key="canvasLocation" x="90" y="504.5"/>
+            <point key="canvasLocation" x="-13" y="474.5"/>
         </tableViewCell>
     </objects>
     <resources>

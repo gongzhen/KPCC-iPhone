@@ -27,6 +27,11 @@
     // Dispose of any resources that can be recreated.
 }
 
+- (void)primeWithText:(NSString *)text {
+    [self.textCaptionLabel setText:text];
+    [self prime];
+}
+
 - (void)prime {
     [self.textCaptionLabel proLightFontize];
     [self.triangleView setShadeColor:[UIColor kpccBalloonBlueColor]];
@@ -42,7 +47,7 @@
     [UIView animateWithDuration:0.15f animations:^{
         self.view.alpha = 0.0f;
     } completion:^(BOOL finished) {
-        [self.view removeFromSuperview];
+        //[self.view removeFromSuperview];
         
         [[NSNotificationCenter defaultCenter] postNotificationName:@"balloon-dismissed"
                                                             object:nil
