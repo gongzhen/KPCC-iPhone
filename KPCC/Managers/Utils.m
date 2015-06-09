@@ -276,12 +276,10 @@ static char *alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz012
 }
 
 + (NSString*)prettyVersion {
-#ifdef PRODUCTION
-    return [[NSBundle mainBundle] infoDictionary][@"CFBundleShortVersionString"];
-#else
-    return [NSString stringWithFormat:@"%@ %@",[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"],
+
+    return [NSString stringWithFormat:@"%@ build %@",[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"],
             [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"]];
-#endif
+
 }
 
 + (NSString*)urlSafeVersion {

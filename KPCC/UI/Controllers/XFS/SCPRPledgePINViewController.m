@@ -227,9 +227,8 @@
 }
 
 - (void)examineAndApplyStyle {
+    self.tokenField.textColor = [UIColor blackColor];
     if ( SEQ(@"",self.tokenField.text) ) {
-        self.tokenField.textColor = [UIColor kpccSubtleGrayColor];
-        self.tokenField.text = kPlaceholderPINString;
         UITextPosition *beginning = [self.tokenField beginningOfDocument];
         [self.tokenField setSelectedTextRange:[self.tokenField textRangeFromPosition:beginning
                                                               toPosition:beginning]];
@@ -241,7 +240,7 @@
         }];
         
     } else {
-        self.tokenField.textColor = [UIColor blackColor];
+        
         [UIView animateWithDuration:0.25f animations:^{
             self.submitButton.alpha = 1.0f;
         } completion:^(BOOL finished) {
