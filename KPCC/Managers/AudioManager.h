@@ -21,33 +21,8 @@ static long kStreamCorrectionTolerance = 60*5;
 
 #define kLargeSkipInterval 60*10
 #define kSmallSkipInterval 20.0
-
 #define kHLS [[AudioManager shared] standardHlsStream]
-/*
-#ifdef USE_TEST_STREAM
-#define kHLSLiveStreamURL @"http://hls.kqed.org/hls/smil:itunes.smil/playlist.m3u8"
-#else
-#ifdef BETA
-//#define kHLSLiveStreamURLBase @"http://streammachine-test.scprdev.org:8020/sg/test.m3u8"
-#define kHLSLiveStreamURLBase @"http://streammachine-hls001.scprdev.org/sg/kpcc-aac.m3u8"
-#define kHLSLiveStreamURL [NSString stringWithFormat:@"%@?ua=KPCCiPhone-%@",kHLSLiveStreamURLBase,[Utils urlSafeVersion]]
-#else
-#ifdef FORCE_TEST_STREAM
-#define kHLSLiveStreamURLBase @"http://streammachine-test.scprdev.org:8020/sg/test.m3u8"
-#define kHLSLiveStreamURL [NSString stringWithFormat:@"%@?ua=KPCCiPhone-%@",kHLSLiveStreamURLBase,[Utils urlSafeVersion]]
-#else
-#define kHLSLiveStreamURL [NSString stringWithFormat:@"%@?ua=KPCCiPhone-%@",@"http://streammachine-hls001.scprdev.org/sg/kpcc-aac.m3u8",[Utils urlSafeVersion]]
-#endif
-#endif
-#endif
-
-#define kLiveStreamURL @"http://live.scpr.org/kpcclive"
-#define kLiveStreamNoPreRollURL @"http://live.scpr.org/kpcclive?preskip=true"
-#define kLiveStreamAACURL @"http://live.scpr.org/aac"
-#define kLiveStreamAACNoPreRollURL @"http://live.scpr.org/aac?preskip=true"*/
-
 #define kLiveStreamPreRollThreshold 3600
-
 #define kFailedConnectionAudioFile @"Wood_Crash"
 #define kFailedStreamAudioFile @"Glass_Crash"
 

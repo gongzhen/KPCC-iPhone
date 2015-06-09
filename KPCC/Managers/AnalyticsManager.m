@@ -69,11 +69,13 @@ static AnalyticsManager *singleton = nil;
     [mxp identify:uuid];
     [mxp.people set:@{ @"uuid" : uuid }];
     
+#ifdef USE_KOCHAVA
     NSString *kKey = globalConfig[@"Kochava"][@"AppKey"];
     if ( kKey ) {
         NSDictionary *kDict = @{ @"kochavaAppId" : kKey };
         self.kTracker = [[KochavaTracker alloc] initKochavaWithParams:kDict];
     }
+#endif
     
     [NewRelicAgent startWithApplicationToken:globalConfig[@"NewRelic"][@"production"]];
     
@@ -96,8 +98,10 @@ static AnalyticsManager *singleton = nil;
 }
 
 - (void)kTrackSession:(NSString *)modifier {
+#ifdef USE_KOCHAVA
     [self.kTracker trackEvent:@"session"
                              :modifier];
+#endif
 }
 
 - (void)trackHeadlinesDismissal {

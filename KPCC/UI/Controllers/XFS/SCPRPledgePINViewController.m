@@ -68,6 +68,9 @@
     [self.faqLinkButton setTitleColor:[[UIColor kpccPeriwinkleColor] translucify:0.55f]
                              forState:UIControlStateHighlighted];
     
+    [self.faqLinkButton.titleLabel proMediumFontize];
+    
+    
 #ifdef DEBUG
     self.tokenField.text = @"49dd5kAOTgV";
     self.pinNumber = @"49dd5kAOTgV";
