@@ -189,12 +189,17 @@ typedef NS_ENUM(NSUInteger, StreamStatus) {
 @property BOOL audioCheating;
 @property BOOL ignoreDriftTolerance;
 @property BOOL calibrating;
+@property BOOL failureGate;
+@property (nonatomic, copy) NSString *reasonToReportError;
+
 @property NSInteger skipCount;
 
 @property NSTimeInterval newPositionDelta;
 
 @property (nonatomic, strong) NSTimer *kickstartTimer;
 @property (nonatomic, strong) NSTimer *giveupTimer;
+@property (nonatomic, strong) NSTimer *waitForLogTimer;
+
 @property (nonatomic, copy) NSDate *seekTargetReferenceDate;
 
 - (void)updateNowPlayingInfoWithAudio:(id)audio;

@@ -13,7 +13,12 @@
 - (NSString*)prettyAnalytics {
     
     NSString *rv = [self localizedDescription];
-    rv = [NSString stringWithFormat:@"%@ - Domain : %@, Code : %ld",rv,self.domain,self.code];
+    NSDictionary * userInfo = [self userInfo];
+    NSString *fullErrorDescription = @"";
+    for ( NSString *key in userInfo.allKeys ) {
+        fullErrorDescription = [fullErrorDescription stringByAppendingFormat:@"%@ : %@",key,userInfo[key]];
+    }
+    
     return rv;
 }
 

@@ -1904,7 +1904,7 @@ setForOnDemandUI;
             [self.liveProgressViewController hide];
             [self determinePlayState];
             
-            [self.upcomingScreen primeWithProgramBasedOnCurrent:returnedObject];
+            //[self.upcomingScreen primeWithProgramBasedOnCurrent:returnedObject];
             [self.cpFullDetailScreen setupSchedule];
             
             if ( [[Utils del] userRespondedToPushWhileClosed] ) {
