@@ -459,6 +459,7 @@ static const NSString *ItemStatusContext;
 }
 
 - (void)forceAnalysis {
+    [[AnalyticsManager shared] clearLogs];
     [[AnalyticsManager shared] logEvent:self.reasonToReportError
                          withParameters:@{ @"errorComment" : @"No error log posted" }];
     self.reasonToReportError = nil;
