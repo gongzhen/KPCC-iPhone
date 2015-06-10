@@ -102,11 +102,10 @@ static NSString *kShortListMenuURL = @"http://www.scpr.org/short-list/latest#no-
 }
 
 - (void)willMoveToParentViewController:(UIViewController *)parent {
-    self.navigationItem.title = self.cachedParentTitle;
-    self.slWebView.delegate = nil;
+   /* self.navigationItem.title = self.cachedParentTitle;
     [self.slWebView loadHTMLString:@"" baseURL:nil];
     [[SessionManager shared] setUserIsViewingHeadlines:NO];
-    [[AnalyticsManager shared] trackHeadlinesDismissal];
+    [[AnalyticsManager shared] trackHeadlinesDismissal];*/
 }
 
 - (void)share {
@@ -262,6 +261,10 @@ static NSString *kShortListMenuURL = @"http://www.scpr.org/short-list/latest#no-
     return YES;
 }
 
+- (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error {
+    NSLog(@"Headlines failed : %@",[error userInfo]);
+}
+
 - (void)unlockBackButton {
     self.navigationItem.leftBarButtonItem.enabled = YES;
 }
@@ -307,7 +310,13 @@ static NSString *kShortListMenuURL = @"http://www.scpr.org/short-list/latest#no-
     // Should not be called
 }
 
+- (void)dealloc {
+    self.slWebView.delegate = nil;
+    [self.slWebView loadHTMLString:@"" baseURL:nil];
 
+    [[SessionManager shared] setUserIsViewingHeadlines:NO];
+    [[AnalyticsManager shared] trackHeadlinesDismissal];
+}
 
 
 #pragma mark - Utilities

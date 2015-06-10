@@ -213,9 +213,6 @@
     self.xfsBalloon.triangleHorizontalAnchor.constant = self.view.frame.size.width / 2.0 - self.xfsBalloon.triangleView.frame.size.width / 2.0f;
     [self.xfsBalloon.view layoutIfNeeded];
     
-    [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                    name:@"balloon-dismissed"
-                                                  object:nil];
     
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(coachingBalloonDismissed)
@@ -239,8 +236,6 @@
 }
 
 - (void)coachingBalloonDismissed {
-    
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
     
     self.xfsBalloon = nil;
     

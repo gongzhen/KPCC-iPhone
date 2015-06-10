@@ -486,6 +486,7 @@ setForOnDemandUI;
     
     if ( self.restoreTitle ) {
         self.restoreTitle = NO;
+        self.homeIsNotRootViewController = NO;
         self.navigationItem.title = kMainLiveStreamTitle;
     }
     
@@ -507,7 +508,7 @@ setForOnDemandUI;
 
 - (void)didMoveToParentViewController:(UIViewController *)parent {
     /*if ( SEQ(self.navigationItem.title,kMainLiveStreamTitle) ) {
-        [[Utils del] controlXFSAvailability:[[SessionManager shared] xFreeStreamIsAvailable]];
+        //[[Utils del] controlXFSAvailability:[[SessionManager shared] xFreeStreamIsAvailable]];
     } else {
         [[Utils del] controlXFSAvailability:NO];
     }*/
@@ -572,7 +573,7 @@ setForOnDemandUI;
 #endif
 
     UIView *v2u = [Utils isIOS8] ? self.mainContentScroller : self.liveStreamView;
-    [v2u printDimensionsWithIdentifier:@">>>>>>>>>>>>>>>>>>>>>>>>>> Basis for scroll content"];
+    //[v2u printDimensionsWithIdentifier:@">>>>>>>>>>>>>>>>>>>>>>>>>> Basis for scroll content"];
     
     NSArray *cpSizeConstraints = [[[DesignManager shared] sizeConstraintsForView:self.upcomingScreen.view hints:@{ @"height" : @(heightHint),
                                                                                                             @"width" : @(v2u.frame.size.width)}] allValues];
@@ -3242,7 +3243,12 @@ setForOnDemandUI;
     
     [self popHiddenVector];
     
-    [[Utils del] controlXFSAvailability:[[SessionManager shared] virtualLiveAudioMode]];
+    if ( !self.homeIsNotRootViewController ) {
+        [[Utils del] controlXFSAvailability:[[SessionManager shared] virtualLiveAudioMode]];
+    } else {
+        [[Utils del] controlXFSAvailability:NO];
+    }
+    
     [self adjustScrollingState];
     [self adjustScrubbingState];
     
@@ -3610,6 +3616,8 @@ setForOnDemandUI;
             
         case 1:
         {
+            
+            self.homeIsNotRootViewController = YES;
             event = @"menuSelectionPrograms";
             Program *prog = [[SessionManager shared] currentProgram];
             if (setForOnDemandUI && self.onDemandProgram != nil) {
@@ -3625,6 +3633,7 @@ setForOnDemandUI;
             
         case 2: {
             
+            self.homeIsNotRootViewController = YES;
             event = @"menuSelectionHeadlines";
             SCPRShortListViewController *slVC = [[SCPRShortListViewController alloc] initWithNibName:@"SCPRShortListViewController"
                                                                                               bundle:nil];
@@ -3635,8 +3644,8 @@ setForOnDemandUI;
         }
         case 3: {
             
+            self.homeIsNotRootViewController = YES;
             [self decloakForMenu:YES];
-            
             
             event = @"menuSelectionWakeSleep";
             SCPRTimerControlViewController *timer = [[SCPRTimerControlViewController alloc] initWithNibName:@"SCPRTimerControlViewController"
@@ -3664,6 +3673,7 @@ setForOnDemandUI;
         }
         case 5: {
             
+            self.homeIsNotRootViewController = YES;
             event = @"menuSelectionFeedback";
             SCPRFeedbackViewController *fbVC = [[SCPRFeedbackViewController alloc] initWithNibName:@"SCPRFeedbackViewController"
                                                                                             bundle:nil];

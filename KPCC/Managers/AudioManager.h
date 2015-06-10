@@ -19,8 +19,8 @@ static long kStreamBufferLimit = 4*60*60;
 static long kStreamCorrectionTolerance = 60*5;
 #endif
 
-#define kLargeSkipInterval 60*10
-#define kSmallSkipInterval 20.0
+#define kLargeSkipInterval [[SessionManager shared] peakDrift]
+#define kSmallSkipInterval 10.0
 #define kHLS [[AudioManager shared] standardHlsStream]
 #define kLiveStreamPreRollThreshold 3600
 #define kFailedConnectionAudioFile @"Wood_Crash"
@@ -189,6 +189,7 @@ typedef NS_ENUM(NSUInteger, StreamStatus) {
 @property BOOL audioCheating;
 @property BOOL ignoreDriftTolerance;
 @property BOOL calibrating;
+@property NSInteger skipCount;
 
 @property NSTimeInterval newPositionDelta;
 

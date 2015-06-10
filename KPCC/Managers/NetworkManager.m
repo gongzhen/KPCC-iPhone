@@ -266,7 +266,7 @@ static NetworkManager *singleton = nil;
 - (NSString*)serverBase {
     NSString *key = @"production";
 #ifdef DEBUG
-    key = @"staging";
+    //key = @"staging";
 #endif
     
     NSDictionary *globalConfig = [Utils globalConfig];

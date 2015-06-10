@@ -632,7 +632,23 @@
 - (void)controlXFSAvailability:(BOOL)available {
     
     // Override here, kind of kludgy, but...
-    if ( ![[SessionManager shared] xFreeStreamIsAvailable] ) {
+    if ( !self.xfsInterface.removeOnBalloonDismissal ) {
+        if ( ![[SessionManager shared] xFreeStreamIsAvailable] ) {
+            available = NO;
+        }
+    } else {
+        if ( !available ) {
+            return;
+        }
+    }
+    
+    if ( [self.masterViewController homeIsNotRootViewController] ) {
+        available = NO;
+    }
+    if ( [self.masterViewController menuOpen] ) {
+        available = NO;
+    }
+    if ( [self.masterViewController preRollOpen] ) {
         available = NO;
     }
     

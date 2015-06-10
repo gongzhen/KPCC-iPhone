@@ -272,6 +272,7 @@
 
 @property BOOL genericImageForProgram;
 @property BOOL onboardingRewindButtonShown;
+@property BOOL homeIsNotRootViewController;
 
 - (BOOL)cloaked;
 

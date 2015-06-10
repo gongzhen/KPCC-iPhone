@@ -485,6 +485,7 @@
     [[NetworkManager shared] requestFromSCPRWithEndpoint:urlString completion:^(id returnedObject) {
         // Create Program and insert into managed object context
         if ( returnedObject && [(NSDictionary*)returnedObject count] > 0 ) {
+            self.programFetchFailoverCount = 0;
             if ( completed ) {
                 dispatch_async(dispatch_get_main_queue(), ^{
                     
@@ -497,11 +498,22 @@
                 });
             }
         } else {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                if ( completed ) {
-                    completed(nil);
-                }
-            });
+            
+            if ( self.programFetchFailoverCount < 3 ) {
+                self.programFetchFailoverCount++;
+                // Don't allow nil right now, do a failover
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [self fetchCurrentProgram:completed];
+                });
+            } else {
+                self.programFetchFailoverCount = 0;
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    if ( completed ) {
+                        completed(nil);
+                    }
+                });
+            }
+            
         }
     }];
     

@@ -112,6 +112,7 @@ static AnalyticsManager *singleton = nil;
 
 - (void)logEvent:(NSString *)event withParameters:(NSDictionary *)parameters {
     
+    NSLog(@"Logging Event : %@",event);
 #if TARGET_IPHONE_SIMULATOR
     return;
 #endif

@@ -81,6 +81,8 @@ static NSInteger kProgramPollingPressure = 5;
 @property NSInteger curDrift;
 @property (nonatomic, strong) Program *currentProgram;
 
+@property NSInteger programFetchFailoverCount;
+
 - (void)fetchCurrentProgram:(CompletionBlockWithValue)completed;
 - (void)fetchProgramAtDate:(NSDate*)date completed:(CompletionBlockWithValue)completed;
 - (void)fetchScheduleForTodayAndTomorrow:(CompletionBlockWithValue)completed;

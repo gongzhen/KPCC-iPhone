@@ -11,6 +11,7 @@
 #import "SCPRProgramsListViewController.h"
 #import "SCPRMenuButton.h"
 #import <POP/POP.h>
+#import "SessionManager.h"
 
 @interface SCPRNavigationController ()
 @property(nonatomic) BOOL menuOpen;
@@ -138,6 +139,8 @@
 # pragma mark - MenuButtonDelegate
 
 - (void)backPressed {
+    [[[Utils del] masterViewController] setHomeIsNotRootViewController:NO];
+    [[Utils del] controlXFSAvailability:[[SessionManager shared] virtualLiveAudioMode]];
     [self popViewControllerAnimated:YES];
 }
 
