@@ -213,10 +213,11 @@ static AnalyticsManager *singleton = nil;
 }
 
 - (void)forceAnalysis:(NSTimer*)timer {
-    NSDictionary *ui = [timer userInfo];
+  /*  NSDictionary *ui = [timer userInfo];
     [[AudioManager shared] setLoggingGateOpen:NO];
     [self failStream:(NetworkHealth)[ui[@"cause"] intValue]
             comments:ui[@"comments"]];
+   */
 }
 
 - (NSDictionary*)logifiedParamsList:(NSDictionary *)originalParams {
@@ -236,7 +237,11 @@ static AnalyticsManager *singleton = nil;
             if ( self.errorLogReceivedAt ) {
                 nParams[@"errorLogPostedAt"] = self.errorLogReceivedAt;
             }
+            if ( event.errorComment ) {
+                nParams[@"errorComment"] = event.errorComment;
+            }
         }
+        self.errorLog = nil;
     }
     if ( self.accessLog ) {
         if ( self.accessLog.events && self.accessLog.events.count > 0 ) {
@@ -266,6 +271,7 @@ static AnalyticsManager *singleton = nil;
                 nParams[@"uri"] = event.URI;
             }
         }
+        self.accessLog = nil;
     }
     
     if ( !nParams[@"avPlayerSessionId"] ) {
@@ -275,18 +281,22 @@ static AnalyticsManager *singleton = nil;
         }
     }
     
+    NSError *misc = [[[AudioManager shared] audioPlayer] currentItem].error;
+    if ( misc ) {
+        for ( NSString *key in [[misc userInfo] allKeys] ) {
+            nParams[key] = [misc userInfo][key];
+        }
+    }
+    
     //NSLog(@" •••••••• FINISHED LOGGIFYING ANALYTICS ••••••• ");
+    
     
     return nParams;
 }
 
 - (void)clearLogs {
-    if ( [self.accessLogReceivedAt timeIntervalSinceNow] > 120 ) {
-        self.accessLog = nil;
-    }
-    if ( [self.errorLogReceivedAt timeIntervalSinceNow] > 120 ) {
-        self.errorLog = nil;
-    }
+    self.accessLog = nil;
+    self.errorLog = nil;
 }
 
 - (NSString*)stringForInterruptionCause:(NetworkHealth)cause {

@@ -795,6 +795,8 @@
         if ( (ctInSeconds*1.0f) >= eaInSeconds ) {
             [self processTimer:nil];
         }
+    } else {
+        [self processTimer:nil];
     }
     
 }
@@ -1056,7 +1058,7 @@
         
     } else {
         if ( [[AudioManager shared] status] != StreamStatusPaused ) {
-            [self checkProgramUpdate:YES];
+            [self checkProgramUpdate:NO];
         }
     }
 }
