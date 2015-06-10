@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="7706" systemVersion="14D136" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7703"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="SCPRBalloonViewController">
+            <connections>
+                <outlet property="closeButton" destination="wB5-wu-bVT" id="nll-eJ-hb5"/>
+                <outlet property="closeButtonImage" destination="t7e-Ig-hJK" id="7uF-Vc-ZWn"/>
+                <outlet property="dividerView" destination="PE3-xB-Vaj" id="Mo9-38-eim"/>
+                <outlet property="textCaptionLabel" destination="InM-hx-3Hg" id="ked-8b-Uu7"/>
+                <outlet property="textContainerView" destination="vNz-bv-wIF" id="sdP-X3-MXd"/>
+                <outlet property="triangleHorizontalAnchor" destination="oNk-x8-DTS" id="r9e-zy-OJw"/>
+                <outlet property="triangleView" destination="F5B-af-Jye" id="wr2-ag-AYr"/>
+                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="600" height="68"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vNz-bv-wIF" userLabel="textContainerView">
+                    <rect key="frame" x="0.0" y="16" width="600" height="52"/>
+                    <subviews>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="PE3-xB-Vaj" userLabel="dividerView">
+                            <rect key="frame" x="549" y="10" width="1" height="36"/>
+                            <color key="backgroundColor" white="1" alpha="0.40000000000000002" colorSpace="calibratedWhite"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="36" id="1rb-Uu-y5h"/>
+                                <constraint firstAttribute="width" constant="1" id="Y30-e3-3Si"/>
+                            </constraints>
+                        </view>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wB5-wu-bVT">
+                            <rect key="frame" x="549" y="2" width="48" height="48"/>
+                            <state key="normal">
+                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                            </state>
+                        </button>
+                        <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="btn_close.png" translatesAutoresizingMaskIntoConstraints="NO" id="t7e-Ig-hJK">
+                            <rect key="frame" x="549" y="2" width="48" height="48"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="48" id="qUG-2B-8TF"/>
+                                <constraint firstAttribute="width" constant="48" id="x4b-8b-3p3"/>
+                            </constraints>
+                        </imageView>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="It's pledge-drive time! KPCC members can tap here to access KPCC Plus." lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="InM-hx-3Hg">
+                            <rect key="frame" x="8" y="4" width="533" height="44"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                            <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                    </subviews>
+                    <color key="backgroundColor" red="0.24812564577554086" green="0.70394632596636098" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                    <constraints>
+                        <constraint firstItem="t7e-Ig-hJK" firstAttribute="bottom" secondItem="wB5-wu-bVT" secondAttribute="bottom" id="44C-2F-aQ3"/>
+                        <constraint firstAttribute="trailing" secondItem="t7e-Ig-hJK" secondAttribute="trailing" constant="3" id="Akb-X2-fwu"/>
+                        <constraint firstItem="t7e-Ig-hJK" firstAttribute="trailing" secondItem="wB5-wu-bVT" secondAttribute="trailing" id="FYH-Bm-8CT"/>
+                        <constraint firstItem="InM-hx-3Hg" firstAttribute="leading" secondItem="vNz-bv-wIF" secondAttribute="leading" constant="8" id="I3b-8h-Rb7"/>
+                        <constraint firstItem="wB5-wu-bVT" firstAttribute="leading" secondItem="PE3-xB-Vaj" secondAttribute="trailing" constant="-1" id="SJz-Ck-SJZ"/>
+                        <constraint firstItem="t7e-Ig-hJK" firstAttribute="leading" secondItem="wB5-wu-bVT" secondAttribute="leading" id="TAs-WU-74b"/>
+                        <constraint firstAttribute="centerY" secondItem="t7e-Ig-hJK" secondAttribute="centerY" id="Y80-ui-6Mt"/>
+                        <constraint firstAttribute="centerY" secondItem="PE3-xB-Vaj" secondAttribute="centerY" constant="-2" id="deU-Vo-axk"/>
+                        <constraint firstItem="InM-hx-3Hg" firstAttribute="top" secondItem="vNz-bv-wIF" secondAttribute="top" constant="4" id="fL8-zl-6jF"/>
+                        <constraint firstAttribute="bottom" secondItem="InM-hx-3Hg" secondAttribute="bottom" constant="4" id="fci-8V-mu4"/>
+                        <constraint firstAttribute="height" constant="52" id="gs8-w3-CzH"/>
+                        <constraint firstItem="PE3-xB-Vaj" firstAttribute="leading" secondItem="InM-hx-3Hg" secondAttribute="trailing" constant="8" id="uyJ-If-3Dq"/>
+                        <constraint firstItem="t7e-Ig-hJK" firstAttribute="top" secondItem="wB5-wu-bVT" secondAttribute="top" id="yNW-pO-ndc"/>
+                    </constraints>
+                </view>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="F5B-af-Jye" customClass="SCPRTriangleView">
+                    <rect key="frame" x="278" y="0.0" width="36" height="16"/>
+                    <color key="backgroundColor" white="1" alpha="0.0" colorSpace="calibratedWhite"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="16" id="C4E-iE-Cfh"/>
+                        <constraint firstAttribute="width" constant="36" id="vfR-hK-qd8"/>
+                    </constraints>
+                </view>
+            </subviews>
+            <color key="backgroundColor" white="1" alpha="0.0" colorSpace="calibratedWhite"/>
+            <constraints>
+                <constraint firstItem="vNz-bv-wIF" firstAttribute="top" secondItem="F5B-af-Jye" secondAttribute="bottom" id="POH-43-Zqj"/>
+                <constraint firstAttribute="trailing" secondItem="vNz-bv-wIF" secondAttribute="trailing" id="UQc-dg-NJC"/>
+                <constraint firstItem="vNz-bv-wIF" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="bwC-8I-ZvA"/>
+                <constraint firstItem="F5B-af-Jye" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="278" id="oNk-x8-DTS"/>
+                <constraint firstAttribute="bottom" secondItem="vNz-bv-wIF" secondAttribute="bottom" id="ryg-Ew-5KE"/>
+            </constraints>
+            <nil key="simulatedStatusBarMetrics"/>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <point key="canvasLocation" x="400" y="119"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="btn_close.png" width="18" height="19"/>
+    </resources>
+</document>

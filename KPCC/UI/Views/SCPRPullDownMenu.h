@@ -8,10 +8,17 @@
 
 #import <UIKit/UIKit.h>
 
+typedef NS_ENUM(NSUInteger, MenuType) {
+    MenuTypeUnknown = 0,
+    MenuTypeStandard,
+    MenuTypeXFS
+};
+
 @protocol SCPRMenuDelegate
     -(void)menuItemSelected:(NSIndexPath *)indexPath;
     -(void)pullDownAnimated:(BOOL)open;
 @end
+
 
 @interface SCPRPullDownMenu : UIView<UITableViewDataSource, UITableViewDelegate> {
 
@@ -43,12 +50,14 @@
 @property (nonatomic) UIColor *cellSelectedColor;
 @property (nonatomic) UIColor *cellTextColor;
 @property (nonatomic) UITableViewCellSelectionStyle cellSelectionStyle;
-@property (nonatomic) UIFont *cellFont;
+
 @property (nonatomic) UIColor *separatorColor;
 @property (nonatomic) float cellHeight;
 @property (nonatomic) BOOL fullyOpen;
+@property MenuType type;
 
 - (instancetype)initWithView:(UIView *)view;
+- (void)primeWithType:(MenuType)type;
 - (void)insertButton:(NSString *)title;
 - (void)loadMenu;
 - (void)animateDropDown;
@@ -57,5 +66,6 @@
 - (void)lightUpCellWithIndex:(NSInteger)index;
 - (void)clearMenu;
 - (void)refresh;
+- (UIFont*)cellFontForIndex:(NSInteger)index;
 
 @end

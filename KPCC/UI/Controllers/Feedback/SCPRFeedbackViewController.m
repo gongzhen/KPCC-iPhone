@@ -42,9 +42,19 @@ static NSString *kCommentsPlaceholder = @"... Add your comments here";
     self.descriptionInputView.delegate = self;
     self.emailTextField.delegate = self;
     self.splashBlurView.blurRadius = 7.0f;
-    self.splashView.image = [UIImage imageNamed:@"onboarding-tile.jpg"];
+    
+    UIImage *img = [[DesignManager shared] currentBlurredLiveImage];
+    if ( [[AudioManager shared] currentAudioMode] == AudioModeOnDemand ) {
+        UIImage *odImg = [[DesignManager shared] currentBlurredImage];
+        if ( odImg ) {
+            img = odImg;
+        }
+    }
+    
+    self.splashView.image = img;
+    
     self.navigationItem.title = @"Feedback";
-    self.splashView.alpha = 0.33;
+    self.splashView.alpha = 1.0f;
     
     self.feedbackTable.separatorColor = [UIColor lightGrayColor];
     
@@ -56,7 +66,7 @@ static NSString *kCommentsPlaceholder = @"... Add your comments here";
     NSString *versionText = [NSString stringWithFormat:@"KPCC iPhone v%@",[Utils prettyVersion]];
     
 #ifndef PRODUCTION
-    NSURL *url = [NSURL URLWithString:kHLSLiveStreamURL];
+    NSURL *url = [NSURL URLWithString:kHLS];
     NSString *server = [url host];
 #ifdef BETA
     NSString *beta = [NSString stringWithFormat:@" BETA : %@",server];
@@ -182,7 +192,10 @@ static NSString *kCommentsPlaceholder = @"... Add your comments here";
      object:nil];
     
     [[FeedbackManager shared] validateCustomer:@{ @"message" : self.descriptionInputView.text,
-                                                  @"email" : self.emailTextField.text, @"date" : [NSDate date], @"name" : self.nameTextField.text, @"type" : self.currentReason }];
+                                                  @"email" : self.emailTextField.text,
+                                                  @"date" : [NSDate date],
+                                                  @"name" : self.nameTextField.text,
+                                                  @"type" : self.currentReason }];
 }
 
 - (void)failWithValidationResult:(ValidationResult)reason {

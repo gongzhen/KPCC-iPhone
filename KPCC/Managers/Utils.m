@@ -13,6 +13,11 @@
 static char *alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 
 @implementation Utils
++ (NSDictionary*)globalConfig {
+    NSString *path = [[NSBundle mainBundle] pathForResource:@"Config" ofType:@"plist"];
+    NSDictionary *globalConfig = [[NSDictionary alloc] initWithContentsOfFile:path];
+    return globalConfig;
+}
 
 + (SCPRAppDelegate*)del {
     return (SCPRAppDelegate*)[UIApplication sharedApplication].delegate;
@@ -271,12 +276,10 @@ static char *alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz012
 }
 
 + (NSString*)prettyVersion {
-#ifdef PRODUCTION
-    return [[NSBundle mainBundle] infoDictionary][@"CFBundleShortVersionString"];
-#else
-    return [NSString stringWithFormat:@"%@ %@",[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"],
+
+    return [NSString stringWithFormat:@"%@ build %@",[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"],
             [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"]];
-#endif
+
 }
 
 + (NSString*)urlSafeVersion {

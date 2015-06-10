@@ -1,0 +1,6 @@
+{
+    "no-views-left-title" : "Uh-Oh! No listens remaining",
+    "no-match-title" : "Uh-oh! We can't seem to find a match",
+    "no-views-left-body" : "The token you provided is out of listens. We allow our members to use KPCC Plus 30 times, and that limit has been reached. Sorry.",
+    "no-match-body" : "The token you entered wasn't found in our system. Please try again or get in touch with our membership help desk."
+}

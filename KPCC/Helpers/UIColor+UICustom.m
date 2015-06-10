@@ -75,6 +75,13 @@
                            alpha:1.0];
 }
 
++ (UIColor*)angryCloudColor {
+    return [UIColor colorWithRed:186.0/255.0
+                           green:186.0/255.0
+                            blue:186.0/255.0
+                           alpha:1.0];
+}
+
 + (UIColor*)paleHorseColor {
     return [UIColor colorWithRed:248.0/255.0
                            green:248.0/255.0
@@ -113,6 +120,18 @@
 
 + (UIColor*)kpccPeriwinkleColor {
     return [UIColor colorWithHex:0x32ACD5];
+}
+
++ (UIColor*)kpccBalloonBlueColor {
+    return [UIColor colorWithHex:0x33AAD5];
+}
+
++ (UIColor*)number2pencilColor {
+    return [UIColor colorWithHex:0x6C7579];
+}
+
++ (UIColor*)kpccDividerGrayColor {
+    return [UIColor colorWithHex:0xE3E3E3];
 }
 
 @end

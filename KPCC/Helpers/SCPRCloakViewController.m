@@ -54,9 +54,7 @@
                                   window.frame.size.height);
     cloak.view.alpha = 0.0f;
     
-    BOOL spinner = useSpinner;
     if ( customView ) {
-        spinner = NO;
         customView.center = CGPointMake(cloak.view.frame.size.width/2.0,
                                         cloak.view.frame.size.height/2.0);
         [cloak.view addSubview:customView];

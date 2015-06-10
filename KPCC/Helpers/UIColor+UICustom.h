@@ -13,6 +13,7 @@
 + (UIColor*)kpccOrangeColor;
 + (UIColor*)virtualBlackColor;
 + (UIColor*)cloudColor;
++ (UIColor*)angryCloudColor;
 + (UIColor*)kpccPeriwinkleColor;
 @property (NS_NONATOMIC_IOSONLY, readonly, copy) UIColor *intensify;
 + (UIColor*)virtualWhiteColor;
@@ -21,5 +22,8 @@
 + (UIColor*)kpccAsphaltColor;
 + (UIColor*)kpccSoftOrangeColor;
 + (UIColor*)kpccSubtleGrayColor;
++ (UIColor*)kpccBalloonBlueColor;
++ (UIColor*)number2pencilColor;
++ (UIColor*)kpccDividerGrayColor;
 
 @end

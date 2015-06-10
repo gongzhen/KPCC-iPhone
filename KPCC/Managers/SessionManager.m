@@ -485,6 +485,7 @@
     [[NetworkManager shared] requestFromSCPRWithEndpoint:urlString completion:^(id returnedObject) {
         // Create Program and insert into managed object context
         if ( returnedObject && [(NSDictionary*)returnedObject count] > 0 ) {
+            self.programFetchFailoverCount = 0;
             if ( completed ) {
                 dispatch_async(dispatch_get_main_queue(), ^{
                     
@@ -497,11 +498,22 @@
                 });
             }
         } else {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                if ( completed ) {
-                    completed(nil);
-                }
-            });
+            
+            if ( self.programFetchFailoverCount < 3 ) {
+                self.programFetchFailoverCount++;
+                // Don't allow nil right now, do a failover
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [self fetchCurrentProgram:completed];
+                });
+            } else {
+                self.programFetchFailoverCount = 0;
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    if ( completed ) {
+                        completed(nil);
+                    }
+                });
+            }
+            
         }
     }];
     
@@ -536,6 +548,9 @@
                                                                     object:nil
                                                                   userInfo:nil];
             }
+            
+            [self xFreeStreamIsAvailableWithCompletion:nil];
+            
             completed(programObj);
             
         } else {
@@ -550,7 +565,7 @@
             NSString *top = [NSDate stringFromDate:bookends[@"top"]
                                         withFormat:@"yyyy-MM-dd'T'HHmmssZZZ"];
             
-            Program *gp = [Program insertProgramWithDictionary:@{ @"title" : @"KPCC Live",
+            Program *gp = [Program insertProgramWithDictionary:@{ @"title" : kMainLiveStreamTitle,
                                                                   @"ends_at" : endsAt,
                                                                   @"starts_at" : top,
                                                                   @"soft_starts_at" : top,
@@ -563,7 +578,7 @@
             [gp setStarts_at:bookends[@"top"]];
             [gp setEnds_at:bookends[@"bottom"]];
             [gp setSoft_starts_at:bookends[@"top"]];
-            [gp setTitle:@"KPCC Live"];
+            [gp setTitle:kMainLiveStreamTitle];
             
             [[ContentManager shared] saveContext];
             
@@ -780,11 +795,118 @@
         if ( (ctInSeconds*1.0f) >= eaInSeconds ) {
             [self processTimer:nil];
         }
+    } else {
+        [self processTimer:nil];
     }
     
 }
 
+#pragma mark - XFS
+- (void)xFreeStreamIsAvailableWithCompletion:(CompletionBlock)completion {
+ 
+#ifdef DEBUG
+    
+    if ( self.numberOfChecks == 2 ) {
+        [self setXFreeStreamIsAvailable:NO];
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"pledge-drive-status-updated"
+                                                            object:nil];
+    } else if ( self.numberOfChecks < 2 ) {
+        self.numberOfChecks++;
+        [self setXFreeStreamIsAvailable:YES];
+        
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"pledge-drive-status-updated"
+                                                            object:nil];
+    }
+    
+
+    
+#else
+    NSString *endpoint = [NSString stringWithFormat:@"%@/schedule?pledge_status=true",kServerBase];
+    NSURL *url = [NSURL URLWithString:endpoint];
+    NSURLRequest *request = [NSURLRequest requestWithURL:url];
+    [NSURLConnection sendAsynchronousRequest:request
+                                       queue:[[NSOperationQueue alloc] init]
+                           completionHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError) {
+                               
+                               NSError *jsonError = nil;
+                               NSDictionary *responseObject = [NSJSONSerialization JSONObjectWithData:data
+                                                                                              options:NSJSONReadingMutableLeaves
+                                                                                                error:&jsonError];
+                               
+                               if (responseObject[@"meta"] && [responseObject[@"meta"][@"status"][@"code"] intValue] == 200) {
+                                   
+                                   if ( responseObject[@"pledge_drive"] ) {
+                                       
+                                       BOOL updated = [responseObject[@"pledge_drive"] boolValue];
+
+                                       [self setXFreeStreamIsAvailable:updated];
+                                       
+                                       dispatch_async(dispatch_get_main_queue(), ^{
+                                           [[NSNotificationCenter defaultCenter] postNotificationName:@"pledge-drive-status-updated"
+                                                                                               object:nil];
+                                       });
+                                       
+                                   } else {
+                                       
+                                       [self setXFreeStreamIsAvailable:NO];
+                                 
+                                       dispatch_async(dispatch_get_main_queue(), ^{
+                                           [[NSNotificationCenter defaultCenter] postNotificationName:@"pledge-drive-status-updated"
+                                                                                               object:nil];
+                                       });
+                                       
+                                   }
+                               }
+                               
+                           }];
+#endif
+    
+}
+
+- (void)validateXFSToken:(NSString *)token completion:(CompletionBlockWithValue)completion {
+    
+    PFQuery *q = [PFQuery queryWithClassName:@"PfsUser"];
+    [q whereKey:@"pledgeToken" equalTo:token];
+    [q findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        
+        if ( error || objects.count == 0 ) {
+            if ( completion ) {
+                completion(@{ @"error" : @"no-match" });
+            }
+            return;
+        }
+        
+        if ( completion ) {
+            PFObject *pfsu = objects.firstObject;
+            if ( [pfsu[@"viewsLeft"] intValue] <= 0 ) {
+                completion(@{ @"error" : @"no-views-left" });
+                return;
+            }
+            
+            completion(@{ @"success" : objects.firstObject });
+        }
+        
+    }];
+   
+    
+}
+
+#pragma mark - Error Handling
+- (NSDictionary*)parseErrors {
+    NSData *parseErrors = [NSData dataWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"pfsu-errors"
+                                                                                         ofType:@"json"]];
+    NSError *jsonError = nil;
+    NSDictionary *errors = [NSJSONSerialization JSONObjectWithData:parseErrors
+                                                           options:NSJSONReadingMutableLeaves
+                                                             error:&jsonError];
+    return errors;
+}
+
 #pragma mark - State handling
+- (BOOL)virtualLiveAudioMode {
+    return ([[AudioManager shared] currentAudioMode] == AudioModeLive || [[AudioManager shared] currentAudioMode] == AudioModeNeutral);
+}
+
 - (void)setLastKnownBitrate:(double)lastKnownBitrate {
     double replacedBitrate = _lastKnownBitrate;
     _lastKnownBitrate = lastKnownBitrate;
@@ -936,7 +1058,7 @@
         
     } else {
         if ( [[AudioManager shared] status] != StreamStatusPaused ) {
-            [self checkProgramUpdate:YES];
+            [self checkProgramUpdate:NO];
         }
     }
 }

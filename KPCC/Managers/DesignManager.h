@@ -20,6 +20,8 @@ typedef NS_ENUM(NSInteger, SculptingStyle) {
 
 + (DesignManager*)shared;
 
+- (NSString*)mainLiveStreamTitle;
+
 - (void)loadProgramImage:(NSString *)slug andImageView:(UIImageView *)imageView completion:(void (^)(BOOL status))completion;
 @property (NS_NONATOMIC_IOSONLY, readonly) CGRect screenFrame;
 - (void)loadStockPhotoToImageView:(UIImageView*)imageView;

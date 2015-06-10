@@ -83,9 +83,7 @@
 - (void)onboardingScrubbingAction:(BOOL)live;
 
 - (void)dismissOnDemand;
-- (void)dismissLiveScrubbing;
 - (void)dismissSchedule;
-- (void)repurposeButton;
 
 // User responses
 - (void)yesToNotifications;

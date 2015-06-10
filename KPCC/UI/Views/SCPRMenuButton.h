@@ -11,7 +11,7 @@
 @protocol MenuButtonDelegate
     -(void)backPressed;
     -(void)menuPressed;
--(void)popPressed;
+    -(void)popPressed;
 @end
 
 @interface SCPRMenuButton : UIControl
@@ -30,5 +30,6 @@
 - (void)animateToMenu;
 - (void)animateToClose;
 - (void)animateToPop:(id<MenuButtonDelegate>)proxyDelegate;
+- (void)touchUpInsideHandler:(SCPRMenuButton *)sender;
 
 @end

@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="7706" systemVersion="14D136" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7703"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="SCPRPledgePINViewController">
+            <connections>
+                <outlet property="entryCell" destination="lko-hu-g64" id="bcK-PC-bxH"/>
+                <outlet property="faqLinkButton" destination="hf1-F5-eyI" id="rfv-DO-WbA"/>
+                <outlet property="headCaptionLabel" destination="THZ-vQ-xjQ" id="uRh-ey-4QA"/>
+                <outlet property="headDescriptionLabel" destination="9dA-NO-Ma6" id="jiV-Dc-7kp"/>
+                <outlet property="headSpacing" destination="M01-xs-mIM" id="AfQ-x0-Slx"/>
+                <outlet property="headerCell" destination="L3W-zu-laB" id="blK-74-z1W"/>
+                <outlet property="lockImageView" destination="MDg-B5-Frb" id="oDQ-GB-hU8"/>
+                <outlet property="spinner" destination="Y0j-ve-mmB" id="aWs-yG-9oo"/>
+                <outlet property="submitButton" destination="qWI-iJ-fDn" id="6Nj-Tr-di1"/>
+                <outlet property="submitCell" destination="7Id-0r-DgB" id="iy5-TF-Cpc"/>
+                <outlet property="tokenField" destination="KeW-eV-ePJ" id="SlC-Va-duK"/>
+                <outlet property="tokenTable" destination="1j2-PA-1cd" id="H0W-45-UyO"/>
+                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="1j2-PA-1cd">
+                    <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                </tableView>
+            </subviews>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+            <constraints>
+                <constraint firstAttribute="bottom" secondItem="1j2-PA-1cd" secondAttribute="bottom" id="AWv-Ot-wAM"/>
+                <constraint firstItem="1j2-PA-1cd" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="Fjs-tZ-umm"/>
+                <constraint firstAttribute="trailing" secondItem="1j2-PA-1cd" secondAttribute="trailing" id="KMu-TW-ocn"/>
+                <constraint firstItem="1j2-PA-1cd" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="X4t-Pc-Pba"/>
+            </constraints>
+            <point key="canvasLocation" x="581" y="637"/>
+        </view>
+        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="271" id="L3W-zu-laB">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="271"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="L3W-zu-laB" id="avr-bT-1gO">
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Are you a KPCC Member?" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="THZ-vQ-xjQ">
+                        <rect key="frame" x="16" y="26" width="289" height="29"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="29" id="Sr1-Ke-gdv"/>
+                        </constraints>
+                        <fontDescription key="fontDescription" type="system" pointSize="24"/>
+                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="252" verticalCompressionResistancePriority="754" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9dA-NO-Ma6">
+                        <rect key="frame" x="16" y="71" width="289" height="153"/>
+                        <string key="text">We'll e-mail all qualifying members a unique code to gain access to KPCC Plus, a stream without fundraising interruptions.
+
+If you need more information on how to get an access code please visit the link below</string>
+                        <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hf1-F5-eyI">
+                        <rect key="frame" x="16" y="226" width="289" height="30"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="30" id="OGe-3U-bdu"/>
+                        </constraints>
+                        <state key="normal" title="KPCC Plus FAQ">
+                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                        </state>
+                    </button>
+                </subviews>
+                <constraints>
+                    <constraint firstAttribute="trailingMargin" secondItem="THZ-vQ-xjQ" secondAttribute="trailing" constant="7" id="BEI-9i-is3"/>
+                    <constraint firstItem="hf1-F5-eyI" firstAttribute="leading" secondItem="avr-bT-1gO" secondAttribute="leadingMargin" constant="8" id="BWX-L3-D7f"/>
+                    <constraint firstAttribute="trailingMargin" secondItem="9dA-NO-Ma6" secondAttribute="trailing" constant="7" id="HK4-uW-ocP"/>
+                    <constraint firstAttribute="trailingMargin" secondItem="hf1-F5-eyI" secondAttribute="trailing" constant="7" id="Kdw-Vc-zgY"/>
+                    <constraint firstItem="9dA-NO-Ma6" firstAttribute="top" secondItem="THZ-vQ-xjQ" secondAttribute="bottom" constant="16" id="M01-xs-mIM"/>
+                    <constraint firstItem="THZ-vQ-xjQ" firstAttribute="top" secondItem="avr-bT-1gO" secondAttribute="topMargin" constant="18" id="MGH-gt-Y0e"/>
+                    <constraint firstItem="9dA-NO-Ma6" firstAttribute="leading" secondItem="avr-bT-1gO" secondAttribute="leadingMargin" constant="8" id="g4J-hQ-pJn"/>
+                    <constraint firstItem="hf1-F5-eyI" firstAttribute="top" secondItem="9dA-NO-Ma6" secondAttribute="bottom" constant="2" id="gHg-E1-QAC"/>
+                    <constraint firstItem="THZ-vQ-xjQ" firstAttribute="leading" secondItem="avr-bT-1gO" secondAttribute="leadingMargin" constant="8" id="yjz-AQ-sCp"/>
+                </constraints>
+            </tableViewCellContentView>
+            <point key="canvasLocation" x="23" y="-80.5"/>
+        </tableViewCell>
+        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="lko-hu-g64">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="lko-hu-g64" id="paF-NN-f8t">
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="icon-lock.png" translatesAutoresizingMaskIntoConstraints="NO" id="MDg-B5-Frb">
+                        <rect key="frame" x="6" y="0.0" width="42" height="42"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="42" id="2c9-Ih-s3O"/>
+                            <constraint firstAttribute="height" constant="42" id="9iI-mf-dzS"/>
+                        </constraints>
+                    </imageView>
+                    <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="KeW-eV-ePJ">
+                        <rect key="frame" x="51" y="7" width="259" height="30"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                        <textInputTraits key="textInputTraits"/>
+                    </textField>
+                </subviews>
+                <constraints>
+                    <constraint firstItem="KeW-eV-ePJ" firstAttribute="top" secondItem="paF-NN-f8t" secondAttribute="topMargin" constant="-1" id="5Jm-F2-1m8"/>
+                    <constraint firstAttribute="trailingMargin" secondItem="KeW-eV-ePJ" secondAttribute="trailing" constant="2" id="RKB-lO-Ldx"/>
+                    <constraint firstItem="MDg-B5-Frb" firstAttribute="leading" secondItem="paF-NN-f8t" secondAttribute="leading" constant="6" id="UtD-PB-H34"/>
+                    <constraint firstItem="KeW-eV-ePJ" firstAttribute="leading" secondItem="MDg-B5-Frb" secondAttribute="trailing" constant="3" id="gWJ-eJ-v8M"/>
+                    <constraint firstAttribute="bottomMargin" secondItem="KeW-eV-ePJ" secondAttribute="bottom" constant="-2" id="slY-eD-ed3"/>
+                    <constraint firstItem="MDg-B5-Frb" firstAttribute="top" secondItem="paF-NN-f8t" secondAttribute="top" id="zB1-Cm-yM1"/>
+                </constraints>
+            </tableViewCellContentView>
+            <point key="canvasLocation" x="-13" y="359"/>
+        </tableViewCell>
+        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="97" id="7Id-0r-DgB">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="97"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="7Id-0r-DgB" id="ecK-mG-dL2">
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qWI-iJ-fDn">
+                        <rect key="frame" x="16" y="28" width="287" height="40"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="40" id="rxp-ku-Yq7"/>
+                        </constraints>
+                        <state key="normal" title="Submit">
+                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                        </state>
+                    </button>
+                    <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="white" translatesAutoresizingMaskIntoConstraints="NO" id="Y0j-ve-mmB">
+                        <rect key="frame" x="150" y="38" width="20" height="20"/>
+                    </activityIndicatorView>
+                </subviews>
+                <constraints>
+                    <constraint firstItem="qWI-iJ-fDn" firstAttribute="top" secondItem="ecK-mG-dL2" secondAttribute="topMargin" constant="20" id="CBs-QK-cIH"/>
+                    <constraint firstItem="qWI-iJ-fDn" firstAttribute="leading" secondItem="ecK-mG-dL2" secondAttribute="leadingMargin" constant="8" id="RHr-zE-4wD"/>
+                    <constraint firstItem="Y0j-ve-mmB" firstAttribute="centerX" secondItem="qWI-iJ-fDn" secondAttribute="centerX" constant="0.5" id="Rqm-xw-0N3"/>
+                    <constraint firstAttribute="trailingMargin" secondItem="qWI-iJ-fDn" secondAttribute="trailing" constant="9" id="SFi-Uy-JTr"/>
+                    <constraint firstItem="Y0j-ve-mmB" firstAttribute="centerY" secondItem="qWI-iJ-fDn" secondAttribute="centerY" id="YkV-fd-Vd9"/>
+                </constraints>
+            </tableViewCellContentView>
+            <point key="canvasLocation" x="-13" y="474.5"/>
+        </tableViewCell>
+    </objects>
+    <resources>
+        <image name="icon-lock.png" width="14" height="20"/>
+    </resources>
+</document>

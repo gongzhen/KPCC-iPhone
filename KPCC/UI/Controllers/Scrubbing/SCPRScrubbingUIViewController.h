@@ -87,7 +87,6 @@
 - (void)recalibrateAfterScrub;
 - (void)behindLiveStatus;
 
-- (NSString*)prettyStringForAmount:(NSInteger)amount;
 
 - (double)strokeEndForCurrentTime;
 

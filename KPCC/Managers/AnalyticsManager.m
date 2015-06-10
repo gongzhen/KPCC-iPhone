@@ -53,8 +53,7 @@ static AnalyticsManager *singleton = nil;
     mixPanelToken = @"BetaToken";
 #endif
     
-    NSString *path = [[NSBundle mainBundle] pathForResource:@"Config" ofType:@"plist"];
-    NSDictionary *globalConfig = [[NSDictionary alloc] initWithContentsOfFile:path];
+    NSDictionary *globalConfig = [Utils globalConfig];
     
 #ifndef TURN_OFF_SANDBOX_CONFIG
     [Flurry setCrashReportingEnabled:YES];
@@ -70,13 +69,15 @@ static AnalyticsManager *singleton = nil;
     [mxp identify:uuid];
     [mxp.people set:@{ @"uuid" : uuid }];
     
+#ifdef USE_KOCHAVA
     NSString *kKey = globalConfig[@"Kochava"][@"AppKey"];
     if ( kKey ) {
         NSDictionary *kDict = @{ @"kochavaAppId" : kKey };
         self.kTracker = [[KochavaTracker alloc] initKochavaWithParams:kDict];
     }
+#endif
     
-    [NewRelicAgent startWithApplicationToken:@"AA04eae1ca71c7b69963c9495552336ff578454833"];
+    [NewRelicAgent startWithApplicationToken:globalConfig[@"NewRelic"][@"production"]];
     
 #endif
     
@@ -97,8 +98,10 @@ static AnalyticsManager *singleton = nil;
 }
 
 - (void)kTrackSession:(NSString *)modifier {
+#ifdef USE_KOCHAVA
     [self.kTracker trackEvent:@"session"
                              :modifier];
+#endif
 }
 
 - (void)trackHeadlinesDismissal {
@@ -108,6 +111,12 @@ static AnalyticsManager *singleton = nil;
 
 
 - (void)logEvent:(NSString *)event withParameters:(NSDictionary *)parameters {
+    
+    NSLog(@"Logging Event : %@",event);
+#if TARGET_IPHONE_SIMULATOR
+    return;
+#endif
+    
     NSMutableDictionary *userInfo = [[NSMutableDictionary alloc] init];
     
     NSMutableDictionary *mParams = [parameters mutableCopy];
@@ -204,10 +213,11 @@ static AnalyticsManager *singleton = nil;
 }
 
 - (void)forceAnalysis:(NSTimer*)timer {
-    NSDictionary *ui = [timer userInfo];
+  /*  NSDictionary *ui = [timer userInfo];
     [[AudioManager shared] setLoggingGateOpen:NO];
     [self failStream:(NetworkHealth)[ui[@"cause"] intValue]
             comments:ui[@"comments"]];
+   */
 }
 
 - (NSDictionary*)logifiedParamsList:(NSDictionary *)originalParams {
@@ -227,7 +237,11 @@ static AnalyticsManager *singleton = nil;
             if ( self.errorLogReceivedAt ) {
                 nParams[@"errorLogPostedAt"] = self.errorLogReceivedAt;
             }
+            if ( event.errorComment ) {
+                nParams[@"errorComment"] = event.errorComment;
+            }
         }
+        self.errorLog = nil;
     }
     if ( self.accessLog ) {
         if ( self.accessLog.events && self.accessLog.events.count > 0 ) {
@@ -257,6 +271,7 @@ static AnalyticsManager *singleton = nil;
                 nParams[@"uri"] = event.URI;
             }
         }
+        self.accessLog = nil;
     }
     
     if ( !nParams[@"avPlayerSessionId"] ) {
@@ -266,25 +281,29 @@ static AnalyticsManager *singleton = nil;
         }
     }
     
+    NSError *misc = [[[AudioManager shared] audioPlayer] currentItem].error;
+    if ( misc ) {
+        for ( NSString *key in [[misc userInfo] allKeys] ) {
+            nParams[key] = [misc userInfo][key];
+        }
+    }
+    
     //NSLog(@" •••••••• FINISHED LOGGIFYING ANALYTICS ••••••• ");
+    
     
     return nParams;
 }
 
 - (void)clearLogs {
-    if ( [self.accessLogReceivedAt timeIntervalSinceNow] > 120 ) {
-        self.accessLog = nil;
-    }
-    if ( [self.errorLogReceivedAt timeIntervalSinceNow] > 120 ) {
-        self.errorLog = nil;
-    }
+    self.accessLog = nil;
+    self.errorLog = nil;
 }
 
 - (NSString*)stringForInterruptionCause:(NetworkHealth)cause {
     NSString *english = @"";
     switch (cause) {
         case NetworkHealthStreamingServerDown:
-            english = [NSString stringWithFormat:@"Device could not communicate with streaming server : %@",kHLSLiveStreamURL];
+            english = [NSString stringWithFormat:@"Device could not communicate with streaming server : %@",kHLS];
             break;
         case NetworkHealthContentServerDown:
             english = [NSString stringWithFormat:@"Device could not communicate with content server : %@",kServerBase];

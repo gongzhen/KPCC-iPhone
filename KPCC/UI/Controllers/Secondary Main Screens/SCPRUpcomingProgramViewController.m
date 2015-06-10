@@ -87,6 +87,10 @@
     
     pretty = [pretty lowercaseString];
     
+#ifdef DEBUG
+    pretty = @"12:34 am";
+#endif
+    
     self.timeLabel.attributedText = [[DesignManager shared] standardTimeFormatWithString:pretty
                                                                                            attributes:@{ @"digits" : [[DesignManager shared] proMedium:18.0f],
                                                                                                          @"period" : [[DesignManager shared] proLight:14.0f] }];

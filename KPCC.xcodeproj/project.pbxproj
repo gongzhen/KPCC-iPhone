@@ -35,6 +35,11 @@
 		258BD3B11A0C0FFF00E7560F /* SCPRProgressViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 258BD3B01A0C0FFF00E7560F /* SCPRProgressViewController.m */; };
 		258C5D261B10048A00C19BE0 /* SCPRUpcomingProgramViewController7.xib in Resources */ = {isa = PBXBuildFile; fileRef = 258C5D251B10048A00C19BE0 /* SCPRUpcomingProgramViewController7.xib */; };
 		258C5D281B1503D700C19BE0 /* SCPRAlarmClockViewController7.xib in Resources */ = {isa = PBXBuildFile; fileRef = 258C5D271B1503D700C19BE0 /* SCPRAlarmClockViewController7.xib */; };
+		258C5D2D1B164C2100C19BE0 /* icon-lock.png in Resources */ = {isa = PBXBuildFile; fileRef = 258C5D291B164C2100C19BE0 /* icon-lock.png */; };
+		258C5D2E1B164C2100C19BE0 /* icon-lock@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 258C5D2A1B164C2100C19BE0 /* icon-lock@2x.png */; };
+		258C5D2F1B164C2100C19BE0 /* stream-antenna.png in Resources */ = {isa = PBXBuildFile; fileRef = 258C5D2B1B164C2100C19BE0 /* stream-antenna.png */; };
+		258C5D301B164C2100C19BE0 /* stream-antenna@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 258C5D2C1B164C2100C19BE0 /* stream-antenna@2x.png */; };
+		258C5D381B1678ED00C19BE0 /* SCPRCornerMaskView.m in Sources */ = {isa = PBXBuildFile; fileRef = 258C5D371B1678ED00C19BE0 /* SCPRCornerMaskView.m */; };
 		258CA0FD1A09636900A3C8DB /* SessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 258CA0FC1A09636900A3C8DB /* SessionManager.m */; };
 		258CA1001A0982ED00A3C8DB /* SCPRCloakViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 258CA0FF1A0982ED00A3C8DB /* SCPRCloakViewController.m */; };
 		258E239F1A13FA84009F8F97 /* DataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 258E239C1A13FA84009F8F97 /* DataModel.xcdatamodeld */; };
@@ -58,6 +63,17 @@
 		259E450E1A1D583A00F5CD65 /* onboarding1.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 259E450C1A1D583A00F5CD65 /* onboarding1.mp3 */; };
 		259E450F1A1D583A00F5CD65 /* onboarding2.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 259E450D1A1D583A00F5CD65 /* onboarding2.mp3 */; };
 		25A6534B1AAE2BA300ABAAD6 /* Bookmark.m in Sources */ = {isa = PBXBuildFile; fileRef = 25A6534A1AAE2BA300ABAAD6 /* Bookmark.m */; };
+		25B25B9B1B17DEF600ABE8B4 /* chevron_up.png in Resources */ = {isa = PBXBuildFile; fileRef = 25B25B991B17DEF600ABE8B4 /* chevron_up.png */; };
+		25B25B9C1B17DEF600ABE8B4 /* chevron_up@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 25B25B9A1B17DEF600ABE8B4 /* chevron_up@2x.png */; };
+		25B25B9F1B190EE200ABE8B4 /* SCPRXFSHeaderCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 25B25B9E1B190EE200ABE8B4 /* SCPRXFSHeaderCell.m */; };
+		25B25BA11B190F1200ABE8B4 /* SCPRXFSHeaderCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 25B25BA01B190F1200ABE8B4 /* SCPRXFSHeaderCell.xib */; };
+		25B25BAD1B1D093D00ABE8B4 /* SCPRPledgePINViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 25B25BAB1B1D093D00ABE8B4 /* SCPRPledgePINViewController.m */; };
+		25B25BAE1B1D093D00ABE8B4 /* SCPRPledgePINViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 25B25BAC1B1D093D00ABE8B4 /* SCPRPledgePINViewController.xib */; };
+		25B25BB51B1D096D00ABE8B4 /* SCPRBalloonViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 25B25BB01B1D096D00ABE8B4 /* SCPRBalloonViewController.m */; };
+		25B25BB61B1D096D00ABE8B4 /* SCPRBalloonViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 25B25BB11B1D096D00ABE8B4 /* SCPRBalloonViewController.xib */; };
+		25B25BB71B1D096D00ABE8B4 /* SCPRXFSViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 25B25BB31B1D096D00ABE8B4 /* SCPRXFSViewController.m */; };
+		25B25BB81B1D096D00ABE8B4 /* SCPRXFSViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 25B25BB41B1D096D00ABE8B4 /* SCPRXFSViewController.xib */; };
+		25B25BBA1B1E2EA200ABE8B4 /* pfsu-errors.json in Resources */ = {isa = PBXBuildFile; fileRef = 25B25BB91B1E2EA200ABE8B4 /* pfsu-errors.json */; };
 		25B59A5619FEF93700D4885C /* SCPRShortListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 25B59A5419FEF93700D4885C /* SCPRShortListViewController.m */; };
 		25B59A5719FEF93700D4885C /* SCPRShortListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 25B59A5519FEF93700D4885C /* SCPRShortListViewController.xib */; };
 		25BBCD6E1A85867F0015071E /* NSError+PrettyAnalytics.m in Sources */ = {isa = PBXBuildFile; fileRef = 25BBCD6D1A85867F0015071E /* NSError+PrettyAnalytics.m */; };
@@ -333,6 +349,12 @@
 		258BD3B01A0C0FFF00E7560F /* SCPRProgressViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SCPRProgressViewController.m; sourceTree = "<group>"; };
 		258C5D251B10048A00C19BE0 /* SCPRUpcomingProgramViewController7.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = SCPRUpcomingProgramViewController7.xib; path = "Secondary Main Screens/SCPRUpcomingProgramViewController7.xib"; sourceTree = "<group>"; };
 		258C5D271B1503D700C19BE0 /* SCPRAlarmClockViewController7.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = SCPRAlarmClockViewController7.xib; path = TimerControl/AlarmClock/SCPRAlarmClockViewController7.xib; sourceTree = "<group>"; };
+		258C5D291B164C2100C19BE0 /* icon-lock.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-lock.png"; sourceTree = "<group>"; };
+		258C5D2A1B164C2100C19BE0 /* icon-lock@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-lock@2x.png"; sourceTree = "<group>"; };
+		258C5D2B1B164C2100C19BE0 /* stream-antenna.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "stream-antenna.png"; sourceTree = "<group>"; };
+		258C5D2C1B164C2100C19BE0 /* stream-antenna@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "stream-antenna@2x.png"; sourceTree = "<group>"; };
+		258C5D361B1678ED00C19BE0 /* SCPRCornerMaskView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCPRCornerMaskView.h; sourceTree = "<group>"; };
+		258C5D371B1678ED00C19BE0 /* SCPRCornerMaskView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SCPRCornerMaskView.m; sourceTree = "<group>"; };
 		258CA0FB1A09636900A3C8DB /* SessionManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SessionManager.h; path = Managers/SessionManager.h; sourceTree = "<group>"; };
 		258CA0FC1A09636900A3C8DB /* SessionManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SessionManager.m; path = Managers/SessionManager.m; sourceTree = "<group>"; };
 		258CA0FE1A0982ED00A3C8DB /* SCPRCloakViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCPRCloakViewController.h; sourceTree = "<group>"; };
@@ -370,6 +392,21 @@
 		25A653481AAA7CFC00ABAAD6 /* KPCC-Proprietary-301.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "KPCC-Proprietary-301.xcdatamodel"; sourceTree = "<group>"; };
 		25A653491AAE2BA300ABAAD6 /* Bookmark.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Bookmark.h; sourceTree = "<group>"; };
 		25A6534A1AAE2BA300ABAAD6 /* Bookmark.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Bookmark.m; sourceTree = "<group>"; };
+		25B25B991B17DEF600ABE8B4 /* chevron_up.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = chevron_up.png; sourceTree = "<group>"; };
+		25B25B9A1B17DEF600ABE8B4 /* chevron_up@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "chevron_up@2x.png"; sourceTree = "<group>"; };
+		25B25B9D1B190EE200ABE8B4 /* SCPRXFSHeaderCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCPRXFSHeaderCell.h; sourceTree = "<group>"; };
+		25B25B9E1B190EE200ABE8B4 /* SCPRXFSHeaderCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SCPRXFSHeaderCell.m; sourceTree = "<group>"; };
+		25B25BA01B190F1200ABE8B4 /* SCPRXFSHeaderCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SCPRXFSHeaderCell.xib; sourceTree = "<group>"; };
+		25B25BAA1B1D093D00ABE8B4 /* SCPRPledgePINViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCPRPledgePINViewController.h; path = XFS/SCPRPledgePINViewController.h; sourceTree = "<group>"; };
+		25B25BAB1B1D093D00ABE8B4 /* SCPRPledgePINViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SCPRPledgePINViewController.m; path = XFS/SCPRPledgePINViewController.m; sourceTree = "<group>"; };
+		25B25BAC1B1D093D00ABE8B4 /* SCPRPledgePINViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = SCPRPledgePINViewController.xib; path = XFS/SCPRPledgePINViewController.xib; sourceTree = "<group>"; };
+		25B25BAF1B1D096D00ABE8B4 /* SCPRBalloonViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCPRBalloonViewController.h; path = XFS/SCPRBalloonViewController.h; sourceTree = "<group>"; };
+		25B25BB01B1D096D00ABE8B4 /* SCPRBalloonViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SCPRBalloonViewController.m; path = XFS/SCPRBalloonViewController.m; sourceTree = "<group>"; };
+		25B25BB11B1D096D00ABE8B4 /* SCPRBalloonViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = SCPRBalloonViewController.xib; path = XFS/SCPRBalloonViewController.xib; sourceTree = "<group>"; };
+		25B25BB21B1D096D00ABE8B4 /* SCPRXFSViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCPRXFSViewController.h; path = XFS/SCPRXFSViewController.h; sourceTree = "<group>"; };
+		25B25BB31B1D096D00ABE8B4 /* SCPRXFSViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SCPRXFSViewController.m; path = XFS/SCPRXFSViewController.m; sourceTree = "<group>"; };
+		25B25BB41B1D096D00ABE8B4 /* SCPRXFSViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = SCPRXFSViewController.xib; path = XFS/SCPRXFSViewController.xib; sourceTree = "<group>"; };
+		25B25BB91B1E2EA200ABE8B4 /* pfsu-errors.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = "pfsu-errors.json"; path = "Fixtures/pfsu-errors.json"; sourceTree = "<group>"; };
 		25B59A5319FEF93700D4885C /* SCPRShortListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCPRShortListViewController.h; path = Headlines/SCPRShortListViewController.h; sourceTree = "<group>"; };
 		25B59A5419FEF93700D4885C /* SCPRShortListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SCPRShortListViewController.m; path = Headlines/SCPRShortListViewController.m; sourceTree = "<group>"; };
 		25B59A5519FEF93700D4885C /* SCPRShortListViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = SCPRShortListViewController.xib; path = Headlines/SCPRShortListViewController.xib; sourceTree = "<group>"; };
@@ -707,6 +744,7 @@
 			children = (
 				258E8E041A16AA4200675E68 /* desk_customer_template.json */,
 				258E8E051A16AA4200675E68 /* desk_template.json */,
+				25B25BB91B1E2EA200ABE8B4 /* pfsu-errors.json */,
 			);
 			name = Fixtures;
 			sourceTree = "<group>";
@@ -751,6 +789,22 @@
 				254CC69D1A23B41D00560805 /* SCPRTriangleView.m */,
 			);
 			name = Onboarding;
+			sourceTree = "<group>";
+		};
+		25B25BA91B1D091100ABE8B4 /* XFS */ = {
+			isa = PBXGroup;
+			children = (
+				25B25BAF1B1D096D00ABE8B4 /* SCPRBalloonViewController.h */,
+				25B25BB01B1D096D00ABE8B4 /* SCPRBalloonViewController.m */,
+				25B25BB11B1D096D00ABE8B4 /* SCPRBalloonViewController.xib */,
+				25B25BB21B1D096D00ABE8B4 /* SCPRXFSViewController.h */,
+				25B25BB31B1D096D00ABE8B4 /* SCPRXFSViewController.m */,
+				25B25BB41B1D096D00ABE8B4 /* SCPRXFSViewController.xib */,
+				25B25BAA1B1D093D00ABE8B4 /* SCPRPledgePINViewController.h */,
+				25B25BAB1B1D093D00ABE8B4 /* SCPRPledgePINViewController.m */,
+				25B25BAC1B1D093D00ABE8B4 /* SCPRPledgePINViewController.xib */,
+			);
+			name = XFS;
 			sourceTree = "<group>";
 		};
 		25B59A5219FEF73300D4885C /* Short List / Headlines */ = {
@@ -1048,6 +1102,7 @@
 		76658ABC18E0AF8500026176 /* View Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				25B25BA91B1D091100ABE8B4 /* XFS */,
 				25F30AE51AFAB67C00F27187 /* Secondary Main Screens */,
 				25E8BDA01ABB8702007B99EB /* Wake / Sleep */,
 				25BBCD791A892D790015071E /* Scrubbing */,
@@ -1104,6 +1159,11 @@
 				52D6B1FF1A02EEB90068B19A /* SCPRQueueScrollableView.m */,
 				254831BF1A41555700963078 /* UIView+PrintDimensions.h */,
 				254831C01A41555700963078 /* UIView+PrintDimensions.m */,
+				258C5D361B1678ED00C19BE0 /* SCPRCornerMaskView.h */,
+				258C5D371B1678ED00C19BE0 /* SCPRCornerMaskView.m */,
+				25B25B9D1B190EE200ABE8B4 /* SCPRXFSHeaderCell.h */,
+				25B25B9E1B190EE200ABE8B4 /* SCPRXFSHeaderCell.m */,
+				25B25BA01B190F1200ABE8B4 /* SCPRXFSHeaderCell.xib */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -1111,6 +1171,12 @@
 		7685BD57194BBCB90075BB16 /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				25B25B991B17DEF600ABE8B4 /* chevron_up.png */,
+				25B25B9A1B17DEF600ABE8B4 /* chevron_up@2x.png */,
+				258C5D291B164C2100C19BE0 /* icon-lock.png */,
+				258C5D2A1B164C2100C19BE0 /* icon-lock@2x.png */,
+				258C5D2B1B164C2100C19BE0 /* stream-antenna.png */,
+				258C5D2C1B164C2100C19BE0 /* stream-antenna@2x.png */,
 				25F30AE11AF98F1A00F27187 /* icon-up-next.png */,
 				25F30AE21AF98F1A00F27187 /* icon-up-next@2x.png */,
 				B5F9F7451ABCE8FD00115DB3 /* icon-clock.png */,
@@ -1357,6 +1423,7 @@
 				76A308C018C8FB940065D4B1 /* Frameworks */,
 				76A308C118C8FB940065D4B1 /* Resources */,
 				9E4DCD001A0847218C219F40 /* Copy Pods Resources */,
+				25B25BBD1B22471700ABE8B4 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -1478,6 +1545,7 @@
 				52EFF84619C368C00059A0E3 /* program_avatar_splendid-table.png in Resources */,
 				25BBCD881A893C350015071E /* btn_back_30@2x.png in Resources */,
 				52EFF83C19C368C00059A0E3 /* program_avatar_radiolab@2x.png in Resources */,
+				258C5D2E1B164C2100C19BE0 /* icon-lock@2x.png in Resources */,
 				52EFF84E19C368C00059A0E3 /* program_avatar_tavis-smiley-show.png in Resources */,
 				52EFF80219C368C00059A0E3 /* program_avatar_dinner-party-download.png in Resources */,
 				52EFF87019C368C00059A0E3 /* program_avatar_writers-almanac@2x.png in Resources */,
@@ -1488,6 +1556,7 @@
 				52EFF85A19C368C00059A0E3 /* program_avatar_this-american-life.png in Resources */,
 				52EFF80E19C368C00059A0E3 /* program_avatar_latino-usa.png in Resources */,
 				768C068A1995911600F829EB /* program_tile_generic.jpg in Resources */,
+				25B25BB61B1D096D00ABE8B4 /* SCPRBalloonViewController.xib in Resources */,
 				52EFF84019C368C00059A0E3 /* program_avatar_science-friday@2x.png in Resources */,
 				768C0683199590CC00F829EB /* FreigSanProSem.otf in Resources */,
 				7685BD62194BBCB90075BB16 /* playButton@2x.png in Resources */,
@@ -1498,8 +1567,11 @@
 				52EFF79719C3688D0059A0E3 /* menu-microphone.png in Resources */,
 				7685BD60194BBCB90075BB16 /* playButton.png in Resources */,
 				52EFF86419C368C00059A0E3 /* program_avatar_weekend-edition-saturday@2x.png in Resources */,
+				25B25BAE1B1D093D00ABE8B4 /* SCPRPledgePINViewController.xib in Resources */,
 				52EFF84219C368C00059A0E3 /* program_avatar_snap-judgment.png in Resources */,
+				258C5D2D1B164C2100C19BE0 /* icon-lock.png in Resources */,
 				768C0681199590CC00F829EB /* FreigSanProMedIt.otf in Resources */,
+				25B25BBA1B1E2EA200ABE8B4 /* pfsu-errors.json in Resources */,
 				7685BD5E194BBCB90075BB16 /* pauseButton@2x.png in Resources */,
 				52EFF84419C368C00059A0E3 /* program_avatar_snap-judgment@2x.png in Resources */,
 				52EFF88719C3BC020059A0E3 /* item-chevron-right.png in Resources */,
@@ -1510,6 +1582,7 @@
 				52EFF80A19C368C00059A0E3 /* program_avatar_fresh-air.png in Resources */,
 				52EFF7F419C368C00059A0E3 /* program_avatar_bbc-newshour@2x.png in Resources */,
 				52D0FC3619D20D29009AECEE /* program_avatar_the-frame.png in Resources */,
+				25B25BB81B1D096D00ABE8B4 /* SCPRXFSViewController.xib in Resources */,
 				52EFF7EA19C368C00059A0E3 /* program_avatar_all-things-considered.png in Resources */,
 				52EFF82E19C368C00059A0E3 /* program_avatar_on-being.png in Resources */,
 				259E44FF1A1D2CD300F5CD65 /* SCPROnboardingViewController.xib in Resources */,
@@ -1525,6 +1598,7 @@
 				52EFF84C19C368C00059A0E3 /* program_avatar_take-two@2x.png in Resources */,
 				254CC6A01A240B6200560805 /* onboarding-episode-swipe@2x.png in Resources */,
 				52EFF82A19C368C00059A0E3 /* program_avatar_offramp.png in Resources */,
+				258C5D2F1B164C2100C19BE0 /* stream-antenna.png in Resources */,
 				52EFF7E819C368C00059A0E3 /* program_avatar_airtalk@2x.png in Resources */,
 				52EFF84A19C368C00059A0E3 /* program_avatar_take-two.png in Resources */,
 				52EFF83019C368C00059A0E3 /* program_avatar_on-being@2x.png in Resources */,
@@ -1534,6 +1608,8 @@
 				52EFF85C19C368C00059A0E3 /* program_avatar_this-american-life@2x.png in Resources */,
 				254CC69A1A23A7A600560805 /* onboarding-tile.jpg in Resources */,
 				52EFF85419C368C00059A0E3 /* program_avatar_ted-radio-hour@2x.png in Resources */,
+				25B25BA11B190F1200ABE8B4 /* SCPRXFSHeaderCell.xib in Resources */,
+				258C5D301B164C2100C19BE0 /* stream-antenna@2x.png in Resources */,
 				52EFF81019C368C00059A0E3 /* program_avatar_latino-usa@2x.png in Resources */,
 				52EFF82219C368C00059A0E3 /* program_avatar_morning-edition.png in Resources */,
 				25BBCD8C1A893C350015071E /* btn_forward_30@2x.png in Resources */,
@@ -1616,6 +1692,7 @@
 				768C06521995905D00F829EB /* btn_live_rewind_small.png in Resources */,
 				25263A881A32669E00BD5FF9 /* onboarding3.mp3 in Resources */,
 				768C066F199590CC00F829EB /* FreigSanProBlk.otf in Resources */,
+				25B25B9B1B17DEF600ABE8B4 /* chevron_up.png in Resources */,
 				258E8E011A16AA3900675E68 /* Glass_Crash.mp3 in Resources */,
 				25F2BC811A3BB60B00108F73 /* onboarding-music-bed.m4a in Resources */,
 				254CC6981A23A7A600560805 /* onboarding-push-icon.png in Resources */,
@@ -1627,6 +1704,7 @@
 				52CC6D6919D112F400C67322 /* SCPRProgramsListViewController.xib in Resources */,
 				52EFF79919C3688D0059A0E3 /* menu-microphone@2x.png in Resources */,
 				52EFF83819C368C00059A0E3 /* program_avatar_prairie-home-companion@2x.png in Resources */,
+				25B25B9C1B17DEF600ABE8B4 /* chevron_up@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1641,6 +1719,19 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		25B25BBD1B22471700ABE8B4 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "SCRIPT=`/usr/bin/find \"${SRCROOT}\" -name newrelic_postbuild.sh | head -n 1`\n/bin/sh \"${SCRIPT}\" AA04eae1ca71c7b69963c9495552336ff578454833\ncp \"${SCRIPT}\" ~/Development";
+		};
 		25DF10EE1ADC36A500B6DC8B /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -1721,6 +1812,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				25B25B9F1B190EE200ABE8B4 /* SCPRXFSHeaderCell.m in Sources */,
 				25F30AEE1AFAB6B700F27187 /* SCPRUpcomingProgramViewController.m in Sources */,
 				258E8DFB1A16A6E800675E68 /* FeedbackManager.m in Sources */,
 				76658AB518DCB0DC00026176 /* AnalyticsManager.m in Sources */,
@@ -1733,9 +1825,11 @@
 				254831C11A41555700963078 /* UIView+PrintDimensions.m in Sources */,
 				258BB03E1A1C083B00B8FCFE /* Settings.m in Sources */,
 				254CC69E1A23B41D00560805 /* SCPRTriangleView.m in Sources */,
+				258C5D381B1678ED00C19BE0 /* SCPRCornerMaskView.m in Sources */,
 				258CA1001A0982ED00A3C8DB /* SCPRCloakViewController.m in Sources */,
 				254E177019F863960022BF6B /* UILabel+Additions.m in Sources */,
 				52EFF87819C37D350059A0E3 /* SCPRMenuCell.m in Sources */,
+				25B25BAD1B1D093D00ABE8B4 /* SCPRPledgePINViewController.m in Sources */,
 				2594B53F1A30F8410013B93A /* SCPRKeyboardToolbar.m in Sources */,
 				25BBCD7D1A892DA30015071E /* SCPRScrubberViewController.m in Sources */,
 				2537D8BD1A8BD7B700481CF8 /* SCPRTouchableScrubberView.m in Sources */,
@@ -1748,10 +1842,12 @@
 				52CF917A1A0032C7007BCFA8 /* QueueManager.m in Sources */,
 				25E8BDB01AC0920E007B99EB /* SCPRAlarmClockViewController.m in Sources */,
 				258BB0381A1C07FD00B8FCFE /* UXmanager.m in Sources */,
+				25B25BB51B1D096D00ABE8B4 /* SCPRBalloonViewController.m in Sources */,
 				76B9A9AC18EF59FD007A6D8C /* SCPRUserReportViewController.m in Sources */,
 				76658AB918DCB51000026176 /* NSDate+Helper.m in Sources */,
 				76B9A9B618EF79F6007A6D8C /* SCPRFooterView.m in Sources */,
 				76A308D718C8FB940065D4B1 /* SCPRAppDelegate.m in Sources */,
+				25B25BB71B1D096D00ABE8B4 /* SCPRXFSViewController.m in Sources */,
 				258BD3AE1A0BF65200E7560F /* UIButton+Additions.m in Sources */,
 				52EFF87419C375CA0059A0E3 /* SCPRPullDownMenu.m in Sources */,
 				523126A719EDB78C008A47A7 /* SCPRPreRollViewController.m in Sources */,
@@ -2097,6 +2193,7 @@
 					"DEBUG=1",
 					"$(inherited)",
 					"SUPPRESS_AGGRESSIVE_KICKSTART=1",
+					"SUPPRESS_DIMENSION_PRINTING=1",
 				);
 				INFOPLIST_FILE = "KPCC/KPCC-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;

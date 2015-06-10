@@ -26,8 +26,11 @@
 #import "SCPRTouchableScrubberView.h"
 #import "SCPRUpcomingProgramViewController.h"
 #import "SCPRCompleteScheduleViewController.h"
+#import "SCPRBalloonViewController.h"
 
-@interface SCPRMasterViewController : UIViewController<SCPRMenuDelegate,UIAlertViewDelegate,UIScrollViewDelegate>
+@import MessageUI;
+
+@interface SCPRMasterViewController : UIViewController<SCPRMenuDelegate,UIAlertViewDelegate,UIScrollViewDelegate,MFMailComposeViewControllerDelegate>
 
 @property IBOutlet UILabel *programTitleLabel;
 @property IBOutlet UIImageView *programImageView;
@@ -90,6 +93,7 @@
 @property (nonatomic,strong) SCPRPullDownMenu *pulldownMenu;
 @property (nonatomic) BOOL menuOpen;
 @property (nonatomic) BOOL preRollOpen;
+@property (nonatomic) BOOL streamSelectorOpen;
 
 // Controllable Constraints
 @property (nonatomic,strong) IBOutlet NSLayoutConstraint *initialControlsYConstraint;
@@ -170,6 +174,7 @@
 - (void)animatedStateForForwardButton:(BOOL)enabled;
 - (void)animatedStateForBackwardButton:(BOOL)enabled;
 - (void)wipeTargetsForScrubButtons;
+- (void)dismissXFSCoachingBalloon;
 
 @property (nonatomic, strong) SCPRScrubbingUIViewController *scrubbingUI;
 @property (nonatomic, strong) SCPRButton *scrubberCloseButton;
@@ -224,17 +229,15 @@
 - (void)cancelSleepTimerAction;
 - (void)remoteControlPlayOrPause;
 
-
-
-
-
-
 @property (NS_NONATOMIC_IOSONLY, readonly) BOOL uiIsJogging;
 @property (NS_NONATOMIC_IOSONLY, readonly) NSTimeInterval rewindAgainstStreamDelta;
 
 // Instance methods.
 - (void)cloakForMenu:(BOOL)animated;
+- (void)cloakForMenu:(BOOL)animated suppressDropdown:(BOOL)suppressDropdown;
 - (void)decloakForMenu:(BOOL)animated;
+
+
 
 - (void)setOnDemandUI:(BOOL)animated forProgram:(Program*)program withAudio:(NSArray*)array atCurrentIndex:(int)index;
 - (void)setLiveStreamingUI:(BOOL)animated;
@@ -269,12 +272,21 @@
 
 @property BOOL genericImageForProgram;
 @property BOOL onboardingRewindButtonShown;
+@property BOOL homeIsNotRootViewController;
 
 - (BOOL)cloaked;
 
-- (void)rollInterferenceText;
 - (void)showOnDemandOnboarding;
 - (void)prettifyBehindLiveStatus;
 - (void)handleResponseForNotification;
+
+// XFS
+- (void)cloakForXFS;
+- (void)decloakForXFS;
+- (void)showBalloonWithText:(NSString*)text;
+
+- (void)composeMail:(NSNotification*)note;
+@property (nonatomic, strong) MFMailComposeViewController *mComposer;
+@property BOOL mailCompositionDisplaying;
 
 @end

@@ -11,8 +11,11 @@
 #import "UIColor+UICustom.h"
 #import "AnalyticsManager.h"
 #import "NetworkManager.h"
+#import "DesignManager.h"
+#import "UXmanager.h"
+#import "SCPRXFSHeaderCell.h"
 
-#define kMenuItemKPCCLive   @"KPCC Live"
+#define kMenuItemKPCCLive   kMainLiveStreamTitle
 #define kMenuItemPrograms   @"Programs"
 #define kMenuItemShortList  @"Headlines"
 #define kMenuItemAlarm      @"Wake / Sleep"
@@ -38,7 +41,6 @@
             topMarginLandscape,
             topMarginPortrait,
             cellColor,
-            cellFont,
             cellTextColor,
             cellSelectedColor,
             cellSelectionStyle,
@@ -80,10 +82,12 @@
     topMarginLandscape = 0;
     cellColor = [UIColor clearColor];
     cellSelectedColor = [[UIColor virtualWhiteColor] translucify:0.2];
-    cellFont = [UIFont fontWithName:@"FreightSansProLight-Regular" size:24.0f];
     cellTextColor = [UIColor whiteColor];
     cellSelectionStyle = UITableViewCellSelectionStyleDefault;
-    separatorColor = [UIColor colorWithRed:222.f/255.f green:228.f/255.f blue:229.f/255.f alpha:0.3f];
+    separatorColor = [UIColor colorWithRed:222.f/255.f
+                                     green:228.f/255.f
+                                      blue:229.f/255.f
+                                     alpha:0.3f];
     
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(refresh)
@@ -131,6 +135,7 @@
 }
 
 - (void)loadMenu {
+    
     tableHeight = ([menuItems count] * cellHeight);
 
     [self updateValues];
@@ -156,12 +161,42 @@
     [menuItems addObject:title];
 }
 
+- (void)primeWithType:(MenuType)type {
+    self.type = type;
+    tableHeight = type == MenuTypeStandard ? ([menuItems count] * cellHeight) : 3 * cellHeight;
+    self.menuList.frame = CGRectMake(0, 0, self.frame.size.width, tableHeight + 20);
+    [self.menuList reloadData];
+}
+
+- (UIFont*)cellFontForIndex:(NSInteger)index {
+    
+    if ( self.type == MenuTypeXFS ) {
+        if ( [[UXmanager shared].settings userHasSelectedXFS] ) {
+            if ( index == 2 ) {
+                return [[DesignManager shared] proMedium:24.0f];
+            } else {
+                return [[DesignManager shared] proLight:24.0f];
+            }
+        } else {
+            if ( index == 1 ) {
+                return [[DesignManager shared] proMedium:24.0f];
+            } else {
+                return [[DesignManager shared] proLight:24.0f];
+            }
+        }
+    }
+    
+    return [[DesignManager shared] proLight:24.0f];
+    
+}
 
 # pragma mark - TableView delegate
-
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     [self.delegate menuItemSelected:indexPath];
+    [self.menuList reloadData];
+    
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
@@ -169,10 +204,16 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return [menuItems count];
+    if ( self.type == MenuTypeStandard ) {
+        return [menuItems count];
+    } else if ( self.type == MenuTypeXFS ) {
+        return 3;
+    }
+    
+    return 0;
 }
 
-- (SCPRMenuCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
 
     SCPRMenuCell *cell = [tableView dequeueReusableCellWithIdentifier:@"menuListCell"];
     if (cell == nil) {
@@ -188,40 +229,72 @@
     cell.selectionStyle = [self cellSelectionStyle];
 
     [cell.menuItemLabel setTextColor:[self cellTextColor]];
-    cell.menuItemLabel.font = [self cellFont];
-    [cell.menuItemLabel setText:menuItems[indexPath.item]];
-
-    BOOL chevronStatus = NO;
-    if ( [menuItems[indexPath.item] isEqualToString:kMenuItemKPCCLive]) {
-        chevronStatus = YES;
-    }
-
-    [cell.rightChevronImageView setHidden:chevronStatus];
+    cell.menuItemLabel.font = [self cellFontForIndex:indexPath.row];
+    cell.parentMenuTable = self;
     
-    NSString *iconNamed = menuItemsDictionary[menuItems[indexPath.item]];
-    if (iconNamed) {
-        UIImage *iconImg = [UIImage imageNamed:[NSString stringWithFormat:@"menu-%@", iconNamed]];
-        [cell.iconImageView setImage:iconImg];
-        cell.iconImageView.frame = CGRectMake(8.0, 8.0,
-                                              44.0,
-                                              44.0);
+    if ( self.type == MenuTypeStandard ) {
         
-        cell.iconImageView.contentMode = UIViewContentModeCenter;
-    }
+        [cell.menuItemLabel setText:menuItems[indexPath.item]];
+    
+        BOOL chevronStatus = NO;
+        if ( [menuItems[indexPath.item] isEqualToString:kMenuItemKPCCLive]) {
+            chevronStatus = YES;
+        }
+
+        [cell.rightChevronImageView setHidden:chevronStatus];
+        
+        NSString *iconNamed = menuItemsDictionary[menuItems[indexPath.item]];
+        if (iconNamed) {
+            UIImage *iconImg = [UIImage imageNamed:[NSString stringWithFormat:@"menu-%@", iconNamed]];
+            [cell shiftForIconWithImage:iconImg];
+        }
 
 #ifndef DISABLE_INTERRUPT
-    if ( [[NetworkManager shared] networkDown] ) {
-        cell.menuItemLabel.alpha = 0.35;
-        cell.iconImageView.alpha = 0.35;
-        cell.userInteractionEnabled = NO;
-        [cell.rightChevronImageView setHidden:YES];
-    } else {
-        cell.menuItemLabel.alpha = 1.0f;
-        cell.iconImageView.alpha = 1.0f;
-        cell.userInteractionEnabled = YES;
-        [cell.rightChevronImageView setHidden:chevronStatus];
-    }
+        if ( [[NetworkManager shared] networkDown] ) {
+            cell.menuItemLabel.alpha = 0.35;
+            cell.iconImageView.alpha = 0.35;
+            cell.userInteractionEnabled = NO;
+            [cell.rightChevronImageView setHidden:YES];
+        } else {
+            cell.menuItemLabel.alpha = 1.0f;
+            cell.iconImageView.alpha = 1.0f;
+            cell.userInteractionEnabled = YES;
+            [cell.rightChevronImageView setHidden:chevronStatus];
+        }
 #endif
+        
+    }
+    if ( self.type == MenuTypeXFS ) {
+        if ( indexPath.row == 0 ) {
+            NSArray *objects = [[NSBundle mainBundle] loadNibNamed:@"SCPRXFSHeaderCell"
+                                                             owner:nil
+                                                           options:nil];
+            SCPRXFSHeaderCell *header = (SCPRXFSHeaderCell*)objects[0];
+            [header setSelectionStyle:UITableViewCellSelectionStyleNone];
+            [header prep];
+            return header;
+        } else {
+            
+            cell.selectionStyle = UITableViewCellSelectionStyleNone;
+            cell.rightChevronImageView.hidden = YES;
+            UIImage *sa = [UIImage imageNamed:@"stream-antenna.png"];
+            if ( indexPath.row == 1 ) {
+                cell.menuItemLabel.text = @"KPCC Live";
+                if ( [[UXmanager shared].settings userHasSelectedXFS] ) {
+                    [cell unshiftForIcon];
+                } else {
+                    [cell shiftForIconWithImage:sa];
+                }
+            } else {
+                cell.menuItemLabel.text = @"KPCC Plus";
+                if ( ![[UXmanager shared].settings userHasSelectedXFS] ) {
+                    [cell unshiftForIcon];
+                } else {
+                    [cell shiftForIconWithImage:sa];
+                }
+            }
+        }
+    }
     
     return cell;
 }
@@ -268,8 +341,10 @@
 
 - (void)openDropDown:(BOOL)animated {
     
-    [[AnalyticsManager shared] logEvent:@"menuOpened"
-                         withParameters:@{}];
+    if ( self.type == MenuTypeStandard ) {
+        [[AnalyticsManager shared] logEvent:@"menuOpened"
+                             withParameters:@{}];
+    }
     
     if (animated)
     {
@@ -279,12 +354,15 @@
                          animations:^{
                              if (!fullyOpen)
                              {
-                                 self.center = CGPointMake(self.frame.size.width / 2, (/*(self.frame.size.height / 2) +*/ topMargin + (([menuItems count]*3.0) * [menuItems count])));
+                                 NSInteger numberToUse = self.type == MenuTypeStandard ? [menuItems count] : 6;
+                                 self.center = CGPointMake(self.frame.size.width / 2, (/*(self.frame.size.height / 2) +*/ topMargin + ((numberToUse*3.0) * numberToUse)));
                                  fullyOpen = YES;
                              }
                          }
                          completion:^(BOOL finished){
-                             [delegate pullDownAnimated:fullyOpen];
+                             if ( self.type == MenuTypeStandard ) {
+                                 [delegate pullDownAnimated:fullyOpen];
+                             }
                          }];
     }
     else
@@ -299,8 +377,10 @@
 
 - (void)closeDropDown:(BOOL)animated {
 
-    [[AnalyticsManager shared] logEvent:@"menuClosed"
+    if ( self.type == MenuTypeStandard ) {
+        [[AnalyticsManager shared] logEvent:@"menuClosed"
                          withParameters:@{}];
+    }
     
     if (animated)
     {

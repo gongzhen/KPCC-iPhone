@@ -24,6 +24,9 @@
     self.userHasViewedLiveScrubbingOnboarding = [aDecoder decodeBoolForKey:@"userHasViewedLiveScrubbingOnboarding"];
     self.userHasViewedScheduleOnboarding = [aDecoder decodeBoolForKey:@"userHasViewedScheduleOnboarding"];
     self.userHasColdStartedAudioOnce = [aDecoder decodeBoolForKey:@"userHasColdStartedAudioOnce"];
+    self.userHasSelectedXFS = [aDecoder decodeBoolForKey:@"userHasSelectedXFS"];
+    self.userHasViewedXFSOnboarding = [aDecoder decodeBoolForKey:@"userHasViewedXFSOnboarding"];
+    self.xfsToken = [aDecoder decodeObjectForKey:@"xfsToken"];
     
     [[Utils del] setAlarmDate:self.alarmFireDate];
     
@@ -53,6 +56,21 @@
                 forKey:@"userHasViewedLiveScrubbingOnboarding"];
     [aCoder encodeBool:self.userHasColdStartedAudioOnce
                 forKey:@"userHasColdStartedAudioOnce"];
+    [aCoder encodeBool:self.userHasSelectedXFS
+                forKey:@"userHasSelectedXFS"];
+    [aCoder encodeBool:self.userHasViewedXFSOnboarding
+                forKey:@"userHasViewedXFSOnboarding"];
+    [aCoder encodeObject:self.xfsToken
+                  forKey:@"xfsToken"];
+}
+
+- (void)setUserHasSelectedXFS:(BOOL)userHasSelectedXFS {
+    _userHasSelectedXFS = userHasSelectedXFS;
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"xfs-toggle"
+                                                        object:nil
+                                                      userInfo:@{ @"value" : [NSNumber numberWithBool:userHasSelectedXFS] }];
+    
 }
 
 @end

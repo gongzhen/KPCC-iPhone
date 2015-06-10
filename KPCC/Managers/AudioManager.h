@@ -19,32 +19,10 @@ static long kStreamBufferLimit = 4*60*60;
 static long kStreamCorrectionTolerance = 60*5;
 #endif
 
-#define kLargeSkipInterval 60*10
-#define kSmallSkipInterval 20.0
-
-#ifdef USE_TEST_STREAM
-#define kHLSLiveStreamURL @"http://hls.kqed.org/hls/smil:itunes.smil/playlist.m3u8"
-#else
-#ifdef BETA
-//#define kHLSLiveStreamURLBase @"http://streammachine-test.scprdev.org:8020/sg/test.m3u8"
-#define kHLSLiveStreamURLBase @"http://streammachine-hls001.scprdev.org/sg/kpcc-aac.m3u8"
-#define kHLSLiveStreamURL [NSString stringWithFormat:@"%@?ua=KPCCiPhone-%@",kHLSLiveStreamURLBase,[Utils urlSafeVersion]]
-#else
-#ifdef FORCE_TEST_STREAM
-#define kHLSLiveStreamURLBase @"http://streammachine-test.scprdev.org:8020/sg/test.m3u8"
-#define kHLSLiveStreamURL [NSString stringWithFormat:@"%@?ua=KPCCiPhone-%@",kHLSLiveStreamURLBase,[Utils urlSafeVersion]]
-#else
-#define kHLSLiveStreamURL [NSString stringWithFormat:@"%@?ua=KPCCiPhone-%@",@"http://streammachine-hls001.scprdev.org/sg/kpcc-aac.m3u8",[Utils urlSafeVersion]]
-#endif
-#endif
-#endif
-
-#define kLiveStreamURL @"http://live.scpr.org/kpcclive"
-#define kLiveStreamNoPreRollURL @"http://live.scpr.org/kpcclive?preskip=true"
-#define kLiveStreamAACURL @"http://live.scpr.org/aac"
-#define kLiveStreamAACNoPreRollURL @"http://live.scpr.org/aac?preskip=true"
+#define kLargeSkipInterval [[SessionManager shared] peakDrift]
+#define kSmallSkipInterval 10.0
+#define kHLS [[AudioManager shared] standardHlsStream]
 #define kLiveStreamPreRollThreshold 3600
-
 #define kFailedConnectionAudioFile @"Wood_Crash"
 #define kFailedStreamAudioFile @"Glass_Crash"
 
@@ -169,6 +147,9 @@ typedef NS_ENUM(NSUInteger, StreamStatus) {
 @property NSInteger onboardingSegment;
 @property (nonatomic) AudioMode currentAudioMode;
 
+- (NSString*)standardHlsStream;
+- (NSString*)streamingURL:(BOOL)hls preskip:(BOOL)preskip mp3:(BOOL)mp3;
+
 - (void)playQueueItemWithUrl:(NSString *)url;
 - (void)playQueueItem:(AudioChunk*)chunk;
 - (void)playLiveStream;
@@ -178,7 +159,9 @@ typedef NS_ENUM(NSUInteger, StreamStatus) {
 - (void)playAudio;
 - (void)pauseAudio;
 - (void)stopAllAudio;
+- (void)stopAudio;
 - (void)muteAudio;
+- (void)switchPlusMinusStreams;
 - (void)unmuteAudio;
 - (void)buildStreamer:(NSString*)urlString;
 - (void)buildStreamer:(NSString*)urlString local:(BOOL)local;
@@ -206,19 +189,28 @@ typedef NS_ENUM(NSUInteger, StreamStatus) {
 @property BOOL audioCheating;
 @property BOOL ignoreDriftTolerance;
 @property BOOL calibrating;
+@property BOOL failureGate;
+@property (nonatomic, copy) NSString *reasonToReportError;
+
+@property NSInteger skipCount;
 
 @property NSTimeInterval newPositionDelta;
 
 @property (nonatomic, strong) NSTimer *kickstartTimer;
 @property (nonatomic, strong) NSTimer *giveupTimer;
+@property (nonatomic, strong) NSTimer *waitForLogTimer;
+
 @property (nonatomic, copy) NSDate *seekTargetReferenceDate;
 
 - (void)updateNowPlayingInfoWithAudio:(id)audio;
 
 - (void)seekToPercent:(CGFloat)percent;
+
+/*
 - (void)seekToDate:(NSDate *)date;
 - (void)seekToDate:(NSDate *)date forward:(BOOL)forward failover:(BOOL)failover;
-- (void)specialSeekToDate:(NSDate*)date;
+- (void)specialSeekToDate:(NSDate*)date;*/
+
 - (void)recalibrateAfterScrub;
 
 - (void)forwardSeekLiveWithCompletion:(CompletionBlock)completion;
@@ -240,12 +232,11 @@ typedef NS_ENUM(NSUInteger, StreamStatus) {
 - (void)resetPlayer;
 
 - (BOOL)isPlayingAudio;
-- (BOOL)verifyPositionAuthenticity;
+- (BOOL)isActiveForAudioMode:(AudioMode)mode;
 - (void)invalidateTimeObserver;
 - (void)startObservingTime;
 
 - (NSString*)avPlayerSessionString;
-
 - (NSDate*)cookDateForActualSchedule:(NSDate*)date;
 
 #ifdef DEBUG

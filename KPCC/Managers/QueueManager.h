@@ -34,7 +34,6 @@
 - (void)playItemAtPosition:(int)index;
 - (void)dequeueForPlayback;
 
-- (void)destroyBookmark:(Bookmark*)bookmark;
 - (void)handleBookmarkingActivity;
 
 // Internal queue

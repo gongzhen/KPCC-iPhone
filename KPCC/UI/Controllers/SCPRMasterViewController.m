@@ -25,6 +25,8 @@
 #import "UIView+PrintDimensions.h"
 #import "SCPRScrubbingUIViewController.h"
 #import "SCPRTimerControlViewController.h"
+#import "SCPRPledgePINViewController.h"
+#import "SCPRBalloonViewController.h"
 
 @import MessageUI;
 
@@ -222,6 +224,8 @@ setForOnDemandUI;
         [self.programTitleYConstraint setConstant:self.initialProgramTitleConstant];
     }
     
+    [[Utils del] applyXFSButton];
+    
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(lockUI:)
                                                  name:@"network-status-fail"
@@ -247,7 +251,35 @@ setForOnDemandUI;
                                                  name:@"sleep-timer-fired"
                                                object:nil];
     
-
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(xfsHidden)
+                                                 name:@"xfs-hidden"
+                                               object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(xfsShown)
+                                                 name:@"xfs-shown"
+                                               object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(xfsToggle)
+                                                 name:@"xfs-toggle"
+                                               object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(xfsConfirm)
+                                                 name:@"xfs-confirmation-entry"
+                                               object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(xfsExit)
+                                                 name:@"xfs-confirmation-exit"
+                                               object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(composeMail:)
+                                                 name:@"compose-mail"
+                                               object:nil];
     
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
     
@@ -268,6 +300,8 @@ setForOnDemandUI;
     pulldownMenu.delegate = self;
     [self.view addSubview:pulldownMenu];
     [pulldownMenu loadMenu];
+    [pulldownMenu primeWithType:MenuTypeStandard];
+    
     self.pulldownMenu.alpha = 0.0f;
     
     // Set up pre-roll child view controller.
@@ -319,6 +353,11 @@ setForOnDemandUI;
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(treatUIforProgram)
                                                  name:@"program-has-changed"
+                                               object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(xfsAvailability)
+                                                 name:@"pledge-drive-status-updated"
                                                object:nil];
     
     [self.queueBlurView setAlpha:0.0];
@@ -384,10 +423,12 @@ setForOnDemandUI;
     [[NetworkManager shared] setupReachability];
     
     self.originalFrames = [NSMutableDictionary new];
-
+    self.navigationItem.title = kMainLiveStreamTitle;
+    
     [self primeScrubber];
     [self setupScroller];
-
+    
+    
     [SCPRCloakViewController cloakWithCustomCenteredView:nil cloakAppeared:^{
         if ( [[UXmanager shared] userHasSeenOnboarding] ) {
             
@@ -403,6 +444,8 @@ setForOnDemandUI;
             self.originalFrames[@"playerControls"] = @(self.playerControlsBottomYConstraint.constant);
             self.originalFrames[@"programTitle"] = @(self.programTitleYConstraint.constant);
             self.originalFrames[@"liveRewind"] = @(self.liveRewindBottomYConstraint.constant);
+            
+
             
         }
     }];
@@ -443,16 +486,12 @@ setForOnDemandUI;
     
     if ( self.restoreTitle ) {
         self.restoreTitle = NO;
-        self.navigationItem.title = @"KPCC Live";
+        self.homeIsNotRootViewController = NO;
+        self.navigationItem.title = kMainLiveStreamTitle;
     }
     
     self.viewHasAppeared = YES;
-    
 
-}
-
-- (void)viewWillDisappear:(BOOL)animated {
-    
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
@@ -467,6 +506,14 @@ setForOnDemandUI;
     
 }
 
+- (void)didMoveToParentViewController:(UIViewController *)parent {
+    /*if ( SEQ(self.navigationItem.title,kMainLiveStreamTitle) ) {
+        //[[Utils del] controlXFSAvailability:[[SessionManager shared] xFreeStreamIsAvailable]];
+    } else {
+        [[Utils del] controlXFSAvailability:NO];
+    }*/
+}
+
 - (void)superPop {
     
     /*if ( self.menuOpen ) {
@@ -476,7 +523,7 @@ setForOnDemandUI;
     
     [self.navigationController popToRootViewControllerAnimated:YES];
     
-    self.navigationItem.title = @"KPCC Live";
+    self.navigationItem.title = kMainLiveStreamTitle;
 }
 
 - (void)setupScroller7 {
@@ -512,11 +559,10 @@ setForOnDemandUI;
     self.upcomingScreen.view.frame = self.upcomingScreen.view.frame;
     self.cpFullDetailScreen.view.frame = self.cpFullDetailScreen.view.frame;
     
-    CGFloat mod = 64.0f;
+
     CGFloat push = 0.0f;
     CGFloat heightHint = [Utils isThreePointFive] ? self.view.frame.size.height-64.0f : self.liveStreamView.frame.size.height;
     if ( [Utils isThreePointFive] ) {
-        mod = 64.0f;
         push = 88.0f;
     }
     
@@ -527,7 +573,7 @@ setForOnDemandUI;
 #endif
 
     UIView *v2u = [Utils isIOS8] ? self.mainContentScroller : self.liveStreamView;
-    [v2u printDimensionsWithIdentifier:@">>>>>>>>>>>>>>>>>>>>>>>>>> Basis for scroll content"];
+    //[v2u printDimensionsWithIdentifier:@">>>>>>>>>>>>>>>>>>>>>>>>>> Basis for scroll content"];
     
     NSArray *cpSizeConstraints = [[[DesignManager shared] sizeConstraintsForView:self.upcomingScreen.view hints:@{ @"height" : @(heightHint),
                                                                                                             @"width" : @(v2u.frame.size.width)}] allValues];
@@ -695,7 +741,7 @@ setForOnDemandUI;
             [self.preRollViewController removeFromParentViewController];
             self.preRollViewController = nil;
             
-            self.navigationItem.title = @"KPCC Live";
+            self.navigationItem.title = kMainLiveStreamTitle;
             
             [self determinePlayState];
             
@@ -710,6 +756,10 @@ setForOnDemandUI;
         }];
         
     }];
+}
+
+- (UIStatusBarStyle)preferredStatusBarStyle {
+    return UIStatusBarStyleLightContent;
 }
 
 #pragma mark - Sleep Timer
@@ -1022,7 +1072,7 @@ setForOnDemandUI;
             if ( [[AudioManager shared] dropoutOccurred] ) {
                 [[AudioManager shared] stopAllAudio];
                 [[AudioManager shared] takedownAudioPlayer];
-                [[AudioManager shared] buildStreamer:kHLSLiveStreamURL];
+                [[AudioManager shared] buildStreamer:kHLS];
             } else {
                 [self pauseAudio];
             }
@@ -1217,6 +1267,10 @@ setForOnDemandUI;
     
     [self.jogShuttle endAnimations];
     
+    if ( [self cloaked] ) {
+        [self decloakForXFS];
+    }
+    
     [[SessionManager shared] fetchCurrentProgram:^(id returnedObject) {
         
         [self setLiveStreamingUI:YES];
@@ -1321,12 +1375,7 @@ setForOnDemandUI;
             case RewindDistanceBeginning:
             default:
                 if (cProgram) {
-                    if ( self.dirtyFromRewind ) {
-                        [[AudioManager shared] specialSeekToDate:cProgram.soft_starts_at];
-                    } else {
-                        //[[AudioManager shared] seekToDate:[cProgram.soft_starts_at dateByAddingTimeInterval:30.0f] forward:NO failover:NO];
-                        [[AudioManager shared] backwardSeekToBeginningOfProgram];
-                    }
+                    [[AudioManager shared] backwardSeekToBeginningOfProgram];
                 } 
                 break;
                 
@@ -1568,6 +1617,7 @@ setForOnDemandUI;
     [self pushToHiddenVector:self.liveRewindAltButton];
     [self pushToHiddenVector:self.shareButton];
     [self pushToHiddenVector:self.sleepTimerContainerView];
+    [self pushToHiddenVector:[[[Utils del] xfsInterface] view]];
     
     [UIView animateWithDuration:0.25 animations:^{
         self.queueBlurView.alpha = 1.0f;
@@ -1854,7 +1904,7 @@ setForOnDemandUI;
             [self.liveProgressViewController hide];
             [self determinePlayState];
             
-            [self.upcomingScreen primeWithProgramBasedOnCurrent:returnedObject];
+            //[self.upcomingScreen primeWithProgramBasedOnCurrent:returnedObject];
             [self.cpFullDetailScreen setupSchedule];
             
             if ( [[Utils del] userRespondedToPushWhileClosed] ) {
@@ -2021,7 +2071,7 @@ setForOnDemandUI;
     self.dividerLineRightAnchor.constant = -5.0f;
     self.dividerLineLeftAnchor.constant = 5.0f;
     
-    self.navigationItem.title = @"KPCC Live";
+    self.navigationItem.title = kMainLiveStreamTitle;
     [self primeRemoteCommandCenter:YES];
     
     self.mainContentScroller.alpha = 1.0f;
@@ -2108,6 +2158,8 @@ setForOnDemandUI;
     self.timeLabelOnDemand.text = @"LOADING...";
     self.queueLoading = YES;
     
+
+    
     [[SessionManager shared] setLocalLiveTime:0.0f];
     
     UIImage *img = [[DesignManager shared] currentBlurredImage];
@@ -2140,6 +2192,7 @@ setForOnDemandUI;
             [self decloakForMenu:NO];
         }
         
+        [[Utils del] controlXFSAvailability:NO];
         [self adjustScrubbingState];
         
         [[SessionManager shared] setCurrentProgram:nil];
@@ -2810,6 +2863,8 @@ setForOnDemandUI;
     [self pushToHiddenVector:self.scrubbingTriggerView];
     [self pushToHiddenVector:nav.menuButton];
     [self pushToHiddenVector:self.liveRewindAltButton];
+    [self pushToHiddenVector:[[[Utils del] xfsInterface] view]];
+    
     [self commitHiddenVector];
     
 }
@@ -2882,15 +2937,154 @@ setForOnDemandUI;
           
 }
 
+#pragma mark - XFS
+- (void)cloakForXFS {
+    self.pulldownMenu.alpha = 1.0f;
+    
+    [self dismissXFSCoachingBalloon];
+    
+    [self pushToHiddenVector:self.mainContentScroller];
+    [self pushToHiddenVector:self.initialControlsView];
+    [self pushToHiddenVector:self.playerControlsView];
+    [self pushToHiddenVector:self.liveProgressViewController.view];
+    
+    [[UXmanager shared] hideMenuButton];
+    
+    [self.pulldownMenu primeWithType:MenuTypeXFS];
+    [self.pulldownMenu setDelegate:[[Utils del] xfsInterface]];
+    [self.pulldownMenu openDropDown:YES];
+    
+    [UIView animateWithDuration:0.33f animations:^{
+        self.queueBlurView.alpha = 1.0f;
+        self.queueDarkBgView.alpha = 0.4f;
+    } completion:^(BOOL finished) {
+        self.streamSelectorOpen = YES;
+    }];
+    
+    [self commitHiddenVector];
+}
+
+- (void)decloakForXFS {
+    
+    [self popHiddenVector];
+    [self.pulldownMenu closeDropDown:YES];
+    
+    [UIView animateWithDuration:0.33f animations:^{
+        self.queueBlurView.alpha = 0.0f;
+        self.queueDarkBgView.alpha = 0.0f;
+    } completion:^(BOOL finished) {
+        
+        [[UXmanager shared] showMenuButton];
+        
+        [self.pulldownMenu primeWithType:MenuTypeStandard];
+        [self.pulldownMenu setDelegate:self];
+        
+        self.streamSelectorOpen = NO;
+        self.pulldownMenu.alpha = 0.0f;
+    }];
+}
+
+- (void)xfsHidden {
+    [self decloakForXFS];
+    
+    [[AnalyticsManager shared] logEvent:@"stream-selector-closed"
+                         withParameters:nil];
+}
+
+- (void)xfsShown {
+    [self cloakForXFS];
+    
+    [[AnalyticsManager shared] logEvent:@"stream-selector-opened"
+                         withParameters:nil];
+}
+
+- (void)xfsToggle {
+    self.navigationItem.title = kMainLiveStreamTitle;
+}
+
+- (void)showBalloonWithText:(NSString *)text {
+    [[Utils del] showCoachingBalloonWithText:text];
+}
+
+- (void)dismissXFSCoachingBalloon {
+    SCPRXFSViewController *xfsvc = [[Utils del] xfsInterface];
+    [xfsvc dismissCoachingBalloon];
+}
+
+- (void)xfsConfirm {
+    
+    [[[Utils del] xfsInterface] grayInterface];
+    
+    SCPRPledgePINViewController *pin = [[SCPRPledgePINViewController alloc]
+                                        initWithNibName:@"SCPRPledgePINViewController"
+                                        bundle:nil];
+    pin.view = pin.view;
+    pin.parentXFSViewController = [[Utils del] xfsInterface];
+    
+    [self.navigationController pushViewController:pin
+                                         animated:YES];
+    
+}
+
+- (void)xfsExit {
+    self.navigationItem.title = kMainLiveStreamTitle;
+    [self.navigationController popViewControllerAnimated:YES];
+    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent
+                                                animated:YES];
+    
+    [self.pulldownMenu.menuList reloadData];
+    
+    if ( [[SessionManager shared] userIsSwitchingToKPCCPlus] ) {
+        [[SessionManager shared] setUserIsSwitchingToKPCCPlus:NO];
+        if ( [[AudioManager shared] isActiveForAudioMode:AudioModeLive] ) {
+            [[AudioManager shared] switchPlusMinusStreams];
+        } else {
+            [self goLive:YES];
+        }
+    }
+}
+
+- (void)xfsAvailability {
+
+    BOOL available = [[SessionManager shared] xFreeStreamIsAvailable];
+    if ( !available ) {
+        
+        BOOL xfs = [[UXmanager shared].settings userHasSelectedXFS];
+        [[UXmanager shared].settings setUserHasSelectedXFS:NO];
+        [[UXmanager shared].settings setXfsToken:nil];
+        [[UXmanager shared] persist];
+        
+        if ( xfs ) {
+            [self showBalloonWithText:@"KPCC Plus will return for the next pledge drive. Thanks for your support as a member!"];
+            [[AudioManager shared] switchPlusMinusStreams];
+            [[[Utils del] xfsInterface] partialRemoval];
+        } else {
+            [[Utils del] controlXFSAvailability:available];
+        }
+        
+    } else {
+        if ( ![[UXmanager shared].settings userHasViewedXFSOnboarding] ) {
+            [self showBalloonWithText:@"It's pledge-drive time! KPCC members can tap here to access KPCC Plus."];
+        }
+        [[Utils del] controlXFSAvailability:available];
+    }
+ 
+}
+
 #pragma mark - Util
 
 - (BOOL)cloaked {
-    return (self.scrubbing || self.preRollOpen || self.menuOpen);
+    return (self.scrubbing || self.preRollOpen || self.menuOpen || self.streamSelectorOpen );
 }
 
-#pragma mark - Menu control
 
+#pragma mark - Menu control
 - (void)cloakForMenu:(BOOL)animated {
+    [self cloakForMenu:animated
+      suppressDropdown:NO];
+}
+
+- (void)cloakForMenu:(BOOL)animated suppressDropdown:(BOOL)suppressDropdown {
     
     if ( [AudioManager shared].currentAudioMode == AudioModePreroll ) return;
     
@@ -2901,13 +3095,14 @@ setForOnDemandUI;
     self.pulldownMenu.alpha = 1.0f;
     [self.liveProgressViewController hide];
     
-    self.navigationItem.title = @"Menu";
-    if (animated) {
-        [pulldownMenu openDropDown:YES];
-    } else {
-        [pulldownMenu openDropDown:NO];
-    }
+    [self dismissXFSCoachingBalloon];
     
+    self.navigationItem.title = @"Menu";
+    
+    if ( !suppressDropdown ) {
+        [pulldownMenu openDropDown:animated];
+    }
+  
     if (setForOnDemandUI){
         POPBasicAnimation *onDemandElementsFade = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
         onDemandElementsFade.toValue = @0;
@@ -2947,6 +3142,9 @@ setForOnDemandUI;
     }
     
     [self pushToHiddenVector:self.liveRewindAltButton];
+    [[Utils del] controlXFSAvailability:[[SessionManager shared] xFreeStreamIsAvailable]];
+    [self pushToHiddenVector:[[[Utils del] xfsInterface] view]];
+    [self pushToHiddenVector:self.shareButton];
     [self commitHiddenVector];
     
     POPBasicAnimation *dividerFadeAnim = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
@@ -2958,7 +3156,6 @@ setForOnDemandUI;
     [self adjustScrubbingState];
     [self adjustScrollingState];
     
-    self.shareButton.alpha = 0.0f;
 }
 
 - (void)decloakForMenu:(BOOL)animated {
@@ -2974,14 +3171,12 @@ setForOnDemandUI;
     if (setForOnDemandUI) {
         self.navigationItem.title = @"Programs";
     } else {
-        self.navigationItem.title = @"KPCC Live";
+        self.navigationItem.title = kMainLiveStreamTitle;
     }
     
-    if (animated) {
-        [pulldownMenu closeDropDown:YES];
-    } else {
-        [pulldownMenu closeDropDown:NO];
-    }
+
+    [pulldownMenu closeDropDown:animated];
+    
     
     NSNumber *restoredAlpha = [[NetworkManager shared] networkDown] ? @.45f : @1;
     
@@ -3047,6 +3242,13 @@ setForOnDemandUI;
     }
     
     [self popHiddenVector];
+    
+    if ( !self.homeIsNotRootViewController ) {
+        [[Utils del] controlXFSAvailability:[[SessionManager shared] virtualLiveAudioMode]];
+    } else {
+        [[Utils del] controlXFSAvailability:NO];
+    }
+    
     [self adjustScrollingState];
     [self adjustScrubbingState];
     
@@ -3075,6 +3277,8 @@ setForOnDemandUI;
     [[UXmanager shared] hideMenuButton];
     
     [self removeAllAnimations];
+    
+    [self dismissXFSCoachingBalloon];
     
     if (setForOnDemandUI){
         POPBasicAnimation *onDemandElementsFade = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
@@ -3107,6 +3311,9 @@ setForOnDemandUI;
     [self.initialControlsView.layer pop_addAnimation:controlsFadeAnimation forKey:@"controlsFade"];
     [self.programTitleLabel.layer pop_addAnimation:controlsFadeAnimation forKey:@"titleFade"];
     [self.liveDescriptionLabel.layer pop_addAnimation:controlsFadeAnimation forKey:@"statusFade"];
+    
+    [self pushToHiddenVector:[[[Utils del] xfsInterface] view]];
+    [self commitHiddenVector];
     
     [self adjustScrollingState];
     [self adjustScrubbingState];
@@ -3153,6 +3360,8 @@ setForOnDemandUI;
         dividerFadeAnim.duration = 0.3;
         [self.horizDividerLine.layer pop_addAnimation:dividerFadeAnim forKey:@"horizDividerFadeOutAnimation"];
     }
+    
+    [self popHiddenVector];
     
     [self adjustScrubbingState];
     [self adjustScrollingState];
@@ -3407,6 +3616,8 @@ setForOnDemandUI;
             
         case 1:
         {
+            
+            self.homeIsNotRootViewController = YES;
             event = @"menuSelectionPrograms";
             Program *prog = [[SessionManager shared] currentProgram];
             if (setForOnDemandUI && self.onDemandProgram != nil) {
@@ -3416,22 +3627,25 @@ setForOnDemandUI;
             [[DesignManager shared] setProtectBlurredImage:YES];
             SCPRProgramsListViewController *vc = [[SCPRProgramsListViewController alloc] initWithBackgroundProgram:prog];
             [self.navigationController pushViewController:vc animated:YES];
+            
             break;
         }
             
         case 2: {
             
+            self.homeIsNotRootViewController = YES;
             event = @"menuSelectionHeadlines";
             SCPRShortListViewController *slVC = [[SCPRShortListViewController alloc] initWithNibName:@"SCPRShortListViewController"
                                                                                               bundle:nil];
+            slVC.view = slVC.view;
             [self.navigationController pushViewController:slVC animated:YES];
             break;
             
         }
         case 3: {
             
+            self.homeIsNotRootViewController = YES;
             [self decloakForMenu:YES];
-            
             
             event = @"menuSelectionWakeSleep";
             SCPRTimerControlViewController *timer = [[SCPRTimerControlViewController alloc] initWithNibName:@"SCPRTimerControlViewController"
@@ -3439,7 +3653,6 @@ setForOnDemandUI;
             
             CGSize bounds = [[UIScreen mainScreen] bounds].size;
             timer.view.frame = CGRectMake(0.0,0.0,bounds.width,bounds.height);
-            
             
             [self.navigationController pushViewController:timer
                                                  animated:YES];
@@ -3460,6 +3673,7 @@ setForOnDemandUI;
         }
         case 5: {
             
+            self.homeIsNotRootViewController = YES;
             event = @"menuSelectionFeedback";
             SCPRFeedbackViewController *fbVC = [[SCPRFeedbackViewController alloc] initWithNibName:@"SCPRFeedbackViewController"
                                                                                             bundle:nil];
@@ -3742,6 +3956,70 @@ setForOnDemandUI;
     }
     
 }
+
+#pragma mark - Compose Mail
+- (void)composeMail:(NSNotification *)note {
+    
+    if ( self.mailCompositionDisplaying ) return;
+    
+    if ( [MFMailComposeViewController canSendMail] ) {
+        self.mailCompositionDisplaying = YES;
+        self.mComposer = [[MFMailComposeViewController alloc] init];
+        MFMailComposeViewController *compose = self.mComposer;
+        
+        NSDictionary *ui = [note userInfo];
+        if ( ui[@"subject"] ) {
+            [compose setSubject:ui[@"subject"]];
+        }
+        
+        NSString *body = ui[@"body"];
+        if ( body ) {
+            if ( ui[@"subtext"] ) {
+                NSDictionary *st = ui[@"subtext"];
+                NSString *total = @"";
+                for ( NSString *key in st.allKeys ) {
+                    total = [total stringByAppendingFormat:@"%@ - %@\n",key,st[key]];
+                }
+                body = [body stringByAppendingFormat:@"\n\n%@",total];
+            }
+            [compose setMessageBody:body
+                             isHTML:NO];
+        }
+        
+        NSString *email = ui[@"email"];
+        if ( email ) {
+            [compose setToRecipients:@[email]];
+        }
+        
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"mail-compose-will-appear"
+                                                            object:nil];
+        
+
+        compose.mailComposeDelegate = self;
+        
+        [self presentViewController:compose
+                           animated:YES
+                         completion:^{
+                             [self pushToHiddenVector:[[[Utils del] xfsInterface] view]];
+                             [self commitHiddenVector];
+                         }];
+        
+        compose.navigationBar.tintColor = [UIColor whiteColor];
+        
+    }
+}
+
+- (void)mailComposeController:(MFMailComposeViewController *)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError *)error {
+    [self popHiddenVector];
+    
+    [[[Utils del] xfsInterface] orangeInterface];
+    
+    [self dismissViewControllerAnimated:YES completion:^{
+        self.mComposer = nil;
+        self.mailCompositionDisplaying = NO;
+    }];
+}
+
 
 /*
  #pragma mark - Navigation

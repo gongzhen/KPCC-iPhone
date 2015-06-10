@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "Utils.h"
 #import "Program.h"
+#import "Parse.h"
 
 typedef NS_ENUM(NSUInteger, OnDemandFinishedReason) {
     OnDemandFinishedReasonEpisodeEnd = 0,
@@ -69,6 +70,7 @@ static NSInteger kProgramPollingPressure = 5;
 @property BOOL userLeavingForClickthrough;
 @property BOOL updaterArmed;
 @property BOOL sleepTimerArmed;
+@property BOOL xFreeStreamIsAvailable;
 
 @property (nonatomic) double lastKnownBitrate;
 @property NSInteger latestDriftValue;
@@ -78,6 +80,8 @@ static NSInteger kProgramPollingPressure = 5;
 @property NSInteger minDrift;
 @property NSInteger curDrift;
 @property (nonatomic, strong) Program *currentProgram;
+
+@property NSInteger programFetchFailoverCount;
 
 - (void)fetchCurrentProgram:(CompletionBlockWithValue)completed;
 - (void)fetchProgramAtDate:(NSDate*)date completed:(CompletionBlockWithValue)completed;
@@ -116,6 +120,13 @@ static NSInteger kProgramPollingPressure = 5;
 - (BOOL)sessionIsInRecess;
 - (BOOL)sessionIsInRecess:(BOOL)respectPause;
 
+// XFS
+- (void)xFreeStreamIsAvailableWithCompletion:(CompletionBlock)completion;
+- (void)validateXFSToken:(NSString*)token completion:(CompletionBlockWithValue)completion;
+#ifdef DEBUG
+@property NSInteger numberOfChecks;
+#endif
+
 @property BOOL sessionIsHot;
 @property BOOL rewindSessionIsHot;
 @property BOOL rewindSessionWillBegin;
@@ -123,6 +134,9 @@ static NSInteger kProgramPollingPressure = 5;
 @property BOOL seekForwardRequested;
 @property BOOL prerollDirty;
 @property BOOL genericImageForProgram;
+@property BOOL userIsSwitchingToKPCCPlus;
+
+- (BOOL)virtualLiveAudioMode;
 
 - (void)handleSessionReactivation;
 - (void)invalidateSession;
@@ -144,6 +158,8 @@ static NSInteger kProgramPollingPressure = 5;
 - (NSString*)prettyStringForPauseExplanation:(PauseExplanation)explanation;
 
 - (long)bufferLength;
+
+- (NSDictionary*)parseErrors;
 
 #ifdef TESTING_PROGRAM_CHANGE
 @property (NS_NONATOMIC_IOSONLY, readonly, strong) Program *fakeProgram;

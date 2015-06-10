@@ -148,7 +148,9 @@ static QueueManager *singleton = nil;
 
 #pragma mark - Queue internal
 - (void)enqueue:(AudioChunk *)audio {
-    [self.queue addObject:audio];
+    if ( audio ) {
+        [self.queue addObject:audio];
+    }
 }
 
 - (AudioChunk*)dequeue {

@@ -15,7 +15,7 @@
 #import "Utils.h"
 #import <KSReachability/KSReachability.h>
 
-#define kServerBase @"http://www.scpr.org/api/v3"
+#define kServerBase [[NetworkManager shared] serverBase]
 #define kFailoverThreshold 10
 
 
@@ -67,6 +67,6 @@ typedef NS_ENUM(NSInteger, NetworkHealth) {
 - (void)setupFloatingReachabilityWithHost:(NSString*)host;
 - (void)applyNotifiersToReachability:(KSReachability*)reachability;
 
-- (BOOL)wifi;
+- (NSString*)serverBase;
 
 @end

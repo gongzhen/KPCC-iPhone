@@ -74,7 +74,7 @@ static NetworkManager *singleton = nil;
     self.anchoredReachability = [KSReachability reachabilityToLocalNetwork];
     [self applyNotifiersToReachability:self.anchoredReachability];
     [self applyNotifiersToReachability:self.anchoredStaticContentReachability];
-    [self setupFloatingReachabilityWithHost:[[NSURL URLWithString:kHLSLiveStreamURL] host]];
+    [self setupFloatingReachabilityWithHost:[[NSURL URLWithString:kHLS] host]];
     
     self.basicReachability = [Reachability reachabilityForInternetConnection];
     
@@ -162,8 +162,11 @@ static NetworkManager *singleton = nil;
             NSString *responseKey;
             for (NSString *key in keys) {
                 if (![key isEqualToString:@"meta"]) {
-                    responseKey = key;
-                    break;
+                    id thing = responseObject[key];
+                    if ( [thing isKindOfClass:[NSDictionary class]] || [thing isKindOfClass:[NSArray class]] ) {
+                        responseKey = key;
+                        break;
+                    }
                 }
             }
             
@@ -258,6 +261,16 @@ static NetworkManager *singleton = nil;
         NSLog(@"send impression failure? %@", error);
         completion(NO);
     }];
+}
+
+- (NSString*)serverBase {
+    NSString *key = @"production";
+#ifdef DEBUG
+    //key = @"staging";
+#endif
+    
+    NSDictionary *globalConfig = [Utils globalConfig];
+    return globalConfig[@"SCPR"][key];
 }
 
 @end

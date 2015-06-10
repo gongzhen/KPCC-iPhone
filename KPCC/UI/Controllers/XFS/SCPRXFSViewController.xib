@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="7706" systemVersion="14D136" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7703"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="SCPRXFSViewController">
+            <connections>
+                <outlet property="cancelButton" destination="oBZ-2q-09F" id="IKy-bQ-OMc"/>
+                <outlet property="chevronHorizontalAnchor" destination="IHl-Be-AlI" id="0TI-bB-9Ay"/>
+                <outlet property="chevronImage" destination="FTz-gP-UDR" id="D74-9U-Pru"/>
+                <outlet property="deployButton" destination="L7W-v0-svq" id="xLg-Bm-5W9"/>
+                <outlet property="dividerView" destination="C66-pG-Vnx" id="rPN-Pi-sgS"/>
+                <outlet property="leftButton" destination="Olh-NJ-d78" id="NSc-l4-uaH"/>
+                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="chevron_down.png" translatesAutoresizingMaskIntoConstraints="NO" id="FTz-gP-UDR">
+                    <rect key="frame" x="208" y="26" width="32" height="32"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="32" id="WyV-Fg-PZM"/>
+                        <constraint firstAttribute="width" constant="32" id="bqH-6n-5qk"/>
+                    </constraints>
+                </imageView>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="L7W-v0-svq">
+                    <rect key="frame" x="50" y="0.0" width="270" height="64"/>
+                    <color key="backgroundColor" red="0.28794010248940244" green="0.98111979166666663" blue="0.94164796598635381" alpha="0.39000000000000001" colorSpace="calibratedRGB"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="64" id="0aN-Z6-DN8"/>
+                    </constraints>
+                    <state key="normal">
+                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                    </state>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Olh-NJ-d78" userLabel="leftButton">
+                    <rect key="frame" x="0.0" y="0.0" width="50" height="64"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="64" id="E8o-2k-4dQ"/>
+                        <constraint firstAttribute="width" constant="50" id="r4S-Gb-zAQ"/>
+                    </constraints>
+                    <state key="normal">
+                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                    </state>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="oBZ-2q-09F">
+                    <rect key="frame" x="0.0" y="19" width="63" height="45"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="63" id="awK-no-d34"/>
+                        <constraint firstAttribute="height" constant="45" id="r2q-Nd-e1m"/>
+                    </constraints>
+                    <state key="normal" title="Cancel">
+                        <color key="titleColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                    </state>
+                </button>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="C66-pG-Vnx" userLabel="divider">
+                    <rect key="frame" x="0.0" y="63" width="320" height="1"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="1" id="y3T-Nt-3aJ"/>
+                    </constraints>
+                </view>
+            </subviews>
+            <color key="backgroundColor" red="0.16546322601010099" green="0.16546322601010099" blue="0.16546322601010099" alpha="0.0" colorSpace="calibratedRGB"/>
+            <constraints>
+                <constraint firstItem="Olh-NJ-d78" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="Cwg-r4-fXY"/>
+                <constraint firstItem="L7W-v0-svq" firstAttribute="trailing" secondItem="FTz-gP-UDR" secondAttribute="trailing" constant="80" id="IHl-Be-AlI"/>
+                <constraint firstItem="C66-pG-Vnx" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="ONY-aa-fef"/>
+                <constraint firstItem="Olh-NJ-d78" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="Tf3-bX-P2K"/>
+                <constraint firstItem="L7W-v0-svq" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="URB-2F-rLS"/>
+                <constraint firstAttribute="trailing" secondItem="C66-pG-Vnx" secondAttribute="trailing" id="VPd-I5-qnx"/>
+                <constraint firstItem="L7W-v0-svq" firstAttribute="top" secondItem="FTz-gP-UDR" secondAttribute="top" constant="-26" id="axD-lv-ejX"/>
+                <constraint firstAttribute="trailing" secondItem="L7W-v0-svq" secondAttribute="trailing" id="fAA-jZ-DYT"/>
+                <constraint firstItem="C66-pG-Vnx" firstAttribute="bottom" secondItem="L7W-v0-svq" secondAttribute="bottom" id="fS7-Lf-N8o"/>
+                <constraint firstItem="L7W-v0-svq" firstAttribute="leading" secondItem="Olh-NJ-d78" secondAttribute="trailing" id="gcT-GL-rcF"/>
+                <constraint firstItem="oBZ-2q-09F" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="nDp-hi-Z1r"/>
+                <constraint firstItem="oBZ-2q-09F" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="19" id="qDh-SF-4sl"/>
+            </constraints>
+            <nil key="simulatedStatusBarMetrics"/>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <point key="canvasLocation" x="205" y="122"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="chevron_down.png" width="15" height="9"/>
+    </resources>
+</document>

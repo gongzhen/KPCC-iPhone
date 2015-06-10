@@ -24,5 +24,6 @@ UIViewControllerTransitioningDelegate> {
 
 - (void)applyCustomLeftBarItem:(CustomLeftBarItem)leftBarItemType proxyDelegate:(id<MenuButtonDelegate>)proxyDelegate;
 - (void)restoreLeftBarItem:(id<MenuButtonDelegate>)proxyDelegate;
+- (void)leftButtonTapped;
 
 @end

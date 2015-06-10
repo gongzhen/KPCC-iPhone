@@ -12,6 +12,7 @@
 #import "UIImageView+AFNetworking.h"
 #import <POP/POP.h>
 #import "SCPRAppDelegate.h"
+#import "UXmanager.h"
 
 @import MessageUI;
 
@@ -106,8 +107,18 @@ static DesignManager *singleton = nil;
     
 }
 
+- (NSString*)mainLiveStreamTitle {
+    if ( [[UXmanager shared].settings userHasSelectedXFS] ) {
+        return @"KPCC Plus";
+    }
+    
+    return @"KPCC Live";
+}
+
 #pragma mark - Layouts
 - (NSArray*)typicalConstraints:(UIView *)view withTopOffset:(CGFloat)topOffset fullscreen:(BOOL)fullscreen {
+    
+    if ( !view ) return @[];
     
     [view setTranslatesAutoresizingMaskIntoConstraints:NO];
     NSArray *hConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[view]|"
@@ -281,6 +292,7 @@ static DesignManager *singleton = nil;
                andText:text
               iconName:nil];
 }
+
 - (void)sculptButton:(UIButton *)button withStyle:(SculptingStyle)style andText:(NSString *)text iconName:(NSString *)iconName {
     [button setTitle:text forState:UIControlStateNormal];
     [button setTitle:text forState:UIControlStateHighlighted];

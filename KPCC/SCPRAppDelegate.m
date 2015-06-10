@@ -40,8 +40,11 @@
     [[AnalyticsManager shared] setup];
     
 #ifndef PRODUCTION
-    //[[UXmanager shared].settings setUserHasViewedOnboarding:YES];
-    //[[UXmanager shared].settings setUserHasViewedOnDemandOnboarding:YES];
+    [[UXmanager shared].settings setUserHasViewedOnboarding:YES];
+    [[UXmanager shared].settings setUserHasViewedOnDemandOnboarding:YES];
+    [[UXmanager shared].settings setUserHasSelectedXFS:NO];
+    [[UXmanager shared].settings setXfsToken:@""];
+    [[UXmanager shared].settings setUserHasViewedXFSOnboarding:NO];
 #ifdef TESTING_SCRUBBER
     [[UXmanager shared].settings setUserHasViewedOnDemandOnboarding:NO];
     [[UXmanager shared].settings setUserHasViewedScrubbingOnboarding:NO];
@@ -86,7 +89,7 @@
     self.window.rootViewController = navigationController;
     navigationController.navigationBarHidden = YES;
 
-    NSString *ua = kHLSLiveStreamURL;
+    NSString *ua = kHLS;
     NSLog(@"URL : %@",ua);
     
     [[AnalyticsManager shared] kTrackSession:@"began"];
@@ -581,6 +584,81 @@
     [[UIApplication sharedApplication] endBackgroundTask:self.alarmTask];
     self.alarmTask = 0;
 }
+
+#pragma mark - XFS
+- (void)applyXFSButton {
+    if ( !self.xfsInterface ) {
+        self.xfsInterface = [[SCPRXFSViewController alloc]
+                             initWithNibName:@"SCPRXFSViewController"
+                             bundle:nil];
+        self.xfsInterface.view = self.xfsInterface.view;
+        CGFloat h = self.masterNavigationController.navigationBar.frame.size.height+20.0f;
+        
+        [self.window addSubview:self.xfsInterface.view];
+        
+        NSLayoutConstraint *height = [NSLayoutConstraint constraintWithItem:self.xfsInterface.view
+                                                                  attribute:NSLayoutAttributeHeight
+                                                                  relatedBy:NSLayoutRelationEqual
+                                                                     toItem:nil
+                                                                  attribute:NSLayoutAttributeNotAnAttribute
+                                                                 multiplier:1.0
+                                                                   constant:h];
+        
+        NSArray *locks = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[xfs]|"
+                                                                 options:0
+                                                                 metrics:nil
+                                                                   views:@{ @"xfs" : self.xfsInterface.view }];
+        
+        NSArray *vLocks = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|[xfs]"
+                                                                  options:0
+                                                                  metrics:nil
+                                                                    views:@{ @"xfs" : self.xfsInterface.view }];
+        
+        self.xfsInterface.view.translatesAutoresizingMaskIntoConstraints = NO;
+        
+        self.xfsInterface.heightAnchor = height;
+        [self.xfsInterface.view addConstraint:height];
+        [self.window addConstraints:vLocks];
+        [self.window addConstraints:locks];
+        [self.window layoutIfNeeded];
+        
+        [self.xfsInterface applyHeight:h];
+ 
+        self.xfsInterface.view.alpha = 0.0f;
+        
+    }
+}
+
+- (void)controlXFSAvailability:(BOOL)available {
+    
+    // Override here, kind of kludgy, but...
+    if ( !self.xfsInterface.removeOnBalloonDismissal ) {
+        if ( ![[SessionManager shared] xFreeStreamIsAvailable] ) {
+            available = NO;
+        }
+    } else {
+        if ( !available ) {
+            return;
+        }
+    }
+    
+    if ( [self.masterViewController homeIsNotRootViewController] ) {
+        available = NO;
+    }
+    if ( [self.masterViewController menuOpen] ) {
+        available = NO;
+    }
+    if ( [self.masterViewController preRollOpen] ) {
+        available = NO;
+    }
+    
+    self.xfsInterface.view.alpha = available ? 1.0f : 0.0f;
+}
+
+- (void)showCoachingBalloonWithText:(NSString *)text {
+    [self.xfsInterface showCoachingBalloonWithText:text];
+}
+
 
 #pragma mark - ContentProcessor
 
