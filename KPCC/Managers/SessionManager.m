@@ -520,6 +520,11 @@
 }
 
 - (void)fetchCurrentProgram:(CompletionBlockWithValue)completed {
+    
+    if ( ![[UXmanager shared] onboardingEnding] && ![[UXmanager shared].settings userHasViewedOnboarding] ) {
+        return;
+    }
+    
     NSDate *ct = [self vNow];
     [self fetchProgramAtDate:ct completed:^(id returnedObject) {
 #ifdef TESTING_SCHEDULE

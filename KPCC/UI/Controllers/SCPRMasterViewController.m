@@ -2329,6 +2329,8 @@ setForOnDemandUI;
             return;
         }
         
+
+        
         [[DesignManager shared] loadProgramImage:programObj.program_slug
                                     andImageView:self.programImageView
                                       completion:^(BOOL status) {
