@@ -68,6 +68,9 @@
     NSDate *cpEndsAt = [program ends_at];
     NSLog(@"Projected end for program : %@",[NSDate stringFromDate:cpEndsAt
                                                         withFormat:@"h:mm:ss a"]);
+    if ( !cpEndsAt ) {
+        return;
+    }
     
     [[SessionManager shared] fetchProgramAtDate:cpEndsAt completed:^(id returnedObject) {
         

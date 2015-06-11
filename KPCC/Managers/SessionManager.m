@@ -503,7 +503,7 @@
                 self.programFetchFailoverCount++;
                 // Don't allow nil right now, do a failover
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    [self fetchCurrentProgram:completed];
+                    [self fetchProgramAtDate:date completed:completed];
                 });
             } else {
                 self.programFetchFailoverCount = 0;
