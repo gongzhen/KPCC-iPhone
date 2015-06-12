@@ -1443,7 +1443,8 @@ setForOnDemandUI;
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.66 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         
         seekRequested = YES;
-        [[AudioManager shared] forwardSeekLiveWithCompletion:nil];
+        [[AudioManager shared] forwardSeekLiveWithType:ScrubbingTypeBackToLive
+                                            completion:nil];
         
     });
 }

@@ -42,19 +42,16 @@
 
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
-    NSLog(@"Scrubber : Touch Began");
     [(SCPRScrubberViewController*)self.parentScrubberController userTouched:touches
                                                                       event:event];
 }
 
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
-    NSLog(@"Scrubber : Touch moved");
     [(SCPRScrubberViewController*)self.parentScrubberController userPanned:touches
                                                                       event:event];
 }
 
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
-    NSLog(@"Scrubber : Touch ended");
     [(SCPRScrubberViewController*)self.parentScrubberController userLifted:touches
                                                                      event:event];
 }

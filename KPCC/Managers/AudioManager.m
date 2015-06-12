@@ -440,6 +440,7 @@ static const NSString *ItemStatusContext;
                                                                   repeats:NO];
 #endif
             if ( !self.failureGate ) {
+                NSLog(@"Playback stalled ... ");
                 self.failureGate = YES;
                 self.reasonToReportError = @"playbackStalled";
                 self.waitForLogTimer = [NSTimer scheduledTimerWithTimeInterval:4.0f
@@ -454,7 +455,7 @@ static const NSString *ItemStatusContext;
         }
     }
     
-    NSLog(@"Playback stalled ... ");
+    
 
 }
 
@@ -514,7 +515,7 @@ static const NSString *ItemStatusContext;
         }
     }
     
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         [[AnalyticsManager shared] clearLogs];
         [[AnalyticsManager shared] logEvent:@"streamRecovered"
                              withParameters:@{}];
@@ -621,7 +622,7 @@ static const NSString *ItemStatusContext;
         }
         
         [[SessionManager shared] setCurDrift:drift];
-        NSLog(@"Drift : %ld",(long)drift);
+       // NSLog(@"Drift : %ld",(long)drift);
         
     }
     
@@ -660,7 +661,7 @@ static const NSString *ItemStatusContext;
         CMTimeRange range = [seekRange[0] CMTimeRangeValue];
         Float64 maxSeekTime = CMTimeGetSeconds(CMTimeRangeGetEnd(range));
         
-        NSLog(@"Reported Date : %@, Expected Date : %@",repStr,expStr);
+        //NSLog(@"Reported Date : %@, Expected Date : %@",repStr,expStr);
         if ( fabs(etFloat - rtFloat) > kSmallSkipInterval || ![expectedDate isWithinTimeFrame:kSmallSkipInterval ofDate:reportedDate] ) {
             
             if ( !self.seekWillEffectBuffer ) {
@@ -669,6 +670,7 @@ static const NSString *ItemStatusContext;
                 }
             
                 NSLog(@"Stream skipped a bit : %ld seconds",(long)fabs([reportedDate timeIntervalSince1970] - [expectedDate timeIntervalSince1970]));
+                NSLog(@"Reported Date : %@, Expected Date : %@",repStr,expStr);
                 
                 [[AnalyticsManager shared] logEvent:@"streamSkippedByInterval"
                                      withParameters:@{ @"expected" : expStr,
@@ -687,7 +689,7 @@ static const NSString *ItemStatusContext;
                     self.seekWillEffectBuffer = YES;
                     
                     [self invalidateTimeObserver];
-                    [self.audioPlayer.currentItem seekToDate:expectedDate completionHandler:^(BOOL finished) {
+                    [self.audioPlayer.currentItem seekToDate:[ completionHandler:^(BOOL finished) {
 
                         self.localBufferSample[@"expectedDate"] = expectedDate;
                         self.localBufferSample[@"open"] = @(YES);
@@ -713,12 +715,21 @@ static const NSString *ItemStatusContext;
                 }
 #else
                 if ( self.skipCount < 1 ) {
-                    [self forwardSeekLiveWithCompletion:^{
+                    
+                    NSDate *seek = [[SessionManager shared] vLive];
+                    if ( [[SessionManager shared] lastValidCurrentPlayerTime] ) {
+                        seek = [[SessionManager shared] lastValidCurrentPlayerTime];
+                    }
+                    NSLog(@"ATTEMPT TO FIX : Get back to %@ when now is %@",[NSDate stringFromDate:seek
+                                                                         withFormat:@"h:mm:ss"],repStr);
+                    
+                    [self seekToDate:[reportedDate laterDate:seek] completion:^{
                         
                         self.skipCount++;
                         NSDate *now = self.audioPlayer.currentItem.currentDate;
                         NSString *currTime = [NSDate stringFromDate:now
                                                          withFormat:@"HH:mm:ss a"];
+                        
                         [[AnalyticsManager shared] logEvent:@"attemptToFixLargeGapInStream"
                                              withParameters:@{ @"expected" : expStr,
                                                                @"reported" : repStr,
@@ -727,6 +738,7 @@ static const NSString *ItemStatusContext;
                                                                @"reportedMaxSeekTime" : @(maxSeekTime)}];
                         
                     }];
+                    
                 } else {
                     [[AnalyticsManager shared] logEvent:@"skippedTooManyTimes"
                                          withParameters:@{}];
@@ -830,7 +842,12 @@ static const NSString *ItemStatusContext;
                                                                       
         if ( weakSelf.frameCount % 10 == 0 ) {
             weakSelf.currentDate = audioPlayer.currentItem.currentDate;
+            if ( [[SessionManager shared] dateIsReasonable:weakSelf.currentDate] ) {
+                [[SessionManager shared] setLastValidCurrentPlayerTime:weakSelf.currentDate];
+            }
+            weakSelf.seekWillEffectBuffer = NO;
         }
+        
         if ( weakSelf.dropoutOccurred ) {
             weakSelf.dropoutOccurred = NO;
 #ifndef SUPPRESS_BITRATE_THROTTLING
@@ -871,10 +888,9 @@ static const NSString *ItemStatusContext;
 
             if ( self.currentAudioMode == AudioModeLive ) {
                 if ( [[SessionManager shared] localLiveTime] == 0.0f ) {
-                    if ( fabs([[weakSelf currentDate] timeIntervalSinceDate:weakSelf.maxSeekableDate]) <= kVirtualMediumBehindLiveTolerance ) {
-                        [[SessionManager shared] setLocalLiveTime:[[weakSelf currentDate] timeIntervalSince1970]];
-                    } else {
-                        [[SessionManager shared] setLocalLiveTime:[weakSelf.maxSeekableDate timeIntervalSince1970]];
+                    NSDate *vLive = [[SessionManager shared] vLive];
+                    if ( [[SessionManager shared] dateIsReasonable:vLive] ) {
+                        [[SessionManager shared] setLocalLiveTime:[vLive timeIntervalSince1970]];
                     }
                 } else {
                     [[SessionManager shared] setLocalLiveTime:[[SessionManager shared] localLiveTime]+0.1f];
@@ -986,14 +1002,14 @@ static const NSString *ItemStatusContext;
                 [self.delegate onSeekCompleted];
             }
             
-            self.seekWillEffectBuffer = NO;
+            [[AnalyticsManager shared] trackSeekUsageWithType:ScrubbingTypeRewindToStart];
             
         }];
     }
     
 }
 
-- (void)forwardSeekLiveWithCompletion:(CompletionBlock)completion {
+- (void)forwardSeekLiveWithType:(NSInteger)type completion:(CompletionBlock)completion {
     if (!self.audioPlayer) {
         [self buildStreamer:kHLS];
     }
@@ -1032,6 +1048,8 @@ static const NSString *ItemStatusContext;
             dispatch_async(dispatch_get_main_queue(), completion);
         }
         
+        [[AnalyticsManager shared] trackSeekUsageWithType:type];
+        
     }];
     
 }
@@ -1039,13 +1057,19 @@ static const NSString *ItemStatusContext;
 - (void)finishSeekToLive {
     if ( [self.audioPlayer rate] <= 0.0 ) {
         [self.audioPlayer play];
+    } else {
+        [self startObservingTime];
     }
     
-
-    self.seekWillEffectBuffer = NO;
-    
     [self.delegate onSeekCompleted];
-    [self startObservingTime];
+
+}
+
+- (void)seekToDate:(NSDate *)date completion:(CompletionBlock)completion {
+    
+    NSDate *now = [[SessionManager shared] vNow];
+    [self intervalSeekWithTimeInterval:(-1.0f*[now timeIntervalSinceDate:date]) completion:completion];
+    
 }
 
 - (void)intervalSeekWithTimeInterval:(NSTimeInterval)interval completion:(CompletionBlock)completion {
@@ -1099,12 +1123,11 @@ static const NSString *ItemStatusContext;
     
     if ( [self.audioPlayer rate] <= 0.0f ) {
         [self.audioPlayer play];
+    } else {
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.25f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            [self startObservingTime];
+        });
     }
-    
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.25f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        [self startObservingTime];
-    });
-    
     
     dispatch_async(dispatch_get_main_queue(), ^{
         
@@ -1112,34 +1135,33 @@ static const NSString *ItemStatusContext;
         NSTimeInterval failDiff = [landingDate timeIntervalSince1970] - [self.seekTargetReferenceDate timeIntervalSince1970];
         NSLog(@"After all attempts the difference between live and target seek is %1.1f - %@",failDiff,[NSDate stringFromDate:landingDate withFormat:@"h:mm:ss a"]);
         
-        ScrubbingType type = interval < 0.0f ? ScrubbingTypeBack30 : ScrubbingTypeFwd30;
-        if ( interval < -30.0f ) {
-            type = ScrubbingTypeRewindToStart;
-        } else if ( interval > 30.0f ) {
-            type = ScrubbingTypeBackToLive;
-        }
-        
         [self recalibrateAfterScrub];
         [self setCalibrating:NO];
-        [self setSeekWillEffectBuffer:NO];
-        
+
         if ( completion ) {
             completion();
         }
-        
-        [[AnalyticsManager shared] trackSeekUsageWithType:type];
-        
         
     });
 }
 
 - (void)forwardSeekThirtySecondsWithCompletion:(CompletionBlock)completion {
-    NSTimeInterval backward = 30.0f;
-    [self intervalSeekWithTimeInterval:backward completion:completion];
+    NSTimeInterval forward = 30.0f;
+    [self intervalSeekWithTimeInterval:forward completion:^{
+        [[AnalyticsManager shared] trackSeekUsageWithType:ScrubbingTypeFwd30];
+        if ( completion ) {
+            completion();
+        }
+    }];
 }
 - (void)backwardSeekThirtySecondsWithCompletion:(CompletionBlock)completion {
     NSTimeInterval backward = -30.0f;
-    [self intervalSeekWithTimeInterval:backward completion:completion];
+    [self intervalSeekWithTimeInterval:backward completion:^{
+        [[AnalyticsManager shared] trackSeekUsageWithType:ScrubbingTypeBack30];
+        if ( completion ) {
+            completion();
+        }
+    }];
 }
 
 - (void)forwardSeekFifteenSecondsWithCompletion:(CompletionBlock)completion {
@@ -1313,12 +1335,9 @@ static const NSString *ItemStatusContext;
                 
             }
         }
-            // [0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{12}
     }
     
-    if ( rv ) {
-        NSLog(@"Playback Session ID : %@",rv);
-    }
+
     return rv;
 
 }

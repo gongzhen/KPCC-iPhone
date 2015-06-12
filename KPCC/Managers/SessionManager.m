@@ -90,12 +90,22 @@
 }
 
 - (NSDate*)vNow {
-    if ( [[AudioManager shared].audioPlayer.currentItem currentDate] ) {
-        return [[AudioManager shared].audioPlayer.currentItem currentDate];
-    }
     
-    if ( self.localLiveTime > 0.0f ) {
-        return [NSDate dateWithTimeIntervalSince1970:self.localLiveTime];
+    NSDate *cd = [[AudioManager shared].audioPlayer.currentItem currentDate];
+    if ( cd ) {
+        if ( [[SessionManager shared] dateIsReasonable:cd] ) {
+            return cd;
+        } else {
+            NSLog(@" ************* AUDIO PLAYER CURRENT DATE IS CORRUPTED : %@",[NSDate stringFromDate:cd
+                                                                                            withFormat:@"MMM/dd/yyyy h:mm a"]);
+        }
+    }
+        
+    cd = [[SessionManager shared] lastValidCurrentPlayerTime];
+    if ( cd ) {
+        if ( [[SessionManager shared] dateIsReasonable:cd] ) {
+            return cd;
+        }
     }
     
     return [NSDate date];
@@ -342,6 +352,16 @@
                                            @"programLengthInSeconds" : [NSString stringWithFormat:@"%@",duration],
                                            @"programLength" : pretty
                                            }];
+}
+
+- (CGFloat)acceptableBufferWindow {
+    NSTimeInterval buffer = [self bufferLength];
+    return buffer+(20.0f*60.0f);
+}
+
+- (BOOL)dateIsReasonable:(NSDate *)date {
+    return [date isWithinTimeFrame:[self acceptableBufferWindow]
+                            ofDate:[NSDate date]];
 }
 
 #pragma mark - Sleep Timer
@@ -934,7 +954,6 @@
         }
     }
     
-    NSLog(@"Buffer length is %@",[NSDate scientificStringFromSeconds:stableDuration]);
     return stableDuration;
     
 }

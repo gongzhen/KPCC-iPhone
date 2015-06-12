@@ -342,6 +342,8 @@ static AnalyticsManager *singleton = nil;
         case ScrubbingTypeRewindToStart:
             method = @"rewind-to-start-button";
             break;
+        case ScrubbingTypeSystem:
+            method = @"system-time-repair";
         case ScrubbingTypeUnknown:
         default:
             method = @"unknown";
