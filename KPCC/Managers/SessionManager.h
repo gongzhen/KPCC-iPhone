@@ -45,6 +45,7 @@ static NSInteger kProgramPollingPressure = 5;
 @property (nonatomic, copy) NSDate *sessionReturnedDate;
 @property (nonatomic, copy) NSDate *sessionPausedDate;
 @property (nonatomic, copy) NSDate *lastProgramUpdate;
+@property (nonatomic, copy) NSDate *lastValidCurrentPlayerTime;
 
 @property (nonatomic, copy) NSString *liveSessionID;
 @property (nonatomic, copy) NSString *odSessionID;
@@ -93,6 +94,8 @@ static NSInteger kProgramPollingPressure = 5;
 - (void)disarmProgramUpdater;
 - (void)resetCache;
 - (void)checkProgramUpdate:(BOOL)force;
+
+- (CGFloat)acceptableBufferWindow;
 
 - (BOOL)sleepTimerActive;
 - (void)armSleepTimerWithSeconds:(NSInteger)seconds completed:(CompletionBlock)completed;
@@ -148,6 +151,9 @@ static NSInteger kProgramPollingPressure = 5;
 - (NSString*)endLiveSession;
 - (void)trackLiveSession;
 - (void)trackRewindSession;
+
+- (BOOL)dateIsReasonable:(NSDate*)date;
+
 
 
 - (NSString*)startOnDemandSession;

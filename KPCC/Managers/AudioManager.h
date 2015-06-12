@@ -213,9 +213,10 @@ typedef NS_ENUM(NSUInteger, StreamStatus) {
 
 - (void)recalibrateAfterScrub;
 
-- (void)forwardSeekLiveWithCompletion:(CompletionBlock)completion;
+- (void)forwardSeekLiveWithType:(NSInteger)type completion:(CompletionBlock)completion;
 - (void)forwardSeekThirtySecondsWithCompletion:(CompletionBlock)completion;
 - (void)backwardSeekThirtySecondsWithCompletion:(CompletionBlock)completion;
+- (void)seekToDate:(NSDate*)date completion:(CompletionBlock)completion;
 - (void)intervalSeekWithTimeInterval:(NSTimeInterval)interval completion:(CompletionBlock)completion;
 - (void)finishIntervalSeek:(NSTimeInterval)interval completion:(CompletionBlock)completion;
 - (void)finishSeekToLive;

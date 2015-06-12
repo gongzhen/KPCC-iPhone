@@ -24,7 +24,8 @@ typedef NS_ENUM(NSInteger, ScrubbingType) {
     ScrubbingTypeBack30,
     ScrubbingTypeFwd30,
     ScrubbingTypeRewindToStart,
-    ScrubbingTypeBackToLive
+    ScrubbingTypeBackToLive,
+    ScrubbingTypeSystem
 };
 
 @interface AnalyticsManager : NSObject
