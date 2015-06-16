@@ -60,27 +60,16 @@
     
     
     NSDate *live = [[NSDate date] dateByAddingTimeInterval:-90.0f]; // Add in what we know is going to be slightly behind live
-    if ( [[AudioManager shared] maxSeekableDate] ) {
-        live = [[AudioManager shared] maxSeekableDate];
-    }
     if ( self.localLiveTime > 0.0f ) {
         live = [NSDate dateWithTimeIntervalSince1970:self.localLiveTime];
+    } else if ( [[AudioManager shared] maxSeekableDate] ) {
+        live = [[AudioManager shared] maxSeekableDate];
     }
+
     
     if ( [AudioManager shared].audioPlayer.currentItem ) {
         NSDate *msd = [[AudioManager shared].audioPlayer.currentItem currentDate];
-        if ( msd ) {
-           /* if ( [msd isWithinTimeFrame:self.peakDrift ofDate:[NSDate date]] ) {
-                if ( fabs([live timeIntervalSinceDate:msd]) > [[SessionManager shared] peakDrift] ) {
-                    live = msd;
-                    self.latestDriftValue = fabs([live timeIntervalSinceDate:msd]);
-                }
-            } else {
-                return live;
-            } */
-            // Make this a no-op for now
-            
-        } else {
+        if ( !msd ) {
             // AVPlayer has no current date, so it's probably stopped
             return [[NSDate date] dateByAddingTimeInterval:60*60*24*10];
         }
@@ -97,7 +86,7 @@
             return cd;
         } else {
             NSLog(@" ************* AUDIO PLAYER CURRENT DATE IS CORRUPTED : %@",[NSDate stringFromDate:cd
-                                                                                            withFormat:@"MMM/dd/yyyy h:mm a"]);
+                                                                                            withFormat:@"MM/dd/yyyy h:mm:ss a"]);
         }
     }
         
@@ -108,7 +97,7 @@
         }
     }
     
-    return [NSDate date];
+    return [self vLive];
 }
 
 - (NSInteger)calculatedDriftValue {
@@ -231,7 +220,6 @@
     
     Program *p = self.currentProgram;
     
-    NSLog(@"Logging play event for Live Stream...");
     NSString *title = @"[UNKNOWN]";
     if ( p.title ) {
         title = p.title;
@@ -332,8 +320,6 @@
     @synchronized(self) {
         self.odSessionIsHot = NO;
     }
-    
-    NSLog(@"Logging play event for Live Stream...");
     
     NSDate *d = [[[QueueManager shared] currentChunk] audioTimeStamp];
     NSString *pubDateStr = [NSDate stringFromDate:d
@@ -447,16 +433,6 @@
 
 #pragma mark - Cache
 - (void)resetCache {
-    
-  /*
-    [[NSURLCache sharedURLCache] removeAllCachedResponses];
-    
-    NSURLCache *shinyCache = [[NSURLCache alloc] initWithMemoryCapacity:2*1024*1024
-                                                           diskCapacity:16*1024*1024
-                                                               diskPath:nil];
-    
-    [NSURLCache setSharedURLCache:shinyCache];
-   */
     
 }
 

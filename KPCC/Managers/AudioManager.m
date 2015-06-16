@@ -343,7 +343,7 @@ static const NSString *ItemStatusContext;
 #endif
             }
         } else {
-            NSLog(@"AVPlayerItem - Buffer filled normally...");
+            //NSLog(@"AVPlayerItem - Buffer filled normally...");
         }
     }
     
@@ -672,48 +672,12 @@ static const NSString *ItemStatusContext;
                 NSLog(@"Stream skipped a bit : %ld seconds",(long)fabs([reportedDate timeIntervalSince1970] - [expectedDate timeIntervalSince1970]));
                 NSLog(@"Reported Date : %@, Expected Date : %@",repStr,expStr);
                 
-                [[AnalyticsManager shared] logEvent:@"streamSkippedByInterval"
-                                     withParameters:@{ @"expected" : expStr,
-                                                       @"reported" : repStr,
-                                                       @"reportedTimeValue" : @(rtFloat),
-                                                       @"reportedMaxSeekTime" : @(maxSeekTime)}];
-                
 #ifndef SUPPRESS_SKIP_FIXER
                 
                 self.localBufferSample[@"expectedDate"] = expectedDate;
                 self.localBufferSample[@"open"] = @(NO);
 
-#ifdef CLASSIC_SKIP_ANALYSIS
-                if ( etFloat - rtFloat > kLargeSkipInterval ) {
 
-                    self.seekWillEffectBuffer = YES;
-                    
-                    [self invalidateTimeObserver];
-                    [self.audioPlayer.currentItem seekToDate:[ completionHandler:^(BOOL finished) {
-
-                        self.localBufferSample[@"expectedDate"] = expectedDate;
-                        self.localBufferSample[@"open"] = @(YES);
-                        
-                        if ( [self.audioPlayer rate] <= 0.0 ) {
-                            [self.audioPlayer play];
-                        }
-                            
-                        NSDate *now = self.audioPlayer.currentItem.currentDate;
-                        NSString *currTime = [NSDate stringFromDate:now
-                                                         withFormat:@"HH:mm:ss a"];
-                            
-                        [[AnalyticsManager shared] logEvent:@"attemptToFixLargeGapInStream"
-                                                 withParameters:@{ @"expected" : expStr,
-                                                                   @"reported" : repStr,
-                                                                   @"timeAfterAttemptToFix" : currTime,
-                                                                   @"reportedTimeValue" : @(rtFloat),
-                                                                   @"reportedMaxSeekTime" : @(maxSeekTime)}];
-                        
-                        self.seekWillEffectBuffer = NO;
-                        
-                    }];
-                }
-#else
                 if ( self.skipCount < 1 ) {
                     
                     NSDate *seek = [[SessionManager shared] vLive];
@@ -745,7 +709,7 @@ static const NSString *ItemStatusContext;
                     
                     [self stopAudio];
                 }
-#endif
+
             }
 #endif
             return;
@@ -1178,13 +1142,11 @@ static const NSString *ItemStatusContext;
     NSDate *vNow = [[SessionManager shared] vNow];
     Program *cp = [[SessionManager shared] currentProgram];
     NSTimeInterval vNowInSeconds = [vNow timeIntervalSince1970];
-    NSTimeInterval saInSeconds = [cp.soft_starts_at timeIntervalSince1970];
+    NSTimeInterval saInSeconds = [cp.starts_at timeIntervalSince1970];
     NSTimeInterval eaInSeconds = [cp.ends_at timeIntervalSince1970];
     
     if ( vNowInSeconds >= eaInSeconds || vNowInSeconds <= saInSeconds ) {
         NSLog(@"Scrub will force program update for vNow : %@",[NSDate stringFromDate:vNow withFormat:@"h:mm:s a"]);
-        
-        
         [[SessionManager shared] fetchCurrentProgram:^(id returnedObject) {
             
         }];
@@ -1266,22 +1228,6 @@ static const NSString *ItemStatusContext;
     }
     return kHLS;
 
-    // Old.. used for playing pre-roll after given threshold on playback start. May be useful in the future.
-/*
-    long currentTimeSeconds = [[NSDate date] timeIntervalSince1970];
-    SCPRDebugLog(@"currentTimeSeconds: %ld", currentTimeSeconds);
-    SCPRDebugLog(@"currentTimeSeconds - LiveStreamThreshold: %ld", (currentTimeSeconds - kLiveStreamPreRollThreshold));
-    SCPRDebugLog(@"currentTimeSeconds - lastPreRoll: %ld", (currentTimeSeconds - self.lastPreRoll));
-    SCPRDebugLog(@"Current lastPreRoll time: %ld", self.lastPreRoll);
-
-    if (currentTimeSeconds - self.lastPreRoll > kLiveStreamPreRollThreshold || currentTimeSeconds - self.lastPreRoll < 3) {
-        SCPRDebugLog(@"liveStreamURL returning WITH preroll");
-        return kLiveStreamAACURL;
-    } else {
-        SCPRDebugLog(@"liveStreamURL returning NO preroll");
-        return kLiveStreamAACNoPreRollURL;
-    }
-*/
 }
 
 - (double)indicatedBitrate {
@@ -1409,8 +1355,9 @@ static const NSString *ItemStatusContext;
     self.localBufferSample = nil;
 #endif
     
-    
-    NSLog(@" ******** Master Audio URL : %@ ********",urlString);
+    if ( self.currentAudioMode != AudioModeLive ) {
+        [[SessionManager shared] setLocalLiveTime:0.0f];
+    }
     
     self.status = StreamStatusStopped;
     self.previousUrl = urlString;
@@ -1465,6 +1412,8 @@ static const NSString *ItemStatusContext;
     if ( self.currentAudioMode != AudioModeOnboarding ) {
         [self.audioPlayer cancelPendingPrerolls];
     }
+    
+    [[SessionManager shared] setLocalLiveTime:0.0f];
     
     self.localBufferSample = nil;
     self.maxSeekableDate = nil;
@@ -1538,10 +1487,6 @@ static const NSString *ItemStatusContext;
 
     [self playAudioWithURL:url];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(playerItemDidFinishPlaying:)
-                                                 name:AVPlayerItemDidPlayToEndTimeNotification
-                                               object:nil];
 }
 
 
