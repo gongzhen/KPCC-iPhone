@@ -167,6 +167,7 @@ static AnalyticsManager *singleton = nil;
     }
     
     [Flurry logEvent:event withParameters:userInfo timed:YES];
+    
 #endif
     
 }

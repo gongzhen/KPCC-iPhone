@@ -300,7 +300,6 @@ static const NSString *ItemStatusContext;
                         }
                     }
                     if ( self.appGaveUp ) {
-                        self.appGaveUp = NO;
 #ifndef SUPPRESS_BITRATE_THROTTLING
                         if ( [Utils isIOS8] ) {
                             [self.audioPlayer.currentItem setPreferredPeakBitRate:kPreferredPeakBitRateTolerance];
@@ -515,12 +514,14 @@ static const NSString *ItemStatusContext;
         }
     }
     
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        [[AnalyticsManager shared] clearLogs];
-        [[AnalyticsManager shared] logEvent:@"streamRecovered"
-                             withParameters:@{}];
-        
-    });
+    if ( !self.appGaveUp ) {
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            [[AnalyticsManager shared] clearLogs];
+            [[AnalyticsManager shared] logEvent:@"streamRecovered"
+                                 withParameters:@{}];
+            
+        });
+    }
 }
 
 - (void)impatientRestart {
@@ -622,7 +623,6 @@ static const NSString *ItemStatusContext;
         }
         
         [[SessionManager shared] setCurDrift:drift];
-       // NSLog(@"Drift : %ld",(long)drift);
         
     }
     
@@ -877,6 +877,7 @@ static const NSString *ItemStatusContext;
                 weakSelf.userPause = NO;
                 weakSelf.seekWillEffectBuffer = NO;
                 weakSelf.seekRequested = NO;
+                weakSelf.appGaveUp = NO;
                 
                 if ( [[SessionManager shared] sleepTimerArmed] ) {
                     [[SessionManager shared] tickSleepTimer];
