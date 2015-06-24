@@ -1423,7 +1423,7 @@
 				76A308C018C8FB940065D4B1 /* Frameworks */,
 				76A308C118C8FB940065D4B1 /* Resources */,
 				9E4DCD001A0847218C219F40 /* Copy Pods Resources */,
-				25B25BBD1B22471700ABE8B4 /* ShellScript */,
+				25B25BBD1B22471700ABE8B4 /* NewRelic dSym Script */,
 			);
 			buildRules = (
 			);
@@ -1719,13 +1719,14 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		25B25BBD1B22471700ABE8B4 /* ShellScript */ = {
+		25B25BBD1B22471700ABE8B4 /* NewRelic dSym Script */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
+			name = "NewRelic dSym Script";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1980,6 +1981,7 @@
 					"BETA=1",
 					"SUPPRESS_AGGRESSIVE_KICKSTART=1",
 				);
+				GCC_WARN_UNUSED_VALUE = NO;
 				INFOPLIST_FILE = "KPCC/KPCC-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -2068,6 +2070,7 @@
 					"SUPPRESS_DIMENSION_PRINTING=1",
 					"SUPPRESS_AGGRESSIVE_KICKSTART=1",
 				);
+				GCC_WARN_UNUSED_VALUE = NO;
 				INFOPLIST_FILE = "KPCC/KPCC-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -2195,6 +2198,7 @@
 					"SUPPRESS_AGGRESSIVE_KICKSTART=1",
 					"SUPPRESS_DIMENSION_PRINTING=1",
 				);
+				GCC_WARN_UNUSED_VALUE = NO;
 				INFOPLIST_FILE = "KPCC/KPCC-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -2231,6 +2235,7 @@
 					"SUPPRESS_AGGRESSIVE_KICKSTART=1",
 					"SUPPRESS_DIMENSION_PRINTING=1",
 				);
+				GCC_WARN_UNUSED_VALUE = NO;
 				INFOPLIST_FILE = "KPCC/KPCC-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
