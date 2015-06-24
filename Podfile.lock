@@ -29,7 +29,7 @@ PODS:
   - Mixpanel (2.7.3):
     - Mixpanel/MPCategoryHelpers (= 2.7.3)
   - Mixpanel/MPCategoryHelpers (2.7.3)
-  - NewRelicAgent (4.186)
+  - NewRelicAgent (5.1.0)
   - Parse (1.7.4):
     - Bolts/Tasks (>= 1.1.5)
   - ParseCrashReporting (1.7.4):
@@ -61,7 +61,7 @@ SPEC CHECKSUMS:
   Kochava: 848021ac47726fdc40f4f2f15428c64d0edf10b0
   KSReachability: 7b418ec0b38c29765adad11421718a8a172dfa30
   Mixpanel: 1d387d76800e07e953958c62c97fea27f13632dd
-  NewRelicAgent: c9efe4386f703c97741fbb1f65e80d5513a04866
+  NewRelicAgent: ab0ca8fe6477d3650eb58c95d5d26dfbd9be7bac
   Parse: 6ca512c6e860b66739c95151b2f76ac4712b7842
   ParseCrashReporting: 0cff3a2720d6e977fff1bdd64e6d3ea94528e170
   pop: 628ffc631644601567ee8bfaaaea493ebd7d0923
