@@ -805,7 +805,7 @@
 #pragma mark - XFS
 - (void)xFreeStreamIsAvailableWithCompletion:(CompletionBlock)completion {
  
-#ifdef DEBUG
+#ifdef TESTING_KPCC_PLUS
     
     if ( self.numberOfChecks == 2 ) {
         [self setXFreeStreamIsAvailable:NO];
