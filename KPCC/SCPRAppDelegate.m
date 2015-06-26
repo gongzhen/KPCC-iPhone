@@ -587,6 +587,8 @@
 
 #pragma mark - XFS
 - (void)applyXFSButton {
+    
+
     if ( !self.xfsInterface ) {
         self.xfsInterface = [[SCPRXFSViewController alloc]
                              initWithNibName:@"SCPRXFSViewController"
@@ -627,10 +629,12 @@
         self.xfsInterface.view.alpha = 0.0f;
         
     }
+    
 }
 
 - (void)controlXFSAvailability:(BOOL)available {
     
+
     // Override here, kind of kludgy, but...
     if ( !self.xfsInterface.removeOnBalloonDismissal ) {
         if ( ![[SessionManager shared] xFreeStreamIsAvailable] ) {
