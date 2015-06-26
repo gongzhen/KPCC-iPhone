@@ -232,7 +232,7 @@ static NetworkManager *singleton = nil;
     AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
     manager.responseSerializer = [AFHTTPResponseSerializer serializer];
     NSString *idfa = [[[ASIdentifierManager sharedManager] advertisingIdentifier] UUIDString];
-    NSString *tritonEndpoint = [NSString stringWithFormat:@"http://cmod.live.streamtheworld.com/ondemand/ars?type=preroll&stid=83153&idfa=%@",idfa];
+    NSString *tritonEndpoint = [NSString stringWithFormat:@"http://adserver.adtechus.com/?adrawdata/3.0/5511.1/3590534/0/0/header=yes;cookie=no;adct=text/xml;guid=%@",idfa];
     
     
     [manager GET:tritonEndpoint parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
