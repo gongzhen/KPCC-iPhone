@@ -805,6 +805,7 @@
 #pragma mark - XFS
 - (void)xFreeStreamIsAvailableWithCompletion:(CompletionBlock)completion {
  
+
     [self setXFreeStreamIsAvailable:NO];
     [[NSNotificationCenter defaultCenter] postNotificationName:@"pledge-drive-status-updated"
                                                         object:nil];
@@ -817,6 +818,7 @@
     
 /*
 #ifdef DEBUG
+
     
     if ( self.numberOfChecks == 2 ) {
         [self setXFreeStreamIsAvailable:NO];

@@ -656,6 +656,11 @@
         available = NO;
     }
     
+    // IPH-17 -- Make sure the scrubbing UI is not up
+    if ( [self.masterViewController scrubbing] ) {
+        available = NO;
+    }
+    
     self.xfsInterface.view.alpha = available ? 1.0f : 0.0f;
 }
 
