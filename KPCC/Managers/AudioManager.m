@@ -1463,6 +1463,12 @@ static const NSString *ItemStatusContext;
     [self playAudio];
     [[UXmanager shared] timeEnd:@"Play Audio"];
     
+    // IPH-18
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(playerItemDidFinishPlaying:)
+                                                 name:AVPlayerItemDidPlayToEndTimeNotification
+                                               object:nil];
+    
 }
 
 - (void)playQueueItem:(AudioChunk*)chunk {

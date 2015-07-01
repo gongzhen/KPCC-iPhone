@@ -1993,7 +1993,7 @@
 					"$(PROJECT_DIR)/KPCC/ThirdParty/TestFlight",
 					"$(PROJECT_DIR)/KPCC/ThirdParty/Flurry",
 				);
-				PRODUCT_NAME = "$(TARGET_NAME) Beta";
+				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "7de88d41-fd13-4035-a8ee-18dabe63e82c";
 				SWIFT_OBJC_BRIDGING_HEADER = "KPCC/UI/Controllers/KPCC-Bridging-Header.h";
 				TARGETED_DEVICE_FAMILY = 1;
