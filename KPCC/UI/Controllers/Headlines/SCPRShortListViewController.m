@@ -192,21 +192,8 @@ static NSString *kShortListMenuURL = @"http://www.scpr.org/short-list/latest#no-
         
         if ( self.initialLoad ) {
             
-            if ( [str rangeOfString:@"googleads"].location != NSNotFound ) {
-                return YES;
-            }
-            if ( [str rangeOfString:@"googlesyndication"].location != NSNotFound ) {
-                return YES;
-            }
-            if ( [str rangeOfString:@"google.com/pagead"].location != NSNotFound ) {
-                return YES;
-            }
-            if ( [str rangeOfString:@"pageview?"].location != NSNotFound ) {
-                return YES;
-            }
-            if ( [str rangeOfString:@"chartbeat"].location != NSNotFound ) {
-                return YES;
-            }
+            if ( navigationType == UIWebViewNavigationTypeOther ) return YES;
+            
             if ( [str rangeOfString:@"http"].location != NSNotFound ) {
                 
                 NSLog(@"Headlines electing to load : %@",str);
@@ -251,10 +238,19 @@ static NSString *kShortListMenuURL = @"http://www.scpr.org/short-list/latest#no-
                 }
                 self.loadingTimer = nil;
             }
+            
             self.loadingTimer = [NSTimer scheduledTimerWithTimeInterval:0.25 target:self
                                                                selector:@selector(unlockBackButton)
                                                                userInfo:nil
                                                                 repeats:NO];
+            
+            if ( navigationType == UIWebViewNavigationTypeOther ) {
+                return YES;
+            }
+            
+            [[UIApplication sharedApplication] openURL:[request URL]];
+            return NO;
+            
             
         }
     }
