@@ -14,6 +14,7 @@
 #import "Program.h"
 #import "QueueManager.h"
 #import "UXmanager.h"
+#import <Google/Analytics.h>
 
 static AnalyticsManager *singleton = nil;
 
@@ -39,6 +40,7 @@ static AnalyticsManager *singleton = nil;
     
     NSString *mixPanelToken = @"SandboxToken";
     NSString *flurryToken = @"DebugKey";
+    
 #ifdef PRODUCTION
 #ifdef PRERELEASE
     mixPanelToken = @"SandboxToken";
@@ -55,13 +57,11 @@ static AnalyticsManager *singleton = nil;
     
     NSDictionary *globalConfig = [Utils globalConfig];
     
-#ifndef TURN_OFF_SANDBOX_CONFIG
     [Flurry setCrashReportingEnabled:YES];
     [Flurry setDebugLogEnabled:NO];
     [Flurry startSession: globalConfig[@"Flurry"][flurryToken] ];
     [Flurry setBackgroundSessionEnabled:NO];
     
-    NSLog(@"Mixpanel : %@ : %@",mixPanelToken,globalConfig[@"Mixpanel"][mixPanelToken]);
     
     [Mixpanel sharedInstanceWithToken:globalConfig[@"Mixpanel"][mixPanelToken]];
     Mixpanel *mxp = [Mixpanel sharedInstance];
@@ -69,17 +69,6 @@ static AnalyticsManager *singleton = nil;
     [mxp identify:uuid];
     [mxp.people set:@{ @"uuid" : uuid }];
     
-#ifdef USE_KOCHAVA
-    NSString *kKey = globalConfig[@"Kochava"][@"AppKey"];
-    if ( kKey ) {
-        NSDictionary *kDict = @{ @"kochavaAppId" : kKey };
-        self.kTracker = [[KochavaTracker alloc] initKochavaWithParams:kDict];
-    }
-#endif
-    
-    [NewRelicAgent startWithApplicationToken:globalConfig[@"NewRelic"][@"production"]];
-    
-#endif
     
 }
 
@@ -117,6 +106,7 @@ static AnalyticsManager *singleton = nil;
     return;
 #endif
     
+    /*
     NSMutableDictionary *userInfo = [[NSMutableDictionary alloc] init];
     
     NSMutableDictionary *mParams = [parameters mutableCopy];
@@ -166,7 +156,8 @@ static AnalyticsManager *singleton = nil;
         }
     }
     
-    [Flurry logEvent:event withParameters:userInfo timed:YES];
+    [Flurry logEvent:event withParameters:userInfo timed:YES];*/
+    
     
 #endif
     

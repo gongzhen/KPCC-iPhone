@@ -236,7 +236,7 @@
 - (void)killAudio {
     [self.lisaPlayer stop];
     [self.musicPlayer stop];
-    [[AudioManager shared] takedownAudioPlayer];
+    [[AudioManager shared] stopAudio];
 }
 
 - (void)presentLensOverRewindButton {

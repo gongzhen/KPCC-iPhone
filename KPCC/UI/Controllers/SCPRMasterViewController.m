@@ -1259,7 +1259,7 @@ setForOnDemandUI;
         return;
     }
     
-    [[AudioManager shared] takedownAudioPlayer];
+    [[AudioManager shared] stopAudio];
     
     self.liveStreamView.userInteractionEnabled = YES;
     self.playerControlsView.userInteractionEnabled = YES;
