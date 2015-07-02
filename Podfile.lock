@@ -1,40 +1,45 @@
 PODS:
-  - AFNetworking (2.5.2):
-    - AFNetworking/NSURLConnection (= 2.5.2)
-    - AFNetworking/NSURLSession (= 2.5.2)
-    - AFNetworking/Reachability (= 2.5.2)
-    - AFNetworking/Security (= 2.5.2)
-    - AFNetworking/Serialization (= 2.5.2)
-    - AFNetworking/UIKit (= 2.5.2)
-  - AFNetworking/NSURLConnection (2.5.2):
+  - AFNetworking (2.5.4):
+    - AFNetworking/NSURLConnection (= 2.5.4)
+    - AFNetworking/NSURLSession (= 2.5.4)
+    - AFNetworking/Reachability (= 2.5.4)
+    - AFNetworking/Security (= 2.5.4)
+    - AFNetworking/Serialization (= 2.5.4)
+    - AFNetworking/UIKit (= 2.5.4)
+  - AFNetworking/NSURLConnection (2.5.4):
     - AFNetworking/Reachability
     - AFNetworking/Security
     - AFNetworking/Serialization
-  - AFNetworking/NSURLSession (2.5.2):
+  - AFNetworking/NSURLSession (2.5.4):
     - AFNetworking/Reachability
     - AFNetworking/Security
     - AFNetworking/Serialization
-  - AFNetworking/Reachability (2.5.2)
-  - AFNetworking/Security (2.5.2)
-  - AFNetworking/Serialization (2.5.2)
-  - AFNetworking/UIKit (2.5.2):
+  - AFNetworking/Reachability (2.5.4)
+  - AFNetworking/Security (2.5.4)
+  - AFNetworking/Serialization (2.5.4)
+  - AFNetworking/UIKit (2.5.4):
     - AFNetworking/NSURLConnection
     - AFNetworking/NSURLSession
-  - Bolts/Tasks (1.1.5)
-  - FlurrySDK/FlurrySDK (6.2.0)
+  - Bolts/Tasks (1.2.0)
+  - FlurrySDK/FlurrySDK (6.5.0)
   - FXBlurView (1.6.3)
-  - JDStatusBarNotification (1.5.1)
-  - Kochava (20150116)
-  - KSReachability (1.4)
-  - Mixpanel (2.7.3):
-    - Mixpanel/MPCategoryHelpers (= 2.7.3)
-  - Mixpanel/MPCategoryHelpers (2.7.3)
-  - NewRelicAgent (5.1.0)
-  - Parse (1.7.4):
-    - Bolts/Tasks (>= 1.1.5)
-  - ParseCrashReporting (1.7.4):
-    - Bolts/Tasks (>= 1.1.5)
-    - Parse (~> 1.7.4)
+  - GoogleAnalytics-iOS-SDK (3.12):
+    - GoogleAnalytics-iOS-SDK/Core (= 3.12)
+  - GoogleAnalytics-iOS-SDK/Core (3.12)
+  - JDStatusBarNotification (1.5.2)
+  - Kochava (20150523)
+  - KSReachability (1.4.1)
+  - Mixpanel (2.8.1):
+    - Mixpanel/Mixpanel (= 2.8.1)
+  - Mixpanel/Mixpanel (2.8.1):
+    - Mixpanel/MPCategoryHelpers
+  - Mixpanel/MPCategoryHelpers (2.8.1)
+  - NewRelicAgent (5.1.2)
+  - Parse (1.7.5):
+    - Bolts/Tasks (>= 1.2.0)
+  - ParseCrashReporting (1.7.5):
+    - Bolts/Tasks (>= 1.2.0)
+    - Parse (~> 1.7.5)
   - pop (1.0.7)
   - XMLDictionary (1.4)
 
@@ -42,6 +47,7 @@ DEPENDENCIES:
   - AFNetworking (~> 2.0)
   - FlurrySDK/FlurrySDK (~> 6.0)
   - FXBlurView (~> 1.6)
+  - GoogleAnalytics-iOS-SDK
   - JDStatusBarNotification
   - Kochava
   - KSReachability
@@ -53,17 +59,18 @@ DEPENDENCIES:
   - XMLDictionary (~> 1.4)
 
 SPEC CHECKSUMS:
-  AFNetworking: fefbce9660acb17f48ae0011292d4da0f457bf36
-  Bolts: aac24961496d504aa56fc267cde95162a71bac39
-  FlurrySDK: 6d8cc2f898589214ed72e481cf59cffa55b88fe0
+  AFNetworking: 05edc0ac4c4c8cf57bcf4b84be5b0744b6d8e71e
+  Bolts: d176cb1e0012175589e389a9db49b85e27787576
+  FlurrySDK: 7e749c1bd22f4fb0a863663e38c58bc841980b25
   FXBlurView: c6d23f3d35af2c6282296a2930f61c6e2c788d01
-  JDStatusBarNotification: 83c7d7a4e1e0d09528bcb98827fe4fc99dbdd6aa
-  Kochava: 848021ac47726fdc40f4f2f15428c64d0edf10b0
-  KSReachability: 7b418ec0b38c29765adad11421718a8a172dfa30
-  Mixpanel: 1d387d76800e07e953958c62c97fea27f13632dd
-  NewRelicAgent: ab0ca8fe6477d3650eb58c95d5d26dfbd9be7bac
-  Parse: 6ca512c6e860b66739c95151b2f76ac4712b7842
-  ParseCrashReporting: 0cff3a2720d6e977fff1bdd64e6d3ea94528e170
+  GoogleAnalytics-iOS-SDK: 13241762fa4aea845eb75bef6c0da3427a26e7b3
+  JDStatusBarNotification: a36d09ccbb047217572b074a61e7ca10dddc5f0a
+  Kochava: c9aa43e71bba1bb8251358c88172e105231644de
+  KSReachability: ddf4af6e6488c45c5c41c59e72d72d078062ee28
+  Mixpanel: 93c4825025e6380ced273ed7178496282e385077
+  NewRelicAgent: 7089e6a018d350bff1be872881ffd468af292fb0
+  Parse: 7c0f115eff3e0cea3fac08d50bda47154edb8832
+  ParseCrashReporting: 504b77a57d0619f8099061c11d323877e681a184
   pop: 628ffc631644601567ee8bfaaaea493ebd7d0923
   XMLDictionary: f9f51601ba76678b594ab485f2b00ec1fed23724
 
