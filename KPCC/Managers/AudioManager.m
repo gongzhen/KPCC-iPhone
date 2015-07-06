@@ -407,6 +407,8 @@ static const NSString *ItemStatusContext;
 #pragma mark - Recovery / Logging / Stalls
 - (void)playbackStalled:(NSNotification*)note {
     
+    if ( self.userPause ) return;
+    
     self.dropoutOccurred = YES;
     
 #ifndef SUPPRESS_GIVEUP_TIMER
@@ -874,7 +876,6 @@ static const NSString *ItemStatusContext;
                     [[QueueManager shared] handleBookmarkingActivity];
                 }
                 
-                weakSelf.userPause = NO;
                 weakSelf.seekWillEffectBuffer = NO;
                 weakSelf.seekRequested = NO;
                 weakSelf.appGaveUp = NO;
