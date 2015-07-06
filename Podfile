@@ -5,12 +5,11 @@ pod 'JDStatusBarNotification'
 pod 'pop', '~> 1.0'
 pod 'FXBlurView', '~> 1.6'
 pod 'XMLDictionary', '~> 1.4'
-pod 'FlurrySDK/FlurrySDK', '~> 6.0'
+pod 'FlurrySDK/FlurrySDK'
 pod 'Parse', '~> 1.6'
 pod 'Mixpanel', '~> 2.7'
 pod 'KSReachability'
 pod 'NewRelicAgent'
 pod 'ParseCrashReporting'
-pod 'Google/Analytics'
 
 link_with ['KPCC', 'KPCCTests']

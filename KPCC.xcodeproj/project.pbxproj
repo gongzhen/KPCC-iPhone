@@ -21,7 +21,6 @@
 		254CC6A01A240B6200560805 /* onboarding-episode-swipe@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 254CC69F1A240B6200560805 /* onboarding-episode-swipe@2x.png */; };
 		254CC6A31A255A1E00560805 /* SCPRButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 254CC6A21A255A1E00560805 /* SCPRButton.m */; };
 		254E177019F863960022BF6B /* UILabel+Additions.m in Sources */ = {isa = PBXBuildFile; fileRef = 254E176F19F863960022BF6B /* UILabel+Additions.m */; };
-		2553EDF61B45DFE600AC1D11 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2553EDF51B45DFE600AC1D11 /* GoogleService-Info.plist */; };
 		25547AB41ACA051D00241B7D /* alarm_beat.aif in Resources */ = {isa = PBXBuildFile; fileRef = 25547AB31ACA051D00241B7D /* alarm_beat.aif */; };
 		2557BA831A1A9BB800B0CAED /* btn_back_to_live_xtra-small.png in Resources */ = {isa = PBXBuildFile; fileRef = 2557BA7F1A1A9BB800B0CAED /* btn_back_to_live_xtra-small.png */; };
 		2557BA841A1A9BB800B0CAED /* btn_back_to_live_xtra-small@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2557BA801A1A9BB800B0CAED /* btn_back_to_live_xtra-small@2x.png */; };
@@ -332,7 +331,6 @@
 		254CC6A21A255A1E00560805 /* SCPRButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SCPRButton.m; sourceTree = "<group>"; };
 		254E176E19F863960022BF6B /* UILabel+Additions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UILabel+Additions.h"; sourceTree = "<group>"; };
 		254E176F19F863960022BF6B /* UILabel+Additions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UILabel+Additions.m"; sourceTree = "<group>"; };
-		2553EDF51B45DFE600AC1D11 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		25547AB31ACA051D00241B7D /* alarm_beat.aif */ = {isa = PBXFileReference; lastKnownFileType = file; name = alarm_beat.aif; path = Audio/alarm_beat.aif; sourceTree = "<group>"; };
 		2557BA7F1A1A9BB800B0CAED /* btn_back_to_live_xtra-small.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "btn_back_to_live_xtra-small.png"; sourceTree = "<group>"; };
 		2557BA801A1A9BB800B0CAED /* btn_back_to_live_xtra-small@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "btn_back_to_live_xtra-small@2x.png"; sourceTree = "<group>"; };
@@ -1315,7 +1313,6 @@
 		76A308CC18C8FB940065D4B1 /* KPCC */ = {
 			isa = PBXGroup;
 			children = (
-				2553EDF51B45DFE600AC1D11 /* GoogleService-Info.plist */,
 				769B907919C0D5C300E812C7 /* Config.plist */,
 				76B9A9BC18F609FF007A6D8C /* Assets */,
 				769FD69918EB682E00AAF1F4 /* Classes */,
@@ -1568,7 +1565,6 @@
 				52EFF86619C368C00059A0E3 /* program_avatar_weekend-edition-sunday.png in Resources */,
 				768C065E1995905D00F829EB /* chevron_down.png in Resources */,
 				52EFF79719C3688D0059A0E3 /* menu-microphone.png in Resources */,
-				2553EDF61B45DFE600AC1D11 /* GoogleService-Info.plist in Resources */,
 				7685BD60194BBCB90075BB16 /* playButton.png in Resources */,
 				52EFF86419C368C00059A0E3 /* program_avatar_weekend-edition-saturday@2x.png in Resources */,
 				25B25BAE1B1D093D00ABE8B4 /* SCPRPledgePINViewController.xib in Resources */,
