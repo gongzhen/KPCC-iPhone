@@ -11,7 +11,6 @@
 #import "AudioManager.h"
 #import "Flurry.h"
 #import "Mixpanel.h"
-#import <Kochava/TrackAndAd.h>
 #import "NetworkManager.h"
 #import <NewRelicAgent/NewRelic.h>
 
@@ -32,7 +31,6 @@ typedef NS_ENUM(NSInteger, ScrubbingType) {
 
 @property long lastErrorLoggedTime;
 @property NSString *lastErrorLoggedComments;
-@property (nonatomic, strong) KochavaTracker *kTracker;
 @property (nonatomic, strong) NSTimer *analyticsSuspensionTimer;
 @property (nonatomic, strong) AVPlayerItemAccessLog *accessLog;
 @property (nonatomic, strong) AVPlayerItemErrorLog *errorLog;
