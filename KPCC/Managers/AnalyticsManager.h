@@ -38,6 +38,9 @@ typedef NS_ENUM(NSInteger, ScrubbingType) {
 @property (nonatomic, strong) NSDate *errorLogReceivedAt;
 @property (nonatomic, strong) NSDate *accessLogReceivedAt;
 @property (nonatomic, strong) NSDate *lastStreamException;
+
+@property BOOL flurryActiveInBackground;
+
 @property NSInteger allowedExceptions;
 
 + (AnalyticsManager*)shared;

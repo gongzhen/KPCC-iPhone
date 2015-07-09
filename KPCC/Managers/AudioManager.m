@@ -393,11 +393,13 @@ static const NSString *ItemStatusContext;
         
         if ( oldRate == 1.0 && newRate == 0.0 ) {
             self.status = StreamStatusPaused;
-            if ( self.currentAudioMode == AudioModeLive ) {
-                NSLog(@"Recording user pause for analytics...");
-                [[SessionManager shared] endLiveSession];
-            } else if ( self.currentAudioMode == AudioModeOnDemand ) {
-                [[SessionManager shared] endOnDemandSessionWithReason:OnDemandFinishedReasonEpisodePaused];
+            if ( !self.seekWillEffectBuffer ) {
+                if ( self.currentAudioMode == AudioModeLive ) {
+                    NSLog(@"Recording user pause for analytics...");
+                    [[SessionManager shared] endLiveSession];
+                } else if ( self.currentAudioMode == AudioModeOnDemand ) {
+                    [[SessionManager shared] endOnDemandSessionWithReason:OnDemandFinishedReasonEpisodePaused];
+                }
             }
         }
         
@@ -900,7 +902,7 @@ static const NSString *ItemStatusContext;
                 
             }
 
-            if ( weakSelf.frameCount == 300) {
+            if ( weakSelf.frameCount == 300 ) {
                 // After 30 seconds, consider skip probation period over
                 weakSelf.skipCount = 0;
                 NSLog(@"Ending skip probation period");
@@ -1125,6 +1127,7 @@ static const NSString *ItemStatusContext;
         }
     }];
 }
+
 - (void)backwardSeekThirtySecondsWithCompletion:(CompletionBlock)completion {
     NSTimeInterval backward = -30.0f;
     [self intervalSeekWithTimeInterval:backward completion:^{
@@ -1205,7 +1208,7 @@ static const NSString *ItemStatusContext;
         [[QueueManager shared] setCurrentBookmark:nil];
     }
     
-    if ( ![[QueueManager shared]isQueueEmpty] ) {
+    if ( ![[QueueManager shared] isQueueEmpty] ) {
         [[SessionManager shared] endOnDemandSessionWithReason:OnDemandFinishedReasonEpisodeEnd];
         [[QueueManager shared] playNext];
     } else {

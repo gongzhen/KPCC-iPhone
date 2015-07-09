@@ -21,8 +21,21 @@ PODS:
     - AFNetworking/NSURLConnection
     - AFNetworking/NSURLSession
   - Bolts/Tasks (1.2.0)
-  - FlurrySDK/FlurrySDK (6.5.0)
+  - FlurrySDK/FlurrySDK (6.6.0)
   - FXBlurView (1.6.3)
+  - Google/Analytics (1.0.7):
+    - Google/Core
+    - GoogleAnalytics (~> 3.12)
+  - Google/Core (1.0.7):
+    - GoogleNetworkingUtilities (~> 1.0)
+    - GoogleSymbolUtilities (~> 1.0)
+    - GoogleUtilities (~> 1.0)
+  - GoogleAnalytics (3.12.0)
+  - GoogleNetworkingUtilities (1.0.0):
+    - GoogleSymbolUtilities (~> 1.0)
+  - GoogleSymbolUtilities (1.0.0)
+  - GoogleUtilities (1.0.1):
+    - GoogleSymbolUtilities (~> 1.0)
   - JDStatusBarNotification (1.5.2)
   - KSReachability (1.4.1)
   - Mixpanel (2.8.1):
@@ -43,6 +56,7 @@ DEPENDENCIES:
   - AFNetworking (~> 2.0)
   - FlurrySDK/FlurrySDK
   - FXBlurView (~> 1.6)
+  - Google/Analytics
   - JDStatusBarNotification
   - KSReachability
   - Mixpanel (~> 2.7)
@@ -55,8 +69,13 @@ DEPENDENCIES:
 SPEC CHECKSUMS:
   AFNetworking: 05edc0ac4c4c8cf57bcf4b84be5b0744b6d8e71e
   Bolts: d176cb1e0012175589e389a9db49b85e27787576
-  FlurrySDK: 7e749c1bd22f4fb0a863663e38c58bc841980b25
+  FlurrySDK: 8478625434c06b323338f776758162756d92c3ed
   FXBlurView: c6d23f3d35af2c6282296a2930f61c6e2c788d01
+  Google: 875f5a8ade86dd02e36586e4a54814843938c7f6
+  GoogleAnalytics: ef2e0b800ef3c1e62688cdfc959e0d3132bc246c
+  GoogleNetworkingUtilities: 292992ab31b7b4ba32809a0e8b40e324cdfb2c0c
+  GoogleSymbolUtilities: a7b0feed1fe667c8d5e647177938d0ecd62d6948
+  GoogleUtilities: e3475cd4d45134221d2f3f3626095a1c49b62041
   JDStatusBarNotification: a36d09ccbb047217572b074a61e7ca10dddc5f0a
   KSReachability: ddf4af6e6488c45c5c41c59e72d72d078062ee28
   Mixpanel: 93c4825025e6380ced273ed7178496282e385077

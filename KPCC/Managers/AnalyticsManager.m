@@ -56,12 +56,11 @@ static AnalyticsManager *singleton = nil;
     
     NSDictionary *globalConfig = [Utils globalConfig];
     
+    NSString *token = globalConfig[@"Flurry"][flurryToken];
     [Flurry setCrashReportingEnabled:YES];
     [Flurry setDebugLogEnabled:NO];
-    [Flurry startSession: globalConfig[@"Flurry"][flurryToken] ];
-    [Flurry setBackgroundSessionEnabled:YES];
-    
-    
+    [Flurry startSession:token];
+
     [Mixpanel sharedInstanceWithToken:globalConfig[@"Mixpanel"][mixPanelToken]];
     Mixpanel *mxp = [Mixpanel sharedInstance];
     NSString *uuid = [[[UIDevice currentDevice] identifierForVendor] UUIDString];
@@ -100,7 +99,7 @@ static AnalyticsManager *singleton = nil;
 
 - (void)logEvent:(NSString *)event withParameters:(NSDictionary *)parameters {
     
-    NSLog(@"Logging Event : %@",event);
+   // NSLog(@"Logging Event : %@",event);
 #if TARGET_IPHONE_SIMULATOR
     return;
 #endif

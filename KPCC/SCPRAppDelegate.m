@@ -23,6 +23,10 @@
 #import "TestFlight.h"
 #endif
 
+#import <Fabric/Fabric.h>
+#import <Crashlytics/Crashlytics.h>
+
+
 
 @implementation SCPRAppDelegate
 
@@ -91,9 +95,10 @@
 
     NSString *ua = kHLS;
     NSLog(@"URL : %@",ua);
-    
-    [[AnalyticsManager shared] kTrackSession:@"began"];
 
+    [Fabric with:@[CrashlyticsKit]];
+
+    
     // Fetch initial list of Programs from SCPRV4 and store in CoreData for later usage.
     [[NetworkManager shared] fetchAllProgramInformation:^(id returnedObject) {
         
@@ -266,6 +271,11 @@
 
 - (void)applicationWillResignActive:(UIApplication *)application {
     
+    if ( [[AudioManager shared] isPlayingAudio] ) {
+        [Flurry setBackgroundSessionEnabled:YES];
+        [[AnalyticsManager shared] setFlurryActiveInBackground:YES];
+    }
+    
     if ( [[AudioManager shared] currentAudioMode] == AudioModeOnboarding ) {
         if ( ![[UXmanager shared] paused] ) {
             [[UXmanager shared] godPauseOrPlay];
@@ -281,6 +291,7 @@
 
 - (void)applicationDidEnterBackground:(UIApplication *)application {
     
+
     if ( [[SessionManager shared] userIsViewingHeadlines] ) {
         //[[AnalyticsManager shared] trackHeadlinesDismissal];
     }
@@ -304,6 +315,11 @@
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application {
+    
+    if ( [[AnalyticsManager shared] flurryActiveInBackground] ) {
+        [Flurry setBackgroundSessionEnabled:NO];
+        [[AnalyticsManager shared] setFlurryActiveInBackground:NO];
+    }
     
     if ( [[AudioManager shared] currentAudioMode] != AudioModeOnboarding ) {
         [[SessionManager shared] setSessionReturnedDate:[NSDate date]];

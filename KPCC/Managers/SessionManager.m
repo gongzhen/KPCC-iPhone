@@ -204,10 +204,10 @@
                                            @"sessionLengthInSeconds" : [NSString stringWithFormat:@"%ld",(long)sessionLength] }];*/
 #if !TARGET_IPHONE_SIMULATOR
     [Flurry endTimedEvent:@"liveStreamPlay"
-           withParameters:@{
+           withParameters:/*@{
                              @"programTitle" : title,
                              @"sessionLength" : pt,
-                             @"sessionLengthInSeconds" : [NSString stringWithFormat:@"%ld",(long)sessionLength] }];
+                             @"sessionLengthInSeconds" : [NSString stringWithFormat:@"%ld",(long)sessionLength] }*/nil];
 #endif
     
     self.sessionIsHot = NO;
