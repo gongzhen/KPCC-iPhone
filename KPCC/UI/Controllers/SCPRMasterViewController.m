@@ -27,6 +27,7 @@
 #import "SCPRTimerControlViewController.h"
 #import "SCPRPledgePINViewController.h"
 #import "SCPRBalloonViewController.h"
+#import "Utils.h"
 
 @import MessageUI;
 
@@ -971,6 +972,10 @@ setForOnDemandUI;
 # pragma mark - Actions
 
 - (IBAction)initialPlayTapped:(id)sender {
+    
+#ifdef DEBUG
+   // [Utils crash];
+#endif
     
 #ifdef FORCE_TEST_STREAM
     self.preRollViewController.tritonAd = nil;
@@ -3486,8 +3491,11 @@ setForOnDemandUI;
                 [self.liveStreamView layoutIfNeeded];
                 [self unmutePrimaryControls];
             } else {
+                [self trackSchedulingSwipes];
                 [self mutePrimaryControls];
             }
+            
+            
         }];
         
     }
@@ -3506,9 +3514,24 @@ setForOnDemandUI;
                 [self.liveStreamView layoutIfNeeded];
                 [self unmutePrimaryControls];
             } else {
+                [self trackSchedulingSwipes];
                 [self mutePrimaryControls];
             }
         }];
+    }
+}
+
+- (void)trackSchedulingSwipes {
+    NSString *event = nil;
+    NSInteger index = floorf((float)(self.mainContentScroller.contentOffset.x / self.mainContentScroller.frame.size.width));
+    if ( index == 2 ) {
+        event = @"userViewingFullSchedule";
+    } else if ( index == 1 ) {
+        event = @"userViewingUpNext";
+    }
+    
+    if ( event ) {
+        [[AnalyticsManager shared] logEvent:event withParameters:@{}];
     }
 }
 

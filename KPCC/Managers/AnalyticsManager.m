@@ -15,6 +15,7 @@
 #import "QueueManager.h"
 #import "UXmanager.h"
 #import <Google/Analytics.h>
+#import "SCPRAppDelegate.h"
 
 static AnalyticsManager *singleton = nil;
 
@@ -54,6 +55,8 @@ static AnalyticsManager *singleton = nil;
 #ifdef BETA
     mixPanelToken = @"BetaToken";
 #endif
+    
+    [Fabric with:@[CrashlyticsKit]];
     
     NSDictionary *globalConfig = [Utils globalConfig];
     
@@ -107,7 +110,7 @@ static AnalyticsManager *singleton = nil;
     return;
 #endif
     
-    
+  /*
     NSMutableDictionary *userInfo = [[NSMutableDictionary alloc] init];
     
     NSMutableDictionary *mParams = [parameters mutableCopy];
@@ -148,7 +151,7 @@ static AnalyticsManager *singleton = nil;
         }
     }
     
-    [Flurry logEvent:event withParameters:userInfo timed:YES];
+    [Flurry logEvent:event withParameters:userInfo timed:YES];*/
     
     
 }

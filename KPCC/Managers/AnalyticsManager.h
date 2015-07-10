@@ -13,6 +13,8 @@
 #import "Mixpanel.h"
 #import "NetworkManager.h"
 #import <NewRelicAgent/NewRelic.h>
+#import <Crashlytics/Crashlytics.h>
+#import <Fabric/Fabric.h>
 
 static NSInteger kMaxAllowedExceptionsPerInterval = 5;
 static NSInteger kExceptionInterval = 60;

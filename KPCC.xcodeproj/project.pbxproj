@@ -63,8 +63,9 @@
 		259E450E1A1D583A00F5CD65 /* onboarding1.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 259E450C1A1D583A00F5CD65 /* onboarding1.mp3 */; };
 		259E450F1A1D583A00F5CD65 /* onboarding2.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 259E450D1A1D583A00F5CD65 /* onboarding2.mp3 */; };
 		25A6534B1AAE2BA300ABAAD6 /* Bookmark.m in Sources */ = {isa = PBXBuildFile; fileRef = 25A6534A1AAE2BA300ABAAD6 /* Bookmark.m */; };
-		25AD96911B4F3BA200858B65 /* Fabric.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 25AD968F1B4F3BA200858B65 /* Fabric.framework */; };
 		25AD96921B4F3BA200858B65 /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 25AD96901B4F3BA200858B65 /* Crashlytics.framework */; };
+		25AD96941B5062E600858B65 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 25AD96931B5062E600858B65 /* GoogleService-Info.plist */; };
+		25AD96961B50680B00858B65 /* Fabric.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 25AD96951B50680B00858B65 /* Fabric.framework */; };
 		25B25B9B1B17DEF600ABE8B4 /* chevron_up.png in Resources */ = {isa = PBXBuildFile; fileRef = 25B25B991B17DEF600ABE8B4 /* chevron_up.png */; };
 		25B25B9C1B17DEF600ABE8B4 /* chevron_up@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 25B25B9A1B17DEF600ABE8B4 /* chevron_up@2x.png */; };
 		25B25B9F1B190EE200ABE8B4 /* SCPRXFSHeaderCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 25B25B9E1B190EE200ABE8B4 /* SCPRXFSHeaderCell.m */; };
@@ -395,8 +396,9 @@
 		25A653481AAA7CFC00ABAAD6 /* KPCC-Proprietary-301.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "KPCC-Proprietary-301.xcdatamodel"; sourceTree = "<group>"; };
 		25A653491AAE2BA300ABAAD6 /* Bookmark.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Bookmark.h; sourceTree = "<group>"; };
 		25A6534A1AAE2BA300ABAAD6 /* Bookmark.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Bookmark.m; sourceTree = "<group>"; };
-		25AD968F1B4F3BA200858B65 /* Fabric.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Fabric.framework; sourceTree = "<group>"; };
 		25AD96901B4F3BA200858B65 /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Crashlytics.framework; sourceTree = "<group>"; };
+		25AD96931B5062E600858B65 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		25AD96951B50680B00858B65 /* Fabric.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Fabric.framework; sourceTree = "<group>"; };
 		25B25B991B17DEF600ABE8B4 /* chevron_up.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = chevron_up.png; sourceTree = "<group>"; };
 		25B25B9A1B17DEF600ABE8B4 /* chevron_up@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "chevron_up@2x.png"; sourceTree = "<group>"; };
 		25B25B9D1B190EE200ABE8B4 /* SCPRXFSHeaderCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCPRXFSHeaderCell.h; sourceTree = "<group>"; };
@@ -706,11 +708,11 @@
 				768EAAE118D26C9C00469734 /* AVFoundation.framework in Frameworks */,
 				768EAADF18D26C5500469734 /* MediaPlayer.framework in Frameworks */,
 				76A308C918C8FB940065D4B1 /* CoreGraphics.framework in Frameworks */,
-				25AD96911B4F3BA200858B65 /* Fabric.framework in Frameworks */,
 				25AD96921B4F3BA200858B65 /* Crashlytics.framework in Frameworks */,
 				76A308CB18C8FB940065D4B1 /* UIKit.framework in Frameworks */,
 				76A308C718C8FB940065D4B1 /* Foundation.framework in Frameworks */,
 				D60D1CDDD065418D8BE73D8C /* libPods.a in Frameworks */,
+				25AD96961B50680B00858B65 /* Fabric.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1301,7 +1303,7 @@
 		76A308C518C8FB940065D4B1 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				25AD968F1B4F3BA200858B65 /* Fabric.framework */,
+				25AD96951B50680B00858B65 /* Fabric.framework */,
 				25AD96901B4F3BA200858B65 /* Crashlytics.framework */,
 				25C409AF1A437B9400ADBFFE /* AdSupport.framework */,
 				768BBF1918DA614300ACAD83 /* libPods.a */,
@@ -1321,6 +1323,7 @@
 		76A308CC18C8FB940065D4B1 /* KPCC */ = {
 			isa = PBXGroup;
 			children = (
+				25AD96931B5062E600858B65 /* GoogleService-Info.plist */,
 				769B907919C0D5C300E812C7 /* Config.plist */,
 				76B9A9BC18F609FF007A6D8C /* Assets */,
 				769FD69918EB682E00AAF1F4 /* Classes */,
@@ -1574,6 +1577,7 @@
 				52EFF86619C368C00059A0E3 /* program_avatar_weekend-edition-sunday.png in Resources */,
 				768C065E1995905D00F829EB /* chevron_down.png in Resources */,
 				52EFF79719C3688D0059A0E3 /* menu-microphone.png in Resources */,
+				25AD96941B5062E600858B65 /* GoogleService-Info.plist in Resources */,
 				7685BD60194BBCB90075BB16 /* playButton.png in Resources */,
 				52EFF86419C368C00059A0E3 /* program_avatar_weekend-edition-saturday@2x.png in Resources */,
 				25B25BAE1B1D093D00ABE8B4 /* SCPRPledgePINViewController.xib in Resources */,
@@ -2012,14 +2016,33 @@
 				GCC_WARN_64_TO_32_BIT_CONVERSION = NO;
 				GCC_WARN_UNUSED_FUNCTION = NO;
 				GCC_WARN_UNUSED_VALUE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"${PODS_ROOT}/Headers/Public\"",
+					"\"${PODS_ROOT}/Headers/Public/AFNetworking\"",
+					"\"${PODS_ROOT}/Headers/Public/Bolts\"",
+					"\"${PODS_ROOT}/Headers/Public/FXBlurView\"",
+					"\"${PODS_ROOT}/Headers/Public/FlurrySDK\"",
+					"\"${PODS_ROOT}/Headers/Public/Google\"",
+					"\"${PODS_ROOT}/Headers/Public/Google/Google\"",
+					"\"${PODS_ROOT}/Headers/Public/GoogleAnalytics\"",
+					"\"${PODS_ROOT}/Headers/Public/GoogleNetworkingUtilities\"",
+					"\"${PODS_ROOT}/Headers/Public/GoogleSymbolUtilities\"",
+					"\"${PODS_ROOT}/Headers/Public/GoogleUtilities\"",
+					"\"${PODS_ROOT}/Headers/Public/JDStatusBarNotification\"",
+					"\"${PODS_ROOT}/Headers/Public/KSReachability\"",
+					"\"${PODS_ROOT}/Headers/Public/Mixpanel\"",
+					"\"${PODS_ROOT}/Headers/Public/NewRelicAgent\"",
+					"\"${PODS_ROOT}/Headers/Public/Parse\"",
+					"\"${PODS_ROOT}/Headers/Public/ParseCrashReporting\"",
+					"\"${PODS_ROOT}/Headers/Public/XMLDictionary\"",
+					"\"${PODS_ROOT}/Headers/Public/pop\"",
+					"${PROJECT_DIR}/Fabric.framework/**",
+				);
 				INFOPLIST_FILE = "KPCC/KPCC-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/KPCC/ThirdParty/TestFlight",
-					"$(PROJECT_DIR)/KPCC/ThirdParty/Flurry",
-				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "7de88d41-fd13-4035-a8ee-18dabe63e82c";
 				SWIFT_OBJC_BRIDGING_HEADER = "KPCC/UI/Controllers/KPCC-Bridging-Header.h";
@@ -2108,14 +2131,33 @@
 				GCC_WARN_64_TO_32_BIT_CONVERSION = NO;
 				GCC_WARN_UNUSED_FUNCTION = NO;
 				GCC_WARN_UNUSED_VALUE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"${PODS_ROOT}/Headers/Public\"",
+					"\"${PODS_ROOT}/Headers/Public/AFNetworking\"",
+					"\"${PODS_ROOT}/Headers/Public/Bolts\"",
+					"\"${PODS_ROOT}/Headers/Public/FXBlurView\"",
+					"\"${PODS_ROOT}/Headers/Public/FlurrySDK\"",
+					"\"${PODS_ROOT}/Headers/Public/Google\"",
+					"\"${PODS_ROOT}/Headers/Public/Google/Google\"",
+					"\"${PODS_ROOT}/Headers/Public/GoogleAnalytics\"",
+					"\"${PODS_ROOT}/Headers/Public/GoogleNetworkingUtilities\"",
+					"\"${PODS_ROOT}/Headers/Public/GoogleSymbolUtilities\"",
+					"\"${PODS_ROOT}/Headers/Public/GoogleUtilities\"",
+					"\"${PODS_ROOT}/Headers/Public/JDStatusBarNotification\"",
+					"\"${PODS_ROOT}/Headers/Public/KSReachability\"",
+					"\"${PODS_ROOT}/Headers/Public/Mixpanel\"",
+					"\"${PODS_ROOT}/Headers/Public/NewRelicAgent\"",
+					"\"${PODS_ROOT}/Headers/Public/Parse\"",
+					"\"${PODS_ROOT}/Headers/Public/ParseCrashReporting\"",
+					"\"${PODS_ROOT}/Headers/Public/XMLDictionary\"",
+					"\"${PODS_ROOT}/Headers/Public/pop\"",
+					"${PROJECT_DIR}/Fabric.framework/**",
+				);
 				INFOPLIST_FILE = "KPCC/KPCC-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/KPCC/ThirdParty/TestFlight",
-					"$(PROJECT_DIR)/KPCC/ThirdParty/Flurry",
-				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "c7ce98c4-6bbb-40da-9762-1ee2c05d3016";
 				SWIFT_OBJC_BRIDGING_HEADER = "KPCC/UI/Controllers/KPCC-Bridging-Header.h";
@@ -2243,14 +2285,33 @@
 				GCC_WARN_64_TO_32_BIT_CONVERSION = NO;
 				GCC_WARN_UNUSED_FUNCTION = NO;
 				GCC_WARN_UNUSED_VALUE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"${PODS_ROOT}/Headers/Public\"",
+					"\"${PODS_ROOT}/Headers/Public/AFNetworking\"",
+					"\"${PODS_ROOT}/Headers/Public/Bolts\"",
+					"\"${PODS_ROOT}/Headers/Public/FXBlurView\"",
+					"\"${PODS_ROOT}/Headers/Public/FlurrySDK\"",
+					"\"${PODS_ROOT}/Headers/Public/Google\"",
+					"\"${PODS_ROOT}/Headers/Public/Google/Google\"",
+					"\"${PODS_ROOT}/Headers/Public/GoogleAnalytics\"",
+					"\"${PODS_ROOT}/Headers/Public/GoogleNetworkingUtilities\"",
+					"\"${PODS_ROOT}/Headers/Public/GoogleSymbolUtilities\"",
+					"\"${PODS_ROOT}/Headers/Public/GoogleUtilities\"",
+					"\"${PODS_ROOT}/Headers/Public/JDStatusBarNotification\"",
+					"\"${PODS_ROOT}/Headers/Public/KSReachability\"",
+					"\"${PODS_ROOT}/Headers/Public/Mixpanel\"",
+					"\"${PODS_ROOT}/Headers/Public/NewRelicAgent\"",
+					"\"${PODS_ROOT}/Headers/Public/Parse\"",
+					"\"${PODS_ROOT}/Headers/Public/ParseCrashReporting\"",
+					"\"${PODS_ROOT}/Headers/Public/XMLDictionary\"",
+					"\"${PODS_ROOT}/Headers/Public/pop\"",
+					"${PROJECT_DIR}/Fabric.framework/**",
+				);
 				INFOPLIST_FILE = "KPCC/KPCC-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/KPCC/ThirdParty/TestFlight",
-					"$(PROJECT_DIR)/KPCC/ThirdParty/Flurry",
-				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "b328a2ff-6d3c-4aef-9c24-47d0cdcafc00";
 				SWIFT_OBJC_BRIDGING_HEADER = "KPCC/UI/Controllers/KPCC-Bridging-Header.h";
@@ -2287,14 +2348,33 @@
 				GCC_WARN_64_TO_32_BIT_CONVERSION = NO;
 				GCC_WARN_UNUSED_FUNCTION = NO;
 				GCC_WARN_UNUSED_VALUE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"${PODS_ROOT}/Headers/Public\"",
+					"\"${PODS_ROOT}/Headers/Public/AFNetworking\"",
+					"\"${PODS_ROOT}/Headers/Public/Bolts\"",
+					"\"${PODS_ROOT}/Headers/Public/FXBlurView\"",
+					"\"${PODS_ROOT}/Headers/Public/FlurrySDK\"",
+					"\"${PODS_ROOT}/Headers/Public/Google\"",
+					"\"${PODS_ROOT}/Headers/Public/Google/Google\"",
+					"\"${PODS_ROOT}/Headers/Public/GoogleAnalytics\"",
+					"\"${PODS_ROOT}/Headers/Public/GoogleNetworkingUtilities\"",
+					"\"${PODS_ROOT}/Headers/Public/GoogleSymbolUtilities\"",
+					"\"${PODS_ROOT}/Headers/Public/GoogleUtilities\"",
+					"\"${PODS_ROOT}/Headers/Public/JDStatusBarNotification\"",
+					"\"${PODS_ROOT}/Headers/Public/KSReachability\"",
+					"\"${PODS_ROOT}/Headers/Public/Mixpanel\"",
+					"\"${PODS_ROOT}/Headers/Public/NewRelicAgent\"",
+					"\"${PODS_ROOT}/Headers/Public/Parse\"",
+					"\"${PODS_ROOT}/Headers/Public/ParseCrashReporting\"",
+					"\"${PODS_ROOT}/Headers/Public/XMLDictionary\"",
+					"\"${PODS_ROOT}/Headers/Public/pop\"",
+					"${PROJECT_DIR}/Fabric.framework/**",
+				);
 				INFOPLIST_FILE = "KPCC/KPCC-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/KPCC/ThirdParty/TestFlight",
-					"$(PROJECT_DIR)/KPCC/ThirdParty/Flurry",
-				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "45c63c60-e0e7-43dc-8945-6bb797ec74ae";
 				SWIFT_OBJC_BRIDGING_HEADER = "KPCC/UI/Controllers/KPCC-Bridging-Header.h";

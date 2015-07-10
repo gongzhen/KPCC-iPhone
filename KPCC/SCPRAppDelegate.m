@@ -23,8 +23,7 @@
 #import "TestFlight.h"
 #endif
 
-#import <Fabric/Fabric.h>
-#import <Crashlytics/Crashlytics.h>
+
 
 
 
@@ -96,7 +95,7 @@
     NSString *ua = kHLS;
     NSLog(@"URL : %@",ua);
 
-    [Fabric with:@[CrashlyticsKit]];
+    
 
     
     // Fetch initial list of Programs from SCPRV4 and store in CoreData for later usage.

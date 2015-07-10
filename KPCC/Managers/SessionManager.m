@@ -239,6 +239,7 @@
     if ( p.title ) {
         title = p.title;
     }
+
     
 #if !TARGET_IPHONE_SIMULATOR
     [Flurry logEvent:@"liveStreamPlay"
@@ -249,11 +250,11 @@
                timed:YES];
 #endif
     
-    /*[[AnalyticsManager shared] logEvent:@"liveStreamPlay"
+   /* [[AnalyticsManager shared] logEvent:@"liveStreamPlay"
                          withParameters:@{ @"kpccSessionId" : self.liveSessionID ,
                                            @"behindLiveStatus" : pt,
                                            @"behindLiveSeconds" : literalValue,
-                                           @"programTitle" : title }];*/
+                                           @"programTitle" : title }]; */
     
 }
 
