@@ -307,6 +307,7 @@
         NSString *ct = [NSString stringWithFormat:@"%ld",(long)[[NSDate date] timeIntervalSince1970]];
         sid = [Utils sha1:ct];
     }
+    NSLog(@"Logging pause event for Live Stream...");
     
     AudioChunk *chunk = [[QueueManager shared] currentChunk];
     NSString *event = @"";

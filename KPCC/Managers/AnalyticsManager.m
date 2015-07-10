@@ -14,6 +14,7 @@
 #import "Program.h"
 #import "QueueManager.h"
 #import "UXmanager.h"
+#import <Google/Analytics.h>
 
 static AnalyticsManager *singleton = nil;
 
@@ -60,7 +61,9 @@ static AnalyticsManager *singleton = nil;
     [Flurry setCrashReportingEnabled:YES];
     [Flurry setDebugLogEnabled:NO];
     [Flurry startSession:token];
-
+    [Flurry setBackgroundSessionEnabled:NO];
+    
+    
     [Mixpanel sharedInstanceWithToken:globalConfig[@"Mixpanel"][mixPanelToken]];
     Mixpanel *mxp = [Mixpanel sharedInstance];
     NSString *uuid = [[[UIDevice currentDevice] identifierForVendor] UUIDString];
@@ -104,7 +107,7 @@ static AnalyticsManager *singleton = nil;
     return;
 #endif
     
-    /*
+    
     NSMutableDictionary *userInfo = [[NSMutableDictionary alloc] init];
     
     NSMutableDictionary *mParams = [parameters mutableCopy];
@@ -121,15 +124,6 @@ static AnalyticsManager *singleton = nil;
         userInfo[key] = parameters[key];
     }
     
-#ifdef DEBUG
-#ifdef VERBOSE_LOGGING
-    NSLog(@"Logging to Analytics now - %@ - with params %@", event, userInfo);
-#endif
-#endif
-    
-#ifdef SUPPRESS_NETWORK_LOGGING
-    NSLog(@"%@",userInfo);
-#else
     
     Mixpanel *mxp = [Mixpanel sharedInstance];
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
@@ -154,7 +148,7 @@ static AnalyticsManager *singleton = nil;
         }
     }
     
-    [Flurry logEvent:event withParameters:userInfo timed:YES];*/
+    [Flurry logEvent:event withParameters:userInfo timed:YES];
     
     
 }
