@@ -112,6 +112,9 @@ static const NSString *ItemStatusContext;
                 if ( SEQ(port.portType,AVAudioSessionPortBuiltInSpeaker) ) {
                     userPause = NO;
                     break;
+                } else {
+                    userPause = YES;
+                    break;
                 }
             }
         }
