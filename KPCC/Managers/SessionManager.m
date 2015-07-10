@@ -196,12 +196,12 @@
     Program *p = self.currentProgram;
     NSString *title = p.title ? p.title : @"[UNKNOWN]";
     
-    /*
+    
     [[AnalyticsManager shared] logEvent:@"liveStreamPause"
                          withParameters:@{ @"kpccSessionId" : sid,
                                            @"programTitle" : title,
                                            @"sessionLength" : pt,
-                                           @"sessionLengthInSeconds" : [NSString stringWithFormat:@"%ld",(long)sessionLength] }];*/
+                                           @"sessionLengthInSeconds" : [NSString stringWithFormat:@"%ld",(long)sessionLength] }];
 #if !TARGET_IPHONE_SIMULATOR
     [Flurry endTimedEvent:@"liveStreamPlay"
            withParameters:@{
@@ -249,11 +249,11 @@
                timed:YES];
 #endif
     
-    /*[[AnalyticsManager shared] logEvent:@"liveStreamPlay"
+    [[AnalyticsManager shared] logEvent:@"liveStreamPlay"
                          withParameters:@{ @"kpccSessionId" : self.liveSessionID ,
                                            @"behindLiveStatus" : pt,
                                            @"behindLiveSeconds" : literalValue,
-                                           @"programTitle" : title }];*/
+                                           @"programTitle" : title }];
     
 }
 

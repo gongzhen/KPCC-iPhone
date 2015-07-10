@@ -147,8 +147,9 @@ static AnalyticsManager *singleton = nil;
         }
     }
     
-    [Flurry logEvent:event withParameters:userInfo timed:YES];
-    
+    if ( !SEQ(@"liveStreamPlay",event) ) {
+        [Flurry logEvent:event withParameters:userInfo timed:YES];
+    }
     
 }
 
