@@ -1451,6 +1451,7 @@ static const NSString *ItemStatusContext;
         }
     }
     
+    
     [[UXmanager shared] timeBegin];
     [self stopAudio];
     [[UXmanager shared] timeEnd:@"Takedown audio player"];
@@ -1553,6 +1554,8 @@ static const NSString *ItemStatusContext;
     if ( [self currentAudioMode] == AudioModeOnboarding ) {
         self.audioPlayer.volume = 0.0f;
     }
+    
+    [self setUserPause:NO];
     
     [[SessionManager shared] startAudioSession];
     
