@@ -11,5 +11,6 @@ pod 'Mixpanel', '~> 2.7'
 pod 'KSReachability'
 pod 'NewRelicAgent'
 pod 'ParseCrashReporting'
+pod 'Google/Analytics'
 
 link_with ['KPCC', 'KPCCTests']
