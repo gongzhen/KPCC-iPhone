@@ -393,12 +393,6 @@ static const NSString *ItemStatusContext;
         
         if ( oldRate == 1.0 && newRate == 0.0 ) {
             self.status = StreamStatusPaused;
-            if ( self.currentAudioMode == AudioModeLive ) {
-                NSLog(@"Recording user pause for analytics...");
-                [[SessionManager shared] endLiveSession];
-            } else if ( self.currentAudioMode == AudioModeOnDemand ) {
-                [[SessionManager shared] endOnDemandSessionWithReason:OnDemandFinishedReasonEpisodePaused];
-            }
         }
         
         if ([self.delegate respondsToSelector:@selector(onRateChange)]) {
@@ -1645,25 +1639,22 @@ static const NSString *ItemStatusContext;
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
         if ( self.currentAudioMode == AudioModeLive ) {
-            // Moving this call to AVPlayer's perceived rate change
-            //[[SessionManager shared] endLiveSession];
+
+            [[SessionManager shared] endLiveSession];
         } else {
-            // Same here
-            //[[SessionManager shared] endOnDemandSessionWithReason:OnDemandFinishedReasonEpisodePaused];
+            [[SessionManager shared] endOnDemandSessionWithReason:OnDemandFinishedReasonEpisodePaused];
         }
     });
      
 }
 
 - (void)stopAudio {
-    
     if ( [self isPlayingAudio] && self.currentAudioMode == AudioModeLive ) {
-        [self pauseAudio];
+        [[SessionManager shared] endLiveSession];
     }
+    
     [self takedownAudioPlayer];
-    
     self.status = StreamStatusStopped;
-    
 }
 
 - (void)stopAllAudio {

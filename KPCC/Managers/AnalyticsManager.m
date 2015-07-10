@@ -14,6 +14,7 @@
 #import "Program.h"
 #import "QueueManager.h"
 #import "UXmanager.h"
+#import <Google/Analytics.h>
 
 static AnalyticsManager *singleton = nil;
 
@@ -59,7 +60,7 @@ static AnalyticsManager *singleton = nil;
     [Flurry setCrashReportingEnabled:YES];
     [Flurry setDebugLogEnabled:NO];
     [Flurry startSession: globalConfig[@"Flurry"][flurryToken] ];
-    [Flurry setBackgroundSessionEnabled:YES];
+    [Flurry setBackgroundSessionEnabled:NO];
     
     
     [Mixpanel sharedInstanceWithToken:globalConfig[@"Mixpanel"][mixPanelToken]];
