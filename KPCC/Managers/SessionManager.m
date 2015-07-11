@@ -175,6 +175,12 @@
         return @"";
     }
     
+    if ( [self sessionIsBehindLive] ) {
+        [self setSessionPausedDate:[[AudioManager shared].audioPlayer.currentItem currentDate]];
+    } else {
+        [self setSessionPausedDate:[NSDate date]];
+    }
+    
     NSTimeInterval now = [[NSDate date] timeIntervalSince1970];
     NSTimeInterval sessionLength = fabs(now - self.liveStreamSessionBegan);
     NSString *pt = [NSDate prettyTextFromSeconds:sessionLength];
@@ -190,11 +196,20 @@
     Program *p = self.currentProgram;
     NSString *title = p.title ? p.title : @"[UNKNOWN]";
     
+    
     [[AnalyticsManager shared] logEvent:@"liveStreamPause"
                          withParameters:@{ @"kpccSessionId" : sid,
                                            @"programTitle" : title,
                                            @"sessionLength" : pt,
                                            @"sessionLengthInSeconds" : [NSString stringWithFormat:@"%ld",(long)sessionLength] }];
+#if !TARGET_IPHONE_SIMULATOR
+    [Flurry endTimedEvent:@"liveStreamPlay"
+           withParameters:@{
+                             @"programTitle" : title,
+                             @"sessionLength" : pt,
+                             @"sessionLengthInSeconds" : [NSString stringWithFormat:@"%ld",(long)sessionLength] }];
+#endif
+    
     self.sessionIsHot = NO;
     self.liveSessionID = nil;
     return sid;
@@ -224,6 +239,16 @@
     if ( p.title ) {
         title = p.title;
     }
+    
+#if !TARGET_IPHONE_SIMULATOR
+    [Flurry logEvent:@"liveStreamPlay"
+      withParameters:@{
+                        @"behindLiveStatus" : pt,
+                        @"behindLiveSeconds" : literalValue,
+                        @"programTitle" : title }
+               timed:YES];
+#endif
+    
     [[AnalyticsManager shared] logEvent:@"liveStreamPlay"
                          withParameters:@{ @"kpccSessionId" : self.liveSessionID ,
                                            @"behindLiveStatus" : pt,
@@ -1086,7 +1111,7 @@
     [[AudioManager shared] setSeekRequested:NO];
     
     if ( [[AudioManager shared] audioPlayer] )
-        [[AudioManager shared] takedownAudioPlayer];
+        [[AudioManager shared] stopAudio];
     
     SCPRMasterViewController *master = [[Utils del] masterViewController];
     [master resetUI];

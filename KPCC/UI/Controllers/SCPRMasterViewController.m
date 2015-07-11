@@ -92,8 +92,6 @@ setForOnDemandUI;
         return;
     }
     
-    [[AudioManager shared] setUserPause:NO];
-    
     if ( self.initialPlay ) {
         [self playOrPauseTapped:nil];
     } else {
@@ -1203,11 +1201,15 @@ setForOnDemandUI;
 
 # pragma mark - Audio commands
 - (void)playAudio:(BOOL)hard {
+    
+    [[AudioManager shared] setUserPause:NO];
+    
     if ( hard && ![[SessionManager shared] sessionIsInBackground] ) {
         [[AudioManager shared] playLiveStream];
     } else {
         [[AudioManager shared] playAudio];
     }
+    
 }
 
 - (void)pauseAudio {
@@ -1259,7 +1261,7 @@ setForOnDemandUI;
         return;
     }
     
-    [[AudioManager shared] takedownAudioPlayer];
+    [[AudioManager shared] stopAudio];
     
     self.liveStreamView.userInteractionEnabled = YES;
     self.playerControlsView.userInteractionEnabled = YES;

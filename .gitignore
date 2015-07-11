@@ -23,4 +23,5 @@ xcuserdata
 DerivedData
 .idea/
 KPCC/Config.plist
+KPCC/GoogleService-Info.plist
 Pods

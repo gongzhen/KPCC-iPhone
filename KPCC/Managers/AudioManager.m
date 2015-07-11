@@ -112,6 +112,9 @@ static const NSString *ItemStatusContext;
                 if ( SEQ(port.portType,AVAudioSessionPortBuiltInSpeaker) ) {
                     userPause = NO;
                     break;
+                } else {
+                    userPause = YES;
+                    break;
                 }
             }
         }
@@ -234,7 +237,7 @@ static const NSString *ItemStatusContext;
                             self.tryAgain = NO;
                             self.failoverCount = 0;
                             [self analyzeStreamError:[error prettyAnalytics]];
-                            [self takedownAudioPlayer];
+                            [self stopAudio];
                         });
                     } else {
                     
@@ -407,6 +410,8 @@ static const NSString *ItemStatusContext;
 #pragma mark - Recovery / Logging / Stalls
 - (void)playbackStalled:(NSNotification*)note {
     
+    if ( self.userPause ) return;
+    
     self.dropoutOccurred = YES;
     
 #ifndef SUPPRESS_GIVEUP_TIMER
@@ -468,7 +473,7 @@ static const NSString *ItemStatusContext;
 - (void)giveUpOnStream {
     if ( self.dropoutOccurred ) {
         NSLog(@"Giving up. Restarting requires user action...");
-        [self takedownAudioPlayer];
+        [self stopAudio];
         self.dropoutOccurred = NO;
         self.appGaveUp = YES;
     }
@@ -548,7 +553,6 @@ static const NSString *ItemStatusContext;
             self.dropoutOccurred = NO;
             [self stopWaiting];
             [self stopAllAudio];
-            [self takedownAudioPlayer];
         }];
     }
 }
@@ -874,7 +878,6 @@ static const NSString *ItemStatusContext;
                     [[QueueManager shared] handleBookmarkingActivity];
                 }
                 
-                weakSelf.userPause = NO;
                 weakSelf.seekWillEffectBuffer = NO;
                 weakSelf.seekRequested = NO;
                 weakSelf.appGaveUp = NO;
@@ -1203,7 +1206,7 @@ static const NSString *ItemStatusContext;
         [[SessionManager shared] endOnDemandSessionWithReason:OnDemandFinishedReasonEpisodeEnd];
         [[QueueManager shared] playNext];
     } else {
-        [self takedownAudioPlayer];
+        [self stopAudio];
         [self playAudio];
     }
 }
@@ -1430,7 +1433,7 @@ static const NSString *ItemStatusContext;
 }
 
 - (void)resetPlayer {
-    [self takedownAudioPlayer];
+    [self stopAudio];
     [self buildStreamer:kHLS];
 }
 
@@ -1451,8 +1454,9 @@ static const NSString *ItemStatusContext;
         }
     }
     
+    
     [[UXmanager shared] timeBegin];
-    [self takedownAudioPlayer];
+    [self stopAudio];
     [[UXmanager shared] timeEnd:@"Takedown audio player"];
     
     [[UXmanager shared] timeBegin];
@@ -1507,7 +1511,8 @@ static const NSString *ItemStatusContext;
 
 - (void)playOnboardingAudio:(NSInteger)segment {
 
-    [self takedownAudioPlayer];
+    [self stopAudio];
+    
     self.onboardingSegment = segment;
     NSString *file = [NSString stringWithFormat:@"onboarding%ld",(long)segment];
     [self buildStreamer:file local:YES];
@@ -1552,6 +1557,8 @@ static const NSString *ItemStatusContext;
     if ( [self currentAudioMode] == AudioModeOnboarding ) {
         self.audioPlayer.volume = 0.0f;
     }
+    
+    [self setUserPause:NO];
     
     [[SessionManager shared] startAudioSession];
     
@@ -1638,11 +1645,7 @@ static const NSString *ItemStatusContext;
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
         if ( self.currentAudioMode == AudioModeLive ) {
-            if ( [[SessionManager shared] sessionIsBehindLive] ) {
-                [[SessionManager shared] setSessionPausedDate:[[AudioManager shared].audioPlayer.currentItem currentDate]];
-            } else {
-                [[SessionManager shared] setSessionPausedDate:[NSDate date]];
-            }
+
             [[SessionManager shared] endLiveSession];
         } else {
             [[SessionManager shared] endOnDemandSessionWithReason:OnDemandFinishedReasonEpisodePaused];
@@ -1652,6 +1655,10 @@ static const NSString *ItemStatusContext;
 }
 
 - (void)stopAudio {
+    if ( [self isPlayingAudio] && self.currentAudioMode == AudioModeLive ) {
+        [[SessionManager shared] endLiveSession];
+    }
+    
     [self takedownAudioPlayer];
     self.status = StreamStatusStopped;
 }
