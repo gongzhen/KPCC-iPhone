@@ -308,9 +308,6 @@ static const NSString *ItemStatusContext;
                             [self.audioPlayer.currentItem setPreferredPeakBitRate:kPreferredPeakBitRateTolerance];
                         }
 #endif
-                        [[AnalyticsManager shared] logEvent:@"streamRecoveredAfterUserInteraction"
-                                             withParameters:nil];
-                        
                     }
                 }
             }
@@ -396,15 +393,6 @@ static const NSString *ItemStatusContext;
         
         if ( oldRate == 1.0 && newRate == 0.0 ) {
             self.status = StreamStatusPaused;
-
-            if ( !self.seekWillEffectBuffer ) {
-                if ( self.currentAudioMode == AudioModeLive ) {
-                    NSLog(@"Recording user pause for analytics...");
-                    [[SessionManager shared] endLiveSession];
-                } else if ( self.currentAudioMode == AudioModeOnDemand ) {
-                    [[SessionManager shared] endOnDemandSessionWithReason:OnDemandFinishedReasonEpisodePaused];
-                }
-            }
         }
         
         if ([self.delegate respondsToSelector:@selector(onRateChange)]) {
@@ -455,12 +443,8 @@ static const NSString *ItemStatusContext;
             if ( !self.failureGate ) {
                 NSLog(@"Playback stalled ... ");
                 self.failureGate = YES;
-                self.reasonToReportError = @"playbackStalled";
-                self.waitForLogTimer = [NSTimer scheduledTimerWithTimeInterval:4.0f
-                                                                        target:self
-                                                                      selector:@selector(forceAnalysis)
-                                                                      userInfo:nil
-                                                                       repeats:NO];
+                
+                
             }
             
         } else {
@@ -474,8 +458,8 @@ static const NSString *ItemStatusContext;
 
 - (void)forceAnalysis {
     [[AnalyticsManager shared] clearLogs];
-    [[AnalyticsManager shared] logEvent:self.reasonToReportError
-                         withParameters:@{ @"errorComment" : @"No error log posted" }];
+    /*[[AnalyticsManager shared] logEvent:self.reasonToReportError
+                         withParameters:@{ @"errorComment" : @"No error log posted" }];*/
     self.reasonToReportError = nil;
 }
 
@@ -531,8 +515,8 @@ static const NSString *ItemStatusContext;
     if ( !self.appGaveUp ) {
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             [[AnalyticsManager shared] clearLogs];
-            [[AnalyticsManager shared] logEvent:@"streamRecovered"
-                                 withParameters:@{}];
+            /*[[AnalyticsManager shared] logEvent:@"streamRecovered"
+                                 withParameters:@{}];*/
             
         });
     }
@@ -599,8 +583,8 @@ static const NSString *ItemStatusContext;
         
         [[AnalyticsManager shared] setErrorLog:self.audioPlayer.currentItem.errorLog];
         if ( self.reasonToReportError ) {
-            [[AnalyticsManager shared] logEvent:self.reasonToReportError
-                                 withParameters:@{}];
+            /*[[AnalyticsManager shared] logEvent:self.reasonToReportError
+                                 withParameters:@{}];*/
             self.reasonToReportError = nil;
         }
     }
@@ -620,10 +604,10 @@ static const NSString *ItemStatusContext;
         
         NSInteger drift = [now timeIntervalSince1970] - [msd timeIntervalSince1970];
         if ( (drift - [[SessionManager shared] peakDrift] > kToleratedIncreaseInDrift) ) {
-            [[AnalyticsManager shared] logEvent:@"driftIncreasing"
+            /*[[AnalyticsManager shared] logEvent:@"driftIncreasing"
                                  withParameters:@{ @"oldDrift" : @([[SessionManager shared] peakDrift]),
                                                    @"newDrift" : @(drift) }];
-            NSLog(@"Drift increasing - Old : %ld, New : %ld",(long)[[SessionManager shared] peakDrift], (long)drift);
+            NSLog(@"Drift increasing - Old : %ld, New : %ld",(long)[[SessionManager shared] peakDrift], (long)drift);*/
         } else {
             //NSLog(@"Drift stabilizing - Old : %ld, New : %ld",(long)[[SessionManager shared] peakDrift], (long)drift);
         }
@@ -707,18 +691,18 @@ static const NSString *ItemStatusContext;
                         NSString *currTime = [NSDate stringFromDate:now
                                                          withFormat:@"HH:mm:ss a"];
                         
-                        [[AnalyticsManager shared] logEvent:@"attemptToFixLargeGapInStream"
+                        /*[[AnalyticsManager shared] logEvent:@"attemptToFixLargeGapInStream"
                                              withParameters:@{ @"expected" : expStr,
                                                                @"reported" : repStr,
                                                                @"timeAfterAttemptToFix" : currTime,
                                                                @"reportedTimeValue" : @(rtFloat),
-                                                               @"reportedMaxSeekTime" : @(maxSeekTime)}];
+                                                               @"reportedMaxSeekTime" : @(maxSeekTime)}];*/
                         
                     }];
                     
                 } else {
-                    [[AnalyticsManager shared] logEvent:@"skippedTooManyTimes"
-                                         withParameters:@{}];
+                    /*[[AnalyticsManager shared] logEvent:@"skippedTooManyTimes"
+                                         withParameters:@{}];*/
                     
                     [self stopAudio];
                 }
@@ -895,9 +879,9 @@ static const NSString *ItemStatusContext;
                     [[SessionManager shared] tickSleepTimer];
                 }
                 
-                [[SessionManager shared] trackLiveSession];
-                [[SessionManager shared] trackRewindSession];
-                [[SessionManager shared] trackOnDemandSession];
+                //[[SessionManager shared] trackLiveSession];
+                //[[SessionManager shared] trackRewindSession];
+                //[[SessionManager shared] trackOnDemandSession];
                 [[SessionManager shared] checkProgramUpdate:NO];
                 
 
@@ -1653,15 +1637,16 @@ static const NSString *ItemStatusContext;
         return;
     }
     
+    
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
         if ( self.currentAudioMode == AudioModeLive ) {
-
             [[SessionManager shared] endLiveSession];
         } else {
             [[SessionManager shared] endOnDemandSessionWithReason:OnDemandFinishedReasonEpisodePaused];
         }
     });
-     
+    
+    
 }
 
 - (void)stopAudio {

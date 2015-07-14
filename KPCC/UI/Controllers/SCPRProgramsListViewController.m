@@ -179,7 +179,7 @@
         title = @"[UNKNOWN]";
     }
     
-    [[AnalyticsManager shared] logEvent:@"programSelected"
+    /*[[AnalyticsManager shared] logEvent:@"programSelected"
                          withParameters:@{ @"programTitle" : title }];
 }
 

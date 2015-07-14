@@ -342,8 +342,8 @@
 - (void)openDropDown:(BOOL)animated {
     
     if ( self.type == MenuTypeStandard ) {
-        [[AnalyticsManager shared] logEvent:@"menuOpened"
-                             withParameters:@{}];
+       /* [[AnalyticsManager shared] logEvent:@"menuOpened"
+                             withParameters:@{}];*/
     }
     
     if (animated)
@@ -378,8 +378,8 @@
 - (void)closeDropDown:(BOOL)animated {
 
     if ( self.type == MenuTypeStandard ) {
-        [[AnalyticsManager shared] logEvent:@"menuClosed"
-                         withParameters:@{}];
+        /*[[AnalyticsManager shared] logEvent:@"menuClosed"
+                         withParameters:@{}];*/
     }
     
     if (animated)

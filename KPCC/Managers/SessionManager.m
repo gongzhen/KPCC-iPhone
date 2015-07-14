@@ -158,6 +158,8 @@
     
     self.liveStreamSessionBegan = (int64_t)[[NSDate date] timeIntervalSince1970];
     
+    [self trackLiveSession];
+    
     return sid;
 }
 
@@ -197,17 +199,16 @@
     NSString *title = p.title ? p.title : @"[UNKNOWN]";
     
     /*
+*/
+#if !TARGET_IPHONE_SIMULATOR
+    [[AnalyticsManager shared] endTimedEvent:@"liveStreamPlay"];
+    
     [[AnalyticsManager shared] logEvent:@"liveStreamPause"
                          withParameters:@{ @"kpccSessionId" : sid,
                                            @"programTitle" : title,
                                            @"sessionLength" : pt,
-                                           @"sessionLengthInSeconds" : [NSString stringWithFormat:@"%ld",(long)sessionLength] }];*/
-#if !TARGET_IPHONE_SIMULATOR
-    [Flurry endTimedEvent:@"liveStreamPlay"
-           withParameters:/*@{
-                             @"programTitle" : title,
-                             @"sessionLength" : pt,
-                             @"sessionLengthInSeconds" : [NSString stringWithFormat:@"%ld",(long)sessionLength] }*/nil];
+                                           @"sessionLengthInSeconds" : [NSString stringWithFormat:@"%ld",(long)sessionLength] }];
+    
 #endif
     
     self.sessionIsHot = NO;
@@ -242,12 +243,17 @@
 
     
 #if !TARGET_IPHONE_SIMULATOR
-    [Flurry logEvent:@"liveStreamPlay"
-      withParameters:@{
-                        @"behindLiveStatus" : pt,
-                        @"behindLiveSeconds" : literalValue,
-                        @"programTitle" : title }
-               timed:YES];
+    
+    NSString *plus = [[UXmanager shared].settings userHasSelectedXFS] ? @"KPCC Plus" : @"KPCC Live";
+    
+    [[AnalyticsManager shared] beginTimedEvent:@"liveStreamPlay"
+                                    parameters:@{
+                                                 @"behindLiveStatus" : pt,
+                                                 @"behindLiveSeconds" : literalValue,
+                                                 @"programTitle" : title,
+                                                 @"streamId" : plus}];
+    
+
 #endif
     
    /* [[AnalyticsManager shared] logEvent:@"liveStreamPlay"
@@ -314,13 +320,13 @@
     NSString *event = @"";
     switch (reason) {
         case OnDemandFinishedReasonEpisodeEnd:
-            event = @"onDemandAudioCompleted";
+            event = @"episodeAudioCompleted";
             break;
         case OnDemandFinishedReasonEpisodePaused:
-            event = @"onDemandAudioPaused";
+            event = @"episodeAudioPaused";
             break;
         case OnDemandFinishedReasonEpisodeSkipped:
-            event = @"onDemandEpisodeSkipped";
+            event = @"episodeSkipped";
             break;
         default:
             break;
@@ -329,7 +335,7 @@
     NSString *title = chunk.audioTitle ? chunk.audioTitle : @"[UNKNOWN]";
     
     [[AnalyticsManager shared] logEvent:event
-                         withParameters:@{ @"kpccSessionId" : sid,
+                         withParameters:@{
                                            @"programTitle" : title,
                                            @"sessionLength" : pt,
                                            @"sessionLengthInSeconds" : [NSString stringWithFormat:@"%ld",(long)sessionLength] }];
@@ -1087,6 +1093,26 @@
     }];
 }
 
+- (void)handleSessionMovingToBackground {
+    
+    NSString *eventName = @"";
+    NSInteger sessionBegan = 0;
+    if ( [[AudioManager shared] currentAudioMode] == AudioModeLive ) {
+        eventName = @"liveStreamMovedToBackground";
+        sessionBegan = self.liveStreamSessionBegan;
+    }
+    if ( [[AudioManager shared] currentAudioMode] == AudioModeOnDemand ) {
+        eventName = @"episodeAudioMovedToBackground";
+        sessionBegan = self.onDemandSessionBegan;
+    }
+    
+    self.timeAudioWasPutInBackground = [[NSDate date] timeIntervalSince1970];
+    NSTimeInterval diff = self.timeAudioWasPutInBackground - sessionBegan;
+    [[AnalyticsManager shared] logEvent:eventName
+                         withParameters:@{ @"secondsSinceSessionBegan" : @(diff) }
+                                  timed:NO];
+}
+
 - (void)handleSessionReactivation {
     
     if ( [[AudioManager shared] currentAudioMode] == AudioModeOnboarding ) return;
@@ -1099,8 +1125,30 @@
     } else {
         if ( [[AudioManager shared] status] != StreamStatusPaused ) {
             [self checkProgramUpdate:NO];
+            
+            if ( [[AudioManager shared] isPlayingAudio] ) {
+
+                NSString *eventName = @"";
+                if ( [[AudioManager shared] currentAudioMode] == AudioModeLive ) {
+                    eventName = @"liveStreamReturnedToForeground";
+                }
+                if ( [[AudioManager shared] currentAudioMode] == AudioModeOnDemand ) {
+                    eventName = @"episodeAudioReturnedToForeground";
+                }
+                NSTimeInterval now = [[NSDate date] timeIntervalSince1970];
+                NSInteger diff = now - self.timeAudioWasPutInBackground;
+                [[AnalyticsManager shared] logEvent:eventName
+                                     withParameters:@{ @"secondsSinceAppWasBackgrounded" : @(diff) }
+                                              timed:NO];
+            }
+            
+        } else {
+         
+
         }
     }
+    
+    self.timeAudioWasPutInBackground = 0.0f;
 }
 
 - (void)expireSession {

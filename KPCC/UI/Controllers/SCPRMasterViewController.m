@@ -1181,7 +1181,7 @@ setForOnDemandUI;
         controller.excludedActivityTypes = @[UIActivityTypeAirDrop];
         [controller setCompletionHandler:^(NSString *activityType, BOOL completed) {
             if ( completed ) {
-                [[AnalyticsManager shared] logEvent:[NSString stringWithFormat:@"programEpisodeShared%@",[activityType capitalizedString]]
+                [[AnalyticsManager shared] logEvent:[NSString stringWithFormat:@"episodeShared%@",[activityType capitalizedString]]
                                      withParameters:@{ @"episodeUrl" : self.onDemandEpUrl,
                                                        @"programTitle" : pt }];
             }
@@ -2997,15 +2997,16 @@ setForOnDemandUI;
 - (void)xfsHidden {
     [self decloakForXFS];
     
-    [[AnalyticsManager shared] logEvent:@"stream-selector-closed"
-                         withParameters:nil];
+    /*[[AnalyticsManager shared] logEvent:@"stream-selector-closed"
+                         withParameters:nil];*/
 }
 
 - (void)xfsShown {
     [self cloakForXFS];
     
-    [[AnalyticsManager shared] logEvent:@"stream-selector-opened"
-                         withParameters:nil];
+    /*[[AnalyticsManager shared] logEvent:@"stream-selector-opened"
+                         withParameters:nil];*/
+    
 }
 
 - (void)xfsToggle {
@@ -3628,15 +3629,14 @@ setForOnDemandUI;
 
 - (void)menuItemSelected:(NSIndexPath *)indexPath {
     
+    BOOL closeMenu = NO;
     NSString *event = @"";
     switch (indexPath.row) {
         case 0:
         {
             event = @"menuSelectionLiveStream";
-            if ( [AudioManager shared].currentAudioMode == AudioModeLive ) {
-                [self decloakForMenu:YES];
-            } else {
-                [self decloakForMenu:YES];
+            closeMenu = YES;
+            if ( ![AudioManager shared].currentAudioMode == AudioModeLive ) {
                 [self goLive:YES];
             }
             break;
@@ -3673,7 +3673,7 @@ setForOnDemandUI;
         case 3: {
             
             self.homeIsNotRootViewController = YES;
-            [self decloakForMenu:YES];
+            closeMenu = YES;
             
             event = @"menuSelectionWakeSleep";
             SCPRTimerControlViewController *timer = [[SCPRTimerControlViewController alloc] initWithNibName:@"SCPRTimerControlViewController"
@@ -3695,7 +3695,7 @@ setForOnDemandUI;
             event = @"menuSelectionDonate";
             NSString *urlStr = @"https://scprcontribute.publicradio.org/contribute.php?refId=iphone&askAmount=60";
             NSURL *url = [NSURL URLWithString:urlStr];
-            [self decloakForMenu:YES];
+            closeMenu = YES;
             [[UIApplication sharedApplication] openURL:url];
             break;
         }
@@ -3706,17 +3706,22 @@ setForOnDemandUI;
             SCPRFeedbackViewController *fbVC = [[SCPRFeedbackViewController alloc] initWithNibName:@"SCPRFeedbackViewController"
                                                                                             bundle:nil];
             [self.navigationController pushViewController:fbVC animated:YES];
+            
             break;
             
         }
         default: {
-            [self decloakForMenu:YES];
+            closeMenu = YES;
             break;
         }
     }
     
-    [[AnalyticsManager shared] logEvent:event
-                         withParameters:@{}];
+    /*[[AnalyticsManager shared] logEvent:event
+                         withParameters:@{}];*/
+    
+    if ( closeMenu ) {
+        [self decloakForMenu:YES];
+    }
 }
 
 - (void)pullDownAnimated:(BOOL)open {

@@ -114,11 +114,11 @@ static NetworkManager *singleton = nil;
                                                                 object:nil];
                 
                 if ( weakself_.timeDropped && weakself_.timeReturned ) {
-                    [[AnalyticsManager shared] logEvent:@"connectivityLostAndFound"
+                    /*[[AnalyticsManager shared] logEvent:@"connectivityLostAndFound"
                                          withParameters:@{ @"lostTime" : [NSDate stringFromDate:weakself_.timeDropped
                                                                                      withFormat:@"HH:mm:ss a"],
                                                            @"foundTime" : [NSDate stringFromDate:weakself_.timeReturned
-                                                                                      withFormat:@"HH:mm:ss a"] }];
+                                                                                      withFormat:@"HH:mm:ss a"] }];*/
                     weakself_.timeReturned = nil;
                     weakself_.timeDropped = nil;
                 }

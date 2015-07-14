@@ -213,7 +213,7 @@
         programTitle = seg.programName;
     }
     
-    [[AnalyticsManager shared] logEvent:@"episodeOrSegmentSelected"
+    [[AnalyticsManager shared] logEvent:@"episodePlay"
                          withParameters:@{ @"episodeOrSegmentTitle" : title,
                                            @"programTitle" : programTitle }];
     

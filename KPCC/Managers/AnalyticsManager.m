@@ -73,6 +73,16 @@ static AnalyticsManager *singleton = nil;
     [mxp identify:uuid];
     [mxp.people set:@{ @"uuid" : uuid }];
     
+    // Configure tracker from GoogleService-Info.plist.
+    NSError *configureError;
+    [[GGLContext sharedInstance] configureWithError:&configureError];
+    NSAssert(!configureError, @"Error configuring Google services: %@", configureError);
+    
+    // Optional: configure GAI options.
+    GAI *gai = [GAI sharedInstance];
+    gai.trackUncaughtExceptions = YES;  // report uncaught exceptions
+    gai.logger.logLevel = kGAILogLevelVerbose;  // remove before app release
+    
     
 }
 
@@ -98,62 +108,60 @@ static AnalyticsManager *singleton = nil;
 }
 
 - (void)trackHeadlinesDismissal {
-    [self logEvent:@"userClosedHeadlines"
-    withParameters:@{ }];
+   /* [self logEvent:@"userClosedHeadlines"
+    withParameters:@{ }]; */
 }
 
 
+- (void)beginTimedEvent:(NSString *)event parameters:(NSDictionary *)parameters {
+    
+    [self logEvent:event withParameters:parameters timed:YES];
+    
+}
+
+- (void)endTimedEvent:(NSString *)event {
+    [Flurry endTimedEvent:event withParameters:nil];
+
+}
+
 - (void)logEvent:(NSString *)event withParameters:(NSDictionary *)parameters {
+    [self logEvent:event withParameters:parameters timed:NO];
+}
+
+- (void)logEvent:(NSString *)event withParameters:(NSDictionary *)parameters timed:(BOOL)timed {
     
-   // NSLog(@"Logging Event : %@",event);
-#if TARGET_IPHONE_SIMULATOR
-    return;
-#endif
+    NSDictionary *cookedParams = [self logifiedParamsList:parameters];
     
-  /*
-    NSMutableDictionary *userInfo = [[NSMutableDictionary alloc] init];
-    
-    NSMutableDictionary *mParams = [parameters mutableCopy];
-    if ( parameters[@"short"] ) {
-        [mParams removeObjectForKey:@"short"];
-        parameters = mParams;
-    } else {
-        parameters = [self logifiedParamsList:parameters];
+    if ( timed ) {
+        [Flurry logEvent:event
+          withParameters:cookedParams
+                   timed:timed];
     }
-    
-    if ( ![[UXmanager shared].settings userHasViewedOnboarding] ) return;
-    
-    for ( NSString *key in [parameters allKeys] ) {
-        userInfo[key] = parameters[key];
-    }
-    
     
     Mixpanel *mxp = [Mixpanel sharedInstance];
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
-        [mxp track:event properties:userInfo];
-    });
+    [mxp track:event properties:cookedParams];
     
-    if ( [userInfo count] >= 10 ) {
-        if ( userInfo[@"numberOfStalls"] ) {
-            [userInfo removeObjectForKey:@"numberOfStalls"];
-        }
-        if ( userInfo[@"observedMaxBitrate"] ) {
-            [userInfo removeObjectForKey:@"observedMaxBitrate"];
-        }
-        if ( userInfo[@"observedMinBitrate"] ) {
-            [userInfo removeObjectForKey:@"observedMinBitrate"];
-        }
-        if ( userInfo[@"bytesTransferred"] ) {
-            [userInfo removeObjectForKey:@"bytesTransferred"];
-        }
-        if ( userInfo[@"accessLogPostedAt"] ) {
-            [userInfo removeObjectForKey:@"accessLogPostedAt"];
-        }
+    NSString *category = [self categoryForEvent:event];
+    GAI *gai = [GAI sharedInstance];
+    id<GAITracker> tracker = [gai defaultTracker];
+    [tracker send:[[GAIDictionaryBuilder createEventWithCategory:category
+                                                          action:event
+                                                           label:@"executed"
+                                                           value:@1] build]];
+    
+    
+    
+}
+
+- (NSString*)categoryForEvent:(NSString *)event {
+    if ( [event rangeOfString:@"liveStream"].location != NSNotFound ) {
+        return @"Live Stream";
+    }
+    if ( [event rangeOfString:@"episode"].location != NSNotFound ) {
+        return @"On Demand";
     }
     
-    [Flurry logEvent:event withParameters:userInfo timed:YES];*/
-    
-    
+    return @"General";
 }
 
 - (void)failStream:(NetworkHealth)cause comments:(NSString *)comments {
@@ -207,7 +215,10 @@ static AnalyticsManager *singleton = nil;
 
 - (NSDictionary*)logifiedParamsList:(NSDictionary *)originalParams {
     
-    NSMutableDictionary *nParams = [originalParams mutableCopy];
+    NSMutableDictionary *nParams = [NSMutableDictionary new];
+    if ( originalParams ) {
+        nParams = [originalParams mutableCopy];
+    }
     if ( self.errorLog ) {
         if ( self.errorLog.events && self.errorLog.events.count > 0 ) {
             
@@ -215,7 +226,7 @@ static AnalyticsManager *singleton = nil;
             if ( event.playbackSessionID ) {
                 nParams[@"avPlayerSessionId"] = event.playbackSessionID;
             }
-            nParams[@"errorStatusCode"] = @(event.errorStatusCode);
+            /*nParams[@"errorStatusCode"] = @(event.errorStatusCode);
             if ( event.errorDomain ) {
                 nParams[@"errorDomain"] = event.errorDomain;
             }
@@ -224,14 +235,14 @@ static AnalyticsManager *singleton = nil;
             }
             if ( event.errorComment ) {
                 nParams[@"errorComment"] = event.errorComment;
-            }
+            }*/
         }
         self.errorLog = nil;
     }
     if ( self.accessLog ) {
         if ( self.accessLog.events && self.accessLog.events.count > 0 ) {
             
-            AVPlayerItemAccessLogEvent *event = self.accessLog.events.lastObject;
+          /*  AVPlayerItemAccessLogEvent *event = self.accessLog.events.lastObject;
             if ( event.playbackSessionID ) {
                 nParams[@"avPlayerSessionId"] = event.playbackSessionID;
             }
@@ -255,6 +266,7 @@ static AnalyticsManager *singleton = nil;
             if ( event.URI ) {
                 nParams[@"uri"] = event.URI;
             }
+           */
         }
         self.accessLog = nil;
     }
@@ -265,13 +277,15 @@ static AnalyticsManager *singleton = nil;
             nParams[@"avPlayerSessionId"] = avpid;
         }
     }
+    nParams[@"UID"] = [[[UIDevice currentDevice] identifierForVendor] UUIDString];
     
-    NSError *misc = [[[AudioManager shared] audioPlayer] currentItem].error;
+    /*NSError *misc = [[[AudioManager shared] audioPlayer] currentItem].error;
     if ( misc ) {
         for ( NSString *key in [[misc userInfo] allKeys] ) {
             nParams[key] = [misc userInfo][key];
         }
     }
+    */
     
     //NSLog(@" •••••••• FINISHED LOGGIFYING ANALYTICS ••••••• ");
     
@@ -336,10 +350,10 @@ static AnalyticsManager *singleton = nil;
     }
     
     if ( [[AudioManager shared] currentAudioMode] == AudioModeLive ) {
-        eventName = @"liveStreamScrubbed";
+        eventName = @"liveStreamTimeShifted";
     }
     if ( [[AudioManager shared] currentAudioMode] == AudioModeOnDemand ) {
-        eventName = @"onDemandAudioScrubbed";
+        eventName = @"episodeAudioTimeShifted";
     }
     
     NSString *direction = @"";
@@ -356,6 +370,23 @@ static AnalyticsManager *singleton = nil;
                                           }];
     
     NSLog(@"%@ : method : %@, amount : %@ %1.1f",eventName,method,direction,fabs([[AudioManager shared] newPositionDelta]));
+}
+
+- (void)trackPlaybackStalled {
+    NSTimeInterval streamStarted = (NSTimeInterval)[[SessionManager shared] liveStreamSessionBegan];
+    NSTimeInterval diff = [[NSDate date] timeIntervalSince1970] - streamStarted;
+    
+    Program *p = [[SessionManager shared] currentProgram];
+    
+    NSString *title = @"[UNKNOWN]";
+    if ( p.title ) {
+        title = p.title;
+    }
+    
+    [self logEvent:@"liveStreamPlaybackStalled"
+    withParameters:@{ @"secondsSinceStreamBegan" : @(diff),
+                      @"programTitle" : title }
+             timed:NO];
 }
 
 @end

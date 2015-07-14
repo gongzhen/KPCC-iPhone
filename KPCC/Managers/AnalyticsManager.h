@@ -50,12 +50,20 @@ typedef NS_ENUM(NSInteger, ScrubbingType) {
 - (void)setup;
 - (void)trackHeadlinesDismissal;
 - (void)logEvent:(NSString *)event withParameters:(NSDictionary *)parameters;
+- (void)logEvent:(NSString *)event withParameters:(NSDictionary *)parameters timed:(BOOL)timed;
+- (void)beginTimedEvent:(NSString *)event parameters:(NSDictionary*)parameters;
+- (void)endTimedEvent:(NSString *)event;
+
 - (void)failStream:(NetworkHealth)cause comments:(NSString*)comments;
 - (void)failStream:(NetworkHealth)cause comments:(NSString *)comments force:(BOOL)force;
+- (void)trackPlaybackStalled;
+
 - (void)kTrackSession:(NSString*)modifier;
 - (void)clearLogs;
 
 - (void)trackSeekUsageWithType:(ScrubbingType)type;
+
+- (NSString*)categoryForEvent:(NSString*)event;
 
 - (NSDictionary*)logifiedParamsList:(NSDictionary*)originalParams;
 

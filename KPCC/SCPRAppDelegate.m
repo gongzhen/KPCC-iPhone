@@ -273,6 +273,8 @@
     if ( [[AudioManager shared] isPlayingAudio] ) {
         [Flurry setBackgroundSessionEnabled:YES];
         [[AnalyticsManager shared] setFlurryActiveInBackground:YES];
+        [[SessionManager shared] handleSessionMovingToBackground];
+        
     }
     
     if ( [[AudioManager shared] currentAudioMode] == AudioModeOnboarding ) {

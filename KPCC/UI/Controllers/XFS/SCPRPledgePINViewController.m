@@ -86,8 +86,8 @@
 
 - (void)puntToFAQ {
     
-    [[AnalyticsManager shared] logEvent:@"userLeavingToViewPlusFAQ"
-                         withParameters:nil];
+    /*[[AnalyticsManager shared] logEvent:@"userLeavingToViewPlusFAQ"
+                         withParameters:nil];*/
     
     NSString *urlStr = @"http://www.scpr.org/pledge-free";
     [[UIApplication sharedApplication] openURL:[NSURL URLWithString:urlStr]];
@@ -140,8 +140,8 @@
                     } completion:^(BOOL finished) {
                         [pfsu saveInBackground];
                         
-                        [[AnalyticsManager shared] logEvent:@"member-token-success"
-                                             withParameters:@{ @"token" : self.pinNumber }];
+                        /*[[AnalyticsManager shared] logEvent:@"member-token-success"
+                                             withParameters:@{ @"token" : self.pinNumber }];*/
                         
                     }];
                     
@@ -216,8 +216,8 @@
                                                animated:YES
                                              completion:nil];
                             
-                            [[AnalyticsManager shared] logEvent:@"member-token-failure"
-                                                 withParameters:@{ @"token" : self.pinNumber }];
+                            /*[[AnalyticsManager shared] logEvent:@"member-token-failure"
+                                                 withParameters:@{ @"token" : self.pinNumber }];*/
                             
                         }];
                     }

@@ -139,9 +139,13 @@ static NSInteger kProgramPollingPressure = 5;
 @property BOOL genericImageForProgram;
 @property BOOL userIsSwitchingToKPCCPlus;
 
+@property NSTimeInterval timeAudioWasPutInBackground;
+
 - (BOOL)virtualLiveAudioMode;
 
+- (void)handleSessionMovingToBackground;
 - (void)handleSessionReactivation;
+
 - (void)invalidateSession;
 - (void)expireSession;
 
