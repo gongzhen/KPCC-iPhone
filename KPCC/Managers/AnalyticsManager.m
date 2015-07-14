@@ -91,6 +91,8 @@ static AnalyticsManager *singleton = nil;
    
 #ifdef DEBUG
     [[UXmanager shared].settings setUserQualityMap:nil];
+    [[UXmanager shared].settings setUserPoints:@0];
+    [[UXmanager shared].settings setHistoryBeganAt:nil];
     [[UXmanager shared] persist];
 #endif
     
@@ -113,11 +115,11 @@ static AnalyticsManager *singleton = nil;
             start = 15;
         }
         
-        for ( unsigned i = 0; i < 15; i++ ) {
+        for ( unsigned i = start; i < finish; i++ ) {
             [compos setDay:i+1];
             NSDate *monthDayDate = [[NSCalendar currentCalendar] dateFromComponents:compos];
             NSString *monthDay = [NSDate stringFromDate:monthDayDate
-                                             withFormat:@"YYYY-MM-dd"];
+                                             withFormat:[NSDate simpleDateFormat]];
      
             NSNumber *value = @0;
 #ifdef DEBUG
@@ -137,15 +139,22 @@ static AnalyticsManager *singleton = nil;
         
         NSString *s1 = (NSString*)obj1;
         NSString *s2 = (NSString*)obj2;
-        NSDate *d1 = [NSDate dateFromString:s1 withFormat:@"YYYY-MM-dd"];
-        NSDate *d2 = [NSDate dateFromString:s2 withFormat:@"YYYY-MM-dd"];
+        NSDate *d1 = [NSDate dateFromString:s1 withFormat:[NSDate simpleDateFormat]];
+        NSDate *d2 = [NSDate dateFromString:s2 withFormat:[NSDate simpleDateFormat]];
         return [d1 compare:d2];
         
     }];
     
+    if ( ![[UXmanager shared].settings historyBeganAt] ) {
+        NSString *startCapStr = sortedKeys.firstObject;
+        NSDate *startCap = [NSDate dateFromString:startCapStr
+                                     withFormat:[NSDate simpleDateFormat]];
+        [[UXmanager shared].settings setHistoryBeganAt:startCap];
+    }
+    
     NSString *endCapStr = sortedKeys.lastObject;
     NSDate *endCap = [NSDate dateFromString:endCapStr
-                                 withFormat:@"YYYY-MM-dd"];
+                                 withFormat:[NSDate simpleDateFormat]];
     
     if ( [today earlierDate:endCap] == endCap ) {
         [[UXmanager shared].settings setUserQualityMap:nil];
@@ -155,7 +164,7 @@ static AnalyticsManager *singleton = nil;
     }
     
     NSString *currentKey = [NSDate stringFromDate:today
-                                       withFormat:@"YYYY-MM-dd"];
+                                       withFormat:[NSDate simpleDateFormat]];
     incumbentMap[currentKey] = @1;
     
     [[UXmanager shared].settings setUserQualityMap:incumbentMap];
@@ -173,7 +182,20 @@ static AnalyticsManager *singleton = nil;
         positives += [incumbentMap[key] intValue];
     }
     
-    CGFloat percent = (positives / 15.0f)*100.0;
+    NSDate *history = [[UXmanager shared].settings historyBeganAt];
+    if ( !history ) {
+        history = [NSDate date];
+    }
+    
+    NSNumber *currentPoints = [[UXmanager shared].settings userPoints];
+    positives += [currentPoints intValue];
+    
+    NSInteger numberOfDays = abs([[NSDate midnightThisMorning] daysBetween:history]);
+    CGFloat percent = (positives / (numberOfDays * 1.0f))*100.0;
+    
+    [[UXmanager shared].settings setUserPoints:@(positives)];
+    [[UXmanager shared] persist];
+    
     NSString *userQuality = [NSString stringWithFormat:@"%1.2f%%",percent];
     
     NSLog(@"User quality : %@",userQuality);

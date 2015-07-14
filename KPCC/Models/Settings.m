@@ -27,6 +27,8 @@
     self.userHasViewedXFSOnboarding = [aDecoder decodeBoolForKey:@"userHasViewedXFSOnboarding"];
     self.xfsToken = [aDecoder decodeObjectForKey:@"xfsToken"];
     self.userQualityMap = [aDecoder decodeObjectForKey:@"userQualityMap"];
+    self.historyBeganAt = [aDecoder decodeObjectForKey:@"historyBeganAt"];
+    self.userPoints = [aDecoder decodeObjectForKey:@"userPoints"];
     [[Utils del] setAlarmDate:self.alarmFireDate];
     
     return self;
@@ -63,6 +65,12 @@
                   forKey:@"xfsToken"];
     [aCoder encodeObject:self.userQualityMap
                   forKey:@"userQualityMap"];
+    
+    [aCoder encodeObject:self.historyBeganAt
+                  forKey:@"historyBeganAt"];
+    [aCoder encodeObject:self.userPoints
+                  forKey:@"userPoints"];
+    
 }
 
 - (void)setUserHasSelectedXFS:(BOOL)userHasSelectedXFS {

@@ -22,10 +22,14 @@
 	return diff;
 }
 
++ (NSString*)simpleDateFormat {
+    return @"YYYY-MM-dd";
+}
+
 - (NSUInteger)daysBetween:(NSDate *)otherDate {
   NSCalendar *calendar = [NSCalendar currentCalendar];
   NSDateFormatter *mdf = [[NSDateFormatter alloc] init];
-	[mdf setDateFormat:@"yyyy-MM-dd"];
+	[mdf setDateFormat:[NSDate simpleDateFormat]];
 	NSDate *midnight = [mdf dateFromString:[mdf stringFromDate:self]];
 	NSDateComponents *components = [calendar components:(NSDayCalendarUnit) fromDate:midnight toDate:otherDate options:0];
 	return [components day];
@@ -41,7 +45,7 @@
 - (NSUInteger)daysAgoAgainstMidnight {
 	// get a midnight version of ourself:
 	NSDateFormatter *mdf = [[NSDateFormatter alloc] init];
-	[mdf setDateFormat:@"yyyy-MM-dd"];
+	[mdf setDateFormat:[NSDate simpleDateFormat]];
 	NSDate *midnight = [mdf dateFromString:[mdf stringFromDate:self]];
 	
 	return (int)[midnight timeIntervalSinceNow] / (60*60*24) *-1;

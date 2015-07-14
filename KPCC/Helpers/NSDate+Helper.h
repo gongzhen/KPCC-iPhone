@@ -60,4 +60,6 @@
 
 - (NSDictionary*)bookends;
 
++ (NSString*)simpleDateFormat;
+
 @end

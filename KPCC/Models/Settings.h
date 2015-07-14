@@ -30,4 +30,7 @@
 @property (nonatomic, strong) NSDate *alarmFireDate;
 @property (nonatomic, strong) NSString *xfsToken;
 @property (nonatomic, strong) NSMutableDictionary *userQualityMap;
+@property (nonatomic, strong) NSDate *historyBeganAt;
+@property (nonatomic, strong) NSNumber *userPoints;
+
 @end
