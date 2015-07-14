@@ -31,6 +31,7 @@ static AnalyticsManager *singleton = nil;
     if (!singleton) {
         @synchronized(self) {
             singleton = [[AnalyticsManager alloc] init];
+            [singleton buildQualityMap];
         }
     }
     return singleton;
@@ -84,6 +85,98 @@ static AnalyticsManager *singleton = nil;
     gai.logger.logLevel = kGAILogLevelVerbose;  // remove before app release
     
     
+}
+
+- (void)buildQualityMap {
+   
+#ifdef DEBUG
+    [[UXmanager shared].settings setUserQualityMap:nil];
+    [[UXmanager shared] persist];
+#endif
+    
+    NSDate *today = [NSDate midnightThisMorning];
+    NSMutableDictionary *incumbentMap = [[UXmanager shared].settings userQualityMap];
+    if ( !incumbentMap ) {
+        incumbentMap = [NSMutableDictionary new];
+
+        NSDateComponents *compos = [[NSCalendar currentCalendar] components:NSCalendarUnitMonth|NSCalendarUnitYear|NSCalendarUnitDay
+                                                                   fromDate:today];
+        NSInteger day = [compos day];
+        
+        NSInteger start = 0;
+        NSInteger finish = 15;
+        if ( day > 15 ) {
+            NSCalendar *cal = [NSCalendar currentCalendar];
+            NSRange rng = [cal rangeOfUnit:NSDayCalendarUnit inUnit:NSMonthCalendarUnit forDate:[NSDate date]];
+            NSUInteger numberOfDaysInMonth = rng.length;
+            finish = numberOfDaysInMonth;
+            start = 15;
+        }
+        
+        for ( unsigned i = 0; i < 15; i++ ) {
+            [compos setDay:i+1];
+            NSDate *monthDayDate = [[NSCalendar currentCalendar] dateFromComponents:compos];
+            NSString *monthDay = [NSDate stringFromDate:monthDayDate
+                                             withFormat:@"YYYY-MM-dd"];
+     
+            NSNumber *value = @0;
+#ifdef DEBUG
+            NSInteger randy = arc4random() % 100;
+            if ( randy <= 35 ) {
+                value = @1;
+            }
+#endif
+            incumbentMap[monthDay] = value;
+
+        }
+
+    }
+    
+    NSArray *dateKeys = [incumbentMap allKeys];
+    NSArray *sortedKeys = [dateKeys sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
+        
+        NSString *s1 = (NSString*)obj1;
+        NSString *s2 = (NSString*)obj2;
+        NSDate *d1 = [NSDate dateFromString:s1 withFormat:@"YYYY-MM-dd"];
+        NSDate *d2 = [NSDate dateFromString:s2 withFormat:@"YYYY-MM-dd"];
+        return [d1 compare:d2];
+        
+    }];
+    
+    NSString *endCapStr = sortedKeys.lastObject;
+    NSDate *endCap = [NSDate dateFromString:endCapStr
+                                 withFormat:@"YYYY-MM-dd"];
+    
+    if ( [today earlierDate:endCap] == endCap ) {
+        [[UXmanager shared].settings setUserQualityMap:nil];
+        [[UXmanager shared] persist];
+        [self buildQualityMap];
+        return;
+    }
+    
+    NSString *currentKey = [NSDate stringFromDate:today
+                                       withFormat:@"YYYY-MM-dd"];
+    incumbentMap[currentKey] = @1;
+    
+    [[UXmanager shared].settings setUserQualityMap:incumbentMap];
+    [[UXmanager shared] persist];
+    
+    [self applyUserQuality];
+    
+    
+}
+
+- (void)applyUserQuality {
+    NSMutableDictionary *incumbentMap = [[UXmanager shared].settings userQualityMap];
+    NSInteger positives = 0;
+    for ( NSString *key in [incumbentMap allKeys] ) {
+        positives += [incumbentMap[key] intValue];
+    }
+    
+    CGFloat percent = (positives / 15.0f)*100.0;
+    NSString *userQuality = [NSString stringWithFormat:@"%1.2f%%",percent];
+    
+    NSLog(@"User quality : %@",userQuality);
 }
 
 - (void)setAccessLog:(AVPlayerItemAccessLog *)accessLog {

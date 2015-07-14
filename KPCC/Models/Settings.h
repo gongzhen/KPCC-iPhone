@@ -29,5 +29,5 @@
 @property (nonatomic, strong) NSDate *lastBookmarkSweep;
 @property (nonatomic, strong) NSDate *alarmFireDate;
 @property (nonatomic, strong) NSString *xfsToken;
-
+@property (nonatomic, strong) NSMutableDictionary *userQualityMap;
 @end

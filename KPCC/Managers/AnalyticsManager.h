@@ -61,6 +61,9 @@ typedef NS_ENUM(NSInteger, ScrubbingType) {
 - (void)kTrackSession:(NSString*)modifier;
 - (void)clearLogs;
 
+- (void)buildQualityMap;
+- (void)applyUserQuality;
+
 - (void)trackSeekUsageWithType:(ScrubbingType)type;
 
 - (NSString*)categoryForEvent:(NSString*)event;

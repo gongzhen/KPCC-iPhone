@@ -318,7 +318,7 @@
 
 + (NSDate*)midnightThisMorning {
     NSDate *now = [NSDate date];
-    NSDateComponents *comps = [[NSCalendar currentCalendar] components:NSCalendarUnitDay
+    NSDateComponents *comps = [[NSCalendar currentCalendar] components:NSCalendarUnitDay|NSCalendarUnitMonth|NSCalendarUnitYear
                                                               fromDate:now];
     NSDate *midnight = [[NSCalendar currentCalendar] dateFromComponents:comps];
     
@@ -414,10 +414,14 @@
 }
 
 + (NSDate *)dateFromString:(NSString *)string {
-	NSDateFormatter *inputFormatter = [[NSDateFormatter alloc] init];
-	[inputFormatter setDateFormat:[NSDate dbFormatString]];
-	NSDate *date = [inputFormatter dateFromString:string];
-	return date;
+    return [NSDate dateFromString:string withFormat:[NSDate dbFormatString]];
+}
+
++ (NSDate*)dateFromString:(NSString *)string withFormat:(NSString*)format {
+    NSDateFormatter *inputFormatter = [[NSDateFormatter alloc] init];
+    [inputFormatter setDateFormat:format];
+    NSDate *date = [inputFormatter dateFromString:string];
+    return date;
 }
 
 + (NSString *)stringFromDate:(NSDate *)date withFormat:(NSString *)format {

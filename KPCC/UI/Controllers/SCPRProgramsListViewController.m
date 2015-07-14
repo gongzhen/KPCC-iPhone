@@ -180,7 +180,7 @@
     }
     
     /*[[AnalyticsManager shared] logEvent:@"programSelected"
-                         withParameters:@{ @"programTitle" : title }];
+                         withParameters:@{ @"programTitle" : title }];*/
 }
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
