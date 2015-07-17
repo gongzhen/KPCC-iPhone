@@ -65,7 +65,6 @@
 		25A6534B1AAE2BA300ABAAD6 /* Bookmark.m in Sources */ = {isa = PBXBuildFile; fileRef = 25A6534A1AAE2BA300ABAAD6 /* Bookmark.m */; };
 		25AD96921B4F3BA200858B65 /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 25AD96901B4F3BA200858B65 /* Crashlytics.framework */; };
 		25AD96941B5062E600858B65 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 25AD96931B5062E600858B65 /* GoogleService-Info.plist */; };
-		25AD96961B50680B00858B65 /* Fabric.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 25AD96951B50680B00858B65 /* Fabric.framework */; };
 		25B25B9B1B17DEF600ABE8B4 /* chevron_up.png in Resources */ = {isa = PBXBuildFile; fileRef = 25B25B991B17DEF600ABE8B4 /* chevron_up.png */; };
 		25B25B9C1B17DEF600ABE8B4 /* chevron_up@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 25B25B9A1B17DEF600ABE8B4 /* chevron_up@2x.png */; };
 		25B25B9F1B190EE200ABE8B4 /* SCPRXFSHeaderCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 25B25B9E1B190EE200ABE8B4 /* SCPRXFSHeaderCell.m */; };
@@ -295,6 +294,8 @@
 		76B9A9AE18EF59FD007A6D8C /* SCPRUserReportViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 76B9A9AB18EF59FD007A6D8C /* SCPRUserReportViewController.xib */; };
 		76B9A9B618EF79F6007A6D8C /* SCPRFooterView.m in Sources */ = {isa = PBXBuildFile; fileRef = 76B9A9B518EF79F6007A6D8C /* SCPRFooterView.m */; };
 		76EF5E8A193E8D6B00568A9D /* Storyboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 76EF5E89193E8D6B00568A9D /* Storyboard.storyboard */; };
+		B50E0E8B1B585DCE00A3203D /* Fabric.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B50E0E8A1B585DCE00A3203D /* Fabric.framework */; };
+		B50E0E8C1B586DB300A3203D /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 25AD96901B4F3BA200858B65 /* Crashlytics.framework */; };
 		B5F9F7491ABCE8FD00115DB3 /* icon-clock.png in Resources */ = {isa = PBXBuildFile; fileRef = B5F9F7451ABCE8FD00115DB3 /* icon-clock.png */; };
 		B5F9F74A1ABCE8FD00115DB3 /* icon-clock@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B5F9F7461ABCE8FD00115DB3 /* icon-clock@2x.png */; };
 		B5F9F74B1ABCE8FD00115DB3 /* icon-stopwatch.png in Resources */ = {isa = PBXBuildFile; fileRef = B5F9F7471ABCE8FD00115DB3 /* icon-stopwatch.png */; };
@@ -398,7 +399,6 @@
 		25A6534A1AAE2BA300ABAAD6 /* Bookmark.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Bookmark.m; sourceTree = "<group>"; };
 		25AD96901B4F3BA200858B65 /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Crashlytics.framework; sourceTree = "<group>"; };
 		25AD96931B5062E600858B65 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
-		25AD96951B50680B00858B65 /* Fabric.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Fabric.framework; sourceTree = "<group>"; };
 		25B25B991B17DEF600ABE8B4 /* chevron_up.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = chevron_up.png; sourceTree = "<group>"; };
 		25B25B9A1B17DEF600ABE8B4 /* chevron_up@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "chevron_up@2x.png"; sourceTree = "<group>"; };
 		25B25B9D1B190EE200ABE8B4 /* SCPRXFSHeaderCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCPRXFSHeaderCell.h; sourceTree = "<group>"; };
@@ -691,6 +691,7 @@
 		76EF5E85193E8BEC00568A9D /* TestFlight-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "TestFlight-Bridging-Header.h"; path = "UI/Controllers/TestFlight-Bridging-Header.h"; sourceTree = "<group>"; };
 		76EF5E89193E8D6B00568A9D /* Storyboard.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Storyboard.storyboard; sourceTree = "<group>"; };
 		793A6CF463174F04B6B48648 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
+		B50E0E8A1B585DCE00A3203D /* Fabric.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Fabric.framework; sourceTree = "<group>"; };
 		B5F9F7451ABCE8FD00115DB3 /* icon-clock.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-clock.png"; sourceTree = "<group>"; };
 		B5F9F7461ABCE8FD00115DB3 /* icon-clock@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-clock@2x.png"; sourceTree = "<group>"; };
 		B5F9F7471ABCE8FD00115DB3 /* icon-stopwatch.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-stopwatch.png"; sourceTree = "<group>"; };
@@ -704,6 +705,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				25C409B01A437B9400ADBFFE /* AdSupport.framework in Frameworks */,
+				B50E0E8B1B585DCE00A3203D /* Fabric.framework in Frameworks */,
 				76349CAA18D3747E0027C3B8 /* libz.dylib in Frameworks */,
 				768EAAE118D26C9C00469734 /* AVFoundation.framework in Frameworks */,
 				768EAADF18D26C5500469734 /* MediaPlayer.framework in Frameworks */,
@@ -712,7 +714,6 @@
 				76A308CB18C8FB940065D4B1 /* UIKit.framework in Frameworks */,
 				76A308C718C8FB940065D4B1 /* Foundation.framework in Frameworks */,
 				D60D1CDDD065418D8BE73D8C /* libPods.a in Frameworks */,
-				25AD96961B50680B00858B65 /* Fabric.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -721,6 +722,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				76A308EC18C8FB950065D4B1 /* XCTest.framework in Frameworks */,
+				B50E0E8C1B586DB300A3203D /* Crashlytics.framework in Frameworks */,
 				76A308EE18C8FB950065D4B1 /* UIKit.framework in Frameworks */,
 				76A308ED18C8FB950065D4B1 /* Foundation.framework in Frameworks */,
 				C902C9E15F3FE6D354EFE519 /* libPods.a in Frameworks */,
@@ -1303,7 +1305,7 @@
 		76A308C518C8FB940065D4B1 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				25AD96951B50680B00858B65 /* Fabric.framework */,
+				B50E0E8A1B585DCE00A3203D /* Fabric.framework */,
 				25AD96901B4F3BA200858B65 /* Crashlytics.framework */,
 				25C409AF1A437B9400ADBFFE /* AdSupport.framework */,
 				768BBF1918DA614300ACAD83 /* libPods.a */,
@@ -2037,7 +2039,7 @@
 					"\"${PODS_ROOT}/Headers/Public/ParseCrashReporting\"",
 					"\"${PODS_ROOT}/Headers/Public/XMLDictionary\"",
 					"\"${PODS_ROOT}/Headers/Public/pop\"",
-					"${PROJECT_DIR}/Fabric.framework/**",
+					"\"${PROJECT_DIR}/Fabric.framework\"/**",
 				);
 				INFOPLIST_FILE = "KPCC/KPCC-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
@@ -2060,9 +2062,34 @@
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
 					"$(DEVELOPER_FRAMEWORKS_DIR)",
+					"$(PROJECT_DIR)",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "KPCC/KPCC-Prefix.pch";
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"${PODS_ROOT}/Headers/Public\"",
+					"\"${PODS_ROOT}/Headers/Public/AFNetworking\"",
+					"\"${PODS_ROOT}/Headers/Public/Bolts\"",
+					"\"${PODS_ROOT}/Headers/Public/FXBlurView\"",
+					"\"${PODS_ROOT}/Headers/Public/FlurrySDK\"",
+					"\"${PODS_ROOT}/Headers/Public/Google\"",
+					"\"${PODS_ROOT}/Headers/Public/Google/Google\"",
+					"\"${PODS_ROOT}/Headers/Public/GoogleAnalytics\"",
+					"\"${PODS_ROOT}/Headers/Public/GoogleNetworkingUtilities\"",
+					"\"${PODS_ROOT}/Headers/Public/GoogleSymbolUtilities\"",
+					"\"${PODS_ROOT}/Headers/Public/GoogleUtilities\"",
+					"\"${PODS_ROOT}/Headers/Public/JDStatusBarNotification\"",
+					"\"${PODS_ROOT}/Headers/Public/KSReachability\"",
+					"\"${PODS_ROOT}/Headers/Public/Mixpanel\"",
+					"\"${PODS_ROOT}/Headers/Public/NewRelicAgent\"",
+					"\"${PODS_ROOT}/Headers/Public/Parse\"",
+					"\"${PODS_ROOT}/Headers/Public/ParseCrashReporting\"",
+					"\"${PODS_ROOT}/Headers/Public/XMLDictionary\"",
+					"\"${PODS_ROOT}/Headers/Public/pop\"",
+					"\"${PROJECT_DIR}/Fabric.framework\"/**",
+					"\"${PROJECT_DIR}/Crashlytics.framework\"",
+				);
 				INFOPLIST_FILE = "KPCCTests/KPCCTests-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/KPCC.app/KPCC";
@@ -2152,7 +2179,7 @@
 					"\"${PODS_ROOT}/Headers/Public/ParseCrashReporting\"",
 					"\"${PODS_ROOT}/Headers/Public/XMLDictionary\"",
 					"\"${PODS_ROOT}/Headers/Public/pop\"",
-					"${PROJECT_DIR}/Fabric.framework/**",
+					"\"${PROJECT_DIR}/Fabric.framework\"/**",
 				);
 				INFOPLIST_FILE = "KPCC/KPCC-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
@@ -2175,9 +2202,34 @@
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
 					"$(DEVELOPER_FRAMEWORKS_DIR)",
+					"$(PROJECT_DIR)",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "KPCC/KPCC-Prefix.pch";
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"${PODS_ROOT}/Headers/Public\"",
+					"\"${PODS_ROOT}/Headers/Public/AFNetworking\"",
+					"\"${PODS_ROOT}/Headers/Public/Bolts\"",
+					"\"${PODS_ROOT}/Headers/Public/FXBlurView\"",
+					"\"${PODS_ROOT}/Headers/Public/FlurrySDK\"",
+					"\"${PODS_ROOT}/Headers/Public/Google\"",
+					"\"${PODS_ROOT}/Headers/Public/Google/Google\"",
+					"\"${PODS_ROOT}/Headers/Public/GoogleAnalytics\"",
+					"\"${PODS_ROOT}/Headers/Public/GoogleNetworkingUtilities\"",
+					"\"${PODS_ROOT}/Headers/Public/GoogleSymbolUtilities\"",
+					"\"${PODS_ROOT}/Headers/Public/GoogleUtilities\"",
+					"\"${PODS_ROOT}/Headers/Public/JDStatusBarNotification\"",
+					"\"${PODS_ROOT}/Headers/Public/KSReachability\"",
+					"\"${PODS_ROOT}/Headers/Public/Mixpanel\"",
+					"\"${PODS_ROOT}/Headers/Public/NewRelicAgent\"",
+					"\"${PODS_ROOT}/Headers/Public/Parse\"",
+					"\"${PODS_ROOT}/Headers/Public/ParseCrashReporting\"",
+					"\"${PODS_ROOT}/Headers/Public/XMLDictionary\"",
+					"\"${PODS_ROOT}/Headers/Public/pop\"",
+					"\"${PROJECT_DIR}/Fabric.framework\"/**",
+					"\"${PROJECT_DIR}/Crashlytics.framework\"",
+				);
 				INFOPLIST_FILE = "KPCCTests/KPCCTests-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/KPCC.app/KPCC";
@@ -2306,7 +2358,7 @@
 					"\"${PODS_ROOT}/Headers/Public/ParseCrashReporting\"",
 					"\"${PODS_ROOT}/Headers/Public/XMLDictionary\"",
 					"\"${PODS_ROOT}/Headers/Public/pop\"",
-					"${PROJECT_DIR}/Fabric.framework/**",
+					"\"${PROJECT_DIR}/Fabric.framework\"/**",
 				);
 				INFOPLIST_FILE = "KPCC/KPCC-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
@@ -2369,7 +2421,7 @@
 					"\"${PODS_ROOT}/Headers/Public/ParseCrashReporting\"",
 					"\"${PODS_ROOT}/Headers/Public/XMLDictionary\"",
 					"\"${PODS_ROOT}/Headers/Public/pop\"",
-					"${PROJECT_DIR}/Fabric.framework/**",
+					"\"${PROJECT_DIR}/Fabric.framework\"/**",
 				);
 				INFOPLIST_FILE = "KPCC/KPCC-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
@@ -2392,12 +2444,37 @@
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
 					"$(DEVELOPER_FRAMEWORKS_DIR)",
+					"$(PROJECT_DIR)",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "KPCC/KPCC-Prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
+				);
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"${PODS_ROOT}/Headers/Public\"",
+					"\"${PODS_ROOT}/Headers/Public/AFNetworking\"",
+					"\"${PODS_ROOT}/Headers/Public/Bolts\"",
+					"\"${PODS_ROOT}/Headers/Public/FXBlurView\"",
+					"\"${PODS_ROOT}/Headers/Public/FlurrySDK\"",
+					"\"${PODS_ROOT}/Headers/Public/Google\"",
+					"\"${PODS_ROOT}/Headers/Public/Google/Google\"",
+					"\"${PODS_ROOT}/Headers/Public/GoogleAnalytics\"",
+					"\"${PODS_ROOT}/Headers/Public/GoogleNetworkingUtilities\"",
+					"\"${PODS_ROOT}/Headers/Public/GoogleSymbolUtilities\"",
+					"\"${PODS_ROOT}/Headers/Public/GoogleUtilities\"",
+					"\"${PODS_ROOT}/Headers/Public/JDStatusBarNotification\"",
+					"\"${PODS_ROOT}/Headers/Public/KSReachability\"",
+					"\"${PODS_ROOT}/Headers/Public/Mixpanel\"",
+					"\"${PODS_ROOT}/Headers/Public/NewRelicAgent\"",
+					"\"${PODS_ROOT}/Headers/Public/Parse\"",
+					"\"${PODS_ROOT}/Headers/Public/ParseCrashReporting\"",
+					"\"${PODS_ROOT}/Headers/Public/XMLDictionary\"",
+					"\"${PODS_ROOT}/Headers/Public/pop\"",
+					"\"${PROJECT_DIR}/Fabric.framework\"/**",
+					"\"${PROJECT_DIR}/Crashlytics.framework\"",
 				);
 				INFOPLIST_FILE = "KPCCTests/KPCCTests-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -2415,9 +2492,34 @@
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
 					"$(DEVELOPER_FRAMEWORKS_DIR)",
+					"$(PROJECT_DIR)",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "KPCC/KPCC-Prefix.pch";
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"${PODS_ROOT}/Headers/Public\"",
+					"\"${PODS_ROOT}/Headers/Public/AFNetworking\"",
+					"\"${PODS_ROOT}/Headers/Public/Bolts\"",
+					"\"${PODS_ROOT}/Headers/Public/FXBlurView\"",
+					"\"${PODS_ROOT}/Headers/Public/FlurrySDK\"",
+					"\"${PODS_ROOT}/Headers/Public/Google\"",
+					"\"${PODS_ROOT}/Headers/Public/Google/Google\"",
+					"\"${PODS_ROOT}/Headers/Public/GoogleAnalytics\"",
+					"\"${PODS_ROOT}/Headers/Public/GoogleNetworkingUtilities\"",
+					"\"${PODS_ROOT}/Headers/Public/GoogleSymbolUtilities\"",
+					"\"${PODS_ROOT}/Headers/Public/GoogleUtilities\"",
+					"\"${PODS_ROOT}/Headers/Public/JDStatusBarNotification\"",
+					"\"${PODS_ROOT}/Headers/Public/KSReachability\"",
+					"\"${PODS_ROOT}/Headers/Public/Mixpanel\"",
+					"\"${PODS_ROOT}/Headers/Public/NewRelicAgent\"",
+					"\"${PODS_ROOT}/Headers/Public/Parse\"",
+					"\"${PODS_ROOT}/Headers/Public/ParseCrashReporting\"",
+					"\"${PODS_ROOT}/Headers/Public/XMLDictionary\"",
+					"\"${PODS_ROOT}/Headers/Public/pop\"",
+					"\"${PROJECT_DIR}/Fabric.framework\"/**",
+					"\"${PROJECT_DIR}/Crashlytics.framework\"",
+				);
 				INFOPLIST_FILE = "KPCCTests/KPCCTests-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/KPCC.app/KPCC";

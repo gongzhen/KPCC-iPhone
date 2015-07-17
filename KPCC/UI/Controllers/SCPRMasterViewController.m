@@ -460,6 +460,8 @@ setForOnDemandUI;
     if (self.menuOpen) {
         self.navigationItem.title = @"Menu";
     }
+    
+    [[AnalyticsManager shared] gaSessionStartWithScreenView:@"Session Begin"];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -3636,7 +3638,7 @@ setForOnDemandUI;
         {
             event = @"menuSelectionLiveStream";
             closeMenu = YES;
-            if ( ![AudioManager shared].currentAudioMode == AudioModeLive ) {
+            if ( [AudioManager shared].currentAudioMode != AudioModeLive ) {
                 [self goLive:YES];
             }
             break;

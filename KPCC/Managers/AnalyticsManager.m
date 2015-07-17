@@ -68,11 +68,11 @@ static AnalyticsManager *singleton = nil;
     [Flurry setBackgroundSessionEnabled:NO];
     
     
-    [Mixpanel sharedInstanceWithToken:globalConfig[@"Mixpanel"][mixPanelToken]];
-    Mixpanel *mxp = [Mixpanel sharedInstance];
+    self.mxp = [Mixpanel sharedInstanceWithToken:globalConfig[@"Mixpanel"][mixPanelToken]];
+
     NSString *uuid = [[[UIDevice currentDevice] identifierForVendor] UUIDString];
-    [mxp identify:uuid];
-    [mxp.people set:@{ @"uuid" : uuid }];
+    [self.mxp identify:uuid];
+    [self.mxp.people set:@{ @"uuid" : uuid }];
     
     // Configure tracker from GoogleService-Info.plist.
     NSError *configureError;
@@ -83,7 +83,8 @@ static AnalyticsManager *singleton = nil;
     GAI *gai = [GAI sharedInstance];
     gai.trackUncaughtExceptions = YES;  // report uncaught exceptions
     gai.logger.logLevel = kGAILogLevelVerbose;  // remove before app release
-    
+    id<GAITracker> tracker = [gai defaultTracker];
+
     
 }
 
@@ -197,7 +198,17 @@ static AnalyticsManager *singleton = nil;
     [[UXmanager shared] persist];
     
     NSString *userQuality = [NSString stringWithFormat:@"%1.2f%%",percent];
+
+    GAI *gai = [GAI sharedInstance];
+    id<GAITracker> tracker = [gai defaultTracker];
     
+    // User scope
+    [tracker set:[GAIFields customDimensionForIndex:1] value:userQuality];
+    
+    // Session scope
+    [tracker set:[GAIFields customDimensionForIndex:2] value:userQuality];
+    
+    [self.mxp.people set:@{ @"userQuality" : userQuality }];
     NSLog(@"User quality : %@",userQuality);
 }
 
@@ -229,14 +240,11 @@ static AnalyticsManager *singleton = nil;
 
 
 - (void)beginTimedEvent:(NSString *)event parameters:(NSDictionary *)parameters {
-    
     [self logEvent:event withParameters:parameters timed:YES];
-    
 }
 
 - (void)endTimedEvent:(NSString *)event {
     [Flurry endTimedEvent:event withParameters:nil];
-
 }
 
 - (void)logEvent:(NSString *)event withParameters:(NSDictionary *)parameters {
@@ -259,13 +267,70 @@ static AnalyticsManager *singleton = nil;
     NSString *category = [self categoryForEvent:event];
     GAI *gai = [GAI sharedInstance];
     id<GAITracker> tracker = [gai defaultTracker];
+    
+    
     [tracker send:[[GAIDictionaryBuilder createEventWithCategory:category
                                                           action:event
-                                                           label:@"executed"
-                                                           value:@1] build]];
+                                                           label:[self buildGALabelStringFromParams:parameters]
+                                                           value:nil] build]];
     
     
     
+}
+
+- (NSString*)buildGALabelStringFromParams:(NSDictionary *)params {
+    
+    NSString *total = @"";
+    for ( NSString *key in params.allKeys ) {
+        if ( !SEQ(total,@"") ) {
+            total = [total stringByAppendingString:@"|-|"];
+        }
+        
+        total = [total stringByAppendingFormat:@"%@:%@",key,params[key]];
+        
+    }
+    
+    if ( !SEQ(total,@"") ) {
+        return total;
+    }
+    
+    return nil;
+    
+}
+
+- (void)gaSessionStartWithScreenView:(NSString*)screenName {
+    
+    if ( self.gaSessionStarted ) return;
+    
+    GAIDictionaryBuilder *builder = [GAIDictionaryBuilder createScreenView];
+    GAI *gai = [GAI sharedInstance];
+    id<GAITracker> tracker = [gai defaultTracker];
+    [builder set:@"start" forKey:kGAISessionControl];
+    [tracker set:kGAIScreenName
+           value:screenName];
+    [tracker send:[builder build]];
+    
+    self.gaSessionStarted = YES;
+}
+
+- (void)gaSessionEnd {
+    GAIDictionaryBuilder *builder = [GAIDictionaryBuilder createScreenView];
+    GAI *gai = [GAI sharedInstance];
+    id<GAITracker> tracker = [gai defaultTracker];
+    [builder set:@"start" forKey:kGAISessionControl];
+    [tracker set:kGAIScreenName
+           value:@"Session End"];
+    [tracker send:[builder build]];
+    
+    self.gaSessionStarted = NO;
+}
+
+- (void)logScreenView:(NSString *)screenName {
+    GAI *gai = [GAI sharedInstance];
+    id<GAITracker> tracker = [gai defaultTracker];
+    [tracker set:kGAIScreenName
+           value:screenName];
+    [tracker send:[[GAIDictionaryBuilder createScreenView] build]];
 }
 
 - (NSString*)categoryForEvent:(NSString *)event {

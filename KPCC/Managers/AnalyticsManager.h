@@ -40,8 +40,10 @@ typedef NS_ENUM(NSInteger, ScrubbingType) {
 @property (nonatomic, strong) NSDate *errorLogReceivedAt;
 @property (nonatomic, strong) NSDate *accessLogReceivedAt;
 @property (nonatomic, strong) NSDate *lastStreamException;
+@property (nonatomic, strong) Mixpanel *mxp;
 
 @property BOOL flurryActiveInBackground;
+@property BOOL gaSessionStarted;
 
 @property NSInteger allowedExceptions;
 
@@ -51,8 +53,13 @@ typedef NS_ENUM(NSInteger, ScrubbingType) {
 - (void)trackHeadlinesDismissal;
 - (void)logEvent:(NSString *)event withParameters:(NSDictionary *)parameters;
 - (void)logEvent:(NSString *)event withParameters:(NSDictionary *)parameters timed:(BOOL)timed;
+- (void)logScreenView:(NSString *)screenName;
 - (void)beginTimedEvent:(NSString *)event parameters:(NSDictionary*)parameters;
 - (void)endTimedEvent:(NSString *)event;
+
+- (NSString*)buildGALabelStringFromParams:(NSDictionary*)params;
+- (void)gaSessionStartWithScreenView:(NSString*)screenName;
+- (void)gaSessionEnd;
 
 - (void)failStream:(NetworkHealth)cause comments:(NSString*)comments;
 - (void)failStream:(NetworkHealth)cause comments:(NSString *)comments force:(BOOL)force;
