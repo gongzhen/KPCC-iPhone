@@ -340,7 +340,6 @@ static AnalyticsManager *singleton = nil;
     if ( [event rangeOfString:@"episode"].location != NSNotFound ) {
         return @"On Demand";
     }
-    
     return @"General";
 }
 
