@@ -192,7 +192,7 @@ static NSString *kShortListMenuURL = @"http://www.scpr.org/short-list/latest#no-
         
         if ( self.initialLoad ) {
             
-            if ( navigationType == UIWebViewNavigationTypeOther ) return YES;
+            if ( navigationType != UIWebViewNavigationTypeLinkClicked ) return YES;
             
             if ( [str rangeOfString:@"http"].location != NSNotFound ) {
                 
@@ -244,7 +244,7 @@ static NSString *kShortListMenuURL = @"http://www.scpr.org/short-list/latest#no-
                                                                userInfo:nil
                                                                 repeats:NO];
             
-            if ( navigationType == UIWebViewNavigationTypeOther ) {
+            if ( navigationType != UIWebViewNavigationTypeLinkClicked ) {
                 return YES;
             }
             
