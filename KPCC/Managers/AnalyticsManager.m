@@ -32,6 +32,7 @@ static AnalyticsManager *singleton = nil;
         @synchronized(self) {
             singleton = [[AnalyticsManager alloc] init];
             [singleton buildQualityMap];
+            singleton.progressMap = [NSMutableDictionary new];
         }
     }
     return singleton;
@@ -91,10 +92,10 @@ static AnalyticsManager *singleton = nil;
 - (void)buildQualityMap {
    
 #ifdef DEBUG
-    [[UXmanager shared].settings setUserQualityMap:nil];
-    [[UXmanager shared].settings setUserPoints:@0];
-    [[UXmanager shared].settings setHistoryBeganAt:nil];
-    [[UXmanager shared] persist];
+    //[[UXmanager shared].settings setUserQualityMap:nil];
+    //[[UXmanager shared].settings setUserPoints:@0];
+    //[[UXmanager shared].settings setHistoryBeganAt:nil];
+    //[[UXmanager shared] persist];
 #endif
     
     NSDate *today = [NSDate midnightThisMorning];
@@ -125,10 +126,12 @@ static AnalyticsManager *singleton = nil;
             NSNumber *value = @0;
 #ifdef DEBUG
             NSInteger randy = arc4random() % 100;
-            if ( randy <= 35 ) {
+            if ( randy <= 45 ) {
                 value = @1;
             }
 #endif
+            if ( i > day ) value = @0;
+            
             incumbentMap[monthDay] = value;
 
         }
@@ -197,18 +200,16 @@ static AnalyticsManager *singleton = nil;
     [[UXmanager shared].settings setUserPoints:@(positives)];
     [[UXmanager shared] persist];
     
-    NSString *userQuality = [NSString stringWithFormat:@"%1.2f%%",percent];
+    NSString *userQuality = [NSString stringWithFormat:@"%ld",(long)floorf(percent)];
 
     GAI *gai = [GAI sharedInstance];
     id<GAITracker> tracker = [gai defaultTracker];
     
-    // User scope
-    [tracker set:[GAIFields customDimensionForIndex:1] value:userQuality];
-    
-    // Session scope
-    [tracker set:[GAIFields customDimensionForIndex:2] value:userQuality];
+    NSString *metricValue = userQuality;
+    [tracker set:[GAIFields customMetricForIndex:1] value:metricValue];
     
     [self.mxp.people set:@{ @"userQuality" : userQuality }];
+    
     NSLog(@"User quality : %@",userQuality);
 }
 
@@ -308,6 +309,9 @@ static AnalyticsManager *singleton = nil;
     [builder set:@"start" forKey:kGAISessionControl];
     [tracker set:kGAIScreenName
            value:screenName];
+    
+    [self applyUserQuality];
+    
     [tracker send:[builder build]];
     
     self.gaSessionStarted = YES;
@@ -333,12 +337,39 @@ static AnalyticsManager *singleton = nil;
     [tracker send:[[GAIDictionaryBuilder createScreenView] build]];
 }
 
+#pragma mark - Track episode progress
+- (void)clearEpisodeProgress {
+    [self.progressMap removeAllObjects];
+}
+
+- (void)trackEpisodeProgress:(double)progress {
+    NSInteger cooked = floor(progress * 100);
+    if ( cooked >= 25 && !self.progressMap[@"25"] ) {
+        [self logEvent:@"episodeReached25percent"
+        withParameters:[self typicalOnDemandEpisodeInformation]];
+        self.progressMap[@"25"] = @1;
+    }
+    if ( cooked >= 50 && !self.progressMap[@"50"] ) {
+        [self logEvent:@"episodeReachedMidwayPoint"
+        withParameters:[self typicalOnDemandEpisodeInformation]];
+        self.progressMap[@"50"] = @1;
+    }
+    if ( cooked >= 75 && !self.progressMap[@"75"] ) {
+        [self logEvent:@"episodeReached75percent"
+        withParameters:[self typicalOnDemandEpisodeInformation]];
+        self.progressMap[@"75"] = @1;
+    }
+}
+
 - (NSString*)categoryForEvent:(NSString *)event {
     if ( [event rangeOfString:@"liveStream"].location != NSNotFound ) {
         return @"Live Stream";
     }
     if ( [event rangeOfString:@"episode"].location != NSNotFound ) {
         return @"On Demand";
+    }
+    if ( [event rangeOfString:@"user"].location == 0 ) {
+        return @"User Interaction";
     }
     return @"General";
 }
@@ -390,6 +421,46 @@ static AnalyticsManager *singleton = nil;
     [self failStream:(NetworkHealth)[ui[@"cause"] intValue]
             comments:ui[@"comments"]];
    */
+}
+
+- (NSDictionary*)typicalLiveProgramInformation {
+    
+    NSMutableDictionary *programInfo = [NSMutableDictionary new];
+    Program *p = [[SessionManager shared] currentProgram];
+    if ( p ) {
+        NSString *pTitle = p.title;
+        if ( pTitle ) {
+            programInfo[@"program"] = pTitle;
+        }
+    }
+    
+    NSTimeInterval streamStart = [[SessionManager shared] liveStreamSessionBegan];
+    NSTimeInterval duration = [[NSDate date] timeIntervalSince1970] - streamStart;
+    if ( duration > 0 ) {
+        programInfo[@"elapsedTime"] = [NSString stringWithFormat:@"%ld",(long)duration];
+    }
+    
+    return programInfo;
+}
+
+- (NSDictionary*)typicalOnDemandEpisodeInformation {
+    AudioChunk *ac = [[QueueManager shared] currentChunk];
+    NSString *episodeTitle = ac.audioTitle;
+    NSString *programTitle = ac.programTitle;
+    
+    NSMutableDictionary *params = [NSMutableDictionary new];
+    if ( episodeTitle ) {
+        params[@"episodeTitle"] = episodeTitle;
+    }
+    if ( programTitle ) {
+        params[@"programTitle"] = programTitle;
+    }
+    
+    double duration = [ac.audioDuration doubleValue];
+    params[@"duration"] = @(duration);
+    params[@"currentProgress"] = @([[QueueManager shared] globalProgress]);
+    
+    return params;
 }
 
 - (NSDictionary*)logifiedParamsList:(NSDictionary *)originalParams {

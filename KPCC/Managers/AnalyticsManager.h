@@ -42,6 +42,8 @@ typedef NS_ENUM(NSInteger, ScrubbingType) {
 @property (nonatomic, strong) NSDate *lastStreamException;
 @property (nonatomic, strong) Mixpanel *mxp;
 
+@property (nonatomic, strong) NSMutableDictionary *progressMap;
+
 @property BOOL flurryActiveInBackground;
 @property BOOL gaSessionStarted;
 
@@ -72,9 +74,13 @@ typedef NS_ENUM(NSInteger, ScrubbingType) {
 - (void)applyUserQuality;
 
 - (void)trackSeekUsageWithType:(ScrubbingType)type;
+- (void)trackEpisodeProgress:(double)progress;
+- (void)clearEpisodeProgress;
 
 - (NSString*)categoryForEvent:(NSString*)event;
 
 - (NSDictionary*)logifiedParamsList:(NSDictionary*)originalParams;
+- (NSDictionary*)typicalLiveProgramInformation;
+- (NSDictionary*)typicalOnDemandEpisodeInformation;
 
 @end

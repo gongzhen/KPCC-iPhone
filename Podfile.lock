@@ -38,17 +38,15 @@ PODS:
     - GoogleSymbolUtilities (~> 1.0)
   - JDStatusBarNotification (1.5.2)
   - KSReachability (1.4.1)
-  - Mixpanel (2.8.1):
-    - Mixpanel/Mixpanel (= 2.8.1)
-  - Mixpanel/Mixpanel (2.8.1):
-    - Mixpanel/MPCategoryHelpers
-  - Mixpanel/MPCategoryHelpers (2.8.1)
+  - Mixpanel (2.8.2):
+    - Mixpanel/Mixpanel (= 2.8.2)
+  - Mixpanel/Mixpanel (2.8.2)
   - NewRelicAgent (5.1.2)
-  - Parse (1.7.5):
+  - Parse (1.7.5.1):
     - Bolts/Tasks (>= 1.2.0)
-  - ParseCrashReporting (1.7.5):
+  - ParseCrashReporting (1.7.5.1):
     - Bolts/Tasks (>= 1.2.0)
-    - Parse (~> 1.7.5)
+    - Parse (~> 1.7.5.1)
   - pop (1.0.7)
   - XMLDictionary (1.4)
 
@@ -78,11 +76,11 @@ SPEC CHECKSUMS:
   GoogleUtilities: e3475cd4d45134221d2f3f3626095a1c49b62041
   JDStatusBarNotification: a36d09ccbb047217572b074a61e7ca10dddc5f0a
   KSReachability: ddf4af6e6488c45c5c41c59e72d72d078062ee28
-  Mixpanel: 93c4825025e6380ced273ed7178496282e385077
+  Mixpanel: f4d71ac2a306e7cda6ad03d4a2be249a0fd7a967
   NewRelicAgent: 7089e6a018d350bff1be872881ffd468af292fb0
-  Parse: 7c0f115eff3e0cea3fac08d50bda47154edb8832
-  ParseCrashReporting: 504b77a57d0619f8099061c11d323877e681a184
+  Parse: 7dd027063c30a010356ec67515aca7787512b0ef
+  ParseCrashReporting: ff7f63ee22670187d116cd59c1a44a91f1f861d3
   pop: 628ffc631644601567ee8bfaaaea493ebd7d0923
   XMLDictionary: f9f51601ba76678b594ab485f2b00ec1fed23724
 
-COCOAPODS: 0.37.1
+COCOAPODS: 0.37.2

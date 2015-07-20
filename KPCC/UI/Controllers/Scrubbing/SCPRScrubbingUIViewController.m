@@ -639,17 +639,22 @@
     NSInteger totalTime = [self convertToSecondsFromPercentage:percent];
     
     NSArray *ranges = [[AudioManager shared].audioPlayer.currentItem seekableTimeRanges];
-    CMTimeRange range = [ranges[0] CMTimeRangeValue];
-    NSInteger end = CMTimeGetSeconds(CMTimeRangeGetEnd(range));
     
-    if ( totalTime > end ) {
-        totalTime = end;
-    }
-    if ( totalTime < 0 ) {
-        totalTime = 0;
+    if ( ranges.count > 0 ) {
+        CMTimeRange range = [ranges[0] CMTimeRangeValue];
+        NSInteger end = CMTimeGetSeconds(CMTimeRangeGetEnd(range));
+        
+        if ( totalTime > end ) {
+            totalTime = end;
+        }
+        if ( totalTime < 0 ) {
+            totalTime = 0;
+        }
+        
+        return CMTimeMake(end - totalTime, 1);
     }
     
-    return CMTimeMake(end - totalTime, 1);
+    return CMTimeMake(totalTime, 1);
     
 }
 

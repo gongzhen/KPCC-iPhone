@@ -1183,8 +1183,12 @@ setForOnDemandUI;
         controller.excludedActivityTypes = @[UIActivityTypeAirDrop];
         [controller setCompletionHandler:^(NSString *activityType, BOOL completed) {
             if ( completed ) {
-                [[AnalyticsManager shared] logEvent:[NSString stringWithFormat:@"episodeShared%@",[activityType capitalizedString]]
+                
+                NSArray *activityTokens = [[activityType capitalizedString] componentsSeparatedByString:@"."];
+                NSString *usable = activityTokens.count > 1 ? activityTokens.lastObject : [activityType capitalizedString];
+                [[AnalyticsManager shared] logEvent:[NSString stringWithFormat:@"episodeShared%@",usable]
                                      withParameters:@{ @"episodeUrl" : self.onDemandEpUrl,
+                                                       @"episodeTitle" : self.onDemandProgram.title,
                                                        @"programTitle" : pt }];
             }
         }];
@@ -3584,12 +3588,23 @@ setForOnDemandUI;
             self.playPauseButton.enabled = YES;
             [self updateControlsAndUI:YES];
         }];
+        
         self.timeLabelOnDemand.text = @"LOADING...";
         self.queueLoading = YES;
         
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.25 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            
+            double progress = [[QueueManager shared] globalProgress];
+            
+            if ( progress <= .15 ) {
+                NSLog(@"episodeSkipped");
+                [[AnalyticsManager shared] logEvent:@"episodeSkipped"
+                                     withParameters:[[AnalyticsManager shared] typicalOnDemandEpisodeInformation]];
+            }
+            
             [[QueueManager shared] playItemAtPosition:newPage];
             self.queueCurrentPage = newPage;
+            
         });
         
         
@@ -3695,6 +3710,10 @@ setForOnDemandUI;
         }
         case 4: {
             event = @"menuSelectionDonate";
+            
+            [[AnalyticsManager shared] logEvent:@"userSelectedDonate"
+                                 withParameters:nil];
+            
             NSString *urlStr = @"https://scprcontribute.publicradio.org/contribute.php?refId=iphone&askAmount=60";
             NSURL *url = [NSURL URLWithString:urlStr];
             closeMenu = YES;
@@ -3830,13 +3849,19 @@ setForOnDemandUI;
     if (CMTimeGetSeconds([[[[AudioManager shared].audioPlayer currentItem] asset] duration]) > 0) {
         double currentTime = CMTimeGetSeconds([[[AudioManager shared].audioPlayer currentItem] currentTime]);
         double duration = CMTimeGetSeconds([[[[AudioManager shared].audioPlayer currentItem] asset] duration]);
+        double progress = (currentTime / duration);
         
         [self.timeLabelOnDemand setText:[Utils elapsedTimeStringWithPosition:currentTime
                                                                  andDuration:duration]];
         
+        [[AnalyticsManager shared] trackEpisodeProgress:progress];
+        [[QueueManager shared] setGlobalProgress:progress];
+        
         dispatch_async(dispatch_get_main_queue(), ^{
-            [self.progressView setProgress:(currentTime / duration) animated:YES];
+            [self.progressView setProgress:progress animated:YES];
         });
+        
+        
     }
     [[QueueManager shared] handleBookmarkingActivity];
     

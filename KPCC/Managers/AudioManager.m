@@ -236,7 +236,7 @@ static const NSString *ItemStatusContext;
                         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.15 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                             self.tryAgain = NO;
                             self.failoverCount = 0;
-                            [self analyzeStreamError:[error prettyAnalytics]];
+                            //[self analyzeStreamError:[error prettyAnalytics]];
                             [self stopAudio];
                         });
                     } else {
@@ -443,8 +443,6 @@ static const NSString *ItemStatusContext;
             if ( !self.failureGate ) {
                 NSLog(@"Playback stalled ... ");
                 self.failureGate = YES;
-                
-                
             }
             
         } else {
@@ -469,6 +467,10 @@ static const NSString *ItemStatusContext;
         [self stopAudio];
         self.dropoutOccurred = NO;
         self.appGaveUp = YES;
+        
+        [[AnalyticsManager shared] logEvent:@"liveStreamStalled"
+                             withParameters:[[AnalyticsManager shared] typicalLiveProgramInformation]];
+        
     }
 }
 
@@ -1190,6 +1192,9 @@ static const NSString *ItemStatusContext;
         // Wasn't necessary
         NSLog(@"Exception - failed to remove AVPlayerItemDidPlayToEndTimeNotification");
     }
+    
+    [[AnalyticsManager shared] logEvent:@"episodeCompleted"
+                         withParameters:[[AnalyticsManager shared] typicalOnDemandEpisodeInformation]];
 
     if ( [[QueueManager shared] currentBookmark] ) {
         [[ContentManager shared] destroyBookmark:[[QueueManager shared] currentBookmark]];
