@@ -1193,8 +1193,7 @@ static const NSString *ItemStatusContext;
         NSLog(@"Exception - failed to remove AVPlayerItemDidPlayToEndTimeNotification");
     }
     
-    [[AnalyticsManager shared] logEvent:@"episodeCompleted"
-                         withParameters:[[AnalyticsManager shared] typicalOnDemandEpisodeInformation]];
+    [[SessionManager shared] endOnDemandSessionWithReason:OnDemandFinishedReasonEpisodeEnd];
 
     if ( [[QueueManager shared] currentBookmark] ) {
         [[ContentManager shared] destroyBookmark:[[QueueManager shared] currentBookmark]];
@@ -1202,7 +1201,6 @@ static const NSString *ItemStatusContext;
     }
     
     if ( ![[QueueManager shared] isQueueEmpty] ) {
-        [[SessionManager shared] endOnDemandSessionWithReason:OnDemandFinishedReasonEpisodeEnd];
         [[QueueManager shared] playNext];
     } else {
         [self stopAudio];
@@ -1642,15 +1640,11 @@ static const NSString *ItemStatusContext;
         return;
     }
     
-    
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
-        if ( self.currentAudioMode == AudioModeLive ) {
-            [[SessionManager shared] endLiveSession];
-        } else {
-            [[SessionManager shared] endOnDemandSessionWithReason:OnDemandFinishedReasonEpisodePaused];
-        }
-    });
-    
+    if ( self.currentAudioMode == AudioModeLive ) {
+        [[SessionManager shared] endLiveSession];
+    } else {
+        [[SessionManager shared] endOnDemandSessionWithReason:OnDemandFinishedReasonEpisodePaused];
+    }
     
 }
 

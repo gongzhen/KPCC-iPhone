@@ -277,6 +277,7 @@
         
     } else {
         [[AnalyticsManager shared] gaSessionEnd];
+        [[SessionManager shared] forceAnalyticsSessionEndForSessionAudio];
     }
     
     if ( [[AudioManager shared] currentAudioMode] == AudioModeOnboarding ) {
@@ -296,7 +297,7 @@
     
 
     if ( [[SessionManager shared] userIsViewingHeadlines] ) {
-        //[[AnalyticsManager shared] trackHeadlinesDismissal];
+        [[AnalyticsManager shared] trackHeadlinesDismissal];
     }
     
     if ( [[AudioManager shared] currentAudioMode] != AudioModeOnboarding ) {
@@ -458,7 +459,7 @@
     
     
     [[AnalyticsManager shared] logEvent:@"alarmClockArmed"
-                         withParameters:@{ @"short" : @1 }];
+                         withParameters:nil];
     
 #else
     
@@ -570,7 +571,7 @@
     [self endAlarmClock];
     
     [[AnalyticsManager shared] logEvent:@"alarmClockFired"
-                         withParameters:@{ @"short" : @1 }];
+                         withParameters:nil];
     
     [[AudioManager shared] setUserPause:NO];
     [self.masterViewController handleResponseForNotification];
@@ -583,7 +584,7 @@
     [self endAlarmClock];
     
     [[AnalyticsManager shared] logEvent:@"alarmCanceled"
-                         withParameters:@{ @"short" : @1 }];
+                         withParameters:nil];
 }
 
 - (void)endAlarmClock {

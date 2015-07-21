@@ -77,6 +77,10 @@ static NSString *kShortListMenuURL = @"http://www.scpr.org/short-list/latest#no-
                                                                                            action:@selector(share)];
     self.currentObjectURL = kShortListMenuURL;
     
+    [[AnalyticsManager shared] logEvent:@"userIsViewingHeadlines"
+                         withParameters:nil
+                                  timed:YES];
+    
     [SCPRSpinnerViewController spinInCenterOfViewController:self appeared:^{
         [[SessionManager shared] setUserIsViewingHeadlines:YES];
 #ifdef USE_API
@@ -312,6 +316,7 @@ static NSString *kShortListMenuURL = @"http://www.scpr.org/short-list/latest#no-
 
     [[SessionManager shared] setUserIsViewingHeadlines:NO];
     [[AnalyticsManager shared] trackHeadlinesDismissal];
+    
 }
 
 

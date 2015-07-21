@@ -461,7 +461,7 @@ setForOnDemandUI;
         self.navigationItem.title = @"Menu";
     }
     
-    [[AnalyticsManager shared] gaSessionStartWithScreenView:@"Session Begin"];
+    //[[AnalyticsManager shared] gaSessionStartWithScreenView:@"Session Begin"];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -1272,6 +1272,7 @@ setForOnDemandUI;
         return;
     }
     
+    [[AnalyticsManager shared] endTimedEvent:@"episodePlay"];
     [[AudioManager shared] stopAudio];
     
     self.liveStreamView.userInteractionEnabled = YES;
@@ -3573,7 +3574,7 @@ setForOnDemandUI;
         self.timeLabelOnDemand.alpha = 1.0f;
     } completion:nil];
     
-    [[SessionManager shared] endOnDemandSessionWithReason:OnDemandFinishedReasonEpisodeSkipped];
+    
     
     int newPage = self.queueScrollView.contentOffset.x / self.queueScrollView.frame.size.width;
     if ((self.queueContents)[newPage]) {
@@ -3597,9 +3598,7 @@ setForOnDemandUI;
             double progress = [[QueueManager shared] globalProgress];
             
             if ( progress <= .15 ) {
-                NSLog(@"episodeSkipped");
-                [[AnalyticsManager shared] logEvent:@"episodeSkipped"
-                                     withParameters:[[AnalyticsManager shared] typicalOnDemandEpisodeInformation]];
+                [[SessionManager shared] endOnDemandSessionWithReason:OnDemandFinishedReasonEpisodeSkipped];
             }
             
             [[QueueManager shared] playItemAtPosition:newPage];

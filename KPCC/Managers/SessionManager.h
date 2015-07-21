@@ -139,6 +139,11 @@ static NSInteger kProgramPollingPressure = 5;
 @property BOOL genericImageForProgram;
 @property BOOL userIsSwitchingToKPCCPlus;
 
+// Analytics
+@property (nonatomic, strong) NSTimer *killSessionTimer;
+- (void)forceAnalyticsSessionEndForSessionAudio;
+- (void)handlePauseEventAgainstSessionAudio;
+
 @property NSTimeInterval timeAudioWasPutInBackground;
 
 - (BOOL)virtualLiveAudioMode;

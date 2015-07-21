@@ -167,7 +167,6 @@
     
     if ( self.rewindSessionWillBegin ) {
         self.rewindSessionWillBegin = NO;
-        
         NSString *sid = self.liveSessionID;
         if ( !sid ) {
             NSString *ct = [NSString stringWithFormat:@"%ld",(long)[[NSDate date] timeIntervalSince1970]];
@@ -205,14 +204,7 @@
                                            @"programTitle" : title,
                                            @"sessionLength" : pt,
                                            @"sessionLengthInSeconds" : [NSString stringWithFormat:@"%ld",(long)sessionLength] }];
-
-
-    [Flurry endTimedEvent:@"liveStreamPlay"
-           withParameters:@{
-                             @"programTitle" : title,
-                             @"sessionLength" : pt,
-                             @"sessionLengthInSeconds" : [NSString stringWithFormat:@"%ld",(long)sessionLength] }];
-
+    [self handlePauseEventAgainstSessionAudio];
 #endif
     
     self.sessionIsHot = NO;
@@ -220,12 +212,46 @@
     return sid;
 }
 
+#pragma mark - Analytics
+- (void)handlePauseEventAgainstSessionAudio {
+    if ( self.killSessionTimer ) {
+        if ( [self.killSessionTimer isValid] ) {
+            [self.killSessionTimer invalidate];
+        }
+        self.killSessionTimer = nil;
+    }
+    
+    self.killSessionTimer = [NSTimer scheduledTimerWithTimeInterval:80.0f
+                                                             target:self
+                                                           selector:@selector(endAnalyticsForAudio:)
+                                                           userInfo:nil
+                                                            repeats:NO];
+}
+
+- (void)forceAnalyticsSessionEndForSessionAudio {
+    [self endAnalyticsForAudio:nil];
+}
+
+- (void)endAnalyticsForAudio:(NSNotification*)note {
+    NSString *eventName = [[AudioManager shared] currentAudioMode] == AudioModeLive ? @"liveStreamPlay" : @"episodePlay";
+    [Flurry endTimedEvent:eventName
+           withParameters:nil];
+}
+
+#pragma mark - Sessions
 - (void)trackLiveSession {
     if ( !self.sessionIsHot ) return;
     if ( [AudioManager shared].currentAudioMode != AudioModeLive ) return;
     
     @synchronized(self) {
         self.sessionIsHot = NO;
+    }
+    
+    if ( self.killSessionTimer ) {
+        if ( [self.killSessionTimer isValid] ) {
+            [self.killSessionTimer invalidate];
+        }
+        self.killSessionTimer = nil;
     }
     
     NSTimeInterval seconds = [self secondsBehindLive];
@@ -249,6 +275,7 @@
 #if !TARGET_IPHONE_SIMULATOR
     
     NSString *plus = [[UXmanager shared].settings userHasSelectedXFS] ? @"KPCC Plus" : @"KPCC Live";
+    
     
     [[AnalyticsManager shared] beginTimedEvent:@"liveStreamPlay"
                                     parameters:@{
@@ -304,25 +331,23 @@
     
     if ( !self.odSessionIsHot ) return @"";
 
-    NSTimeInterval now = [[NSDate date] timeIntervalSince1970];
-    NSTimeInterval sessionLength = fabs(now - self.onDemandSessionBegan);
-    NSString *pt = [NSDate prettyTextFromSeconds:sessionLength];
     
     NSString *sid = self.odSessionID;
     if ( !sid ) {
         NSString *ct = [NSString stringWithFormat:@"%ld",(long)[[NSDate date] timeIntervalSince1970]];
         sid = [Utils sha1:ct];
     }
-    NSLog(@"Logging pause event for Live Stream...");
     
-    AudioChunk *chunk = [[QueueManager shared] currentChunk];
+    BOOL timed = NO;
+    
     NSString *event = @"";
     switch (reason) {
         case OnDemandFinishedReasonEpisodeEnd:
-            event = @"episodeAudioCompleted";
+            event = @"episodeCompleted";
             break;
         case OnDemandFinishedReasonEpisodePaused:
-            event = @"episodeAudioPaused";
+            event = @"episodePaused";
+            timed = YES;
             break;
         case OnDemandFinishedReasonEpisodeSkipped:
             event = @"episodeSkipped";
@@ -331,13 +356,12 @@
             break;
     }
     
-    NSString *title = chunk.audioTitle ? chunk.audioTitle : @"[UNKNOWN]";
-    
     [[AnalyticsManager shared] logEvent:event
-                         withParameters:@{
-                                           @"programTitle" : title,
-                                           @"sessionLength" : pt,
-                                           @"sessionLengthInSeconds" : [NSString stringWithFormat:@"%ld",(long)sessionLength] }];
+                         withParameters:[[AnalyticsManager shared] typicalOnDemandEpisodeInformation]];
+    
+    if ( timed ) {
+        [self handlePauseEventAgainstSessionAudio];
+    }
     
     self.odSessionIsHot = NO;
     self.odSessionID = nil;
@@ -410,7 +434,7 @@
             completed();
             
             [[AnalyticsManager shared] logEvent:@"sleepTimerArmed"
-                                 withParameters:@{ @"short" : @1 }];
+                                 withParameters:nil];
             
         });
     }
@@ -427,7 +451,7 @@
             [[AudioManager shared] stopAllAudio];
             
             [[AnalyticsManager shared] logEvent:@"sleepTimerFired"
-                                 withParameters:@{ @"short" : @1 }];
+                                 withParameters:nil];
         }];
         return;
     }
@@ -438,7 +462,7 @@
 
 - (void)cancelSleepTimerWithCompletion:(CompletionBlock)completed {
     [[AnalyticsManager shared] logEvent:@"sleepTimerCanceled"
-                         withParameters:@{ @"short" : @1 }];
+                         withParameters:nil];
     [self disarmSleepTimerWithCompletion:completed];
 }
 

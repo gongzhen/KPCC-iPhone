@@ -92,10 +92,10 @@ static AnalyticsManager *singleton = nil;
 - (void)buildQualityMap {
    
 #ifdef DEBUG
-    //[[UXmanager shared].settings setUserQualityMap:nil];
-    //[[UXmanager shared].settings setUserPoints:@0];
-    //[[UXmanager shared].settings setHistoryBeganAt:nil];
-    //[[UXmanager shared] persist];
+    [[UXmanager shared].settings setUserQualityMap:nil];
+    [[UXmanager shared].settings setUserPoints:@0];
+    [[UXmanager shared].settings setHistoryBeganAt:nil];
+    [[UXmanager shared] persist];
 #endif
     
     NSDate *today = [NSDate midnightThisMorning];
@@ -235,8 +235,7 @@ static AnalyticsManager *singleton = nil;
 }
 
 - (void)trackHeadlinesDismissal {
-   /* [self logEvent:@"userClosedHeadlines"
-    withParameters:@{ }]; */
+    [[AnalyticsManager shared] endTimedEvent:@"userIsViewingHeadlines"];
 }
 
 
@@ -370,6 +369,12 @@ static AnalyticsManager *singleton = nil;
     }
     if ( [event rangeOfString:@"user"].location == 0 ) {
         return @"User Interaction";
+    }
+    if ( [event rangeOfString:@"alarm"].location == 0 ) {
+        return @"Alarm / Sleep Timer";
+    }
+    if ( [event rangeOfString:@"sleep"].location == 0 ) {
+        return @"Alarm / Sleep Timer";
     }
     return @"General";
 }
