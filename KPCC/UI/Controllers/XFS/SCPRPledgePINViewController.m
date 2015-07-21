@@ -15,6 +15,7 @@
 #import "SessionManager.h"
 #import "SCPRXFSViewController.h"
 #import "AnalyticsManager.h"
+#import <Parse/Parse.h>
 
 #define kTallSpacing 16.0f
 #define kShortSpacing 8.0f

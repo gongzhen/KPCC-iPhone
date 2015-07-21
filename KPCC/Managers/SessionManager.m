@@ -14,7 +14,7 @@
 #import "QueueManager.h"
 #import "UXmanager.h"
 #import "SCPRMasterViewController.h"
-
+#import <Parse/Parse.h>
 
 
 
