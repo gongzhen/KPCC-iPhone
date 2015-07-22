@@ -268,20 +268,29 @@ static AnalyticsManager *singleton = nil;
     GAI *gai = [GAI sharedInstance];
     id<GAITracker> tracker = [gai defaultTracker];
     
-    
     [tracker send:[[GAIDictionaryBuilder createEventWithCategory:category
                                                           action:event
                                                            label:[self buildGALabelStringFromParams:parameters]
                                                            value:nil] build]];
-    
-    
     
 }
 
 - (NSString*)buildGALabelStringFromParams:(NSDictionary *)params {
     
     NSString *total = @"";
-    for ( NSString *key in params.allKeys ) {
+    
+    NSArray *sorted = [[params allKeys] sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
+        
+        NSString *k1 = (NSString*)obj1;
+        NSString *k2 = (NSString*)obj2;
+        return [k1 compare:k2];
+        
+    }];
+    
+    for ( unsigned i = 0; i < [sorted count]; i++ ) {
+        
+        NSString *key = sorted[i];
+        
         if ( !SEQ(total,@"") ) {
             total = [total stringByAppendingString:@"|-|"];
         }
@@ -298,8 +307,16 @@ static AnalyticsManager *singleton = nil;
     
 }
 
+- (void)screen:(NSString *)screen {
+    GAIDictionaryBuilder *builder = [GAIDictionaryBuilder createScreenView];
+    GAI *gai = [GAI sharedInstance];
+    id<GAITracker> tracker = [gai defaultTracker];
+    [tracker set:kGAIScreenName
+           value:screen];
+    [tracker send:[builder build]];
+}
+
 - (void)gaSessionStartWithScreenView:(NSString*)screenName {
-    
     if ( self.gaSessionStarted ) return;
     
     GAIDictionaryBuilder *builder = [GAIDictionaryBuilder createScreenView];
@@ -309,10 +326,7 @@ static AnalyticsManager *singleton = nil;
     [tracker set:kGAIScreenName
            value:screenName];
     
-    [self applyUserQuality];
-    
     [tracker send:[builder build]];
-    
     self.gaSessionStarted = YES;
 }
 

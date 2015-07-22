@@ -282,7 +282,8 @@
                                                  @"behindLiveStatus" : pt,
                                                  @"behindLiveSeconds" : literalValue,
                                                  @"programTitle" : title,
-                                                 @"streamId" : plus}];
+                                                 @"streamId" : plus
+                                                 }];
     
 
 #endif

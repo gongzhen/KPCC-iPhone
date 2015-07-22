@@ -179,6 +179,8 @@ setForOnDemandUI;
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    [[AnalyticsManager shared] screen:@"liveStreamView"];
+    
     self.navigationController.interactivePopGestureRecognizer.enabled = NO;
     self.hiddenVector = [NSMutableArray new];
     
@@ -461,7 +463,6 @@ setForOnDemandUI;
         self.navigationItem.title = @"Menu";
     }
     
-    //[[AnalyticsManager shared] gaSessionStartWithScreenView:@"Session Begin"];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -767,8 +768,6 @@ setForOnDemandUI;
 - (void)showSleepTimer {
     
     self.plainTextCountdownLabel.text = @"";
-
-        
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.25 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         [self superPop];
         if ( ![[AudioManager shared] isPlayingAudio] ) {
@@ -843,8 +842,6 @@ setForOnDemandUI;
     SCPRNavigationController *nav = [del masterNavigationController];
     [[UIApplication sharedApplication] setStatusBarHidden:YES];
     
-    
-    //nav.navigationBarHidden = YES;
     self.liveDescriptionLabel.hidden = YES;
     self.automationMode = YES;
     self.programImageView.image = [UIImage imageNamed:@"onboarding-tile.jpg"];
@@ -2130,6 +2127,8 @@ setForOnDemandUI;
     self.liveDescriptionLabel.text = @"LIVE";
     [[AudioManager shared] setCurrentAudioMode:AudioModeLive];
     
+    [[AnalyticsManager shared] screen:@"liveStreamView"];
+    
 }
 
 
@@ -2268,6 +2267,13 @@ setForOnDemandUI;
                 [weakSelf.view bringSubviewToFront:weakSelf.scrubbingTriggerView];
                 
                 [[DesignManager shared] setProtectBlurredImage:NO];
+                
+                NSString *pt = program.title;
+                pt = [pt stringByReplacingOccurrencesOfString:@" "
+                                                   withString:@""];
+                NSString *token = [NSString stringWithFormat:@"%@%@",@"onDemandView",pt];
+                
+                [[AnalyticsManager shared] screen:token];
                 
                 dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                     [[QueueManager shared] playItemAtPosition:index];

@@ -72,6 +72,7 @@ typedef NS_ENUM(NSInteger, ScrubbingType) {
 
 - (void)buildQualityMap;
 - (void)applyUserQuality;
+- (void)screen:(NSString*)screen;
 
 - (void)trackSeekUsageWithType:(ScrubbingType)type;
 - (void)trackEpisodeProgress:(double)progress;

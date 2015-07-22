@@ -43,6 +43,8 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     self.navigationItem.title = @"Programs";
+    
+    [[AnalyticsManager shared] screen:@"programsListView"];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
