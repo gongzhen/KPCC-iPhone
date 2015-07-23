@@ -285,8 +285,13 @@
 - (void)decloakForXFS;
 - (void)showBalloonWithText:(NSString*)text;
 
+- (void)trackSchedulingSwipes;
+
 - (void)composeMail:(NSNotification*)note;
 @property (nonatomic, strong) MFMailComposeViewController *mComposer;
 @property BOOL mailCompositionDisplaying;
+
+
+
 
 @end

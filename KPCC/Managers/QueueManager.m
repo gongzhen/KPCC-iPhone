@@ -21,6 +21,7 @@ static QueueManager *singleton = nil;
         dispatch_once(&isDispatched, ^{
             singleton = [[QueueManager alloc] init];
             singleton.queue = [[NSMutableArray alloc] init];
+
         });
     }
     return singleton;
@@ -128,10 +129,21 @@ static QueueManager *singleton = nil;
     
     if (![self isQueueEmpty]) {
         if (index >= 0 && index < [self.queue count]) {
+            
+            if ( self.currentChunk ) {
+                [[AnalyticsManager shared] endTimedEvent:@"episodePlay"];
+            }
+            
             AudioChunk *chunk = (self.queue)[index];
             self.currentChunk = chunk;
+            [[AnalyticsManager shared] clearEpisodeProgress];
             [[AudioManager shared] playQueueItem:chunk];
             self.currentlyPlayingIndex = index;
+            
+            [[AnalyticsManager shared] logEvent:@"episodePlay"
+                                 withParameters:@{ @"episodeOrSegmentTitle" : chunk.audioTitle,
+                                                   @"programTitle" : chunk.programTitle }
+                                          timed:YES];
         }
     }
 }
@@ -144,7 +156,10 @@ static QueueManager *singleton = nil;
     }
 }
 
-
+- (AudioChunk*)currentEpisode {
+    AudioChunk *cac = self.queue[self.currentlyPlayingIndex];
+    return cac;
+}
 
 #pragma mark - Queue internal
 - (void)enqueue:(AudioChunk *)audio {

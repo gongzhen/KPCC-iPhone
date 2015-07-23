@@ -27,6 +27,7 @@
 #import "SCPRTimerControlViewController.h"
 #import "SCPRPledgePINViewController.h"
 #import "SCPRBalloonViewController.h"
+#import "Utils.h"
 
 @import MessageUI;
 
@@ -177,6 +178,8 @@ setForOnDemandUI;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    [[AnalyticsManager shared] screen:@"liveStreamView"];
     
     self.navigationController.interactivePopGestureRecognizer.enabled = NO;
     self.hiddenVector = [NSMutableArray new];
@@ -459,6 +462,7 @@ setForOnDemandUI;
     if (self.menuOpen) {
         self.navigationItem.title = @"Menu";
     }
+    
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -764,8 +768,6 @@ setForOnDemandUI;
 - (void)showSleepTimer {
     
     self.plainTextCountdownLabel.text = @"";
-
-        
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.25 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         [self superPop];
         if ( ![[AudioManager shared] isPlayingAudio] ) {
@@ -840,8 +842,6 @@ setForOnDemandUI;
     SCPRNavigationController *nav = [del masterNavigationController];
     [[UIApplication sharedApplication] setStatusBarHidden:YES];
     
-    
-    //nav.navigationBarHidden = YES;
     self.liveDescriptionLabel.hidden = YES;
     self.automationMode = YES;
     self.programImageView.image = [UIImage imageNamed:@"onboarding-tile.jpg"];
@@ -971,6 +971,10 @@ setForOnDemandUI;
 # pragma mark - Actions
 
 - (IBAction)initialPlayTapped:(id)sender {
+    
+#ifdef DEBUG
+   // [Utils crash];
+#endif
     
 #ifdef FORCE_TEST_STREAM
     self.preRollViewController.tritonAd = nil;
@@ -1176,8 +1180,12 @@ setForOnDemandUI;
         controller.excludedActivityTypes = @[UIActivityTypeAirDrop];
         [controller setCompletionHandler:^(NSString *activityType, BOOL completed) {
             if ( completed ) {
-                [[AnalyticsManager shared] logEvent:[NSString stringWithFormat:@"programEpisodeShared%@",[activityType capitalizedString]]
+                
+                NSArray *activityTokens = [[activityType capitalizedString] componentsSeparatedByString:@"."];
+                NSString *usable = activityTokens.count > 1 ? activityTokens.lastObject : [activityType capitalizedString];
+                [[AnalyticsManager shared] logEvent:[NSString stringWithFormat:@"episodeShared%@",usable]
                                      withParameters:@{ @"episodeUrl" : self.onDemandEpUrl,
+                                                       @"episodeTitle" : self.onDemandProgram.title,
                                                        @"programTitle" : pt }];
             }
         }];
@@ -1261,6 +1269,7 @@ setForOnDemandUI;
         return;
     }
     
+    [[AnalyticsManager shared] endTimedEvent:@"episodePlay"];
     [[AudioManager shared] stopAudio];
     
     self.liveStreamView.userInteractionEnabled = YES;
@@ -2118,6 +2127,8 @@ setForOnDemandUI;
     self.liveDescriptionLabel.text = @"LIVE";
     [[AudioManager shared] setCurrentAudioMode:AudioModeLive];
     
+    [[AnalyticsManager shared] screen:@"liveStreamView"];
+    
 }
 
 
@@ -2256,6 +2267,13 @@ setForOnDemandUI;
                 [weakSelf.view bringSubviewToFront:weakSelf.scrubbingTriggerView];
                 
                 [[DesignManager shared] setProtectBlurredImage:NO];
+                
+                NSString *pt = program.title;
+                pt = [pt stringByReplacingOccurrencesOfString:@" "
+                                                   withString:@""];
+                NSString *token = [NSString stringWithFormat:@"%@%@",@"onDemandView",pt];
+                
+                [[AnalyticsManager shared] screen:token];
                 
                 dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                     [[QueueManager shared] playItemAtPosition:index];
@@ -2992,15 +3010,16 @@ setForOnDemandUI;
 - (void)xfsHidden {
     [self decloakForXFS];
     
-    [[AnalyticsManager shared] logEvent:@"stream-selector-closed"
-                         withParameters:nil];
+    /*[[AnalyticsManager shared] logEvent:@"stream-selector-closed"
+                         withParameters:nil];*/
 }
 
 - (void)xfsShown {
     [self cloakForXFS];
     
-    [[AnalyticsManager shared] logEvent:@"stream-selector-opened"
-                         withParameters:nil];
+    /*[[AnalyticsManager shared] logEvent:@"stream-selector-opened"
+                         withParameters:nil];*/
+    
 }
 
 - (void)xfsToggle {
@@ -3486,8 +3505,11 @@ setForOnDemandUI;
                 [self.liveStreamView layoutIfNeeded];
                 [self unmutePrimaryControls];
             } else {
+                [self trackSchedulingSwipes];
                 [self mutePrimaryControls];
             }
+            
+            
         }];
         
     }
@@ -3506,9 +3528,24 @@ setForOnDemandUI;
                 [self.liveStreamView layoutIfNeeded];
                 [self unmutePrimaryControls];
             } else {
+                [self trackSchedulingSwipes];
                 [self mutePrimaryControls];
             }
         }];
+    }
+}
+
+- (void)trackSchedulingSwipes {
+    NSString *event = nil;
+    NSInteger index = floorf((float)(self.mainContentScroller.contentOffset.x / self.mainContentScroller.frame.size.width));
+    if ( index == 2 ) {
+        event = @"userViewingFullSchedule";
+    } else if ( index == 1 ) {
+        event = @"userViewingUpNext";
+    }
+    
+    if ( event ) {
+        [[AnalyticsManager shared] logEvent:event withParameters:@{}];
     }
 }
 
@@ -3543,7 +3580,7 @@ setForOnDemandUI;
         self.timeLabelOnDemand.alpha = 1.0f;
     } completion:nil];
     
-    [[SessionManager shared] endOnDemandSessionWithReason:OnDemandFinishedReasonEpisodeSkipped];
+    
     
     int newPage = self.queueScrollView.contentOffset.x / self.queueScrollView.frame.size.width;
     if ((self.queueContents)[newPage]) {
@@ -3558,12 +3595,21 @@ setForOnDemandUI;
             self.playPauseButton.enabled = YES;
             [self updateControlsAndUI:YES];
         }];
+        
         self.timeLabelOnDemand.text = @"LOADING...";
         self.queueLoading = YES;
         
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.25 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            
+            double progress = [[QueueManager shared] globalProgress];
+            
+            if ( progress <= .15 ) {
+                [[SessionManager shared] endOnDemandSessionWithReason:OnDemandFinishedReasonEpisodeSkipped];
+            }
+            
             [[QueueManager shared] playItemAtPosition:newPage];
             self.queueCurrentPage = newPage;
+            
         });
         
         
@@ -3605,15 +3651,14 @@ setForOnDemandUI;
 
 - (void)menuItemSelected:(NSIndexPath *)indexPath {
     
+    BOOL closeMenu = NO;
     NSString *event = @"";
     switch (indexPath.row) {
         case 0:
         {
             event = @"menuSelectionLiveStream";
-            if ( [AudioManager shared].currentAudioMode == AudioModeLive ) {
-                [self decloakForMenu:YES];
-            } else {
-                [self decloakForMenu:YES];
+            closeMenu = YES;
+            if ( [AudioManager shared].currentAudioMode != AudioModeLive ) {
                 [self goLive:YES];
             }
             break;
@@ -3650,7 +3695,7 @@ setForOnDemandUI;
         case 3: {
             
             self.homeIsNotRootViewController = YES;
-            [self decloakForMenu:YES];
+            closeMenu = YES;
             
             event = @"menuSelectionWakeSleep";
             SCPRTimerControlViewController *timer = [[SCPRTimerControlViewController alloc] initWithNibName:@"SCPRTimerControlViewController"
@@ -3670,9 +3715,13 @@ setForOnDemandUI;
         }
         case 4: {
             event = @"menuSelectionDonate";
+            
+            [[AnalyticsManager shared] logEvent:@"userSelectedDonate"
+                                 withParameters:nil];
+            
             NSString *urlStr = @"https://scprcontribute.publicradio.org/contribute.php?refId=iphone&askAmount=60";
             NSURL *url = [NSURL URLWithString:urlStr];
-            [self decloakForMenu:YES];
+            closeMenu = YES;
             [[UIApplication sharedApplication] openURL:url];
             break;
         }
@@ -3683,17 +3732,22 @@ setForOnDemandUI;
             SCPRFeedbackViewController *fbVC = [[SCPRFeedbackViewController alloc] initWithNibName:@"SCPRFeedbackViewController"
                                                                                             bundle:nil];
             [self.navigationController pushViewController:fbVC animated:YES];
+            
             break;
             
         }
         default: {
-            [self decloakForMenu:YES];
+            closeMenu = YES;
             break;
         }
     }
     
-    [[AnalyticsManager shared] logEvent:event
-                         withParameters:@{}];
+    /*[[AnalyticsManager shared] logEvent:event
+                         withParameters:@{}];*/
+    
+    if ( closeMenu ) {
+        [self decloakForMenu:YES];
+    }
 }
 
 - (void)pullDownAnimated:(BOOL)open {
@@ -3800,13 +3854,19 @@ setForOnDemandUI;
     if (CMTimeGetSeconds([[[[AudioManager shared].audioPlayer currentItem] asset] duration]) > 0) {
         double currentTime = CMTimeGetSeconds([[[AudioManager shared].audioPlayer currentItem] currentTime]);
         double duration = CMTimeGetSeconds([[[[AudioManager shared].audioPlayer currentItem] asset] duration]);
+        double progress = (currentTime / duration);
         
         [self.timeLabelOnDemand setText:[Utils elapsedTimeStringWithPosition:currentTime
                                                                  andDuration:duration]];
         
+        [[AnalyticsManager shared] trackEpisodeProgress:progress];
+        [[QueueManager shared] setGlobalProgress:progress];
+        
         dispatch_async(dispatch_get_main_queue(), ^{
-            [self.progressView setProgress:(currentTime / duration) animated:YES];
+            [self.progressView setProgress:progress animated:YES];
         });
+        
+        
     }
     [[QueueManager shared] handleBookmarkingActivity];
     

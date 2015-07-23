@@ -21,7 +21,7 @@ PODS:
     - AFNetworking/NSURLConnection
     - AFNetworking/NSURLSession
   - Bolts/Tasks (1.2.0)
-  - FlurrySDK/FlurrySDK (6.5.0)
+  - FlurrySDK/FlurrySDK (6.6.0)
   - FXBlurView (1.6.3)
   - Google/Analytics (1.0.7):
     - Google/Core
@@ -38,17 +38,15 @@ PODS:
     - GoogleSymbolUtilities (~> 1.0)
   - JDStatusBarNotification (1.5.2)
   - KSReachability (1.4.1)
-  - Mixpanel (2.8.1):
-    - Mixpanel/Mixpanel (= 2.8.1)
-  - Mixpanel/Mixpanel (2.8.1):
-    - Mixpanel/MPCategoryHelpers
-  - Mixpanel/MPCategoryHelpers (2.8.1)
+  - Mixpanel (2.8.2):
+    - Mixpanel/Mixpanel (= 2.8.2)
+  - Mixpanel/Mixpanel (2.8.2)
   - NewRelicAgent (5.1.2)
-  - Parse (1.7.5):
+  - Parse (1.7.5.3):
     - Bolts/Tasks (>= 1.2.0)
-  - ParseCrashReporting (1.7.5):
+  - ParseCrashReporting (1.7.5.3):
     - Bolts/Tasks (>= 1.2.0)
-    - Parse (~> 1.7.5)
+    - Parse (~> 1.7.5.3)
   - pop (1.0.7)
   - XMLDictionary (1.4)
 
@@ -69,7 +67,7 @@ DEPENDENCIES:
 SPEC CHECKSUMS:
   AFNetworking: 05edc0ac4c4c8cf57bcf4b84be5b0744b6d8e71e
   Bolts: d176cb1e0012175589e389a9db49b85e27787576
-  FlurrySDK: 7e749c1bd22f4fb0a863663e38c58bc841980b25
+  FlurrySDK: 8478625434c06b323338f776758162756d92c3ed
   FXBlurView: c6d23f3d35af2c6282296a2930f61c6e2c788d01
   Google: 875f5a8ade86dd02e36586e4a54814843938c7f6
   GoogleAnalytics: ef2e0b800ef3c1e62688cdfc959e0d3132bc246c
@@ -78,11 +76,11 @@ SPEC CHECKSUMS:
   GoogleUtilities: e3475cd4d45134221d2f3f3626095a1c49b62041
   JDStatusBarNotification: a36d09ccbb047217572b074a61e7ca10dddc5f0a
   KSReachability: ddf4af6e6488c45c5c41c59e72d72d078062ee28
-  Mixpanel: 93c4825025e6380ced273ed7178496282e385077
+  Mixpanel: f4d71ac2a306e7cda6ad03d4a2be249a0fd7a967
   NewRelicAgent: 7089e6a018d350bff1be872881ffd468af292fb0
-  Parse: 7c0f115eff3e0cea3fac08d50bda47154edb8832
-  ParseCrashReporting: 504b77a57d0619f8099061c11d323877e681a184
+  Parse: 373adbb1ad2e34d383542c3b28f678c49ebe4881
+  ParseCrashReporting: 36d2e2770d7502d943b81c013acd5193946ced46
   pop: 628ffc631644601567ee8bfaaaea493ebd7d0923
   XMLDictionary: f9f51601ba76678b594ab485f2b00ec1fed23724
 
-COCOAPODS: 0.37.2
+COCOAPODS: 0.38.0

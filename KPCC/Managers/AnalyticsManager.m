@@ -15,6 +15,7 @@
 #import "QueueManager.h"
 #import "UXmanager.h"
 #import <Google/Analytics.h>
+#import "SCPRAppDelegate.h"
 
 static AnalyticsManager *singleton = nil;
 
@@ -30,6 +31,8 @@ static AnalyticsManager *singleton = nil;
     if (!singleton) {
         @synchronized(self) {
             singleton = [[AnalyticsManager alloc] init];
+            [singleton buildQualityMap];
+            singleton.progressMap = [NSMutableDictionary new];
         }
     }
     return singleton;
@@ -55,21 +58,159 @@ static AnalyticsManager *singleton = nil;
     mixPanelToken = @"BetaToken";
 #endif
     
+    [Fabric with:@[CrashlyticsKit]];
+    
     NSDictionary *globalConfig = [Utils globalConfig];
     
+    NSString *token = globalConfig[@"Flurry"][flurryToken];
     [Flurry setCrashReportingEnabled:YES];
     [Flurry setDebugLogEnabled:NO];
-    [Flurry startSession: globalConfig[@"Flurry"][flurryToken] ];
+    [Flurry startSession:token];
     [Flurry setBackgroundSessionEnabled:NO];
     
     
-    [Mixpanel sharedInstanceWithToken:globalConfig[@"Mixpanel"][mixPanelToken]];
-    Mixpanel *mxp = [Mixpanel sharedInstance];
+    self.mxp = [Mixpanel sharedInstanceWithToken:globalConfig[@"Mixpanel"][mixPanelToken]];
+
     NSString *uuid = [[[UIDevice currentDevice] identifierForVendor] UUIDString];
-    [mxp identify:uuid];
-    [mxp.people set:@{ @"uuid" : uuid }];
+    [self.mxp identify:uuid];
+    [self.mxp.people set:@{ @"uuid" : uuid }];
+    
+    // Configure tracker from GoogleService-Info.plist.
+    NSError *configureError;
+    [[GGLContext sharedInstance] configureWithError:&configureError];
+    NSAssert(!configureError, @"Error configuring Google services: %@", configureError);
+    
+    // Optional: configure GAI options.
+    GAI *gai = [GAI sharedInstance];
+    gai.trackUncaughtExceptions = YES;  // report uncaught exceptions
+    gai.logger.logLevel = kGAILogLevelVerbose;  // remove before app release
+    id<GAITracker> tracker = [gai defaultTracker];
+
+    
+}
+
+- (void)buildQualityMap {
+   
+#ifdef DEBUG
+    [[UXmanager shared].settings setUserQualityMap:nil];
+    [[UXmanager shared].settings setUserPoints:@0];
+    [[UXmanager shared].settings setHistoryBeganAt:nil];
+    [[UXmanager shared] persist];
+#endif
+    
+    NSDate *today = [NSDate midnightThisMorning];
+    NSMutableDictionary *incumbentMap = [[UXmanager shared].settings userQualityMap];
+    if ( !incumbentMap ) {
+        incumbentMap = [NSMutableDictionary new];
+
+        NSDateComponents *compos = [[NSCalendar currentCalendar] components:NSCalendarUnitMonth|NSCalendarUnitYear|NSCalendarUnitDay
+                                                                   fromDate:today];
+        NSInteger day = [compos day];
+        
+        NSInteger start = 0;
+        NSInteger finish = 15;
+        if ( day > 15 ) {
+            NSCalendar *cal = [NSCalendar currentCalendar];
+            NSRange rng = [cal rangeOfUnit:NSDayCalendarUnit inUnit:NSMonthCalendarUnit forDate:[NSDate date]];
+            NSUInteger numberOfDaysInMonth = rng.length;
+            finish = numberOfDaysInMonth;
+            start = 15;
+        }
+        
+        for ( unsigned i = start; i < finish; i++ ) {
+            [compos setDay:i+1];
+            NSDate *monthDayDate = [[NSCalendar currentCalendar] dateFromComponents:compos];
+            NSString *monthDay = [NSDate stringFromDate:monthDayDate
+                                             withFormat:[NSDate simpleDateFormat]];
+     
+            NSNumber *value = @0;
+#ifdef DEBUG
+            NSInteger randy = arc4random() % 100;
+            if ( randy <= 45 ) {
+                value = @1;
+            }
+#endif
+            if ( i > day ) value = @0;
+            
+            incumbentMap[monthDay] = value;
+
+        }
+
+    }
+    
+    NSArray *dateKeys = [incumbentMap allKeys];
+    NSArray *sortedKeys = [dateKeys sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
+        
+        NSString *s1 = (NSString*)obj1;
+        NSString *s2 = (NSString*)obj2;
+        NSDate *d1 = [NSDate dateFromString:s1 withFormat:[NSDate simpleDateFormat]];
+        NSDate *d2 = [NSDate dateFromString:s2 withFormat:[NSDate simpleDateFormat]];
+        return [d1 compare:d2];
+        
+    }];
+    
+    if ( ![[UXmanager shared].settings historyBeganAt] ) {
+        NSString *startCapStr = sortedKeys.firstObject;
+        NSDate *startCap = [NSDate dateFromString:startCapStr
+                                     withFormat:[NSDate simpleDateFormat]];
+        [[UXmanager shared].settings setHistoryBeganAt:startCap];
+    }
+    
+    NSString *endCapStr = sortedKeys.lastObject;
+    NSDate *endCap = [NSDate dateFromString:endCapStr
+                                 withFormat:[NSDate simpleDateFormat]];
+    
+    if ( [today earlierDate:endCap] == endCap ) {
+        [[UXmanager shared].settings setUserQualityMap:nil];
+        [[UXmanager shared] persist];
+        [self buildQualityMap];
+        return;
+    }
+    
+    NSString *currentKey = [NSDate stringFromDate:today
+                                       withFormat:[NSDate simpleDateFormat]];
+    incumbentMap[currentKey] = @1;
+    
+    [[UXmanager shared].settings setUserQualityMap:incumbentMap];
+    [[UXmanager shared] persist];
+    
+    [self applyUserQuality];
     
     
+}
+
+- (void)applyUserQuality {
+    NSMutableDictionary *incumbentMap = [[UXmanager shared].settings userQualityMap];
+    NSInteger positives = 0;
+    for ( NSString *key in [incumbentMap allKeys] ) {
+        positives += [incumbentMap[key] intValue];
+    }
+    
+    NSDate *history = [[UXmanager shared].settings historyBeganAt];
+    if ( !history ) {
+        history = [NSDate date];
+    }
+    
+    NSNumber *currentPoints = [[UXmanager shared].settings userPoints];
+    positives += [currentPoints intValue];
+    
+    NSInteger numberOfDays = abs([[NSDate midnightThisMorning] daysBetween:history]);
+    CGFloat percent = (positives / (numberOfDays * 1.0f))*100.0;
+    
+    [[UXmanager shared].settings setUserPoints:@(positives)];
+    [[UXmanager shared] persist];
+    
+    NSString *userQuality = [NSString stringWithFormat:@"%ld",(long)floorf(percent)];
+
+    GAI *gai = [GAI sharedInstance];
+    id<GAITracker> tracker = [gai defaultTracker];
+    
+    NSString *metricValue = userQuality;
+    [tracker set:[GAIFields customMetricForIndex:1] value:metricValue];
+    
+    [self.mxp.people set:@{ @"userQuality" : userQuality }];
+    
+    NSLog(@"User quality : %@",userQuality);
 }
 
 - (void)setAccessLog:(AVPlayerItemAccessLog *)accessLog {
@@ -94,63 +235,162 @@ static AnalyticsManager *singleton = nil;
 }
 
 - (void)trackHeadlinesDismissal {
-    [self logEvent:@"userClosedHeadlines"
-    withParameters:@{ }];
+    [[AnalyticsManager shared] endTimedEvent:@"userIsViewingHeadlines"];
 }
 
 
+- (void)beginTimedEvent:(NSString *)event parameters:(NSDictionary *)parameters {
+    [self logEvent:event withParameters:parameters timed:YES];
+}
+
+- (void)endTimedEvent:(NSString *)event {
+    [Flurry endTimedEvent:event withParameters:nil];
+}
+
 - (void)logEvent:(NSString *)event withParameters:(NSDictionary *)parameters {
+    [self logEvent:event withParameters:parameters timed:NO];
+}
+
+- (void)logEvent:(NSString *)event withParameters:(NSDictionary *)parameters timed:(BOOL)timed {
     
-    NSLog(@"Logging Event : %@",event);
-#if TARGET_IPHONE_SIMULATOR
-    return;
-#endif
+    NSDictionary *cookedParams = [self logifiedParamsList:parameters];
     
-    
-    NSMutableDictionary *userInfo = [[NSMutableDictionary alloc] init];
-    
-    NSMutableDictionary *mParams = [parameters mutableCopy];
-    if ( parameters[@"short"] ) {
-        [mParams removeObjectForKey:@"short"];
-        parameters = mParams;
-    } else {
-        parameters = [self logifiedParamsList:parameters];
+    if ( timed ) {
+        [Flurry logEvent:event
+          withParameters:cookedParams
+                   timed:timed];
     }
-    
-    if ( ![[UXmanager shared].settings userHasViewedOnboarding] ) return;
-    
-    for ( NSString *key in [parameters allKeys] ) {
-        userInfo[key] = parameters[key];
-    }
-    
     
     Mixpanel *mxp = [Mixpanel sharedInstance];
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
-        [mxp track:event properties:userInfo];
-    });
+    [mxp track:event properties:cookedParams];
     
-    if ( [userInfo count] >= 10 ) {
-        if ( userInfo[@"numberOfStalls"] ) {
-            [userInfo removeObjectForKey:@"numberOfStalls"];
+    NSString *category = [self categoryForEvent:event];
+    GAI *gai = [GAI sharedInstance];
+    id<GAITracker> tracker = [gai defaultTracker];
+    
+    [tracker send:[[GAIDictionaryBuilder createEventWithCategory:category
+                                                          action:event
+                                                           label:[self buildGALabelStringFromParams:parameters]
+                                                           value:nil] build]];
+    
+}
+
+- (NSString*)buildGALabelStringFromParams:(NSDictionary *)params {
+    
+    NSString *total = @"";
+    
+    NSArray *sorted = [[params allKeys] sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
+        
+        NSString *k1 = (NSString*)obj1;
+        NSString *k2 = (NSString*)obj2;
+        return [k1 compare:k2];
+        
+    }];
+    
+    for ( unsigned i = 0; i < [sorted count]; i++ ) {
+        
+        NSString *key = sorted[i];
+        
+        if ( !SEQ(total,@"") ) {
+            total = [total stringByAppendingString:@"|-|"];
         }
-        if ( userInfo[@"observedMaxBitrate"] ) {
-            [userInfo removeObjectForKey:@"observedMaxBitrate"];
-        }
-        if ( userInfo[@"observedMinBitrate"] ) {
-            [userInfo removeObjectForKey:@"observedMinBitrate"];
-        }
-        if ( userInfo[@"bytesTransferred"] ) {
-            [userInfo removeObjectForKey:@"bytesTransferred"];
-        }
-        if ( userInfo[@"accessLogPostedAt"] ) {
-            [userInfo removeObjectForKey:@"accessLogPostedAt"];
-        }
+        
+        total = [total stringByAppendingFormat:@"%@:%@",key,params[key]];
+        
     }
     
-    if ( !SEQ(@"liveStreamPlay",event) ) {
-        [Flurry logEvent:event withParameters:userInfo timed:YES];
+    if ( !SEQ(total,@"") ) {
+        return total;
     }
     
+    return nil;
+    
+}
+
+- (void)screen:(NSString *)screen {
+    GAIDictionaryBuilder *builder = [GAIDictionaryBuilder createScreenView];
+    GAI *gai = [GAI sharedInstance];
+    id<GAITracker> tracker = [gai defaultTracker];
+    [tracker set:kGAIScreenName
+           value:screen];
+    [tracker send:[builder build]];
+}
+
+- (void)gaSessionStartWithScreenView:(NSString*)screenName {
+    if ( self.gaSessionStarted ) return;
+    
+    GAIDictionaryBuilder *builder = [GAIDictionaryBuilder createScreenView];
+    GAI *gai = [GAI sharedInstance];
+    id<GAITracker> tracker = [gai defaultTracker];
+    [builder set:@"start" forKey:kGAISessionControl];
+    [tracker set:kGAIScreenName
+           value:screenName];
+    
+    [tracker send:[builder build]];
+    self.gaSessionStarted = YES;
+}
+
+- (void)gaSessionEnd {
+    GAIDictionaryBuilder *builder = [GAIDictionaryBuilder createScreenView];
+    GAI *gai = [GAI sharedInstance];
+    id<GAITracker> tracker = [gai defaultTracker];
+    [builder set:@"start" forKey:kGAISessionControl];
+    [tracker set:kGAIScreenName
+           value:@"Session End"];
+    [tracker send:[builder build]];
+    
+    self.gaSessionStarted = NO;
+}
+
+- (void)logScreenView:(NSString *)screenName {
+    GAI *gai = [GAI sharedInstance];
+    id<GAITracker> tracker = [gai defaultTracker];
+    [tracker set:kGAIScreenName
+           value:screenName];
+    [tracker send:[[GAIDictionaryBuilder createScreenView] build]];
+}
+
+#pragma mark - Track episode progress
+- (void)clearEpisodeProgress {
+    [self.progressMap removeAllObjects];
+}
+
+- (void)trackEpisodeProgress:(double)progress {
+    NSInteger cooked = floor(progress * 100);
+    if ( cooked >= 25 && !self.progressMap[@"25"] ) {
+        [self logEvent:@"episodeReached25percent"
+        withParameters:[self typicalOnDemandEpisodeInformation]];
+        self.progressMap[@"25"] = @1;
+    }
+    if ( cooked >= 50 && !self.progressMap[@"50"] ) {
+        [self logEvent:@"episodeReachedMidwayPoint"
+        withParameters:[self typicalOnDemandEpisodeInformation]];
+        self.progressMap[@"50"] = @1;
+    }
+    if ( cooked >= 75 && !self.progressMap[@"75"] ) {
+        [self logEvent:@"episodeReached75percent"
+        withParameters:[self typicalOnDemandEpisodeInformation]];
+        self.progressMap[@"75"] = @1;
+    }
+}
+
+- (NSString*)categoryForEvent:(NSString *)event {
+    if ( [event rangeOfString:@"liveStream"].location != NSNotFound ) {
+        return @"Live Stream";
+    }
+    if ( [event rangeOfString:@"episode"].location != NSNotFound ) {
+        return @"On Demand";
+    }
+    if ( [event rangeOfString:@"user"].location == 0 ) {
+        return @"User Interaction";
+    }
+    if ( [event rangeOfString:@"alarm"].location == 0 ) {
+        return @"Alarm / Sleep Timer";
+    }
+    if ( [event rangeOfString:@"sleep"].location == 0 ) {
+        return @"Alarm / Sleep Timer";
+    }
+    return @"General";
 }
 
 - (void)failStream:(NetworkHealth)cause comments:(NSString *)comments {
@@ -202,9 +442,52 @@ static AnalyticsManager *singleton = nil;
    */
 }
 
+- (NSDictionary*)typicalLiveProgramInformation {
+    
+    NSMutableDictionary *programInfo = [NSMutableDictionary new];
+    Program *p = [[SessionManager shared] currentProgram];
+    if ( p ) {
+        NSString *pTitle = p.title;
+        if ( pTitle ) {
+            programInfo[@"program"] = pTitle;
+        }
+    }
+    
+    NSTimeInterval streamStart = [[SessionManager shared] liveStreamSessionBegan];
+    NSTimeInterval duration = [[NSDate date] timeIntervalSince1970] - streamStart;
+    if ( duration > 0 ) {
+        programInfo[@"elapsedTime"] = [NSString stringWithFormat:@"%ld",(long)duration];
+    }
+    
+    return programInfo;
+}
+
+- (NSDictionary*)typicalOnDemandEpisodeInformation {
+    AudioChunk *ac = [[QueueManager shared] currentChunk];
+    NSString *episodeTitle = ac.audioTitle;
+    NSString *programTitle = ac.programTitle;
+    
+    NSMutableDictionary *params = [NSMutableDictionary new];
+    if ( episodeTitle ) {
+        params[@"episodeTitle"] = episodeTitle;
+    }
+    if ( programTitle ) {
+        params[@"programTitle"] = programTitle;
+    }
+    
+    double duration = [ac.audioDuration doubleValue];
+    params[@"duration"] = @(duration);
+    params[@"currentProgress"] = @([[QueueManager shared] globalProgress]);
+    
+    return params;
+}
+
 - (NSDictionary*)logifiedParamsList:(NSDictionary *)originalParams {
     
-    NSMutableDictionary *nParams = [originalParams mutableCopy];
+    NSMutableDictionary *nParams = [NSMutableDictionary new];
+    if ( originalParams ) {
+        nParams = [originalParams mutableCopy];
+    }
     if ( self.errorLog ) {
         if ( self.errorLog.events && self.errorLog.events.count > 0 ) {
             
@@ -212,7 +495,7 @@ static AnalyticsManager *singleton = nil;
             if ( event.playbackSessionID ) {
                 nParams[@"avPlayerSessionId"] = event.playbackSessionID;
             }
-            nParams[@"errorStatusCode"] = @(event.errorStatusCode);
+            /*nParams[@"errorStatusCode"] = @(event.errorStatusCode);
             if ( event.errorDomain ) {
                 nParams[@"errorDomain"] = event.errorDomain;
             }
@@ -221,14 +504,14 @@ static AnalyticsManager *singleton = nil;
             }
             if ( event.errorComment ) {
                 nParams[@"errorComment"] = event.errorComment;
-            }
+            }*/
         }
         self.errorLog = nil;
     }
     if ( self.accessLog ) {
         if ( self.accessLog.events && self.accessLog.events.count > 0 ) {
             
-            AVPlayerItemAccessLogEvent *event = self.accessLog.events.lastObject;
+          /*  AVPlayerItemAccessLogEvent *event = self.accessLog.events.lastObject;
             if ( event.playbackSessionID ) {
                 nParams[@"avPlayerSessionId"] = event.playbackSessionID;
             }
@@ -252,6 +535,7 @@ static AnalyticsManager *singleton = nil;
             if ( event.URI ) {
                 nParams[@"uri"] = event.URI;
             }
+           */
         }
         self.accessLog = nil;
     }
@@ -262,13 +546,15 @@ static AnalyticsManager *singleton = nil;
             nParams[@"avPlayerSessionId"] = avpid;
         }
     }
+    nParams[@"UID"] = [[[UIDevice currentDevice] identifierForVendor] UUIDString];
     
-    NSError *misc = [[[AudioManager shared] audioPlayer] currentItem].error;
+    /*NSError *misc = [[[AudioManager shared] audioPlayer] currentItem].error;
     if ( misc ) {
         for ( NSString *key in [[misc userInfo] allKeys] ) {
             nParams[key] = [misc userInfo][key];
         }
     }
+    */
     
     //NSLog(@" •••••••• FINISHED LOGGIFYING ANALYTICS ••••••• ");
     
@@ -333,10 +619,10 @@ static AnalyticsManager *singleton = nil;
     }
     
     if ( [[AudioManager shared] currentAudioMode] == AudioModeLive ) {
-        eventName = @"liveStreamScrubbed";
+        eventName = @"liveStreamTimeShifted";
     }
     if ( [[AudioManager shared] currentAudioMode] == AudioModeOnDemand ) {
-        eventName = @"onDemandAudioScrubbed";
+        eventName = @"episodeAudioTimeShifted";
     }
     
     NSString *direction = @"";
@@ -353,6 +639,23 @@ static AnalyticsManager *singleton = nil;
                                           }];
     
     NSLog(@"%@ : method : %@, amount : %@ %1.1f",eventName,method,direction,fabs([[AudioManager shared] newPositionDelta]));
+}
+
+- (void)trackPlaybackStalled {
+    NSTimeInterval streamStarted = (NSTimeInterval)[[SessionManager shared] liveStreamSessionBegan];
+    NSTimeInterval diff = [[NSDate date] timeIntervalSince1970] - streamStarted;
+    
+    Program *p = [[SessionManager shared] currentProgram];
+    
+    NSString *title = @"[UNKNOWN]";
+    if ( p.title ) {
+        title = p.title;
+    }
+    
+    [self logEvent:@"liveStreamPlaybackStalled"
+    withParameters:@{ @"secondsSinceStreamBegan" : @(diff),
+                      @"programTitle" : title }
+             timed:NO];
 }
 
 @end

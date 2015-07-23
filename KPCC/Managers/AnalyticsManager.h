@@ -13,6 +13,8 @@
 #import "Mixpanel.h"
 #import "NetworkManager.h"
 #import <NewRelicAgent/NewRelic.h>
+#import <Crashlytics/Crashlytics.h>
+#import <Fabric/Fabric.h>
 
 static NSInteger kMaxAllowedExceptionsPerInterval = 5;
 static NSInteger kExceptionInterval = 60;
@@ -38,6 +40,13 @@ typedef NS_ENUM(NSInteger, ScrubbingType) {
 @property (nonatomic, strong) NSDate *errorLogReceivedAt;
 @property (nonatomic, strong) NSDate *accessLogReceivedAt;
 @property (nonatomic, strong) NSDate *lastStreamException;
+@property (nonatomic, strong) Mixpanel *mxp;
+
+@property (nonatomic, strong) NSMutableDictionary *progressMap;
+
+@property BOOL flurryActiveInBackground;
+@property BOOL gaSessionStarted;
+
 @property NSInteger allowedExceptions;
 
 + (AnalyticsManager*)shared;
@@ -45,13 +54,34 @@ typedef NS_ENUM(NSInteger, ScrubbingType) {
 - (void)setup;
 - (void)trackHeadlinesDismissal;
 - (void)logEvent:(NSString *)event withParameters:(NSDictionary *)parameters;
+- (void)logEvent:(NSString *)event withParameters:(NSDictionary *)parameters timed:(BOOL)timed;
+- (void)logScreenView:(NSString *)screenName;
+- (void)beginTimedEvent:(NSString *)event parameters:(NSDictionary*)parameters;
+- (void)endTimedEvent:(NSString *)event;
+
+- (NSString*)buildGALabelStringFromParams:(NSDictionary*)params;
+- (void)gaSessionStartWithScreenView:(NSString*)screenName;
+- (void)gaSessionEnd;
+
 - (void)failStream:(NetworkHealth)cause comments:(NSString*)comments;
 - (void)failStream:(NetworkHealth)cause comments:(NSString *)comments force:(BOOL)force;
+- (void)trackPlaybackStalled;
+
 - (void)kTrackSession:(NSString*)modifier;
 - (void)clearLogs;
 
+- (void)buildQualityMap;
+- (void)applyUserQuality;
+- (void)screen:(NSString*)screen;
+
 - (void)trackSeekUsageWithType:(ScrubbingType)type;
+- (void)trackEpisodeProgress:(double)progress;
+- (void)clearEpisodeProgress;
+
+- (NSString*)categoryForEvent:(NSString*)event;
 
 - (NSDictionary*)logifiedParamsList:(NSDictionary*)originalParams;
+- (NSDictionary*)typicalLiveProgramInformation;
+- (NSDictionary*)typicalOnDemandEpisodeInformation;
 
 @end

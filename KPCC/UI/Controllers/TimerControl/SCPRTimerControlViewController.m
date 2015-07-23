@@ -13,6 +13,7 @@
 #import "SCPRSleepViewController.h"
 #import "SCPRAlarmClockViewController.h"
 #import "Utils.h"
+#import "AnalyticsManager.h"
 
 @interface SCPRTimerControlViewController ()
 
@@ -31,6 +32,7 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     [self.navigationController.interactivePopGestureRecognizer setDelegate:self];
+    [[AnalyticsManager shared] screen:@"wakeSleepView"];
 }
 
 - (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer {

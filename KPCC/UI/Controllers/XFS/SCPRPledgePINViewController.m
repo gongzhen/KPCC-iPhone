@@ -15,6 +15,7 @@
 #import "SessionManager.h"
 #import "SCPRXFSViewController.h"
 #import "AnalyticsManager.h"
+#import <Parse/Parse.h>
 
 #define kTallSpacing 16.0f
 #define kShortSpacing 8.0f
@@ -86,8 +87,8 @@
 
 - (void)puntToFAQ {
     
-    [[AnalyticsManager shared] logEvent:@"userLeavingToViewPlusFAQ"
-                         withParameters:nil];
+    /*[[AnalyticsManager shared] logEvent:@"userLeavingToViewPlusFAQ"
+                         withParameters:nil];*/
     
     NSString *urlStr = @"http://www.scpr.org/pledge-free";
     [[UIApplication sharedApplication] openURL:[NSURL URLWithString:urlStr]];
@@ -140,8 +141,8 @@
                     } completion:^(BOOL finished) {
                         [pfsu saveInBackground];
                         
-                        [[AnalyticsManager shared] logEvent:@"member-token-success"
-                                             withParameters:@{ @"token" : self.pinNumber }];
+                        /*[[AnalyticsManager shared] logEvent:@"member-token-success"
+                                             withParameters:@{ @"token" : self.pinNumber }];*/
                         
                     }];
                     
@@ -216,8 +217,8 @@
                                                animated:YES
                                              completion:nil];
                             
-                            [[AnalyticsManager shared] logEvent:@"member-token-failure"
-                                                 withParameters:@{ @"token" : self.pinNumber }];
+                            /*[[AnalyticsManager shared] logEvent:@"member-token-failure"
+                                                 withParameters:@{ @"token" : self.pinNumber }];*/
                             
                         }];
                     }

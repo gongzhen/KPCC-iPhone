@@ -66,11 +66,11 @@
         NSString *audioPlayerStateString;
         audioPlayerStateString = [[AudioManager shared] isStreamPlaying] ? @"playing" : @"not playing";
         
-        [[AnalyticsManager shared] logEvent:@"userReportedIssue" withParameters:@{ @"UserReport" :  reportToSend,
+        /*[[AnalyticsManager shared] logEvent:@"userReportedIssue" withParameters:@{ @"UserReport" :  reportToSend,
                                                                                    @"StreamPlaying?" : [NSString stringWithFormat:@"%@", [[AudioManager shared] isStreamPlaying] == 1 ? @"YES" : @"NO"],
                                                                                    @"StreamState" : audioPlayerStateString,
                                                                                    @"NetworkInfo" : [[NetworkManager shared] networkInformation],
-                                                                                   @"LastPrerollPlayedSecondsAgo" : [NSString stringWithFormat:@"%ld", currentTimeSeconds - [[AudioManager shared] lastPreRoll]]}];
+                                                                                   @"LastPrerollPlayedSecondsAgo" : [NSString stringWithFormat:@"%ld", currentTimeSeconds - [[AudioManager shared] lastPreRoll]]}];*/
         [self hideUserReportView];
     } else {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Access Denied" message:@"Come on, be original!" delegate:self cancelButtonTitle:nil otherButtonTitles: @"OK",nil, nil];

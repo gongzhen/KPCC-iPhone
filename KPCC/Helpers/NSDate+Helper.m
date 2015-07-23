@@ -22,10 +22,14 @@
 	return diff;
 }
 
++ (NSString*)simpleDateFormat {
+    return @"YYYY-MM-dd";
+}
+
 - (NSUInteger)daysBetween:(NSDate *)otherDate {
   NSCalendar *calendar = [NSCalendar currentCalendar];
   NSDateFormatter *mdf = [[NSDateFormatter alloc] init];
-	[mdf setDateFormat:@"yyyy-MM-dd"];
+	[mdf setDateFormat:[NSDate simpleDateFormat]];
 	NSDate *midnight = [mdf dateFromString:[mdf stringFromDate:self]];
 	NSDateComponents *components = [calendar components:(NSDayCalendarUnit) fromDate:midnight toDate:otherDate options:0];
 	return [components day];
@@ -41,7 +45,7 @@
 - (NSUInteger)daysAgoAgainstMidnight {
 	// get a midnight version of ourself:
 	NSDateFormatter *mdf = [[NSDateFormatter alloc] init];
-	[mdf setDateFormat:@"yyyy-MM-dd"];
+	[mdf setDateFormat:[NSDate simpleDateFormat]];
 	NSDate *midnight = [mdf dateFromString:[mdf stringFromDate:self]];
 	
 	return (int)[midnight timeIntervalSinceNow] / (60*60*24) *-1;
@@ -318,7 +322,7 @@
 
 + (NSDate*)midnightThisMorning {
     NSDate *now = [NSDate date];
-    NSDateComponents *comps = [[NSCalendar currentCalendar] components:NSCalendarUnitDay
+    NSDateComponents *comps = [[NSCalendar currentCalendar] components:NSCalendarUnitDay|NSCalendarUnitMonth|NSCalendarUnitYear
                                                               fromDate:now];
     NSDate *midnight = [[NSCalendar currentCalendar] dateFromComponents:comps];
     
@@ -414,10 +418,14 @@
 }
 
 + (NSDate *)dateFromString:(NSString *)string {
-	NSDateFormatter *inputFormatter = [[NSDateFormatter alloc] init];
-	[inputFormatter setDateFormat:[NSDate dbFormatString]];
-	NSDate *date = [inputFormatter dateFromString:string];
-	return date;
+    return [NSDate dateFromString:string withFormat:[NSDate dbFormatString]];
+}
+
++ (NSDate*)dateFromString:(NSString *)string withFormat:(NSString*)format {
+    NSDateFormatter *inputFormatter = [[NSDateFormatter alloc] init];
+    [inputFormatter setDateFormat:format];
+    NSDate *date = [inputFormatter dateFromString:string];
+    return date;
 }
 
 + (NSString *)stringFromDate:(NSDate *)date withFormat:(NSString *)format {

@@ -18,10 +18,13 @@
 
 + (NSString *)dbFormatString;
 + (NSDate *)dateFromString:(NSString *)string;
++ (NSDate*)dateFromString:(NSString *)string withFormat:(NSString*)format;
 + (NSString *)stringFromDate:(NSDate *)date withFormat:(NSString *)string;
 + (NSString *)stringFromDate:(NSDate *)date;
 + (NSString *)stringForDisplayFromDate:(NSDate *)date;
 + (NSString *)stringForDisplayFromDate:(NSDate *)date prefixed:(BOOL)prefixed;
+
+- (NSDate*)simpleDate;
 
 - (NSDate*)dateChangedBy:(NSInteger)days;
 @property (NS_NONATOMIC_IOSONLY, readonly, copy) NSDate *beginningOfWeek;
@@ -56,5 +59,7 @@
 + (NSString*)prettyUSTimeFromSeconds:(NSInteger)seconds;
 
 - (NSDictionary*)bookends;
+
++ (NSString*)simpleDateFormat;
 
 @end

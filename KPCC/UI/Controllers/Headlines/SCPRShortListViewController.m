@@ -77,6 +77,10 @@ static NSString *kShortListMenuURL = @"http://www.scpr.org/short-list/latest#no-
                                                                                            action:@selector(share)];
     self.currentObjectURL = kShortListMenuURL;
     
+    [[AnalyticsManager shared] logEvent:@"userIsViewingHeadlines"
+                         withParameters:nil
+                                  timed:YES];
+    
     [SCPRSpinnerViewController spinInCenterOfViewController:self appeared:^{
         [[SessionManager shared] setUserIsViewingHeadlines:YES];
 #ifdef USE_API
@@ -99,6 +103,7 @@ static NSString *kShortListMenuURL = @"http://www.scpr.org/short-list/latest#no-
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     [[DesignManager shared] treatBar];
+    [[AnalyticsManager shared] screen:@"headlinesView"];
 }
 
 - (void)willMoveToParentViewController:(UIViewController *)parent {
@@ -192,7 +197,7 @@ static NSString *kShortListMenuURL = @"http://www.scpr.org/short-list/latest#no-
         
         if ( self.initialLoad ) {
             
-            if ( navigationType == UIWebViewNavigationTypeOther ) return YES;
+            if ( navigationType != UIWebViewNavigationTypeLinkClicked ) return YES;
             
             if ( [str rangeOfString:@"http"].location != NSNotFound ) {
                 
@@ -244,7 +249,7 @@ static NSString *kShortListMenuURL = @"http://www.scpr.org/short-list/latest#no-
                                                                userInfo:nil
                                                                 repeats:NO];
             
-            if ( navigationType == UIWebViewNavigationTypeOther ) {
+            if ( navigationType != UIWebViewNavigationTypeLinkClicked ) {
                 return YES;
             }
             
@@ -312,6 +317,7 @@ static NSString *kShortListMenuURL = @"http://www.scpr.org/short-list/latest#no-
 
     [[SessionManager shared] setUserIsViewingHeadlines:NO];
     [[AnalyticsManager shared] trackHeadlinesDismissal];
+    
 }
 
 

@@ -9,7 +9,6 @@
 #import <Foundation/Foundation.h>
 #import "Utils.h"
 #import "Program.h"
-#import "Parse.h"
 
 typedef NS_ENUM(NSUInteger, OnDemandFinishedReason) {
     OnDemandFinishedReasonEpisodeEnd = 0,
@@ -139,9 +138,18 @@ static NSInteger kProgramPollingPressure = 5;
 @property BOOL genericImageForProgram;
 @property BOOL userIsSwitchingToKPCCPlus;
 
+// Analytics
+@property (nonatomic, strong) NSTimer *killSessionTimer;
+- (void)forceAnalyticsSessionEndForSessionAudio;
+- (void)handlePauseEventAgainstSessionAudio;
+
+@property NSTimeInterval timeAudioWasPutInBackground;
+
 - (BOOL)virtualLiveAudioMode;
 
+- (void)handleSessionMovingToBackground;
 - (void)handleSessionReactivation;
+
 - (void)invalidateSession;
 - (void)expireSession;
 

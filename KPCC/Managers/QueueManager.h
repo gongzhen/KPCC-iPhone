@@ -24,6 +24,8 @@
 @property (nonatomic) NSInteger currentlyPlayingIndex;
 @property (nonatomic,strong) AudioChunk *currentChunk;
 @property (nonatomic,strong) Bookmark *currentBookmark;
+@property double globalProgress;
+
 
 // Playback actions
 - (void)enqueueEpisode:(Episode *)episode;
@@ -33,6 +35,8 @@
 - (void)playPrev;
 - (void)playItemAtPosition:(int)index;
 - (void)dequeueForPlayback;
+
+- (AudioChunk*)currentEpisode;
 
 - (void)handleBookmarkingActivity;
 

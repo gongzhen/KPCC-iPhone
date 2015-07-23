@@ -43,6 +43,8 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     self.navigationItem.title = @"Programs";
+    
+    [[AnalyticsManager shared] screen:@"programsListView"];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -179,8 +181,8 @@
         title = @"[UNKNOWN]";
     }
     
-    [[AnalyticsManager shared] logEvent:@"programSelected"
-                         withParameters:@{ @"programTitle" : title }];
+    /*[[AnalyticsManager shared] logEvent:@"programSelected"
+                         withParameters:@{ @"programTitle" : title }];*/
 }
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {

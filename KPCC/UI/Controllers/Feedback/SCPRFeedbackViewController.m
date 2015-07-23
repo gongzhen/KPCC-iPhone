@@ -9,6 +9,7 @@
 #import "SCPRFeedbackViewController.h"
 #import "DesignManager.h"
 #import "AudioManager.h"
+#import "AnalyticsManager.h"
 
 static NSString *kCommentsPlaceholder = @"... Add your comments here";
 
@@ -96,6 +97,7 @@ static NSString *kCommentsPlaceholder = @"... Add your comments here";
                                                                             attributes:@{ NSForegroundColorAttributeName : [[UIColor virtualWhiteColor] translucify:0.63] }];
     NSMutableAttributedString *dph = [[NSMutableAttributedString alloc] initWithString:kCommentsPlaceholder
                                                                             attributes:@{ NSForegroundColorAttributeName : [[UIColor virtualWhiteColor] translucify:0.63] }];
+    
     self.nameTextField.attributedPlaceholder = nph;
     self.emailTextField.attributedPlaceholder = eph;
     self.descriptionInputView.attributedPlaceholder = dph;
@@ -137,6 +139,10 @@ static NSString *kCommentsPlaceholder = @"... Add your comments here";
     
     [self checkForm];
     // Do any additional setup after loading the view from its nib.
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    [[AnalyticsManager shared] screen:@"feedbackView"];
 }
 
 
