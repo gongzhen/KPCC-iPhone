@@ -276,7 +276,7 @@
         [[SessionManager shared] handleSessionMovingToBackground];
         
     } else {
-        [[AnalyticsManager shared] gaSessionEnd];
+        //[[AnalyticsManager shared] gaSessionEnd];
         [[SessionManager shared] forceAnalyticsSessionEndForSessionAudio];
     }
     
@@ -325,7 +325,7 @@
         [[AnalyticsManager shared] setFlurryActiveInBackground:NO];
     }
     
-    [[AnalyticsManager shared] gaSessionStartWithScreenView:@"Session Begin"];
+    //[[AnalyticsManager shared] gaSessionStartWithScreenView:@"Session Begin"];
     
     if ( [[AudioManager shared] currentAudioMode] != AudioModeOnboarding ) {
         [[SessionManager shared] setSessionReturnedDate:[NSDate date]];

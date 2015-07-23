@@ -184,8 +184,10 @@ static const NSString *ItemStatusContext;
         } else if (interruptionType == AVAudioSessionInterruptionTypeEnded) {
             if ( self.audioPlayer ) {
                 if ( self.audioPlayer.rate <= 0.0 && self.reactivate ) {
-                    [self playAudio];
-                    self.reactivate = NO;
+                    if ( !self.userPause ) {
+                        [self playAudio];
+                        self.reactivate = NO;
+                    }
                 } else {
                     self.reactivate = NO;
                 }
