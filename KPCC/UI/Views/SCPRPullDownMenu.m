@@ -117,6 +117,15 @@
 }
 
 - (void)refresh {
+    
+    if ( [[NetworkManager shared] networkDown] ) {
+        self.menuList.alpha = 0.4f;
+        self.menuList.userInteractionEnabled = NO;
+    } else {
+        self.menuList.alpha = 1.0f;
+        self.menuList.userInteractionEnabled = YES;
+    }
+    
     [self.menuList reloadData];
 }
 
@@ -249,6 +258,7 @@
             [cell shiftForIconWithImage:iconImg];
         }
 
+        /*
 #ifndef DISABLE_INTERRUPT
         if ( [[NetworkManager shared] networkDown] ) {
             cell.menuItemLabel.alpha = 0.35;
@@ -261,7 +271,7 @@
             cell.userInteractionEnabled = YES;
             [cell.rightChevronImageView setHidden:chevronStatus];
         }
-#endif
+#endif*/
         
     }
     if ( self.type == MenuTypeXFS ) {

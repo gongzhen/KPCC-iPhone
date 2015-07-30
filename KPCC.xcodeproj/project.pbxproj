@@ -29,6 +29,7 @@
 		255943EA19F1A7620007294D /* SCPRJogShuttleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 255943E919F1A7620007294D /* SCPRJogShuttleViewController.m */; };
 		256DE7271A16B9D90022EB84 /* menu-feedback.png in Resources */ = {isa = PBXBuildFile; fileRef = 256DE7251A16B9D90022EB84 /* menu-feedback.png */; };
 		256DE7281A16B9D90022EB84 /* menu-feedback@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 256DE7261A16B9D90022EB84 /* menu-feedback@2x.png */; };
+		2574799B1B6965F800F72AF6 /* Fabric.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2574799A1B6965F800F72AF6 /* Fabric.framework */; };
 		258BB0381A1C07FD00B8FCFE /* UXmanager.m in Sources */ = {isa = PBXBuildFile; fileRef = 258BB0371A1C07FD00B8FCFE /* UXmanager.m */; };
 		258BB03E1A1C083B00B8FCFE /* Settings.m in Sources */ = {isa = PBXBuildFile; fileRef = 258BB03D1A1C083B00B8FCFE /* Settings.m */; };
 		258BD3AE1A0BF65200E7560F /* UIButton+Additions.m in Sources */ = {isa = PBXBuildFile; fileRef = 258BD3AD1A0BF65200E7560F /* UIButton+Additions.m */; };
@@ -92,8 +93,6 @@
 		25BBCD8E1A893C350015071E /* onboarding-scrubber@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 25BBCD861A893C350015071E /* onboarding-scrubber@2x.png */; };
 		25C409B01A437B9400ADBFFE /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 25C409AF1A437B9400ADBFFE /* AdSupport.framework */; };
 		25E5532B1B61A79100C45B85 /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 25E553271B61A79100C45B85 /* Crashlytics.framework */; };
-		25E5532C1B61A79100C45B85 /* Fabric.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 25E553281B61A79100C45B85 /* Fabric.framework */; };
-		25E5532D1B61A79100C45B85 /* NielsenAppApi-cpp11.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 25E553291B61A79100C45B85 /* NielsenAppApi-cpp11.framework */; };
 		25E5532E1B61A79100C45B85 /* NielsenAppApi.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 25E5532A1B61A79100C45B85 /* NielsenAppApi.framework */; };
 		25E8BD9E1ABA034D007B99EB /* program_avatar_invisibilia.png in Resources */ = {isa = PBXBuildFile; fileRef = 25E8BD9C1ABA034D007B99EB /* program_avatar_invisibilia.png */; };
 		25E8BD9F1ABA034D007B99EB /* program_avatar_invisibilia@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 25E8BD9D1ABA034D007B99EB /* program_avatar_invisibilia@2x.png */; };
@@ -345,6 +344,7 @@
 		255943E919F1A7620007294D /* SCPRJogShuttleViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SCPRJogShuttleViewController.m; sourceTree = "<group>"; };
 		256DE7251A16B9D90022EB84 /* menu-feedback.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "menu-feedback.png"; sourceTree = "<group>"; };
 		256DE7261A16B9D90022EB84 /* menu-feedback@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "menu-feedback@2x.png"; sourceTree = "<group>"; };
+		2574799A1B6965F800F72AF6 /* Fabric.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Fabric.framework; sourceTree = "<group>"; };
 		258BB0361A1C07FD00B8FCFE /* UXmanager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UXmanager.h; path = Managers/UXmanager.h; sourceTree = "<group>"; };
 		258BB0371A1C07FD00B8FCFE /* UXmanager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UXmanager.m; path = Managers/UXmanager.m; sourceTree = "<group>"; };
 		258BB03C1A1C083B00B8FCFE /* Settings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Settings.h; sourceTree = "<group>"; };
@@ -435,8 +435,6 @@
 		25BBCD861A893C350015071E /* onboarding-scrubber@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "onboarding-scrubber@2x.png"; sourceTree = "<group>"; };
 		25C409AF1A437B9400ADBFFE /* AdSupport.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AdSupport.framework; path = System/Library/Frameworks/AdSupport.framework; sourceTree = SDKROOT; };
 		25E553271B61A79100C45B85 /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Crashlytics.framework; path = LocalFrameworks/Crashlytics.framework; sourceTree = "<group>"; };
-		25E553281B61A79100C45B85 /* Fabric.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Fabric.framework; path = LocalFrameworks/Fabric.framework; sourceTree = "<group>"; };
-		25E553291B61A79100C45B85 /* NielsenAppApi-cpp11.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = "NielsenAppApi-cpp11.framework"; path = "LocalFrameworks/NielsenAppApi-cpp11.framework"; sourceTree = "<group>"; };
 		25E5532A1B61A79100C45B85 /* NielsenAppApi.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = NielsenAppApi.framework; path = LocalFrameworks/NielsenAppApi.framework; sourceTree = "<group>"; };
 		25E8BD9C1ABA034D007B99EB /* program_avatar_invisibilia.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = program_avatar_invisibilia.png; sourceTree = "<group>"; };
 		25E8BD9D1ABA034D007B99EB /* program_avatar_invisibilia@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "program_avatar_invisibilia@2x.png"; sourceTree = "<group>"; };
@@ -636,7 +634,6 @@
 		7685BD59194BBCB90075BB16 /* pauseButton@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "pauseButton@2x.png"; sourceTree = "<group>"; };
 		7685BD5A194BBCB90075BB16 /* playButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = playButton.png; sourceTree = "<group>"; };
 		7685BD5B194BBCB90075BB16 /* playButton@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "playButton@2x.png"; sourceTree = "<group>"; };
-		768BBF1918DA614300ACAD83 /* libPods.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libPods.a; path = "Pods/build/Debug-iphoneos/libPods.a"; sourceTree = "<group>"; };
 		768C064619958FD900F829EB /* SCPRMasterViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCPRMasterViewController.h; sourceTree = "<group>"; };
 		768C064719958FD900F829EB /* SCPRMasterViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SCPRMasterViewController.m; sourceTree = "<group>"; };
 		768C064A1995905D00F829EB /* btn_live_rewind_small.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = btn_live_rewind_small.png; sourceTree = "<group>"; };
@@ -709,8 +706,6 @@
 			files = (
 				25E5532E1B61A79100C45B85 /* NielsenAppApi.framework in Frameworks */,
 				25C409B01A437B9400ADBFFE /* AdSupport.framework in Frameworks */,
-				25E5532D1B61A79100C45B85 /* NielsenAppApi-cpp11.framework in Frameworks */,
-				25E5532C1B61A79100C45B85 /* Fabric.framework in Frameworks */,
 				25E5532B1B61A79100C45B85 /* Crashlytics.framework in Frameworks */,
 				76349CAA18D3747E0027C3B8 /* libz.dylib in Frameworks */,
 				768EAAE118D26C9C00469734 /* AVFoundation.framework in Frameworks */,
@@ -719,6 +714,7 @@
 				76A308CB18C8FB940065D4B1 /* UIKit.framework in Frameworks */,
 				76A308C718C8FB940065D4B1 /* Foundation.framework in Frameworks */,
 				D60D1CDDD065418D8BE73D8C /* libPods.a in Frameworks */,
+				2574799B1B6965F800F72AF6 /* Fabric.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1309,12 +1305,10 @@
 		76A308C518C8FB940065D4B1 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				2574799A1B6965F800F72AF6 /* Fabric.framework */,
 				25E553271B61A79100C45B85 /* Crashlytics.framework */,
-				25E553281B61A79100C45B85 /* Fabric.framework */,
-				25E553291B61A79100C45B85 /* NielsenAppApi-cpp11.framework */,
 				25E5532A1B61A79100C45B85 /* NielsenAppApi.framework */,
 				25C409AF1A437B9400ADBFFE /* AdSupport.framework */,
-				768BBF1918DA614300ACAD83 /* libPods.a */,
 				76349D2318D8F8D80027C3B8 /* SystemConfiguration.framework */,
 				76349CA918D3747E0027C3B8 /* libz.dylib */,
 				768EAAE018D26C9C00469734 /* AVFoundation.framework */,
@@ -2012,7 +2006,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
-					"$(PROJECT_DIR)/LocalFrameworks",
+					"$(PROJECT_DIR)/LocalFrameworks/**",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "KPCC/KPCC-Prefix.pch";
@@ -2070,6 +2064,7 @@
 					"$(inherited)",
 					"$(DEVELOPER_FRAMEWORKS_DIR)",
 					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/LocalFrameworks",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "KPCC/KPCC-Prefix.pch";
@@ -2152,7 +2147,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
-					"$(PROJECT_DIR)/LocalFrameworks",
+					"$(PROJECT_DIR)/LocalFrameworks/**",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "KPCC/KPCC-Prefix.pch";
@@ -2211,6 +2206,7 @@
 					"$(inherited)",
 					"$(DEVELOPER_FRAMEWORKS_DIR)",
 					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/LocalFrameworks",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "KPCC/KPCC-Prefix.pch";
@@ -2333,7 +2329,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
-					"$(PROJECT_DIR)/LocalFrameworks",
+					"$(PROJECT_DIR)/LocalFrameworks/**",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "KPCC/KPCC-Prefix.pch";
@@ -2396,7 +2392,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
-					"$(PROJECT_DIR)/LocalFrameworks",
+					"$(PROJECT_DIR)/LocalFrameworks/**",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "KPCC/KPCC-Prefix.pch";
@@ -2455,6 +2451,7 @@
 					"$(inherited)",
 					"$(DEVELOPER_FRAMEWORKS_DIR)",
 					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/LocalFrameworks",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "KPCC/KPCC-Prefix.pch";
@@ -2503,6 +2500,7 @@
 					"$(inherited)",
 					"$(DEVELOPER_FRAMEWORKS_DIR)",
 					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/LocalFrameworks",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "KPCC/KPCC-Prefix.pch";

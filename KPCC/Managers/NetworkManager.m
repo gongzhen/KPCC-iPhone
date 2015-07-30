@@ -114,19 +114,13 @@ static NetworkManager *singleton = nil;
                                                                 object:nil];
                 
                 if ( weakself_.timeDropped && weakself_.timeReturned ) {
-                    /*[[AnalyticsManager shared] logEvent:@"connectivityLostAndFound"
-                                         withParameters:@{ @"lostTime" : [NSDate stringFromDate:weakself_.timeDropped
-                                                                                     withFormat:@"HH:mm:ss a"],
-                                                           @"foundTime" : [NSDate stringFromDate:weakself_.timeReturned
-                                                                                      withFormat:@"HH:mm:ss a"] }];*/
                     weakself_.timeReturned = nil;
                     weakself_.timeDropped = nil;
                 }
                 
             } else {
                 
-                weakself_.timeDropped = [NSDate date];
-                weakself_.networkDown = YES;
+
                 weakself_.failTimer = [NSTimer scheduledTimerWithTimeInterval:kFailThreshold
                                                                        target:weakself_
                                                                      selector:@selector(trueFail)
@@ -146,6 +140,8 @@ static NetworkManager *singleton = nil;
 }
 
 - (void)trueFail {
+    self.timeDropped = [NSDate date];
+    self.networkDown = YES;
     [[NSNotificationCenter defaultCenter] postNotificationName:@"network-status-fail"
                                                         object:nil];
 }

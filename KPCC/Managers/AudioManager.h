@@ -72,7 +72,7 @@ typedef NS_ENUM(NSUInteger, StreamStatus) {
 
 #define kPreferredPeakBitRateTolerance 1000
 #define kImpatientWaitingTolerance 15.0
-#define kGiveUpTolerance 30.0
+#define kGiveUpTolerance 15.0
 #define kBookmarkingTolerance 10
 
 @interface AudioManager : NSObject<AVAssetResourceLoaderDelegate>

@@ -3834,6 +3834,8 @@ setForOnDemandUI;
             }
         }
         
+        [[AnalyticsManager shared] nielsenTrack];
+        
     }
     
     [self.liveProgressViewController tick];
