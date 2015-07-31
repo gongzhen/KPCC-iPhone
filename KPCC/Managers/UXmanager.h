@@ -14,6 +14,13 @@
 @class SCPROnboardingViewController;
 @class SCPRMasterViewController;
 
+typedef NS_ENUM(NSUInteger, SSOType) {
+    SSOTypeNone = 0,
+    SSOTypeTwitter,
+    SSOTypeFacebook,
+    SSOTypeKPCC
+};
+
 @interface UXmanager : NSObject<AVAudioPlayerDelegate>
 
 @property (nonatomic,strong) Settings *settings;
@@ -69,5 +76,8 @@
 - (void)killAudio;
 - (void)timeBegin;
 - (void)timeEnd:(NSString*)operationName;
+
+// SSO
+- (SSOType)userLoginType;
 
 @end

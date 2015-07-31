@@ -28,6 +28,7 @@
 #import "SCPRPledgePINViewController.h"
 #import "SCPRBalloonViewController.h"
 #import "Utils.h"
+#import "SCPRLoginViewController.h"
 
 @import MessageUI;
 
@@ -3726,6 +3727,24 @@ setForOnDemandUI;
             break;
         }
         case 5: {
+            
+            if ( [[UXmanager shared] userLoginType] == SSOTypeNone ) {
+                
+                SCPRLoginViewController *login = [[SCPRLoginViewController alloc] initWithNibName:@"SCPRLoginViewController"
+                                                                                           bundle:nil];
+                login.view.frame = CGRectMake(0.0f,0.0f,self.view.frame.size.width,
+                                              self.view.frame.size.height);
+                
+                [self presentViewController:login
+                                   animated:YES
+                                 completion:^{
+                                     [login.view layoutIfNeeded];
+                                 }];
+                
+            }
+            break;
+        }
+        case 6: {
             
             self.homeIsNotRootViewController = YES;
             event = @"menuSelectionFeedback";

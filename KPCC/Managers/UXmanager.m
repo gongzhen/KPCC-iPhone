@@ -514,4 +514,11 @@
     nav.menuButton.alpha = 1.0f;
 }
 
+#pragma mark - SSO
+- (SSOType)userLoginType {
+    // TODO: Make this actually work
+    return SSOTypeNone;
+}
+
+
 @end

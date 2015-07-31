@@ -30,6 +30,16 @@
 		256DE7271A16B9D90022EB84 /* menu-feedback.png in Resources */ = {isa = PBXBuildFile; fileRef = 256DE7251A16B9D90022EB84 /* menu-feedback.png */; };
 		256DE7281A16B9D90022EB84 /* menu-feedback@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 256DE7261A16B9D90022EB84 /* menu-feedback@2x.png */; };
 		2574799B1B6965F800F72AF6 /* Fabric.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2574799A1B6965F800F72AF6 /* Fabric.framework */; };
+		2574799E1B6AB69700F72AF6 /* menu-profile.png in Resources */ = {isa = PBXBuildFile; fileRef = 2574799C1B6AB69700F72AF6 /* menu-profile.png */; };
+		2574799F1B6AB69700F72AF6 /* menu-profile@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2574799D1B6AB69700F72AF6 /* menu-profile@2x.png */; };
+		257479A41B6AB90900F72AF6 /* SCPRLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 257479A21B6AB90900F72AF6 /* SCPRLoginViewController.m */; };
+		257479A51B6AB90900F72AF6 /* SCPRLoginViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 257479A31B6AB90900F72AF6 /* SCPRLoginViewController.xib */; };
+		257479A91B6ACEAC00F72AF6 /* SCPRSSOInputFieldCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 257479A71B6ACEAC00F72AF6 /* SCPRSSOInputFieldCell.m */; };
+		257479AA1B6ACEAC00F72AF6 /* SCPRSSOInputFieldCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 257479A81B6ACEAC00F72AF6 /* SCPRSSOInputFieldCell.xib */; };
+		257479AD1B6AD12D00F72AF6 /* onboarding-tile-blurry@2x.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 257479AC1B6AD12D00F72AF6 /* onboarding-tile-blurry@2x.jpg */; };
+		257479AF1B6AD14200F72AF6 /* onboarding-tile-blurry.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 257479AE1B6AD14200F72AF6 /* onboarding-tile-blurry.jpg */; };
+		257479B21B6AE08200F72AF6 /* icon-mail.png in Resources */ = {isa = PBXBuildFile; fileRef = 257479B01B6AE08200F72AF6 /* icon-mail.png */; };
+		257479B31B6AE08200F72AF6 /* icon-mail@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 257479B11B6AE08200F72AF6 /* icon-mail@2x.png */; };
 		258BB0381A1C07FD00B8FCFE /* UXmanager.m in Sources */ = {isa = PBXBuildFile; fileRef = 258BB0371A1C07FD00B8FCFE /* UXmanager.m */; };
 		258BB03E1A1C083B00B8FCFE /* Settings.m in Sources */ = {isa = PBXBuildFile; fileRef = 258BB03D1A1C083B00B8FCFE /* Settings.m */; };
 		258BD3AE1A0BF65200E7560F /* UIButton+Additions.m in Sources */ = {isa = PBXBuildFile; fileRef = 258BD3AD1A0BF65200E7560F /* UIButton+Additions.m */; };
@@ -345,6 +355,18 @@
 		256DE7251A16B9D90022EB84 /* menu-feedback.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "menu-feedback.png"; sourceTree = "<group>"; };
 		256DE7261A16B9D90022EB84 /* menu-feedback@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "menu-feedback@2x.png"; sourceTree = "<group>"; };
 		2574799A1B6965F800F72AF6 /* Fabric.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Fabric.framework; sourceTree = "<group>"; };
+		2574799C1B6AB69700F72AF6 /* menu-profile.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "menu-profile.png"; sourceTree = "<group>"; };
+		2574799D1B6AB69700F72AF6 /* menu-profile@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "menu-profile@2x.png"; sourceTree = "<group>"; };
+		257479A11B6AB90900F72AF6 /* SCPRLoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCPRLoginViewController.h; path = SSO/SCPRLoginViewController.h; sourceTree = "<group>"; };
+		257479A21B6AB90900F72AF6 /* SCPRLoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SCPRLoginViewController.m; path = SSO/SCPRLoginViewController.m; sourceTree = "<group>"; };
+		257479A31B6AB90900F72AF6 /* SCPRLoginViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = SCPRLoginViewController.xib; path = SSO/SCPRLoginViewController.xib; sourceTree = "<group>"; };
+		257479A61B6ACEAC00F72AF6 /* SCPRSSOInputFieldCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCPRSSOInputFieldCell.h; path = SSO/SCPRSSOInputFieldCell.h; sourceTree = "<group>"; };
+		257479A71B6ACEAC00F72AF6 /* SCPRSSOInputFieldCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SCPRSSOInputFieldCell.m; path = SSO/SCPRSSOInputFieldCell.m; sourceTree = "<group>"; };
+		257479A81B6ACEAC00F72AF6 /* SCPRSSOInputFieldCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = SCPRSSOInputFieldCell.xib; path = SSO/SCPRSSOInputFieldCell.xib; sourceTree = "<group>"; };
+		257479AC1B6AD12D00F72AF6 /* onboarding-tile-blurry@2x.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "onboarding-tile-blurry@2x.jpg"; sourceTree = "<group>"; };
+		257479AE1B6AD14200F72AF6 /* onboarding-tile-blurry.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "onboarding-tile-blurry.jpg"; sourceTree = "<group>"; };
+		257479B01B6AE08200F72AF6 /* icon-mail.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-mail.png"; sourceTree = "<group>"; };
+		257479B11B6AE08200F72AF6 /* icon-mail@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-mail@2x.png"; sourceTree = "<group>"; };
 		258BB0361A1C07FD00B8FCFE /* UXmanager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UXmanager.h; path = Managers/UXmanager.h; sourceTree = "<group>"; };
 		258BB0371A1C07FD00B8FCFE /* UXmanager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UXmanager.m; path = Managers/UXmanager.m; sourceTree = "<group>"; };
 		258BB03C1A1C083B00B8FCFE /* Settings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Settings.h; sourceTree = "<group>"; };
@@ -749,6 +771,28 @@
 			name = Onboarding;
 			sourceTree = "<group>";
 		};
+		257479A01B6AB8E600F72AF6 /* SSO / Profile */ = {
+			isa = PBXGroup;
+			children = (
+				257479A11B6AB90900F72AF6 /* SCPRLoginViewController.h */,
+				257479A21B6AB90900F72AF6 /* SCPRLoginViewController.m */,
+				257479A31B6AB90900F72AF6 /* SCPRLoginViewController.xib */,
+				257479A61B6ACEAC00F72AF6 /* SCPRSSOInputFieldCell.h */,
+				257479A71B6ACEAC00F72AF6 /* SCPRSSOInputFieldCell.m */,
+				257479A81B6ACEAC00F72AF6 /* SCPRSSOInputFieldCell.xib */,
+			);
+			name = "SSO / Profile";
+			sourceTree = "<group>";
+		};
+		257479AB1B6AD11500F72AF6 /* sso */ = {
+			isa = PBXGroup;
+			children = (
+				257479AE1B6AD14200F72AF6 /* onboarding-tile-blurry.jpg */,
+				257479AC1B6AD12D00F72AF6 /* onboarding-tile-blurry@2x.jpg */,
+			);
+			name = sso;
+			sourceTree = "<group>";
+		};
 		258E8DFC1A16AA1100675E68 /* Fixtures */ = {
 			isa = PBXGroup;
 			children = (
@@ -924,6 +968,8 @@
 		52EFF77A19C3688D0059A0E3 /* menu */ = {
 			isa = PBXGroup;
 			children = (
+				2574799C1B6AB69700F72AF6 /* menu-profile.png */,
+				2574799D1B6AB69700F72AF6 /* menu-profile@2x.png */,
 				256DE7251A16B9D90022EB84 /* menu-feedback.png */,
 				256DE7261A16B9D90022EB84 /* menu-feedback@2x.png */,
 				52EFF77B19C3688D0059A0E3 /* menu-antenna.png */,
@@ -1112,6 +1158,7 @@
 		76658ABC18E0AF8500026176 /* View Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				257479A01B6AB8E600F72AF6 /* SSO / Profile */,
 				25B25BA91B1D091100ABE8B4 /* XFS */,
 				25F30AE51AFAB67C00F27187 /* Secondary Main Screens */,
 				25E8BDA01ABB8702007B99EB /* Wake / Sleep */,
@@ -1181,6 +1228,9 @@
 		7685BD57194BBCB90075BB16 /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				257479B01B6AE08200F72AF6 /* icon-mail.png */,
+				257479B11B6AE08200F72AF6 /* icon-mail@2x.png */,
+				257479AB1B6AD11500F72AF6 /* sso */,
 				25B25B991B17DEF600ABE8B4 /* chevron_up.png */,
 				25B25B9A1B17DEF600ABE8B4 /* chevron_up@2x.png */,
 				258C5D291B164C2100C19BE0 /* icon-lock.png */,
@@ -1528,10 +1578,12 @@
 				25F30AFD1B0A9B1800F27187 /* onboarding-schedule-swipe-left@2x.png in Resources */,
 				2557BA841A1A9BB800B0CAED /* btn_back_to_live_xtra-small@2x.png in Resources */,
 				76B9A9AE18EF59FD007A6D8C /* SCPRUserReportViewController.xib in Resources */,
+				257479B31B6AE08200F72AF6 /* icon-mail@2x.png in Resources */,
 				52EFF81619C368C00059A0E3 /* program_avatar_loh-life.png in Resources */,
 				25BBCD8D1A893C350015071E /* onboarding-scrubber.png in Resources */,
 				52EFF83619C368C00059A0E3 /* program_avatar_prairie-home-companion.png in Resources */,
 				52EFF80C19C368C00059A0E3 /* program_avatar_fresh-air@2x.png in Resources */,
+				257479B21B6AE08200F72AF6 /* icon-mail.png in Resources */,
 				25BBCD871A893C350015071E /* btn_back_30.png in Resources */,
 				768C067D199590CC00F829EB /* FreigSanProLigIt.otf in Resources */,
 				52EFF81419C368C00059A0E3 /* program_avatar_loh-down-on-science@2x.png in Resources */,
@@ -1574,6 +1626,7 @@
 				52EFF84019C368C00059A0E3 /* program_avatar_science-friday@2x.png in Resources */,
 				768C0683199590CC00F829EB /* FreigSanProSem.otf in Resources */,
 				7685BD62194BBCB90075BB16 /* playButton@2x.png in Resources */,
+				257479AA1B6ACEAC00F72AF6 /* SCPRSSOInputFieldCell.xib in Resources */,
 				256DE7281A16B9D90022EB84 /* menu-feedback@2x.png in Resources */,
 				52EFF7F619C368C00059A0E3 /* program_avatar_bbc-world-service.png in Resources */,
 				52EFF86619C368C00059A0E3 /* program_avatar_weekend-edition-sunday.png in Resources */,
@@ -1601,6 +1654,7 @@
 				52EFF7EA19C368C00059A0E3 /* program_avatar_all-things-considered.png in Resources */,
 				52EFF82E19C368C00059A0E3 /* program_avatar_on-being.png in Resources */,
 				259E44FF1A1D2CD300F5CD65 /* SCPROnboardingViewController.xib in Resources */,
+				257479A51B6AB90900F72AF6 /* SCPRLoginViewController.xib in Resources */,
 				52D9227819D366C90018AD4B /* content-share.png in Resources */,
 				52EFF85619C368C00059A0E3 /* program_avatar_world.png in Resources */,
 				258E8E101A16AE0400675E68 /* SCPRFeedbackViewController.xib in Resources */,
@@ -1639,11 +1693,13 @@
 				768C068C1995911600F829EB /* program_tile_generic@2x.jpg in Resources */,
 				52EFF81C19C368C00059A0E3 /* program_avatar_marketplace-morning-report@2x.png in Resources */,
 				52EFF80819C368C00059A0E3 /* program_avatar_filmweek@2x.png in Resources */,
+				257479AF1B6AD14200F72AF6 /* onboarding-tile-blurry.jpg in Resources */,
 				52EFF78719C3688D0059A0E3 /* menu-antenna.png in Resources */,
 				52EFF79519C3688D0059A0E3 /* menu-heart-plus@2x.png in Resources */,
 				25E8BDA51ABB933C007B99EB /* SCPRTimerControlViewController.xib in Resources */,
 				259E450F1A1D583A00F5CD65 /* onboarding2.mp3 in Resources */,
 				52EFF83219C368C00059A0E3 /* program_avatar_on-the-media.png in Resources */,
+				257479AD1B6AD12D00F72AF6 /* onboarding-tile-blurry@2x.jpg in Resources */,
 				2557BA851A1A9BB800B0CAED /* btn_live_rewind_xtra-small.png in Resources */,
 				25F30AED1AFAB6B700F27187 /* SCPRCompleteScheduleViewController.xib in Resources */,
 				B5F9F74A1ABCE8FD00115DB3 /* icon-clock@2x.png in Resources */,
@@ -1663,6 +1719,7 @@
 				2557BA861A1A9BB800B0CAED /* btn_live_rewind_xtra-small@2x.png in Resources */,
 				52EFF7EE19C368C00059A0E3 /* program_avatar_ask-me-another.png in Resources */,
 				768C06541995905D00F829EB /* btn_live_rewind_small@2x.png in Resources */,
+				2574799E1B6AB69700F72AF6 /* menu-profile.png in Resources */,
 				52D0FC2A19D20D29009AECEE /* program_avatar_marketplace-tech-report.png in Resources */,
 				52EFF7FE19C368C00059A0E3 /* program_avatar_car-talk.png in Resources */,
 				52EFF7FA19C368C00059A0E3 /* program_avatar_bullseye.png in Resources */,
@@ -1710,6 +1767,7 @@
 				25B25B9B1B17DEF600ABE8B4 /* chevron_up.png in Resources */,
 				258E8E011A16AA3900675E68 /* Glass_Crash.mp3 in Resources */,
 				25F2BC811A3BB60B00108F73 /* onboarding-music-bed.m4a in Resources */,
+				2574799F1B6AB69700F72AF6 /* menu-profile@2x.png in Resources */,
 				254CC6981A23A7A600560805 /* onboarding-push-icon.png in Resources */,
 				52D0FC3819D20D29009AECEE /* program_avatar_the-frame@2x.png in Resources */,
 				B5F9F74B1ABCE8FD00115DB3 /* icon-stopwatch.png in Resources */,
@@ -1853,6 +1911,7 @@
 				25F30AFA1AFABB3E00F27187 /* SCPRScheduleHeaderViewController.m in Sources */,
 				52D0FC1C19D1F24F009AECEE /* SCPRProgramDetailHeaderView.m in Sources */,
 				254831C11A41555700963078 /* UIView+PrintDimensions.m in Sources */,
+				257479A91B6ACEAC00F72AF6 /* SCPRSSOInputFieldCell.m in Sources */,
 				258BB03E1A1C083B00B8FCFE /* Settings.m in Sources */,
 				254CC69E1A23B41D00560805 /* SCPRTriangleView.m in Sources */,
 				258C5D381B1678ED00C19BE0 /* SCPRCornerMaskView.m in Sources */,
@@ -1872,6 +1931,7 @@
 				52CF917A1A0032C7007BCFA8 /* QueueManager.m in Sources */,
 				25E8BDB01AC0920E007B99EB /* SCPRAlarmClockViewController.m in Sources */,
 				258BB0381A1C07FD00B8FCFE /* UXmanager.m in Sources */,
+				257479A41B6AB90900F72AF6 /* SCPRLoginViewController.m in Sources */,
 				25B25BB51B1D096D00ABE8B4 /* SCPRBalloonViewController.m in Sources */,
 				76B9A9AC18EF59FD007A6D8C /* SCPRUserReportViewController.m in Sources */,
 				76658AB918DCB51000026176 /* NSDate+Helper.m in Sources */,

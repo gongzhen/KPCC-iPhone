@@ -32,5 +32,6 @@
 @property (nonatomic, strong) NSMutableDictionary *userQualityMap;
 @property (nonatomic, strong) NSDate *historyBeganAt;
 @property (nonatomic, strong) NSNumber *userPoints;
+@property (nonatomic, strong) NSString *ssoKey;
 
 @end

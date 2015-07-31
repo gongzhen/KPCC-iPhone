@@ -29,6 +29,8 @@
     self.userQualityMap = [aDecoder decodeObjectForKey:@"userQualityMap"];
     self.historyBeganAt = [aDecoder decodeObjectForKey:@"historyBeganAt"];
     self.userPoints = [aDecoder decodeObjectForKey:@"userPoints"];
+    self.ssoKey = [aDecoder decodeObjectForKey:@"ssoKey"];
+    
     [[Utils del] setAlarmDate:self.alarmFireDate];
     
     return self;
@@ -70,6 +72,8 @@
                   forKey:@"historyBeganAt"];
     [aCoder encodeObject:self.userPoints
                   forKey:@"userPoints"];
+    [aCoder encodeObject:self.ssoKey
+                  forKey:@"ssoKey"];
     
 }
 
