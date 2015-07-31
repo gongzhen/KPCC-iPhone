@@ -160,7 +160,7 @@ static AnalyticsManager *singleton = nil;
     NSDate *endCap = [NSDate dateFromString:endCapStr
                                  withFormat:[NSDate simpleDateFormat]];
     
-    if ( [today earlierDate:endCap] == endCap && [today timeIntervalSince1970] != [endCap timeIntervalSince1970] ) {
+    if ( [today timeIntervalSince1970] > [endCap timeIntervalSince1970] ) {
         [[UXmanager shared].settings setUserQualityMap:nil];
         [[UXmanager shared] persist];
         [self buildQualityMap];
