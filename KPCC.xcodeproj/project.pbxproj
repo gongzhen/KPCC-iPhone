@@ -40,6 +40,11 @@
 		257479AF1B6AD14200F72AF6 /* onboarding-tile-blurry.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 257479AE1B6AD14200F72AF6 /* onboarding-tile-blurry.jpg */; };
 		257479B21B6AE08200F72AF6 /* icon-mail.png in Resources */ = {isa = PBXBuildFile; fileRef = 257479B01B6AE08200F72AF6 /* icon-mail.png */; };
 		257479B31B6AE08200F72AF6 /* icon-mail@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 257479B11B6AE08200F72AF6 /* icon-mail@2x.png */; };
+		257479B61B6C205600F72AF6 /* kpcc-logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 257479B41B6C205600F72AF6 /* kpcc-logo.png */; };
+		257479B71B6C205600F72AF6 /* kpcc-logo@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 257479B51B6C205600F72AF6 /* kpcc-logo@2x.png */; };
+		257479BA1B6C21FE00F72AF6 /* icon-lock-white.png in Resources */ = {isa = PBXBuildFile; fileRef = 257479B81B6C21FE00F72AF6 /* icon-lock-white.png */; };
+		257479BB1B6C21FE00F72AF6 /* icon-lock-white@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 257479B91B6C21FE00F72AF6 /* icon-lock-white@2x.png */; };
+		257479BD1B6C4A3E00F72AF6 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 257479BC1B6C4A3E00F72AF6 /* WebKit.framework */; };
 		258BB0381A1C07FD00B8FCFE /* UXmanager.m in Sources */ = {isa = PBXBuildFile; fileRef = 258BB0371A1C07FD00B8FCFE /* UXmanager.m */; };
 		258BB03E1A1C083B00B8FCFE /* Settings.m in Sources */ = {isa = PBXBuildFile; fileRef = 258BB03D1A1C083B00B8FCFE /* Settings.m */; };
 		258BD3AE1A0BF65200E7560F /* UIButton+Additions.m in Sources */ = {isa = PBXBuildFile; fileRef = 258BD3AD1A0BF65200E7560F /* UIButton+Additions.m */; };
@@ -367,6 +372,11 @@
 		257479AE1B6AD14200F72AF6 /* onboarding-tile-blurry.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "onboarding-tile-blurry.jpg"; sourceTree = "<group>"; };
 		257479B01B6AE08200F72AF6 /* icon-mail.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-mail.png"; sourceTree = "<group>"; };
 		257479B11B6AE08200F72AF6 /* icon-mail@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-mail@2x.png"; sourceTree = "<group>"; };
+		257479B41B6C205600F72AF6 /* kpcc-logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "kpcc-logo.png"; sourceTree = "<group>"; };
+		257479B51B6C205600F72AF6 /* kpcc-logo@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "kpcc-logo@2x.png"; sourceTree = "<group>"; };
+		257479B81B6C21FE00F72AF6 /* icon-lock-white.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-lock-white.png"; sourceTree = "<group>"; };
+		257479B91B6C21FE00F72AF6 /* icon-lock-white@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-lock-white@2x.png"; sourceTree = "<group>"; };
+		257479BC1B6C4A3E00F72AF6 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
 		258BB0361A1C07FD00B8FCFE /* UXmanager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UXmanager.h; path = Managers/UXmanager.h; sourceTree = "<group>"; };
 		258BB0371A1C07FD00B8FCFE /* UXmanager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UXmanager.m; path = Managers/UXmanager.m; sourceTree = "<group>"; };
 		258BB03C1A1C083B00B8FCFE /* Settings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Settings.h; sourceTree = "<group>"; };
@@ -726,6 +736,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				257479BD1B6C4A3E00F72AF6 /* WebKit.framework in Frameworks */,
 				25E5532E1B61A79100C45B85 /* NielsenAppApi.framework in Frameworks */,
 				25C409B01A437B9400ADBFFE /* AdSupport.framework in Frameworks */,
 				25E5532B1B61A79100C45B85 /* Crashlytics.framework in Frameworks */,
@@ -1228,6 +1239,10 @@
 		7685BD57194BBCB90075BB16 /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				257479B81B6C21FE00F72AF6 /* icon-lock-white.png */,
+				257479B91B6C21FE00F72AF6 /* icon-lock-white@2x.png */,
+				257479B41B6C205600F72AF6 /* kpcc-logo.png */,
+				257479B51B6C205600F72AF6 /* kpcc-logo@2x.png */,
 				257479B01B6AE08200F72AF6 /* icon-mail.png */,
 				257479B11B6AE08200F72AF6 /* icon-mail@2x.png */,
 				257479AB1B6AD11500F72AF6 /* sso */,
@@ -1355,6 +1370,7 @@
 		76A308C518C8FB940065D4B1 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				257479BC1B6C4A3E00F72AF6 /* WebKit.framework */,
 				2574799A1B6965F800F72AF6 /* Fabric.framework */,
 				25E553271B61A79100C45B85 /* Crashlytics.framework */,
 				25E5532A1B61A79100C45B85 /* NielsenAppApi.framework */,
@@ -1690,6 +1706,7 @@
 				52EFF82019C368C00059A0E3 /* program_avatar_marketplace@2x.png in Resources */,
 				25BBCD8A1A893C350015071E /* btn_close@2x.png in Resources */,
 				258E8E021A16AA3900675E68 /* rewind_beat.mp3 in Resources */,
+				257479BA1B6C21FE00F72AF6 /* icon-lock-white.png in Resources */,
 				768C068C1995911600F829EB /* program_tile_generic@2x.jpg in Resources */,
 				52EFF81C19C368C00059A0E3 /* program_avatar_marketplace-morning-report@2x.png in Resources */,
 				52EFF80819C368C00059A0E3 /* program_avatar_filmweek@2x.png in Resources */,
@@ -1726,6 +1743,7 @@
 				52EFF7F819C368C00059A0E3 /* program_avatar_bbc-world-service@2x.png in Resources */,
 				52EFF82619C368C00059A0E3 /* program_avatar_moth-radio-hour.png in Resources */,
 				76EF5E8A193E8D6B00568A9D /* Storyboard.storyboard in Resources */,
+				257479B61B6C205600F72AF6 /* kpcc-logo.png in Resources */,
 				254CC69B1A23A7A600560805 /* onboarding-tile@2x.jpg in Resources */,
 				25F30AE31AF98F1A00F27187 /* icon-up-next.png in Resources */,
 				25BBCD781A892D730015071E /* SCPRScrubbingUIViewController.xib in Resources */,
@@ -1747,6 +1765,7 @@
 				52EFF85819C368C00059A0E3 /* program_avatar_world@2x.png in Resources */,
 				52EFF80019C368C00059A0E3 /* program_avatar_car-talk@2x.png in Resources */,
 				258E8E031A16AA3900675E68 /* Wood_Crash.mp3 in Resources */,
+				257479BB1B6C21FE00F72AF6 /* icon-lock-white@2x.png in Resources */,
 				52EFF88919C3BC020059A0E3 /* item-chevron-right@2x.png in Resources */,
 				761CC5A4195A2878006A6C7C /* Testflight-Info.plist in Resources */,
 				25F30AEF1AFAB6B700F27187 /* SCPRUpcomingProgramViewController.xib in Resources */,
@@ -1772,6 +1791,7 @@
 				52D0FC3819D20D29009AECEE /* program_avatar_the-frame@2x.png in Resources */,
 				B5F9F74B1ABCE8FD00115DB3 /* icon-stopwatch.png in Resources */,
 				25F30AF61AFAB89600F27187 /* SCPRScheduleTableViewCell.xib in Resources */,
+				257479B71B6C205600F72AF6 /* kpcc-logo@2x.png in Resources */,
 				768C06601995905D00F829EB /* chevron_down@2x.png in Resources */,
 				768C0671199590CC00F829EB /* FreigSanProBlkIt.otf in Resources */,
 				52CC6D6919D112F400C67322 /* SCPRProgramsListViewController.xib in Resources */,

@@ -39,6 +39,8 @@
         self.settings = nil;
     }
     
+    _lock = [A0Lock newLock];
+    
     NSData *data = [[NSUserDefaults standardUserDefaults] objectForKey:@"settings"];
     if ( data ) {
         self.settings = (Settings*)[NSKeyedUnarchiver unarchiveObjectWithData:data];
@@ -518,6 +520,10 @@
 - (SSOType)userLoginType {
     // TODO: Make this actually work
     return SSOTypeNone;
+}
+
+- (void)loginWithCredentials:(NSDictionary *)credentials completion:(CompletionBlockWithValue)completion {
+    
 }
 
 

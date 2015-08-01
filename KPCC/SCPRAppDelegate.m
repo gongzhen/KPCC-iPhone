@@ -41,6 +41,8 @@
     NSDictionary *globalConfig = [[NSDictionary alloc] initWithContentsOfFile:path];
     
     [[AnalyticsManager shared] setup];
+    A0Lock *lock = [[UXmanager shared] lock];
+    [lock applicationLaunchedWithOptions:launchOptions];
     
 #ifndef PRODUCTION
     //[[UXmanager shared].settings setUserHasViewedOnboarding:NO];
@@ -250,6 +252,12 @@
     
     [self fireAlarmClock];
     
+}
+
+- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation {
+    A0Lock *lock = [[UXmanager shared] lock];
+    [lock handleURL:url sourceApplication:sourceApplication];
+    return YES;
 }
 
 - (void)application:(UIApplication *)application handleActionWithIdentifier:(NSString *)identifier forLocalNotification:(UILocalNotification *)notification completionHandler:(void (^)())completionHandler {

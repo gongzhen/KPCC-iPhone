@@ -15,6 +15,8 @@ typedef NS_ENUM(NSInteger, SculptingStyle) {
     SculptingStyleClearWithBorder
 };
 
+#define kGlobalSpinnerTag 29384
+#define WSPIN [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite]
 
 @interface DesignManager : NSObject
 
@@ -46,6 +48,7 @@ typedef NS_ENUM(NSInteger, SculptingStyle) {
 - (UIFont*)proBold:(CGFloat)size;
 - (UIFont*)proLight:(CGFloat)size;
 - (UIFont*)proMedium:(CGFloat)size;
+- (UIFont*)proBookItalic:(CGFloat)size;
 
 - (void)normalizeBar;
 - (void)treatBar;
@@ -60,8 +63,10 @@ typedef NS_ENUM(NSInteger, SculptingStyle) {
 @property (nonatomic, strong) UIImage *currentBlurredLiveImage;
 @property (nonatomic, strong) NSDictionary *attributes;
 @property (nonatomic, strong) UIView *navbarMask;
-
+@property (nonatomic, weak) UIView *hiddenAccessory;
 @property (nonatomic, weak) UINavigationBar *hiddenNavBar;
+
+- (void)switchAccessoryForSpinner:(UIActivityIndicatorView *)spinner toReplace:(UIView *)toReplace callback:(CompletionBlock)callback;
 
 #ifdef TEST_PROGRAM_IMAGE
 @property (nonatomic,strong) NSString *currentSlug;

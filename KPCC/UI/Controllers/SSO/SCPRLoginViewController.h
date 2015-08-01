@@ -26,14 +26,18 @@ typedef NS_ENUM(NSUInteger, SSOStateType) {
 @property (nonatomic, strong) IBOutlet UIButton *signInButton;
 @property (nonatomic, strong) IBOutlet UIButton *signUpButton;
 @property (nonatomic, strong) IBOutlet UIButton *closeButton;
+@property (nonatomic, strong) IBOutlet UIButton *backButton;
 @property (nonatomic, strong) IBOutlet UIImageView *kpccLogoImageView;
 @property (nonatomic, strong) IBOutlet UILabel *signInLabel;
 @property (nonatomic, strong) IBOutlet NSLayoutConstraint *tableTopAnchor;
-
+@property (nonatomic, strong) IBOutlet UILabel *createAccountCaptionLabel;
+@property (nonatomic, strong) UITapGestureRecognizer *dismissalTapper;
+@property BOOL transitioning;
 
 @property (nonatomic, strong) SCPRSSOInputFieldCell *emailCell;
 @property (nonatomic, strong) SCPRSSOInputFieldCell *passwordCell;
 @property (nonatomic, strong) SCPRSSOInputFieldCell *confirmationCell;
+@property (nonatomic, weak) SCPRSSOInputFieldCell *targetedCell;
 
 @property SSOStateType currentState;
 

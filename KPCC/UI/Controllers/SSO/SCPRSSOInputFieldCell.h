@@ -22,6 +22,7 @@ typedef NS_ENUM(NSUInteger, SSOInputFieldType) {
 @property (nonatomic, strong) IBOutlet UIView *inputSeatView;
 @property (nonatomic, strong) IBOutlet NSLayoutConstraint *fieldLeftAnchor;
 
+@property (nonatomic) BOOL signup;
 @property (nonatomic) BOOL inputting;
 
 @property SSOInputFieldType type;

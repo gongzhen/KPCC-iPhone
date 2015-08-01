@@ -320,6 +320,12 @@ static DesignManager *singleton = nil;
             break;
         }
         case SculptingStyleNormal:
+        {
+            [button setTitleColor:[UIColor whiteColor]
+                         forState:UIControlStateNormal];
+            [button setTitleColor:[[UIColor virtualWhiteColor] translucify:0.75]
+                         forState:UIControlStateHighlighted];
+        }
         default:
         {
             
@@ -453,6 +459,10 @@ static DesignManager *singleton = nil;
     return [UIFont fontWithName:@"FreightSansProBook-Regular" size:size];
 }
 
+- (UIFont*)proBookItalic:(CGFloat)size {
+    return [UIFont fontWithName:@"FreightSansProBook-Italic" size:size];
+}
+
 - (UIFont*)proBold:(CGFloat)size {
     return [UIFont fontWithName:@"FreightSansProSemibold-Regular" size:size];
 
@@ -480,6 +490,33 @@ static DesignManager *singleton = nil;
     [[UINavigationBar appearance] setBarTintColor:[UIColor kpccOrangeColor]];
     [[UINavigationBar appearance] setTitleTextAttributes:self.attributes];
     
+}
+
+#pragma mark - Utilities
+- (void)switchAccessoryForSpinner:(UIActivityIndicatorView *)spinner toReplace:(UIView *)toReplace callback:(CompletionBlock)callback {
+    if ( !spinner ) {
+        spinner = WSPIN;
+    }
+    
+    UIView *incumbent = [toReplace.superview viewWithTag:kGlobalSpinnerTag];
+    if ( incumbent ) {
+        [incumbent removeFromSuperview];
+    }
+    
+    spinner.alpha = 0.0;
+    spinner.center = toReplace.center;
+    spinner.tag = kGlobalSpinnerTag;
+    [toReplace.superview addSubview:spinner];
+    [UIView animateWithDuration:0.25 animations:^{
+        toReplace.alpha = 0.0;
+        [spinner startAnimating];
+        [spinner setAlpha:1.0];
+    } completion:^(BOOL finished) {
+        self.hiddenAccessory = toReplace;
+        if ( callback ) {
+            dispatch_async(dispatch_get_main_queue(), callback);
+        }
+    }];
 }
 
 @end

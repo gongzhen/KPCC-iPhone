@@ -10,6 +10,8 @@
 #import "Settings.h"
 #import "SCPRAppDelegate.h"
 #import <AVFoundation/AVFoundation.h>
+#import <Lock/Lock.h>
+#import <libextobjc/EXTScope.h>
 
 @class SCPROnboardingViewController;
 @class SCPRMasterViewController;
@@ -38,6 +40,7 @@ typedef NS_ENUM(NSUInteger, SSOType) {
 @property (nonatomic,strong) NSOperationQueue *fadeQueue;
 @property (nonatomic,strong) NSMutableDictionary *committedActions;
 @property (nonatomic,strong) NSDate *operationBeganDate;
+@property (readonly, nonatomic) A0Lock *lock;
 
 + (instancetype)shared;
 - (void)load;
@@ -79,5 +82,6 @@ typedef NS_ENUM(NSUInteger, SSOType) {
 
 // SSO
 - (SSOType)userLoginType;
+- (void)loginWithCredentials:(NSDictionary*)credentials completion:(CompletionBlockWithValue)completion;
 
 @end
