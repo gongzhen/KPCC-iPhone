@@ -14,6 +14,13 @@ typedef NS_ENUM(NSUInteger, SSOStateType) {
     SSOStateTypeSignUp
 };
 
+typedef NS_ENUM(NSUInteger, SSOValidationResult) {
+    SSOValidationResultOK = 0,
+    SSOValidationResultInvalidEmail,
+    SSOValidationResultPasswordTooShort,
+    SSOValidationResultPasswordsDontMatch
+};
+
 @class SCPRSSOInputFieldCell;
 
 @interface SCPRLoginViewController : UIViewController<UITableViewDataSource,UITableViewDelegate,UITextFieldDelegate>
@@ -42,5 +49,6 @@ typedef NS_ENUM(NSUInteger, SSOStateType) {
 @property SSOStateType currentState;
 
 - (void)primeForState:(SSOStateType)type animated:(BOOL)animated;
+- (SSOValidationResult)validateInput;
 
 @end

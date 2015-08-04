@@ -446,9 +446,7 @@ setForOnDemandUI;
             self.originalFrames[@"playerControls"] = @(self.playerControlsBottomYConstraint.constant);
             self.originalFrames[@"programTitle"] = @(self.programTitleYConstraint.constant);
             self.originalFrames[@"liveRewind"] = @(self.liveRewindBottomYConstraint.constant);
-            
-
-            
+        
         }
     }];
     

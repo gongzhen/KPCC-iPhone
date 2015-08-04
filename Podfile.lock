@@ -147,6 +147,7 @@ PODS:
     - Parse (~> 1.7.5.3)
   - pop (1.0.7)
   - PSAlertView (2.0.3)
+  - SimpleKeychain (0.4.0)
   - TWReverseAuth (0.1.1):
     - LUKeychainAccess
     - OAuthCore
@@ -163,11 +164,13 @@ DEPENDENCIES:
   - Lock (~> 1.12)
   - Lock-Facebook (~> 2.0)
   - Lock-Twitter (~> 1.0)
+  - Lock/Core (~> 1.16)
   - Mixpanel (~> 2.7)
   - NewRelicAgent
   - Parse (~> 1.6)
   - ParseCrashReporting
   - pop (~> 1.0)
+  - SimpleKeychain
   - XMLDictionary (~> 1.4)
 
 SPEC CHECKSUMS:
@@ -201,6 +204,7 @@ SPEC CHECKSUMS:
   ParseCrashReporting: 36d2e2770d7502d943b81c013acd5193946ced46
   pop: 628ffc631644601567ee8bfaaaea493ebd7d0923
   PSAlertView: 16d35f5dba549418492cf68a750d4f0dca21f4a2
+  SimpleKeychain: ed7fcbc2a235ad6919a3d2385ed4b44ab866d874
   TWReverseAuth: d2deef3521fa6bee32eabab67f114c2c4a53d4f5
   XMLDictionary: f9f51601ba76678b594ab485f2b00ec1fed23724
 

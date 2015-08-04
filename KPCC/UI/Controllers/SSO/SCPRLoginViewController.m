@@ -12,6 +12,7 @@
 #import "UIButton+Additions.h"
 #import "SCPRSSOInputFieldCell.h"
 #import "Utils.h"
+#import "UXmanager.h"
 
 #define kTallHeight 93.0f
 #define kShortHeight 63.0f
@@ -42,6 +43,8 @@
     self.confirmationCell.selectionStyle = UITableViewCellSelectionStyleNone;
     self.signUpFooterCell.selectionStyle = UITableViewCellSelectionStyleNone;
     
+
+    
     [self.createAccountCaptionLabel proBookFontize];
     
     [self.signUpButton addTarget:self
@@ -62,6 +65,11 @@
     
     [self primeForState:SSOStateTypeIdle animated:NO];
     
+#ifdef DEBUG
+    self.emailCell.emailTextField.text = @"bhochberg@scpr.org";
+    self.passwordCell.emailTextField.text = @"KPCCDev#474";
+    self.confirmationCell.emailTextField.text = @"KPCCDev#474";
+#endif
     // Do any additional setup after loading the view from its nib.
 }
 
@@ -135,8 +143,13 @@
         
     }
     if ( type == SSOStateTypeSignUp ) {
+#ifdef DEBUG
         self.signInButton.alpha = 0.45f;
         self.signInButton.userInteractionEnabled = NO;
+#else
+        self.signInButton.alpha = 1.0f;
+        self.signInButton.userInteractionEnabled = YES;
+#endif
         self.twitterButton.alpha = 0.0f;
         self.facebookButton.alpha = 0.0f;
         self.orLabel.alpha = 0.0f;
@@ -214,13 +227,36 @@
     }
 }
 
+- (SSOValidationResult)validateInput {
+    return SSOValidationResultOK;
+    // TODO: Make this work
+}
+
 #pragma mark - Event handling
 - (void)signInTapped {
-    [[DesignManager shared] switchAccessoryForSpinner:WSPIN toReplace:self.signInButton callback:^{
-        
-        
-        
-    }];
+    SSOValidationResult validationResult = [self validateInput];
+    
+    if ( validationResult == SSOValidationResultOK ) {
+        [[DesignManager shared] switchAccessoryForSpinner:WSPIN toReplace:self.signInButton callback:^{
+            [[UXmanager shared] loginWithCredentials:@{ @"email" : self.emailCell.emailTextField.text,
+                                                        @"password" : self.passwordCell.emailTextField.text }
+                                          completion:^(id returnedObject) {
+                                              
+                                              if ( returnedObject ) {
+                                                  // Success
+                                                  NSDictionary *tokens = (NSDictionary*)returnedObject;
+                                                  
+                                              } else {
+                                                  // Failure
+                                                  int x = 1;
+                                                  x++;
+                                              }
+                                              
+                                          }];
+        }];
+    } else {
+        // TODO: Handle bad input
+    }
 }
 
 - (void)facebookTapped {
@@ -242,7 +278,14 @@
 }
 
 - (void)createTapped {
-    
+    SSOValidationResult validationResult = [self validateInput];
+    if ( validationResult == SSOValidationResultOK ) {
+        [[DesignManager shared] switchAccessoryForSpinner:WSPIN toReplace:self.signInButton callback:^{
+            [[UXmanager shared] createUserWithMetadata:@{ @"email" : self.emailCell.emailTextField.text,
+                                                          @"password" : self.passwordCell.emailTextField.text }];
+            
+        }];
+    }
 }
 
 - (void)backTapped {

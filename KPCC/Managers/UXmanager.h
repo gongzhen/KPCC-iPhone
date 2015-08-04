@@ -12,6 +12,7 @@
 #import <AVFoundation/AVFoundation.h>
 #import <Lock/Lock.h>
 #import <libextobjc/EXTScope.h>
+#import <SimpleKeychain/A0SimpleKeychain.h>
 
 @class SCPROnboardingViewController;
 @class SCPRMasterViewController;
@@ -41,6 +42,7 @@ typedef NS_ENUM(NSUInteger, SSOType) {
 @property (nonatomic,strong) NSMutableDictionary *committedActions;
 @property (nonatomic,strong) NSDate *operationBeganDate;
 @property (readonly, nonatomic) A0Lock *lock;
+@property (nonatomic, strong) A0SimpleKeychain *store;
 
 + (instancetype)shared;
 - (void)load;
@@ -82,6 +84,7 @@ typedef NS_ENUM(NSUInteger, SSOType) {
 
 // SSO
 - (SSOType)userLoginType;
+- (void)createUserWithMetadata:(NSDictionary*)metadata;
 - (void)loginWithCredentials:(NSDictionary*)credentials completion:(CompletionBlockWithValue)completion;
 
 @end

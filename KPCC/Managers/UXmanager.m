@@ -40,6 +40,7 @@
     }
     
     _lock = [A0Lock newLock];
+    _store = [A0SimpleKeychain keychainWithService:@"Auth0"];
     
     NSData *data = [[NSUserDefaults standardUserDefaults] objectForKey:@"settings"];
     if ( data ) {
@@ -523,7 +524,96 @@
 }
 
 - (void)loginWithCredentials:(NSDictionary *)credentials completion:(CompletionBlockWithValue)completion {
+    NSString *email = credentials[@"email"];
+    NSString *password = credentials[@"password"];
     
+    A0Lock *lock = [self lock];
+    A0APIClient *client = [lock apiClient];
+    A0APIClientAuthenticationSuccess success = ^(A0UserProfile *profile, A0Token *token) {
+        NSLog(@"We did it!. Logged in with Auth0.");
+        if ( completion ) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                completion(@{ @"profile" : profile, @"token" : token });
+            });
+        }
+    };
+    
+    A0AuthParameters *params = [A0AuthParameters newDefaultParams];
+    params[A0ParameterConnection] = @"Username-Password-Authentication"; // Or your configured DB connection
+   
+    [client loginWithUsername:email
+                     password:password
+                   parameters:params
+                      success:success
+                      failure:^(NSError *error) {
+                          
+                          if ( completion ) {
+                              dispatch_async(dispatch_get_main_queue(), ^{
+                                  completion(nil);
+                              });
+                          }
+                          
+                          NSLog(@"Error : %@",[error localizedDescription]);
+                          
+                      }];
+    
+}
+
+- (void)createUserWithMetadata:(NSDictionary *)metadata {
+    
+    if ( !metadata[@"connection"] ) {
+        NSMutableDictionary *revised = [metadata mutableCopy];
+        revised[@"connection"] = @"Username-Password-Authentication";
+        metadata = [NSDictionary dictionaryWithDictionary:revised];
+    }
+    
+    NSError *jsonError = nil;
+    NSData *json = [NSJSONSerialization dataWithJSONObject:metadata
+                                                   options:NSJSONWritingPrettyPrinted
+                                                     error:&jsonError];
+    NSString *jsonString = [[NSString alloc] initWithData:json
+                                                 encoding:NSUTF8StringEncoding];
+    NSLog(@"JSON Body : %@",jsonString);
+    
+    NSString *a0apiStr = [NSString stringWithFormat:@"https://kpcc.auth0.com/api/v2/users"];
+    
+    NSDictionary *globalConfig = [Utils globalConfig];
+    NSString *token = globalConfig[@"Auth0"][@"POST"];
+    NSMutableURLRequest *mru = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:a0apiStr]];
+    [mru setHTTPMethod:@"POST"];
+    [mru setHTTPBody:json];
+    [mru setValue:@"application/json" forHTTPHeaderField:@"Accept"];
+    [mru setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+    [mru setValue:[NSString stringWithFormat:@"%ld", (long)[json length]] forHTTPHeaderField:@"Content-Length"];
+    [mru setValue:[NSString stringWithFormat:@"Bearer %@", token] forHTTPHeaderField:@"Authorization"];
+    [NSURLConnection sendAsynchronousRequest:mru queue:[NSOperationQueue new]
+                           completionHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError) {
+                               
+                               if ( connectionError ) {
+                                   NSLog(@"Problems : %@",[connectionError userInfo]);
+                               }
+                               
+                               if ( [(NSHTTPURLResponse*)response statusCode] == 201 ) {
+                                   if ( data ) {
+                                       NSString *userData = [[NSString alloc] initWithData:data
+                                                                                  encoding:NSUTF8StringEncoding];
+                                       NSLog(@"User data : %@",userData);
+                                   }
+                               } else {
+                                   if ( data ) {
+                                       NSString *userData = [[NSString alloc] initWithData:data
+                                                                                  encoding:NSUTF8StringEncoding];
+                                       NSLog(@"Response fails with %ld : %@",(long)[(NSHTTPURLResponse*)response statusCode],
+                                             userData);
+                                   }
+                                  
+                               }
+                               
+
+                               int x = 1;
+                               x++;
+                               
+                           }];
 }
 
 
