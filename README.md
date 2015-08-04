@@ -13,32 +13,117 @@ Config
   Here's what that might look like for you:
   ```xml
   <?xml version="1.0" encoding="UTF-8"?>
-  <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-  <plist version="1.0">
-  <dict>
-    <key>Flurry</key>
-    <dict>
-      <key>DebugKey</key>
-      <string>*****</string>
-      <key>ProductionKey</key>
-      <string>*****</string>
-    <dict/>
-    <key>TestFlight</key>
-    <dict>
-      <key>iPadKey</key>
-      <string>*****</string>
-      <key>iPhoneKey</key>
-      <string>*****</string>
-    </dict>
-    <key>Parse</key>
-    <dict>
-      <key>ClientKey</key>
-      <string>*****</string>
-      <key>ApplicationId</key>
-      <string>*****</string>
-    </dict>
-  </dict>
-  </plist>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Kochava</key>
+	<dict>
+		<key>AppKey</key>
+		<string>...</string>
+	</dict>
+	<key>LinkedIn</key>
+	<dict>
+		<key>AppKey</key>
+		<string></string>
+		<key>ClientSecret</key>
+		<string></string>
+	</dict>
+	<key>Twitter</key>
+	<dict>
+		<key>ConsumerKey</key>
+		<string></string>
+		<key>ConsumerSecret</key>
+		<string></string>
+	</dict>
+	<key>Readability</key>
+	<dict>
+		<key>ApiKey</key>
+		<string></string>
+	</dict>
+	<key>Mixpanel</key>
+	<dict>
+		<key>SandboxToken</key>
+		<string>...</string>
+		<key>ProductionToken</key>
+		<string>...</string>
+		<key>BetaToken</key>
+		<string>...</string>
+	</dict>
+	<key>Desk</key>
+	<dict>
+		<key>AuthPassword</key>
+		<string>...</string>
+		<key>AuthUser</key>
+		<string>...</string>
+	</dict>
+	<key>AdSettings</key>
+	<dict>
+		<key>AdGtpId</key>
+		<string></string>
+		<key>VendorId</key>
+		<string></string>
+	</dict>
+	<key>Flurry</key>
+	<dict>
+		<key>ProductionKey</key>
+		<string>...</string>
+		<key>DebugKey</key>
+		<string>...</string>
+	</dict>
+	<key>TestFlight</key>
+	<dict>
+		<key>AppToken</key>
+		<string>...</string>
+	</dict>
+	<key>StreamMachine</key>
+	<dict>
+		<key>standard</key>
+		<string>...</string>
+		<key>xfs</key>
+		<string>...</string>
+		<key>test</key>
+		<string>...</string>
+		<key>external-test</key>
+		<string>...</string>
+		<key>xcast-mp3</key>
+		<string>...</string>
+		<key>xcast-aac</key>
+		<string>...</string>
+	</dict>
+	<key>SCPR</key>
+	<dict>
+		<key>staging</key>
+		<string>...</string>
+		<key>production</key>
+		<string>...</string>
+	</dict>
+	<key>NewRelic</key>
+	<dict>
+		<key>production</key>
+		<string>...</string>
+	</dict>
+	<key>GoogleAnalytics</key>
+	<dict>
+		<key>Sandbox</key>
+		<string>...</string>
+		<key>Production</key>
+		<string>...</string>
+	</dict>
+	<key>Parse</key>
+	<dict>
+		<key>ClientKey</key>
+		<string>...</string>
+		<key>ApplicationId</key>
+		<string>...</string>
+	</dict>
+	<key>Auth0</key>
+	<dict>
+		<key>POST</key>
+		<string>...</string>
+	</dict>
+</dict>
+</plist>
+
   ```
 
 Dependencies
