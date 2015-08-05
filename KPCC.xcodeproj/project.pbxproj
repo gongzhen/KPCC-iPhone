@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		25263A881A32669E00BD5FF9 /* onboarding3.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 25263A871A32669E00BD5FF9 /* onboarding3.mp3 */; };
+		253030151B717CDD00B88468 /* SCPRProfileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 253030131B717CDD00B88468 /* SCPRProfileViewController.m */; };
+		253030161B717CDD00B88468 /* SCPRProfileViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 253030141B717CDD00B88468 /* SCPRProfileViewController.xib */; };
 		2537D8BD1A8BD7B700481CF8 /* SCPRTouchableScrubberView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2537D8BC1A8BD7B700481CF8 /* SCPRTouchableScrubberView.m */; };
 		2546AF6F1AB0CB6800E11D5B /* SCPRProgramTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2546AF6E1AB0CB6800E11D5B /* SCPRProgramTableViewCell.xib */; };
 		254831C11A41555700963078 /* UIView+PrintDimensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 254831C01A41555700963078 /* UIView+PrintDimensions.m */; };
@@ -332,6 +334,9 @@
 /* Begin PBXFileReference section */
 		1B29166D1072B92AE58CD1BB /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 		25263A871A32669E00BD5FF9 /* onboarding3.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = onboarding3.mp3; path = Audio/onboarding3.mp3; sourceTree = "<group>"; };
+		253030121B717CDD00B88468 /* SCPRProfileViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCPRProfileViewController.h; path = SSO/SCPRProfileViewController.h; sourceTree = "<group>"; };
+		253030131B717CDD00B88468 /* SCPRProfileViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SCPRProfileViewController.m; path = SSO/SCPRProfileViewController.m; sourceTree = "<group>"; };
+		253030141B717CDD00B88468 /* SCPRProfileViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = SCPRProfileViewController.xib; path = SSO/SCPRProfileViewController.xib; sourceTree = "<group>"; };
 		2537D8BB1A8BD7B700481CF8 /* SCPRTouchableScrubberView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCPRTouchableScrubberView.h; path = Scrubbing/SCPRTouchableScrubberView.h; sourceTree = "<group>"; };
 		2537D8BC1A8BD7B700481CF8 /* SCPRTouchableScrubberView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SCPRTouchableScrubberView.m; path = Scrubbing/SCPRTouchableScrubberView.m; sourceTree = "<group>"; };
 		2546AF6E1AB0CB6800E11D5B /* SCPRProgramTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SCPRProgramTableViewCell.xib; sourceTree = "<group>"; };
@@ -791,6 +796,9 @@
 				257479A61B6ACEAC00F72AF6 /* SCPRSSOInputFieldCell.h */,
 				257479A71B6ACEAC00F72AF6 /* SCPRSSOInputFieldCell.m */,
 				257479A81B6ACEAC00F72AF6 /* SCPRSSOInputFieldCell.xib */,
+				253030121B717CDD00B88468 /* SCPRProfileViewController.h */,
+				253030131B717CDD00B88468 /* SCPRProfileViewController.m */,
+				253030141B717CDD00B88468 /* SCPRProfileViewController.xib */,
 			);
 			name = "SSO / Profile";
 			sourceTree = "<group>";
@@ -1613,6 +1621,7 @@
 				768C0675199590CC00F829EB /* FreigSanProBoldIt.otf in Resources */,
 				523E86D219C8A292006FC366 /* SCPRProgramDetailViewController.xib in Resources */,
 				76A308E518C8FB940065D4B1 /* Images.xcassets in Resources */,
+				253030161B717CDD00B88468 /* SCPRProfileViewController.xib in Resources */,
 				52CF917619FEF306007BCFA8 /* btn_play.png in Resources */,
 				52CF917719FEF306007BCFA8 /* btn_play@2x.png in Resources */,
 				768C0679199590CC00F829EB /* FreigSanProBookIt.otf in Resources */,
@@ -1941,6 +1950,7 @@
 				25B25BAD1B1D093D00ABE8B4 /* SCPRPledgePINViewController.m in Sources */,
 				2594B53F1A30F8410013B93A /* SCPRKeyboardToolbar.m in Sources */,
 				25BBCD7D1A892DA30015071E /* SCPRScrubberViewController.m in Sources */,
+				253030151B717CDD00B88468 /* SCPRProfileViewController.m in Sources */,
 				2537D8BD1A8BD7B700481CF8 /* SCPRTouchableScrubberView.m in Sources */,
 				25BBCD771A892D730015071E /* SCPRScrubbingUIViewController.m in Sources */,
 				25F2BC7E1A3B9B4D00108F73 /* SCPRGenericAvatarViewController.m in Sources */,

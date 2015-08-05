@@ -43,7 +43,12 @@
     self.confirmationCell.selectionStyle = UITableViewCellSelectionStyleNone;
     self.signUpFooterCell.selectionStyle = UITableViewCellSelectionStyleNone;
     
-
+#ifdef DEBUG
+    self.longPressGestureRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self
+                                                                                    action:@selector(cheat)];
+    self.longPressGestureRecognizer.minimumPressDuration = 4.0f;
+    [self.mainTable addGestureRecognizer:self.longPressGestureRecognizer];
+#endif
     
     [self.createAccountCaptionLabel proBookFontize];
     
@@ -65,12 +70,23 @@
     
     [self primeForState:SSOStateTypeIdle animated:NO];
     
+
+    // Do any additional setup after loading the view from its nib.
+}
+
+- (void)cheat {
 #ifdef DEBUG
+    [[UXmanager shared].settings setSsoKey:nil];
+    [[UXmanager shared].settings setSsoLoginType:SSOTypeNone];
+    [[UXmanager shared] persist];
+    
     self.emailCell.emailTextField.text = @"bhochberg@scpr.org";
     self.passwordCell.emailTextField.text = @"KPCCDev#474";
     self.confirmationCell.emailTextField.text = @"KPCCDev#474";
+    
+    self.signInButton.alpha = 1.0f;
+    self.signInButton.userInteractionEnabled = YES;
 #endif
-    // Do any additional setup after loading the view from its nib.
 }
 
 - (void)didReceiveMemoryWarning {
@@ -179,8 +195,6 @@
     [[DesignManager shared] sculptButton:self.signUpButton
                                withStyle:SculptingStyleClearWithBorder
                                  andText:@"Sign Up"];
-    
-
 
     // Global
     self.mainTable.backgroundColor = [UIColor clearColor];
@@ -245,11 +259,11 @@
                                               if ( returnedObject ) {
                                                   // Success
                                                   NSDictionary *tokens = (NSDictionary*)returnedObject;
+                                                  [[UXmanager shared] storeTokens:tokens type:SSOTypeKPCC];
                                                   
                                               } else {
                                                   // Failure
-                                                  int x = 1;
-                                                  x++;
+                                                  
                                               }
                                               
                                           }];
@@ -282,7 +296,35 @@
     if ( validationResult == SSOValidationResultOK ) {
         [[DesignManager shared] switchAccessoryForSpinner:WSPIN toReplace:self.signInButton callback:^{
             [[UXmanager shared] createUserWithMetadata:@{ @"email" : self.emailCell.emailTextField.text,
-                                                          @"password" : self.passwordCell.emailTextField.text }];
+                                                          @"password" : self.passwordCell.emailTextField.text } completion:^(id returnedObject) {
+                                                              
+                                                              [[DesignManager shared] restoreControlFromSpinner];
+                                                              
+                                                              if ( returnedObject ) {
+                                                                  
+                                                                  NSDictionary *profile = (NSDictionary*)returnedObject;
+                                                                  NSString *email = profile[@"email"];
+                                                                  NSString *password = self.passwordCell.emailTextField.text;
+                                                                  [[UXmanager shared] loginWithCredentials:@{ @"email" : email,
+                                                                                                              @"password" : password }
+                                                                                                completion:^(id returnedObject) {
+                                                                                                    
+                                                                                                    if ( returnedObject ) {
+                                                                                                        // Success
+                                                                                                        NSDictionary *tokens = (NSDictionary*)returnedObject;
+                                                                                                        [[UXmanager shared] storeTokens:tokens type:SSOTypeKPCC];
+                                                                                                        
+                                                                                                    } else {
+                                                                                                        // Failure
+                                                                                                        
+                                                                                                    }
+                                                                                                    
+                                                                                                }];
+                                                                  
+                                                              } else {
+                                                                  
+                                                              }
+                                                          }];
             
         }];
     }

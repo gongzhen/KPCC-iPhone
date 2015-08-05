@@ -45,6 +45,9 @@
     [lock applicationLaunchedWithOptions:launchOptions];
     
 #ifndef PRODUCTION
+    //[[UXmanager shared].settings setSsoLoginType:SSOTypeNone];
+    //[[UXmanager shared].settings setSsoKey:nil];
+    //[[UXmanager shared] persist];
     //[[UXmanager shared].settings setUserHasViewedOnboarding:NO];
     //[[UXmanager shared].settings setUserHasViewedOnDemandOnboarding:NO];
     //[[UXmanager shared].settings setUserHasSelectedXFS:NO];

@@ -67,6 +67,7 @@ typedef NS_ENUM(NSInteger, SculptingStyle) {
 @property (nonatomic, weak) UINavigationBar *hiddenNavBar;
 
 - (void)switchAccessoryForSpinner:(UIActivityIndicatorView *)spinner toReplace:(UIView *)toReplace callback:(CompletionBlock)callback;
+- (void)restoreControlFromSpinner;
 
 #ifdef TEST_PROGRAM_IMAGE
 @property (nonatomic,strong) NSString *currentSlug;

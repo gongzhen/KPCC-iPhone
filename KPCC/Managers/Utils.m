@@ -379,6 +379,11 @@ static char *alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz012
 
 }
 
++ (NSMutableDictionary*)sanitizeDictionary:(NSDictionary *)dictionary {
+    // TODO: Make this do something
+    return [dictionary mutableCopy];
+}
+
 + (void)crash {
     [NSException raise:NSGenericException format:@"Everything is ok. This is just a test crash."];
 }

@@ -519,4 +519,21 @@ static DesignManager *singleton = nil;
     }];
 }
 
+- (void)restoreControlFromSpinner {
+    
+    UIView *toRestore = (UIView*)self.hiddenAccessory;
+    UIView *spinner = [toRestore.superview viewWithTag:kGlobalSpinnerTag];
+    [UIView animateWithDuration:0.25 animations:^{
+        
+        toRestore.alpha = 1.0;
+        [spinner setAlpha:0.0];
+        
+    } completion:^(BOOL finished) {
+        
+        [spinner removeFromSuperview];
+        self.hiddenAccessory = nil;
+        
+    }];
+}
+
 @end

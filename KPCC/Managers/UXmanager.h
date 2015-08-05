@@ -17,7 +17,7 @@
 @class SCPROnboardingViewController;
 @class SCPRMasterViewController;
 
-typedef NS_ENUM(NSUInteger, SSOType) {
+typedef NS_ENUM(NSInteger, SSOType) {
     SSOTypeNone = 0,
     SSOTypeTwitter,
     SSOTypeFacebook,
@@ -84,7 +84,10 @@ typedef NS_ENUM(NSUInteger, SSOType) {
 
 // SSO
 - (SSOType)userLoginType;
-- (void)createUserWithMetadata:(NSDictionary*)metadata;
+- (void)createUserWithMetadata:(NSDictionary*)metadata completion:(CompletionBlockWithValue)completion;
 - (void)loginWithCredentials:(NSDictionary*)credentials completion:(CompletionBlockWithValue)completion;
+- (A0UserProfile*)a0profile;
+
+- (void)storeTokens:(NSDictionary*)tokenInfo type:(SSOType)type;
 
 @end

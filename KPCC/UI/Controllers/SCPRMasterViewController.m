@@ -29,6 +29,7 @@
 #import "SCPRBalloonViewController.h"
 #import "Utils.h"
 #import "SCPRLoginViewController.h"
+#import "SCPRProfileViewController.h"
 
 @import MessageUI;
 
@@ -3728,6 +3729,11 @@ setForOnDemandUI;
             
             if ( [[UXmanager shared] userLoginType] == SSOTypeNone ) {
                 
+                [[NSNotificationCenter defaultCenter] addObserver:self
+                                                         selector:@selector(pushToProfile)
+                                                             name:@"tokens-stored"
+                                                           object:nil];
+                
                 SCPRLoginViewController *login = [[SCPRLoginViewController alloc] initWithNibName:@"SCPRLoginViewController"
                                                                                            bundle:nil];
                 login.view.frame = CGRectMake(0.0f,0.0f,self.view.frame.size.width,
@@ -3736,9 +3742,12 @@ setForOnDemandUI;
                 [self presentViewController:login
                                    animated:YES
                                  completion:^{
+                                     self.userIsLoggingIn = YES;
                                      [login.view layoutIfNeeded];
                                  }];
                 
+            } else {
+                [self pushToProfile];
             }
             break;
         }
@@ -3764,6 +3773,37 @@ setForOnDemandUI;
     
     if ( closeMenu ) {
         [self decloakForMenu:YES];
+    }
+}
+
+- (void)pushToProfile {
+
+    if ( [[UXmanager shared].settings ssoLoginType] != SSOTypeNone ) {
+        
+        if ( self.userIsLoggingIn ) {
+            [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                            name:@"tokens-stored"
+                                                          object:nil];
+            [self dismissViewControllerAnimated:YES completion:^{
+                SCPRProfileViewController *profile = [[SCPRProfileViewController alloc] initWithNibName:@"SCPRProfileViewController"
+                                                                                             bundle:nil];
+                self.userIsLoggingIn = NO;
+                
+                profile.view = profile.view;
+                [profile setup];
+                
+                [self.navigationController pushViewController:profile animated:YES];
+            }];
+        } else {
+            SCPRProfileViewController *profile = [[SCPRProfileViewController alloc] initWithNibName:@"SCPRProfileViewController"
+                                                                                             bundle:nil];
+            
+            profile.view = profile.view;
+            [profile setup];
+            
+            [self.navigationController pushViewController:profile animated:YES];
+        }
+
     }
 }
 

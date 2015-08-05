@@ -51,7 +51,7 @@
     if ( type == SSOInputFieldTypePasswordConfirmation ) {
         self.emailTextField.secureTextEntry = YES;
         self.captionLabel.text = @"Confirm your password:";
-        self.iconImageView.alpha = 0.0f;
+        self.iconImageView.image = [UIImage imageNamed:@"icon-lock-white.png"];
         self.fieldLeftAnchor.constant = 12.0f;
         
         NSMutableAttributedString *aPlaceholder = [[NSMutableAttributedString alloc] initWithString:@"Confirm Password"

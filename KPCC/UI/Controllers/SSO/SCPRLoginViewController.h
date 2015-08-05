@@ -39,6 +39,8 @@ typedef NS_ENUM(NSUInteger, SSOValidationResult) {
 @property (nonatomic, strong) IBOutlet NSLayoutConstraint *tableTopAnchor;
 @property (nonatomic, strong) IBOutlet UILabel *createAccountCaptionLabel;
 @property (nonatomic, strong) UITapGestureRecognizer *dismissalTapper;
+@property (nonatomic, strong) UILongPressGestureRecognizer *longPressGestureRecognizer;
+
 @property BOOL transitioning;
 
 @property (nonatomic, strong) SCPRSSOInputFieldCell *emailCell;

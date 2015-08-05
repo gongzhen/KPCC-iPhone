@@ -30,6 +30,7 @@
     self.historyBeganAt = [aDecoder decodeObjectForKey:@"historyBeganAt"];
     self.userPoints = [aDecoder decodeObjectForKey:@"userPoints"];
     self.ssoKey = [aDecoder decodeObjectForKey:@"ssoKey"];
+    self.ssoLoginType = [aDecoder decodeIntegerForKey:@"ssoLoginType"];
     
     [[Utils del] setAlarmDate:self.alarmFireDate];
     
@@ -74,6 +75,8 @@
                   forKey:@"userPoints"];
     [aCoder encodeObject:self.ssoKey
                   forKey:@"ssoKey"];
+    
+    [aCoder encodeInteger:self.ssoLoginType forKey:@"ssoLoginType"];
     
 }
 

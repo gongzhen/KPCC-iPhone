@@ -12,6 +12,7 @@
 #import "SCPRMasterViewController.h"
 #import "SCPRNavigationController.h"
 #import "SessionManager.h"
+#import <Lock-Facebook/A0FacebookAuthenticator.h>
 
 @implementation UXmanager
 + (instancetype)shared {
@@ -41,6 +42,8 @@
     
     _lock = [A0Lock newLock];
     _store = [A0SimpleKeychain keychainWithService:@"Auth0"];
+    A0FacebookAuthenticator *facebook = [A0FacebookAuthenticator newAuthenticatorWithDefaultPermissions];
+    [_lock registerAuthenticators:@[facebook]];
     
     NSData *data = [[NSUserDefaults standardUserDefaults] objectForKey:@"settings"];
     if ( data ) {
@@ -519,8 +522,7 @@
 
 #pragma mark - SSO
 - (SSOType)userLoginType {
-    // TODO: Make this actually work
-    return SSOTypeNone;
+    return self.settings.ssoLoginType;
 }
 
 - (void)loginWithCredentials:(NSDictionary *)credentials completion:(CompletionBlockWithValue)completion {
@@ -559,7 +561,7 @@
     
 }
 
-- (void)createUserWithMetadata:(NSDictionary *)metadata {
+- (void)createUserWithMetadata:(NSDictionary *)metadata completion:(CompletionBlockWithValue)completion {
     
     if ( !metadata[@"connection"] ) {
         NSMutableDictionary *revised = [metadata mutableCopy];
@@ -598,6 +600,19 @@
                                        NSString *userData = [[NSString alloc] initWithData:data
                                                                                   encoding:NSUTF8StringEncoding];
                                        NSLog(@"User data : %@",userData);
+                                       
+
+                                       dispatch_async(dispatch_get_main_queue(), ^{
+                                           if ( completion ) {
+                                               NSError *jsonError = nil;
+                                               NSMutableDictionary *profile = [NSJSONSerialization JSONObjectWithData:data
+                                                                                                              options:NSJSONReadingMutableLeaves
+                                                                                                                error:&jsonError];
+                                               completion(profile);
+                                           }
+                                       });
+
+                                       
                                    }
                                } else {
                                    if ( data ) {
@@ -605,16 +620,38 @@
                                                                                   encoding:NSUTF8StringEncoding];
                                        NSLog(@"Response fails with %ld : %@",(long)[(NSHTTPURLResponse*)response statusCode],
                                              userData);
+                                       
+                                       if ( completion ) {
+                                           completion(nil);
+                                       }
                                    }
-                                  
                                }
                                
-
-                               int x = 1;
-                               x++;
                                
                            }];
 }
 
+- (void)storeTokens:(NSDictionary *)tokenInfo type:(SSOType)type {
+    A0Token *token = tokenInfo[@"token"];
+    A0UserProfile *profile = tokenInfo[@"profile"];
+    
+    A0SimpleKeychain *keychain = [A0SimpleKeychain keychainWithService:@"Auth0"];
+    [keychain setString:token.idToken forKey:@"id_token"];
+    [keychain setString:token.refreshToken forKey:@"refresh_token"];
+    [keychain setData:[NSKeyedArchiver archivedDataWithRootObject:profile]
+               forKey:@"profile"];
+    [self.settings setSsoKey:token.idToken];
+    [self.settings setSsoLoginType:type];
+    [[UXmanager shared] persist];
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"tokens-stored"
+                                                        object:nil];
+    
+}
+
+- (A0UserProfile*)a0profile {
+    A0SimpleKeychain *keychain = [A0SimpleKeychain keychainWithService:@"Auth0"];
+    return (A0UserProfile*)[NSKeyedUnarchiver unarchiveObjectWithData:[keychain dataForKey:@"profile"]];
+}
 
 @end
