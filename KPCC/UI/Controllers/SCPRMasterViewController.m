@@ -423,7 +423,11 @@ setForOnDemandUI;
     
     NSLog(@"Program Title Y Lock : %1.1f",self.programTitleYConstraint.constant);
     
-    [[NetworkManager shared] setupReachability];
+
+    [[AudioManager shared] loadXfsStreamUrlWithCompletion:^{
+        [[NetworkManager shared] setupReachability];
+    }];
+
     
     self.originalFrames = [NSMutableDictionary new];
     self.navigationItem.title = kMainLiveStreamTitle;

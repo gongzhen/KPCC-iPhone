@@ -877,10 +877,10 @@
     }
     
     return;
-    */
+    
     
 
-#ifdef DEBUG
+
 
     
     if ( self.numberOfChecks == 2 ) {
@@ -895,9 +895,8 @@
                                                             object:nil];
     }
     
+     */
 
-    
-#else
     NSString *endpoint = [NSString stringWithFormat:@"%@/schedule?pledge_status=true",kServerBase];
     NSURL *url = [NSURL URLWithString:endpoint];
     NSURLRequest *request = [NSURLRequest requestWithURL:url];
@@ -936,7 +935,6 @@
                                }
                                
                            }];
-#endif
  
     
 }
