@@ -19,6 +19,7 @@
 #import "UXmanager.h"
 #import "SCPRMasterViewController.h"
 #import "Bookmark.h"
+#import <Parse/Parse.h>
 
 static AudioManager *singleton = nil;
 static NSInteger kLocalSampleSize = 5;
@@ -38,7 +39,7 @@ static const NSString *ItemStatusContext;
             singleton.currentAudioMode = AudioModeNeutral;
             singleton.localBufferSample = [NSMutableDictionary new];
             singleton.frameCount = 1;
-
+            
             [[NSNotificationCenter defaultCenter] addObserver:singleton
                                                          selector:@selector(handleInterruption:)
                                                              name:AVAudioSessionInterruptionNotification
@@ -54,6 +55,29 @@ static const NSString *ItemStatusContext;
     return singleton;
 }
 
+- (void)loadXfsStreamUrlWithCompletion:(CompletionBlock)completion {
+    
+    PFQuery *settingsQuery = [PFQuery queryWithClassName:@"iPhoneSettings"];
+    [settingsQuery whereKey:@"settingName"
+             containsString:@"kpccPlusStream"];
+    [settingsQuery findObjectsInBackgroundWithBlock:^( NSArray *objects, NSError *error ) {
+       
+        if ( !error && [objects count] > 0 ) {
+            
+            PFObject *settings = [objects firstObject];
+            self.xfsStreamUrl = settings[@"settingValue"];
+            if ( completion ) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    completion();
+                });
+            }
+            
+        }
+        
+    }];
+    
+}
+
 - (NSString*)standardHlsStream {
     return [self streamingURL:YES
                       preskip:NO
@@ -67,7 +91,11 @@ static const NSString *ItemStatusContext;
     if ( hls ) {
         
         if ( [[UXmanager shared].settings userHasSelectedXFS] ) {
-            streamURL = streams[@"xfs"];
+            if ( self.xfsStreamUrl ) {
+                streamURL = self.xfsStreamUrl;
+            } else {
+                streamURL = streams[@"xfs"];
+            }
         } else {
             streamURL = streams[@"standard"];
         }
@@ -1709,6 +1737,18 @@ static const NSString *ItemStatusContext;
 }
 
 - (void)switchPlusMinusStreams {
+    
+    if ( [[UXmanager shared].settings userHasSelectedXFS] ) {
+        [self loadXfsStreamUrlWithCompletion:^{
+            [self finishSwitchPlusMinus];
+        }];
+    } else {
+        [self finishSwitchPlusMinus];
+    }
+
+}
+
+- (void)finishSwitchPlusMinus {
     if ( [self isActiveForAudioMode:AudioModeLive] ) {
         if ( self.seekWillEffectBuffer ) {
             

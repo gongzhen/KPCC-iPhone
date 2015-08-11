@@ -98,6 +98,7 @@ typedef NS_ENUM(NSUInteger, StreamStatus) {
 
 @property long latencyCorrection;
 
+@property (nonatomic,copy) NSString *xfsStreamUrl;
 
 @property (strong,nonatomic) NSDateFormatter *dateFormatter;
 @property (nonatomic,strong) NSOperationQueue *fadeQueue;
@@ -162,6 +163,7 @@ typedef NS_ENUM(NSUInteger, StreamStatus) {
 - (void)stopAudio;
 - (void)muteAudio;
 - (void)switchPlusMinusStreams;
+- (void)finishSwitchPlusMinus;
 - (void)unmuteAudio;
 - (void)buildStreamer:(NSString*)urlString;
 - (void)buildStreamer:(NSString*)urlString local:(BOOL)local;
@@ -244,6 +246,8 @@ typedef NS_ENUM(NSUInteger, StreamStatus) {
 - (BOOL)isActiveForAudioMode:(AudioMode)mode;
 - (void)invalidateTimeObserver;
 - (void)startObservingTime;
+
+- (void)loadXfsStreamUrlWithCompletion:(CompletionBlock)completion;
 
 - (NSString*)avPlayerSessionString;
 - (NSDate*)cookDateForActualSchedule:(NSDate*)date;
