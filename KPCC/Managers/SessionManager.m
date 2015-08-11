@@ -867,7 +867,7 @@
 #pragma mark - XFS
 - (void)xFreeStreamIsAvailableWithCompletion:(CompletionBlock)completion {
  
-
+    /*
     [self setXFreeStreamIsAvailable:NO];
     [[NSNotificationCenter defaultCenter] postNotificationName:@"pledge-drive-status-updated"
                                                         object:nil];
@@ -877,8 +877,9 @@
     }
     
     return;
+    */
     
-/*
+
 #ifdef DEBUG
 
     
@@ -936,7 +937,7 @@
                                
                            }];
 #endif
- */
+ 
     
 }
 
@@ -960,7 +961,9 @@
                 return;
             }
             
-            completion(@{ @"success" : objects.firstObject });
+            if ( objects.firstObject ) {
+                completion(@{ @"success" : objects.firstObject });
+            }
         }
         
     }];

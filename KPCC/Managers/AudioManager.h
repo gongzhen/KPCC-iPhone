@@ -190,6 +190,13 @@ typedef NS_ENUM(NSUInteger, StreamStatus) {
 @property BOOL ignoreDriftTolerance;
 @property BOOL calibrating;
 @property BOOL failureGate;
+
+@property BOOL playerNeedsToSeekToLive;
+@property BOOL playerNeedsToSeekGenerally;
+@property NSTimeInterval queuedTimeInterval;
+@property NSInteger queuedSeekType;
+@property (nonatomic, copy) CompletionBlock queuedCompletion;
+
 @property (nonatomic, copy) NSString *reasonToReportError;
 
 @property NSInteger skipCount;

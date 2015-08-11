@@ -1493,7 +1493,8 @@ setForOnDemandUI;
     self.scrubbingUI.flagAnchor = self.flagAnchor;
     self.scrubbingUI.currentProgressNeedleView = self.currentProgressNeedleView;
     self.scrubbingUI.currentProgressReadingLabel = self.currentProgressNeedleReadingLabel;
-   
+    self.scrubbingUI.scrubbingAvailable = YES;
+    
     if ( [Utils isThreePointFive] ) {
         self.topGapScrubbingAnchor.constant = 54.0f;
     }
@@ -1552,6 +1553,8 @@ setForOnDemandUI;
         [[AudioManager shared] currentAudioMode] != AudioModeLive ) {
         return;
     }
+    
+    if ( !self.scrubbingUI.scrubbingAvailable ) return;
     
     if ( [[SessionManager shared] sessionHasNoProgram] ) {
         return;

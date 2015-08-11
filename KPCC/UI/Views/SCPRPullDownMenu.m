@@ -58,7 +58,8 @@
                                                                         kMenuItemShortList,
                                                                         kMenuItemAlarm,
                                                                         kMenuItemDonate,
-                                                                        kMenuItemProfile,
+                                                                        /* TODO: When the rest of the SSO flow is complete, re-enable it in the menu
+                                                                         kMenuItemProfile,*/
                                                                         kMenuItemFeedback,
                                   
                                                                         //

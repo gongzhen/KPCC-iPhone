@@ -83,8 +83,10 @@ static AnalyticsManager *singleton = nil;
     // Optional: configure GAI options.
     GAI *gai = [GAI sharedInstance];
     gai.trackUncaughtExceptions = YES;  // report uncaught exceptions
-    gai.logger.logLevel = kGAILogLevelVerbose;  // remove before app release
-
+#ifndef PRODUCTION
+    gai.logger.logLevel = kGAILogLevelError;  // remove before app release
+#endif
+    
 #ifndef SUPPRESS_NIELSEN_TRACKING
     NSString *theAppVersion = [Utils prettyVersion];
     
