@@ -1470,22 +1470,30 @@ static const NSString *ItemStatusContext;
     
     [[SessionManager shared] setLocalLiveTime:0.0f];
     
-    self.localBufferSample = nil;
-    self.maxSeekableDate = nil;
-    self.minSeekableDate = nil;
-    self.seekWillEffectBuffer = NO;
-    self.waitForSeek = NO;
-    self.waitForOnDemandSeek = NO;
-    self.status = StreamStatusStopped;
-    self.currentAudioMode = AudioModeNeutral;
+    [self resetFlags];
+    
     self.audioPlayer = nil;
-    self.skipCount = 0;
     
 }
 
 - (void)resetPlayer {
     [self stopAudio];
     [self buildStreamer:kHLS];
+}
+
+- (void)resetFlags {
+    self.localBufferSample = nil;
+    self.maxSeekableDate = nil;
+    self.minSeekableDate = nil;
+    self.seekWillEffectBuffer = NO;
+    self.dropoutOccurred = NO;
+    self.playerNeedsToSeekGenerally = NO;
+    self.playerNeedsToSeekToLive = NO;
+    self.waitForSeek = NO;
+    self.waitForOnDemandSeek = NO;
+    self.status = StreamStatusStopped;
+    self.currentAudioMode = AudioModeNeutral;
+    self.skipCount = 0;
 }
 
 - (void)sanitizeFromOnboarding {
@@ -1504,7 +1512,6 @@ static const NSString *ItemStatusContext;
             url = [url stringByAppendingString:[NSString stringWithFormat:@"&ua=KPCCiPhone-%@", [Utils urlSafeVersion]]];
         }
     }
-    
     
     [[UXmanager shared] timeBegin];
     [self stopAudio];
@@ -1533,9 +1540,11 @@ static const NSString *ItemStatusContext;
 }
 
 - (void)playQueueItemWithUrl:(NSString *)url {
+    
 #ifdef DEBUG
     NSLog(@"playing queue item with url: %@", url);
 #endif
+    
     if ( !url ) {
         if ( [self.delegate respondsToSelector:@selector(onDemandAudioFailed)] ) {
             [self.delegate onDemandAudioFailed];
@@ -1546,7 +1555,6 @@ static const NSString *ItemStatusContext;
     [[SessionManager shared] startOnDemandSession];
     [[[Utils del] masterViewController] showOnDemandOnboarding];
     
-
     [self playAudioWithURL:url];
     
 }
@@ -1611,8 +1619,7 @@ static const NSString *ItemStatusContext;
     
     [self setUserPause:NO];
     
-    [[SessionManager shared] startAudioSession];
-    
+    [[SessionManager shared] startAudioSession];    
     [[SessionManager shared] setSessionPausedDate:nil];
     self.status = StreamStatusPlaying;
     

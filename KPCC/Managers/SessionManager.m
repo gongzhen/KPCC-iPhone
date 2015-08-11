@@ -1119,7 +1119,6 @@
 }
 
 - (void)processTimer:(NSTimer*)timer {
-
     [self setUpdaterArmed:YES];
     [self fetchCurrentProgram:^(id returnedObject) {
         
@@ -1141,6 +1140,7 @@
     
     self.timeAudioWasPutInBackground = [[NSDate date] timeIntervalSince1970];
     NSTimeInterval diff = self.timeAudioWasPutInBackground - sessionBegan;
+    
     [[AnalyticsManager shared] logEvent:eventName
                          withParameters:@{ @"secondsSinceSessionBegan" : @(diff) }
                                   timed:NO];
@@ -1157,8 +1157,8 @@
         
     } else {
         if ( [[AudioManager shared] status] != StreamStatusPaused ) {
-            [self checkProgramUpdate:NO];
             
+            [self checkProgramUpdate:NO];
             if ( [[AudioManager shared] isPlayingAudio] ) {
 
                 NSString *eventName = @"";
@@ -1170,14 +1170,12 @@
                 }
                 NSTimeInterval now = [[NSDate date] timeIntervalSince1970];
                 NSInteger diff = now - self.timeAudioWasPutInBackground;
+                
                 [[AnalyticsManager shared] logEvent:eventName
                                      withParameters:@{ @"secondsSinceAppWasBackgrounded" : @(diff) }
                                               timed:NO];
             }
             
-        } else {
-         
-
         }
     }
     
@@ -1189,11 +1187,15 @@
     self.sessionPausedDate = nil;
     self.expiring = YES;
     
-    [[AudioManager shared] setWaitForSeek:NO];
-    [[AudioManager shared] setSeekRequested:NO];
+    [[AudioManager shared] resetFlags];
     
-    if ( [[AudioManager shared] audioPlayer] )
-        [[AudioManager shared] stopAudio];
+    if ( [[AudioManager shared] audioPlayer] ) {
+        if ( [[AudioManager shared] isPlayingAudio] ) {
+            // Shouldn't happen, but...
+            [[AudioManager shared] stopAudio];
+        }
+        [[AudioManager shared] takedownAudioPlayer];
+    }
     
     SCPRMasterViewController *master = [[Utils del] masterViewController];
     [master resetUI];

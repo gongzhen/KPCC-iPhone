@@ -238,6 +238,7 @@ typedef NS_ENUM(NSUInteger, StreamStatus) {
 - (void)threadedAdjustWithValue:(CGFloat)increment completion:(void (^)(void))completion;
 - (void)takedownAudioPlayer;
 - (void)resetPlayer;
+- (void)resetFlags;
 
 - (BOOL)isPlayingAudio;
 - (BOOL)isActiveForAudioMode:(AudioMode)mode;

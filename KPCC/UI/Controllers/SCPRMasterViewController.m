@@ -728,6 +728,8 @@ setForOnDemandUI;
             [self decloakForPreRoll:NO];
         }
         
+        [[SessionManager shared] setLocalLiveTime:0.0f];
+        
         [UIView animateWithDuration:0.25 animations:^{
             self.playerControlsBottomYConstraint.constant = [self.originalFrames[@"playerControls"] floatValue];
             self.liveRewindBottomYConstraint.constant = [self.originalFrames[@"liveRewind"] floatValue];
