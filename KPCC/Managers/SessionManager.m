@@ -905,6 +905,17 @@
                            completionHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError) {
                                
                                NSError *jsonError = nil;
+                               
+                               if ( !data || connectionError ) {
+                                   if ( connectionError ) {
+                                       NSLog(@"Connection error : %@",[connectionError localizedDescription]);
+                                   }
+                                   
+                                   [self setXFreeStreamIsAvailable:NO];
+                                   
+                                   return;
+                               }
+                               
                                NSDictionary *responseObject = [NSJSONSerialization JSONObjectWithData:data
                                                                                               options:NSJSONReadingMutableLeaves
                                                                                                 error:&jsonError];
