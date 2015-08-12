@@ -3734,7 +3734,7 @@ setForOnDemandUI;
             [[UIApplication sharedApplication] openURL:url];
             break;
         }
-        case 5: {
+        /*case 5: {
             
             if ( [[UXmanager shared] userLoginType] == SSOTypeNone ) {
                 
@@ -3759,8 +3759,8 @@ setForOnDemandUI;
                 [self pushToProfile];
             }
             break;
-        }
-        case 6: {
+        }*/
+        case 5: {
             
             self.homeIsNotRootViewController = YES;
             event = @"menuSelectionFeedback";
