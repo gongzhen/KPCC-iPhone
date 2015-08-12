@@ -41,13 +41,18 @@
     NSDictionary *globalConfig = [[NSDictionary alloc] initWithContentsOfFile:path];
     
     [[AnalyticsManager shared] setup];
+    A0Lock *lock = [[UXmanager shared] lock];
+    [lock applicationLaunchedWithOptions:launchOptions];
     
 #ifndef PRODUCTION
+    //[[UXmanager shared].settings setSsoLoginType:SSOTypeNone];
+    //[[UXmanager shared].settings setSsoKey:nil];
+    //[[UXmanager shared] persist];
     //[[UXmanager shared].settings setUserHasViewedOnboarding:NO];
     //[[UXmanager shared].settings setUserHasViewedOnDemandOnboarding:NO];
-    //[[UXmanager shared].settings setUserHasSelectedXFS:NO];
-    //[[UXmanager shared].settings setXfsToken:@""];
-    //[[UXmanager shared].settings setUserHasViewedXFSOnboarding:NO];
+    [[UXmanager shared].settings setUserHasSelectedXFS:NO];
+    [[UXmanager shared].settings setXfsToken:@""];
+    [[UXmanager shared].settings setUserHasViewedXFSOnboarding:NO];
 #ifdef TESTING_SCRUBBER
     [[UXmanager shared].settings setUserHasViewedOnDemandOnboarding:NO];
     [[UXmanager shared].settings setUserHasViewedScrubbingOnboarding:NO];
@@ -92,12 +97,6 @@
     self.window.rootViewController = navigationController;
     navigationController.navigationBarHidden = YES;
 
-    NSString *ua = kHLS;
-    NSLog(@"URL : %@",ua);
-
-    
-
-    
     // Fetch initial list of Programs from SCPRV4 and store in CoreData for later usage.
     [[NetworkManager shared] fetchAllProgramInformation:^(id returnedObject) {
         
@@ -250,6 +249,12 @@
     
     [self fireAlarmClock];
     
+}
+
+- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation {
+    A0Lock *lock = [[UXmanager shared] lock];
+    [lock handleURL:url sourceApplication:sourceApplication];
+    return YES;
 }
 
 - (void)application:(UIApplication *)application handleActionWithIdentifier:(NSString *)identifier forLocalNotification:(UILocalNotification *)notification completionHandler:(void (^)())completionHandler {

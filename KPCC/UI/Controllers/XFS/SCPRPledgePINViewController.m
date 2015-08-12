@@ -73,8 +73,8 @@
     
     
 #ifdef DEBUG
-    self.tokenField.text = @"49dd5kAOTgV";
-    self.pinNumber = @"49dd5kAOTgV";
+    self.tokenField.text = @"4c3a3hn9hti";
+    self.pinNumber = @"4c3a3hn9hti";
 #endif
     
     [self examineAndApplyStyle];

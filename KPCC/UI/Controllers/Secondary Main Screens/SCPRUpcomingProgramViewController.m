@@ -91,7 +91,7 @@
     pretty = [pretty lowercaseString];
     
 #ifdef DEBUG
-    pretty = @"12:34 am";
+    //pretty = @"12:34 am";
 #endif
     
     self.timeLabel.attributedText = [[DesignManager shared] standardTimeFormatWithString:pretty

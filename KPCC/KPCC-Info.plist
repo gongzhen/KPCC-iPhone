@@ -2,6 +2,10 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>Auth0ClientId</key>
+	<string>ievRk7JzaNKynSpvQT96rssYJKt2RzWA</string>
+	<key>Auth0Domain</key>
+	<string>kpcc.auth0.com</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
@@ -17,9 +21,30 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>3.3.4</string>
+	<string>3.3.5</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLName</key>
+			<string></string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>fb842051802522808</string>
+			</array>
+		</dict>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>None</string>
+			<key>CFBundleURLName</key>
+			<string>auth0</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>a0ievRk7JzaNKynSpvQT96rssYJKt2RzWA</string>
+			</array>
+		</dict>
+	</array>
 	<key>CFBundleVersion</key>
 	<string>102</string>
 	<key>Fabric</key>
@@ -36,6 +61,10 @@
 			</dict>
 		</array>
 	</dict>
+	<key>FacebookAppId</key>
+	<string>842051802522808</string>
+	<key>FacebookDisplayName</key>
+	<string>KPCC iPhone</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>UIAppFonts</key>

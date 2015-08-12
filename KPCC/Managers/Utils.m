@@ -23,6 +23,15 @@ static char *alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz012
     return (SCPRAppDelegate*)[UIApplication sharedApplication].delegate;
 }
 
++ (id)xib:(NSString *)name {
+    
+    NSArray *objects = [[NSBundle mainBundle] loadNibNamed:name
+                                                     owner:nil
+                                                   options:nil];
+    return objects[0];
+    
+}
+
 + (CGFloat)degreesToRadians:(CGFloat) degrees {
     return degrees * M_PI / 180.0f;
 }
@@ -368,6 +377,11 @@ static char *alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz012
     }
     return array;
 
+}
+
++ (NSMutableDictionary*)sanitizeDictionary:(NSDictionary *)dictionary {
+    // TODO: Make this do something
+    return [dictionary mutableCopy];
 }
 
 + (void)crash {

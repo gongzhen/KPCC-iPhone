@@ -291,7 +291,7 @@
 @property (nonatomic, strong) MFMailComposeViewController *mComposer;
 @property BOOL mailCompositionDisplaying;
 
-
+@property BOOL userIsLoggingIn;
 
 
 @end

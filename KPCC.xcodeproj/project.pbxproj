@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		25263A881A32669E00BD5FF9 /* onboarding3.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 25263A871A32669E00BD5FF9 /* onboarding3.mp3 */; };
+		253030151B717CDD00B88468 /* SCPRProfileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 253030131B717CDD00B88468 /* SCPRProfileViewController.m */; };
+		253030161B717CDD00B88468 /* SCPRProfileViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 253030141B717CDD00B88468 /* SCPRProfileViewController.xib */; };
 		2537D8BD1A8BD7B700481CF8 /* SCPRTouchableScrubberView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2537D8BC1A8BD7B700481CF8 /* SCPRTouchableScrubberView.m */; };
 		2546AF6F1AB0CB6800E11D5B /* SCPRProgramTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2546AF6E1AB0CB6800E11D5B /* SCPRProgramTableViewCell.xib */; };
 		254831C11A41555700963078 /* UIView+PrintDimensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 254831C01A41555700963078 /* UIView+PrintDimensions.m */; };
@@ -29,6 +31,22 @@
 		255943EA19F1A7620007294D /* SCPRJogShuttleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 255943E919F1A7620007294D /* SCPRJogShuttleViewController.m */; };
 		256DE7271A16B9D90022EB84 /* menu-feedback.png in Resources */ = {isa = PBXBuildFile; fileRef = 256DE7251A16B9D90022EB84 /* menu-feedback.png */; };
 		256DE7281A16B9D90022EB84 /* menu-feedback@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 256DE7261A16B9D90022EB84 /* menu-feedback@2x.png */; };
+		2574799B1B6965F800F72AF6 /* Fabric.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2574799A1B6965F800F72AF6 /* Fabric.framework */; };
+		2574799E1B6AB69700F72AF6 /* menu-profile.png in Resources */ = {isa = PBXBuildFile; fileRef = 2574799C1B6AB69700F72AF6 /* menu-profile.png */; };
+		2574799F1B6AB69700F72AF6 /* menu-profile@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2574799D1B6AB69700F72AF6 /* menu-profile@2x.png */; };
+		257479A41B6AB90900F72AF6 /* SCPRLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 257479A21B6AB90900F72AF6 /* SCPRLoginViewController.m */; };
+		257479A51B6AB90900F72AF6 /* SCPRLoginViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 257479A31B6AB90900F72AF6 /* SCPRLoginViewController.xib */; };
+		257479A91B6ACEAC00F72AF6 /* SCPRSSOInputFieldCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 257479A71B6ACEAC00F72AF6 /* SCPRSSOInputFieldCell.m */; };
+		257479AA1B6ACEAC00F72AF6 /* SCPRSSOInputFieldCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 257479A81B6ACEAC00F72AF6 /* SCPRSSOInputFieldCell.xib */; };
+		257479AD1B6AD12D00F72AF6 /* onboarding-tile-blurry@2x.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 257479AC1B6AD12D00F72AF6 /* onboarding-tile-blurry@2x.jpg */; };
+		257479AF1B6AD14200F72AF6 /* onboarding-tile-blurry.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 257479AE1B6AD14200F72AF6 /* onboarding-tile-blurry.jpg */; };
+		257479B21B6AE08200F72AF6 /* icon-mail.png in Resources */ = {isa = PBXBuildFile; fileRef = 257479B01B6AE08200F72AF6 /* icon-mail.png */; };
+		257479B31B6AE08200F72AF6 /* icon-mail@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 257479B11B6AE08200F72AF6 /* icon-mail@2x.png */; };
+		257479B61B6C205600F72AF6 /* kpcc-logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 257479B41B6C205600F72AF6 /* kpcc-logo.png */; };
+		257479B71B6C205600F72AF6 /* kpcc-logo@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 257479B51B6C205600F72AF6 /* kpcc-logo@2x.png */; };
+		257479BA1B6C21FE00F72AF6 /* icon-lock-white.png in Resources */ = {isa = PBXBuildFile; fileRef = 257479B81B6C21FE00F72AF6 /* icon-lock-white.png */; };
+		257479BB1B6C21FE00F72AF6 /* icon-lock-white@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 257479B91B6C21FE00F72AF6 /* icon-lock-white@2x.png */; };
+		257479BD1B6C4A3E00F72AF6 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 257479BC1B6C4A3E00F72AF6 /* WebKit.framework */; };
 		258BB0381A1C07FD00B8FCFE /* UXmanager.m in Sources */ = {isa = PBXBuildFile; fileRef = 258BB0371A1C07FD00B8FCFE /* UXmanager.m */; };
 		258BB03E1A1C083B00B8FCFE /* Settings.m in Sources */ = {isa = PBXBuildFile; fileRef = 258BB03D1A1C083B00B8FCFE /* Settings.m */; };
 		258BD3AE1A0BF65200E7560F /* UIButton+Additions.m in Sources */ = {isa = PBXBuildFile; fileRef = 258BD3AD1A0BF65200E7560F /* UIButton+Additions.m */; };
@@ -63,7 +81,6 @@
 		259E450E1A1D583A00F5CD65 /* onboarding1.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 259E450C1A1D583A00F5CD65 /* onboarding1.mp3 */; };
 		259E450F1A1D583A00F5CD65 /* onboarding2.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 259E450D1A1D583A00F5CD65 /* onboarding2.mp3 */; };
 		25A6534B1AAE2BA300ABAAD6 /* Bookmark.m in Sources */ = {isa = PBXBuildFile; fileRef = 25A6534A1AAE2BA300ABAAD6 /* Bookmark.m */; };
-		25AD96921B4F3BA200858B65 /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 25AD96901B4F3BA200858B65 /* Crashlytics.framework */; };
 		25AD96941B5062E600858B65 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 25AD96931B5062E600858B65 /* GoogleService-Info.plist */; };
 		25B25B9B1B17DEF600ABE8B4 /* chevron_up.png in Resources */ = {isa = PBXBuildFile; fileRef = 25B25B991B17DEF600ABE8B4 /* chevron_up.png */; };
 		25B25B9C1B17DEF600ABE8B4 /* chevron_up@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 25B25B9A1B17DEF600ABE8B4 /* chevron_up@2x.png */; };
@@ -92,6 +109,8 @@
 		25BBCD8D1A893C350015071E /* onboarding-scrubber.png in Resources */ = {isa = PBXBuildFile; fileRef = 25BBCD851A893C350015071E /* onboarding-scrubber.png */; };
 		25BBCD8E1A893C350015071E /* onboarding-scrubber@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 25BBCD861A893C350015071E /* onboarding-scrubber@2x.png */; };
 		25C409B01A437B9400ADBFFE /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 25C409AF1A437B9400ADBFFE /* AdSupport.framework */; };
+		25E5532B1B61A79100C45B85 /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 25E553271B61A79100C45B85 /* Crashlytics.framework */; };
+		25E5532E1B61A79100C45B85 /* NielsenAppApi.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 25E5532A1B61A79100C45B85 /* NielsenAppApi.framework */; };
 		25E8BD9E1ABA034D007B99EB /* program_avatar_invisibilia.png in Resources */ = {isa = PBXBuildFile; fileRef = 25E8BD9C1ABA034D007B99EB /* program_avatar_invisibilia.png */; };
 		25E8BD9F1ABA034D007B99EB /* program_avatar_invisibilia@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 25E8BD9D1ABA034D007B99EB /* program_avatar_invisibilia@2x.png */; };
 		25E8BDA41ABB933C007B99EB /* SCPRTimerControlViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 25E8BDA21ABB933C007B99EB /* SCPRTimerControlViewController.m */; };
@@ -294,8 +313,6 @@
 		76B9A9AE18EF59FD007A6D8C /* SCPRUserReportViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 76B9A9AB18EF59FD007A6D8C /* SCPRUserReportViewController.xib */; };
 		76B9A9B618EF79F6007A6D8C /* SCPRFooterView.m in Sources */ = {isa = PBXBuildFile; fileRef = 76B9A9B518EF79F6007A6D8C /* SCPRFooterView.m */; };
 		76EF5E8A193E8D6B00568A9D /* Storyboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 76EF5E89193E8D6B00568A9D /* Storyboard.storyboard */; };
-		B50E0E8B1B585DCE00A3203D /* Fabric.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B50E0E8A1B585DCE00A3203D /* Fabric.framework */; };
-		B50E0E8C1B586DB300A3203D /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 25AD96901B4F3BA200858B65 /* Crashlytics.framework */; };
 		B5F9F7491ABCE8FD00115DB3 /* icon-clock.png in Resources */ = {isa = PBXBuildFile; fileRef = B5F9F7451ABCE8FD00115DB3 /* icon-clock.png */; };
 		B5F9F74A1ABCE8FD00115DB3 /* icon-clock@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B5F9F7461ABCE8FD00115DB3 /* icon-clock@2x.png */; };
 		B5F9F74B1ABCE8FD00115DB3 /* icon-stopwatch.png in Resources */ = {isa = PBXBuildFile; fileRef = B5F9F7471ABCE8FD00115DB3 /* icon-stopwatch.png */; };
@@ -317,6 +334,9 @@
 /* Begin PBXFileReference section */
 		1B29166D1072B92AE58CD1BB /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 		25263A871A32669E00BD5FF9 /* onboarding3.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = onboarding3.mp3; path = Audio/onboarding3.mp3; sourceTree = "<group>"; };
+		253030121B717CDD00B88468 /* SCPRProfileViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCPRProfileViewController.h; path = SSO/SCPRProfileViewController.h; sourceTree = "<group>"; };
+		253030131B717CDD00B88468 /* SCPRProfileViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SCPRProfileViewController.m; path = SSO/SCPRProfileViewController.m; sourceTree = "<group>"; };
+		253030141B717CDD00B88468 /* SCPRProfileViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = SCPRProfileViewController.xib; path = SSO/SCPRProfileViewController.xib; sourceTree = "<group>"; };
 		2537D8BB1A8BD7B700481CF8 /* SCPRTouchableScrubberView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCPRTouchableScrubberView.h; path = Scrubbing/SCPRTouchableScrubberView.h; sourceTree = "<group>"; };
 		2537D8BC1A8BD7B700481CF8 /* SCPRTouchableScrubberView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SCPRTouchableScrubberView.m; path = Scrubbing/SCPRTouchableScrubberView.m; sourceTree = "<group>"; };
 		2546AF6E1AB0CB6800E11D5B /* SCPRProgramTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SCPRProgramTableViewCell.xib; sourceTree = "<group>"; };
@@ -344,6 +364,24 @@
 		255943E919F1A7620007294D /* SCPRJogShuttleViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SCPRJogShuttleViewController.m; sourceTree = "<group>"; };
 		256DE7251A16B9D90022EB84 /* menu-feedback.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "menu-feedback.png"; sourceTree = "<group>"; };
 		256DE7261A16B9D90022EB84 /* menu-feedback@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "menu-feedback@2x.png"; sourceTree = "<group>"; };
+		2574799A1B6965F800F72AF6 /* Fabric.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Fabric.framework; sourceTree = "<group>"; };
+		2574799C1B6AB69700F72AF6 /* menu-profile.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "menu-profile.png"; sourceTree = "<group>"; };
+		2574799D1B6AB69700F72AF6 /* menu-profile@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "menu-profile@2x.png"; sourceTree = "<group>"; };
+		257479A11B6AB90900F72AF6 /* SCPRLoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCPRLoginViewController.h; path = SSO/SCPRLoginViewController.h; sourceTree = "<group>"; };
+		257479A21B6AB90900F72AF6 /* SCPRLoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SCPRLoginViewController.m; path = SSO/SCPRLoginViewController.m; sourceTree = "<group>"; };
+		257479A31B6AB90900F72AF6 /* SCPRLoginViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = SCPRLoginViewController.xib; path = SSO/SCPRLoginViewController.xib; sourceTree = "<group>"; };
+		257479A61B6ACEAC00F72AF6 /* SCPRSSOInputFieldCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCPRSSOInputFieldCell.h; path = SSO/SCPRSSOInputFieldCell.h; sourceTree = "<group>"; };
+		257479A71B6ACEAC00F72AF6 /* SCPRSSOInputFieldCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SCPRSSOInputFieldCell.m; path = SSO/SCPRSSOInputFieldCell.m; sourceTree = "<group>"; };
+		257479A81B6ACEAC00F72AF6 /* SCPRSSOInputFieldCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = SCPRSSOInputFieldCell.xib; path = SSO/SCPRSSOInputFieldCell.xib; sourceTree = "<group>"; };
+		257479AC1B6AD12D00F72AF6 /* onboarding-tile-blurry@2x.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "onboarding-tile-blurry@2x.jpg"; sourceTree = "<group>"; };
+		257479AE1B6AD14200F72AF6 /* onboarding-tile-blurry.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "onboarding-tile-blurry.jpg"; sourceTree = "<group>"; };
+		257479B01B6AE08200F72AF6 /* icon-mail.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-mail.png"; sourceTree = "<group>"; };
+		257479B11B6AE08200F72AF6 /* icon-mail@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-mail@2x.png"; sourceTree = "<group>"; };
+		257479B41B6C205600F72AF6 /* kpcc-logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "kpcc-logo.png"; sourceTree = "<group>"; };
+		257479B51B6C205600F72AF6 /* kpcc-logo@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "kpcc-logo@2x.png"; sourceTree = "<group>"; };
+		257479B81B6C21FE00F72AF6 /* icon-lock-white.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-lock-white.png"; sourceTree = "<group>"; };
+		257479B91B6C21FE00F72AF6 /* icon-lock-white@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-lock-white@2x.png"; sourceTree = "<group>"; };
+		257479BC1B6C4A3E00F72AF6 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
 		258BB0361A1C07FD00B8FCFE /* UXmanager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UXmanager.h; path = Managers/UXmanager.h; sourceTree = "<group>"; };
 		258BB0371A1C07FD00B8FCFE /* UXmanager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UXmanager.m; path = Managers/UXmanager.m; sourceTree = "<group>"; };
 		258BB03C1A1C083B00B8FCFE /* Settings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Settings.h; sourceTree = "<group>"; };
@@ -397,7 +435,6 @@
 		25A653481AAA7CFC00ABAAD6 /* KPCC-Proprietary-301.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "KPCC-Proprietary-301.xcdatamodel"; sourceTree = "<group>"; };
 		25A653491AAE2BA300ABAAD6 /* Bookmark.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Bookmark.h; sourceTree = "<group>"; };
 		25A6534A1AAE2BA300ABAAD6 /* Bookmark.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Bookmark.m; sourceTree = "<group>"; };
-		25AD96901B4F3BA200858B65 /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Crashlytics.framework; sourceTree = "<group>"; };
 		25AD96931B5062E600858B65 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		25B25B991B17DEF600ABE8B4 /* chevron_up.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = chevron_up.png; sourceTree = "<group>"; };
 		25B25B9A1B17DEF600ABE8B4 /* chevron_up@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "chevron_up@2x.png"; sourceTree = "<group>"; };
@@ -434,6 +471,8 @@
 		25BBCD851A893C350015071E /* onboarding-scrubber.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "onboarding-scrubber.png"; sourceTree = "<group>"; };
 		25BBCD861A893C350015071E /* onboarding-scrubber@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "onboarding-scrubber@2x.png"; sourceTree = "<group>"; };
 		25C409AF1A437B9400ADBFFE /* AdSupport.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AdSupport.framework; path = System/Library/Frameworks/AdSupport.framework; sourceTree = SDKROOT; };
+		25E553271B61A79100C45B85 /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Crashlytics.framework; path = LocalFrameworks/Crashlytics.framework; sourceTree = "<group>"; };
+		25E5532A1B61A79100C45B85 /* NielsenAppApi.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = NielsenAppApi.framework; path = LocalFrameworks/NielsenAppApi.framework; sourceTree = "<group>"; };
 		25E8BD9C1ABA034D007B99EB /* program_avatar_invisibilia.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = program_avatar_invisibilia.png; sourceTree = "<group>"; };
 		25E8BD9D1ABA034D007B99EB /* program_avatar_invisibilia@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "program_avatar_invisibilia@2x.png"; sourceTree = "<group>"; };
 		25E8BDA11ABB933C007B99EB /* SCPRTimerControlViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCPRTimerControlViewController.h; path = TimerControl/SCPRTimerControlViewController.h; sourceTree = "<group>"; };
@@ -632,7 +671,6 @@
 		7685BD59194BBCB90075BB16 /* pauseButton@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "pauseButton@2x.png"; sourceTree = "<group>"; };
 		7685BD5A194BBCB90075BB16 /* playButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = playButton.png; sourceTree = "<group>"; };
 		7685BD5B194BBCB90075BB16 /* playButton@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "playButton@2x.png"; sourceTree = "<group>"; };
-		768BBF1918DA614300ACAD83 /* libPods.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libPods.a; path = "Pods/build/Debug-iphoneos/libPods.a"; sourceTree = "<group>"; };
 		768C064619958FD900F829EB /* SCPRMasterViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCPRMasterViewController.h; sourceTree = "<group>"; };
 		768C064719958FD900F829EB /* SCPRMasterViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SCPRMasterViewController.m; sourceTree = "<group>"; };
 		768C064A1995905D00F829EB /* btn_live_rewind_small.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = btn_live_rewind_small.png; sourceTree = "<group>"; };
@@ -691,7 +729,6 @@
 		76EF5E85193E8BEC00568A9D /* TestFlight-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "TestFlight-Bridging-Header.h"; path = "UI/Controllers/TestFlight-Bridging-Header.h"; sourceTree = "<group>"; };
 		76EF5E89193E8D6B00568A9D /* Storyboard.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Storyboard.storyboard; sourceTree = "<group>"; };
 		793A6CF463174F04B6B48648 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
-		B50E0E8A1B585DCE00A3203D /* Fabric.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Fabric.framework; sourceTree = "<group>"; };
 		B5F9F7451ABCE8FD00115DB3 /* icon-clock.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-clock.png"; sourceTree = "<group>"; };
 		B5F9F7461ABCE8FD00115DB3 /* icon-clock@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-clock@2x.png"; sourceTree = "<group>"; };
 		B5F9F7471ABCE8FD00115DB3 /* icon-stopwatch.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-stopwatch.png"; sourceTree = "<group>"; };
@@ -704,16 +741,18 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				257479BD1B6C4A3E00F72AF6 /* WebKit.framework in Frameworks */,
+				25E5532E1B61A79100C45B85 /* NielsenAppApi.framework in Frameworks */,
 				25C409B01A437B9400ADBFFE /* AdSupport.framework in Frameworks */,
-				B50E0E8B1B585DCE00A3203D /* Fabric.framework in Frameworks */,
+				25E5532B1B61A79100C45B85 /* Crashlytics.framework in Frameworks */,
 				76349CAA18D3747E0027C3B8 /* libz.dylib in Frameworks */,
 				768EAAE118D26C9C00469734 /* AVFoundation.framework in Frameworks */,
 				768EAADF18D26C5500469734 /* MediaPlayer.framework in Frameworks */,
 				76A308C918C8FB940065D4B1 /* CoreGraphics.framework in Frameworks */,
-				25AD96921B4F3BA200858B65 /* Crashlytics.framework in Frameworks */,
 				76A308CB18C8FB940065D4B1 /* UIKit.framework in Frameworks */,
 				76A308C718C8FB940065D4B1 /* Foundation.framework in Frameworks */,
 				D60D1CDDD065418D8BE73D8C /* libPods.a in Frameworks */,
+				2574799B1B6965F800F72AF6 /* Fabric.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -722,7 +761,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				76A308EC18C8FB950065D4B1 /* XCTest.framework in Frameworks */,
-				B50E0E8C1B586DB300A3203D /* Crashlytics.framework in Frameworks */,
 				76A308EE18C8FB950065D4B1 /* UIKit.framework in Frameworks */,
 				76A308ED18C8FB950065D4B1 /* Foundation.framework in Frameworks */,
 				C902C9E15F3FE6D354EFE519 /* libPods.a in Frameworks */,
@@ -747,6 +785,31 @@
 				254CC6951A23A7A600560805 /* onboarding-tile@2x.jpg */,
 			);
 			name = Onboarding;
+			sourceTree = "<group>";
+		};
+		257479A01B6AB8E600F72AF6 /* SSO / Profile */ = {
+			isa = PBXGroup;
+			children = (
+				257479A11B6AB90900F72AF6 /* SCPRLoginViewController.h */,
+				257479A21B6AB90900F72AF6 /* SCPRLoginViewController.m */,
+				257479A31B6AB90900F72AF6 /* SCPRLoginViewController.xib */,
+				257479A61B6ACEAC00F72AF6 /* SCPRSSOInputFieldCell.h */,
+				257479A71B6ACEAC00F72AF6 /* SCPRSSOInputFieldCell.m */,
+				257479A81B6ACEAC00F72AF6 /* SCPRSSOInputFieldCell.xib */,
+				253030121B717CDD00B88468 /* SCPRProfileViewController.h */,
+				253030131B717CDD00B88468 /* SCPRProfileViewController.m */,
+				253030141B717CDD00B88468 /* SCPRProfileViewController.xib */,
+			);
+			name = "SSO / Profile";
+			sourceTree = "<group>";
+		};
+		257479AB1B6AD11500F72AF6 /* sso */ = {
+			isa = PBXGroup;
+			children = (
+				257479AE1B6AD14200F72AF6 /* onboarding-tile-blurry.jpg */,
+				257479AC1B6AD12D00F72AF6 /* onboarding-tile-blurry@2x.jpg */,
+			);
+			name = sso;
 			sourceTree = "<group>";
 		};
 		258E8DFC1A16AA1100675E68 /* Fixtures */ = {
@@ -924,6 +987,8 @@
 		52EFF77A19C3688D0059A0E3 /* menu */ = {
 			isa = PBXGroup;
 			children = (
+				2574799C1B6AB69700F72AF6 /* menu-profile.png */,
+				2574799D1B6AB69700F72AF6 /* menu-profile@2x.png */,
 				256DE7251A16B9D90022EB84 /* menu-feedback.png */,
 				256DE7261A16B9D90022EB84 /* menu-feedback@2x.png */,
 				52EFF77B19C3688D0059A0E3 /* menu-antenna.png */,
@@ -1112,6 +1177,7 @@
 		76658ABC18E0AF8500026176 /* View Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				257479A01B6AB8E600F72AF6 /* SSO / Profile */,
 				25B25BA91B1D091100ABE8B4 /* XFS */,
 				25F30AE51AFAB67C00F27187 /* Secondary Main Screens */,
 				25E8BDA01ABB8702007B99EB /* Wake / Sleep */,
@@ -1181,6 +1247,13 @@
 		7685BD57194BBCB90075BB16 /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				257479B81B6C21FE00F72AF6 /* icon-lock-white.png */,
+				257479B91B6C21FE00F72AF6 /* icon-lock-white@2x.png */,
+				257479B41B6C205600F72AF6 /* kpcc-logo.png */,
+				257479B51B6C205600F72AF6 /* kpcc-logo@2x.png */,
+				257479B01B6AE08200F72AF6 /* icon-mail.png */,
+				257479B11B6AE08200F72AF6 /* icon-mail@2x.png */,
+				257479AB1B6AD11500F72AF6 /* sso */,
 				25B25B991B17DEF600ABE8B4 /* chevron_up.png */,
 				25B25B9A1B17DEF600ABE8B4 /* chevron_up@2x.png */,
 				258C5D291B164C2100C19BE0 /* icon-lock.png */,
@@ -1305,10 +1378,11 @@
 		76A308C518C8FB940065D4B1 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				B50E0E8A1B585DCE00A3203D /* Fabric.framework */,
-				25AD96901B4F3BA200858B65 /* Crashlytics.framework */,
+				257479BC1B6C4A3E00F72AF6 /* WebKit.framework */,
+				2574799A1B6965F800F72AF6 /* Fabric.framework */,
+				25E553271B61A79100C45B85 /* Crashlytics.framework */,
+				25E5532A1B61A79100C45B85 /* NielsenAppApi.framework */,
 				25C409AF1A437B9400ADBFFE /* AdSupport.framework */,
-				768BBF1918DA614300ACAD83 /* libPods.a */,
 				76349D2318D8F8D80027C3B8 /* SystemConfiguration.framework */,
 				76349CA918D3747E0027C3B8 /* libz.dylib */,
 				768EAAE018D26C9C00469734 /* AVFoundation.framework */,
@@ -1528,10 +1602,12 @@
 				25F30AFD1B0A9B1800F27187 /* onboarding-schedule-swipe-left@2x.png in Resources */,
 				2557BA841A1A9BB800B0CAED /* btn_back_to_live_xtra-small@2x.png in Resources */,
 				76B9A9AE18EF59FD007A6D8C /* SCPRUserReportViewController.xib in Resources */,
+				257479B31B6AE08200F72AF6 /* icon-mail@2x.png in Resources */,
 				52EFF81619C368C00059A0E3 /* program_avatar_loh-life.png in Resources */,
 				25BBCD8D1A893C350015071E /* onboarding-scrubber.png in Resources */,
 				52EFF83619C368C00059A0E3 /* program_avatar_prairie-home-companion.png in Resources */,
 				52EFF80C19C368C00059A0E3 /* program_avatar_fresh-air@2x.png in Resources */,
+				257479B21B6AE08200F72AF6 /* icon-mail.png in Resources */,
 				25BBCD871A893C350015071E /* btn_back_30.png in Resources */,
 				768C067D199590CC00F829EB /* FreigSanProLigIt.otf in Resources */,
 				52EFF81419C368C00059A0E3 /* program_avatar_loh-down-on-science@2x.png in Resources */,
@@ -1545,6 +1621,7 @@
 				768C0675199590CC00F829EB /* FreigSanProBoldIt.otf in Resources */,
 				523E86D219C8A292006FC366 /* SCPRProgramDetailViewController.xib in Resources */,
 				76A308E518C8FB940065D4B1 /* Images.xcassets in Resources */,
+				253030161B717CDD00B88468 /* SCPRProfileViewController.xib in Resources */,
 				52CF917619FEF306007BCFA8 /* btn_play.png in Resources */,
 				52CF917719FEF306007BCFA8 /* btn_play@2x.png in Resources */,
 				768C0679199590CC00F829EB /* FreigSanProBookIt.otf in Resources */,
@@ -1574,6 +1651,7 @@
 				52EFF84019C368C00059A0E3 /* program_avatar_science-friday@2x.png in Resources */,
 				768C0683199590CC00F829EB /* FreigSanProSem.otf in Resources */,
 				7685BD62194BBCB90075BB16 /* playButton@2x.png in Resources */,
+				257479AA1B6ACEAC00F72AF6 /* SCPRSSOInputFieldCell.xib in Resources */,
 				256DE7281A16B9D90022EB84 /* menu-feedback@2x.png in Resources */,
 				52EFF7F619C368C00059A0E3 /* program_avatar_bbc-world-service.png in Resources */,
 				52EFF86619C368C00059A0E3 /* program_avatar_weekend-edition-sunday.png in Resources */,
@@ -1601,6 +1679,7 @@
 				52EFF7EA19C368C00059A0E3 /* program_avatar_all-things-considered.png in Resources */,
 				52EFF82E19C368C00059A0E3 /* program_avatar_on-being.png in Resources */,
 				259E44FF1A1D2CD300F5CD65 /* SCPROnboardingViewController.xib in Resources */,
+				257479A51B6AB90900F72AF6 /* SCPRLoginViewController.xib in Resources */,
 				52D9227819D366C90018AD4B /* content-share.png in Resources */,
 				52EFF85619C368C00059A0E3 /* program_avatar_world.png in Resources */,
 				258E8E101A16AE0400675E68 /* SCPRFeedbackViewController.xib in Resources */,
@@ -1636,14 +1715,17 @@
 				52EFF82019C368C00059A0E3 /* program_avatar_marketplace@2x.png in Resources */,
 				25BBCD8A1A893C350015071E /* btn_close@2x.png in Resources */,
 				258E8E021A16AA3900675E68 /* rewind_beat.mp3 in Resources */,
+				257479BA1B6C21FE00F72AF6 /* icon-lock-white.png in Resources */,
 				768C068C1995911600F829EB /* program_tile_generic@2x.jpg in Resources */,
 				52EFF81C19C368C00059A0E3 /* program_avatar_marketplace-morning-report@2x.png in Resources */,
 				52EFF80819C368C00059A0E3 /* program_avatar_filmweek@2x.png in Resources */,
+				257479AF1B6AD14200F72AF6 /* onboarding-tile-blurry.jpg in Resources */,
 				52EFF78719C3688D0059A0E3 /* menu-antenna.png in Resources */,
 				52EFF79519C3688D0059A0E3 /* menu-heart-plus@2x.png in Resources */,
 				25E8BDA51ABB933C007B99EB /* SCPRTimerControlViewController.xib in Resources */,
 				259E450F1A1D583A00F5CD65 /* onboarding2.mp3 in Resources */,
 				52EFF83219C368C00059A0E3 /* program_avatar_on-the-media.png in Resources */,
+				257479AD1B6AD12D00F72AF6 /* onboarding-tile-blurry@2x.jpg in Resources */,
 				2557BA851A1A9BB800B0CAED /* btn_live_rewind_xtra-small.png in Resources */,
 				25F30AED1AFAB6B700F27187 /* SCPRCompleteScheduleViewController.xib in Resources */,
 				B5F9F74A1ABCE8FD00115DB3 /* icon-clock@2x.png in Resources */,
@@ -1663,12 +1745,14 @@
 				2557BA861A1A9BB800B0CAED /* btn_live_rewind_xtra-small@2x.png in Resources */,
 				52EFF7EE19C368C00059A0E3 /* program_avatar_ask-me-another.png in Resources */,
 				768C06541995905D00F829EB /* btn_live_rewind_small@2x.png in Resources */,
+				2574799E1B6AB69700F72AF6 /* menu-profile.png in Resources */,
 				52D0FC2A19D20D29009AECEE /* program_avatar_marketplace-tech-report.png in Resources */,
 				52EFF7FE19C368C00059A0E3 /* program_avatar_car-talk.png in Resources */,
 				52EFF7FA19C368C00059A0E3 /* program_avatar_bullseye.png in Resources */,
 				52EFF7F819C368C00059A0E3 /* program_avatar_bbc-world-service@2x.png in Resources */,
 				52EFF82619C368C00059A0E3 /* program_avatar_moth-radio-hour.png in Resources */,
 				76EF5E8A193E8D6B00568A9D /* Storyboard.storyboard in Resources */,
+				257479B61B6C205600F72AF6 /* kpcc-logo.png in Resources */,
 				254CC69B1A23A7A600560805 /* onboarding-tile@2x.jpg in Resources */,
 				25F30AE31AF98F1A00F27187 /* icon-up-next.png in Resources */,
 				25BBCD781A892D730015071E /* SCPRScrubbingUIViewController.xib in Resources */,
@@ -1690,6 +1774,7 @@
 				52EFF85819C368C00059A0E3 /* program_avatar_world@2x.png in Resources */,
 				52EFF80019C368C00059A0E3 /* program_avatar_car-talk@2x.png in Resources */,
 				258E8E031A16AA3900675E68 /* Wood_Crash.mp3 in Resources */,
+				257479BB1B6C21FE00F72AF6 /* icon-lock-white@2x.png in Resources */,
 				52EFF88919C3BC020059A0E3 /* item-chevron-right@2x.png in Resources */,
 				761CC5A4195A2878006A6C7C /* Testflight-Info.plist in Resources */,
 				25F30AEF1AFAB6B700F27187 /* SCPRUpcomingProgramViewController.xib in Resources */,
@@ -1710,10 +1795,12 @@
 				25B25B9B1B17DEF600ABE8B4 /* chevron_up.png in Resources */,
 				258E8E011A16AA3900675E68 /* Glass_Crash.mp3 in Resources */,
 				25F2BC811A3BB60B00108F73 /* onboarding-music-bed.m4a in Resources */,
+				2574799F1B6AB69700F72AF6 /* menu-profile@2x.png in Resources */,
 				254CC6981A23A7A600560805 /* onboarding-push-icon.png in Resources */,
 				52D0FC3819D20D29009AECEE /* program_avatar_the-frame@2x.png in Resources */,
 				B5F9F74B1ABCE8FD00115DB3 /* icon-stopwatch.png in Resources */,
 				25F30AF61AFAB89600F27187 /* SCPRScheduleTableViewCell.xib in Resources */,
+				257479B71B6C205600F72AF6 /* kpcc-logo@2x.png in Resources */,
 				768C06601995905D00F829EB /* chevron_down@2x.png in Resources */,
 				768C0671199590CC00F829EB /* FreigSanProBlkIt.otf in Resources */,
 				52CC6D6919D112F400C67322 /* SCPRProgramsListViewController.xib in Resources */,
@@ -1853,6 +1940,7 @@
 				25F30AFA1AFABB3E00F27187 /* SCPRScheduleHeaderViewController.m in Sources */,
 				52D0FC1C19D1F24F009AECEE /* SCPRProgramDetailHeaderView.m in Sources */,
 				254831C11A41555700963078 /* UIView+PrintDimensions.m in Sources */,
+				257479A91B6ACEAC00F72AF6 /* SCPRSSOInputFieldCell.m in Sources */,
 				258BB03E1A1C083B00B8FCFE /* Settings.m in Sources */,
 				254CC69E1A23B41D00560805 /* SCPRTriangleView.m in Sources */,
 				258C5D381B1678ED00C19BE0 /* SCPRCornerMaskView.m in Sources */,
@@ -1862,6 +1950,7 @@
 				25B25BAD1B1D093D00ABE8B4 /* SCPRPledgePINViewController.m in Sources */,
 				2594B53F1A30F8410013B93A /* SCPRKeyboardToolbar.m in Sources */,
 				25BBCD7D1A892DA30015071E /* SCPRScrubberViewController.m in Sources */,
+				253030151B717CDD00B88468 /* SCPRProfileViewController.m in Sources */,
 				2537D8BD1A8BD7B700481CF8 /* SCPRTouchableScrubberView.m in Sources */,
 				25BBCD771A892D730015071E /* SCPRScrubbingUIViewController.m in Sources */,
 				25F2BC7E1A3B9B4D00108F73 /* SCPRGenericAvatarViewController.m in Sources */,
@@ -1872,6 +1961,7 @@
 				52CF917A1A0032C7007BCFA8 /* QueueManager.m in Sources */,
 				25E8BDB01AC0920E007B99EB /* SCPRAlarmClockViewController.m in Sources */,
 				258BB0381A1C07FD00B8FCFE /* UXmanager.m in Sources */,
+				257479A41B6AB90900F72AF6 /* SCPRLoginViewController.m in Sources */,
 				25B25BB51B1D096D00ABE8B4 /* SCPRBalloonViewController.m in Sources */,
 				76B9A9AC18EF59FD007A6D8C /* SCPRUserReportViewController.m in Sources */,
 				76658AB918DCB51000026176 /* NSDate+Helper.m in Sources */,
@@ -2006,6 +2096,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/LocalFrameworks/**",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "KPCC/KPCC-Prefix.pch";
@@ -2063,6 +2154,7 @@
 					"$(inherited)",
 					"$(DEVELOPER_FRAMEWORKS_DIR)",
 					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/LocalFrameworks",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "KPCC/KPCC-Prefix.pch";
@@ -2145,6 +2237,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/LocalFrameworks/**",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "KPCC/KPCC-Prefix.pch";
@@ -2203,6 +2296,7 @@
 					"$(inherited)",
 					"$(DEVELOPER_FRAMEWORKS_DIR)",
 					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/LocalFrameworks",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "KPCC/KPCC-Prefix.pch";
@@ -2325,6 +2419,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/LocalFrameworks/**",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "KPCC/KPCC-Prefix.pch";
@@ -2387,6 +2482,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/LocalFrameworks/**",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "KPCC/KPCC-Prefix.pch";
@@ -2445,6 +2541,7 @@
 					"$(inherited)",
 					"$(DEVELOPER_FRAMEWORKS_DIR)",
 					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/LocalFrameworks",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "KPCC/KPCC-Prefix.pch";
@@ -2493,6 +2590,7 @@
 					"$(inherited)",
 					"$(DEVELOPER_FRAMEWORKS_DIR)",
 					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/LocalFrameworks",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "KPCC/KPCC-Prefix.pch";

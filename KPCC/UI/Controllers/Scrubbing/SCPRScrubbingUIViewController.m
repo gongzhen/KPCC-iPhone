@@ -27,6 +27,16 @@
     
     self.darkeningView.backgroundColor = [[UIColor virtualBlackColor] translucify:0.35];
     
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(enableScrubbingUI)
+                                                 name:@"playback-stalled"
+                                               object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(disableScrubbingUI)
+                                                 name:@"player-ready"
+                                               object:nil];
+    
     [self primeForAudioMode];
     
     // Do any additional setup after loading the view from its nib.
@@ -77,6 +87,8 @@
                                              selector:@selector(programChanged)
                                                  name:@"program-has-changed"
                                                object:nil];
+    
+
     
     self.currentProgressNeedleView.alpha = 0.0f;
     self.currentProgressReadingLabel.alpha = 0.0f;
@@ -270,6 +282,22 @@
     self.scrubberController.panning = NO;
     self.scrubberController.currentBarLine.strokeEnd = 0.0f;
     
+}
+
+- (void)enableScrubbingUI {
+    self.scrubbingAvailable = YES;
+    self.rw30Button.alpha = 1.0f;
+    self.fw30Button.alpha = 1.0f;
+    self.rw30Button.userInteractionEnabled = YES;
+    self.fw30Button.userInteractionEnabled = YES;
+}
+
+- (void)disableScrubbingUI {
+    self.scrubbingAvailable = NO;
+    self.rw30Button.alpha = 0.4f;
+    self.fw30Button.alpha = 0.4f;
+    self.rw30Button.userInteractionEnabled = NO;
+    self.fw30Button.userInteractionEnabled = NO;
 }
 
 #pragma mark - Seeking

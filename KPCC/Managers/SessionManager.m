@@ -136,6 +136,108 @@
     return floor((self.minDrift + self.peakDrift)/2.0);
 }
 
+#pragma mark - Analytics
+- (void)handlePauseEventAgainstSessionAudio {
+    if ( self.killSessionTimer ) {
+        if ( [self.killSessionTimer isValid] ) {
+            [self.killSessionTimer invalidate];
+        }
+        self.killSessionTimer = nil;
+    }
+    
+    self.killSessionTimer = [NSTimer scheduledTimerWithTimeInterval:80.0f
+                                                             target:self
+                                                           selector:@selector(endAnalyticsForAudio:)
+                                                           userInfo:nil
+                                                            repeats:NO];
+}
+
+- (void)forceAnalyticsSessionEndForSessionAudio {
+    [self endAnalyticsForAudio:nil];
+}
+
+- (void)endAnalyticsForAudio:(NSNotification*)note {
+    NSString *eventName = [[AudioManager shared] currentAudioMode] == AudioModeLive ? @"liveStreamPlay" : @"episodePlay";
+    [Flurry endTimedEvent:eventName
+           withParameters:nil];
+    
+    [[AnalyticsManager shared] nielsenStop];
+}
+
+#pragma mark - Sessions
+- (void)trackLiveSession {
+    if ( !self.sessionIsHot ) return;
+    if ( [AudioManager shared].currentAudioMode != AudioModeLive ) return;
+    
+    @synchronized(self) {
+        self.sessionIsHot = NO;
+    }
+    
+    if ( self.killSessionTimer ) {
+        if ( [self.killSessionTimer isValid] ) {
+            [self.killSessionTimer invalidate];
+        }
+        self.killSessionTimer = nil;
+    }
+    
+    NSTimeInterval seconds = [self secondsBehindLive];
+    NSString *pt = @"";
+    if ( seconds > kAllowableDriftCeiling ) {
+        pt = [NSDate prettyTextFromSeconds:seconds];
+    } else {
+        pt = @"LIVE";
+    }
+    
+    NSString *literalValue = [NSString stringWithFormat:@"%ld",(long)seconds];
+    
+    Program *p = self.currentProgram;
+    
+    NSString *title = @"[UNKNOWN]";
+    if ( p.title ) {
+        title = p.title;
+    }
+
+    
+#if !TARGET_IPHONE_SIMULATOR
+    
+    NSString *plus = [[UXmanager shared].settings userHasSelectedXFS] ? @"KPCC Plus" : @"KPCC Live";
+    
+    
+    [[AnalyticsManager shared] beginTimedEvent:@"liveStreamPlay"
+                                    parameters:@{
+                                                 @"behindLiveStatus" : pt,
+                                                 @"behindLiveSeconds" : literalValue,
+                                                 @"programTitle" : title,
+                                                 @"streamId" : plus
+                                                 }];
+    
+    [[AnalyticsManager shared] nielsenPlay];
+
+#endif
+    
+    
+}
+
+- (void)trackRewindSession {
+    if ( !self.rewindSessionIsHot ) return;
+    if ( [AudioManager shared].currentAudioMode != AudioModeLive ) return;
+    
+    @synchronized(self) {
+        self.rewindSessionIsHot = NO;
+    }
+    
+    NSInteger seconds = [self secondsBehindLive];
+    NSString *pt = [NSDate prettyTextFromSeconds:seconds];
+    
+    NSLog(@"Tracking rewind session...");
+    
+    NSString *title = self.currentProgram.title ? self.currentProgram.title : @"[UNKNOWN]";
+    [[AnalyticsManager shared] logEvent:@"liveStreamRewound"
+                         withParameters:@{ @"behindLiveStatus" : pt,
+                                           @"behindLiveSeconds" : [NSString stringWithFormat:@"%ld",(long)seconds],
+                                           @"programTitle" : title }];
+}
+
 - (void)startAudioSession {
     if ( [[AudioManager shared] currentAudioMode] == AudioModeLive ) {
         [self startLiveSession];
@@ -197,8 +299,8 @@
     Program *p = self.currentProgram;
     NSString *title = p.title ? p.title : @"[UNKNOWN]";
     
-
-#if !TARGET_IPHONE_SIMULATOR    
+    
+#if !TARGET_IPHONE_SIMULATOR
     [[AnalyticsManager shared] logEvent:@"liveStreamPause"
                          withParameters:@{ @"kpccSessionId" : sid,
                                            @"programTitle" : title,
@@ -210,105 +312,6 @@
     self.sessionIsHot = NO;
     self.liveSessionID = nil;
     return sid;
-}
-
-#pragma mark - Analytics
-- (void)handlePauseEventAgainstSessionAudio {
-    if ( self.killSessionTimer ) {
-        if ( [self.killSessionTimer isValid] ) {
-            [self.killSessionTimer invalidate];
-        }
-        self.killSessionTimer = nil;
-    }
-    
-    self.killSessionTimer = [NSTimer scheduledTimerWithTimeInterval:80.0f
-                                                             target:self
-                                                           selector:@selector(endAnalyticsForAudio:)
-                                                           userInfo:nil
-                                                            repeats:NO];
-}
-
-- (void)forceAnalyticsSessionEndForSessionAudio {
-    [self endAnalyticsForAudio:nil];
-}
-
-- (void)endAnalyticsForAudio:(NSNotification*)note {
-    NSString *eventName = [[AudioManager shared] currentAudioMode] == AudioModeLive ? @"liveStreamPlay" : @"episodePlay";
-    [Flurry endTimedEvent:eventName
-           withParameters:nil];
-}
-
-#pragma mark - Sessions
-- (void)trackLiveSession {
-    if ( !self.sessionIsHot ) return;
-    if ( [AudioManager shared].currentAudioMode != AudioModeLive ) return;
-    
-    @synchronized(self) {
-        self.sessionIsHot = NO;
-    }
-    
-    if ( self.killSessionTimer ) {
-        if ( [self.killSessionTimer isValid] ) {
-            [self.killSessionTimer invalidate];
-        }
-        self.killSessionTimer = nil;
-    }
-    
-    NSTimeInterval seconds = [self secondsBehindLive];
-    NSString *pt = @"";
-    if ( seconds > kAllowableDriftCeiling ) {
-        pt = [NSDate prettyTextFromSeconds:seconds];
-    } else {
-        pt = @"LIVE";
-    }
-    
-    NSString *literalValue = [NSString stringWithFormat:@"%ld",(long)seconds];
-    
-    Program *p = self.currentProgram;
-    
-    NSString *title = @"[UNKNOWN]";
-    if ( p.title ) {
-        title = p.title;
-    }
-
-    
-#if !TARGET_IPHONE_SIMULATOR
-    
-    NSString *plus = [[UXmanager shared].settings userHasSelectedXFS] ? @"KPCC Plus" : @"KPCC Live";
-    
-    
-    [[AnalyticsManager shared] beginTimedEvent:@"liveStreamPlay"
-                                    parameters:@{
-                                                 @"behindLiveStatus" : pt,
-                                                 @"behindLiveSeconds" : literalValue,
-                                                 @"programTitle" : title,
-                                                 @"streamId" : plus
-                                                 }];
-    
-
-#endif
-    
-    
-}
-
-- (void)trackRewindSession {
-    if ( !self.rewindSessionIsHot ) return;
-    if ( [AudioManager shared].currentAudioMode != AudioModeLive ) return;
-    
-    @synchronized(self) {
-        self.rewindSessionIsHot = NO;
-    }
-    
-    NSInteger seconds = [self secondsBehindLive];
-    NSString *pt = [NSDate prettyTextFromSeconds:seconds];
-    
-    NSLog(@"Tracking rewind session...");
-    
-    NSString *title = self.currentProgram.title ? self.currentProgram.title : @"[UNKNOWN]";
-    [[AnalyticsManager shared] logEvent:@"liveStreamRewound"
-                         withParameters:@{ @"behindLiveStatus" : pt,
-                                           @"behindLiveSeconds" : [NSString stringWithFormat:@"%ld",(long)seconds],
-                                           @"programTitle" : title }];
 }
 
 - (NSString*)startOnDemandSession {
@@ -362,6 +365,8 @@
     
     if ( timed ) {
         [self handlePauseEventAgainstSessionAudio];
+    } else {
+        [[AnalyticsManager shared] nielsenStop];
     }
     
     self.odSessionIsHot = NO;
@@ -394,6 +399,7 @@
                                            @"programLengthInSeconds" : [NSString stringWithFormat:@"%@",duration],
                                            @"programLength" : pretty
                                            }];
+    [[AnalyticsManager shared] nielsenPlay];
 }
 
 - (CGFloat)acceptableBufferWindow {
@@ -861,7 +867,7 @@
 #pragma mark - XFS
 - (void)xFreeStreamIsAvailableWithCompletion:(CompletionBlock)completion {
  
-
+    /*
     [self setXFreeStreamIsAvailable:NO];
     [[NSNotificationCenter defaultCenter] postNotificationName:@"pledge-drive-status-updated"
                                                         object:nil];
@@ -872,8 +878,9 @@
     
     return;
     
-/*
-#ifdef DEBUG
+    
+
+
 
     
     if ( self.numberOfChecks == 2 ) {
@@ -888,9 +895,8 @@
                                                             object:nil];
     }
     
+     */
 
-    
-#else
     NSString *endpoint = [NSString stringWithFormat:@"%@/schedule?pledge_status=true",kServerBase];
     NSURL *url = [NSURL URLWithString:endpoint];
     NSURLRequest *request = [NSURLRequest requestWithURL:url];
@@ -899,6 +905,17 @@
                            completionHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError) {
                                
                                NSError *jsonError = nil;
+                               
+                               if ( !data || connectionError ) {
+                                   if ( connectionError ) {
+                                       NSLog(@"Connection error : %@",[connectionError localizedDescription]);
+                                   }
+                                   
+                                   [self setXFreeStreamIsAvailable:NO];
+                                   
+                                   return;
+                               }
+                               
                                NSDictionary *responseObject = [NSJSONSerialization JSONObjectWithData:data
                                                                                               options:NSJSONReadingMutableLeaves
                                                                                                 error:&jsonError];
@@ -929,8 +946,7 @@
                                }
                                
                            }];
-#endif
- */
+ 
     
 }
 
@@ -954,7 +970,9 @@
                 return;
             }
             
-            completion(@{ @"success" : objects.firstObject });
+            if ( objects.firstObject ) {
+                completion(@{ @"success" : objects.firstObject });
+            }
         }
         
     }];
@@ -1110,7 +1128,6 @@
 }
 
 - (void)processTimer:(NSTimer*)timer {
-
     [self setUpdaterArmed:YES];
     [self fetchCurrentProgram:^(id returnedObject) {
         
@@ -1132,6 +1149,7 @@
     
     self.timeAudioWasPutInBackground = [[NSDate date] timeIntervalSince1970];
     NSTimeInterval diff = self.timeAudioWasPutInBackground - sessionBegan;
+    
     [[AnalyticsManager shared] logEvent:eventName
                          withParameters:@{ @"secondsSinceSessionBegan" : @(diff) }
                                   timed:NO];
@@ -1148,8 +1166,8 @@
         
     } else {
         if ( [[AudioManager shared] status] != StreamStatusPaused ) {
-            [self checkProgramUpdate:NO];
             
+            [self checkProgramUpdate:NO];
             if ( [[AudioManager shared] isPlayingAudio] ) {
 
                 NSString *eventName = @"";
@@ -1161,14 +1179,12 @@
                 }
                 NSTimeInterval now = [[NSDate date] timeIntervalSince1970];
                 NSInteger diff = now - self.timeAudioWasPutInBackground;
+                
                 [[AnalyticsManager shared] logEvent:eventName
                                      withParameters:@{ @"secondsSinceAppWasBackgrounded" : @(diff) }
                                               timed:NO];
             }
             
-        } else {
-         
-
         }
     }
     
@@ -1180,11 +1196,15 @@
     self.sessionPausedDate = nil;
     self.expiring = YES;
     
-    [[AudioManager shared] setWaitForSeek:NO];
-    [[AudioManager shared] setSeekRequested:NO];
+    [[AudioManager shared] resetFlags];
     
-    if ( [[AudioManager shared] audioPlayer] )
-        [[AudioManager shared] stopAudio];
+    if ( [[AudioManager shared] audioPlayer] ) {
+        if ( [[AudioManager shared] isPlayingAudio] ) {
+            // Shouldn't happen, but...
+            [[AudioManager shared] stopAudio];
+        }
+        [[AudioManager shared] takedownAudioPlayer];
+    }
     
     SCPRMasterViewController *master = [[Utils del] masterViewController];
     [master resetUI];

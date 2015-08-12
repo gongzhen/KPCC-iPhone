@@ -12,5 +12,11 @@ pod 'KSReachability'
 pod 'NewRelicAgent'
 pod 'ParseCrashReporting'
 pod 'Google/Analytics'
+pod 'Lock', '~> 1.12'
+pod 'Lock/Core', '~> 1.16'
+pod 'JWTDecode', '~> 0.2'
+pod 'Lock-Facebook', '~> 2.0'
+pod 'Lock-Twitter', '~> 1.0'
+pod 'SimpleKeychain'
 
 link_with ['KPCC', 'KPCCTests']

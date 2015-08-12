@@ -12,6 +12,7 @@
 #import "SCPRMasterViewController.h"
 #import "SCPRNavigationController.h"
 #import "SessionManager.h"
+#import <Lock-Facebook/A0FacebookAuthenticator.h>
 
 @implementation UXmanager
 + (instancetype)shared {
@@ -38,6 +39,11 @@
     if ( self.settings ) {
         self.settings = nil;
     }
+    
+    _lock = [A0Lock newLock];
+    _store = [A0SimpleKeychain keychainWithService:@"Auth0"];
+    A0FacebookAuthenticator *facebook = [A0FacebookAuthenticator newAuthenticatorWithDefaultPermissions];
+    [_lock registerAuthenticators:@[facebook]];
     
     NSData *data = [[NSUserDefaults standardUserDefaults] objectForKey:@"settings"];
     if ( data ) {
@@ -512,6 +518,140 @@
     SCPRAppDelegate *del = [Utils del];
     SCPRNavigationController *nav = [del masterNavigationController];
     nav.menuButton.alpha = 1.0f;
+}
+
+#pragma mark - SSO
+- (SSOType)userLoginType {
+    return self.settings.ssoLoginType;
+}
+
+- (void)loginWithCredentials:(NSDictionary *)credentials completion:(CompletionBlockWithValue)completion {
+    NSString *email = credentials[@"email"];
+    NSString *password = credentials[@"password"];
+    
+    A0Lock *lock = [self lock];
+    A0APIClient *client = [lock apiClient];
+    A0APIClientAuthenticationSuccess success = ^(A0UserProfile *profile, A0Token *token) {
+        NSLog(@"We did it!. Logged in with Auth0.");
+        if ( completion ) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                completion(@{ @"profile" : profile, @"token" : token });
+            });
+        }
+    };
+    
+    A0AuthParameters *params = [A0AuthParameters newDefaultParams];
+    params[A0ParameterConnection] = @"Username-Password-Authentication"; // Or your configured DB connection
+   
+    [client loginWithUsername:email
+                     password:password
+                   parameters:params
+                      success:success
+                      failure:^(NSError *error) {
+                          
+                          if ( completion ) {
+                              dispatch_async(dispatch_get_main_queue(), ^{
+                                  completion(nil);
+                              });
+                          }
+                          
+                          NSLog(@"Error : %@",[error localizedDescription]);
+                          
+                      }];
+    
+}
+
+- (void)createUserWithMetadata:(NSDictionary *)metadata completion:(CompletionBlockWithValue)completion {
+    
+    if ( !metadata[@"connection"] ) {
+        NSMutableDictionary *revised = [metadata mutableCopy];
+        revised[@"connection"] = @"Username-Password-Authentication";
+        metadata = [NSDictionary dictionaryWithDictionary:revised];
+    }
+    
+    NSError *jsonError = nil;
+    NSData *json = [NSJSONSerialization dataWithJSONObject:metadata
+                                                   options:NSJSONWritingPrettyPrinted
+                                                     error:&jsonError];
+    NSString *jsonString = [[NSString alloc] initWithData:json
+                                                 encoding:NSUTF8StringEncoding];
+    NSLog(@"JSON Body : %@",jsonString);
+    
+    NSString *a0apiStr = [NSString stringWithFormat:@"https://kpcc.auth0.com/api/v2/users"];
+    
+    NSDictionary *globalConfig = [Utils globalConfig];
+    NSString *token = globalConfig[@"Auth0"][@"POST"];
+    NSMutableURLRequest *mru = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:a0apiStr]];
+    [mru setHTTPMethod:@"POST"];
+    [mru setHTTPBody:json];
+    [mru setValue:@"application/json" forHTTPHeaderField:@"Accept"];
+    [mru setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+    [mru setValue:[NSString stringWithFormat:@"%ld", (long)[json length]] forHTTPHeaderField:@"Content-Length"];
+    [mru setValue:[NSString stringWithFormat:@"Bearer %@", token] forHTTPHeaderField:@"Authorization"];
+    [NSURLConnection sendAsynchronousRequest:mru queue:[NSOperationQueue new]
+                           completionHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError) {
+                               
+                               if ( connectionError ) {
+                                   NSLog(@"Problems : %@",[connectionError userInfo]);
+                               }
+                               
+                               if ( [(NSHTTPURLResponse*)response statusCode] == 201 ) {
+                                   if ( data ) {
+                                       NSString *userData = [[NSString alloc] initWithData:data
+                                                                                  encoding:NSUTF8StringEncoding];
+                                       NSLog(@"User data : %@",userData);
+                                       
+
+                                       dispatch_async(dispatch_get_main_queue(), ^{
+                                           if ( completion ) {
+                                               NSError *jsonError = nil;
+                                               NSMutableDictionary *profile = [NSJSONSerialization JSONObjectWithData:data
+                                                                                                              options:NSJSONReadingMutableLeaves
+                                                                                                                error:&jsonError];
+                                               completion(profile);
+                                           }
+                                       });
+
+                                       
+                                   }
+                               } else {
+                                   if ( data ) {
+                                       NSString *userData = [[NSString alloc] initWithData:data
+                                                                                  encoding:NSUTF8StringEncoding];
+                                       NSLog(@"Response fails with %ld : %@",(long)[(NSHTTPURLResponse*)response statusCode],
+                                             userData);
+                                       
+                                       if ( completion ) {
+                                           completion(nil);
+                                       }
+                                   }
+                               }
+                               
+                               
+                           }];
+}
+
+- (void)storeTokens:(NSDictionary *)tokenInfo type:(SSOType)type {
+    A0Token *token = tokenInfo[@"token"];
+    A0UserProfile *profile = tokenInfo[@"profile"];
+    
+    A0SimpleKeychain *keychain = [A0SimpleKeychain keychainWithService:@"Auth0"];
+    [keychain setString:token.idToken forKey:@"id_token"];
+    [keychain setString:token.refreshToken forKey:@"refresh_token"];
+    [keychain setData:[NSKeyedArchiver archivedDataWithRootObject:profile]
+               forKey:@"profile"];
+    [self.settings setSsoKey:token.idToken];
+    [self.settings setSsoLoginType:type];
+    [[UXmanager shared] persist];
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"tokens-stored"
+                                                        object:nil];
+    
+}
+
+- (A0UserProfile*)a0profile {
+    A0SimpleKeychain *keychain = [A0SimpleKeychain keychainWithService:@"Auth0"];
+    return (A0UserProfile*)[NSKeyedUnarchiver unarchiveObjectWithData:[keychain dataForKey:@"profile"]];
 }
 
 @end

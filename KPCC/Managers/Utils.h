@@ -60,5 +60,7 @@ static NSString *kPotentialElements = @"date time uri cs-guid s-ip s-ip-changes 
 + (NSString*)formatOfInterestFromDate:(NSDate*)rawDate startDate:(BOOL)startDate;
 + (NSString*)formatOfInterestFromDate:(NSDate*)rawDate startDate:(BOOL)startDate gapped:(BOOL)gapped;
 + (NSDictionary*)globalConfig;
++ (id)xib:(NSString*)name;
++ (NSMutableDictionary*)sanitizeDictionary:(NSDictionary*)dictionary;
 
 @end

@@ -44,6 +44,7 @@
 @property NSInteger sampleTick;
 
 @property BOOL seeking;
+@property BOOL scrubbingAvailable;
 
 @property NSTimeInterval frozenNow;
 @property NSTimeInterval sampledNow;

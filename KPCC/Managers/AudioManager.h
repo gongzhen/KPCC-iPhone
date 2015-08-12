@@ -72,7 +72,7 @@ typedef NS_ENUM(NSUInteger, StreamStatus) {
 
 #define kPreferredPeakBitRateTolerance 1000
 #define kImpatientWaitingTolerance 15.0
-#define kGiveUpTolerance 30.0
+#define kGiveUpTolerance 15.0
 #define kBookmarkingTolerance 10
 
 @interface AudioManager : NSObject<AVAssetResourceLoaderDelegate>
@@ -98,6 +98,7 @@ typedef NS_ENUM(NSUInteger, StreamStatus) {
 
 @property long latencyCorrection;
 
+@property (nonatomic,copy) NSString *xfsStreamUrl;
 
 @property (strong,nonatomic) NSDateFormatter *dateFormatter;
 @property (nonatomic,strong) NSOperationQueue *fadeQueue;
@@ -162,6 +163,7 @@ typedef NS_ENUM(NSUInteger, StreamStatus) {
 - (void)stopAudio;
 - (void)muteAudio;
 - (void)switchPlusMinusStreams;
+- (void)finishSwitchPlusMinus;
 - (void)unmuteAudio;
 - (void)buildStreamer:(NSString*)urlString;
 - (void)buildStreamer:(NSString*)urlString local:(BOOL)local;
@@ -190,6 +192,13 @@ typedef NS_ENUM(NSUInteger, StreamStatus) {
 @property BOOL ignoreDriftTolerance;
 @property BOOL calibrating;
 @property BOOL failureGate;
+
+@property BOOL playerNeedsToSeekToLive;
+@property BOOL playerNeedsToSeekGenerally;
+@property NSTimeInterval queuedTimeInterval;
+@property NSInteger queuedSeekType;
+@property (nonatomic, copy) CompletionBlock queuedCompletion;
+
 @property (nonatomic, copy) NSString *reasonToReportError;
 
 @property NSInteger skipCount;
@@ -231,11 +240,14 @@ typedef NS_ENUM(NSUInteger, StreamStatus) {
 - (void)threadedAdjustWithValue:(CGFloat)increment completion:(void (^)(void))completion;
 - (void)takedownAudioPlayer;
 - (void)resetPlayer;
+- (void)resetFlags;
 
 - (BOOL)isPlayingAudio;
 - (BOOL)isActiveForAudioMode:(AudioMode)mode;
 - (void)invalidateTimeObserver;
 - (void)startObservingTime;
+
+- (void)loadXfsStreamUrlWithCompletion:(CompletionBlock)completion;
 
 - (NSString*)avPlayerSessionString;
 - (NSDate*)cookDateForActualSchedule:(NSDate*)date;

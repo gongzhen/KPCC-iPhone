@@ -28,6 +28,8 @@
 #import "SCPRPledgePINViewController.h"
 #import "SCPRBalloonViewController.h"
 #import "Utils.h"
+#import "SCPRLoginViewController.h"
+#import "SCPRProfileViewController.h"
 
 @import MessageUI;
 
@@ -421,7 +423,11 @@ setForOnDemandUI;
     
     NSLog(@"Program Title Y Lock : %1.1f",self.programTitleYConstraint.constant);
     
-    [[NetworkManager shared] setupReachability];
+
+    [[AudioManager shared] loadXfsStreamUrlWithCompletion:^{
+        [[NetworkManager shared] setupReachability];
+    }];
+
     
     self.originalFrames = [NSMutableDictionary new];
     self.navigationItem.title = kMainLiveStreamTitle;
@@ -445,9 +451,7 @@ setForOnDemandUI;
             self.originalFrames[@"playerControls"] = @(self.playerControlsBottomYConstraint.constant);
             self.originalFrames[@"programTitle"] = @(self.programTitleYConstraint.constant);
             self.originalFrames[@"liveRewind"] = @(self.liveRewindBottomYConstraint.constant);
-            
-
-            
+        
         }
     }];
     
@@ -727,6 +731,8 @@ setForOnDemandUI;
         if ( self.preRollOpen ) {
             [self decloakForPreRoll:NO];
         }
+        
+        [[SessionManager shared] setLocalLiveTime:0.0f];
         
         [UIView animateWithDuration:0.25 animations:^{
             self.playerControlsBottomYConstraint.constant = [self.originalFrames[@"playerControls"] floatValue];
@@ -1493,7 +1499,8 @@ setForOnDemandUI;
     self.scrubbingUI.flagAnchor = self.flagAnchor;
     self.scrubbingUI.currentProgressNeedleView = self.currentProgressNeedleView;
     self.scrubbingUI.currentProgressReadingLabel = self.currentProgressNeedleReadingLabel;
-   
+    self.scrubbingUI.scrubbingAvailable = YES;
+    
     if ( [Utils isThreePointFive] ) {
         self.topGapScrubbingAnchor.constant = 54.0f;
     }
@@ -1552,6 +1559,8 @@ setForOnDemandUI;
         [[AudioManager shared] currentAudioMode] != AudioModeLive ) {
         return;
     }
+    
+    if ( !self.scrubbingUI.scrubbingAvailable ) return;
     
     if ( [[SessionManager shared] sessionHasNoProgram] ) {
         return;
@@ -3727,6 +3736,32 @@ setForOnDemandUI;
         }
         case 5: {
             
+            if ( [[UXmanager shared] userLoginType] == SSOTypeNone ) {
+                
+                [[NSNotificationCenter defaultCenter] addObserver:self
+                                                         selector:@selector(pushToProfile)
+                                                             name:@"tokens-stored"
+                                                           object:nil];
+                
+                SCPRLoginViewController *login = [[SCPRLoginViewController alloc] initWithNibName:@"SCPRLoginViewController"
+                                                                                           bundle:nil];
+                login.view.frame = CGRectMake(0.0f,0.0f,self.view.frame.size.width,
+                                              self.view.frame.size.height);
+                
+                [self presentViewController:login
+                                   animated:YES
+                                 completion:^{
+                                     self.userIsLoggingIn = YES;
+                                     [login.view layoutIfNeeded];
+                                 }];
+                
+            } else {
+                [self pushToProfile];
+            }
+            break;
+        }
+        case 6: {
+            
             self.homeIsNotRootViewController = YES;
             event = @"menuSelectionFeedback";
             SCPRFeedbackViewController *fbVC = [[SCPRFeedbackViewController alloc] initWithNibName:@"SCPRFeedbackViewController"
@@ -3747,6 +3782,37 @@ setForOnDemandUI;
     
     if ( closeMenu ) {
         [self decloakForMenu:YES];
+    }
+}
+
+- (void)pushToProfile {
+
+    if ( [[UXmanager shared].settings ssoLoginType] != SSOTypeNone ) {
+        
+        if ( self.userIsLoggingIn ) {
+            [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                            name:@"tokens-stored"
+                                                          object:nil];
+            [self dismissViewControllerAnimated:YES completion:^{
+                SCPRProfileViewController *profile = [[SCPRProfileViewController alloc] initWithNibName:@"SCPRProfileViewController"
+                                                                                             bundle:nil];
+                self.userIsLoggingIn = NO;
+                
+                profile.view = profile.view;
+                [profile setup];
+                
+                [self.navigationController pushViewController:profile animated:YES];
+            }];
+        } else {
+            SCPRProfileViewController *profile = [[SCPRProfileViewController alloc] initWithNibName:@"SCPRProfileViewController"
+                                                                                             bundle:nil];
+            
+            profile.view = profile.view;
+            [profile setup];
+            
+            [self.navigationController pushViewController:profile animated:YES];
+        }
+
     }
 }
 
@@ -3833,6 +3899,8 @@ setForOnDemandUI;
                 }
             }
         }
+        
+        [[AnalyticsManager shared] nielsenTrack];
         
     }
     

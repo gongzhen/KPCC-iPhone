@@ -10,9 +10,19 @@
 #import "Settings.h"
 #import "SCPRAppDelegate.h"
 #import <AVFoundation/AVFoundation.h>
+#import <Lock/Lock.h>
+#import <libextobjc/EXTScope.h>
+#import <SimpleKeychain/A0SimpleKeychain.h>
 
 @class SCPROnboardingViewController;
 @class SCPRMasterViewController;
+
+typedef NS_ENUM(NSInteger, SSOType) {
+    SSOTypeNone = 0,
+    SSOTypeTwitter,
+    SSOTypeFacebook,
+    SSOTypeKPCC
+};
 
 @interface UXmanager : NSObject<AVAudioPlayerDelegate>
 
@@ -31,6 +41,8 @@
 @property (nonatomic,strong) NSOperationQueue *fadeQueue;
 @property (nonatomic,strong) NSMutableDictionary *committedActions;
 @property (nonatomic,strong) NSDate *operationBeganDate;
+@property (readonly, nonatomic) A0Lock *lock;
+@property (nonatomic, strong) A0SimpleKeychain *store;
 
 + (instancetype)shared;
 - (void)load;
@@ -69,5 +81,13 @@
 - (void)killAudio;
 - (void)timeBegin;
 - (void)timeEnd:(NSString*)operationName;
+
+// SSO
+- (SSOType)userLoginType;
+- (void)createUserWithMetadata:(NSDictionary*)metadata completion:(CompletionBlockWithValue)completion;
+- (void)loginWithCredentials:(NSDictionary*)credentials completion:(CompletionBlockWithValue)completion;
+- (A0UserProfile*)a0profile;
+
+- (void)storeTokens:(NSDictionary*)tokenInfo type:(SSOType)type;
 
 @end

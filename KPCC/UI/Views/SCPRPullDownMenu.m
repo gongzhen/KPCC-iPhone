@@ -22,6 +22,7 @@
 #define kMenuItemDonate     @"Donate"
 #define kMenuItemSettings   @"Settings"
 #define kMenuItemFeedback   @"Feedback"
+#define kMenuItemProfile @"Profile"
 
 #define kIconKPCCLive   @"antenna"
 #define kIconPrograms   @"microphone"
@@ -30,6 +31,7 @@
 #define kIconDonate     @"heart-plus"
 #define kIconSettings   @"settings"
 #define kIconFeedback   @"feedback"
+#define kIconProfile    @"profile"
 
 @implementation SCPRPullDownMenu
 
@@ -56,7 +58,10 @@
                                                                         kMenuItemShortList,
                                                                         kMenuItemAlarm,
                                                                         kMenuItemDonate,
+                                                                        /* TODO: When the rest of the SSO flow is complete, re-enable it in the menu
+                                                                         kMenuItemProfile,*/
                                                                         kMenuItemFeedback,
+                                  
                                                                         //
                                                                         //kMenuItemSettings,
                                                                         nil];
@@ -67,7 +72,8 @@
                             kMenuItemAlarm      : kIconAlarm,
                             kMenuItemDonate     : kIconDonate,
                             kMenuItemSettings   : kIconSettings,
-                            kMenuItemFeedback   : kIconFeedback };
+                            kMenuItemFeedback   : kIconFeedback,
+                            kMenuItemProfile    : kIconProfile };
 
     menuItems = [[NSMutableArray alloc] init];
     for (NSString *menuItem in orderedItems) {
@@ -117,6 +123,15 @@
 }
 
 - (void)refresh {
+    
+    if ( [[NetworkManager shared] networkDown] ) {
+        self.menuList.alpha = 0.4f;
+        self.menuList.userInteractionEnabled = NO;
+    } else {
+        self.menuList.alpha = 1.0f;
+        self.menuList.userInteractionEnabled = YES;
+    }
+    
     [self.menuList reloadData];
 }
 
@@ -249,6 +264,7 @@
             [cell shiftForIconWithImage:iconImg];
         }
 
+        /*
 #ifndef DISABLE_INTERRUPT
         if ( [[NetworkManager shared] networkDown] ) {
             cell.menuItemLabel.alpha = 0.35;
@@ -261,7 +277,7 @@
             cell.userInteractionEnabled = YES;
             [cell.rightChevronImageView setHidden:chevronStatus];
         }
-#endif
+#endif*/
         
     }
     if ( self.type == MenuTypeXFS ) {
@@ -355,7 +371,7 @@
                              if (!fullyOpen)
                              {
                                  NSInteger numberToUse = self.type == MenuTypeStandard ? [menuItems count] : 6;
-                                 self.center = CGPointMake(self.frame.size.width / 2, (/*(self.frame.size.height / 2) +*/ topMargin + ((numberToUse*3.0) * numberToUse)));
+                                 self.frame = CGRectMake(0.0f,40.0f,self.frame.size.width,self.frame.size.height);
                                  fullyOpen = YES;
                              }
                          }
@@ -390,7 +406,9 @@
                          animations:^{
                              if (fullyOpen)
                              {
-                                 self.center = CGPointMake(self.frame.size.width / 2, -((self.frame.size.height / 2) + topMargin - 20.0));
+                                 self.frame = CGRectMake(0.0f, -1.0*self.frame.size.height-40.0f,
+                                                         self.frame.size.width,
+                                                         self.frame.size.height);
                                  fullyOpen = NO;
                              }
                          }
