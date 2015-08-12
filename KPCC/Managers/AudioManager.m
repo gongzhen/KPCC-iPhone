@@ -1105,7 +1105,6 @@ static const NSString *ItemStatusContext;
         self.queuedCompletion = completion;
         self.queuedTimeInterval = interval;
         [self buildStreamer:kHLS];
-        
     }
     
     [self setSeekWillEffectBuffer:YES];
