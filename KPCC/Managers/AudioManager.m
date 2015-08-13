@@ -445,12 +445,14 @@ static const NSString *ItemStatusContext;
 #pragma mark - Recovery / Logging / Stalls
 - (void)playbackStalled:(NSNotification*)note {
     
+    
     if ( self.userPause ) return;
     if ( self.giveupTimer ) return;
-
     if ( !self.seekWillEffectBuffer ) {
         if ( !self.audioOutputSourceChanging ) {
             self.dropoutOccurred = YES;
+            
+            NSLog(@"Playback has stalled ... ");
             
             [[NSNotificationCenter defaultCenter] postNotificationName:@"playback-stalled"
                                                                 object:nil];
@@ -620,6 +622,7 @@ static const NSString *ItemStatusContext;
         
         NSLog(@"Error log received....");
         
+        self.suppressSkipFixer = YES;
         if ( self.waitForLogTimer ) {
             if ( [self.waitForLogTimer isValid] ) {
                 [self.waitForLogTimer invalidate];
@@ -702,16 +705,25 @@ static const NSString *ItemStatusContext;
                                        withFormat:@"HH:mm:ss a"];
         
         CMTimeRange range = [seekRange[0] CMTimeRangeValue];
-        Float64 maxSeekTime = CMTimeGetSeconds(CMTimeRangeGetEnd(range));
+        //Float64 maxSeekTime = CMTimeGetSeconds(CMTimeRangeGetEnd(range));
         
         //NSLog(@"Reported Date : %@, Expected Date : %@",repStr,expStr);
         if ( fabs(etFloat - rtFloat) > kSmallSkipInterval || ![expectedDate isWithinTimeFrame:kSmallSkipInterval ofDate:reportedDate] ) {
             
             if ( !self.seekWillEffectBuffer ) {
+                
                 if ( self.userPause ) {
                     return;
                 }
-            
+                if ( self.suppressSkipFixer ) {
+                    NSLog(@"Ignoring because error log was received");
+                    return;
+                }
+                if ( self.dropoutOccurred ) {
+                    NSLog(@"Going to ignore this because the stream has dropped out");
+                    return;
+                }
+                
                 NSLog(@"Stream skipped a bit : %ld seconds",(long)fabs([reportedDate timeIntervalSince1970] - [expectedDate timeIntervalSince1970]));
                 NSLog(@"Reported Date : %@, Expected Date : %@",repStr,expStr);
                 
@@ -723,6 +735,7 @@ static const NSString *ItemStatusContext;
 
                 if ( self.skipCount < 1 ) {
                     
+
                     NSDate *seek = [[SessionManager shared] vLive];
                     if ( [[SessionManager shared] lastValidCurrentPlayerTime] ) {
                         seek = [[SessionManager shared] lastValidCurrentPlayerTime];
@@ -942,6 +955,7 @@ static const NSString *ItemStatusContext;
             if ( weakSelf.frameCount == 300 ) {
                 // After 30 seconds, consider skip probation period over
                 weakSelf.skipCount = 0;
+                weakSelf.suppressSkipFixer = NO;
                 NSLog(@"Ending skip probation period");
             }
             
@@ -1487,6 +1501,7 @@ static const NSString *ItemStatusContext;
         
     } @catch (NSException *e) {
         // Wasn't necessary
+        NSLog(@"An exception occurred : %@",e.userInfo);
     }
     
     [[SessionManager shared] resetCache];
@@ -1521,6 +1536,8 @@ static const NSString *ItemStatusContext;
     self.status = StreamStatusStopped;
     self.currentAudioMode = AudioModeNeutral;
     self.skipCount = 0;
+    self.appGaveUp = NO;
+    self.suppressSkipFixer = NO;
 }
 
 - (void)sanitizeFromOnboarding {
