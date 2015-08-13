@@ -71,8 +71,8 @@ typedef NS_ENUM(NSUInteger, StreamStatus) {
 @end
 
 #define kPreferredPeakBitRateTolerance 1000
-#define kImpatientWaitingTolerance 15.0
-#define kGiveUpTolerance 15.0
+#define kImpatientWaitingTolerance 20.0
+#define kGiveUpTolerance 10.0
 #define kBookmarkingTolerance 10
 
 @interface AudioManager : NSObject<AVAssetResourceLoaderDelegate>
@@ -135,6 +135,8 @@ typedef NS_ENUM(NSUInteger, StreamStatus) {
 @property BOOL streamWarning;
 @property BOOL appGaveUp;
 @property BOOL audioOutputSourceChanging;
+@property BOOL suppressSkipFixer;
+
 
 @property (nonatomic, strong) NSMutableDictionary *localBufferSample;
 
