@@ -75,7 +75,7 @@ typedef NS_ENUM(NSUInteger, StreamStatus) {
 #define kGiveUpTolerance 10.0
 #define kBookmarkingTolerance 10
 
-@interface AudioManager : NSObject<AVAssetResourceLoaderDelegate>
+@interface AudioManager : NSObject
 
 + (AudioManager*)shared;
 
@@ -157,7 +157,6 @@ typedef NS_ENUM(NSUInteger, StreamStatus) {
 - (void)playLiveStream;
 
 @property (NS_NONATOMIC_IOSONLY, readonly, copy) NSString *liveStreamURL;
-- (void)startStream;
 - (void)playAudio;
 - (void)pauseAudio;
 - (void)stopAllAudio;
@@ -216,11 +215,6 @@ typedef NS_ENUM(NSUInteger, StreamStatus) {
 
 - (void)seekToPercent:(CGFloat)percent;
 
-/*
-- (void)seekToDate:(NSDate *)date;
-- (void)seekToDate:(NSDate *)date forward:(BOOL)forward failover:(BOOL)failover;
-- (void)specialSeekToDate:(NSDate*)date;*/
-
 - (void)recalibrateAfterScrub;
 
 - (void)forwardSeekLiveWithType:(NSInteger)type completion:(CompletionBlock)completion;
@@ -236,7 +230,6 @@ typedef NS_ENUM(NSUInteger, StreamStatus) {
 - (void)forwardSeekFifteenSecondsWithCompletion:(CompletionBlock)completion;
 - (void)backwardSeekFifteenSecondsWithCompletion:(CompletionBlock)completion;
 
-- (void)analyzeStreamError:(NSString*)comments;
 - (void)adjustAudioWithValue:(CGFloat)increment completion:(void (^)(void))completion;
 - (void)threadedAdjustWithValue:(CGFloat)increment completion:(void (^)(void))completion;
 - (void)takedownAudioPlayer;
@@ -251,13 +244,11 @@ typedef NS_ENUM(NSUInteger, StreamStatus) {
 - (void)loadXfsStreamUrlWithCompletion:(CompletionBlock)completion;
 
 - (NSString*)avPlayerSessionString;
-- (NSDate*)cookDateForActualSchedule:(NSDate*)date;
 
 #ifdef DEBUG
 @property long frame;
 @property (nonatomic,strong) NSDate *previousCD;
 - (void)dump:(BOOL)superVerbose;
-- (void)streamFrame;
 @property (nonatomic, strong) NSTimer *multipurposeTimer;
 
 #endif

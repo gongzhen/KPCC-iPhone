@@ -448,14 +448,6 @@ static AnalyticsManager *singleton = nil;
     
 }
 
-- (void)forceAnalysis:(NSTimer*)timer {
-  /*  NSDictionary *ui = [timer userInfo];
-    [[AudioManager shared] setLoggingGateOpen:NO];
-    [self failStream:(NetworkHealth)[ui[@"cause"] intValue]
-            comments:ui[@"comments"]];
-   */
-}
-
 - (NSDictionary*)typicalLiveProgramInformation {
     
     NSMutableDictionary *programInfo = [NSMutableDictionary new];

@@ -456,13 +456,6 @@ static const NSString *ItemStatusContext;
 
 }
 
-- (void)forceAnalysis {
-    [[AnalyticsManager shared] clearLogs];
-    /*[[AnalyticsManager shared] logEvent:self.reasonToReportError
-                         withParameters:@{ @"errorComment" : @"No error log posted" }];*/
-    self.reasonToReportError = nil;
-}
-
 - (void)giveUpOnStream {
     if ( self.dropoutOccurred ) {
         [self stopAudio];
@@ -757,11 +750,6 @@ static const NSString *ItemStatusContext;
         
     }
 }
-
-- (BOOL)resourceLoader:(AVAssetResourceLoader *)resourceLoader shouldWaitForRenewalOfRequestedResource:(AVAssetResourceRenewalRequest *)renewalRequest {
-    return YES;
-}
-
 
 #pragma mark - State
 - (void)setCurrentAudioMode:(AudioMode)currentAudioMode {
@@ -1211,28 +1199,6 @@ static const NSString *ItemStatusContext;
     }
 }
 
-#pragma mark - Date and Time helper operations
-- (NSString *)currentDateTimeString {
-    return [[self programDateTimeFormatter] stringFromDate:self.currentDate];
-}
-
-- (NSString *)minSeekableDateTimeString {
-    return [[self programDateTimeFormatter] stringFromDate:self.minSeekableDate];
-}
-
-- (NSString *)maxSeekableDateTimeString {
-    return [[self programDateTimeFormatter] stringFromDate:self.maxSeekableDate];
-}
-
-- (NSDateFormatter *)programDateTimeFormatter {
-    if (_dateFormatter == nil) {
-        _dateFormatter = [[NSDateFormatter alloc] init];
-        [_dateFormatter setDateFormat:@"h:mm:ss a"];
-        [_dateFormatter setTimeZone:[NSTimeZone timeZoneForSecondsFromGMT: [[NSTimeZone localTimeZone] secondsFromGMT]]];
-    }
-    return _dateFormatter;
-}
-
 - (void)playerItemFailedToPlayToEndTime:(NSNotification *)notification {
     NSError *error = notification.userInfo[AVPlayerItemFailedToPlayToEndTimeErrorKey];
 #ifdef DEBUG
@@ -1617,10 +1583,6 @@ static const NSString *ItemStatusContext;
     return self.status == StreamStatusPaused || self.status == StreamStatusPlaying;
 }
 
-- (void)startStream {
-    [self playAudio];
-}
-
 - (void)playAudio {
     
     [[ContentManager shared] saveContext];
@@ -1838,23 +1800,6 @@ static const NSString *ItemStatusContext;
     return NO;
 }
 
-#pragma mark - General Utils
-- (NSDate*)cookDateForActualSchedule:(NSDate *)date {
-#ifdef USE_TEST_STREAM
-    return [self minSeekableDate];
-#else
-#ifndef NO_PROGRAM_OFFSET_CORRECTION
-    NSTimeInterval supposed = [date timeIntervalSince1970];
-    NSTimeInterval actual = supposed + 60 * 6;
-    NSDate *actualDate = [NSDate dateWithTimeIntervalSince1970:actual];
-    return actualDate;
-#else
-    return date;
-#endif
-#endif
-}
-
-
 #pragma mark - Error Logging
 #ifdef DEBUG
 - (void)dump:(BOOL)superVerbose {
@@ -1883,77 +1828,6 @@ static const NSString *ItemStatusContext;
     
 }
 
-
-- (void)streamFrame {
-    self.frame++;
-    if ( self.frame % 100 == 0 ) {
-        [self dump:NO];
-        if ( self.previousCD ) {
-            long diff = [self.audioPlayer.currentItem.currentDate timeIntervalSinceDate:self.previousCD];
-            if ( diff > 60 ) {
-                NSLog(@"Big drift spike : %ld, previous snapshot : %@",diff,[self.previousCD prettyTimeString]);
-            }
-        }
-        
-        self.previousCD = self.audioPlayer.currentItem.currentDate;
-    }
-}
 #endif
-
-- (void)analyzeStreamError:(NSString *)comments {
-
-    NetworkHealth netHealth = [[NetworkManager shared] checkNetworkHealth];
-    switch (netHealth) {
-        case NetworkHealthAllOK:
-            // If recovering from stream failure, cancel playing of local audio file
-            if (self.localAudioPlayer && self.localAudioPlayer.isPlaying) {
-                [self.localAudioPlayer stop];
-            }
-            
-            [[AnalyticsManager shared] failStream:NetworkHealthUnknown
-                                         comments:comments];
-            
-            break;
-            
-        case NetworkHealthNetworkDown:
-            //[self localAudioFallback:[[NSBundle mainBundle] pathForResource:kFailedConnectionAudioFile ofType:@"mp3"]];
-            if ([self.delegate respondsToSelector:@selector(handleUIForFailedConnection)]) {
-                [self.delegate handleUIForFailedConnection];
-            }
-            [[AnalyticsManager shared] failStream:NetworkHealthNetworkDown comments:comments];
-            break;
-        
-        case NetworkHealthContentServerDown:
-            //[self localAudioFallback:[[NSBundle mainBundle] pathForResource:kFailedStreamAudioFile ofType:@"mp3"]];
-            if ([self.delegate respondsToSelector:@selector(handleUIForFailedStream)]) {
-                [self.delegate handleUIForFailedStream];
-            }
-            [[AnalyticsManager shared] failStream:NetworkHealthContentServerDown comments:comments];
-            break;
-        case NetworkHealthStreamingServerDown:
-            if ([self.delegate respondsToSelector:@selector(handleUIForFailedStream)]) {
-                [self.delegate handleUIForFailedStream];
-            }
-            [[AnalyticsManager shared] failStream:NetworkHealthStreamingServerDown comments:comments];
-            break;
-        default:
-            [[AnalyticsManager shared] failStream:NetworkHealthUnknown comments:comments];
-            break;
-    }
-}
-
-- (void)localAudioFallback:(NSString *)filePath {
-
-    if (!filePath) {
-        return;
-    }
-
-    [self stopAudio];
-
-    // Init the local audio player, set to loop indefinitely, and play.
-    self.localAudioPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:[NSURL fileURLWithPath:filePath] error:nil];
-    self.localAudioPlayer.numberOfLoops = -1;
-    [self.localAudioPlayer play];
-}
 
 @end
