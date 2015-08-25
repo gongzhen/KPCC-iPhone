@@ -57,9 +57,6 @@ typedef NS_ENUM(NSUInteger, StreamStatus) {
 
 @protocol AudioManagerDelegate <NSObject>
 @optional
-- (void)handleUIForFailedConnection;
-- (void)handleUIForFailedStream;
-- (void)handleUIForRecoveredStream;
 - (void)onTimeChange;
 - (void)onRateChange;
 - (void)onSeekCompleted;
@@ -94,45 +91,28 @@ typedef NS_ENUM(NSUInteger, StreamStatus) {
 @property NSDate *minSeekableDate;
 @property NSDate *maxSeekableDate;
 @property NSDate *requestedSeekDate;
-@property NSDate *relativeFauxDate;
-
-@property long latencyCorrection;
 
 @property (nonatomic,copy) NSString *xfsStreamUrl;
 
 @property (strong,nonatomic) NSDateFormatter *dateFormatter;
 @property (nonatomic,strong) NSOperationQueue *fadeQueue;
 
-
-@property long bufferObservationCount;
-
 @property CGFloat savedVolume;
 @property CGFloat savedVolumeFromMute;
 @property Float64 onDemandSeekPosition;
 
 @property BOOL seekRequested;
-@property BOOL bufferMutex;
-@property BOOL waitForFirstTick;
-@property BOOL autoMuted;
-@property BOOL temporaryMutex;
 @property BOOL easeInAudio;
 @property BOOL waitForSeek;
 @property BOOL waitForOnDemandSeek;
 @property BOOL prerollPlaying;
 @property BOOL tryAgain;
-@property BOOL dumpedOnce;
-@property BOOL recoveryGateOpen;
-@property BOOL loggingGateOpen;
 @property BOOL reactivate;
 @property BOOL dropoutOccurred;
 @property BOOL seekWillEffectBuffer;
-@property BOOL streamStabilized;
 @property BOOL smooth;
 @property BOOL userPause;
-@property BOOL waitingForRecovery;
 @property BOOL beginNormally;
-@property BOOL bufferEmpty;
-@property BOOL streamWarning;
 @property BOOL appGaveUp;
 @property BOOL audioOutputSourceChanging;
 @property BOOL suppressSkipFixer;
@@ -145,7 +125,6 @@ typedef NS_ENUM(NSUInteger, StreamStatus) {
 @property NSInteger failoverCount;
 
 @property (nonatomic, copy) NSString *previousUrl;
-@property (nonatomic, strong) NSDate *queuedSeekDate;
 
 @property NSInteger onboardingSegment;
 @property (nonatomic) AudioMode currentAudioMode;
@@ -156,7 +135,6 @@ typedef NS_ENUM(NSUInteger, StreamStatus) {
 - (void)playQueueItem:(AudioChunk*)chunk;
 - (void)playLiveStream;
 
-@property (NS_NONATOMIC_IOSONLY, readonly, copy) NSString *liveStreamURL;
 - (void)playAudio;
 - (void)pauseAudio;
 - (void)stopAllAudio;
@@ -184,14 +162,11 @@ typedef NS_ENUM(NSUInteger, StreamStatus) {
 @property (NS_NONATOMIC_IOSONLY, readonly) double indicatedBitrate;
 @property (NS_NONATOMIC_IOSONLY, readonly) double observedMaxBitrate;
 @property (NS_NONATOMIC_IOSONLY, readonly) double observedMinBitrate;
-@property (NS_NONATOMIC_IOSONLY, readonly, copy) NSString *currentDateTimeString;
 
 @property NSInteger frameCount;
 
-@property BOOL audioCheating;
 @property BOOL ignoreDriftTolerance;
 @property BOOL calibrating;
-@property BOOL failureGate;
 
 @property BOOL playerNeedsToSeekToLive;
 @property BOOL playerNeedsToSeekGenerally;

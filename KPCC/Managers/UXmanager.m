@@ -474,7 +474,6 @@
     
     self.onboardingEnding = YES;
     self.fadeQueue = [[NSOperationQueue alloc] init];
-    [[AudioManager shared] setRelativeFauxDate:nil];
     [self.onboardingCtrl.view removeFromSuperview];
     [self fadePlayer:self.musicPlayer];
     

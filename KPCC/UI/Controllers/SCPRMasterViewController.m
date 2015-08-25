@@ -929,7 +929,6 @@ setForOnDemandUI;
 
 - (void)onboarding_beginOutro {
     
-    [[AudioManager shared] setTemporaryMutex:NO];
     [[AudioManager shared] playOnboardingAudio:3];
 }
 
@@ -1362,7 +1361,6 @@ setForOnDemandUI;
                                    
                                    [[SessionManager shared] fetchOnboardingProgramWithSegment:2 completed:^(id returnedObject) {
                                        
-                                       [[AudioManager shared] setTemporaryMutex:NO];
                                        [[AudioManager shared] playOnboardingAudio:2];
                                        
                                    }];

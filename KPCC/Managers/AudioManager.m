@@ -816,7 +816,6 @@ static const NSString *ItemStatusContext;
     
     self.calibrating = YES;
     self.timeObserver = nil;
-    self.waitForFirstTick = YES;
     self.frameCount = 0;
     
     
@@ -839,10 +838,7 @@ static const NSString *ItemStatusContext;
             }
 #endif
         }
-        weakSelf.bufferEmpty = NO;
         weakSelf.beginNormally = NO;
-        weakSelf.streamWarning = NO;
-        
         
         NSArray *seekRange = audioPlayer.currentItem.seekableTimeRanges;
         if (seekRange && [seekRange count] > 0) {
@@ -1244,17 +1240,6 @@ static const NSString *ItemStatusContext;
     }
 }
 
-- (NSString *)liveStreamURL {
-
-    if (self.audioPlayer) {
-        if ([self.audioPlayer.currentItem.accessLog.events.lastObject URI]) {
-            return [NSString stringWithFormat:@"%@",[self.audioPlayer.currentItem.accessLog.events.lastObject URI]];
-        }
-    }
-    return kHLS;
-
-}
-
 - (double)indicatedBitrate {
     return [self.audioPlayer indicatedBitrate];
 }
@@ -1398,7 +1383,6 @@ static const NSString *ItemStatusContext;
     
     [[ContentManager shared] saveContext];
     
-    self.temporaryMutex = NO;
     if ( self.audioPlayer ) {
         [self.audioPlayer pause];
     }
@@ -1567,8 +1551,6 @@ static const NSString *ItemStatusContext;
                                              selector:@selector(onboardingSegmentCompleted)
                                                  name:AVPlayerItemDidPlayToEndTimeNotification
                                                object:nil];
-    
-    [[AudioManager shared] setRelativeFauxDate:[NSDate date]];
     
     [self playAudio];
     
@@ -1755,9 +1737,6 @@ static const NSString *ItemStatusContext;
     if ( basecase ) {
         if ( increasing ) {
             self.audioPlayer.volume = self.savedVolume;
-            self.autoMuted = NO;
-        } else {
-            self.autoMuted = YES;
         }
         
         self.smooth = NO;
