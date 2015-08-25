@@ -78,48 +78,21 @@ static const NSString *ItemStatusContext;
     
 }
 
-- (NSString*)standardHlsStream {
-    return [self streamingURL:YES
-                      preskip:NO
-                          mp3:NO];
-}
-
-- (NSString*)streamingURL:(BOOL)hls preskip:(BOOL)preskip mp3:(BOOL)mp3 {
+- (NSString*)streamingURL {
     
     NSDictionary *streams = [[Utils globalConfig] objectForKey:@"StreamMachine"];
     NSString *streamURL = @"";
-    if ( hls ) {
         
-        if ( [[UXmanager shared].settings userHasSelectedXFS] ) {
-            if ( self.xfsStreamUrl ) {
-                streamURL = self.xfsStreamUrl;
-            } else {
-                streamURL = streams[@"xfs"];
-            }
+    if ( [[UXmanager shared].settings userHasSelectedXFS] ) {
+        if ( self.xfsStreamUrl ) {
+            streamURL = self.xfsStreamUrl;
         } else {
-            streamURL = streams[@"standard"];
+            streamURL = streams[@"xfs"];
         }
-        streamURL = [NSString stringWithFormat:@"%@?ua=KPCCiPhone-%@",streamURL,[Utils urlSafeVersion]];
-        
     } else {
-        
-        NSString *keybase = @"xcast-";
-        if ( mp3 ) {
-            keybase = [keybase stringByAppendingString:@"mp3"];
-        } else {
-            keybase = [keybase stringByAppendingString:@"aac"];
-        }
-        streamURL = streams[keybase];
-
-        if ( preskip ) {
-            streamURL = [streamURL stringByAppendingString:@"?preskip=true"];
-        }
-        
+        streamURL = streams[@"standard"];
     }
-
-#ifdef SANITY_STREAM_TEST
-    streamURL = streams[@"external-test"];
-#endif
+    streamURL = [NSString stringWithFormat:@"%@?ua=KPCCiPhone-%@",streamURL,[Utils urlSafeVersion]];
     
     return streamURL;
     

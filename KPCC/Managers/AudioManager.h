@@ -21,7 +21,7 @@ static long kStreamCorrectionTolerance = 60*5;
 
 #define kLargeSkipInterval [[SessionManager shared] peakDrift]
 #define kSmallSkipInterval 10.0
-#define kHLS [[AudioManager shared] standardHlsStream]
+#define kHLS [[AudioManager shared] streamingURL]
 #define kLiveStreamPreRollThreshold 3600
 #define kFailedConnectionAudioFile @"Wood_Crash"
 #define kFailedStreamAudioFile @"Glass_Crash"
@@ -150,8 +150,7 @@ typedef NS_ENUM(NSUInteger, StreamStatus) {
 @property NSInteger onboardingSegment;
 @property (nonatomic) AudioMode currentAudioMode;
 
-- (NSString*)standardHlsStream;
-- (NSString*)streamingURL:(BOOL)hls preskip:(BOOL)preskip mp3:(BOOL)mp3;
+- (NSString*)streamingURL;
 
 - (void)playQueueItemWithUrl:(NSString *)url;
 - (void)playQueueItem:(AudioChunk*)chunk;
