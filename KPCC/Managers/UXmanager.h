@@ -48,8 +48,6 @@ typedef NS_ENUM(NSInteger, SSOType) {
 - (void)load;
 - (void)persist;
 
-- (void)freezeProgressBar;
-
 - (BOOL)userHasSeenOnboarding;
 - (BOOL)userHasSeenScrubbingOnboarding;
 

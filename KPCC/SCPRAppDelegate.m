@@ -18,14 +18,6 @@
 #import "AnalyticsManager.h"
 #import <Parse/Parse.h>
 
-#ifdef ENABLE_TESTFLIGHT
-#import "TestFlight.h"
-#endif
-
-
-
-
-
 @implementation SCPRAppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {

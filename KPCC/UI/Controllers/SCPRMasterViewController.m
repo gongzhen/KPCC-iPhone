@@ -532,24 +532,6 @@ setForOnDemandUI;
     self.navigationItem.title = kMainLiveStreamTitle;
 }
 
-- (void)setupScroller7 {
-    self.mainContentScroller.translatesAutoresizingMaskIntoConstraints = NO;
-    self.mainContentScroller.pagingEnabled = YES;
-    self.upcomingScreen = [[SCPRUpcomingProgramViewController alloc] initWithNibName:@"SCPRUpcomingProgramViewController"
-                                                                              bundle:nil];
-    self.cpFullDetailScreen = [[SCPRCompleteScheduleViewController alloc] initWithNibName:@"SCPRCompleteScheduleViewController"
-                                                                                   bundle:nil];
-    
-    
-    self.upcomingScreen.view.frame = self.upcomingScreen.view.frame;
-    self.cpFullDetailScreen.view.frame = self.cpFullDetailScreen.view.frame;
-    
-    UIView *contentView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0,
-                                                                   self.mainContentScroller.frame.size.width*3.0,
-                                                                   self.view.frame.size.height-64.0)];
-    [self.mainContentScroller addSubview:contentView];
-}
-
 - (void)setupScroller {
     
     self.mainContentScroller.translatesAutoresizingMaskIntoConstraints = NO;

@@ -898,9 +898,6 @@ static const NSString *ItemStatusContext;
                     [[SessionManager shared] tickSleepTimer];
                 }
                 
-                //[[SessionManager shared] trackLiveSession];
-                //[[SessionManager shared] trackRewindSession];
-                //[[SessionManager shared] trackOnDemandSession];
                 [[SessionManager shared] checkProgramUpdate:NO];
                 
 

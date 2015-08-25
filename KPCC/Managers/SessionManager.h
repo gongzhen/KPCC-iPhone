@@ -107,11 +107,9 @@ static NSInteger kProgramPollingPressure = 5;
 // Drift
 - (NSDate*)vLive;
 - (NSDate*)vNow;
-- (NSInteger)calculatedDriftValue;
 
 - (NSTimeInterval)secondsBehindLive;
 - (NSTimeInterval)virtualSecondsBehindLive;
-- (NSInteger)medianDrift;
 
 - (void)processNotification:(UILocalNotification*)programUpdate;
 @property (NS_NONATOMIC_IOSONLY) BOOL ignoreProgramUpdating;
@@ -166,10 +164,6 @@ static NSInteger kProgramPollingPressure = 5;
 
 - (NSString*)startOnDemandSession;
 - (NSString*)endOnDemandSessionWithReason:(OnDemandFinishedReason)reason;
-- (void)trackOnDemandSession;
-- (BOOL)programDirty:(Program*)p;
-
-- (NSString*)prettyStringForPauseExplanation:(PauseExplanation)explanation;
 
 - (long)bufferLength;
 

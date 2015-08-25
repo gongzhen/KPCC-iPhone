@@ -34,27 +34,6 @@
     return mgr;
 }
 
-
-
-- (NSString*)prettyStringForPauseExplanation:(PauseExplanation)explanation {
-    switch (explanation) {
-        case PauseExplanationUnknown:
-            return @"Undetermined";
-        case PauseExplanationAppIsTerminatingSession:
-            return @"App is pausing audio session from stream exception";
-        case PauseExplanationAudioInterruption:
-            return @"App received an interruption from another audio source";
-        case PauseExplanationUserHasPausedExplicitly:
-            return @"The user hit the pause button";
-        case PauseExplanationAppIsRespondingToPush:
-            return @"The app is responding to a Live Stream push";
-        default:
-            break;
-    }
-    
-    return @"";
-}
-
 #pragma mark - Session Mgmt
 - (NSDate*)vLive {
     
@@ -100,13 +79,6 @@
     return [self vLive];
 }
 
-- (NSInteger)calculatedDriftValue {
-    /*NSInteger vDrift = fabs([[NSDate date] timeIntervalSinceDate:[[AudioManager shared] maxSeekableDate]]);
-    NSLog(@"Current Drift Value : %ld",(long)vDrift);
-    return vDrift / 2.0 < [[SessionManager shared] peakDrift] ? vDrift / 2.0 : [[SessionManager shared] peakDrift];*/
-    return 2;
-}
-
 - (NSTimeInterval)secondsBehindLive {
     NSDate *currentTime = [AudioManager shared].audioPlayer.currentItem.currentDate;
     if ( !currentTime ) return 0;
@@ -130,10 +102,6 @@
     } 
     
     return (NSTimeInterval)sbl;
-}
-
-- (NSInteger)medianDrift {
-    return floor((self.minDrift + self.peakDrift)/2.0);
 }
 
 #pragma mark - Analytics
@@ -372,34 +340,6 @@
     self.odSessionIsHot = NO;
     self.odSessionID = nil;
     return sid;
-}
-
-- (void)trackOnDemandSession {
-    if ( !self.odSessionIsHot ) return;
-    if ( [AudioManager shared].currentAudioMode != AudioModeOnDemand ) return;
-    
-    @synchronized(self) {
-        self.odSessionIsHot = NO;
-    }
-    
-    NSDate *d = [[[QueueManager shared] currentChunk] audioTimeStamp];
-    NSString *pubDateStr = [NSDate stringFromDate:d
-                                       withFormat:@"MM/dd/YYYY hh:mm a"];
-    NSNumber *duration = [[[QueueManager shared] currentChunk] audioDuration];
-    NSInteger dur = [duration intValue];
-    NSString *pretty = [NSDate prettyTextFromSeconds:dur];
-    
-    AudioChunk *chunk = [[QueueManager shared] currentChunk];
-    NSString *title = chunk.programTitle ? chunk.programTitle : @"[UNKNOWN]";
-    
-    [[AnalyticsManager shared] logEvent:@"onDemandEpisodeBegan"
-                         withParameters:@{ @"kpccSessionId" : self.odSessionID,
-                                           @"programPublishedAt" : pubDateStr,
-                                           @"programTitle" : title,
-                                           @"programLengthInSeconds" : [NSString stringWithFormat:@"%@",duration],
-                                           @"programLength" : pretty
-                                           }];
-    [[AnalyticsManager shared] nielsenPlay];
 }
 
 - (CGFloat)acceptableBufferWindow {
@@ -831,14 +771,6 @@
     
 }
 #endif
-
-- (BOOL)programDirty:(Program *)p {
-    Program *cp = self.currentProgram;
-    if ( !cp ) {
-        return YES;
-    }
-    return !SEQ(p.program_slug,cp.program_slug);
-}
 
 - (void)checkProgramUpdate:(BOOL)force {
 

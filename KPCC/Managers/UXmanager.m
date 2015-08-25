@@ -73,10 +73,6 @@
     return self.settings.userHasViewedScrubbingOnboarding;
 }
 
-- (void)freezeProgressBar {
-    self.masterCtrl.liveProgressViewController.freezeBit = YES;
-}
-
 - (void)loadOnboarding {
     
     [self listenForQueues];
