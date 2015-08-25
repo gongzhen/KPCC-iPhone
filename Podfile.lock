@@ -136,15 +136,11 @@ PODS:
   - Mixpanel (2.8.2):
     - Mixpanel/Mixpanel (= 2.8.2)
   - Mixpanel/Mixpanel (2.8.2)
-  - NewRelicAgent (5.1.2)
   - NSData+Base64 (1.0.0)
   - OAuthCore (0.0.1):
     - NSData+Base64
-  - Parse (1.7.5.3):
+  - Parse (1.8.1):
     - Bolts/Tasks (>= 1.2.0)
-  - ParseCrashReporting (1.7.5.3):
-    - Bolts/Tasks (>= 1.2.0)
-    - Parse (~> 1.7.5.3)
   - pop (1.0.7)
   - PSAlertView (2.0.3)
   - SimpleKeychain (0.4.0)
@@ -166,9 +162,7 @@ DEPENDENCIES:
   - Lock-Twitter (~> 1.0)
   - Lock/Core (~> 1.16)
   - Mixpanel (~> 2.7)
-  - NewRelicAgent
   - Parse (~> 1.6)
-  - ParseCrashReporting
   - pop (~> 1.0)
   - SimpleKeychain
   - XMLDictionary (~> 1.4)
@@ -197,15 +191,13 @@ SPEC CHECKSUMS:
   Lock-Twitter: 8168e4c3861f6cc6581d1b8d635f41e29a607cb3
   LUKeychainAccess: 6479edb12cf06e11ff3336f796959eedbc58f714
   Mixpanel: f4d71ac2a306e7cda6ad03d4a2be249a0fd7a967
-  NewRelicAgent: 7089e6a018d350bff1be872881ffd468af292fb0
   NSData+Base64: 4e84902c4db907a15673474677e57763ef3903e4
   OAuthCore: 43dce261db846a1fe20234d95654257e00e78581
-  Parse: 373adbb1ad2e34d383542c3b28f678c49ebe4881
-  ParseCrashReporting: 36d2e2770d7502d943b81c013acd5193946ced46
+  Parse: 2155953b1565494095d5fa5c83b3c77f2c677c09
   pop: 628ffc631644601567ee8bfaaaea493ebd7d0923
   PSAlertView: 16d35f5dba549418492cf68a750d4f0dca21f4a2
   SimpleKeychain: ed7fcbc2a235ad6919a3d2385ed4b44ab866d874
   TWReverseAuth: d2deef3521fa6bee32eabab67f114c2c4a53d4f5
   XMLDictionary: f9f51601ba76678b594ab485f2b00ec1fed23724
 
-COCOAPODS: 0.38.0
+COCOAPODS: 0.38.2

@@ -12,7 +12,6 @@
 #import "Flurry.h"
 #import "Mixpanel.h"
 #import "NetworkManager.h"
-#import <NewRelicAgent/NewRelic.h>
 #import <Crashlytics/Crashlytics.h>
 #import <Fabric/Fabric.h>
 #import <NielsenAppApi/NielsenAppApi.h>
