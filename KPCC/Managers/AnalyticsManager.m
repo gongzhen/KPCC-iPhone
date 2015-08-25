@@ -248,13 +248,6 @@ static AnalyticsManager *singleton = nil;
     }
 }
 
-- (void)kTrackSession:(NSString *)modifier {
-#ifdef USE_KOCHAVA
-    [self.kTracker trackEvent:@"session"
-                             :modifier];
-#endif
-}
-
 - (void)trackHeadlinesDismissal {
     [[AnalyticsManager shared] endTimedEvent:@"userIsViewingHeadlines"];
 }

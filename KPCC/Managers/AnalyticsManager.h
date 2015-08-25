@@ -67,7 +67,6 @@ typedef NS_ENUM(NSInteger, ScrubbingType) {
 - (void)failStream:(NetworkHealth)cause comments:(NSString *)comments force:(BOOL)force;
 - (void)trackPlaybackStalled;
 
-- (void)kTrackSession:(NSString*)modifier;
 - (void)clearLogs;
 
 - (void)buildQualityMap;

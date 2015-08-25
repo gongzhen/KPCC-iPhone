@@ -313,8 +313,6 @@
         [[SessionManager shared] setUserLeavingForClickthrough:YES];
     }
     
-    [[AnalyticsManager shared] kTrackSession:@"ended"];
-    
     [[ContentManager shared] saveContext];
     // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later. 
     // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
@@ -343,7 +341,6 @@
     }
     
     [[AudioManager shared] interruptAutorecovery];
-    [[AnalyticsManager shared] kTrackSession:@"began"];
     [[SessionManager shared] setUserLeavingForClickthrough:NO];
     [[AudioManager shared] stopWaiting];
     [[ContentManager shared] sweepBookmarks];

@@ -13,7 +13,6 @@
 @property BOOL userHasViewedOnboarding;
 @property BOOL userHasViewedOnDemandOnboarding;
 @property BOOL userHasViewedScrubbingOnboarding;
-@property BOOL userHasConnectedWithKochava;
 @property BOOL userHasViewedLiveScrubbingOnboarding;
 @property BOOL userHasViewedScheduleOnboarding;
 @property BOOL userHasColdStartedAudioOnce;
