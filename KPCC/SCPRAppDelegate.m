@@ -296,7 +296,6 @@
     
     if ( [[AudioManager shared] currentAudioMode] != AudioModeOnboarding ) {
         if ( ![[SessionManager shared] sessionLeftDate] ) {
-            [[SessionManager shared] disarmProgramUpdater];
             [[SessionManager shared] setSessionLeftDate:[NSDate date]];
         }
     }

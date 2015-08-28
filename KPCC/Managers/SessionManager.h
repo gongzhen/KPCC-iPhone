@@ -89,8 +89,6 @@ static NSInteger kProgramPollingPressure = 5;
 
 - (void)fetchOnboardingProgramWithSegment:(NSInteger)segment completed:(CompletionBlockWithValue)completed;
 
-- (void)armProgramUpdater;
-- (void)disarmProgramUpdater;
 - (void)resetCache;
 - (void)checkProgramUpdate:(BOOL)force;
 

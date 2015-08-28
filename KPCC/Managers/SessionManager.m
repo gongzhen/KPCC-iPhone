@@ -475,7 +475,6 @@
     
 
     
-    [self armProgramUpdater];
     return;
 #endif
     
@@ -629,101 +628,6 @@
     }];
     
     
-}
-
-- (void)armProgramUpdater {
-    [self disarmProgramUpdater];
-    
-    if ( [self ignoreProgramUpdating] ) return;
-#ifdef LEGACY_TIMER
-#ifndef TESTING_PROGRAM_CHANGE
-    NSInteger unit = NSYearCalendarUnit|NSMonthCalendarUnit|NSDayCalendarUnit|NSHourCalendarUnit|NSMinuteCalendarUnit|NSSecondCalendarUnit;
-    NSDate *now = [NSDate date];
-    
-    
-    NSDate *fakeNow = nil;
-    BOOL cookDate = NO;
-    Program *cp = [self currentProgram];
-    NSLog(@"%@ soft starts at %@",cp.title,[NSDate stringFromDate:cp.soft_starts_at
-                                                       withFormat:@"hh:mm:ss a"]);
-    
-    if ( [self sessionIsBehindLive] ) {
-        fakeNow = [[AudioManager shared].audioPlayer.currentItem currentDate];
-        cookDate = YES;
-    }
-    
-    NSDate *nowToUse = cookDate ? fakeNow : now;
-    NSDateComponents *components = [[NSCalendar currentCalendar] components:unit
-                                                                   fromDate:nowToUse];
-    
-    NSDate *then = nil;
-    NSInteger minute = [components minute];
-    NSInteger minDiff = 0;
-    if ( minute < 30 ) {
-        minDiff = 30 - minute;
-    } else {
-        minDiff = 60 - minute;
-    }
-    
-    then = [NSDate dateWithTimeInterval:minDiff*60
-                              sinceDate:now];
-
-    NSDateComponents *cleanedComps = [[NSCalendar currentCalendar] components:unit
-                                                                     fromDate:then];
-    [cleanedComps setSecond:10];
-    then = [[NSCalendar currentCalendar] dateFromComponents:cleanedComps];
-    
-    NSTimeInterval nowTI = [now timeIntervalSince1970];
-    NSTimeInterval thenTI = [then timeIntervalSince1970];
-    if ( fabs(thenTI - nowTI) < 60 ) {
-        then = [NSDate dateWithTimeInterval:30*60
-                                  sinceDate:then];
-    }
-
-
-    NSTimeInterval sinceNow = [then timeIntervalSince1970] - [now timeIntervalSince1970];
-    if ( cookDate ) {
-        sinceNow = minDiff * 60 + 6;
-    }
-
-    self.programUpdateTimer = [NSTimer scheduledTimerWithTimeInterval:sinceNow
-                                                                   target:self
-                                                                 selector:@selector(processTimer:)
-                                                                 userInfo:nil
-                                                                  repeats:NO];
-#ifdef DEBUG
-    NSLog(@"Program will check itself again at %@ (Approx %@ from now)",[then prettyTimeString],[NSDate prettyTextFromSeconds:sinceNow]);
-    NSLog(@"Current player time is : %@",[NSDate stringFromDate:[[AudioManager shared].audioPlayer.currentItem currentDate]
-                                                     withFormat:@"hh:mm:ss a"]);
-#endif
-   // }
-#else
-    NSDate *threeMinutesFromNow = [[NSDate date] dateByAddingTimeInterval:96];
-    NSLog(@"Program will check itself again at : %@",[threeMinutesFromNow prettyTimeString]);
-    self.programUpdateTimer = [NSTimer scheduledTimerWithTimeInterval:abs([threeMinutesFromNow timeIntervalSinceNow])
-                                                               target:self
-                                                             selector:@selector(processTimer:)
-                                                             userInfo:nil
-                                                              repeats:NO];
-    
-#endif
-#else
-    
-   // [self checkProgramUpdate:NO];
-    
-#endif
-    
-}
-
-- (void)disarmProgramUpdater {
-#ifdef LEGACY_TIMER
-    if ( self.programUpdateTimer ) {
-        if ( [self.programUpdateTimer isValid] ) {
-            [self.programUpdateTimer invalidate];
-        }
-        self.programUpdateTimer = nil;
-    }
-#endif
 }
 
 - (BOOL)ignoreProgramUpdating {
@@ -1035,7 +939,6 @@
 
 - (void)invalidateSession {
     if ( [[AudioManager shared] currentAudioMode] == AudioModeOnDemand ) return;
-    [self armProgramUpdater];
 }
 
 - (void)setSessionLeftDate:(NSDate *)sessionLeftDate {
