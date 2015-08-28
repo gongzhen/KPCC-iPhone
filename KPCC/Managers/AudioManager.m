@@ -968,11 +968,6 @@ static const NSString *ItemStatusContext;
             NSTimeInterval beginning = [p.soft_starts_at timeIntervalSince1970];
             NSTimeInterval now = [cd timeIntervalSince1970];
             [self intervalSeekWithTimeInterval:(beginning - now) completion:^{
-
-                if ( self.audioPlayer.rate <= 0.0 || self.status != StreamStatusPlaying ) {
-                    [self playAudio];
-                }
-
                 if ([self.delegate respondsToSelector:@selector(onSeekCompleted)]) {
                     [self.delegate onSeekCompleted];
                 }
@@ -985,68 +980,33 @@ static const NSString *ItemStatusContext;
 }
 
 - (void)forwardSeekLiveWithType:(NSInteger)type completion:(CompletionBlock)completion {
-    
-    if (!self.audioPlayer || self.audioPlayer.currentItem.status != AVPlayerItemStatusReadyToPlay ) {
-        self.playerNeedsToSeekToLive = YES;
-        if ( self.audioPlayer ) {
-            return;
-        }
-        
-        self.queuedCompletion = completion;
-        self.queuedSeekType = type;
-        [self buildStreamer:kHLS];
-        return;
-    }
-    
-    self.seekWillEffectBuffer = YES;
-    self.ignoreDriftTolerance = NO;
-    
-    [self invalidateTimeObserver];
-    if ( [self isPlayingAudio] ) {
-        [self.audioPlayer pause];
-    }
-    
-    [self.audioPlayer.currentItem cancelPendingSeeks];
-    [self.audioPlayer.currentItem seekToTime:CMTimeMake(MAXFLOAT * HUGE_VALF, 1) completionHandler:^(BOOL finished) {
-        
-        NSDate *landingDate = self.audioPlayer.currentItem.currentDate;
-        NSTimeInterval diff = fabs([landingDate timeIntervalSince1970] - [[[SessionManager shared] vLive] timeIntervalSince1970]);
-        if ( diff > kVirtualBehindLiveTolerance ) {
-            
-            NSLog(@"Trying again...");
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                [self.audioPlayer.currentItem seekToTime:CMTimeMake(MAXFLOAT * HUGE_VALF, 1) completionHandler:^(BOOL finished) {
-                    [self finishSeekToLive];
-                    if ( completion ) {
-                        dispatch_async(dispatch_get_main_queue(), completion);
-                    }
-                }];
-            });
+    NSInteger seek_id = ++self.interactionIdx;
 
+    [self getReadyPlayer:^{
+        if (self.interactionIdx != seek_id) {
             return;
         }
-        
-        [self finishSeekToLive];
-        
-        if ( completion ) {
-            dispatch_async(dispatch_get_main_queue(), completion);
-        }
-        
-        [[AnalyticsManager shared] trackSeekUsageWithType:type];
-        
+
+        [self.audioPlayer.currentItem seekToTime:kCMTimePositiveInfinity completionHandler:^(BOOL finished) {
+            if (!finished) {
+                return;
+            }
+
+            if ( [self.audioPlayer rate] < 1.0 ) {
+                [self.audioPlayer play];
+            } else {
+                [self startObservingTime];
+            }
+
+            [self.delegate onSeekCompleted];
+
+            if ( completion ) {
+                dispatch_async(dispatch_get_main_queue(), completion);
+            }
+
+            [[AnalyticsManager shared] trackSeekUsageWithType:type];
+        }];
     }];
-    
-}
-
-- (void)finishSeekToLive {
-    if ( [self.audioPlayer rate] <= 0.0 ) {
-        [self.audioPlayer play];
-    } else {
-        [self startObservingTime];
-    }
-    
-    [self.delegate onSeekCompleted];
-
 }
 
 - (void)seekToDate:(NSDate *)date completion:(CompletionBlock)completion {
