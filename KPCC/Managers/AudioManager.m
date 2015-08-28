@@ -949,42 +949,32 @@ static const NSString *ItemStatusContext;
 }
 
 - (void)backwardSeekToBeginningOfProgram {
-    
-    if (!self.audioPlayer) {
-        self.waitForSeek = YES;
-        self.audioPlayer.volume = 0.0f;
-        self.savedVolume = 1.0f;
-        [self buildStreamer:kHLS];
-        return;
-    }
-    
-    self.waitForSeek = NO;
-    self.seekWillEffectBuffer = YES;
-    
-    NSDate *cd = self.audioPlayer.currentItem.currentDate;
-    Program *p = [[SessionManager shared] currentProgram];
-    if ( p ) {
-        NSTimeInterval beginning = [p.soft_starts_at timeIntervalSince1970];
-        NSTimeInterval now = [cd timeIntervalSince1970];
-        [self intervalSeekWithTimeInterval:(beginning - now)+kVirtualMediumBehindLiveTolerance completion:^{
-            
-#ifndef SUPPRESS_LOCAL_SAMPLING
-            self.localBufferSample[@"expectedDate"] = self.audioPlayer.currentItem.currentDate;
-            self.localBufferSample[@"open"] = @(YES);
-#endif
-            if ( self.audioPlayer.rate <= 0.0 || self.status != StreamStatusPlaying ) {
-                [self playAudio];
-            }
-            
-            if ([self.delegate respondsToSelector:@selector(onSeekCompleted)]) {
-                [self.delegate onSeekCompleted];
-            }
-            
-            [[AnalyticsManager shared] trackSeekUsageWithType:ScrubbingTypeRewindToStart];
-            
-        }];
-    }
-    
+
+    self.savedVolume = 1.0f;
+
+    [self getReadyPlayer:^{
+        // FIXME: Manage volume
+
+        NSDate *cd = self.audioPlayer.currentItem.currentDate;
+        Program *p = [[SessionManager shared] currentProgram];
+        if ( p ) {
+            NSTimeInterval beginning = [p.soft_starts_at timeIntervalSince1970];
+            NSTimeInterval now = [cd timeIntervalSince1970];
+            [self intervalSeekWithTimeInterval:(beginning - now) completion:^{
+
+                if ( self.audioPlayer.rate <= 0.0 || self.status != StreamStatusPlaying ) {
+                    [self playAudio];
+                }
+
+                if ([self.delegate respondsToSelector:@selector(onSeekCompleted)]) {
+                    [self.delegate onSeekCompleted];
+                }
+
+                [[AnalyticsManager shared] trackSeekUsageWithType:ScrubbingTypeRewindToStart];
+
+            }];
+        }
+    }];
 }
 
 - (void)forwardSeekLiveWithType:(NSInteger)type completion:(CompletionBlock)completion {
@@ -1060,93 +1050,76 @@ static const NSString *ItemStatusContext;
 }
 
 - (void)intervalSeekWithTimeInterval:(NSTimeInterval)interval completion:(CompletionBlock)completion {
+    void (^finishBlock)(void) = ^{
+        self.newPositionDelta = interval;
 
-    
-    
-    // KPCC-iPhone issue #68
-    if ( !self.audioPlayer || [self.audioPlayer.currentItem status] != AVPlayerItemStatusReadyToPlay ) {
-        self.playerNeedsToSeekGenerally = YES;
-        if ( self.audioPlayer ) {
-            // In this case let's do nothing here and wait for the observer to kick in and hope for the best
-            return;
-        }
-        
-        [self takedownAudioPlayer];
-        self.queuedCompletion = completion;
-        self.queuedTimeInterval = interval;
-        [self buildStreamer:kHLS];
-    }
-    
-    [self setSeekWillEffectBuffer:YES];
-    CMTime ct = [self.audioPlayer.currentItem currentTime];
-    ct.value += (interval*ct.timescale);
-    
-    self.calibrating = YES;
-    
-    NSDate *targetDate = self.audioPlayer.currentItem.currentDate;
-    targetDate = [targetDate dateByAddingTimeInterval:interval];
-    
-    [self invalidateTimeObserver];
-    [self.audioPlayer.currentItem cancelPendingSeeks];
-    [self.audioPlayer.currentItem seekToTime:ct completionHandler:^(BOOL finished) {
-        
-        __block NSDate *landingDate = self.audioPlayer.currentItem.currentDate;
-        NSTimeInterval diff = [landingDate timeIntervalSince1970] - [targetDate timeIntervalSince1970];
-        NSLog(@"After 1 attempt the difference between live and target seek is %1.1f",diff);
-        self.seekTargetReferenceDate = targetDate;
-        
-        if ( fabs(diff) > kVirtualBehindLiveTolerance ) {
-            
-            NSLog(@"Trying again...");
-            
-            [self.audioPlayer pause];
-            CMTime ctFail = self.audioPlayer.currentItem.currentTime;
-            ctFail.value += -1.0f*diff*ctFail.timescale;
-          
-            NSAssert([NSThread isMainThread],@"Should be main thread");
-            
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                [self.audioPlayer.currentItem seekToTime:ctFail completionHandler:^(BOOL finished) {
-                    self.seekTargetReferenceDate = targetDate;
-                    [self finishIntervalSeek:interval completion:completion];
-                }];
+        if ( [self.audioPlayer rate] <= 0.0f ) {
+            [self.audioPlayer play];
+        } else {
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.25f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                [self startObservingTime];
             });
-
-            
-            return;
         }
 
-        [self finishIntervalSeek:interval completion:completion];
-        
-    }];
-}
+        dispatch_async(dispatch_get_main_queue(), ^{
 
-- (void)finishIntervalSeek:(NSTimeInterval)interval completion:(CompletionBlock)completion {
+            NSDate *landingDate = self.audioPlayer.currentItem.currentDate;
+            NSTimeInterval failDiff = [landingDate timeIntervalSince1970] - [self.seekTargetReferenceDate timeIntervalSince1970];
+            NSLog(@"After all attempts the difference between live and target seek is %1.1f - %@",failDiff,[NSDate stringFromDate:landingDate withFormat:@"h:mm:ss a"]);
 
-    self.newPositionDelta = interval;
-    
-    if ( [self.audioPlayer rate] <= 0.0f ) {
-        [self.audioPlayer play];
-    } else {
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.25f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            [self startObservingTime];
+            [self recalibrateAfterScrub];
+            [self setCalibrating:NO];
+
+            if ( completion ) {
+                completion();
+            }
+
         });
-    }
+    };
     
-    dispatch_async(dispatch_get_main_queue(), ^{
-        
-        NSDate *landingDate = self.audioPlayer.currentItem.currentDate;
-        NSTimeInterval failDiff = [landingDate timeIntervalSince1970] - [self.seekTargetReferenceDate timeIntervalSince1970];
-        NSLog(@"After all attempts the difference between live and target seek is %1.1f - %@",failDiff,[NSDate stringFromDate:landingDate withFormat:@"h:mm:ss a"]);
-        
-        [self recalibrateAfterScrub];
-        [self setCalibrating:NO];
+    [self getReadyPlayer:^{
+        [self setSeekWillEffectBuffer:YES];
+        CMTime ct = [self.audioPlayer.currentItem currentTime];
+        ct.value += (interval*ct.timescale);
 
-        if ( completion ) {
-            completion();
-        }
-        
-    });
+        NSDate *targetDate = self.audioPlayer.currentItem.currentDate;
+        targetDate = [targetDate dateByAddingTimeInterval:interval];
+
+        self.calibrating = YES;
+
+        [self invalidateTimeObserver];
+        [self.audioPlayer.currentItem cancelPendingSeeks];
+        [self.audioPlayer.currentItem seekToTime:ct completionHandler:^(BOOL finished) {
+            if (!finished) {
+                return;
+            }
+
+            __block NSDate *landingDate = self.audioPlayer.currentItem.currentDate;
+            NSTimeInterval diff = [landingDate timeIntervalSince1970] - [targetDate timeIntervalSince1970];
+            NSLog(@"After 1 attempt the difference between live and target seek is %1.1f",diff);
+            self.seekTargetReferenceDate = targetDate;
+
+            if ( fabs(diff) > kVirtualBehindLiveTolerance ) {
+
+                NSLog(@"Trying again...");
+
+                [self.audioPlayer pause];
+                CMTime ctFail = self.audioPlayer.currentItem.currentTime;
+                ctFail.value += -1.0f*diff*ctFail.timescale;
+
+                NSAssert([NSThread isMainThread],@"Should be main thread");
+
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                    [self.audioPlayer.currentItem seekToTime:ctFail completionHandler:^(BOOL finished) {
+                        self.seekTargetReferenceDate = targetDate;
+                        finishBlock();
+                    }];
+                });
+            } else {
+                finishBlock();
+            }
+        }];
+    }];
 }
 
 - (void)forwardSeekThirtySecondsWithCompletion:(CompletionBlock)completion {
@@ -1256,14 +1229,21 @@ static const NSString *ItemStatusContext;
 }
 
 - (void)getReadyPlayer:(CompletionBlock)completion {
-    if (self.audioPlayer != nil) {
+    // FIXME: Should this create a new player if the URL is different?
+    if (self.audioPlayer == nil) {
+        NSLog(@"getReadyPlayer calling buildStreamer");
         [self buildStreamer:nil];
     }
     
     if (self.audioPlayer.currentItem != nil && self.audioPlayer.status == AVPlayerItemStatusReadyToPlay) {
+        NSLog(@"getReadyPlayer: item is already ready to play");
         completion();
     } else {
-        [self.avobserver once:StatusesItemReady callback:^(NSString *msg, id obj) { completion(); } ];
+        NSLog(@"getReadyPlayer: waiting for item");
+        [self.avobserver once:StatusesItemReady callback:^(NSString *msg, id obj) {
+            NSLog(@"getReadyPlayer: item is now ready");
+            completion();
+        } ];
     }
 }
 

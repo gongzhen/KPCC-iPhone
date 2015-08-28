@@ -202,7 +202,6 @@ typedef NS_ENUM(NSUInteger, StreamStatus) {
 - (void)backwardSeekThirtySecondsWithCompletion:(CompletionBlock)completion;
 - (void)seekToDate:(NSDate*)date completion:(CompletionBlock)completion;
 - (void)intervalSeekWithTimeInterval:(NSTimeInterval)interval completion:(CompletionBlock)completion;
-- (void)finishIntervalSeek:(NSTimeInterval)interval completion:(CompletionBlock)completion;
 - (void)finishSeekToLive;
 
 - (void)backwardSeekToBeginningOfProgram;
