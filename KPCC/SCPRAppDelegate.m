@@ -18,6 +18,8 @@
 #import "AnalyticsManager.h"
 #import <Parse/Parse.h>
 
+#import "KPCC-Swift.h"
+
 @implementation SCPRAppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {

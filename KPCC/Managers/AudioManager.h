@@ -10,6 +10,8 @@
 #import <AVFoundation/AVFoundation.h>
 #import <MediaPlayer/MediaPlayer.h>
 
+#import "KPCC-Swift.h"
+
 
 #ifdef SHORTENED_BUFFER
 static long kStreamBufferLimit = 1*60;
@@ -83,6 +85,9 @@ typedef NS_ENUM(NSUInteger, StreamStatus) {
 @property AVPlayer *audioPlayer;
 @property AVPlayerItem *playerItem;
 @property AVAudioPlayer *localAudioPlayer;
+
+@property AVObserver *avobserver;
+@property NSString *avSessionId;
 
 @property StreamStatus status;
 @property long lastPreRoll;

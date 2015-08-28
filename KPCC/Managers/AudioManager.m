@@ -254,69 +254,69 @@ static const NSString *ItemStatusContext;
             
         } else if ([self.audioPlayer.currentItem status] == AVPlayerItemStatusReadyToPlay) {
             
-            if ( self.waitForSeek ) {
-                NSLog(@"Delayed seek");
-                [self backwardSeekToBeginningOfProgram];
-            } else if ( self.tryAgain ) {
-                NSLog(@"Trying again after failure...");
-                self.failoverCount = 0;
-                self.tryAgain = NO;
-                [self playAudio];
-            } else if ( self.playerNeedsToSeekToLive ) {
-                
-                self.playerNeedsToSeekToLive = NO;
-                [self forwardSeekLiveWithType:self.queuedSeekType completion:self.queuedCompletion];
-                
-            } else if ( self.playerNeedsToSeekGenerally ) {
-                
-                self.playerNeedsToSeekGenerally = NO;
-                [self intervalSeekWithTimeInterval:self.queuedTimeInterval completion:self.queuedCompletion];
-                
-            } else {
-#ifndef SUPPRESS_BITRATE_THROTTLING
-                if ( [Utils isIOS8] ) {
-                    if ( ![[NetworkManager shared] wifi] ) {
-                        [self.audioPlayer.currentItem setPreferredPeakBitRate:kPreferredPeakBitRateTolerance];
-                    }
-                }
-#endif
-                if ( self.waitForOnDemandSeek ) {
-                    self.waitForOnDemandSeek = NO;
-                    @try {
-                        [self.audioPlayer.currentItem seekToTime:CMTimeMakeWithSeconds(self.onDemandSeekPosition, 1) completionHandler:^(BOOL finished) {
-                            dispatch_async(dispatch_get_main_queue(), ^{
-                                [self.audioPlayer play];
-                            });
-                        }];
-                    }
-                    @catch (NSException *exception) {
-                        NSLog(@"Couldn't seek : %@",[exception description]);
-                        [self.audioPlayer play];
-                    }
-                    @finally {
-                        
-                    }
-                } else {
-                    if ( self.dropoutOccurred ) {
-                        [self.audioPlayer pause];
-                    }
-                    if ( (self.audioPlayer.rate == 0.0 && self.beginNormally) || (self.audioPlayer.rate == 0.0 && self.dropoutOccurred) ) {
-                        if ( !self.userPause ) {
-                            if ( !self.seekWillEffectBuffer ) {
-                                NSLog(@"All systems go...");
-                                [self.audioPlayer play];
-                            }
-                        }
-                    }
-                    if ( self.appGaveUp ) {
-#ifndef SUPPRESS_BITRATE_THROTTLING
-                        if ( [Utils isIOS8] ) {
-                            [self.audioPlayer.currentItem setPreferredPeakBitRate:kPreferredPeakBitRateTolerance];
-                        }
-#endif
-                    }
-                }
-            }
+//            if ( self.waitForSeek ) {
+//                NSLog(@"Delayed seek");
+//                [self backwardSeekToBeginningOfProgram];
+//            } else if ( self.tryAgain ) {
+//                NSLog(@"Trying again after failure...");
+//                self.failoverCount = 0;
+//                self.tryAgain = NO;
+//                [self playAudio];
+//            } else if ( self.playerNeedsToSeekToLive ) {
+//                
+//                self.playerNeedsToSeekToLive = NO;
+//                [self forwardSeekLiveWithType:self.queuedSeekType completion:self.queuedCompletion];
+//                
+//            } else if ( self.playerNeedsToSeekGenerally ) {
+//                
+//                self.playerNeedsToSeekGenerally = NO;
+//                [self intervalSeekWithTimeInterval:self.queuedTimeInterval completion:self.queuedCompletion];
+//                
+//            } else {
+//#ifndef SUPPRESS_BITRATE_THROTTLING
+//                if ( [Utils isIOS8] ) {
+//                    if ( ![[NetworkManager shared] wifi] ) {
+//                        [self.audioPlayer.currentItem setPreferredPeakBitRate:kPreferredPeakBitRateTolerance];
+//                    }
+//                }
+//#endif
+//                if ( self.waitForOnDemandSeek ) {
+//                    self.waitForOnDemandSeek = NO;
+//                    @try {
+//                        [self.audioPlayer.currentItem seekToTime:CMTimeMakeWithSeconds(self.onDemandSeekPosition, 1) completionHandler:^(BOOL finished) {
+//                            dispatch_async(dispatch_get_main_queue(), ^{
+//                                [self.audioPlayer play];
+//                            });
+//                        }];
+//                    }
+//                    @catch (NSException *exception) {
+//                        NSLog(@"Couldn't seek : %@",[exception description]);
+//                        [self.audioPlayer play];
+//                    }
+//                    @finally {
+//                        
+//                    }
+//                } else {
+//                    if ( self.dropoutOccurred ) {
+//                        [self.audioPlayer pause];
+//                    }
+//                    if ( (self.audioPlayer.rate == 0.0 && self.beginNormally) || (self.audioPlayer.rate == 0.0 && self.dropoutOccurred) ) {
+//                        if ( !self.userPause ) {
+//                            if ( !self.seekWillEffectBuffer ) {
+//                                NSLog(@"All systems go...");
+//                                [self.audioPlayer play];
+//                            }
+//                        }
+//                    }
+//                    if ( self.appGaveUp ) {
+//#ifndef SUPPRESS_BITRATE_THROTTLING
+//                        if ( [Utils isIOS8] ) {
+//                            [self.audioPlayer.currentItem setPreferredPeakBitRate:kPreferredPeakBitRateTolerance];
+//                        }
+//#endif
+//                    }
+//                }
+//            }
             
         } else if ([self.audioPlayer.currentItem status] == AVPlayerItemStatusUnknown) {
             NSLog(@"AVPlayerItemStatus - Unknown");
@@ -881,11 +881,11 @@ static const NSString *ItemStatusContext;
             
             if ( weakSelf.frameCount % 10 == 0 ) {
                 
-#ifndef SUPPRESS_LOCAL_SAMPLING
-                if ( weakSelf.currentAudioMode == AudioModeLive ) {
-                    [weakSelf localSample:time];
-                }
-#endif
+//#ifndef SUPPRESS_LOCAL_SAMPLING
+//                if ( weakSelf.currentAudioMode == AudioModeLive ) {
+//                    [weakSelf localSample:time];
+//                }
+//#endif
                 if ( weakSelf.currentAudioMode == AudioModeOnDemand ) {
                     [[QueueManager shared] handleBookmarkingActivity];
                 }
@@ -1060,6 +1060,8 @@ static const NSString *ItemStatusContext;
 }
 
 - (void)intervalSeekWithTimeInterval:(NSTimeInterval)interval completion:(CompletionBlock)completion {
+
+    
     
     // KPCC-iPhone issue #68
     if ( !self.audioPlayer || [self.audioPlayer.currentItem status] != AVPlayerItemStatusReadyToPlay ) {
@@ -1250,49 +1252,19 @@ static const NSString *ItemStatusContext;
 }
 
 - (NSString*)avPlayerSessionString {
-    NSString *rv = nil;
-    if ( self.audioPlayer ) {
-        if ( self.audioPlayer.currentItem ) {
-            AVPlayerItemErrorLog *errorLog = [self.audioPlayer.currentItem errorLog];
-            
-            NSString *logAsString = [[NSString alloc] initWithData:[errorLog extendedLogData]
-                                                encoding:[errorLog extendedLogDataStringEncoding]];
-            if ( logAsString && [logAsString length] > 0 ) {
-                
-                NSString *pattern = @"[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{12}";
-                NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:pattern
-                                                                                       options:0 error:NULL];
-                NSTextCheckingResult *match = [regex firstMatchInString:logAsString options:0 range:NSMakeRange(0, [logAsString length])];
-                if ( match ) {
-                    
-                    NSRange r1 = [match rangeAtIndex:0];
-                    rv = [logAsString substringWithRange:r1];
-                    
-                }
+    return self.avSessionId;
+}
 
-            } else {
-                AVPlayerItemAccessLog *accessLog = [self.audioPlayer.currentItem accessLog];
-               logAsString = [[NSString alloc] initWithData:[accessLog extendedLogData]
-                                                              encoding:[accessLog extendedLogDataStringEncoding]];
-                
-                NSString *pattern = @"[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{12}";
-                NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:pattern
-                                                                                       options:0 error:NULL];
-                NSTextCheckingResult *match = [regex firstMatchInString:logAsString options:0 range:NSMakeRange(0, [logAsString length])];
-                if ( match ) {
-                    
-                    NSRange r1 = [match rangeAtIndex:0];
-                    rv = [logAsString substringWithRange:r1];
-                    
-                }
-                
-            }
-        }
+- (void)getReadyPlayer:(CompletionBlock)completion {
+    if (self.audioPlayer != nil) {
+        [self buildStreamer:nil];
     }
     
-
-    return rv;
-
+    if (self.audioPlayer.currentItem != nil && self.audioPlayer.status == AVPlayerItemStatusReadyToPlay) {
+        completion();
+    } else {
+        [self.avobserver once:StatusesItemReady callback:^(NSString *msg, id obj) { completion(); } ];
+    }
 }
 
 #pragma mark - Audio Control
@@ -1323,6 +1295,17 @@ static const NSString *ItemStatusContext;
     }
     
     self.audioPlayer = [AVPlayer playerWithURL:url];
+    self.avobserver = [ [AVObserver alloc] initWithPlayer:self.audioPlayer callback:^ void (enum Statuses status, NSString *msg, id obj) {
+        
+        NSLog(@"AVObserver sent %ld: %@", (long)status, msg);
+    } ];
+
+    // Watch for our session ID and stash it
+    [self.avobserver once:StatusesAccessLog callback:^(NSString *msg, AVPlayerItemAccessLogEvent *obj) {
+        self.avSessionId = obj.playbackSessionID;
+        NSLog(@"Setting avSessionId to %@",self.avSessionId);
+    }];
+    
     [self.audioPlayer.currentItem addObserver:self forKeyPath:@"status" options:NSKeyValueObservingOptionOld|NSKeyValueObservingOptionNew context:nil];
     [self.audioPlayer.currentItem addObserver:self forKeyPath:@"playbackBufferEmpty" options:NSKeyValueObservingOptionNew context:nil];
     [self.audioPlayer.currentItem addObserver:self forKeyPath:@"playbackLikelyToKeepUp" options:NSKeyValueObservingOptionNew context:nil];
@@ -1435,6 +1418,11 @@ static const NSString *ItemStatusContext;
     [self resetFlags];
     
     self.audioPlayer = nil;
+    
+    if ( self.avobserver != nil ) {
+        [self.avobserver stop];
+        self.avobserver = nil;
+    }
     
 }
 
