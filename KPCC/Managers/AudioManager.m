@@ -39,6 +39,8 @@ static const NSString *ItemStatusContext;
             singleton.currentAudioMode = AudioModeNeutral;
             singleton.localBufferSample = [NSMutableDictionary new];
             singleton.frameCount = 1;
+
+            singleton.interactionIdx = 0;
             
             [[NSNotificationCenter defaultCenter] addObserver:singleton
                                                          selector:@selector(handleInterruption:)
@@ -949,10 +951,15 @@ static const NSString *ItemStatusContext;
 }
 
 - (void)backwardSeekToBeginningOfProgram {
+    NSInteger seek_id = ++self.interactionIdx;
 
     self.savedVolume = 1.0f;
 
     [self getReadyPlayer:^{
+        if (self.interactionIdx != seek_id) {
+            return;
+        }
+
         // FIXME: Manage volume
 
         NSDate *cd = self.audioPlayer.currentItem.currentDate;
@@ -1089,7 +1096,7 @@ static const NSString *ItemStatusContext;
 
         [self invalidateTimeObserver];
         [self.audioPlayer.currentItem cancelPendingSeeks];
-        [self.audioPlayer.currentItem seekToTime:ct completionHandler:^(BOOL finished) {
+        [self.audioPlayer.currentItem seekToTime:ct toleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero completionHandler:^(BOOL finished) {
             if (!finished) {
                 return;
             }
@@ -1110,7 +1117,7 @@ static const NSString *ItemStatusContext;
                 NSAssert([NSThread isMainThread],@"Should be main thread");
 
                 dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                    [self.audioPlayer.currentItem seekToTime:ctFail completionHandler:^(BOOL finished) {
+                    [self.audioPlayer.currentItem seekToTime:ctFail toleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero completionHandler:^(BOOL finished) {
                         self.seekTargetReferenceDate = targetDate;
                         finishBlock();
                     }];
@@ -1229,7 +1236,6 @@ static const NSString *ItemStatusContext;
 }
 
 - (void)getReadyPlayer:(CompletionBlock)completion {
-    // FIXME: Should this create a new player if the URL is different?
     if (self.audioPlayer == nil) {
         NSLog(@"getReadyPlayer calling buildStreamer");
         [self buildStreamer:nil];
@@ -1278,6 +1284,19 @@ static const NSString *ItemStatusContext;
     self.avobserver = [ [AVObserver alloc] initWithPlayer:self.audioPlayer callback:^ void (enum Statuses status, NSString *msg, id obj) {
         
         NSLog(@"AVObserver sent %ld: %@", (long)status, msg);
+
+        switch (status) {
+            case StatusesLikelyToKeepUp:
+                break;
+            case StatusesAccessLog:
+                break;
+            case StatusesErrorLog:
+                break;
+            case StatusesStalled:
+                break;
+            default:
+                break;
+        }
     } ];
 
     // Watch for our session ID and stash it

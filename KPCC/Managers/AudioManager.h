@@ -191,6 +191,8 @@ typedef NS_ENUM(NSUInteger, StreamStatus) {
 
 @property (nonatomic, copy) NSDate *seekTargetReferenceDate;
 
+@property NSInteger interactionIdx;
+
 - (void)updateNowPlayingInfoWithAudio:(id)audio;
 
 - (void)seekToPercent:(CGFloat)percent;
