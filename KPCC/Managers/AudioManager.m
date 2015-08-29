@@ -253,19 +253,6 @@ static const NSString *ItemStatusContext;
             });
         }
     }
-    
-    // Monitoring AVPlayer status.
-    if (object == self.audioPlayer && [keyPath isEqualToString:@"status"]) {
-        if ([self.audioPlayer status] == AVPlayerStatusFailed) {
-            NSError *error = [self.audioPlayer error];
-            NSLog(@"AVPlayerStatus ERROR! --- %@", error);
-            return;
-        } else if ([self.audioPlayer status] == AVPlayerStatusReadyToPlay) {
-            NSLog(@"AVPlayerStatus - ReadyToPlay");
-        } else if ([self.audioPlayer status] == AVPlayerStatusUnknown) {
-            NSLog(@"AVPlayerStatus - Unknown");
-        }
-    }
 }
 
 
@@ -671,8 +658,7 @@ static const NSString *ItemStatusContext;
             }
 #endif
         }
-        weakSelf.beginNormally = NO;
-        
+
         NSArray *seekRange = audioPlayer.currentItem.seekableTimeRanges;
         if (seekRange && [seekRange count] > 0) {
             CMTimeRange range = [seekRange[0] CMTimeRangeValue];
@@ -1067,6 +1053,8 @@ static const NSString *ItemStatusContext;
         url = [NSURL fileURLWithPath:filePath];
         self.currentAudioMode = AudioModeOnboarding;
     }
+
+    NSLog(@"In buildStreamer for %@",urlString);
     
     [[NetworkManager shared] setupFloatingReachabilityWithHost:urlString];
     
@@ -1107,6 +1095,7 @@ static const NSString *ItemStatusContext;
                         [self.delegate onDemandAudioFailed];
                     }
                 } else {
+                    NSLog(@"Triggering tryAgain logic after player/item failed.");
                     self.failoverCount++;
                     if ( self.failoverCount > kFailoverThreshold ) {
                         self.tryAgain = NO;
@@ -1137,6 +1126,8 @@ static const NSString *ItemStatusContext;
 
                 break;
             case StatusesStalled:
+//                [self playbackStalled];
+
                 break;
             default:
                 break;
@@ -1148,8 +1139,9 @@ static const NSString *ItemStatusContext;
         self.avSessionId = obj.playbackSessionID;
         NSLog(@"Setting avSessionId to %@",self.avSessionId);
     }];
+
+    [self startObservingTime];
     
-    [self.audioPlayer.currentItem addObserver:self forKeyPath:@"status" options:NSKeyValueObservingOptionOld|NSKeyValueObservingOptionNew context:nil];
     [self.audioPlayer.currentItem addObserver:self forKeyPath:@"playbackBufferEmpty" options:NSKeyValueObservingOptionNew context:nil];
     [self.audioPlayer.currentItem addObserver:self forKeyPath:@"playbackLikelyToKeepUp" options:NSKeyValueObservingOptionNew context:nil];
     
@@ -1163,12 +1155,7 @@ static const NSString *ItemStatusContext;
                                                  name:AVPlayerItemFailedToPlayToEndTimeNotification
                                                object:nil];
     
-    
-    [self.audioPlayer addObserver:self
-                       forKeyPath:@"status"
-                          options:NSKeyValueObservingOptionOld|NSKeyValueObservingOptionNew
-                          context:nil];
-    
+
 #ifndef SUPPRESS_LOCAL_SAMPLING
     self.localBufferSample = nil;
 #endif
@@ -1197,11 +1184,6 @@ static const NSString *ItemStatusContext;
     [self invalidateTimeObserver];
     
     @try {
-        [self.audioPlayer removeObserver:self forKeyPath:@"status"];
-        
-        [self.audioPlayer.currentItem removeObserver:self forKeyPath:@"status"];
-        NSLog(@"Removed status KVO without exception...");
-        
         [self.audioPlayer.currentItem removeObserver:self forKeyPath:@"playbackBufferEmpty"];
         NSLog(@"Removed playbackBufferEmpty KVO without exception...");
         
@@ -1372,7 +1354,6 @@ static const NSString *ItemStatusContext;
     
     [[ContentManager shared] saveContext];
     
-    self.beginNormally = YES;
     if (!self.audioPlayer) {
         [self buildStreamer:kHLS];
     }
@@ -1385,8 +1366,8 @@ static const NSString *ItemStatusContext;
     
     [[SessionManager shared] startAudioSession];    
     [[SessionManager shared] setSessionPausedDate:nil];
-    self.status = StreamStatusPlaying;
-    
+//    self.status = StreamStatusPlaying;
+
     if ( self.smooth ) {
         self.savedVolume = self.audioPlayer.volume;
         if ( self.savedVolume <= 0.0 ) {
@@ -1415,7 +1396,6 @@ static const NSString *ItemStatusContext;
                         }
                     }
                 } else {
-                    self.beginNormally = NO;
                     [self.audioPlayer play];
                 }
             } else {
@@ -1423,11 +1403,9 @@ static const NSString *ItemStatusContext;
             }
         }
     } else {
-        if ( self.audioPlayer.currentItem.status == AVPlayerItemStatusReadyToPlay ) {
-            NSLog(@"Player ready immediately");
-            self.beginNormally = NO;
+        [self getReadyPlayer:^{
             [self.audioPlayer play];
-        }
+        }];
     }
 
 }
@@ -1435,7 +1413,7 @@ static const NSString *ItemStatusContext;
 - (void)pauseAudio {
     
     [self.audioPlayer pause];
-    self.status = StreamStatusPaused;
+//    self.status = StreamStatusPaused;
     self.localBufferSample = nil;
     
     [[SessionManager shared] setLocalLiveTime:0.0f];

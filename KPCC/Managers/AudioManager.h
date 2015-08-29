@@ -117,7 +117,6 @@ typedef NS_ENUM(NSUInteger, StreamStatus) {
 @property BOOL seekWillAffectBuffer;
 @property BOOL smooth;
 @property BOOL userPause;
-@property BOOL beginNormally;
 @property BOOL appGaveUp;
 @property BOOL audioOutputSourceChanging;
 @property BOOL suppressSkipFixer;

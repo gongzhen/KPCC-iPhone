@@ -682,9 +682,9 @@ setForOnDemandUI;
     self.preRollViewController = [[SCPRPreRollViewController alloc] initWithNibName:nil bundle:nil];
     self.preRollViewController.delegate = self;
     
-    [[NetworkManager shared] fetchTritonAd:nil completion:^(TritonAd *tritonAd) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            self.preRollViewController.tritonAd = tritonAd;
+//    [[NetworkManager shared] fetchTritonAd:nil completion:^(TritonAd *tritonAd) {
+//        dispatch_async(dispatch_get_main_queue(), ^{
+//            self.preRollViewController.tritonAd = tritonAd;
             [self addChildViewController:self.preRollViewController];
             
             CGRect frame = self.view.bounds;
@@ -693,9 +693,9 @@ setForOnDemandUI;
             
             [self.view addSubview:self.preRollViewController.view];
             [self.preRollViewController didMoveToParentViewController:self];
-        });
-    }];
-    
+//        });
+//    }];
+
 
 }
 
@@ -986,18 +986,24 @@ setForOnDemandUI;
         [UIView animateWithDuration:0.15 animations:^{
             self.liveRewindAltButton.alpha = 0.0f;
         } completion:^(BOOL finished) {
-            if (self.preRollViewController.tritonAd) {
-                [self cloakForPreRoll:YES];
-                [self.preRollViewController primeUI:^{
-                    [self.preRollViewController showPreRollWithAnimation:YES completion:^(BOOL done) {
-                        [self primePlaybackUI:YES];
-                        [self.preRollViewController.prerollPlayer play];
+            // is there a preroll that we should play?
+            [[NetworkManager shared] fetchTritonAd:nil completion:^(TritonAd *tritonAd) {
+                if (tritonAd) {
+                    self.preRollViewController.tritonAd = tritonAd;
+                    [[AudioManager shared] setSmooth:NO];
+
+                    [self cloakForPreRoll:YES];
+                    [self.preRollViewController primeUI:^{
+                        [self.preRollViewController showPreRollWithAnimation:YES completion:^(BOOL done) {
+                            [self primePlaybackUI:YES];
+                            [self.preRollViewController.prerollPlayer play];
+                        }];
                     }];
-                }];
-            } else {
-                [self primePlaybackUI:YES];
-                self.initialPlay = YES;
-            }
+                } else {
+                    [self primePlaybackUI:YES];
+                    self.initialPlay = YES;
+                }
+            }];
         }];
     }];
 
@@ -1183,15 +1189,6 @@ setForOnDemandUI;
             
         }];
     }
-}
-
-- (IBAction)showPreRollTapped:(id)sender {
-    [self cloakForPreRoll:YES];
-    [self.preRollViewController primeUI:^{
-        [self.preRollViewController showPreRollWithAnimation:YES completion:^(BOOL done) {
-            
-        }];
-    }];
 }
 
 # pragma mark - Audio commands
@@ -3388,6 +3385,7 @@ setForOnDemandUI;
 }
 
 - (void)preRollCompleted {
+    NSLog(@"Finished playing preroll.");
 
     [self.preRollViewController removeFromParentViewController];
     [self.preRollViewController.view removeFromSuperview];
