@@ -34,8 +34,8 @@ typedef NS_ENUM(NSInteger, ScrubbingType) {
 @property long lastErrorLoggedTime;
 @property NSString *lastErrorLoggedComments;
 @property (nonatomic, strong) NSTimer *analyticsSuspensionTimer;
-@property (nonatomic, strong) AVPlayerItemAccessLog *accessLog;
-@property (nonatomic, strong) AVPlayerItemErrorLog *errorLog;
+@property (nonatomic, strong) AVPlayerItemAccessLogEvent *accessLog;
+@property (nonatomic, strong) AVPlayerItemErrorLogEvent *errorLog;
 
 @property (nonatomic, strong) NSDate *errorLogReceivedAt;
 @property (nonatomic, strong) NSDate *accessLogReceivedAt;

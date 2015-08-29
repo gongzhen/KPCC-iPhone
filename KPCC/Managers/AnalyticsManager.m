@@ -234,14 +234,14 @@ static AnalyticsManager *singleton = nil;
     NSLog(@"User quality : %@",userQuality);
 }
 
-- (void)setAccessLog:(AVPlayerItemAccessLog *)accessLog {
+- (void)setAccessLog:(AVPlayerItemAccessLogEvent *)accessLog {
     _accessLog = accessLog;
     if ( accessLog ) {
         self.accessLogReceivedAt = [NSDate date];
     }
 }
 
-- (void)setErrorLog:(AVPlayerItemErrorLog *)errorLog {
+- (void)setErrorLog:(AVPlayerItemErrorLogEvent *)errorLog {
     _errorLog = errorLog;
     if ( errorLog ) {
         self.errorLogReceivedAt = [NSDate date];
@@ -495,54 +495,13 @@ static AnalyticsManager *singleton = nil;
         nParams = [originalParams mutableCopy];
     }
     if ( self.errorLog ) {
-        if ( self.errorLog.events && self.errorLog.events.count > 0 ) {
-            
-            AVPlayerItemErrorLogEvent *event = self.errorLog.events.lastObject;
-            if ( event.playbackSessionID ) {
-                nParams[@"avPlayerSessionId"] = event.playbackSessionID;
-            }
-            /*nParams[@"errorStatusCode"] = @(event.errorStatusCode);
-            if ( event.errorDomain ) {
-                nParams[@"errorDomain"] = event.errorDomain;
-            }
-            if ( self.errorLogReceivedAt ) {
-                nParams[@"errorLogPostedAt"] = self.errorLogReceivedAt;
-            }
-            if ( event.errorComment ) {
-                nParams[@"errorComment"] = event.errorComment;
-            }*/
+
+        if ( self.errorLog.playbackSessionID ) {
+            nParams[@"avPlayerSessionId"] = self.errorLog.playbackSessionID;
         }
         self.errorLog = nil;
     }
     if ( self.accessLog ) {
-        if ( self.accessLog.events && self.accessLog.events.count > 0 ) {
-            
-          /*  AVPlayerItemAccessLogEvent *event = self.accessLog.events.lastObject;
-            if ( event.playbackSessionID ) {
-                nParams[@"avPlayerSessionId"] = event.playbackSessionID;
-            }
-            
-            nParams[@"numberOfStalls"] = @(event.numberOfStalls);
-            
-            [[SessionManager shared] setLastKnownBitrate:event.indicatedBitrate];
-            
-            if ( event.observedBitrateStandardDeviation >= 0.0 ) {
-                nParams[@"bitrateDeviation"] = @(event.observedBitrateStandardDeviation);
-            }
-            
-            nParams[@"indicatedBitrate"] = [NSString stringWithFormat:@"%1.1f",event.indicatedBitrate];
-            nParams[@"observedBitrate"] =  [NSString stringWithFormat:@"%1.1f",event.observedBitrate];
-            nParams[@"bytesTransferred"] = @(event.numberOfBytesTransferred);
-            
-            if ( self.accessLogReceivedAt ) {
-                nParams[@"accessLogPostedAt"] = self.accessLogReceivedAt;
-            }
-            
-            if ( event.URI ) {
-                nParams[@"uri"] = event.URI;
-            }
-           */
-        }
         self.accessLog = nil;
     }
     
@@ -553,17 +512,6 @@ static AnalyticsManager *singleton = nil;
         }
     }
     nParams[@"UID"] = [[[UIDevice currentDevice] identifierForVendor] UUIDString];
-    
-    /*NSError *misc = [[[AudioManager shared] audioPlayer] currentItem].error;
-    if ( misc ) {
-        for ( NSString *key in [[misc userInfo] allKeys] ) {
-            nParams[key] = [misc userInfo][key];
-        }
-    }
-    */
-    
-    //NSLog(@" •••••••• FINISHED LOGGIFYING ANALYTICS ••••••• ");
-    
     
     return nParams;
 }

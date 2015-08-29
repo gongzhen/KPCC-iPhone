@@ -1996,7 +1996,7 @@ setForOnDemandUI;
 
 - (void)determinePlayState {
     
-    if ( [[AudioManager shared] seekWillEffectBuffer] ) return;
+    if ( [[AudioManager shared] seekWillAffectBuffer] ) return;
     
     if ( [[AudioManager shared] status] == StreamStatusStopped || self.dirtyFromFailure || [[SessionManager shared] expiring] ) {
         if ( [[SessionManager shared] sessionIsInRecess] ) {
@@ -2613,7 +2613,7 @@ setForOnDemandUI;
             NSLog(@"Rewind Button - Hiding because a dropout has occurred");
         okToShow = NO;
     }
-    if ( [self jogging] || [[AudioManager shared] seekWillEffectBuffer] ) {
+    if ( [self jogging] || [[AudioManager shared] seekWillAffectBuffer] ) {
         if ( okToShow )
             NSLog(@"Rewind Button - Hiding because of the UI is jogging");
         okToShow = NO;

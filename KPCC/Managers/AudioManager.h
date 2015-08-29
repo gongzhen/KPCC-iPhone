@@ -114,7 +114,7 @@ typedef NS_ENUM(NSUInteger, StreamStatus) {
 @property BOOL tryAgain;
 @property BOOL reactivate;
 @property BOOL dropoutOccurred;
-@property BOOL seekWillEffectBuffer;
+@property BOOL seekWillAffectBuffer;
 @property BOOL smooth;
 @property BOOL userPause;
 @property BOOL beginNormally;

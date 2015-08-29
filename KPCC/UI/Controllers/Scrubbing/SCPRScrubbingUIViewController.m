@@ -438,9 +438,9 @@
     self.positionBeforeScrub = [[[SessionManager shared] vNow] timeIntervalSince1970];
     NSLog(@"Position before scrub : %ld", (long)self.positionBeforeScrub);
     
-    [[AudioManager shared] invalidateTimeObserver];
-    [[AudioManager shared] setSeekWillEffectBuffer:YES];
-    
+//    [[AudioManager shared] invalidateTimeObserver];
+//    [[AudioManager shared] setSeekWillAffectBuffer:YES];
+
     self.seeking = YES;
     
     [self printCurrentDate];
@@ -487,12 +487,12 @@
     
     [self printCurrentDate];
     
-    if ( [[AudioManager shared].audioPlayer rate] <= 0.0f ) {
-        [[AudioManager shared].audioPlayer play];
-    } else {
-        [[AudioManager shared] startObservingTime];
-    }
-    
+//    if ( [[AudioManager shared].audioPlayer rate] <= 0.0f ) {
+//        [[AudioManager shared].audioPlayer play];
+//    } else {
+//        [[AudioManager shared] startObservingTime];
+//    }
+
     self.seeking = NO;
     
     [(SCPRMasterViewController*)self.parentControlView primeManualControlButton];
