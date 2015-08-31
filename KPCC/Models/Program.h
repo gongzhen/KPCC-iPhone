@@ -26,6 +26,6 @@
 + (void)insertProgramsWithArray:(NSArray *)array inManagedObjectContext:(NSManagedObjectContext *)context;
 + (instancetype)fetchProgramWithSlug:(NSString *)slug fromManagedObjectContext:(NSManagedObjectContext *)context;
 + (NSArray *)fetchAllProgramsInContext:(NSManagedObjectContext *)context;
-
+- (BOOL)containsDate:(NSDate*)date;
 
 @end

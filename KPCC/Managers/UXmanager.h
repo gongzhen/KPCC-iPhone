@@ -77,8 +77,6 @@ typedef NS_ENUM(NSInteger, SSOType) {
 
 - (void)godPauseOrPlay;
 - (void)killAudio;
-- (void)timeBegin;
-- (void)timeEnd:(NSString*)operationName;
 
 // SSO
 - (SSOType)userLoginType;

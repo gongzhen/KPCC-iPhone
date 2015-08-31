@@ -835,12 +835,7 @@ static const NSString *ItemStatusContext;
     void (^finishBlock)(void) = ^{
         self.newPositionDelta = interval;
 
-//        if ( [self.audioPlayer rate] <= 0.0f ) {
-            [self.audioPlayer play];
-//        } else {
-//            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.25f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-//            });
-//        }
+        [self.audioPlayer play];
 
         dispatch_async(dispatch_get_main_queue(), ^{
 
@@ -1264,17 +1259,9 @@ static const NSString *ItemStatusContext;
         url = [url stringByAppendingString:[NSString stringWithFormat:@"&ua=KPCCiPhone-%@", [Utils urlSafeVersion]]];
     }
 
-    [[UXmanager shared] timeBegin];
     [self stopAudio];
-    [[UXmanager shared] timeEnd:@"Takedown audio player"];
-    
-    [[UXmanager shared] timeBegin];
     [self buildStreamer:url];
-    [[UXmanager shared] timeEnd:@"Build audio player"];
-    
-    [[UXmanager shared] timeBegin];
     [self playAudio];
-    [[UXmanager shared] timeEnd:@"Play Audio"];
 }
 
 - (void)playQueueItem:(AudioChunk*)chunk {
@@ -1375,40 +1362,48 @@ static const NSString *ItemStatusContext;
         if ( self.savedVolume <= 0.0 ) {
             self.savedVolume = 1.0f;
         }
-        self.audioPlayer.volume = 0.0f;
+
+        // FIXME: Reintroduce volume management
+//        self.audioPlayer.volume = 0.0f;
     }
-    
-    if ( self.currentAudioMode == AudioModeOnDemand ) {
-        if ( [self.audioPlayer currentItem] ) {
+
+    [self getReadyPlayer:^{
+        if ( self.currentAudioMode == AudioModeOnDemand ) {
             if ( CMTimeGetSeconds( self.audioPlayer.currentItem.currentTime ) == 0 ) {
+                // see if we have a bookmark for where to start in this audio file
                 Bookmark *b = [[QueueManager shared] currentBookmark];
+
+                Float64 resumeTime = 0;
+
                 if ( b ) {
-                    Float64 resumeTime = [b.resumeTimeInSeconds floatValue];
                     Float64 duration = [b.duration floatValue];
-                    if ( fabs(duration - resumeTime) <= 1.0 ) {
+                    if ( b.resumeTimeInSeconds > 0 && ( fabs(duration - resumeTime) <= 1.0 || resumeTime >= duration )) {
+                        // invalid bookmark position. reset our stored value
                         b.resumeTimeInSeconds = @(0);
                     }
-                    if ( b && b.resumeTimeInSeconds > 0 ) {
-                        if ( resumeTime >= duration ) {
-                            b.resumeTimeInSeconds = @(0);
-                        } else {
-                            self.onDemandSeekPosition = resumeTime;
-                            self.waitForOnDemandSeek = YES;
-                            return;
-                        }
-                    }
-                } else {
+
+                    resumeTime = [b.resumeTimeInSeconds floatValue];
+                }
+
+                if (resumeTime == 0) {
+                    NSLog(@"ondemand playAudio should start from 0.");
                     [self.audioPlayer play];
+                } else {
+                    // seek
+                    NSLog(@"ondemand playAudio should seek to %f.",resumeTime);
+
+                    [self intervalSeekWithTimeInterval:(NSTimeInterval)resumeTime completion:^{
+                        NSLog(@"ondemand playAudio seek to %f successful.",resumeTime);
+                    }];
                 }
             } else {
+                NSLog(@"ondemand playAudio starting from non-zero: %f", CMTimeGetSeconds(self.audioPlayer.currentItem.currentTime));
                 [self.audioPlayer play];
             }
-        }
-    } else {
-        [self getReadyPlayer:^{
+        } else {
             [self.audioPlayer play];
-        }];
-    }
+        }
+    }];
 
 }
 

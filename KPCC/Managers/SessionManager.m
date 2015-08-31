@@ -523,6 +523,16 @@
     }
     
     NSDate *ct = [self vNow];
+
+    NSLog(@"In fetchCurrentProgram for %@", ct);
+
+    // do we already have this program?
+    if ( self.currentProgram && [self.currentProgram containsDate:ct]) {
+        NSLog(@"fetchCurrentProgram returning existing current program.");
+        completed(self.currentProgram);
+        return;
+    }
+
     [self fetchProgramAtDate:ct completed:^(id returnedObject) {
 #ifdef TESTING_SCHEDULE
         returnedObject = nil;

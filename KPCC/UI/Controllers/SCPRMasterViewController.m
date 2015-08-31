@@ -48,7 +48,6 @@ static NSInteger kCancelSleepTimerAlertTag = 44839;
 @property BOOL jogging;
 @property BOOL setForLiveStreamUI;
 @property BOOL setForOnDemandUI;
-@property BOOL dirtyFromRewind;
 @property BOOL queueBlurShown;
 @property BOOL queueLoading;
 
@@ -1315,7 +1314,6 @@ setForOnDemandUI;
                             withSound:sound
                            completion:^{
                                
-                               self.dirtyFromRewind = YES;
                                self.initiateRewind = NO;
                                self.jogging = NO;
                                
@@ -1410,7 +1408,6 @@ setForOnDemandUI;
                                completion:^{
                                    
                                    self.jogging = NO;
-                                   self.dirtyFromRewind = NO;
                                    [self updateControlsAndUI:YES];
                                    
                                    [[SessionManager shared] setSeekForwardRequested:NO];
@@ -1848,33 +1845,27 @@ setForOnDemandUI;
     if ( [[AudioManager shared] calibrating] ) {
         return;
     }
-    
-#ifndef SUPPRESS_V_LIVE
+
+    if ( [[NetworkManager shared] networkDown] ) {
+        [self.liveDescriptionLabel fadeText:@"NO NETWORK"];
+        return;
+    }
+
     NSTimeInterval ti = [[[SessionManager shared] vLive] timeIntervalSinceDate:ciCurrentDate];
-#else
-    NSTimeInterval ti = [[NSDate date] timeIntervalSinceDate:ciCurrentDate];
-#endif
-    
-#ifndef SUPPRESS_V_LIVE
+
+    // EWR: Does this come into play for onboarding? i'm assuming 48 hours is to get 0
     if ( ti > 60*60*48 ) {
         if ( [[SessionManager shared] sessionIsInRecess] ) {
             [self.liveDescriptionLabel fadeText:@"UP NEXT"];
         } else {
             [self.liveDescriptionLabel fadeText:@"LIVE"];
-            self.dirtyFromRewind = NO;
         }
         
         [self adjustScrubbingState];
         
         return;
     }
-#endif
-    
-    if ( [[NetworkManager shared] networkDown] ) {
-        [self.liveDescriptionLabel fadeText:@"NO NETWORK"];
-        return;
-    }
-    
+
     if ( ti > kVirtualMediumBehindLiveTolerance || [[AudioManager shared] ignoreDriftTolerance] ) {
         [self.liveDescriptionLabel fadeText:[NSString stringWithFormat:@"%@ BEHIND LIVE", [NSDate prettyTextFromSeconds:ti]]];
         self.previousRewindThreshold = [[AudioManager shared].audioPlayer.currentItem.currentDate timeIntervalSince1970];
@@ -1885,7 +1876,6 @@ setForOnDemandUI;
             [self.liveDescriptionLabel fadeText:@"UP NEXT"];
         } else {
             [self.liveDescriptionLabel fadeText:@"LIVE"];
-            self.dirtyFromRewind = NO;
         }
         
     }
@@ -1993,8 +1983,8 @@ setForOnDemandUI;
 }
 
 - (void)determinePlayState {
-    
-    if ( [[AudioManager shared] seekWillAffectBuffer] ) return;
+
+    if ( [[[AudioManager shared] status] status] == AudioStatusSeeking) return;
 
     if ( [[[AudioManager shared] status] status] == AudioStatusStopped || self.dirtyFromFailure || [[SessionManager shared] expiring] ) {
         if ( [[SessionManager shared] sessionIsInRecess] ) {
@@ -2893,8 +2883,8 @@ setForOnDemandUI;
     BOOL fwd30 = YES;
     BOOL scrubbing = YES;
     
-    if ( [[AudioManager shared] currentAudioMode] != AudioModeLive &&
-        [[AudioManager shared] currentAudioMode] != AudioModeOnDemand ) {
+    if ( [[AudioManager shared] currentAudioMode] == AudioModeOnboarding ||
+        [[AudioManager shared] currentAudioMode] == AudioModeNeutral) {
         back30 = NO;
         fwd30 = NO;
         scrubbing = NO;
@@ -2922,8 +2912,6 @@ setForOnDemandUI;
     [self animatedStateForBackwardButton:back30];
     [self animatedStateForForwardButton:fwd30];
     self.scrubbingTriggerView.alpha = scrubbing ? 1.0f : 0.0f;
-    
-          
 }
 
 #pragma mark - XFS

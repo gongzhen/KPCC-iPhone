@@ -569,14 +569,14 @@
 }
 
 - (double)strokeEndForCurrentTime {
-    if ( [[AudioManager shared] currentAudioMode] == AudioModeOnDemand ) {
-        NSInteger cS = CMTimeGetSeconds([[AudioManager shared].audioPlayer.currentItem currentTime]);
-        NSInteger tS = CMTimeGetSeconds([[AudioManager shared].audioPlayer.currentItem.asset duration]);
-        return (cS*1.0f / tS*1.0f)*1.0f;
-    }
     if ( [[AudioManager shared] currentAudioMode] == AudioModeLive ) {
         return [self percentageThroughCurrentProgram];
+    } else if ( [[AudioManager shared] currentAudioMode] == AudioModeOnDemand ) {
+        NSInteger cS = CMTimeGetSeconds([[AudioManager shared].audioPlayer.currentItem currentTime]);
+        NSInteger tS = CMTimeGetSeconds([[AudioManager shared].audioPlayer.currentItem.asset duration]);
+        return (cS*1.0f / tS*1.0f);
     }
+
     
     return 0.0f;
 }
