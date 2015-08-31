@@ -98,15 +98,16 @@ static QueueManager *singleton = nil;
 }
 
 - (void)playNext {
-#ifdef DEBUG
-    NSLog(@"playNext fired");
-#endif
+    NSLog(@"QueueManager in playNext");
+
     if (![self isQueueEmpty]) {
         if (self.currentlyPlayingIndex + 1 < [self.queue count]) {
             AudioChunk *chunk = (self.queue)[self.currentlyPlayingIndex + 1];
             self.currentChunk = chunk;
             self.currentlyPlayingIndex += 1;
             [[[Utils del] masterViewController] setPositionForQueue:(int)self.currentlyPlayingIndex animated:YES];
+
+            NSLog(@"QueueManger playNext is starting next chunk.");
             [[AudioManager shared] playQueueItem:chunk];
         }
     }
@@ -125,8 +126,8 @@ static QueueManager *singleton = nil;
 }
 
 - (void)playItemAtPosition:(int)index {
-    [[AudioManager shared] invalidateTimeObserver];
-    
+//    [[AudioManager shared] invalidateTimeObserver];
+
     if (![self isQueueEmpty]) {
         if (index >= 0 && index < [self.queue count]) {
             

@@ -145,7 +145,7 @@
     }
     
     
-    if ( [[AudioManager shared] status] == StreamStatusStopped ) return;
+    if ( [[[AudioManager shared] status] status] == AudioStatusStopped ) return;
     if ( [[AudioManager shared] currentAudioMode] == AudioModeOnDemand ) return;
     
     // An ugly and absurd opacity check that at this point seems necessary

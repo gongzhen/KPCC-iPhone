@@ -132,6 +132,8 @@
             [self updateProgramObject:programObj withDictionary:program];
         }
     }
+
+    NSLog(@"Done with Program update.");
 }
 
 + (instancetype)updateProgramObject:(Program *)program withDictionary:(NSDictionary *)dictionary {

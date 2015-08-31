@@ -13,6 +13,12 @@
 int main(int argc, char * argv[])
 {
     @autoreleasepool {
-        return UIApplicationMain(argc, argv, nil, NSStringFromClass([SCPRAppDelegate class]));
+        @try {
+            return UIApplicationMain(argc, argv, nil, NSStringFromClass([SCPRAppDelegate class]));
+        }
+        @catch (NSException *exception) {
+            NSLog(@"Exception - %@",exception);
+            exit(EXIT_FAILURE);
+        }
     }
 }

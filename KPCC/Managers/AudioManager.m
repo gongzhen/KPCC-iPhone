@@ -34,13 +34,14 @@ static const NSString *ItemStatusContext;
         @synchronized(self) {
             singleton = [[AudioManager alloc] init];
             singleton.fadeQueue = [[NSOperationQueue alloc] init];
-            singleton.status = StreamStatusStopped;
             singleton.savedVolumeFromMute = -1.0f;
             singleton.currentAudioMode = AudioModeNeutral;
             singleton.localBufferSample = [NSMutableDictionary new];
             singleton.frameCount = 1;
 
             singleton.interactionIdx = 0;
+
+            singleton.status = [[AVStatus alloc] init];
             
             [[NSNotificationCenter defaultCenter] addObserver:singleton
                                                          selector:@selector(handleInterruption:)
@@ -182,19 +183,7 @@ static const NSString *ItemStatusContext;
 }
 
 - (void)printStatus {
-    switch (self.status) {
-        case StreamStatusPaused:
-            NSLog(@"CurrentStatus - Stream is paused");
-            break;
-        case StreamStatusPlaying:
-            NSLog(@"CurrentStatus - Stream is playing");
-            break;
-        case StreamStatusStopped:
-            NSLog(@"CurrentStatus - Stream is stopped");
-            break;
-        default:
-            break;
-    }
+    NSLog(@"Current audio status is %@",[self.status toString]);
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object
@@ -772,6 +761,8 @@ static const NSString *ItemStatusContext;
 
     self.savedVolume = 1.0f;
 
+    [self.status setStatus:AudioStatusWaiting];
+
     [self getReadyPlayer:^{
         if (self.interactionIdx != seek_id) {
             return;
@@ -799,10 +790,14 @@ static const NSString *ItemStatusContext;
 - (void)forwardSeekLiveWithType:(NSInteger)type completion:(CompletionBlock)completion {
     NSInteger seek_id = ++self.interactionIdx;
 
+    [self.status setStatus:AudioStatusWaiting];
+
     [self getReadyPlayer:^{
         if (self.interactionIdx != seek_id) {
             return;
         }
+
+        [self.status setStatus:AudioStatusSeeking];
 
         self.seekWillAffectBuffer = TRUE;
 
@@ -850,6 +845,8 @@ static const NSString *ItemStatusContext;
 
             [self startObservingTime];
 
+            [self.status setStatus:AudioStatusPlaying];
+
             NSDate *landingDate = self.audioPlayer.currentItem.currentDate;
             NSTimeInterval failDiff = [landingDate timeIntervalSince1970] - [self.seekTargetReferenceDate timeIntervalSince1970];
             NSLog(@"After all attempts the difference between live and target seek is %1.1f - %@",failDiff,[NSDate stringFromDate:landingDate withFormat:@"h:mm:ss a"]);
@@ -863,6 +860,8 @@ static const NSString *ItemStatusContext;
 
         });
     };
+
+    [self.status setStatus:AudioStatusWaiting];
     
     [self getReadyPlayer:^{
         [self setSeekWillAffectBuffer:YES];
@@ -874,8 +873,13 @@ static const NSString *ItemStatusContext;
 
         self.calibrating = YES;
 
-//        [self invalidateTimeObserver];
+        [self.status setStatus:AudioStatusSeeking];
+
         [self.audioPlayer.currentItem cancelPendingSeeks];
+
+        // for ios9, we need to start playing before we seek
+        [self.audioPlayer play];
+
         [self.audioPlayer.currentItem seekToTime:ct toleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero completionHandler:^(BOOL finished) {
             if (!finished) {
                 return;
@@ -962,29 +966,15 @@ static const NSString *ItemStatusContext;
     NSLog(@"playerItemFailedToPlayToEndTime! --- %@ ", [error localizedDescription]);
 }
 
-- (void)playerItemDidFinishPlaying:(NSNotification *)notification {
-    @try {
-        [[NSNotificationCenter defaultCenter] removeObserver:self
-         name:AVPlayerItemDidPlayToEndTimeNotification
-                                                      object:nil];
-    } @catch (NSException *exception) {
-        // Wasn't necessary
-        NSLog(@"Exception - failed to remove AVPlayerItemDidPlayToEndTimeNotification");
-    }
-    
+- (void)playerItemDidFinishPlaying {
     [[SessionManager shared] endOnDemandSessionWithReason:OnDemandFinishedReasonEpisodeEnd];
 
     if ( [[QueueManager shared] currentBookmark] ) {
         [[ContentManager shared] destroyBookmark:[[QueueManager shared] currentBookmark]];
         [[QueueManager shared] setCurrentBookmark:nil];
     }
-    
-    if ( ![[QueueManager shared] isQueueEmpty] ) {
-        [[QueueManager shared] playNext];
-    } else {
-        [self stopAudio];
-        [self playAudio];
-    }
+
+    [[QueueManager shared] playNext];
 }
 
 - (void)onboardingSegmentCompleted {
@@ -1073,7 +1063,9 @@ static const NSString *ItemStatusContext;
                     [self.delegate onRateChange];
                 }
 
-                self.status = StreamStatusPlaying;
+                if ([self.status status] != AudioStatusSeeking) {
+                    [self.status setStatus:AudioStatusPlaying];
+                }
 
                 break;
             case StatusesPaused:
@@ -1081,7 +1073,9 @@ static const NSString *ItemStatusContext;
                     [self.delegate onRateChange];
                 }
 
-                self.status = StreamStatusPaused;
+                if ([self.status status] != AudioStatusSeeking) {
+                    [self.status setStatus:AudioStatusPaused];
+                }
 
                 break;
             case StatusesPlayerFailed:
@@ -1129,6 +1123,12 @@ static const NSString *ItemStatusContext;
 //                [self playbackStalled];
 
                 break;
+
+            case StatusesItemEnded:
+                if ([self currentAudioMode] == AudioModeOnDemand) {
+                    [self playerItemDidFinishPlaying];
+                }
+                break;
             default:
                 break;
         }
@@ -1163,8 +1163,9 @@ static const NSString *ItemStatusContext;
     if ( self.currentAudioMode != AudioModeLive ) {
         [[SessionManager shared] setLocalLiveTime:0.0f];
     }
-    
-    self.status = StreamStatusStopped;
+
+    [self.status setStatus:AudioStatusStopped];
+
     self.previousUrl = urlString;
     
 }
@@ -1241,7 +1242,6 @@ static const NSString *ItemStatusContext;
     self.playerNeedsToSeekToLive = NO;
     self.waitForSeek = NO;
     self.waitForOnDemandSeek = NO;
-    self.status = StreamStatusStopped;
     self.currentAudioMode = AudioModeNeutral;
     self.skipCount = 0;
     self.appGaveUp = NO;
@@ -1257,14 +1257,12 @@ static const NSString *ItemStatusContext;
 
 - (void)playAudioWithURL:(NSString *)url {
     
-    if ( [self currentAudioMode] != AudioModePreroll ) {
-        if ( [url rangeOfString:@"?"].location == NSNotFound ) {
-            url = [url stringByAppendingString:[NSString stringWithFormat:@"?ua=KPCCiPhone-%@",[Utils urlSafeVersion]]];
-        } else {
-            url = [url stringByAppendingString:[NSString stringWithFormat:@"&ua=KPCCiPhone-%@", [Utils urlSafeVersion]]];
-        }
+    if ( [url rangeOfString:@"?"].location == NSNotFound ) {
+        url = [url stringByAppendingString:[NSString stringWithFormat:@"?ua=KPCCiPhone-%@",[Utils urlSafeVersion]]];
+    } else {
+        url = [url stringByAppendingString:[NSString stringWithFormat:@"&ua=KPCCiPhone-%@", [Utils urlSafeVersion]]];
     }
-    
+
     [[UXmanager shared] timeBegin];
     [self stopAudio];
     [[UXmanager shared] timeEnd:@"Takedown audio player"];
@@ -1276,13 +1274,6 @@ static const NSString *ItemStatusContext;
     [[UXmanager shared] timeBegin];
     [self playAudio];
     [[UXmanager shared] timeEnd:@"Play Audio"];
-    
-    // IPH-18
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(playerItemDidFinishPlaying:)
-                                                 name:AVPlayerItemDidPlayToEndTimeNotification
-                                               object:nil];
-    
 }
 
 - (void)playQueueItem:(AudioChunk*)chunk {
@@ -1347,10 +1338,21 @@ static const NSString *ItemStatusContext;
 
 - (BOOL)isActiveForAudioMode:(AudioMode)mode {
     if ( self.currentAudioMode != mode ) return NO;
-    return self.status == StreamStatusPaused || self.status == StreamStatusPlaying;
+
+    switch (self.status.status) {
+        case AudioStatusPlaying:
+        case AudioStatusPaused:
+        case AudioStatusWaiting:
+        case AudioStatusSeeking:
+            return YES;
+            break;
+        default:
+            return NO;
+    }
 }
 
 - (void)playAudio {
+    [self.status setStatus:AudioStatusWaiting];
     
     [[ContentManager shared] saveContext];
     
@@ -1366,7 +1368,6 @@ static const NSString *ItemStatusContext;
     
     [[SessionManager shared] startAudioSession];    
     [[SessionManager shared] setSessionPausedDate:nil];
-//    self.status = StreamStatusPlaying;
 
     if ( self.smooth ) {
         self.savedVolume = self.audioPlayer.volume;
@@ -1413,7 +1414,7 @@ static const NSString *ItemStatusContext;
 - (void)pauseAudio {
     
     [self.audioPlayer pause];
-//    self.status = StreamStatusPaused;
+
     self.localBufferSample = nil;
     
     [[SessionManager shared] setLocalLiveTime:0.0f];
@@ -1436,7 +1437,7 @@ static const NSString *ItemStatusContext;
     }
     
     [self takedownAudioPlayer];
-    self.status = StreamStatusStopped;
+    [self.status setStatus:AudioStatusStopped];
 }
 
 - (void)stopAllAudio {

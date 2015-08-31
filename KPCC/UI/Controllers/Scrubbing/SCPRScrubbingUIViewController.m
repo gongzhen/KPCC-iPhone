@@ -38,7 +38,27 @@
                                                object:nil];
     
     [self primeForAudioMode];
-    
+
+    // listen for audio state changes
+//    [[[AudioManager shared] status] observe:^(enum AudioStatus o) {
+//        switch (o) {
+//            case AudioStatusPlaying:
+//                // pause button
+//
+//                [self.playPauseButton fadeImage:[UIImage imageNamed:@"btn_pause.png"]
+//                                       duration:0.2];
+//
+//                break;
+//            default:
+//                // play button
+//
+//                [self.playPauseButton fadeImage:[UIImage imageNamed:@"btn_play.png"]
+//                                       duration:0.2];
+//
+//                break;
+//        }
+//    }];
+
     // Do any additional setup after loading the view from its nib.
 }
 
@@ -140,7 +160,7 @@
         [self.timeNumericLabel proLightFontize];
         [self.timeBehindLiveLabel proMediumFontize];
         
-        if ( [[AudioManager shared] status] != StreamStatusStopped ) {
+        if ( ![[[AudioManager shared] status] stopped] ) {
 
             self.timeBehindLiveLabel.alpha = 0.0f;
             self.timeNumericLabel.alpha = 1.0f;
@@ -165,8 +185,7 @@
         self.currentProgressNeedleView.alpha = 0.0f;
         self.currentProgressReadingLabel.alpha = 0.0f;
         
-    }
-    if ( [[AudioManager shared] currentAudioMode] == AudioModeOnDemand ) {
+    } else if ( [[AudioManager shared] currentAudioMode] == AudioModeOnDemand ) {
         self.liveProgressView.alpha = 0.0f;
         self.lowerBoundLabel.alpha = 0.0f;
         self.upperBoundLabel.alpha = 0.0f;
@@ -515,15 +534,15 @@
 }
 
 #pragma mark - AudioManager
-- (void)onRateChange {
-    if ( [[AudioManager shared] isStreamPlaying] || [[AudioManager shared] isStreamBuffering] ) {
-        [self.playPauseButton fadeImage:[UIImage imageNamed:@"btn_pause.png"]
-                               duration:0.2];
-    } else {
-        [self.playPauseButton fadeImage:[UIImage imageNamed:@"btn_play.png"]
-                               duration:0.2];
-    }
-}
+//- (void)onRateChange {
+//    if ( [[AudioManager shared] isStreamPlaying] || [[AudioManager shared] isStreamBuffering] ) {
+//        [self.playPauseButton fadeImage:[UIImage imageNamed:@"btn_pause.png"]
+//                               duration:0.2];
+//    } else {
+//        [self.playPauseButton fadeImage:[UIImage imageNamed:@"btn_play.png"]
+//                               duration:0.2];
+//    }
+//}
 
 - (void)onTimeChange {
     
@@ -782,8 +801,7 @@
 }
 
 - (void)scrubberWillAppear {
-    StreamStatus s = [[AudioManager shared] status];
-    if ( s == StreamStatusPlaying ) {
+    if ( [[[AudioManager shared] status] status] == AudioStatusPlaying ) {
         self.scrubberController.currentBarLine.strokeEnd = 0.0f;
     } else {
         [self.scrubberController tick:0.0f];

@@ -22,14 +22,15 @@ import AVFoundation
     @objc enum Statuses: Int {
         case PlayerFailed = 0, PlayerReady = 1, ItemFailed = 2, ItemReady = 3,
         Playing = 4, Paused = 5, Stalled = 6, TimeJump = 7, AccessLog = 8,
-        ErrorLog = 9, LikelyToKeepUp = 10, UnlikelyToKeepUp = 11
+        ErrorLog = 9, LikelyToKeepUp = 10, UnlikelyToKeepUp = 11, ItemEnded = 12
     }
     
     let _itemNotifications = [
         AVPlayerItemPlaybackStalledNotification,
         AVPlayerItemTimeJumpedNotification,
         AVPlayerItemNewAccessLogEntryNotification,
-        AVPlayerItemNewErrorLogEntryNotification
+        AVPlayerItemNewErrorLogEntryNotification,
+        AVPlayerItemDidPlayToEndTimeNotification
     ]
     
     @objc init(player:AVPlayer,callback:CallbackClosure) {
@@ -124,6 +125,8 @@ import AVFoundation
         case AVPlayerItemNewAccessLogEntryNotification:
             let log:AVPlayerItemAccessLogEvent? = self._player.currentItem!.accessLog()!.events.last
             self._notify(Statuses.AccessLog,msg: "Access Log",obj: log)
+        case AVPlayerItemDidPlayToEndTimeNotification:
+            self._notify(Statuses.ItemEnded, msg:"Item played to end.")
         default:
             true
         }

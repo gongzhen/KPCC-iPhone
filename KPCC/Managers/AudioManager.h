@@ -88,8 +88,9 @@ typedef NS_ENUM(NSUInteger, StreamStatus) {
 
 @property AVObserver *avobserver;
 @property NSString *avSessionId;
+@property AVStatus *status;
 
-@property StreamStatus status;
+//@property StreamStatus status;
 @property long lastPreRoll;
 
 @property NSDate *currentDate;

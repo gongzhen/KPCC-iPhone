@@ -152,7 +152,7 @@ setForOnDemandUI;
             return;
         }
     } else if ( [[AudioManager shared] currentAudioMode] == AudioModeLive ) {
-        if ( [[AudioManager shared] status] == StreamStatusPaused ) {
+        if ( [[[AudioManager shared] status] status] == AudioStatusPaused ) {
             [[AudioManager shared] resetPlayer];
         } else if ( [[SessionManager shared] sessionIsBehindLive] ) {
             [[SessionManager shared] setLastKnownPauseExplanation:PauseExplanationAppIsRespondingToPush];
@@ -383,11 +383,32 @@ setForOnDemandUI;
                                action:@selector(initialPlayTapped:)
                      forControlEvents:UIControlEventTouchUpInside
                               special:YES];
-    
+
+    // set up the playPause button
+
     [self.playPauseButton addTarget:self
                              action:@selector(playOrPauseTapped:)
                    forControlEvents:UIControlEventTouchUpInside
                             special:YES];
+
+    [[[AudioManager shared] status] observe:^(enum AudioStatus s) {
+        switch (s) {
+            case AudioStatusPlaying:
+            case AudioStatusSeeking:
+            case AudioStatusWaiting:
+                // set pause button
+                NSLog(@"Set playPauseButton to PAUSE based on status %ld",(long)s);
+                [self.playPauseButton fadeImage:[UIImage imageNamed:@"btn_pause.png"] duration:0.2];
+
+                break;
+            default:
+                // set play button
+                NSLog(@"Set playPauseButton to PLAY based on status %ld",(long)s);
+                [self.playPauseButton fadeImage:[UIImage imageNamed:@"btn_play.png"] duration:0.2];
+
+                break;
+        }
+    }];
     
     if ( [Utils isIOS8] ) {
         [self.shareButton addTarget:self
@@ -676,27 +697,19 @@ setForOnDemandUI;
 }
 
 - (void)addPreRollController {
-    
     if ( ![[UXmanager shared] userHasSeenOnboarding] ) return;
     
     self.preRollViewController = [[SCPRPreRollViewController alloc] initWithNibName:nil bundle:nil];
     self.preRollViewController.delegate = self;
+
+    [self addChildViewController:self.preRollViewController];
     
-//    [[NetworkManager shared] fetchTritonAd:nil completion:^(TritonAd *tritonAd) {
-//        dispatch_async(dispatch_get_main_queue(), ^{
-//            self.preRollViewController.tritonAd = tritonAd;
-            [self addChildViewController:self.preRollViewController];
-            
-            CGRect frame = self.view.bounds;
-            frame.origin.y = (-1)*self.view.bounds.size.height;
-            self.preRollViewController.view.frame = frame;
-            
-            [self.view addSubview:self.preRollViewController.view];
-            [self.preRollViewController didMoveToParentViewController:self];
-//        });
-//    }];
-
-
+    CGRect frame = self.view.bounds;
+    frame.origin.y = (-1)*self.view.bounds.size.height;
+    self.preRollViewController.view.frame = frame;
+    
+    [self.view addSubview:self.preRollViewController.view];
+    [self.preRollViewController didMoveToParentViewController:self];
 }
 
 - (void)resetUI {
@@ -959,17 +972,6 @@ setForOnDemandUI;
 
 - (IBAction)initialPlayTapped:(id)sender {
     
-#ifdef DEBUG
-   // [Utils crash];
-#endif
-    
-#ifdef FORCE_TEST_STREAM
-    self.preRollViewController.tritonAd = nil;
-#endif
-#ifdef BETA
-    self.preRollViewController.tritonAd = nil;
-#endif
-    
     if ( ![[UXmanager shared].settings userHasViewedOnboarding] ) {
         [[UXmanager shared] fadeOutBrandingWithCompletion:^{
             [self adjustScrubbingState];
@@ -979,8 +981,6 @@ setForOnDemandUI;
         }];
         return;
     }
-    
-    [[AudioManager shared] setSmooth:!self.preRollViewController.tritonAd];
 
     [[SessionManager shared] fetchCurrentProgram:^(id returnedObject) {
         [UIView animateWithDuration:0.15 animations:^{
@@ -1052,8 +1052,9 @@ setForOnDemandUI;
             } else {
                 
                 self.scrubbingTriggerView.userInteractionEnabled = YES;
-                BOOL hard = [[AudioManager shared] status] == StreamStatusStopped ? YES : NO;
-                [self playAudio:hard];
+                // FIXME: Reimplement this
+//                BOOL hard = [[AudioManager shared] status] == StreamStatusStopped ? YES : NO;
+                [self playAudio:NO];
                 
             }
             
@@ -1233,7 +1234,7 @@ setForOnDemandUI;
     
     if ( [[AudioManager shared] currentAudioMode] == AudioModeLive ||
         [[AudioManager shared] currentAudioMode] == AudioModeNeutral ) {
-        if ( [[AudioManager shared] status] == StreamStatusPaused ) {
+        if ( [[[AudioManager shared] status] status] == AudioStatusPaused ) {
             if ( self.initialPlay ) {
                 [self playAudio:NO];
             } else {
@@ -1241,7 +1242,7 @@ setForOnDemandUI;
             }
             return;
         }
-        if ( [[AudioManager shared] status] == StreamStatusStopped ) {
+        if ( [[[AudioManager shared] status] status] == AudioStatusStopped ) {
             if ( self.initialPlay ) {
                 [self playAudio:YES];
             } else {
@@ -1446,10 +1447,10 @@ setForOnDemandUI;
 - (void)handlePreRollControl:(BOOL)paused {
     if ( !paused ) {
         [self.preRollViewController.prerollPlayer pause];
-        [self.playPauseButton fadeImage:[UIImage imageNamed:@"btn_play.png"] duration:0.2];
+//        [self.playPauseButton fadeImage:[UIImage imageNamed:@"btn_play.png"] duration:0.2];
     } else {
         [self.preRollViewController.prerollPlayer play];
-        [self.playPauseButton fadeImage:[UIImage imageNamed:@"btn_pause.png"] duration:0.2];
+//        [self.playPauseButton fadeImage:[UIImage imageNamed:@"btn_pause.png"] duration:0.2];
     }
 }
 
@@ -1971,9 +1972,9 @@ setForOnDemandUI;
             
         } completion:^(BOOL finished) {
             if ([[AudioManager shared] isStreamPlaying] || [[AudioManager shared] isStreamBuffering]) {
-                [self.playPauseButton fadeImage:[UIImage imageNamed:@"btn_pause.png"] duration:0.2];
+//                [self.playPauseButton fadeImage:[UIImage imageNamed:@"btn_pause.png"] duration:0.2];
             } else {
-                [self.playPauseButton fadeImage:[UIImage imageNamed:@"btn_play.png"] duration:0.2];
+//                [self.playPauseButton fadeImage:[UIImage imageNamed:@"btn_play.png"] duration:0.2];
             }
             
             
@@ -1994,8 +1995,8 @@ setForOnDemandUI;
 - (void)determinePlayState {
     
     if ( [[AudioManager shared] seekWillAffectBuffer] ) return;
-    
-    if ( [[AudioManager shared] status] == StreamStatusStopped || self.dirtyFromFailure || [[SessionManager shared] expiring] ) {
+
+    if ( [[[AudioManager shared] status] status] == AudioStatusStopped || self.dirtyFromFailure || [[SessionManager shared] expiring] ) {
         if ( [[SessionManager shared] sessionIsInRecess] ) {
             self.liveDescriptionLabel.text = @"UP NEXT";
         } else {
@@ -2003,19 +2004,9 @@ setForOnDemandUI;
                 self.liveDescriptionLabel.text = @"ON NOW";
         }
     }
-    if ( [[AudioManager shared] status] == StreamStatusPaused ) {
+    if ( [[[AudioManager shared] status] status] == AudioStatusPaused) {
         if ( [[SessionManager shared] sessionIsBehindLive] ) {
-#ifndef SUPPRESS_V_LIVE
             [self prettifyBehindLiveStatus];
-#else
-            NSDate *ciCurrentDate = [AudioManager shared].audioPlayer.currentItem.currentDate;
-            NSTimeInterval ti = [[NSDate date] timeIntervalSinceDate:ciCurrentDate];
-            if ( ti > [[SessionManager shared] peakDrift] ) {
-                [self.liveDescriptionLabel setText:[NSString stringWithFormat:@"%@ BEHIND LIVE", [NSDate prettyTextFromSeconds:ti]]];
-            } else {
-                [self.liveDescriptionLabel setText:[NSString stringWithFormat:@"LIVE"]];
-            }
-#endif
         }
     }
     
@@ -2555,6 +2546,9 @@ setForOnDemandUI;
 }
 
 - (void)primeManualControlButton {
+
+    // 1) Should any control be showing?
+    // 2) Should the control be Rewind or Live?
     
     /*BOOL okToShow = ( [[AudioManager shared] status] == StreamStatusPaused &&
                      [[AudioManager shared] currentAudioMode] != AudioModeOnDemand &&
@@ -2562,10 +2556,32 @@ setForOnDemandUI;
     
     BOOL okToShow = YES;
 
-    if ( [[AudioManager shared] currentAudioMode] == AudioModeOnboarding ) {
-        NSLog(@"Rewind Button - Hiding because onboarding");
-        okToShow = NO;
+    switch ([[AudioManager shared] currentAudioMode]) {
+        case AudioModeOnboarding:
+            okToShow = NO;
+            break;
+        case AudioModeOnDemand:
+            okToShow = NO;
+            break;
+        default:
+            // Leave it as YES
+            break;
     }
+
+    // turn it off while audio is playing or seeking
+    if (okToShow) {
+        switch ([[[AudioManager shared] status] status]) {
+            case AudioStatusPlaying:
+            case AudioStatusSeeking:
+            case AudioStatusWaiting:
+                okToShow = NO;
+                break;
+            default:
+                // leave it as YES
+                break;
+        }
+    }
+
     if ( self.scrubbing ) {
         if ( okToShow ) {
             NSLog(@"Rewind Button - Hiding because the scrubber is up");
@@ -2582,57 +2598,20 @@ setForOnDemandUI;
             NSLog(@"Rewind Button - Hiding because live stream has no clearly defined program");
         okToShow = NO;
     }
-    if ( [[AudioManager shared] status] == StreamStatusStopped && [[AudioManager shared] currentAudioMode] == AudioModeOnDemand ) {
-        if ( okToShow )
-            NSLog(@"Rewind Button - Hiding because onboarding initial state");
-        okToShow = NO;
-    }
-    if ( [[AudioManager shared] status] == StreamStatusPlaying || [[AudioManager shared] isPlayingAudio] ) {
-        
-        if ( ![[SessionManager shared] sessionIsBehindLive] ) {
-            if ( okToShow )
-                NSLog(@"Rewind Button - Hiding because audio is playing");
-            okToShow = NO;
-        }
-        
-    }
-    if ( [[AudioManager shared] calibrating] ) {
-        if ( okToShow )
-            NSLog(@"Rewind Button - Hiding because audio is still calibrating");
-    }
-    if ( [[AudioManager shared] currentAudioMode] == AudioModeOnDemand ) {
-        if ( okToShow )
-            NSLog(@"Rewind Button - Hiding because Audio Mode is onDemand");
-        okToShow = NO;
-    }
+
     if ( [[AudioManager shared] dropoutOccurred] ) {
         if ( okToShow )
             NSLog(@"Rewind Button - Hiding because a dropout has occurred");
         okToShow = NO;
     }
-    if ( [self jogging] || [[AudioManager shared] seekWillAffectBuffer] ) {
-        if ( okToShow )
-            NSLog(@"Rewind Button - Hiding because of the UI is jogging");
-        okToShow = NO;
-    }
-    if ( [self scrubbing] ) {
-        if ( okToShow )
-            NSLog(@"Rewind Button - Hiding because of scrubbing" );
-    }
-    if ( self.preRollViewController.tritonAd ) {
-        if ( self.initialPlay ) {
-            if ( okToShow )
-                NSLog(@"Rewind Button - Hiding because of a Triton Ad");
-            okToShow = NO;
-        }
-    }
-    
+
     [self.liveRewindAltButton removeTarget:nil
                                     action:nil
                           forControlEvents:UIControlEventAllEvents];
     
     [self.liveRewindAltButton setImageEdgeInsets:UIEdgeInsetsMake(0.0, 0.0, 0.0, 20.0)];
-    if ( [[SessionManager shared] sessionIsBehindLive] && [[AudioManager shared] status] != StreamStatusStopped ) {
+
+    if ( [[SessionManager shared] sessionIsBehindLive] ) {
         [self.liveRewindAltButton setImage:[UIImage imageNamed:@"btn_back_to_live_xtra-small.png"]
                                   forState:UIControlStateHighlighted];
         [self.liveRewindAltButton setImage:[UIImage imageNamed:@"btn_back_to_live_xtra-small.png"]
@@ -2654,7 +2633,8 @@ setForOnDemandUI;
                                   forState:UIControlStateNormal];
         [self.liveRewindAltButton setTitle:@"Rewind to the start of this show"
                                   forState:UIControlStateHighlighted];
-        
+
+        // FIXME: How can we collapse this to one path?
         if ( initialPlay ) {
             [self.liveRewindAltButton addTarget:self
                                          action:@selector(activateRewind:)
@@ -2675,13 +2655,13 @@ setForOnDemandUI;
             NSLog(@"Rewind Button - Hiding because we're in no-mans-land");
         okToShow = NO;
     }
-    
-    
+
     if ( [[UXmanager shared] onboardingEnding] ) {
         if ( okToShow )
             NSLog(@"Rewind Button - Hiding because onboarding is ending");
         okToShow = NO;
     }
+
     if ( [[NetworkManager shared] networkDown] ) {
         if ( okToShow )
             NSLog(@"Rewind Button - Hiding because program is nil");
@@ -3468,7 +3448,7 @@ setForOnDemandUI;
             self.queueScrollTimer = nil;
         }
         
-        if ( [[AudioManager shared] status] == StreamStatusPlaying ) {
+        if ( [[[AudioManager shared] status] status] == AudioStatusPlaying ) {
             if ( ![self.jogShuttle spinning] ) {
                 [self snapJogWheel];
             }

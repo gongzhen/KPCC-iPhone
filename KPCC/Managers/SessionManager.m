@@ -636,7 +636,7 @@
     if ( [self seekForwardRequested] ) return NO;
     if ( [self sessionIsExpired] ) return NO;
     if (
-            ([[AudioManager shared] status] == StreamStatusPaused && [AudioManager shared].currentAudioMode != AudioModeOnboarding)  ||
+            ([[[AudioManager shared] status] status] == AudioStatusPaused && [AudioManager shared].currentAudioMode != AudioModeOnboarding)  ||
             [[AudioManager shared] currentAudioMode] == AudioModeOnDemand
         
         )
@@ -859,14 +859,21 @@
 }
 
 - (BOOL)sessionIsBehindLive {
-    return [self virtualSecondsBehindLive] > kVirtualLargeBehindLiveTolerance;
+    // FIXME: This should be something internal to the session
+    switch ([[[AudioManager shared] status] status]) {
+        case AudioStatusNew:
+        case AudioStatusStopped:
+            return NO;
+        default:
+            return [self virtualSecondsBehindLive] > kVirtualLargeBehindLiveTolerance;
+    }
 }
 
 - (BOOL)sessionIsExpired {
     
     if ( [[AudioManager shared] currentAudioMode] == AudioModeOnDemand ) return NO;
-    if ( [[AudioManager shared] status] == StreamStatusPaused ||
-            [[AudioManager shared] status] == StreamStatusStopped ) {
+    if ( [[[AudioManager shared] status] status] == AudioStatusPaused ||
+            [[[AudioManager shared] status] status] == AudioStatusStopped ) {
         NSDate *spd = [[SessionManager shared] sessionPausedDate];
         if ( !spd ) {
             spd = [[SessionManager shared] sessionLeftDate];
@@ -875,7 +882,7 @@
         if ( !spd ) return NO;
         
         NSDate *cit = [[AudioManager shared].audioPlayer.currentItem currentDate];
-        if ( [[AudioManager shared] status] != StreamStatusStopped ) {
+        if ( [[[AudioManager shared] status] status] != AudioStatusStopped ) {
             if ( !cit ) {
                 // Some kind of audio abnormality, so expire this session
                 return YES;
@@ -1000,7 +1007,7 @@
         [self expireSession];
         
     } else {
-        if ( [[AudioManager shared] status] != StreamStatusPaused ) {
+        if ( [[[AudioManager shared] status] status] != AudioStatusPaused ) {
             
             [self checkProgramUpdate:NO];
             if ( [[AudioManager shared] isPlayingAudio] ) {
