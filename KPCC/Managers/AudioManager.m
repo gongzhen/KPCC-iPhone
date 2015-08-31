@@ -807,6 +807,7 @@ static const NSString *ItemStatusContext;
             }
 
             [self.audioPlayer play];
+            [self.status setStatus:AudioStatusPlaying];
 
             [self.delegate onSeekCompleted];
 
