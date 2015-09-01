@@ -25,38 +25,51 @@
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         mgr = [[SessionManager alloc] init];
-#ifdef TESTING_PROGRAM_CHANGE
-        mgr.initialProgramRequested = 0;
-#endif
         mgr.prevCheckedMinute = -1;
         mgr.peakDrift = kAllowableDriftCeiling;
+
+        [[[AudioManager shared] status] observe:^(enum AudioStatus status) {
+            switch (status) {
+                case AudioStatusPlaying:
+                    if ([[AudioManager shared] currentAudioMode] == AudioModeLive) {
+                        [mgr setLocalLiveTimeFromSession];
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }];
     });
     return mgr;
+}
+
+- (void)setLocalLiveTimeFromSession {
+    [[[AudioManager shared] avobserver] once:StatusesLikelyToKeepUp callback:^(NSString* msg, id obj) {
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            NSDate* maxDate = [[AudioManager shared] maxSeekableDate];
+
+            if (maxDate) {
+                NSLog(@"setLocalLiveTimeFromSession: %@", maxDate);
+                self.localLiveTime = [[maxDate dateByAddingTimeInterval:-60.0f] timeIntervalSince1970];
+            }
+        });
+    }];
 }
 
 #pragma mark - Session Mgmt
 // What is the "live" date for our stream?
 - (NSDate*)vLive {
-    
-    
+
+    // FIXME: Is there any context in which we would need live date while in
+    // on-demand?
+    if ([[AudioManager shared] currentAudioMode] == AudioModeOnDemand) {
+        return nil;
+    }
+
     NSDate *live = [[NSDate date] dateByAddingTimeInterval:-90.0f]; // Add in what we know is going to be slightly behind live
     if ( self.localLiveTime > 0.0f ) {
-        NSLog(@"vLive being set by localLiveTime: %f",self.localLiveTime);
         live = [NSDate dateWithTimeIntervalSince1970:self.localLiveTime];
-    } else if ( [[AudioManager shared] maxSeekableDate] ) {
-        NSLog(@"vLive being set by maxSeekableDate: %@", [[AudioManager shared] maxSeekableDate]);
-        // since AVPlayer typically starts three segments behind, we should be
-        // roughly 60 seconds behind the max seekable date in the playlist
-        live = [[[AudioManager shared] maxSeekableDate] dateByAddingTimeInterval:-60.f];
     }
-    
-//    if ( [AudioManager shared].audioPlayer.currentItem ) {
-//        NSDate *msd = [[AudioManager shared].audioPlayer.currentItem currentDate];
-//        if ( !msd ) {
-//            // AVPlayer has no current date, so it's probably stopped
-//            return [[NSDate date] dateByAddingTimeInterval:60*60*24*10];
-//        }
-//    }
 
     return live;
 }

@@ -669,31 +669,13 @@ static const NSString *ItemStatusContext;
                 weakSelf.kickstartTimer = nil;
             }
 #endif
-            
+
             weakSelf.minSeekableDate = [NSDate dateWithTimeInterval:( -1 * (CMTimeGetSeconds(time) - CMTimeGetSeconds(range.start))) sinceDate:weakSelf.currentDate];
             weakSelf.maxSeekableDate = [NSDate dateWithTimeInterval:(CMTimeGetSeconds(CMTimeRangeGetEnd(range)) - CMTimeGetSeconds(time)) sinceDate:weakSelf.currentDate];
-            
+//            NSLog(@"Range is %@ - %@",weakSelf.minSeekableDate,weakSelf.maxSeekableDate);
+//            CMTimeRangeShow(range);
 
-            if ( self.currentAudioMode == AudioModeLive ) {
-                if ( [[SessionManager shared] localLiveTime] == 0.0f ) {
-                    NSDate *vLive = [[SessionManager shared] vLive];
-                    if ( [[SessionManager shared] dateIsReasonable:vLive] ) {
-                        [[SessionManager shared] setLocalLiveTime:[vLive timeIntervalSince1970]];
-                    }
-                } else {
-                    [[SessionManager shared] setLocalLiveTime:[[SessionManager shared] localLiveTime]+0.1f];
-                }
-            } else {
-                [[SessionManager shared] setLocalLiveTime:0.0f];
-            }
-            
             if ( weakSelf.frameCount % 10 == 0 ) {
-                
-//#ifndef SUPPRESS_LOCAL_SAMPLING
-//                if ( weakSelf.currentAudioMode == AudioModeLive ) {
-//                    [weakSelf localSample:time];
-//                }
-//#endif
                 if ( weakSelf.currentAudioMode == AudioModeOnDemand ) {
                     [[QueueManager shared] handleBookmarkingActivity];
                 }
@@ -1052,22 +1034,22 @@ static const NSString *ItemStatusContext;
 
         switch (status) {
             case StatusesPlaying:
-                if ([self.delegate respondsToSelector:@selector(onRateChange)]) {
-                    [self.delegate onRateChange];
-                }
-
                 if ([self.status status] != AudioStatusSeeking) {
                     [self.status setStatus:AudioStatusPlaying];
+
+                    if ([self.delegate respondsToSelector:@selector(onRateChange)]) {
+                        [self.delegate onRateChange];
+                    }
                 }
 
                 break;
             case StatusesPaused:
-                if ([self.delegate respondsToSelector:@selector(onRateChange)]) {
-                    [self.delegate onRateChange];
-                }
-
                 if ([self.status status] != AudioStatusSeeking) {
                     [self.status setStatus:AudioStatusPaused];
+
+                    if ([self.delegate respondsToSelector:@selector(onRateChange)]) {
+                        [self.delegate onRateChange];
+                    }
                 }
 
                 break;

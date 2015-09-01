@@ -2873,9 +2873,10 @@ setForOnDemandUI;
     BOOL back30 = YES;
     BOOL fwd30 = YES;
     BOOL scrubbing = YES;
+
+    enum AudioMode mode = [[AudioManager shared] currentAudioMode];
     
-    if ( [[AudioManager shared] currentAudioMode] == AudioModeOnboarding ||
-        [[AudioManager shared] currentAudioMode] == AudioModeNeutral) {
+    if ( mode == AudioModeOnboarding || mode == AudioModeNeutral) {
         back30 = NO;
         fwd30 = NO;
         scrubbing = NO;
@@ -2885,7 +2886,7 @@ setForOnDemandUI;
         fwd30 = NO;
         scrubbing = NO;
     }
-    if ( ![[SessionManager shared] sessionIsBehindLive] ) {
+    if ( mode == AudioModeLive && ![[SessionManager shared] sessionIsBehindLive] ) {
         fwd30 = NO;
     }
     if ( self.scrubbing ) {
@@ -2899,6 +2900,8 @@ setForOnDemandUI;
         back30 = NO;
         scrubbing = NO;
     }
+
+    NSLog(@"adjustScrubbingState: Back - %d | Forward - %d | Scrub - %d", back30, fwd30, scrubbing);
     
     [self animatedStateForBackwardButton:back30];
     [self animatedStateForForwardButton:fwd30];
@@ -3786,11 +3789,6 @@ setForOnDemandUI;
     NSAssert([NSThread isMainThread],@"This is not the main thread...");
     
     if ( [[AudioManager shared] frameCount] % 10 == 0 ) {
-        if ( !self.menuOpen ) {
-            [self prettifyBehindLiveStatus];
-        }
-        
-
         if ( self.showLiveHelpScreens ) {
             self.showLiveHelpScreens = NO;
             SCPRAppDelegate *del = [Utils del];
@@ -3798,7 +3796,11 @@ setForOnDemandUI;
         }
         
         [self adjustScrollingState];
-        
+
+        if ( !self.menuOpen ) {
+            [self prettifyBehindLiveStatus];
+        }
+
         if ( [AudioManager shared].currentAudioMode == AudioModeLive ) {
             if ( self.liveRewindAltButton.alpha == 1.0 || self.liveRewindAltButton.layer.opacity == 1.0 )
                 [self primeManualControlButton];
