@@ -123,7 +123,7 @@
         self.currentProgressNeedleView.alpha = 0.0f;
         self.currentProgressReadingLabel.alpha = 0.0f;
         self.timeBehindLiveLabel.text = @"YOUR LISTENING SPOT";
-        Program *p = [[SessionManager shared] currentProgram];
+        ScheduleOccurrence *p = [[SessionManager shared] currentSchedule];
         
         NSDate *startDate = p.starts_at;
         NSDate *endDate = p.ends_at;
@@ -448,7 +448,7 @@
     }
     
     if ( seekDate ) {
-        Program *p = [[SessionManager shared] currentProgram];
+        ScheduleOccurrence *p = [[SessionManager shared] currentSchedule];
         if ( [p.starts_at timeIntervalSince1970] >= [seekDate timeIntervalSince1970] ) {
             seekDate = [p.starts_at dateByAddingTimeInterval:30.0f];
         }
@@ -583,7 +583,7 @@
 
 #pragma mark - Live
 - (double)livePercentage {
-    Program *p = [[SessionManager shared] currentProgram];
+    ScheduleOccurrence *p = [[SessionManager shared] currentSchedule];
     if ( !p ) {
         return 0.0f;
     }
@@ -603,7 +603,7 @@
 
 - (double)percentageThroughCurrentProgram {
     
-    Program *p = [[SessionManager shared] currentProgram];
+    ScheduleOccurrence *p = [[SessionManager shared] currentSchedule];
     NSDate *endDate = p.ends_at;
     NSDate *startDate = p.starts_at;
     CGFloat duration = [endDate timeIntervalSince1970] - [startDate timeIntervalSince1970];
@@ -667,7 +667,7 @@
 }
 
 - (NSDate*)convertToDateFromPercentage:(double)percent {
-    Program *p = [[SessionManager shared] currentProgram];
+    ScheduleOccurrence *p = [[SessionManager shared] currentSchedule];
     NSTimeInterval duration = [p.ends_at timeIntervalSince1970] - [p.starts_at timeIntervalSince1970];
     CGFloat cpInSeconds = duration * percent;
     NSDate *rough = [p.starts_at dateByAddingTimeInterval:cpInSeconds];
@@ -706,7 +706,7 @@
 }
 
 - (NSInteger)convertToSecondsFromPercentage:(double)percent {
-    Program *p = [[SessionManager shared] currentProgram];
+    ScheduleOccurrence *p = [[SessionManager shared] currentSchedule];
     NSDate *startDate = p.starts_at;
     NSDate *endDate = p.ends_at;
     

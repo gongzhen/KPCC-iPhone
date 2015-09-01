@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "Program.h"
+#import "KPCC-Swift.h"
 
 @class SCPRGenericAvatarViewController;
 @class SCPRButton;
@@ -25,9 +26,9 @@
 @property IBOutlet SCPRGenericAvatarViewController *genericAvatar;
 @property (nonatomic, weak) UIScrollView *tableToScroll;
 @property (nonatomic, strong) IBOutlet NSLayoutConstraint *verticalPushAnchor;
-@property (nonatomic, strong) Program *nextProgram;
+@property (nonatomic, strong) ScheduleOccurrence *nextProgram;
 
-- (void)primeWithProgramBasedOnCurrent:(Program*)program;
+- (void)primeWithProgramBasedOnCurrent:(ScheduleOccurrence*)program;
 - (void)alignDividerToValue:(CGFloat)yCoordinate;
 
 @end

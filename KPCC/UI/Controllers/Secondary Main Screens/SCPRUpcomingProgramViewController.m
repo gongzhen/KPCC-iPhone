@@ -56,10 +56,10 @@
 }
 
 - (void)primeWithProgramBasedOnCurrent {
-    [self primeWithProgramBasedOnCurrent:[[SessionManager shared] currentProgram]];
+    [self primeWithProgramBasedOnCurrent:[[SessionManager shared] currentSchedule]];
 }
 
-- (void)primeWithProgramBasedOnCurrent:(Program *)program {
+- (void)primeWithProgramBasedOnCurrent:(ScheduleOccurrence *)program {
     
     if ( !program ) {
         return;
@@ -71,20 +71,21 @@
     if ( !cpEndsAt ) {
         return;
     }
-    
-    [[SessionManager shared] fetchProgramAtDate:cpEndsAt completed:^(id returnedObject) {
+
+    NSLog(@"primeWith fetching NEXT program for %@",cpEndsAt);
+    [[SessionManager shared] fetchScheduleAtDate:cpEndsAt completed:^(id returnedObject) {
         
-        [self setupWithNextProgram:(Program*)returnedObject];
+        [self setupWithNextProgram:(ScheduleOccurrence*)returnedObject];
         
     }];
 }
 
-- (void)setupWithNextProgram:(Program *)program {
+- (void)setupWithNextProgram:(ScheduleOccurrence *)program {
     self.nextProgram = program;
     
     self.programTitleLabel.text = [program title];
     
-    NSDate *displayDate = [[SessionManager shared] sessionHasNoProgram] ? [[[SessionManager shared] currentProgram] ends_at] : [program starts_at];
+    NSDate *displayDate = [[SessionManager shared] sessionHasNoProgram] ? [[[SessionManager shared] currentSchedule] ends_at] : [program starts_at];
     NSString *pretty = [NSDate stringFromDate:displayDate
                                    withFormat:@"h:mm a"];
     

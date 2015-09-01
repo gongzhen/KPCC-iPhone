@@ -8,9 +8,10 @@
 
 #import <Foundation/Foundation.h>
 #import "ContentManager.h"
+#import "KPCC-Swift.h"
+#import "GenericProgram.h"
 
-
-@interface Program : NSManagedObject
+@interface Program : NSManagedObject<GenericProgram>
 
 @property (nonatomic, retain) NSString * title;
 @property (nonatomic, retain) NSDate * ends_at;
@@ -26,6 +27,5 @@
 + (void)insertProgramsWithArray:(NSArray *)array inManagedObjectContext:(NSManagedObjectContext *)context;
 + (instancetype)fetchProgramWithSlug:(NSString *)slug fromManagedObjectContext:(NSManagedObjectContext *)context;
 + (NSArray *)fetchAllProgramsInContext:(NSManagedObjectContext *)context;
-- (BOOL)containsDate:(NSDate*)date;
 
 @end

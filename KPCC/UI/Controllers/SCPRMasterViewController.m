@@ -30,6 +30,7 @@
 #import "Utils.h"
 #import "SCPRLoginViewController.h"
 #import "SCPRProfileViewController.h"
+#import "GenericProgram.h"
 
 @import MessageUI;
 
@@ -748,7 +749,7 @@ setForOnDemandUI;
             [self determinePlayState];
             
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.85 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                [[SessionManager shared] fetchCurrentProgram:^(id returnedObject) {
+                [[SessionManager shared] fetchCurrentSchedule:^(id returnedObject) {
                     [self addPreRollController];
                     [SCPRCloakViewController uncloak];
                     [[SessionManager shared] setExpiring:NO];
@@ -901,7 +902,7 @@ setForOnDemandUI;
 - (void)onboarding_beginOnboardingAudio {
     
   
-    [self.liveProgressViewController displayWithProgram:[[SessionManager shared] currentProgram]
+    [self.liveProgressViewController displayWithProgram:[[SessionManager shared] currentSchedule]
                                                  onView:self.view
                                        aboveSiblingView:self.playerControlsView];
     [self.liveProgressViewController show];
@@ -981,7 +982,7 @@ setForOnDemandUI;
         return;
     }
 
-    [[SessionManager shared] fetchCurrentProgram:^(id returnedObject) {
+    [[SessionManager shared] fetchCurrentSchedule:^(id returnedObject) {
         [UIView animateWithDuration:0.15 animations:^{
             self.liveRewindAltButton.alpha = 0.0f;
         } completion:^(BOOL finished) {
@@ -1036,7 +1037,7 @@ setForOnDemandUI;
         }
         
         if ( [[SessionManager shared] sessionIsExpired] ) {
-            [[SessionManager shared] fetchCurrentProgram:^(id returnedObject) {
+            [[SessionManager shared] fetchCurrentSchedule:^(id returnedObject) {
                 [self playAudio:YES];
             }];
         } else {
@@ -1123,20 +1124,6 @@ setForOnDemandUI;
     [self.playerControlsView layoutIfNeeded];
 }
 
-
-- (NSTimeInterval)rewindAgainstStreamDelta {
-    AVPlayerItem *item = [[AudioManager shared].audioPlayer currentItem];
-    NSTimeInterval current = [item.currentDate timeIntervalSince1970];
-    
-    if ( [[SessionManager shared] currentProgram] ) {
-        NSTimeInterval startOfProgram = [[[[SessionManager shared] currentProgram] soft_starts_at] timeIntervalSince1970];
-        return current - startOfProgram;
-    }
-    
-    return (NSTimeInterval)0;
-    
-}
-
 - (BOOL)uiIsJogging {
     if ( [self.liveDescriptionLabel.text isEqualToString:kRewindingText] ) return YES;
     if ( [self.liveDescriptionLabel.text isEqualToString:kForwardingText] ) return YES;
@@ -1152,7 +1139,7 @@ setForOnDemandUI;
 }
 
 - (IBAction)backToLiveTapped:(id)sender {
-    [[SessionManager shared] fetchCurrentProgram:^(id returnedObject) {
+    [[SessionManager shared] fetchCurrentSchedule:^(id returnedObject) {
         [self activateFastForward];
     }];
 }
@@ -1266,7 +1253,7 @@ setForOnDemandUI;
         [self decloakForXFS];
     }
     
-    [[SessionManager shared] fetchCurrentProgram:^(id returnedObject) {
+    [[SessionManager shared] fetchCurrentSchedule:^(id returnedObject) {
         
         [self setLiveStreamingUI:YES];
         [self treatUIforProgram];
@@ -1304,7 +1291,7 @@ setForOnDemandUI;
     [[AudioManager shared] setCalibrating:YES];
     [[SessionManager shared] setLocalLiveTime:0.0f];
     
-    Program *cProgram = [[SessionManager shared] currentProgram];
+    ScheduleOccurrence *cProgram = [[SessionManager shared] currentSchedule];
     [self.jogShuttle.view setAlpha:1.0f];
     
     BOOL sound = [AudioManager shared].currentAudioMode == AudioModeOnboarding ? NO : YES;
@@ -1400,7 +1387,7 @@ setForOnDemandUI;
     
     [self.jogShuttle.view setAlpha:1.0];
     [[SessionManager shared] setSeekForwardRequested:YES];
-    [[SessionManager shared] fetchCurrentProgram:^(id returnedObject) {
+    [[SessionManager shared] fetchCurrentSchedule:^(id returnedObject) {
         [self.jogShuttle animateWithSpeed:0.8
                              hideableView:self.playPauseButton
                                 direction:SpinDirectionForward
@@ -1852,6 +1839,8 @@ setForOnDemandUI;
     }
 
     NSTimeInterval ti = [[[SessionManager shared] vLive] timeIntervalSinceDate:ciCurrentDate];
+    NSLog(@"Time interval is %f",ti);
+    NSLog(@"vLive returned %@",[[SessionManager shared] vLive]);
 
     // EWR: Does this come into play for onboarding? i'm assuming 48 hours is to get 0
     if ( ti > 60*60*48 ) {
@@ -1884,10 +1873,10 @@ setForOnDemandUI;
 }
 
 - (void)updateDataForUI {
-    [[SessionManager shared] fetchCurrentProgram:^(id returnedObject) {
+    [[SessionManager shared] fetchCurrentSchedule:^(id returnedObject) {
         if ( returnedObject ) {
             
-            [self.liveProgressViewController displayWithProgram:(Program*)returnedObject
+            [self.liveProgressViewController displayWithProgram:(ScheduleOccurrence*)returnedObject
                                                          onView:self.view
                                                aboveSiblingView:self.playerControlsView];
             [self.liveProgressViewController hide];
@@ -2176,7 +2165,7 @@ setForOnDemandUI;
         [[Utils del] controlXFSAvailability:NO];
         [self adjustScrubbingState];
         
-        [[SessionManager shared] setCurrentProgram:nil];
+        [[SessionManager shared] setCurrentSchedule:nil];
         
         self.navigationItem.title = @"Programs";
         [self.progressView setProgress:0.0 animated:YES];
@@ -2305,9 +2294,11 @@ setForOnDemandUI;
 }
 
 - (void)treatUIforProgram {
-    Program *programObj = [[SessionManager shared] currentProgram];
+    ScheduleOccurrence *programObj = [[SessionManager shared] currentSchedule];
+
     // Only update background image when we're not in On Demand mode.
     if (!setForOnDemandUI){
+
         
         if ( !programObj || SEQ(programObj.program_slug,@"kpcc-live") ) {
             [self updateUIWithProgram:programObj];
@@ -2387,7 +2378,7 @@ setForOnDemandUI;
     });
 }
 
-- (void)updateUIWithProgram:(Program*)program {
+- (void)updateUIWithProgram:(ScheduleOccurrence*)program {
     
     if ([program title]) {
         if ([program title].length <= 14) {
@@ -3624,7 +3615,7 @@ setForOnDemandUI;
             
             self.homeIsNotRootViewController = YES;
             event = @"menuSelectionPrograms";
-            Program *prog = [[SessionManager shared] currentProgram];
+            id<GenericProgram> prog = [[SessionManager shared] currentSchedule];
             if (setForOnDemandUI && self.onDemandProgram != nil) {
                 prog = self.onDemandProgram;
             }
@@ -3888,7 +3879,7 @@ setForOnDemandUI;
 
 - (void)onSeekCompleted {
     // Make sure UI gets set to "Playing" state after a seek.
-    [[SessionManager shared] fetchCurrentProgram:^(id returnedObject) {
+    [[SessionManager shared] fetchCurrentSchedule:^(id returnedObject) {
         [self.jogShuttle endAnimations];
     }];
 }

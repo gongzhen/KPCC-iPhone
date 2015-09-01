@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "Utils.h"
 #import "Program.h"
+#import "KPCC-Swift.h"
 
 typedef NS_ENUM(NSUInteger, OnDemandFinishedReason) {
     OnDemandFinishedReasonEpisodeEnd = 0,
@@ -79,12 +80,12 @@ static NSInteger kProgramPollingPressure = 5;
 @property NSInteger peakDrift;
 @property NSInteger minDrift;
 @property NSInteger curDrift;
-@property (nonatomic, strong) Program *currentProgram;
+@property (nonatomic, strong) ScheduleOccurrence *currentSchedule;
 
 @property NSInteger programFetchFailoverCount;
 
-- (void)fetchCurrentProgram:(CompletionBlockWithValue)completed;
-- (void)fetchProgramAtDate:(NSDate*)date completed:(CompletionBlockWithValue)completed;
+- (void)fetchCurrentSchedule:(CompletionBlockWithValue)completed;
+- (void)fetchScheduleAtDate:(NSDate*)date completed:(CompletionBlockWithValue)completed;
 - (void)fetchScheduleForTodayAndTomorrow:(CompletionBlockWithValue)completed;
 
 - (void)fetchOnboardingProgramWithSegment:(NSInteger)segment completed:(CompletionBlockWithValue)completed;
@@ -110,7 +111,6 @@ static NSInteger kProgramPollingPressure = 5;
 - (NSTimeInterval)virtualSecondsBehindLive;
 
 - (void)processNotification:(UILocalNotification*)programUpdate;
-@property (NS_NONATOMIC_IOSONLY) BOOL ignoreProgramUpdating;
 @property (NS_NONATOMIC_IOSONLY) BOOL sessionIsExpired;
 @property (NS_NONATOMIC_IOSONLY) BOOL sessionIsBehindLive;
 

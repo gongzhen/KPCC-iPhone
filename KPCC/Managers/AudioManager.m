@@ -771,7 +771,7 @@ static const NSString *ItemStatusContext;
         // FIXME: Manage volume
 
         NSDate *cd = self.audioPlayer.currentItem.currentDate;
-        Program *p = [[SessionManager shared] currentProgram];
+        ScheduleOccurrence *p = [[SessionManager shared] currentSchedule];
         if ( p ) {
             NSTimeInterval beginning = [p.soft_starts_at timeIntervalSince1970];
             NSTimeInterval now = [cd timeIntervalSince1970];
@@ -941,14 +941,11 @@ static const NSString *ItemStatusContext;
 
 - (void)recalibrateAfterScrub {
     NSDate *vNow = [[SessionManager shared] vNow];
-    Program *cp = [[SessionManager shared] currentProgram];
-    NSTimeInterval vNowInSeconds = [vNow timeIntervalSince1970];
-    NSTimeInterval saInSeconds = [cp.starts_at timeIntervalSince1970];
-    NSTimeInterval eaInSeconds = [cp.ends_at timeIntervalSince1970];
-    
-    if ( vNowInSeconds >= eaInSeconds || vNowInSeconds <= saInSeconds ) {
+    ScheduleOccurrence *cp = [[SessionManager shared] currentSchedule];
+
+    if ( cp != nil && ![cp containsDate:vNow]) {
         NSLog(@"Scrub will force program update for vNow : %@",[NSDate stringFromDate:vNow withFormat:@"h:mm:s a"]);
-        [[SessionManager shared] fetchCurrentProgram:^(id returnedObject) {
+        [[SessionManager shared] fetchCurrentSchedule:^(id returnedObject) {
             
         }];
     }
@@ -1215,6 +1212,9 @@ static const NSString *ItemStatusContext;
     [self resetFlags];
     
     self.audioPlayer = nil;
+
+    self.minSeekableDate = nil;
+    self.maxSeekableDate = nil;
     
     if ( self.avobserver != nil ) {
         [self.avobserver stop];

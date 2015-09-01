@@ -43,7 +43,7 @@
     [self.currentProgressView setNeedsUpdateConstraints];
 }
 
-- (void)displayWithProgram:(Program*)program onView:(UIView *)view aboveSiblingView:(UIView *)anchorView {
+- (void)displayWithProgram:(ScheduleOccurrence*)program onView:(UIView *)view aboveSiblingView:(UIView *)anchorView {
     
     [self setupProgressBarsWithProgram:program];
     if ( self.view.superview ) {
@@ -108,7 +108,7 @@
     
 }
 
-- (void)setupProgressBarsWithProgram:(Program *)program {
+- (void)setupProgressBarsWithProgram:(ScheduleOccurrence *)program {
     
     self.currentProgram = program;
     self.liveTintColor = [[UIColor virtualWhiteColor] translucify:0.33];
@@ -216,7 +216,7 @@
         self.shuttling = YES;
     }
     
-    Program *program = [[SessionManager shared] currentProgram];
+    ScheduleOccurrence *program = [[SessionManager shared] currentSchedule];
     
     NSTimeInterval beginning = [program.soft_starts_at timeIntervalSince1970];
     NSTimeInterval end = [program.ends_at timeIntervalSince1970];
@@ -264,7 +264,7 @@
     }
     
     NSDictionary *p = [[SessionManager shared] onboardingAudio];
-    Program *program = [[SessionManager shared] currentProgram];
+    ScheduleOccurrence *program = [[SessionManager shared] currentSchedule];
     
     NSDate *currentDate = [AudioManager shared].audioPlayer.currentItem.currentDate;
     NSTimeInterval beginning = [program.soft_starts_at timeIntervalSince1970];

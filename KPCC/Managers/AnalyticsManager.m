@@ -451,7 +451,7 @@ static AnalyticsManager *singleton = nil;
 - (NSDictionary*)typicalLiveProgramInformation {
     
     NSMutableDictionary *programInfo = [NSMutableDictionary new];
-    Program *p = [[SessionManager shared] currentProgram];
+    ScheduleOccurrence *p = [[SessionManager shared] currentSchedule];
     if ( p ) {
         NSString *pTitle = p.title;
         if ( pTitle ) {
@@ -566,7 +566,7 @@ static AnalyticsManager *singleton = nil;
 
 - (NSString*)nielsenInfoForCurrentAudio {
     if ( [[AudioManager shared] currentAudioMode] == AudioModeLive ) {
-        Program *p = [[SessionManager shared] currentProgram];
+        ScheduleOccurrence *p = [[SessionManager shared] currentSchedule];
         if ( p ) {
             return [NSString stringWithFormat:@"{ \"channelName\" : \"%@\" }",p.title];
         } else {
@@ -643,7 +643,7 @@ static AnalyticsManager *singleton = nil;
     NSTimeInterval streamStarted = (NSTimeInterval)[[SessionManager shared] liveStreamSessionBegan];
     NSTimeInterval diff = [[NSDate date] timeIntervalSince1970] - streamStarted;
     
-    Program *p = [[SessionManager shared] currentProgram];
+    ScheduleOccurrence *p = [[SessionManager shared] currentSchedule];
     
     NSString *title = @"[UNKNOWN]";
     if ( p.title ) {

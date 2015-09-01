@@ -13,6 +13,7 @@
 #import "AnalyticsManager.h"
 #import <FXBlurView.h>
 #import "SCPRGenericAvatarViewController.h"
+#import "GenericProgram.h"
 
 /**
  * Programs with these slugs will be hidden from this table view.
@@ -22,7 +23,7 @@
 
 @interface SCPRProgramsListViewController ()
 @property NSArray *programsList;
-@property Program *currentProgram;
+@property id<GenericProgram> currentProgram;
 @end
 
 
@@ -33,7 +34,7 @@
     return self;
 }
 
-- (instancetype)initWithBackgroundProgram:(Program *)program {
+- (instancetype)initWithBackgroundProgram:(id<GenericProgram>)program {
     self = [self initWithNibName:nil bundle:nil];
     self.currentProgram = program;
     self.title = @"Programs";

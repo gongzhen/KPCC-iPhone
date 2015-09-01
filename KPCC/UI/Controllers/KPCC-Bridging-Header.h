@@ -10,3 +10,8 @@
 //#include "JDStatusBarNotification.h"
 //#import "SCPRAppDelegate.h"
 //#import "Program.h"
+
+#import "KPCC-Prefix.pch"
+#import "ContentManager.h"
+#import "Utils.h"
+#import "GenericProgram.h"

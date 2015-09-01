@@ -25,16 +25,6 @@
     return shared;
 }
 
-- (void)timeBegin {
-    self.operationBeganDate = [NSDate date];
-}
-
-- (void)timeEnd:(NSString*)operationName {
-    NSDate *now = [NSDate date];
-    NSTimeInterval execution = [now timeIntervalSinceDate:self.operationBeganDate];
-    NSLog(@"%@ Running Time : %f",operationName,execution);
-}
-
 - (void)load {
     if ( self.settings ) {
         self.settings = nil;

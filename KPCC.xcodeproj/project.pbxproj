@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		07139B841B95E701007DBA91 /* ScheduleOccurrence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07139B831B95E701007DBA91 /* ScheduleOccurrence.swift */; settings = {ASSET_TAGS = (); }; };
 		0775D0B71B8C1A6E009EDAE9 /* Empty.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0775D0B61B8C1A6E009EDAE9 /* Empty.mm */; };
 		07B2D0821B90C39000BB113A /* AVObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07B2D0811B90C39000BB113A /* AVObserver.swift */; settings = {ASSET_TAGS = (); }; };
 		07B2D0831B90D98000BB113A /* AVObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07B2D0811B90C39000BB113A /* AVObserver.swift */; settings = {ASSET_TAGS = (); }; };
@@ -337,6 +338,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		07139B831B95E701007DBA91 /* ScheduleOccurrence.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScheduleOccurrence.swift; sourceTree = "<group>"; };
+		0724AFD21B96068D00C8DE4D /* GenericProgram.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GenericProgram.h; sourceTree = "<group>"; };
+		0724AFD31B9620E400C8DE4D /* KPCC-Proprietary-340.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "KPCC-Proprietary-340.xcdatamodel"; sourceTree = "<group>"; };
 		075F6FAD1B8CFE2400E641F3 /* KPCCPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = KPCCPlayer.framework; path = "../../../Library/Developer/Xcode/DerivedData/KPCCPlayer-cfmdykrumzkmswepgfywosbqcrly/Build/Products/Debug-iphoneos/KPCCPlayer.framework"; sourceTree = "<group>"; };
 		0775D0B61B8C1A6E009EDAE9 /* Empty.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = Empty.mm; sourceTree = "<group>"; };
 		07B2D0811B90C39000BB113A /* AVObserver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AVObserver.swift; sourceTree = "<group>"; };
@@ -1123,6 +1127,8 @@
 				525C6CA319F701FA0076C13B /* TritonAd.m */,
 				52CF917B1A0036CA007BCFA8 /* AudioChunk.h */,
 				52CF917C1A0036CA007BCFA8 /* AudioChunk.m */,
+				07139B831B95E701007DBA91 /* ScheduleOccurrence.swift */,
+				0724AFD21B96068D00C8DE4D /* GenericProgram.h */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -1562,6 +1568,7 @@
 			isa = PBXProject;
 			attributes = {
 				CLASSPREFIX = SCPR;
+				LastSwiftUpdateCheck = 0700;
 				LastUpgradeCheck = 0510;
 				ORGANIZATIONNAME = SCPR;
 				TargetAttributes = {
@@ -1938,6 +1945,7 @@
 				25F30AFA1AFABB3E00F27187 /* SCPRScheduleHeaderViewController.m in Sources */,
 				52D0FC1C19D1F24F009AECEE /* SCPRProgramDetailHeaderView.m in Sources */,
 				254831C11A41555700963078 /* UIView+PrintDimensions.m in Sources */,
+				07139B841B95E701007DBA91 /* ScheduleOccurrence.swift in Sources */,
 				257479A91B6ACEAC00F72AF6 /* SCPRSSOInputFieldCell.m in Sources */,
 				258BB03E1A1C083B00B8FCFE /* Settings.m in Sources */,
 				254CC69E1A23B41D00560805 /* SCPRTriangleView.m in Sources */,
@@ -3562,11 +3570,12 @@
 		258E239C1A13FA84009F8F97 /* DataModel.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				0724AFD31B9620E400C8DE4D /* KPCC-Proprietary-340.xcdatamodel */,
 				25A653481AAA7CFC00ABAAD6 /* KPCC-Proprietary-301.xcdatamodel */,
 				258E239D1A13FA84009F8F97 /* DataModel.xcdatamodel */,
 				258E239E1A13FA84009F8F97 /* KPCC-Proprietary-1.xcdatamodel */,
 			);
-			currentVersion = 25A653481AAA7CFC00ABAAD6 /* KPCC-Proprietary-301.xcdatamodel */;
+			currentVersion = 0724AFD31B9620E400C8DE4D /* KPCC-Proprietary-340.xcdatamodel */;
 			path = DataModel.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;
