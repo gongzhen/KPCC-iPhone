@@ -381,9 +381,7 @@
 - (void)armSleepTimerWithSeconds:(NSInteger)seconds completed:(CompletionBlock)completed {
     
     [self disarmSleepTimerWithCompletion:nil];
-#ifdef DEBUG
-    seconds = 65;
-#endif
+
     self.originalSleepTimerRequest = seconds;
     self.remainingSleepTimerSeconds = seconds;
 
@@ -563,28 +561,8 @@
             
             NSDate *now = [self vNow];
             NSDictionary *bookends = [now bookends];
-            
-//            NSString *endsAt = [NSDate stringFromDate:bookends[@"bottom"]
-//                                           withFormat:@"yyyy-MM-dd'T'HHmmssZZZ"];
-//            NSString *top = [NSDate stringFromDate:bookends[@"top"]
-//                                        withFormat:@"yyyy-MM-dd'T'HHmmssZZZ"];
 
             ScheduleOccurrence *gs = [[ScheduleOccurrence alloc] initWithContext:[[ContentManager shared] managedObjectContext] title:kMainLiveStreamTitle ends_at:bookends[@"bottom"] starts_at:bookends[@"top"] public_url:@"http://www.scpr.org" program_slug:@"kpcc-live" soft_starts_at:bookends[@"top"]];
-            
-//            Program *gp = [ScheduleOccurrence insertProgramWithDictionary:@{ @"title" : kMainLiveStreamTitle,
-//                                                                  @"ends_at" : endsAt,
-//                                                                  @"starts_at" : top,
-//                                                                  @"soft_starts_at" : top,
-//                                                                  @"is_recurring" : @(NO),
-//                                                                  @"public_url" : @"http://scpr.org",
-//                                                                  @"program" : @{ @"slug" : @"kpcc-live" }
-//                                                                  }
-//                                        inManagedObjectContext:[[ContentManager shared] managedObjectContext]];
-
-//            [gp setStarts_at:bookends[@"top"]];
-//            [gp setEnds_at:bookends[@"bottom"]];
-//            [gp setSoft_starts_at:bookends[@"top"]];
-//            [gp setTitle:kMainLiveStreamTitle];
 
             [[ContentManager shared] saveContext];
             
@@ -633,34 +611,6 @@
     
     
 }
-
-#ifdef TESTING_PROGRAM_CHANGE
-- (Program*)fakeProgram {
-    if ( self.initialProgramRequested >= 2 ) {
-        Program *p = [Program insertNewObjectIntoContext:nil];
-        p.soft_starts_at = [[NSDate date] dateByAddingTimeInterval:(60*4)];
-        p.starts_at = [[NSDate date] dateByAddingTimeInterval:(60*3)];
-        p.ends_at = [[NSDate date] dateByAddingTimeInterval:(60*10)];
-        p.title = @"Next Program";
-        p.program_slug = [NSString stringWithFormat:@"%ld",(long)arc4random() % 10000];
-        return p;
-    }
-    
-    self.initialProgramRequested++;
-    if ( !self.fakeCurrent ) {
-        self.fakeCurrent = [Program insertNewObjectIntoContext:nil];
-        Program *p = self.fakeCurrent;
-        p.soft_starts_at = [[NSDate date] dateByAddingTimeInterval:-120];
-        p.starts_at = [[NSDate date] dateByAddingTimeInterval:-1*(120)];
-        p.ends_at = [[NSDate date] dateByAddingTimeInterval:(60*1)];
-        p.title = @"Current Program";
-    }
-
-    NSLog(@"Times a fake thing was requested : %d",self.initialProgramRequested);
-    return self.fakeCurrent;
-    
-}
-#endif
 
 - (void)checkProgramUpdate:(BOOL)force {
 

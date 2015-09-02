@@ -771,21 +771,7 @@ setForOnDemandUI;
     self.plainTextCountdownLabel.text = @"";
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.25 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         [self superPop];
-        if ( ![[AudioManager shared] isPlayingAudio] ) {
-            if ( [[AudioManager shared] currentAudioMode] != AudioModeLive ) {
-                [self goLive:YES];
-            } else {
-                if ( self.initialPlay ) {
-                    [self playAudio:NO];
-                } else {
-                    [self initialPlayTapped:nil];
-                }
-            }
-        } else {
-            if ( [[AudioManager shared] currentAudioMode] != AudioModeLive ) {
-                [self goLive:YES];
-            }
-        }
+        [self goLive:YES];
     });
    
 }
@@ -1213,40 +1199,27 @@ setForOnDemandUI;
     [self goLive:play smooth:YES];
 }
 
+// regardless of what we're currently doing, get to the live stream
 - (void)goLive:(BOOL)play smooth:(BOOL)smooth {
+
+    if ([[AudioManager shared] isActiveForAudioMode:AudioModeLive]) {
+        // we're good
+        return;
+    }
+
+    if ([[AudioManager shared] isActiveForAudioMode:AudioModeOnDemand]) {
+        // we're currently playing on-demand content. stop that, so that
+        // we can switch to live stream
+        [[AnalyticsManager shared] endTimedEvent:@"episodePlay"];
+        [[AudioManager shared] stopAudio];
+    }
     
     [[AudioManager shared] setSmooth:smooth];
     [self.liveProgressViewController hide];
-    
-    if ( [[AudioManager shared] currentAudioMode] == AudioModeLive ||
-        [[AudioManager shared] currentAudioMode] == AudioModeNeutral ) {
-        if ( [[[AudioManager shared] status] status] == AudioStatusPaused ) {
-            if ( self.initialPlay ) {
-                [self playAudio:NO];
-            } else {
-                [self initialPlayTapped:nil];
-            }
-            return;
-        }
-        if ( [[[AudioManager shared] status] status] == AudioStatusStopped ) {
-            if ( self.initialPlay ) {
-                [self playAudio:YES];
-            } else {
-                [self initialPlayTapped:nil];
-            }
-            return;
-        }
-        
-        return;
-    }
-    
-    [[AnalyticsManager shared] endTimedEvent:@"episodePlay"];
-    [[AudioManager shared] stopAudio];
-    
+
     self.liveStreamView.userInteractionEnabled = YES;
     self.playerControlsView.userInteractionEnabled = YES;
-    self.lockPlayback = !play;
-    
+
     [self.jogShuttle endAnimations];
     
     if ( [self cloaked] ) {
@@ -2901,8 +2874,6 @@ setForOnDemandUI;
         back30 = NO;
         scrubbing = NO;
     }
-
-    NSLog(@"adjustScrubbingState: Back - %d | Forward - %d | Scrub - %d", back30, fwd30, scrubbing);
     
     [self animatedStateForBackwardButton:back30];
     [self animatedStateForForwardButton:fwd30];
