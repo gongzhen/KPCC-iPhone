@@ -690,11 +690,11 @@ static const NSString *ItemStatusContext;
     self.audioPlayer = [[AudioPlayer alloc] initWithPlayer:self._avplayer];
 
     [self.audioPlayer observeTime:^(StreamDates* d) {
-        NSLog(@"curDate is %@",d.curDate);
+        //NSLog(@"curDate is %@",d.curDate);
     }];
 
     [self.audioPlayer observeEvents:^(AudioEvent* e) {
-        NSLog(@"%@: %@",e.time,e.message);
+        NSLog(@"AP: %@",e.message);
     }];
 
     // watch for failures

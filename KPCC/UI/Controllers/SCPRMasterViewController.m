@@ -1569,6 +1569,7 @@ setForOnDemandUI;
         }
         
         [self addCloseButton];
+
         if ( [[AudioManager shared] currentAudioMode] == AudioModeLive ) {
             [self.scrubbingUI tickLive:NO];
         }

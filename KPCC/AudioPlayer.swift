@@ -459,15 +459,31 @@ public struct AudioPlayerObserver<T> {
     //----------
 
     private func _getReadyPlayer(c:finishCallback) -> Void {
+        if ( self._player.status == AVPlayerStatus.Failed || self._player.currentItem?.status == AVPlayerItemStatus.Failed) {
+            self._emitEvent("_getReadyPlayer instead found a failed player/item.");
+            return;
+        }
+
         if ( self._player.status == AVPlayerStatus.ReadyToPlay && self._player.currentItem?.status == AVPlayerItemStatus.ReadyToPlay) {
             // ready...
-            self._emitEvent("Item was already ready.")
+            self._emitEvent("_getReadyPlayer Item was already ready.")
             c(false)
         } else {
-            self._emitEvent("Item not ready. Waiting.")
-            self.observer.once(.ItemReady) { msg,obj in
-                self._emitEvent("Item is now ready.")
-                c(true)
+            // is the player ready?
+            if ( self._player.status == AVPlayerStatus.ReadyToPlay) {
+                // yes... so we need to wait for the item
+                self._emitEvent("_getReadyPlayer Item not ready. Waiting.")
+                self.observer.once(.ItemReady) { msg,obj in
+                    self._emitEvent("_getReadyPlayer Item is now ready.")
+                    c(true)
+                }
+            } else {
+                // no... wait for the player
+                self._emitEvent("_getReadyPlayer Player not ready. Waiting.")
+                self.observer.once(.PlayerReady) { msg,obj in
+                    self._emitEvent("_getReadyPlayer Player is now ready.")
+                    self._getReadyPlayer(c)
+                }
             }
         }
     }
@@ -608,7 +624,7 @@ public struct AudioPlayerObserver<T> {
             // sometimes leave seekToDate stuck playing a loop
             // also, a cold seek with seekToDate never works, so start with seekToTime
 
-            if (cold || useTime) {//|| abs(offsetSeconds) < 60 {
+            if (cold || useTime || abs(offsetSeconds) < 60) {
                 let seek_time = CMTimeAdd(self._player.currentItem!.currentTime(), CMTimeMakeWithSeconds(offsetSeconds, 10))
                 self._emitEvent(fsig+"seeking \(offsetSeconds) seconds.")
                 self._player.currentItem!.seekToTime(seek_time, toleranceBefore:kCMTimeZero, toleranceAfter:kCMTimeZero, completionHandler:testLanding)
@@ -622,37 +638,46 @@ public struct AudioPlayerObserver<T> {
     //----------
 
     public func seekToPercent(percent: Float64,completion:finishCallback? = nil) -> Bool {
-        // convert percent into a date and then just call seekToDate
-
         let str_per = String(format:"%2f", percent)
-
         self._emitEvent("seekToPercent called for \(str_per)")
 
-        if self.currentDates != nil {
-            let date = self.currentDates!.percentToDate(percent)
+        if (self._player.currentItem?.duration > kCMTimeZero) {
+            // this is an on-demand file, so just seek using the percentage
+            let dur = self._player.currentItem!.duration
+            let seek_time = CMTimeMultiplyByFloat64(dur, percent)
 
-            if date != nil {
-                self.seekToDate(date!,completion:completion)
-                return true
+            self._seekToTime(seek_time,completion:completion)
+            return true
+
+        } else {
+            // convert percent into a date and then just call seekToDate
+            if self.currentDates != nil {
+                let date = self.currentDates!.percentToDate(percent)
+
+                if date != nil {
+                    self.seekToDate(date!,completion:completion)
+                    return true
+                } else {
+                    return false
+                }
             } else {
                 return false
             }
-        } else {
-            return false
+
         }
     }
 
     //----------
 
-    public func seekToLive(completionHandler:finishCallback) -> Void {
-        self._emitEvent("seekToLive called")
+    private func _seekToTime(time:CMTime,completion:finishCallback?) -> Void {
+        self._emitEvent("_seekToTime called for \(time)")
 
         let seek_id = ++self._interactionIdx
 
         self._getReadyPlayer() { cold in
             if (self._interactionIdx != seek_id) {
-                self._emitEvent("seekToLive: seek interrupted.")
-                completionHandler(false)
+                self._emitEvent("_seekToTime: seek interrupted.")
+                completion?(false)
                 return;
             }
 
@@ -660,12 +685,19 @@ public struct AudioPlayerObserver<T> {
                 self._player.play()
             }
 
-            self._player.currentItem!.seekToTime(kCMTimePositiveInfinity) { finished in
-                self._emitEvent("seekToLive landed at \(self._dateFormat.stringFromDate(self._player.currentItem!.currentDate()!))")
-                self._player.play()
-
-                completionHandler(finished)
+            self._player.currentItem!.seekToTime(time) { finished in
+                completion?(finished)
             }
+        }
+    }
+
+    //----------
+
+    public func seekToLive(completion:finishCallback?) -> Void {
+        self._emitEvent("seekToLive called")
+        self._seekToTime(kCMTimePositiveInfinity) { finished in
+            self._emitEvent("_seekToTime landed at \(self._dateFormat.stringFromDate(self._player.currentItem!.currentDate()!))")
+            completion?(finished)
         }
     }
 

@@ -27,37 +27,31 @@
     
     self.darkeningView.backgroundColor = [[UIColor virtualBlackColor] translucify:0.35];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(enableScrubbingUI)
-                                                 name:@"playback-stalled"
-                                               object:nil];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(disableScrubbingUI)
-                                                 name:@"player-ready"
-                                               object:nil];
-    
+//    [[NSNotificationCenter defaultCenter] addObserver:self
+//                                             selector:@selector(enableScrubbingUI)
+//                                                 name:@"playback-stalled"
+//                                               object:nil];
+//    
+//    [[NSNotificationCenter defaultCenter] addObserver:self
+//                                             selector:@selector(disableScrubbingUI)
+//                                                 name:@"player-ready"
+//                                               object:nil];
+
     [self primeForAudioMode];
 
     // listen for audio state changes
-//    [[[AudioManager shared] status] observe:^(enum AudioStatus o) {
-//        switch (o) {
-//            case AudioStatusPlaying:
-//                // pause button
-//
-//                [self.playPauseButton fadeImage:[UIImage imageNamed:@"btn_pause.png"]
-//                                       duration:0.2];
-//
-//                break;
-//            default:
-//                // play button
-//
-//                [self.playPauseButton fadeImage:[UIImage imageNamed:@"btn_play.png"]
-//                                       duration:0.2];
-//
-//                break;
-//        }
-//    }];
+    [[[AudioManager shared] status] observe:^(enum AudioStatus o) {
+        switch (o) {
+            case AudioStatusPlaying:
+                break;
+            case AudioStatusSeeking:
+            case AudioStatusWaiting:
+
+                break;
+            default:
+                break;
+        }
+    }];
 
     // Do any additional setup after loading the view from its nib.
 }
@@ -214,9 +208,6 @@
 }
 
 - (void)forward30 {
-    
-    self.seeking = YES;
-    
     [[AudioManager shared] forwardSeekThirtySecondsWithCompletion:^{
         if ( [[AudioManager shared] currentAudioMode] == AudioModeOnDemand ) {
             [self onDemandSeekCompleted];
@@ -224,16 +215,12 @@
         if ( [[AudioManager shared] currentAudioMode] == AudioModeLive ) {
             [[AudioManager shared] recalibrateAfterScrub];
         }
-        
-        self.seeking = NO;
     }];
 
     
 }
 
 - (void)rewind30 {
-    
-    self.seeking = YES;
     [AudioManager shared].ignoreDriftTolerance = YES;
     
     [[AudioManager shared] backwardSeekThirtySecondsWithCompletion:^{
@@ -245,29 +232,27 @@
         }
         
         [self behindLiveStatus];
-        
-        self.seeking = NO;
     }];
     
     
 }
 
-- (void)setupWithProgram:(NSDictionary *)program blurredImage:(UIImage *)image parent:(id)parent {
-    self.parentControlView = parent;
-    self.blurredImageView.image = image;
-    AudioChunk *ac = program[@"chunk"];
-    
-    self.captionLabel.text = ac.audioTitle;
-    self.blurredImageView.alpha = 0.0f;
-    
-
-    self.captionLabel.font = [[DesignManager shared] proLight:self.captionLabel.font.pointSize];
-    
-    [self.closeButton addTarget:self
-                         action:@selector(closeScrubber)
-               forControlEvents:UIControlEventTouchUpInside];
-    
-}
+//- (void)setupWithProgram:(NSDictionary *)program blurredImage:(UIImage *)image parent:(id)parent {
+//    self.parentControlView = parent;
+//    self.blurredImageView.image = image;
+//    AudioChunk *ac = program[@"chunk"];
+//    
+//    self.captionLabel.text = ac.audioTitle;
+//    self.blurredImageView.alpha = 0.0f;
+//    
+//
+//    self.captionLabel.font = [[DesignManager shared] proLight:self.captionLabel.font.pointSize];
+//    
+//    [self.closeButton addTarget:self
+//                         action:@selector(closeScrubber)
+//               forControlEvents:UIControlEventTouchUpInside];
+//    
+//}
 
 - (void)closeScrubber {
     SCPRMasterViewController *mvc = (SCPRMasterViewController*)self.parentControlView;
@@ -382,7 +367,6 @@
 
 #pragma mark - Scrubbable
 - (void)actionOfInterestOnScrubBegin {
-    self.frozenNow = self.sampledNow;
 }
 
 - (void)actionOfInterestWithPercentage:(CGFloat)percent {
@@ -427,23 +411,18 @@
 }
 
 - (void)actionOfInterestAfterScrub:(CGFloat)finalValue {
-    
-    BOOL onDemand = NO;
-    double multiplier = finalValue;
-    CMTime seek;
-    NSDate *seekDate;
 
     if ( [[AudioManager shared] currentAudioMode] == AudioModeOnDemand ) {
-        
-        onDemand = YES;
-        
-    } else if ( [[AudioManager shared] currentAudioMode] == AudioModeLive ) {
-        
-        seekDate = [self convertToDateFromPercentage:finalValue];
-        self.roundSeekDate = seekDate;
-        
+        // on-demand seeks are just based on percentage, so we're good
+        [[[AudioManager shared] audioPlayer] seekToPercent:(double)finalValue completion:^(BOOL finished) {
+            [self postSeek];
+        }];
+
+        return;
     }
-    
+        
+    NSDate* seekDate = [self convertToDateFromPercentage:finalValue];
+
     if ( seekDate ) {
         ScheduleOccurrence *p = [[SessionManager shared] currentSchedule];
         if ( [p.starts_at timeIntervalSince1970] >= [seekDate timeIntervalSince1970] ) {
@@ -453,47 +432,29 @@
     
     self.positionBeforeScrub = [[[SessionManager shared] vNow] timeIntervalSince1970];
     NSLog(@"Position before scrub : %ld", (long)self.positionBeforeScrub);
-    
-//    [[AudioManager shared] invalidateTimeObserver];
-//    [[AudioManager shared] setSeekWillAffectBuffer:YES];
 
-    self.seeking = YES;
-    
     [self printCurrentDate];
-    
-    if ( onDemand ) {
-        [[[AudioManager shared] audioPlayer] seekToPercent:multiplier completion:^(BOOL finished) {
+        
+    if ( !seekDate ) {
+        // a nil seekDate implies seeking to live
+        [[[AudioManager shared] audioPlayer] seekToLive:^(BOOL finished){
             [self postSeek];
         }];
-    } else {
         
-        if ( !seekDate ) {
-            // a nil seekDate implies seeking to live
-            [[[AudioManager shared] audioPlayer] seekToLive:^(BOOL finished){
-                self.seeking = NO;
-                [(SCPRMasterViewController*)self.parentControlView primeManualControlButton];
-                
-                [[AnalyticsManager shared] trackSeekUsageWithType:ScrubbingTypeScrubber];
-            }];
-            
-            return;
-        }
-
-        // FIXME: Why doesn't the shortened version work?
-        [[[AudioManager shared] audioPlayer] seekToDate:seekDate completion:^(BOOL finished){
-            self.seeking = NO;
-            
-            [(SCPRMasterViewController*)self.parentControlView primeManualControlButton];
-            
-            [[AnalyticsManager shared] trackSeekUsageWithType:ScrubbingTypeScrubber];
-        }];
-        
-
+        return;
     }
+
+    [[[AudioManager shared] audioPlayer] seekToDate:seekDate completion:^(BOOL finished){
+        [self postSeek];
+    }];
+
 }
 
 - (void)postSeek {
-    
+
+    [(SCPRMasterViewController*)self.parentControlView primeManualControlButton];
+    [[AnalyticsManager shared] trackSeekUsageWithType:ScrubbingTypeScrubber];
+
     [AudioManager shared].newPositionDelta = [[[SessionManager shared] vNow] timeIntervalSince1970] - self.positionBeforeScrub;
     NSLog(@"Scrub Delta : %ld",(long)[AudioManager shared].newPositionDelta);
     
@@ -579,8 +540,12 @@
 }
 
 #pragma mark - Live
+// For the given schedule occurrence, what's the maximum percentage we should
+// be allowed to seek into it? For a live show that's half-over, for instance,
+// livePercentage should return 0.5
 - (double)livePercentage {
     ScheduleOccurrence *p = [[SessionManager shared] currentSchedule];
+
     if ( !p ) {
         return 0.0f;
     }
@@ -594,13 +559,19 @@
     
     NSString *imprecise = [NSString stringWithFormat:@"%1.4f",( diff / ( total * 1.0f ) )];
     CGFloat impValue = [imprecise floatValue];
+
+    if (impValue > 1.0f) {
+        impValue = 1.0f;
+    }
     
     return (double)impValue;
 }
 
+// What percentage of the way is our playhead through the given schedule
+// occurrence?
 - (double)percentageThroughCurrentProgram {
-    
     ScheduleOccurrence *p = [[SessionManager shared] currentSchedule];
+
     NSDate *endDate = p.ends_at;
     NSDate *startDate = p.starts_at;
     CGFloat duration = [endDate timeIntervalSince1970] - [startDate timeIntervalSince1970];
@@ -626,8 +597,7 @@
     self.liveProgressNeedleReadingLabel.text = [prettyTime lowercaseString];
     
     self.maxPercentage = [self livePercentage];
-    self.maxPercentage = fmin(self.maxPercentage, 1.0f);
-    
+
     CGFloat percent = [self percentageThroughCurrentProgram];
     CGFloat where = percent * self.scrubbableView.frame.size.width;
     self.cpLeftAnchor.constant = where;
