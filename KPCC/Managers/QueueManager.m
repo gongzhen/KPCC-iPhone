@@ -79,7 +79,7 @@ static QueueManager *singleton = nil;
 
 - (void)handleBookmarkingActivity {
     if ( [[AudioManager shared] currentAudioMode] != AudioModeOnDemand ) return;
-    CMTime currentTime = [[AudioManager shared].audioPlayer.currentItem currentTime];
+    CMTime currentTime = [[AudioManager shared].audioPlayer currentTime];
     NSInteger seconds = CMTimeGetSeconds(currentTime);
     if ( seconds > kBookmarkingTolerance ) {
         if ( !self.currentBookmark ) {

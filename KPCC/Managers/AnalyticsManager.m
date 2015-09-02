@@ -415,9 +415,9 @@ static AnalyticsManager *singleton = nil;
     
     if ( !comments || SEQ(comments,@"") ) return;
     
-    self.accessLog = [[AudioManager shared].audioPlayer.currentItem accessLog];
-    self.errorLog = [[AudioManager shared].audioPlayer.currentItem errorLog];
-    
+//    self.accessLog = [[AudioManager shared].audioPlayer.currentItem accessLog];
+//    self.errorLog = [[AudioManager shared].audioPlayer.currentItem errorLog];
+
     if ( self.analyticsSuspensionTimer ) {
         if ( [self.analyticsSuspensionTimer isValid] ) {
             [self.analyticsSuspensionTimer invalidate];

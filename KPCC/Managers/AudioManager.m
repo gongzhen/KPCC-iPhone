@@ -189,59 +189,6 @@ static const NSString *ItemStatusContext;
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object
                         change:(NSDictionary *)change context:(void *)context {
     
-    NSAssert([NSThread isMainThread],@"not the main queue...");
-    
-    // Monitoring AVPlayer->currentItem with empty playback buffer.
-    if (object == self.audioPlayer.currentItem && [keyPath isEqualToString:@"playbackBufferEmpty"]) {
-        if ( [change[@"new"] intValue] == 1 ) {
-            if ( !self.seekWillAffectBuffer ) {
-                NSLog(@"Buffer is empty ...");
-#ifndef SUPPRESS_BITRATE_THROTTLING
-                if ( !self.userPause ) {
-                    if ( !self.audioOutputSourceChanging ) {
-                        if ( [Utils isIOS8] ) {
-                            [self.audioPlayer.currentItem setPreferredPeakBitRate:kPreferredPeakBitRateTolerance];
-                        }
-                        
-                        [[NSNotificationCenter defaultCenter] postNotificationName:AVPlayerItemPlaybackStalledNotification
-                                                                            object:nil];
-                        
-                        
-                    } else {
-                        NSLog(@"Ignoring this buffer emptiness because it was triggered by an output source change");
-                    }
-                } else {
-                    NSLog(@"Ignoring buffer emptiness because user has paused the audio");
-                }
-#endif
-            }
-        } else {
-            //NSLog(@"AVPlayerItem - Buffer filled normally...");
-        }
-    }
-    
-    if (object == self.audioPlayer.currentItem && [keyPath isEqualToString:@"playbackLikelyToKeepUp"]) {
-        if ( [change[@"new"] intValue] == 0 ) {
-            if ( [self isPlayingAudio] ) {
-                if ( !self.seekWillAffectBuffer ) {
-                    NSLog(@"AVPlayerItem - Stream not likely to keep up...");
-                    if ( !self.audioOutputSourceChanging ) {
-                        [self waitPatiently];
-                    }
-                }
-            }
-        } else {
-            if ( self.dropoutOccurred ) {
-                NSLog(@"AVPlayerItem - Stream likely to return after failure...");
-                [self attemptToRecover];
-            }
-            
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [[NSNotificationCenter defaultCenter] postNotificationName:@"playback-ready"
-                                                                    object:nil];
-            });
-        }
-    }
 }
 
 
@@ -344,12 +291,12 @@ static const NSString *ItemStatusContext;
     self.dropoutOccurred = NO;
 
     
-    if ( self.audioPlayer.rate == 1.0f ) {
-        if ( !self.timeObserver ) {
-            [self startObservingTime];
-        }
-    }
-    
+//    if ( self.audioPlayer.rate == 1.0f ) {
+//        if ( !self.timeObserver ) {
+//            [self startObservingTime];
+//        }
+//    }
+
     if ( !self.appGaveUp ) {
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             [[AnalyticsManager shared] clearLogs];
@@ -414,147 +361,6 @@ static const NSString *ItemStatusContext;
     NSLog(@"Expiry in : %ld",(long)[[UIApplication sharedApplication] backgroundTimeRemaining]);
 }
 
-- (void)localSample:(CMTime)time {
-    NSArray *seekRange = self.audioPlayer.currentItem.seekableTimeRanges;
-    
-    NSDate *now = [NSDate date];
-    NSDate *msd = self.maxSeekableDate;
-    if ( msd && [msd isWithinReasonableframeOfDate:now] ) {
-        
-        NSInteger drift = [now timeIntervalSince1970] - [msd timeIntervalSince1970];
-        if ( (drift - [[SessionManager shared] peakDrift] > kToleratedIncreaseInDrift) ) {
-            /*[[AnalyticsManager shared] logEvent:@"driftIncreasing"
-                                 withParameters:@{ @"oldDrift" : @([[SessionManager shared] peakDrift]),
-                                                   @"newDrift" : @(drift) }];
-            NSLog(@"Drift increasing - Old : %ld, New : %ld",(long)[[SessionManager shared] peakDrift], (long)drift);*/
-        } else {
-            //NSLog(@"Drift stabilizing - Old : %ld, New : %ld",(long)[[SessionManager shared] peakDrift], (long)drift);
-        }
-        
-        [[SessionManager shared] setPeakDrift:MAX(drift,[[SessionManager shared] peakDrift])];
-        if ( [[SessionManager shared] minDrift] > 0 ) {
-            [[SessionManager shared] setMinDrift:MIN(drift,[[SessionManager shared] minDrift])];
-        } else {
-            [[SessionManager shared] setMinDrift:drift];
-        }
-        
-        [[SessionManager shared] setCurDrift:drift];
-        
-    }
-    
-    AVPlayer *audioPlayer = self.audioPlayer;
-    if ( !self.localBufferSample || !self.localBufferSample[@"expectedDate"] ) {
-        self.localBufferSample = [NSMutableDictionary new];
-        self.localBufferSample[@"expectedDate"] = audioPlayer.currentItem.currentDate;
-        NSMutableArray *samples = [NSMutableArray new];
-        self.localBufferSample[@"samples"] = samples;
-        self.localBufferSample[@"open"] = @(YES);
-        self.localBufferSample[@"frame"] = @(self.frameCount);
-        self.localBufferSample[@"expectedTime"] = [NSValue valueWithCMTime:audioPlayer.currentItem.currentTime];
-    }
-    
-    
-    if ( [self.localBufferSample[@"open"] boolValue] ) {
-        NSMutableArray *localSamples = self.localBufferSample[@"samples"];
-        if ( [localSamples count] >= kLocalSampleSize ) {
-            [localSamples removeAllObjects];
-        }
-        
-        NSDate *expectedDate = self.localBufferSample[@"expectedDate"];
-        NSDate *reportedDate = self.audioPlayer.currentItem.currentDate;
-        
-        CMTime expectedTime = [self.localBufferSample[@"expectedTime"] CMTimeValue];
-        CMTime reportedTime = time;
-   
-        Float64 etFloat = CMTimeGetSeconds(expectedTime);
-        Float64 rtFloat = CMTimeGetSeconds(reportedTime);
-        
-        NSString *expStr = [NSDate stringFromDate:[expectedDate dateByAddingTimeInterval:1]
-                                       withFormat:@"HH:mm:ss a"];
-        NSString *repStr = [NSDate stringFromDate:reportedDate
-                                       withFormat:@"HH:mm:ss a"];
-        
-        CMTimeRange range = [seekRange[0] CMTimeRangeValue];
-        //Float64 maxSeekTime = CMTimeGetSeconds(CMTimeRangeGetEnd(range));
-        
-        //NSLog(@"Reported Date : %@, Expected Date : %@",repStr,expStr);
-        if ( fabs(etFloat - rtFloat) > kSmallSkipInterval || ![expectedDate isWithinTimeFrame:kSmallSkipInterval ofDate:reportedDate] ) {
-            
-            if ( !self.seekWillAffectBuffer ) {
-                
-                if ( self.userPause ) {
-                    return;
-                }
-                if ( self.suppressSkipFixer ) {
-                    NSLog(@"Ignoring because error log was received");
-                    return;
-                }
-                if ( self.dropoutOccurred ) {
-                    NSLog(@"Going to ignore this because the stream has dropped out");
-                    return;
-                }
-                
-                NSLog(@"Stream skipped a bit : %ld seconds",(long)fabs([reportedDate timeIntervalSince1970] - [expectedDate timeIntervalSince1970]));
-                NSLog(@"Reported Date : %@, Expected Date : %@",repStr,expStr);
-                
-#ifndef SUPPRESS_SKIP_FIXER
-                
-                self.localBufferSample[@"expectedDate"] = expectedDate;
-                self.localBufferSample[@"open"] = @(NO);
-
-
-                if ( self.skipCount < 1 ) {
-                    
-
-                    NSDate *seek = [[SessionManager shared] vLive];
-                    if ( [[SessionManager shared] lastValidCurrentPlayerTime] ) {
-                        seek = [[SessionManager shared] lastValidCurrentPlayerTime];
-                    }
-                    
-                    NSLog(@"ATTEMPT TO FIX : Get back to %@ when now is %@",[NSDate stringFromDate:seek
-                                                                         withFormat:@"h:mm:ss"],repStr);
-                    
-                    [self seekToDate:[reportedDate laterDate:seek] completion:^{
-                        
-                        self.skipCount++;
-                        NSDate *now = self.audioPlayer.currentItem.currentDate;
-                        NSString *currTime = [NSDate stringFromDate:now
-                                                         withFormat:@"HH:mm:ss a"];
-                        
-                        /*[[AnalyticsManager shared] logEvent:@"attemptToFixLargeGapInStream"
-                                             withParameters:@{ @"expected" : expStr,
-                                                               @"reported" : repStr,
-                                                               @"timeAfterAttemptToFix" : currTime,
-                                                               @"reportedTimeValue" : @(rtFloat),
-                                                               @"reportedMaxSeekTime" : @(maxSeekTime)}];*/
-                        
-                    }];
-                    
-                } else {
-                    /*[[AnalyticsManager shared] logEvent:@"skippedTooManyTimes"
-                                         withParameters:@{}];*/
-                    
-                    [self stopAudio];
-                }
-
-            }
-#endif
-            return;
-        }
-        
-        
-        self.localBufferSample[@"frame"] = @([localSamples count]);
-        
-        
-        [localSamples addObject:@{ @"frame" : @(self.frameCount),
-                                   @"sampleTime" : [NSValue valueWithCMTime:time] }];
-        
-        self.localBufferSample[@"expectedDate"] = self.audioPlayer.currentItem.currentDate;
-        self.localBufferSample[@"expectedTime"] = [NSValue valueWithCMTime:time];
-        
-    }
-}
-
 #pragma mark - State
 - (void)setCurrentAudioMode:(AudioMode)currentAudioMode {
     _currentAudioMode = currentAudioMode;
@@ -606,11 +412,11 @@ static const NSString *ItemStatusContext;
     [[MPNowPlayingInfoCenter defaultCenter] setNowPlayingInfo:audioMetaData];
 }
 
-
 - (void)startObservingTime {
     
-    AVPlayer *audioPlayer = self.audioPlayer;
+    AVPlayer *audioPlayer = self.audioPlayer._player;
     __unsafe_unretained typeof(self) weakSelf = self;
+    __unsafe_unretained typeof(audioPlayer) weakAudioPlayer = audioPlayer;
 
     if ( [[Utils del] alarmTask] > 0 ) {
         [[Utils del] killBackgroundTask];
@@ -628,10 +434,10 @@ static const NSString *ItemStatusContext;
     self.frameCount = 0;
     
     
-    self.timeObserver = [self.audioPlayer addPeriodicTimeObserverForInterval:CMTimeMake(1, 10) queue:NULL usingBlock:^(CMTime time) {
+    self.timeObserver = [audioPlayer addPeriodicTimeObserverForInterval:CMTimeMake(1, 10) queue:NULL usingBlock:^(CMTime time) {
                                                                       
         if ( weakSelf.frameCount % 10 == 0 ) {
-            weakSelf.currentDate = audioPlayer.currentItem.currentDate;
+            weakSelf.currentDate = weakAudioPlayer.currentItem.currentDate;
             if ( [[SessionManager shared] dateIsReasonable:weakSelf.currentDate] ) {
                 [[SessionManager shared] setLastValidCurrentPlayerTime:weakSelf.currentDate];
             }
@@ -643,12 +449,12 @@ static const NSString *ItemStatusContext;
             weakSelf.dropoutOccurred = NO;
 #ifndef SUPPRESS_BITRATE_THROTTLING
             if ( [Utils isIOS8] ) {
-                weakSelf.audioPlayer.currentItem.preferredPeakBitRate = kPreferredPeakBitRateTolerance;
+                weakAudioPlayer.currentItem.preferredPeakBitRate = kPreferredPeakBitRateTolerance;
             }
 #endif
         }
 
-        NSArray *seekRange = audioPlayer.currentItem.seekableTimeRanges;
+        NSArray *seekRange = weakAudioPlayer.currentItem.seekableTimeRanges;
         if (seekRange && [seekRange count] > 0) {
             CMTimeRange range = [seekRange[0] CMTimeRangeValue];
             if ([weakSelf.delegate respondsToSelector:@selector(onTimeChange)]) {
@@ -719,7 +525,7 @@ static const NSString *ItemStatusContext;
 - (void)invalidateTimeObserver {
     if ( self.timeObserver ) {
         [[SessionManager shared] setLocalLiveTime:0.0f];
-        [self.audioPlayer removeTimeObserver:self.timeObserver];
+//        [self.audioPlayer removeTimeObserver:self.timeObserver];
         self.timeObserver = nil;
         self.localBufferSample = nil;
     }
@@ -727,82 +533,42 @@ static const NSString *ItemStatusContext;
 
 #pragma mark - Scrubbing and Seeking
 - (void)seekToPercent:(CGFloat)percent {
-    NSArray *seekRange = self.audioPlayer.currentItem.seekableTimeRanges;
-    if (seekRange && [seekRange count] > 0) {
-        CMTimeRange range = [seekRange[0] CMTimeRangeValue];
-
-        CMTime seekTime = CMTimeMakeWithSeconds( CMTimeGetSeconds(range.start) + ( CMTimeGetSeconds(range.duration) * (percent / 100)),
-                                                range.start.timescale);
-
-        [self.audioPlayer.currentItem seekToTime:seekTime];
-    }
-}
-
-- (void)backwardSeekToBeginningOfProgram {
-    NSInteger seek_id = ++self.interactionIdx;
-
-    self.savedVolume = 1.0f;
-
-    [self.status setStatus:AudioStatusWaiting];
-
-    [self getReadyPlayer:^{
-        if (self.interactionIdx != seek_id) {
-            return;
-        }
-
-        // FIXME: Manage volume
-
-        NSDate *cd = self.audioPlayer.currentItem.currentDate;
-        ScheduleOccurrence *p = [[SessionManager shared] currentSchedule];
-        if ( p ) {
-            NSTimeInterval beginning = [p.soft_starts_at timeIntervalSince1970];
-            NSTimeInterval now = [cd timeIntervalSince1970];
-            [self intervalSeekWithTimeInterval:(beginning - now) completion:^{
-                if ([self.delegate respondsToSelector:@selector(onSeekCompleted)]) {
-                    [self.delegate onSeekCompleted];
-                }
-
-                [[AnalyticsManager shared] trackSeekUsageWithType:ScrubbingTypeRewindToStart];
-
-            }];
+    [self.audioPlayer seekToPercent:percent completion:^(BOOL finished) {
+        if ([self.delegate respondsToSelector:@selector(onSeekCompleted)]) {
+            [self.delegate onSeekCompleted];
         }
     }];
 }
 
-- (void)forwardSeekLiveWithType:(NSInteger)type completion:(CompletionBlock)completion {
-    NSInteger seek_id = ++self.interactionIdx;
+- (void)backwardSeekToBeginningOfProgram {
+    ScheduleOccurrence *p = [[SessionManager shared] currentSchedule];
 
-    [self.status setStatus:AudioStatusWaiting];
+    if (p) {
+        self.savedVolume = 1.0f;
 
-    [self getReadyPlayer:^{
-        if (self.interactionIdx != seek_id) {
-            return;
-        }
-
-        [self.status setStatus:AudioStatusSeeking];
-
-        self.seekWillAffectBuffer = TRUE;
-
-        [self.audioPlayer.currentItem seekToTime:kCMTimePositiveInfinity completionHandler:^(BOOL finished) {
-            if (!finished) {
-                return;
+        [self.audioPlayer seekToDate:p.soft_starts_at completion:^(BOOL finished) {
+            if ([self.delegate respondsToSelector:@selector(onSeekCompleted)]) {
+                [self.delegate onSeekCompleted];
             }
 
-            [self.audioPlayer play];
-            [self.status setStatus:AudioStatusPlaying];
-
-            [self.delegate onSeekCompleted];
-
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [self startObservingTime];
-
-                if (completion) {
-                    completion();
-                }
-            });
-
-            [[AnalyticsManager shared] trackSeekUsageWithType:type];
+            [[AnalyticsManager shared] trackSeekUsageWithType:ScrubbingTypeRewindToStart];
         }];
+    }
+}
+
+- (void)forwardSeekLiveWithType:(NSInteger)type completion:(CompletionBlock)completion {
+    [self.audioPlayer seekToLive:^(BOOL finished) {
+        [self.delegate onSeekCompleted];
+
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self startObservingTime];
+
+            if (completion) {
+                completion();
+            }
+        });
+
+        [[AnalyticsManager shared] trackSeekUsageWithType:type];
     }];
 }
 
@@ -814,80 +580,10 @@ static const NSString *ItemStatusContext;
 }
 
 - (void)intervalSeekWithTimeInterval:(NSTimeInterval)interval completion:(CompletionBlock)completion {
-    void (^finishBlock)(void) = ^{
-        self.newPositionDelta = interval;
-
-        [self.audioPlayer play];
-
-        dispatch_async(dispatch_get_main_queue(), ^{
-
-            [self startObservingTime];
-
-            [self.status setStatus:AudioStatusPlaying];
-
-            NSDate *landingDate = self.audioPlayer.currentItem.currentDate;
-            NSTimeInterval failDiff = [landingDate timeIntervalSince1970] - [self.seekTargetReferenceDate timeIntervalSince1970];
-            NSLog(@"After all attempts the difference between live and target seek is %1.1f - %@",failDiff,[NSDate stringFromDate:landingDate withFormat:@"h:mm:ss a"]);
-
-            [self recalibrateAfterScrub];
-            [self setCalibrating:NO];
-
-            if ( completion ) {
-                completion();
-            }
-
-        });
-    };
-
-    [self.status setStatus:AudioStatusWaiting];
-    
-    [self getReadyPlayer:^{
-        [self setSeekWillAffectBuffer:YES];
-        CMTime ct = [self.audioPlayer.currentItem currentTime];
-        ct.value += (interval*ct.timescale);
-
-        NSDate *targetDate = self.audioPlayer.currentItem.currentDate;
-        targetDate = [targetDate dateByAddingTimeInterval:interval];
-
-        self.calibrating = YES;
-
-        [self.status setStatus:AudioStatusSeeking];
-
-        [self.audioPlayer.currentItem cancelPendingSeeks];
-
-        // for ios9, we need to start playing before we seek
-        [self.audioPlayer play];
-
-        [self.audioPlayer.currentItem seekToTime:ct toleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero completionHandler:^(BOOL finished) {
-            if (!finished) {
-                return;
-            }
-
-            __block NSDate *landingDate = self.audioPlayer.currentItem.currentDate;
-            NSTimeInterval diff = [landingDate timeIntervalSince1970] - [targetDate timeIntervalSince1970];
-            NSLog(@"After 1 attempt the difference between live and target seek is %1.1f",diff);
-            self.seekTargetReferenceDate = targetDate;
-
-            if ( fabs(diff) > kVirtualBehindLiveTolerance ) {
-
-                NSLog(@"Trying again...");
-
-                [self.audioPlayer pause];
-                CMTime ctFail = self.audioPlayer.currentItem.currentTime;
-                ctFail.value += -1.0f*diff*ctFail.timescale;
-
-                NSAssert([NSThread isMainThread],@"Should be main thread");
-
-                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                    [self.audioPlayer.currentItem seekToTime:ctFail toleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero completionHandler:^(BOOL finished) {
-                        self.seekTargetReferenceDate = targetDate;
-                        finishBlock();
-                    }];
-                });
-            } else {
-                finishBlock();
-            }
-        }];
+    [self.audioPlayer seekByInterval:interval completion:^(BOOL finished) {
+        if (completion) {
+            completion();
+        }
     }];
 }
 
@@ -933,14 +629,7 @@ static const NSString *ItemStatusContext;
     }
 }
 
-- (void)playerItemFailedToPlayToEndTime:(NSNotification *)notification {
-    NSError *error = notification.userInfo[AVPlayerItemFailedToPlayToEndTimeErrorKey];
-#ifdef DEBUG
-    [self dump:YES];
-#endif
-    NSLog(@"playerItemFailedToPlayToEndTime! --- %@ ", [error localizedDescription]);
-}
-
+// FIXME: Does this code need to be moved?
 - (void)playerItemDidFinishPlaying {
     [[SessionManager shared] endOnDemandSessionWithReason:OnDemandFinishedReasonEpisodeEnd];
 
@@ -964,38 +653,8 @@ static const NSString *ItemStatusContext;
     }
 }
 
-- (double)indicatedBitrate {
-    return [self.audioPlayer indicatedBitrate];
-}
-
-- (double)observedMaxBitrate {
-    return [self.audioPlayer observedMaxBitrate];
-}
-
-- (double)observedMinBitrate {
-    return [self.audioPlayer observedMinBitrate];
-}
-
 - (NSString*)avPlayerSessionString {
     return self.avSessionId;
-}
-
-- (void)getReadyPlayer:(CompletionBlock)completion {
-    if (self.audioPlayer == nil) {
-        NSLog(@"getReadyPlayer calling buildStreamer");
-        [self buildStreamer:nil];
-    }
-    
-    if (self.audioPlayer.currentItem != nil && self.audioPlayer.status == AVPlayerItemStatusReadyToPlay) {
-        NSLog(@"getReadyPlayer: item is already ready to play");
-        completion();
-    } else {
-        NSLog(@"getReadyPlayer: waiting for item");
-        [self.avobserver once:StatusesItemReady callback:^(NSString *msg, id obj) {
-            NSLog(@"getReadyPlayer: item is now ready");
-            completion();
-        } ];
-    }
 }
 
 #pragma mark - Audio Control
@@ -1026,114 +685,91 @@ static const NSString *ItemStatusContext;
     if ( self.audioPlayer ) {
         [self takedownAudioPlayer];
     }
-    
-    self.audioPlayer = [AVPlayer playerWithURL:url];
-    self.avobserver = [ [AVObserver alloc] initWithPlayer:self.audioPlayer callback:^ void (enum Statuses status, NSString *msg, id obj) {
-        
-        NSLog(@"AVObserver sent %ld: %@", (long)status, msg);
+
+    self._avplayer = [AVPlayer playerWithURL:url];
+    self.audioPlayer = [[AudioPlayer alloc] initWithPlayer:self._avplayer];
+
+    [self.audioPlayer observeTime:^(StreamDates* d) {
+        NSLog(@"curDate is %@",d.curDate);
+    }];
+
+    [self.audioPlayer observeEvents:^(AudioEvent* e) {
+        NSLog(@"%@: %@",e.time,e.message);
+    }];
+
+    // watch for failures
+    void (^failure)(NSString*, id) = ^(NSString* msg, id obj) {
+        if ( [self currentAudioMode] == AudioModeOnDemand ) {
+            // FIXME: do we need to also be tearing down our now-broken
+            // player?
+            if ( [self.delegate respondsToSelector:@selector(onDemandAudioFailed)] ) {
+                [self.delegate onDemandAudioFailed];
+            }
+        } else {
+            NSLog(@"Triggering tryAgain logic after player/item failed.");
+            self.failoverCount++;
+            if ( self.failoverCount > kFailoverThreshold ) {
+                self.tryAgain = NO;
+                self.failoverCount = 0;
+                [self stopAudio];
+            } else {
+                self.tryAgain = YES;
+                [self resetPlayer];
+            }
+        }
+    };
+
+    [self.audioPlayer.observer on:StatusesItemFailed callback:failure];
+    [self.audioPlayer.observer on:StatusesPlayerFailed callback:failure];
+
+    // watch for status changes and pass them on to our global status
+    [self.audioPlayer observeStatus:^(AudioStatus status){
+        [self.status setStatus:status];
 
         switch (status) {
-            case StatusesPlaying:
-                if ([self.status status] != AudioStatusSeeking) {
-                    [self.status setStatus:AudioStatusPlaying];
-
-                    if ([self.delegate respondsToSelector:@selector(onRateChange)]) {
-                        [self.delegate onRateChange];
-                    }
-                }
-
-                break;
-            case StatusesPaused:
-                if ([self.status status] != AudioStatusSeeking) {
-                    [self.status setStatus:AudioStatusPaused];
-
-                    if ([self.delegate respondsToSelector:@selector(onRateChange)]) {
-                        [self.delegate onRateChange];
-                    }
-                }
-
-                break;
-            case StatusesPlayerFailed:
-            case StatusesItemFailed:
-                NSLog(@"Player or Item Failed! %@",msg);
-
-                if ( [self currentAudioMode] == AudioModeOnDemand ) {
-                    // FIXME: do we need to also be tearing down our now-broken
-                    // player?
-                    if ( [self.delegate respondsToSelector:@selector(onDemandAudioFailed)] ) {
-                        [self.delegate onDemandAudioFailed];
-                    }
-                } else {
-                    NSLog(@"Triggering tryAgain logic after player/item failed.");
-                    self.failoverCount++;
-                    if ( self.failoverCount > kFailoverThreshold ) {
-                        self.tryAgain = NO;
-                        self.failoverCount = 0;
-                        [self stopAudio];
-                    } else {
-                        self.tryAgain = YES;
-                        [self resetPlayer];
-                    }
-                }
-
-                break;
-            case StatusesLikelyToKeepUp:
-                break;
-            case StatusesAccessLog:
-                [[AnalyticsManager shared] setAccessLog:obj];
-
-                break;
-            case StatusesErrorLog:
-                [[AnalyticsManager shared] setErrorLog:obj];
-
-                if ( self.waitForLogTimer ) {
-                    if ( [self.waitForLogTimer isValid] ) {
-                        [self.waitForLogTimer invalidate];
-                    }
-                    self.waitForLogTimer = nil;
-                }
-
-                break;
-            case StatusesStalled:
-//                [self playbackStalled];
-
-                break;
-
-            case StatusesItemEnded:
-                if ([self currentAudioMode] == AudioModeOnDemand) {
-                    [self playerItemDidFinishPlaying];
+            case AudioStatusPlaying:
+            case AudioStatusPaused:
+                if ([self.delegate respondsToSelector:@selector(onRateChange)]) {
+                    [self.delegate onRateChange];
                 }
                 break;
+
             default:
                 break;
         }
-    } ];
+    }];
+
+    // watch for logs
+    [self.audioPlayer.observer on:StatusesAccessLog callback:^(NSString* msg, AVPlayerItemAccessLogEvent *obj) {
+        [[AnalyticsManager shared] setAccessLog:obj];
+    }];
+
+    [self.audioPlayer.observer on:StatusesErrorLog callback:^(NSString* msg, AVPlayerItemErrorLogEvent *obj) {
+        [[AnalyticsManager shared] setErrorLog:obj];
+
+        // FIXME: Still used?
+        if ( self.waitForLogTimer ) {
+            if ( [self.waitForLogTimer isValid] ) {
+                [self.waitForLogTimer invalidate];
+            }
+            self.waitForLogTimer = nil;
+        }
+    }];
+
+    // watch for item end
+    [self.audioPlayer.observer on:StatusesItemEnded callback:^(NSString* msg, id obj) {
+        if ([self currentAudioMode] == AudioModeOnDemand) {
+            [self playerItemDidFinishPlaying];
+        }
+    }];
 
     // Watch for our session ID and stash it
-    [self.avobserver once:StatusesAccessLog callback:^(NSString *msg, AVPlayerItemAccessLogEvent *obj) {
+    [self.audioPlayer.observer once:StatusesAccessLog callback:^(NSString *msg, AVPlayerItemAccessLogEvent *obj) {
         self.avSessionId = obj.playbackSessionID;
         NSLog(@"Setting avSessionId to %@",self.avSessionId);
     }];
 
     [self startObservingTime];
-    
-    [self.audioPlayer.currentItem addObserver:self forKeyPath:@"playbackBufferEmpty" options:NSKeyValueObservingOptionNew context:nil];
-    [self.audioPlayer.currentItem addObserver:self forKeyPath:@"playbackLikelyToKeepUp" options:NSKeyValueObservingOptionNew context:nil];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(playbackStalled:)
-                                                 name:AVPlayerItemPlaybackStalledNotification
-                                               object:nil];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(playerItemFailedToPlayToEndTime:)
-                                                 name:AVPlayerItemFailedToPlayToEndTimeNotification
-                                               object:nil];
-    
-
-#ifndef SUPPRESS_LOCAL_SAMPLING
-    self.localBufferSample = nil;
-#endif
     
     if ( self.currentAudioMode != AudioModeLive ) {
         [[SessionManager shared] setLocalLiveTime:0.0f];
@@ -1142,7 +778,6 @@ static const NSString *ItemStatusContext;
     [self.status setStatus:AudioStatusStopped];
 
     self.previousUrl = urlString;
-    
 }
 
 - (void)buildStreamer:(NSString *)urlString {
@@ -1154,40 +789,13 @@ static const NSString *ItemStatusContext;
     [[ContentManager shared] saveContext];
     
     if ( self.audioPlayer ) {
-        [self.audioPlayer pause];
+        [self.audioPlayer stop];
     }
     
     [self invalidateTimeObserver];
-    
-    @try {
-        [self.audioPlayer.currentItem removeObserver:self forKeyPath:@"playbackBufferEmpty"];
-        NSLog(@"Removed playbackBufferEmpty KVO without exception...");
-        
-        [self.audioPlayer.currentItem removeObserver:self forKeyPath:@"playbackLikelyToKeepUp"];
-        NSLog(@"Removed playbackLikelyToKeepUp KVO without exception...");
-        
-        [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                        name:AVPlayerItemDidPlayToEndTimeNotification
-                                                      object:nil];
-        
-        [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                        name:AVPlayerItemFailedToPlayToEndTimeNotification
-                                                      object:nil];
-        
-        [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                        name:AVPlayerItemPlaybackStalledNotification
-                                                      object:nil];
-        
-    } @catch (NSException *e) {
-        // Wasn't necessary
-        NSLog(@"An exception occurred : %@",e.userInfo);
-    }
+
     
     [[SessionManager shared] resetCache];
-    
-    if ( self.currentAudioMode != AudioModeOnboarding ) {
-        [self.audioPlayer cancelPendingPrerolls];
-    }
     
     [[SessionManager shared] setLocalLiveTime:0.0f];
     
@@ -1303,7 +911,8 @@ static const NSString *ItemStatusContext;
 }
 
 - (BOOL)isPlayingAudio {
-    return [self.audioPlayer rate] > 0.0f;
+    // FIXME: How should we be computing this?
+    return [self.audioPlayer._player rate] > 0.0f;
 }
 
 - (BOOL)isActiveForAudioMode:(AudioMode)mode {
@@ -1331,7 +940,7 @@ static const NSString *ItemStatusContext;
     }
     
     if ( [self currentAudioMode] == AudioModeOnboarding ) {
-        self.audioPlayer.volume = 0.0f;
+//        self.audioPlayer.volume = 0.0f;
     }
     
     [self setUserPause:NO];
@@ -1340,7 +949,7 @@ static const NSString *ItemStatusContext;
     [[SessionManager shared] setSessionPausedDate:nil];
 
     if ( self.smooth ) {
-        self.savedVolume = self.audioPlayer.volume;
+//        self.savedVolume = self.audioPlayer.volume;
         if ( self.savedVolume <= 0.0 ) {
             self.savedVolume = 1.0f;
         }
@@ -1349,43 +958,45 @@ static const NSString *ItemStatusContext;
 //        self.audioPlayer.volume = 0.0f;
     }
 
-    [self getReadyPlayer:^{
-        if ( self.currentAudioMode == AudioModeOnDemand ) {
-            if ( CMTimeGetSeconds( self.audioPlayer.currentItem.currentTime ) == 0 ) {
-                // see if we have a bookmark for where to start in this audio file
-                Bookmark *b = [[QueueManager shared] currentBookmark];
+    [self.audioPlayer play];
 
-                Float64 resumeTime = 0;
-
-                if ( b ) {
-                    Float64 duration = [b.duration floatValue];
-                    if ( b.resumeTimeInSeconds > 0 && ( fabs(duration - resumeTime) <= 1.0 || resumeTime >= duration )) {
-                        // invalid bookmark position. reset our stored value
-                        b.resumeTimeInSeconds = @(0);
-                    }
-
-                    resumeTime = [b.resumeTimeInSeconds floatValue];
-                }
-
-                if (resumeTime == 0) {
-                    NSLog(@"ondemand playAudio should start from 0.");
-                    [self.audioPlayer play];
-                } else {
-                    // seek
-                    NSLog(@"ondemand playAudio should seek to %f.",resumeTime);
-
-                    [self intervalSeekWithTimeInterval:(NSTimeInterval)resumeTime completion:^{
-                        NSLog(@"ondemand playAudio seek to %f successful.",resumeTime);
-                    }];
-                }
-            } else {
-                NSLog(@"ondemand playAudio starting from non-zero: %f", CMTimeGetSeconds(self.audioPlayer.currentItem.currentTime));
-                [self.audioPlayer play];
-            }
-        } else {
-            [self.audioPlayer play];
-        }
-    }];
+//    [self getReadyPlayer:^{
+//        if ( self.currentAudioMode == AudioModeOnDemand ) {
+//            if ( CMTimeGetSeconds( self.audioPlayer.currentItem.currentTime ) == 0 ) {
+//                // see if we have a bookmark for where to start in this audio file
+//                Bookmark *b = [[QueueManager shared] currentBookmark];
+//
+//                Float64 resumeTime = 0;
+//
+//                if ( b ) {
+//                    Float64 duration = [b.duration floatValue];
+//                    if ( b.resumeTimeInSeconds > 0 && ( fabs(duration - resumeTime) <= 1.0 || resumeTime >= duration )) {
+//                        // invalid bookmark position. reset our stored value
+//                        b.resumeTimeInSeconds = @(0);
+//                    }
+//
+//                    resumeTime = [b.resumeTimeInSeconds floatValue];
+//                }
+//
+//                if (resumeTime == 0) {
+//                    NSLog(@"ondemand playAudio should start from 0.");
+//                    [self.audioPlayer play];
+//                } else {
+//                    // seek
+//                    NSLog(@"ondemand playAudio should seek to %f.",resumeTime);
+//
+//                    [self intervalSeekWithTimeInterval:(NSTimeInterval)resumeTime completion:^{
+//                        NSLog(@"ondemand playAudio seek to %f successful.",resumeTime);
+//                    }];
+//                }
+//            } else {
+//                NSLog(@"ondemand playAudio starting from non-zero: %f", CMTimeGetSeconds(self.audioPlayer.currentItem.currentTime));
+//                [self.audioPlayer play];
+//            }
+//        } else {
+//            [self.audioPlayer play];
+//        }
+//    }];
 
 }
 
@@ -1395,8 +1006,8 @@ static const NSString *ItemStatusContext;
 
     self.localBufferSample = nil;
     
-    [[SessionManager shared] setLocalLiveTime:0.0f];
-    
+//    [[SessionManager shared] setLocalLiveTime:0.0f];
+
     if ( self.dropoutOccurred && !self.userPause ) {
         return;
     }
@@ -1527,7 +1138,7 @@ static const NSString *ItemStatusContext;
 }
 
 - (BOOL)isStreamPlaying {
-    if (self.audioPlayer && [self.audioPlayer rate] > 0.0) {
+    if (self.audioPlayer && [self.audioPlayer._player rate] > 0.0) {
         return YES;
     } else {
         return NO;
@@ -1538,35 +1149,5 @@ static const NSString *ItemStatusContext;
     // Old.. can most likely be removed.
     return NO;
 }
-
-#pragma mark - Error Logging
-#ifdef DEBUG
-- (void)dump:(BOOL)superVerbose {
-    AVPlayerItemErrorLog *log = [self.audioPlayer.currentItem errorLog];
-    NSString *logAsString = [[NSString alloc] initWithData:[log extendedLogData]
-                                                  encoding:[log extendedLogDataStringEncoding]];
-    if ( [logAsString length] > 0 ) {
-        NSLog(@"Player error log : %@",logAsString);
-    }
-    
-    if ( superVerbose ) {
-        AVPlayerItemAccessLog *accessLog = [self.audioPlayer.currentItem accessLog];
-        logAsString = [[NSString alloc] initWithData:[accessLog extendedLogData]
-                                            encoding:[accessLog extendedLogDataStringEncoding]];
-        if ( [logAsString length] > 0 ) {
-#ifdef VERBOSE_LOGGING
-            NSLog(@"Player access log : %@",logAsString);
-#endif
-        }
-    }
-    
-    NSString *sid = [self avPlayerSessionString];
-    if ( sid ) {
-        NSLog(@"Session ID : %@",sid);
-    }
-    
-}
-
-#endif
 
 @end

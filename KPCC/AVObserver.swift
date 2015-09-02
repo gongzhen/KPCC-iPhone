@@ -13,7 +13,7 @@ import AVFoundation
     typealias CallbackClosure   = ( (Statuses,String,AnyObject?) -> Void )
     typealias OnceClosure       = (String,AnyObject?) -> Void
     
-    let _callback:CallbackClosure
+    var _callback:CallbackClosure?
     let _player:AVPlayer
     
     var _once   = [Statuses:[OnceClosure]]()
@@ -33,7 +33,7 @@ import AVFoundation
         AVPlayerItemDidPlayToEndTimeNotification
     ]
     
-    @objc init(player:AVPlayer,callback:CallbackClosure) {
+    @objc init(player:AVPlayer,callback:CallbackClosure? = nil) {
         self._player = player
         self._callback = callback
         
@@ -49,6 +49,12 @@ import AVFoundation
             NSNotificationCenter.defaultCenter().addObserver(self, selector:"item_notification:", name: n, object: player.currentItem)
         }
     }
+
+    //----------
+
+    func setCallback(callback:CallbackClosure) {
+        self._callback = callback
+    }
     
     //----------
     
@@ -62,6 +68,8 @@ import AVFoundation
         
         self._once.removeAll(keepCapacity: false)
         self._on.removeAll(keepCapacity: false)
+
+        self._callback = nil
     }
     
     //----------
@@ -88,7 +96,7 @@ import AVFoundation
     
     private func _notify(status:Statuses,msg:String,obj:AnyObject? = nil) -> Void {
         // always notify our callback
-        self._callback(status,msg,obj)
+        self._callback?(status,msg,obj)
         
         // repeat callbacks
         if let on_callbacks = self._on[status] {

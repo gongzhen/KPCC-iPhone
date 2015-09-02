@@ -77,7 +77,7 @@
 // What date are we currently playing?
 - (NSDate*)vNow {
     
-    NSDate *cd = [[AudioManager shared].audioPlayer.currentItem currentDate];
+    NSDate *cd = [[AudioManager shared].audioPlayer currentDate];
     if ( cd ) {
         if ( [[SessionManager shared] dateIsReasonable:cd] ) {
             return cd;
@@ -98,7 +98,7 @@
 }
 
 - (NSTimeInterval)secondsBehindLive {
-    NSDate *currentTime = [AudioManager shared].audioPlayer.currentItem.currentDate;
+    NSDate *currentTime = [[AudioManager shared].audioPlayer currentDate];
     if ( !currentTime ) return 0;
     
 #ifndef SUPPRESS_V_LIVE
@@ -114,11 +114,14 @@
 }
 
 - (NSTimeInterval)virtualSecondsBehindLive {
-    CGFloat sbl = [[[SessionManager shared] vLive] timeIntervalSince1970] - [[[AudioManager shared].audioPlayer.currentItem currentDate] timeIntervalSince1970];
+    CGFloat sbl = [[[SessionManager shared] vLive] timeIntervalSince1970] - [[[AudioManager shared].audioPlayer currentDate] timeIntervalSince1970];
     if ( sbl < 0.0f ) {
         sbl = 0.0f;
-    } 
-    
+    }
+
+    NSLog(@"vSecBehindLive is %f",sbl);
+    NSLog(@"Playhead is at %@. vLive is %@", [[AudioManager shared].audioPlayer currentDate], [[SessionManager shared] vLive]);
+
     return (NSTimeInterval)sbl;
 }
 
@@ -265,7 +268,7 @@
     }
     
     if ( [self sessionIsBehindLive] ) {
-        [self setSessionPausedDate:[[AudioManager shared].audioPlayer.currentItem currentDate]];
+        [self setSessionPausedDate:[[AudioManager shared].audioPlayer currentDate]];
     } else {
         [self setSessionPausedDate:[NSDate date]];
     }
@@ -602,7 +605,7 @@
 
 - (void)fetchScheduleForTodayAndTomorrow:(CompletionBlockWithValue)completed {
     
-    NSDate *now = [[AudioManager shared].audioPlayer.currentItem currentDate];
+    NSDate *now = [[AudioManager shared].audioPlayer currentDate];
     if ( !now ) {
         now = [NSDate date];
     }
@@ -830,13 +833,14 @@
 
 - (long)bufferLength {
     long stableDuration = kStreamBufferLimit;
-    for ( NSValue *str in [[[AudioManager shared] audioPlayer] currentItem].seekableTimeRanges ) {
-        CMTimeRange r = [str CMTimeRangeValue];
-        if ( labs(CMTimeGetSeconds(r.duration) > kStreamCorrectionTolerance ) ) {
-            stableDuration = CMTimeGetSeconds(r.duration);
-        }
-    }
-    
+    // FIXME
+//    for ( NSValue *str in [[[AudioManager shared] audioPlayer] currentItem].seekableTimeRanges ) {
+//        CMTimeRange r = [str CMTimeRangeValue];
+//        if ( labs(CMTimeGetSeconds(r.duration) > kStreamCorrectionTolerance ) ) {
+//            stableDuration = CMTimeGetSeconds(r.duration);
+//        }
+//    }
+
     return stableDuration;
     
 }
@@ -864,7 +868,7 @@
         
         if ( !spd ) return NO;
         
-        NSDate *cit = [[AudioManager shared].audioPlayer.currentItem currentDate];
+        NSDate *cit = [[AudioManager shared].audioPlayer currentDate];
         if ( [[[AudioManager shared] status] status] != AudioStatusStopped ) {
             if ( !cit ) {
                 // Some kind of audio abnormality, so expire this session
@@ -903,8 +907,8 @@
 #endif
     
     if ( ![self sessionIsBehindLive] ) {
-        if ( [[AudioManager shared].audioPlayer.currentItem currentDate] ) {
-            now = [[AudioManager shared].audioPlayer.currentItem currentDate];
+        if ( [[AudioManager shared].audioPlayer currentDate] ) {
+            now = [[AudioManager shared].audioPlayer currentDate];
         }
     }
     

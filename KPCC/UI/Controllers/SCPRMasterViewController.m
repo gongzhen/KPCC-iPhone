@@ -1289,8 +1289,8 @@ setForOnDemandUI;
     self.shuttlingGate = YES;
     
     [[AudioManager shared] setCalibrating:YES];
-    [[SessionManager shared] setLocalLiveTime:0.0f];
-    
+//    [[SessionManager shared] setLocalLiveTime:0.0f];
+
     ScheduleOccurrence *cProgram = [[SessionManager shared] currentSchedule];
     [self.jogShuttle.view setAlpha:1.0f];
     
@@ -1383,8 +1383,8 @@ setForOnDemandUI;
     
     self.shuttlingGate = YES;
     [[AudioManager shared] setCalibrating:YES];
-    [[SessionManager shared] setLocalLiveTime:0.0f];
-    
+//    [[SessionManager shared] setLocalLiveTime:0.0f];
+
     [self.jogShuttle.view setAlpha:1.0];
     [[SessionManager shared] setSeekForwardRequested:YES];
     [[SessionManager shared] fetchCurrentSchedule:^(id returnedObject) {
@@ -1823,7 +1823,7 @@ setForOnDemandUI;
         return;
     }
     
-    NSDate *ciCurrentDate = [AudioManager shared].audioPlayer.currentItem.currentDate;
+    NSDate *ciCurrentDate = [[AudioManager shared].audioPlayer currentDate];
     if ( !ciCurrentDate ) {
         self.liveDescriptionLabel.text = @"";
         return;
@@ -1857,7 +1857,7 @@ setForOnDemandUI;
 
     if ( ti > kVirtualMediumBehindLiveTolerance || [[AudioManager shared] ignoreDriftTolerance] ) {
         [self.liveDescriptionLabel fadeText:[NSString stringWithFormat:@"%@ BEHIND LIVE", [NSDate prettyTextFromSeconds:ti]]];
-        self.previousRewindThreshold = [[AudioManager shared].audioPlayer.currentItem.currentDate timeIntervalSince1970];
+        self.previousRewindThreshold = [[[AudioManager shared].audioPlayer currentDate] timeIntervalSince1970];
         
 
     } else {
@@ -3858,9 +3858,9 @@ setForOnDemandUI;
     if ( !self.onDemandPanning )
         [self rebootOnDemandUI];
     
-    if (CMTimeGetSeconds([[[[AudioManager shared].audioPlayer currentItem] asset] duration]) > 0) {
-        double currentTime = CMTimeGetSeconds([[[AudioManager shared].audioPlayer currentItem] currentTime]);
-        double duration = CMTimeGetSeconds([[[[AudioManager shared].audioPlayer currentItem] asset] duration]);
+    if (CMTimeGetSeconds([[AudioManager shared].audioPlayer duration]) > 0) {
+        double currentTime = CMTimeGetSeconds([[AudioManager shared].audioPlayer currentTime]);
+        double duration = CMTimeGetSeconds([[AudioManager shared].audioPlayer duration]);
         double progress = (currentTime / duration);
         
         [self.timeLabelOnDemand setText:[Utils elapsedTimeStringWithPosition:currentTime

@@ -17,7 +17,7 @@
 
 @interface SCPRUpcomingProgramViewController ()
 
-- (void)setupWithNextProgram:(Program*)program;
+- (void)setupWithNextProgram:(ScheduleOccurrence*)program;
 
 @end
 

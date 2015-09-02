@@ -59,7 +59,6 @@
 
 @property (nonatomic,strong) SCPRScrubberViewController *scrubberController;
 @property (nonatomic,weak) id parentControlView;
-@property CMTime lowerBoundThreshold;
 
 - (void)prerender;
 - (void)setupWithProgram:(NSDictionary*)program blurredImage:(UIImage*)image parent:(id)parent;
@@ -81,7 +80,6 @@
 - (double)percentageThroughCurrentProgram;
 - (void)tickLive:(BOOL)animated;
 
-- (CMTime)convertToTimeValueFromPercentage:(double)percent;
 - (NSInteger)convertToSecondsFromPercentage:(double)percent;
 - (NSDate*)convertToDateFromPercentage:(double)percent;
 

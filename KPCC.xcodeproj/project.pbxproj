@@ -9,10 +9,9 @@
 /* Begin PBXBuildFile section */
 		07139B841B95E701007DBA91 /* ScheduleOccurrence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07139B831B95E701007DBA91 /* ScheduleOccurrence.swift */; settings = {ASSET_TAGS = (); }; };
 		0775D0B71B8C1A6E009EDAE9 /* Empty.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0775D0B61B8C1A6E009EDAE9 /* Empty.mm */; };
-		07B2D0821B90C39000BB113A /* AVObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07B2D0811B90C39000BB113A /* AVObserver.swift */; settings = {ASSET_TAGS = (); }; };
-		07B2D0831B90D98000BB113A /* AVObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07B2D0811B90C39000BB113A /* AVObserver.swift */; settings = {ASSET_TAGS = (); }; };
-		07B2D08B1B92088700BB113A /* AVStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07B2D08A1B92088700BB113A /* AVStatus.swift */; settings = {ASSET_TAGS = (); }; };
-		07B2D08C1B92088700BB113A /* AVStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07B2D08A1B92088700BB113A /* AVStatus.swift */; settings = {ASSET_TAGS = (); }; };
+		07EB395E1B9723ED005A8DDB /* AudioPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07EB395D1B9723ED005A8DDB /* AudioPlayer.swift */; settings = {ASSET_TAGS = (); }; };
+		07EB39601B9731BC005A8DDB /* AVObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07EB395F1B9731BC005A8DDB /* AVObserver.swift */; settings = {ASSET_TAGS = (); }; };
+		07EB39621B973200005A8DDB /* AVStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07EB39611B973200005A8DDB /* AVStatus.swift */; settings = {ASSET_TAGS = (); }; };
 		25263A881A32669E00BD5FF9 /* onboarding3.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 25263A871A32669E00BD5FF9 /* onboarding3.mp3 */; };
 		253030151B717CDD00B88468 /* SCPRProfileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 253030131B717CDD00B88468 /* SCPRProfileViewController.m */; };
 		253030161B717CDD00B88468 /* SCPRProfileViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 253030141B717CDD00B88468 /* SCPRProfileViewController.xib */; };
@@ -343,8 +342,9 @@
 		0724AFD31B9620E400C8DE4D /* KPCC-Proprietary-340.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "KPCC-Proprietary-340.xcdatamodel"; sourceTree = "<group>"; };
 		075F6FAD1B8CFE2400E641F3 /* KPCCPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = KPCCPlayer.framework; path = "../../../Library/Developer/Xcode/DerivedData/KPCCPlayer-cfmdykrumzkmswepgfywosbqcrly/Build/Products/Debug-iphoneos/KPCCPlayer.framework"; sourceTree = "<group>"; };
 		0775D0B61B8C1A6E009EDAE9 /* Empty.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = Empty.mm; sourceTree = "<group>"; };
-		07B2D0811B90C39000BB113A /* AVObserver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AVObserver.swift; sourceTree = "<group>"; };
-		07B2D08A1B92088700BB113A /* AVStatus.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AVStatus.swift; sourceTree = "<group>"; };
+		07EB395D1B9723ED005A8DDB /* AudioPlayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioPlayer.swift; sourceTree = "<group>"; };
+		07EB395F1B9731BC005A8DDB /* AVObserver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AVObserver.swift; sourceTree = "<group>"; };
+		07EB39611B973200005A8DDB /* AVStatus.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AVStatus.swift; sourceTree = "<group>"; };
 		1B29166D1072B92AE58CD1BB /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 		25263A871A32669E00BD5FF9 /* onboarding3.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = onboarding3.mp3; path = Audio/onboarding3.mp3; sourceTree = "<group>"; };
 		253030121B717CDD00B88468 /* SCPRProfileViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCPRProfileViewController.h; path = SSO/SCPRProfileViewController.h; sourceTree = "<group>"; };
@@ -1481,8 +1481,9 @@
 				258CA0FC1A09636900A3C8DB /* SessionManager.m */,
 				258BB0361A1C07FD00B8FCFE /* UXmanager.h */,
 				258BB0371A1C07FD00B8FCFE /* UXmanager.m */,
-				07B2D0811B90C39000BB113A /* AVObserver.swift */,
-				07B2D08A1B92088700BB113A /* AVStatus.swift */,
+				07EB395F1B9731BC005A8DDB /* AVObserver.swift */,
+				07EB39611B973200005A8DDB /* AVStatus.swift */,
+				07EB395D1B9723ED005A8DDB /* AudioPlayer.swift */,
 			);
 			name = Managers;
 			sourceTree = "<group>";
@@ -1992,22 +1993,23 @@
 				258E8E0A1A16AC5B00675E68 /* NSData+JSONAdditions.m in Sources */,
 				25BBCD6E1A85867F0015071E /* NSError+PrettyAnalytics.m in Sources */,
 				258FC47B1A018F3D00282D59 /* SCPRSpinnerViewController.m in Sources */,
-				07B2D0821B90C39000BB113A /* AVObserver.swift in Sources */,
 				258E8E0F1A16AE0400675E68 /* SCPRFeedbackViewController.m in Sources */,
 				259E44FE1A1D2CD300F5CD65 /* SCPROnboardingViewController.m in Sources */,
 				52D0FC2019D1FC0C009AECEE /* SCPRProgramDetailTableViewCell.m in Sources */,
 				760E3C4C194FB61B00D86D91 /* Program.m in Sources */,
+				07EB39601B9731BC005A8DDB /* AVObserver.swift in Sources */,
 				259E45021A1D2CE400F5CD65 /* SCPRLensViewController.m in Sources */,
 				25B59A5619FEF93700D4885C /* SCPRShortListViewController.m in Sources */,
 				258CA0FD1A09636900A3C8DB /* SessionManager.m in Sources */,
 				52CC6D6619D110E300C67322 /* SCPRProgramsListViewController.m in Sources */,
-				07B2D08B1B92088700BB113A /* AVStatus.swift in Sources */,
+				07EB395E1B9723ED005A8DDB /* AudioPlayer.swift in Sources */,
 				258E239F1A13FA84009F8F97 /* DataModel.xcdatamodeld in Sources */,
 				5257E9CC19E34A550055733F /* SCPRSlideInTransition.m in Sources */,
 				52CC6D5E19D0DC7100C67322 /* Segment.m in Sources */,
 				25F30AF51AFAB89600F27187 /* SCPRScheduleTableViewCell.m in Sources */,
 				760EA99219521E98009B504E /* AVPlayer+Additions.m in Sources */,
 				52E68B8819B919300028F8AE /* SCPRMenuButton.m in Sources */,
+				07EB39621B973200005A8DDB /* AVStatus.swift in Sources */,
 				768C064819958FDA00F829EB /* SCPRMasterViewController.m in Sources */,
 				7695FD15195E299000F63DE9 /* SCPRNavigationBar.m in Sources */,
 				760EA9961953724E009B504E /* ContentManager.m in Sources */,
@@ -2024,8 +2026,6 @@
 			files = (
 				25F30B011B0BDC2B00F27187 /* SCPRTestSuite.m in Sources */,
 				76A308F818C8FB950065D4B1 /* KPCCTests.m in Sources */,
-				07B2D08C1B92088700BB113A /* AVStatus.swift in Sources */,
-				07B2D0831B90D98000BB113A /* AVObserver.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

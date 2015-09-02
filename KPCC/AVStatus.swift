@@ -23,16 +23,16 @@ public struct KPCCPlayerObserver<T> {
     }
 }
 
-@objc public class AVStatus: NSObject {
-    @objc public enum AudioStatus:Int {
-        case New = 0, Stopped = 1, Playing = 2, Waiting = 3, Seeking = 4, Paused = 5, Error = 6
+@objc public enum AudioStatus:Int {
+    case New = 0, Stopped = 1, Playing = 2, Waiting = 3, Seeking = 4, Paused = 5, Error = 6
 
-        func toString() -> String {
-            let s = ["New","Stopped","Playing","Waiting","Seeking","Paused","Error"]
-            return s[self.rawValue]
-        }
+    func toString() -> String {
+        let s = ["New","Stopped","Playing","Waiting","Seeking","Paused","Error"]
+        return s[self.rawValue]
     }
+}
 
+@objc public class AVStatus: NSObject {
     public var oStatus              = KPCCPlayerObserver<AudioStatus>()
 
     var _prevStatus: AudioStatus    = AudioStatus.New

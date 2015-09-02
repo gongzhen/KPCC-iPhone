@@ -266,7 +266,7 @@
     NSDictionary *p = [[SessionManager shared] onboardingAudio];
     ScheduleOccurrence *program = [[SessionManager shared] currentSchedule];
     
-    NSDate *currentDate = [AudioManager shared].audioPlayer.currentItem.currentDate;
+    NSDate *currentDate = [[[AudioManager shared] audioPlayer] currentDate];
     NSTimeInterval beginning = [program.soft_starts_at timeIntervalSince1970];
     if ( [[AudioManager shared] currentAudioMode] == AudioModeOnboarding ) {
         beginning = 0;
@@ -294,7 +294,7 @@
     }*/
     
     if ( [[AudioManager shared] currentAudioMode] == AudioModeOnboarding ) {
-        live = CMTimeGetSeconds([AudioManager shared].audioPlayer.currentItem.currentTime);
+        live = CMTimeGetSeconds([[[AudioManager shared] audioPlayer] currentTime]);
         
     }
     

@@ -13,7 +13,7 @@
 #import "Program.h"
 #import "SessionManager.h"
 #import "AnalyticsManager.h"
-
+#import "KPCC-Swift.h"
 
 
 @interface SCPRScrubbingUIViewController ()
@@ -154,9 +154,7 @@
 
         self.maxPercentage = [self livePercentage];
         [self tickLive];
-        
-        self.lowerBoundThreshold = [self convertToTimeValueFromPercentage:0.0f];
-        
+                
         [self.timeNumericLabel proLightFontize];
         [self.timeBehindLiveLabel proMediumFontize];
         
@@ -201,7 +199,7 @@
 }
 
 - (void)printCurrentDate {
-    NSDate *cd = [[AudioManager shared].audioPlayer.currentItem currentDate];
+    NSDate *cd = [[AudioManager shared].audioPlayer currentDate];
     NSLog(@"Time is : %@",[NSDate stringFromDate:cd
                                       withFormat:@"h:mm:ss a"]);
 }
@@ -391,7 +389,7 @@
     NSString *pretty = @"";
     
     if ( [[AudioManager shared] currentAudioMode] == AudioModeOnDemand ) {
-        CMTime total = [[[[AudioManager shared].audioPlayer currentItem] asset] duration];
+        CMTime total = [[AudioManager shared].audioPlayer duration];
         double duration = CMTimeGetSeconds(total);
         
         pretty = [Utils elapsedTimeStringWithPosition:duration*percent
@@ -434,10 +432,9 @@
     double multiplier = finalValue;
     CMTime seek;
     NSDate *seekDate;
+
     if ( [[AudioManager shared] currentAudioMode] == AudioModeOnDemand ) {
         
-        CMTime total = [[[[AudioManager shared].audioPlayer currentItem] asset] duration];
-        seek = CMTimeMake(total.value*multiplier, total.timescale);
         onDemand = YES;
         
     } else if ( [[AudioManager shared] currentAudioMode] == AudioModeLive ) {
@@ -465,14 +462,14 @@
     [self printCurrentDate];
     
     if ( onDemand ) {
-        [[AudioManager shared].audioPlayer.currentItem seekToTime:seek completionHandler:^(BOOL finished) {
+        [[[AudioManager shared] audioPlayer] seekToPercent:multiplier completion:^(BOOL finished) {
             [self postSeek];
         }];
     } else {
         
         if ( !seekDate ) {
             // a nil seekDate implies seeking to live
-            [[AudioManager shared] forwardSeekLiveWithType:ScrubbingTypeScrubber completion:^{
+            [[[AudioManager shared] audioPlayer] seekToLive:^(BOOL finished){
                 self.seeking = NO;
                 [(SCPRMasterViewController*)self.parentControlView primeManualControlButton];
                 
@@ -481,9 +478,9 @@
             
             return;
         }
-        
-        [[AudioManager shared].audioPlayer pause];
-        [[AudioManager shared] intervalSeekWithTimeInterval:(-1.0*[[[SessionManager shared] vNow] timeIntervalSinceDate:seekDate]) completion:^{
+
+        // FIXME: Why doesn't the shortened version work?
+        [[[AudioManager shared] audioPlayer] seekToDate:seekDate completion:^(BOOL finished){
             self.seeking = NO;
             
             [(SCPRMasterViewController*)self.parentControlView primeManualControlButton];
@@ -548,9 +545,9 @@
     
     if ( !self.scrubberController.panning ) {
         if ( [[AudioManager shared] currentAudioMode] == AudioModeOnDemand ) {
-            if (CMTimeGetSeconds([[[[AudioManager shared].audioPlayer currentItem] asset] duration]) > 0) {
-                double currentTime = CMTimeGetSeconds([[[AudioManager shared].audioPlayer currentItem] currentTime]);
-                double duration = CMTimeGetSeconds([[[[AudioManager shared].audioPlayer currentItem] asset] duration]);
+            if (CMTimeGetSeconds([[AudioManager shared].audioPlayer duration]) > 0) {
+                double currentTime = CMTimeGetSeconds([[AudioManager shared].audioPlayer currentTime]);
+                double duration = CMTimeGetSeconds([[AudioManager shared].audioPlayer duration]);
                 NSString *pretty = [Utils elapsedTimeStringWithPosition:currentTime
                                                             andDuration:duration];
                 [[self scrubbingIndicatorLabel] setText:pretty];
@@ -572,8 +569,8 @@
     if ( [[AudioManager shared] currentAudioMode] == AudioModeLive ) {
         return [self percentageThroughCurrentProgram];
     } else if ( [[AudioManager shared] currentAudioMode] == AudioModeOnDemand ) {
-        NSInteger cS = CMTimeGetSeconds([[AudioManager shared].audioPlayer.currentItem currentTime]);
-        NSInteger tS = CMTimeGetSeconds([[AudioManager shared].audioPlayer.currentItem.asset duration]);
+        NSInteger cS = CMTimeGetSeconds([[[AudioManager shared] audioPlayer] currentTime]);
+        NSInteger tS = CMTimeGetSeconds([[[AudioManager shared] audioPlayer] duration]);
         return (cS*1.0f / tS*1.0f);
     }
 
@@ -679,30 +676,6 @@
     }
     
     return rough;
-}
-
-- (CMTime)convertToTimeValueFromPercentage:(double)percent {
-
-    NSInteger totalTime = [self convertToSecondsFromPercentage:percent];
-    
-    NSArray *ranges = [[AudioManager shared].audioPlayer.currentItem seekableTimeRanges];
-    
-    if ( ranges.count > 0 ) {
-        CMTimeRange range = [ranges[0] CMTimeRangeValue];
-        NSInteger end = CMTimeGetSeconds(CMTimeRangeGetEnd(range));
-        
-        if ( totalTime > end ) {
-            totalTime = end;
-        }
-        if ( totalTime < 0 ) {
-            totalTime = 0;
-        }
-        
-        return CMTimeMake(end - totalTime, 1);
-    }
-    
-    return CMTimeMake(totalTime, 1);
-    
 }
 
 - (NSInteger)convertToSecondsFromPercentage:(double)percent {
