@@ -56,4 +56,35 @@ import CoreData
             return false
         }
     }
+
+    //----------
+
+    func percentageToDate(var percent:Double) -> NSDate {
+        if (percent > 1.0) {
+            percent = 1.0
+        } else if (percent < 0.0) {
+            percent = 0.0
+        }
+        
+        let duration = self.ends_at.timeIntervalSinceReferenceDate - self.starts_at.timeIntervalSinceReferenceDate
+        let seconds:Double = duration * percent
+        return self.starts_at.dateByAddingTimeInterval(seconds)
+    }
+
+    //----------
+
+    func dateToPercentage(date:NSDate) -> Double {
+        let duration = self.ends_at.timeIntervalSinceReferenceDate - self.starts_at.timeIntervalSinceReferenceDate
+        let seconds:Double = date.timeIntervalSinceReferenceDate - self.starts_at.timeIntervalSinceReferenceDate
+
+        let percent = seconds / duration
+
+        if 0.0 <= percent && percent < 1.0 {
+            return percent
+        } else if percent > 1.0 {
+            return 1.0
+        } else {
+            return 0.0
+        }
+    }
 }

@@ -76,12 +76,7 @@
 
 
 // Live
-- (double)livePercentage;
-- (double)percentageThroughCurrentProgram;
 - (void)tickLive:(BOOL)animated;
-
-- (NSInteger)convertToSecondsFromPercentage:(double)percent;
-- (NSDate*)convertToDateFromPercentage:(double)percent;
 
 - (void)recalibrateAfterScrub;
 - (void)behindLiveStatus;

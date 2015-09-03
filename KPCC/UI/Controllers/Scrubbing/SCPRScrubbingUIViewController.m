@@ -146,7 +146,7 @@
                                                                                                       @"period" : [[DesignManager shared] proLight:16.0f] }];
         
 
-        self.maxPercentage = [self livePercentage];
+        self.maxPercentage = [p dateToPercentage:[[SessionManager shared] vLive]];
         [self tickLive];
                 
         [self.timeNumericLabel proLightFontize];
@@ -382,8 +382,10 @@
         [[self scrubbingIndicatorLabel] setText:pretty];
     }
     if ( [[AudioManager shared] currentAudioMode] == AudioModeLive ) {
-        
-        NSDate *scrubbed = [self convertToDateFromPercentage:percent];
+
+        ScheduleOccurrence *p = [[SessionManager shared] currentSchedule];
+        NSDate *scrubbed  = [p percentageToDate:percent];
+
         pretty = [[NSDate stringFromDate:scrubbed
                              withFormat:@"h:mm:ss a"] lowercaseString];
 
@@ -420,11 +422,11 @@
 
         return;
     }
-        
-    NSDate* seekDate = [self convertToDateFromPercentage:finalValue];
+
+    ScheduleOccurrence *p = [[SessionManager shared] currentSchedule];
+    NSDate* seekDate = [p percentageToDate:finalValue];
 
     if ( seekDate ) {
-        ScheduleOccurrence *p = [[SessionManager shared] currentSchedule];
         if ( [p.starts_at timeIntervalSince1970] >= [seekDate timeIntervalSince1970] ) {
             seekDate = [p.starts_at dateByAddingTimeInterval:30.0f];
         }
@@ -528,7 +530,10 @@
 
 - (double)strokeEndForCurrentTime {
     if ( [[AudioManager shared] currentAudioMode] == AudioModeLive ) {
-        return [self percentageThroughCurrentProgram];
+        ScheduleOccurrence *p = [[SessionManager shared] currentSchedule];
+        return [p dateToPercentage:[[SessionManager shared] vNow]];
+
+//        return [self percentageThroughCurrentProgram];
     } else if ( [[AudioManager shared] currentAudioMode] == AudioModeOnDemand ) {
         NSInteger cS = CMTimeGetSeconds([[[AudioManager shared] audioPlayer] currentTime]);
         NSInteger tS = CMTimeGetSeconds([[[AudioManager shared] audioPlayer] duration]);
@@ -540,49 +545,6 @@
 }
 
 #pragma mark - Live
-// For the given schedule occurrence, what's the maximum percentage we should
-// be allowed to seek into it? For a live show that's half-over, for instance,
-// livePercentage should return 0.5
-- (double)livePercentage {
-    ScheduleOccurrence *p = [[SessionManager shared] currentSchedule];
-
-    if ( !p ) {
-        return 0.0f;
-    }
-    
-    NSDate *startDate = p.starts_at;
-    NSDate *endDate = p.ends_at;
-  
-    NSTimeInterval nowTI = [[[SessionManager shared] vLive] timeIntervalSince1970];
-    NSTimeInterval total = [endDate timeIntervalSince1970] - [startDate timeIntervalSince1970];
-    NSTimeInterval diff = nowTI - [startDate timeIntervalSince1970];
-    
-    NSString *imprecise = [NSString stringWithFormat:@"%1.4f",( diff / ( total * 1.0f ) )];
-    CGFloat impValue = [imprecise floatValue];
-
-    if (impValue > 1.0f) {
-        impValue = 1.0f;
-    }
-    
-    return (double)impValue;
-}
-
-// What percentage of the way is our playhead through the given schedule
-// occurrence?
-- (double)percentageThroughCurrentProgram {
-    ScheduleOccurrence *p = [[SessionManager shared] currentSchedule];
-
-    NSDate *endDate = p.ends_at;
-    NSDate *startDate = p.starts_at;
-    CGFloat duration = [endDate timeIntervalSince1970] - [startDate timeIntervalSince1970];
-    CGFloat chunk = [[[SessionManager shared] vNow] timeIntervalSince1970] - [startDate timeIntervalSince1970];
-    
-    NSString *imprecise = [NSString stringWithFormat:@"%1.4f",chunk / duration];
-    CGFloat impValue = [imprecise floatValue];
-    
-    return (double) impValue;
-    
-}
 
 - (void)tickLive:(BOOL)animated {
     [self tickLive];
@@ -595,10 +557,12 @@
                                        withFormat:@"h:mma"];
     
     self.liveProgressNeedleReadingLabel.text = [prettyTime lowercaseString];
-    
-    self.maxPercentage = [self livePercentage];
 
-    CGFloat percent = [self percentageThroughCurrentProgram];
+    ScheduleOccurrence *p = [[SessionManager shared] currentSchedule];
+
+    self.maxPercentage = [p dateToPercentage:[[SessionManager shared] vLive]];
+
+    CGFloat percent = [p dateToPercentage:[[SessionManager shared] vNow]];
     CGFloat where = percent * self.scrubbableView.frame.size.width;
     self.cpLeftAnchor.constant = where;
     
@@ -631,55 +595,6 @@
         
         [self.view layoutIfNeeded];
     }];
-}
-
-- (NSDate*)convertToDateFromPercentage:(double)percent {
-    ScheduleOccurrence *p = [[SessionManager shared] currentSchedule];
-    NSTimeInterval duration = [p.ends_at timeIntervalSince1970] - [p.starts_at timeIntervalSince1970];
-    CGFloat cpInSeconds = duration * percent;
-    NSDate *rough = [p.starts_at dateByAddingTimeInterval:cpInSeconds];
-    
-    if ( [rough timeIntervalSinceDate:[[SessionManager shared] vLive]] >= 0.0f ) {
-        // Seek to Live
-        // rough = nil;
-        // Disable this for now
-    }
-    
-    return rough;
-}
-
-- (NSInteger)convertToSecondsFromPercentage:(double)percent {
-    ScheduleOccurrence *p = [[SessionManager shared] currentSchedule];
-    NSDate *startDate = p.starts_at;
-    NSDate *endDate = p.ends_at;
-    
-    NSTimeInterval total = [endDate timeIntervalSince1970] - [startDate timeIntervalSince1970];
-    NSInteger secondsThroughProgram = floorf(total * percent);
-    NSDate *msd = [[SessionManager shared] vLive];
-    
-    NSInteger liveInSeconds = [msd timeIntervalSince1970];
-    NSInteger programEndInSeconds = [endDate timeIntervalSince1970];
-    
-    NSInteger totalTime = 0;
-    if ( programEndInSeconds > liveInSeconds ) {
-        
-        CGFloat chunkUpToLive = liveInSeconds - [startDate timeIntervalSince1970];
-        totalTime = chunkUpToLive - secondsThroughProgram;
-        
-    } else {
-        
-        CGFloat chunkUpToLive = programEndInSeconds - [startDate timeIntervalSince1970];
-        totalTime = chunkUpToLive - secondsThroughProgram;
-        
-        CGFloat afterProgram = liveInSeconds - programEndInSeconds;
-        totalTime += afterProgram;
-        
-    }
-    
-    
-    totalTime -= [[SessionManager shared] peakDrift];
-    
-    return totalTime;
 }
 
 - (void)recalibrateAfterScrub {
