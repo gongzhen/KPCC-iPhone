@@ -225,9 +225,11 @@ static NetworkManager *singleton = nil;
 
 
 - (void)fetchTritonAd:(NSString *)params completion:(void (^)(TritonAd* tritonAd))completion {
-    // EWR -- short-circuit for a moment
+    #if TARGET_IPHONE_SIMULATOR
+    // EWR -- short-circuit preroll requests in the simulator
     completion(nil);
     return;
+    #endif
 
 
     AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
