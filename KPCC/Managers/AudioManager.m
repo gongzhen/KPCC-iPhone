@@ -22,7 +22,6 @@
 #import <Parse/Parse.h>
 
 static AudioManager *singleton = nil;
-static NSInteger kLocalSampleSize = 5;
 
 // Define this constant for the key-value observation context.
 static const NSString *ItemStatusContext;

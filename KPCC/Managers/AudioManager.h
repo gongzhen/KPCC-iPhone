@@ -160,7 +160,6 @@ typedef NS_ENUM(NSUInteger, StreamStatus) {
 - (void)attemptToRecover;
 - (void)interruptAutorecovery;
 - (void)stopWaiting;
-- (void)localSample:(CMTime)time;
 
 @property (NS_NONATOMIC_IOSONLY, getter=isStreamPlaying, readonly) BOOL streamPlaying;
 @property (NS_NONATOMIC_IOSONLY, getter=isStreamBuffering, readonly) BOOL streamBuffering;
@@ -229,7 +228,6 @@ typedef NS_ENUM(NSUInteger, StreamStatus) {
 #ifdef DEBUG
 @property long frame;
 @property (nonatomic,strong) NSDate *previousCD;
-- (void)dump:(BOOL)superVerbose;
 @property (nonatomic, strong) NSTimer *multipurposeTimer;
 
 #endif
