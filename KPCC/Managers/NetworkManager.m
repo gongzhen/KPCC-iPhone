@@ -202,7 +202,7 @@ static NetworkManager *singleton = nil;
 
 
 - (void)fetchAllProgramInformation:(CompletionBlockWithValue)completion {
-    NSString *urlString = [NSString stringWithFormat:@"%@/programs?air_status=onair",kServerBase];
+    NSString *urlString = [NSString stringWithFormat:@"%@/programs?air_status=onair,online",kServerBase];
     [self requestFromSCPRWithEndpoint:urlString completion:^(id returnedObject) {
         completion(returnedObject);
     }];
