@@ -129,8 +129,6 @@ public struct AudioPlayerObserver<T> {
 
     var _sessionId:String?
 
-    var _lowBandwidth:Bool = false
-
     var prevStatus: AudioStatus = AudioStatus.New
     var status: AudioStatus = AudioStatus.New
 
@@ -142,7 +140,7 @@ public struct AudioPlayerObserver<T> {
     public var seekTolerance:Int = 5
     public var reduceBandwidthOnCellular:Bool = true
 
-//    let _reachability = Reachability.reachabilityForInternetConnection()
+    let _reachability = SReachability.reachabilityForInternetConnection()
     var _networkStatus: AudioNetworkStatus = .Unknown
 
     //var _sessions:AudioSessionTracker? = nil
@@ -201,6 +199,45 @@ public struct AudioPlayerObserver<T> {
 
                     self._computeStreamDates()
             })
+        }
+
+        // -- watch for Reachability -- //
+
+        self._reachability!.whenReachable = { r in
+            self.setNetworkStatus()
+        }
+
+        self._reachability!.whenUnreachable = { r in
+            self.setNetworkStatus()
+        }
+
+        self._reachability!.startNotifier()
+
+        // and a check right now...
+        self.setNetworkStatus()
+
+        // -- set up bandwidth limiter -- //
+
+        if #available(iOS 8.0,*) {
+            self.oNetwork.addObserver() { s in
+                if self.reduceBandwidthOnCellular {
+                    if self._player.currentItem != nil {
+                        switch s {
+                        case .Cellular:
+                            // turn limit on
+                            self._emitEvent("Limiting bandwidth on cellular.")
+                            self._player.currentItem!.preferredPeakBitRate = 1000
+                        case .WIFI:
+                            // turn limit off
+                            self._emitEvent("Turning off bandwidth limit.")
+                            self._player.currentItem!.preferredPeakBitRate = 0
+                        default:
+                            // don't make changes
+                            true
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -342,26 +379,26 @@ public struct AudioPlayerObserver<T> {
     //----------
 
     private func setNetworkStatus() {
-//        var s:NetworkStatus
+        var s:AudioNetworkStatus
 
-//        switch self._reachability!.currentReachabilityStatus {
-//        case .ReachableViaWiFi:
-//            NSLog("Reach is WIFI")
-//
-//            s = .WIFI
-//        case .ReachableViaWWAN:
-//            NSLog("Reach is cellular")
-//            s = .Cellular
-//        case .NotReachable:
-//            NSLog("Reach is unreachable")
-//            s = .NotReachable
-//        }
-//
-//        if s != self._networkStatus {
-//            self._networkStatus = s
-//            self._emitEvent("Network status is now \(s.toString())")
-//            self.oNetwork.notify(s)
-//        }
+        switch self._reachability!.currentReachabilityStatus {
+        case .ReachableViaWiFi:
+            NSLog("Reach is WIFI")
+
+            s = .WIFI
+        case .ReachableViaWWAN:
+            NSLog("Reach is cellular")
+            s = .Cellular
+        case .NotReachable:
+            NSLog("Reach is unreachable")
+            s = .NotReachable
+        }
+
+        if s != self._networkStatus {
+            self._networkStatus = s
+            self._emitEvent("Network status is now \(s.toString())")
+            self.oNetwork.notify(s)
+        }
     }
 
     //----------

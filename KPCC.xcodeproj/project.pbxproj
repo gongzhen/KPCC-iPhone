@@ -13,6 +13,7 @@
 		07EB39601B9731BC005A8DDB /* AVObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07EB395F1B9731BC005A8DDB /* AVObserver.swift */; settings = {ASSET_TAGS = (); }; };
 		07EB39621B973200005A8DDB /* AVStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07EB39611B973200005A8DDB /* AVStatus.swift */; settings = {ASSET_TAGS = (); }; };
 		07EB39641B989A09005A8DDB /* NowPlayingManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07EB39631B989A09005A8DDB /* NowPlayingManager.swift */; settings = {ASSET_TAGS = (); }; };
+		07EB39671B9A3D84005A8DDB /* SReachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07EB39661B9A3D84005A8DDB /* SReachability.swift */; settings = {ASSET_TAGS = (); }; };
 		25263A881A32669E00BD5FF9 /* onboarding3.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 25263A871A32669E00BD5FF9 /* onboarding3.mp3 */; };
 		253030151B717CDD00B88468 /* SCPRProfileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 253030131B717CDD00B88468 /* SCPRProfileViewController.m */; };
 		253030161B717CDD00B88468 /* SCPRProfileViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 253030141B717CDD00B88468 /* SCPRProfileViewController.xib */; };
@@ -347,6 +348,7 @@
 		07EB395F1B9731BC005A8DDB /* AVObserver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AVObserver.swift; sourceTree = "<group>"; };
 		07EB39611B973200005A8DDB /* AVStatus.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AVStatus.swift; sourceTree = "<group>"; };
 		07EB39631B989A09005A8DDB /* NowPlayingManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NowPlayingManager.swift; sourceTree = "<group>"; };
+		07EB39661B9A3D84005A8DDB /* SReachability.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SReachability.swift; sourceTree = "<group>"; };
 		1B29166D1072B92AE58CD1BB /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 		25263A871A32669E00BD5FF9 /* onboarding3.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = onboarding3.mp3; path = Audio/onboarding3.mp3; sourceTree = "<group>"; };
 		253030121B717CDD00B88468 /* SCPRProfileViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCPRProfileViewController.h; path = SSO/SCPRProfileViewController.h; sourceTree = "<group>"; };
@@ -1487,6 +1489,7 @@
 				07EB39611B973200005A8DDB /* AVStatus.swift */,
 				07EB395D1B9723ED005A8DDB /* AudioPlayer.swift */,
 				07EB39631B989A09005A8DDB /* NowPlayingManager.swift */,
+				07EB39661B9A3D84005A8DDB /* SReachability.swift */,
 			);
 			name = Managers;
 			sourceTree = "<group>";
@@ -2012,6 +2015,7 @@
 				52CC6D5E19D0DC7100C67322 /* Segment.m in Sources */,
 				25F30AF51AFAB89600F27187 /* SCPRScheduleTableViewCell.m in Sources */,
 				760EA99219521E98009B504E /* AVPlayer+Additions.m in Sources */,
+				07EB39671B9A3D84005A8DDB /* SReachability.swift in Sources */,
 				52E68B8819B919300028F8AE /* SCPRMenuButton.m in Sources */,
 				07EB39621B973200005A8DDB /* AVStatus.swift in Sources */,
 				768C064819958FDA00F829EB /* SCPRMasterViewController.m in Sources */,
