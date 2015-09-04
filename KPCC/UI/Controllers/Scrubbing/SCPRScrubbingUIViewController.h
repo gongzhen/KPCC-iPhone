@@ -64,12 +64,11 @@
 - (void)takedown;
 - (void)scrubberWillAppear;
 - (void)printCurrentDate;
+- (void)activateStatusObserver;
 
 // Seeking
 - (void)muteUI;
 - (void)unmuteUI;
-- (void)killLatencyTimer;
-- (void)audioWillSeek;
 - (void)primeForAudioMode;
 - (void)postSeek;
 

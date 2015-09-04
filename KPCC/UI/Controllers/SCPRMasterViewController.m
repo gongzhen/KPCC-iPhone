@@ -1407,6 +1407,8 @@ setForOnDemandUI;
     SCPRScrubbingUIViewController *sUI = [[SCPRScrubbingUIViewController alloc]
                                           init];
     sUI.view = self.scrubbingUIView;
+
+    [sUI activateStatusObserver];
     
     self.scrubbingUI = sUI;
     self.scrubbingUI.rw30Button = self.mainBackward30Button;

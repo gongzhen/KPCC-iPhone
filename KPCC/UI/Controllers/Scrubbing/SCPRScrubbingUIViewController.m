@@ -39,19 +39,7 @@
 
     [self primeForAudioMode];
 
-    // listen for audio state changes
-    [[[AudioManager shared] status] observe:^(enum AudioStatus o) {
-        switch (o) {
-            case AudioStatusPlaying:
-                break;
-            case AudioStatusSeeking:
-            case AudioStatusWaiting:
 
-                break;
-            default:
-                break;
-        }
-    }];
 
     // Do any additional setup after loading the view from its nib.
 }
@@ -63,6 +51,25 @@
 
 - (void)viewDidLayoutSubviews {
     
+}
+
+- (void)activateStatusObserver {
+    // listen for audio state changes
+    [[[AudioManager shared] status] observe:^(enum AudioStatus o) {
+        switch (o) {
+            case AudioStatusPlaying:
+                self.seeking = NO;
+                break;
+            case AudioStatusSeeking:
+            case AudioStatusWaiting:
+                self.seeking = YES;
+
+                break;
+            default:
+                self.seeking = NO;
+                break;
+        }
+    }];
 }
 
 - (void)programChanged {
@@ -237,23 +244,6 @@
     
 }
 
-//- (void)setupWithProgram:(NSDictionary *)program blurredImage:(UIImage *)image parent:(id)parent {
-//    self.parentControlView = parent;
-//    self.blurredImageView.image = image;
-//    AudioChunk *ac = program[@"chunk"];
-//    
-//    self.captionLabel.text = ac.audioTitle;
-//    self.blurredImageView.alpha = 0.0f;
-//    
-//
-//    self.captionLabel.font = [[DesignManager shared] proLight:self.captionLabel.font.pointSize];
-//    
-//    [self.closeButton addTarget:self
-//                         action:@selector(closeScrubber)
-//               forControlEvents:UIControlEventTouchUpInside];
-//    
-//}
-
 - (void)closeScrubber {
     SCPRMasterViewController *mvc = (SCPRMasterViewController*)self.parentControlView;
     [UIView animateWithDuration:0.25 animations:^{
@@ -303,24 +293,24 @@
 }
 
 #pragma mark - Seeking
-- (void)audioWillSeek {
-    
-    self.seekLatencyTimer = [NSTimer scheduledTimerWithTimeInterval:1.5
-                                                             target:self
-                                                           selector:@selector(muteUI)
-                                                           userInfo:nil
-                                                            repeats:NO];
-    
-}
-
-- (void)killLatencyTimer {
-    if ( self.seekLatencyTimer ) {
-        if ( [self.seekLatencyTimer isValid] ) {
-            [self.seekLatencyTimer invalidate];
-        }
-        self.seekLatencyTimer = nil;
-    }
-}
+//- (void)audioWillSeek {
+//    
+//    self.seekLatencyTimer = [NSTimer scheduledTimerWithTimeInterval:1.5
+//                                                             target:self
+//                                                           selector:@selector(muteUI)
+//                                                           userInfo:nil
+//                                                            repeats:NO];
+//    
+//}
+//
+//- (void)killLatencyTimer {
+//    if ( self.seekLatencyTimer ) {
+//        if ( [self.seekLatencyTimer isValid] ) {
+//            [self.seekLatencyTimer invalidate];
+//        }
+//        self.seekLatencyTimer = nil;
+//    }
+//}
 
 - (void)muteUI {
     self.uiIsMutedForSeek = YES;
@@ -343,7 +333,7 @@
 }
 
 - (void)unmuteUI {
-    [self killLatencyTimer];
+//    [self killLatencyTimer];
     if ( self.uiIsMutedForSeek ) {
         [UIView animateWithDuration:0.26 animations:^{
             self.fw30Button.alpha = 1.0f;
@@ -472,8 +462,6 @@
 //        [[AudioManager shared] startObservingTime];
 //    }
 
-    self.seeking = NO;
-    
     [(SCPRMasterViewController*)self.parentControlView primeManualControlButton];
     
     [[AnalyticsManager shared] trackSeekUsageWithType:ScrubbingTypeScrubber];
@@ -505,6 +493,9 @@
 //}
 
 - (void)onTimeChange {
+    if (self.seeking) {
+        return;
+    }
     
     if ( !self.scrubberController.panning ) {
         if ( [[AudioManager shared] currentAudioMode] == AudioModeOnDemand ) {
@@ -533,11 +524,11 @@
         ScheduleOccurrence *p = [[SessionManager shared] currentSchedule];
         return [p dateToPercentage:[[SessionManager shared] vNow]];
 
-//        return [self percentageThroughCurrentProgram];
     } else if ( [[AudioManager shared] currentAudioMode] == AudioModeOnDemand ) {
         NSInteger cS = CMTimeGetSeconds([[[AudioManager shared] audioPlayer] currentTime]);
         NSInteger tS = CMTimeGetSeconds([[[AudioManager shared] audioPlayer] duration]);
         return (cS*1.0f / tS*1.0f);
+
     }
 
     
@@ -551,7 +542,6 @@
 }
 
 - (void)tickLive {
- 
     NSDate *vLive = [[SessionManager shared] vLive];
     NSString *prettyTime = [NSDate stringFromDate:vLive
                                        withFormat:@"h:mma"];
