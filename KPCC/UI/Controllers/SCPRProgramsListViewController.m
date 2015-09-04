@@ -101,8 +101,8 @@
     // Sort Programs alphabetically.
     NSArray *sortedPrograms;
     sortedPrograms = [filteredPrograms sortedArrayUsingComparator:^NSComparisonResult(id a, id b) {
-        NSString *first = [(Program *)a title];
-        NSString *second = [(Program *)b title];
+        NSString *first = [(Program *)a sortTitle];
+        NSString *second = [(Program *)b sortTitle];
         return [first compare:second];
     }];
 

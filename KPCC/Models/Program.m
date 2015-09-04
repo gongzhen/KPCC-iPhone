@@ -272,4 +272,17 @@
     return nil;
 }
 
+- (NSString*)sortTitle {
+    if (self.title.length < 4) {
+        return self.title;
+    }
+
+    NSString* st = [NSString stringWithString:self.title];
+    if (SEQ([st substringToIndex:4],@"The ")) {
+        st = [st substringFromIndex:4];
+    }
+
+    return st;
+}
+
 @end

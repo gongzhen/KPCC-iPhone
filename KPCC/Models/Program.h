@@ -28,4 +28,6 @@
 + (instancetype)fetchProgramWithSlug:(NSString *)slug fromManagedObjectContext:(NSManagedObjectContext *)context;
 + (NSArray *)fetchAllProgramsInContext:(NSManagedObjectContext *)context;
 
+- (NSString*)sortTitle;
+
 @end
