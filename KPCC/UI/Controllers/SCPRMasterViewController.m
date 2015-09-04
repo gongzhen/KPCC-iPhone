@@ -102,30 +102,15 @@ setForOnDemandUI;
 
 - (void)remoteControlReceivedWithEvent:(UIEvent *)event {
     // Handle remote audio control events.
-    NSLog(@" >>>>>> EVENT RECEIVED FROM OTHER REMOTE CONTROL SOURCE <<<<<< ");
-    NSString *pretty = @"";
-    NSString *ammendment = @"";
     if (event.type == UIEventTypeRemoteControl) {
-        if (event.subtype == UIEventSubtypeRemoteControlTogglePlayPause) {
+        if ( event.subtype == UIEventSubtypeRemoteControlPause ) {
+//            [[AudioManager shared] pauseAudio];
             [self remoteControlPlayOrPause];
-            pretty = @"Toggle Play / Pause";
-        } else if ( event.subtype == UIEventSubtypeRemoteControlPause ) {
-            if ( [[AudioManager shared] isPlayingAudio] ) {
-                [self remoteControlPlayOrPause];
-            } else {
-                ammendment = @", but we're going to ignore it";
-            }
-            pretty = @"Hard Pause";
         } else if ( event.subtype == UIEventSubtypeRemoteControlPlay ) {
-            if ( ![[AudioManager shared] isPlayingAudio] ) {
-                [self remoteControlPlayOrPause];
-            } else {
-                ammendment = @", but we're going to ignore it";
-            }
-            pretty = @"Hard Play";
+//            [[AudioManager shared] playAudio];
+            [self remoteControlPlayOrPause];
         }
     }
-    NSLog(@"Received : %@%@",pretty,ammendment);
 }
 
 - (void)handleResponseForNotification {
@@ -334,7 +319,7 @@ setForOnDemandUI;
     
     // Initially flag as KPCC Live view
     setForLiveStreamUI = YES;
-    [self primeRemoteCommandCenter:YES];
+    [self primeRemoteCommandCenter];
     
     self.jogShuttle = [[SCPRJogShuttleViewController alloc] init];
     self.jogShuttle.view = self.rewindView;
@@ -1111,11 +1096,11 @@ setForOnDemandUI;
 }
 
 -(void)skipBackwardEvent: (MPSkipIntervalCommandEvent *)skipEvent {
-    [self rewindFifteen];
+    [self seekBack30];
 }
 
 -(void)skipForwardEvent: (MPSkipIntervalCommandEvent *)skipEvent {
-    [self fastForwardFifteen];
+    [self seekFwd30];
 }
 
 - (IBAction)backToLiveTapped:(id)sender {
@@ -1979,8 +1964,7 @@ setForOnDemandUI;
     self.dividerLineLeftAnchor.constant = 5.0f;
     
     self.navigationItem.title = kMainLiveStreamTitle;
-    [self primeRemoteCommandCenter:YES];
-    
+
     self.mainContentScroller.alpha = 1.0f;
     
     if (![self.onDemandPlayerView isHidden]) {
@@ -2113,9 +2097,7 @@ setForOnDemandUI;
         self.queueScrollView.alpha = 1.0f;
         self.onDemandPlayerView.alpha = 1.0f;
         self.queueDarkBgView.alpha = 0.0f;
-        
-        [self primeRemoteCommandCenter:NO];
-        
+
         // Make sure the larger play button is hidden ...
         if ( !self.initialPlay ) {
             [self primePlaybackUI:NO];
@@ -2845,6 +2827,11 @@ setForOnDemandUI;
     [self animatedStateForBackwardButton:back30];
     [self animatedStateForForwardButton:fwd30];
     self.scrubbingTriggerView.alpha = scrubbing ? 1.0f : 0.0f;
+
+    // Also update Remote Command Center functions
+    MPRemoteCommandCenter *rcc = [MPRemoteCommandCenter sharedCommandCenter];
+    [[rcc skipBackwardCommand] setEnabled:back30];
+    [[rcc skipForwardCommand] setEnabled:fwd30];
 }
 
 #pragma mark - XFS
@@ -3915,37 +3902,31 @@ setForOnDemandUI;
     // Dispose of any resources that can be recreated.
 }
 
-- (void)primeRemoteCommandCenter:(BOOL)forLiveStream {
+- (void)primeRemoteCommandCenter {
     MPRemoteCommandCenter *rcc = [MPRemoteCommandCenter sharedCommandCenter];
-    
-    if (forLiveStream) {
-        [[rcc previousTrackCommand] setEnabled:NO];
-        MPSkipIntervalCommand *skipBackwardIntervalCommand = [rcc skipBackwardCommand];
-        [skipBackwardIntervalCommand setEnabled:YES];
-        [skipBackwardIntervalCommand addTarget:self action:@selector(skipBackwardEvent:)];
-        skipBackwardIntervalCommand.preferredIntervals = @[@(15)];
-        
-        [[rcc nextTrackCommand] setEnabled:NO];
-        MPSkipIntervalCommand *skipForwardIntervalCommand = [rcc skipForwardCommand];
-        skipForwardIntervalCommand.preferredIntervals = @[@(15)];  // Max 99
-        [skipForwardIntervalCommand setEnabled:YES];
-        [skipForwardIntervalCommand addTarget:self action:@selector(skipForwardEvent:)];
-    } else {
-        [[rcc skipBackwardCommand] setEnabled:NO];
-        MPRemoteCommand *prevTrackCommand = [rcc previousTrackCommand];
-        [prevTrackCommand addTarget:self action:@selector(prevEpisodeTapped:)];
-        [prevTrackCommand setEnabled:YES];
-        
-        [[rcc skipForwardCommand] setEnabled:NO];
-        MPRemoteCommand *nextTrackCommand = [rcc nextTrackCommand];
-        [nextTrackCommand addTarget:self action:@selector(nextEpisodeTapped:)];
-        [nextTrackCommand setEnabled:YES];
-    }
+
+    MPSkipIntervalCommand *skipBackwardIntervalCommand = [rcc skipBackwardCommand];
+    [skipBackwardIntervalCommand setEnabled:NO];
+    [skipBackwardIntervalCommand addTarget:self action:@selector(skipBackwardEvent:)];
+    skipBackwardIntervalCommand.preferredIntervals = @[@(30)];
+
+    MPSkipIntervalCommand *skipForwardIntervalCommand = [rcc skipForwardCommand];
+    skipForwardIntervalCommand.preferredIntervals = @[@(30)];
+    [skipForwardIntervalCommand setEnabled:NO];
+    [skipForwardIntervalCommand addTarget:self action:@selector(skipForwardEvent:)];
+
+//        MPRemoteCommand *prevTrackCommand = [rcc previousTrackCommand];
+//        [prevTrackCommand addTarget:self action:@selector(prevEpisodeTapped:)];
+//        [prevTrackCommand setEnabled:YES];
+//
+//        MPRemoteCommand *nextTrackCommand = [rcc nextTrackCommand];
+//        [nextTrackCommand addTarget:self action:@selector(nextEpisodeTapped:)];
+//        [nextTrackCommand setEnabled:YES];
     
     MPRemoteCommand *pauseCommand = [rcc pauseCommand];
     [pauseCommand setEnabled:YES];
     [pauseCommand addTarget:self action:@selector(pauseTapped:)];
-    
+
     MPRemoteCommand *playCommand = [rcc playCommand];
     [playCommand setEnabled:YES];
     [playCommand addTarget:self action:@selector(playTapped:)];
