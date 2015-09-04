@@ -41,6 +41,7 @@ static const NSString *ItemStatusContext;
             singleton.interactionIdx = 0;
 
             singleton.status = [[AVStatus alloc] init];
+            singleton.nowPlaying = [[NowPlayingManager alloc] initWithStatus:singleton.status];
             
             [[NSNotificationCenter defaultCenter] addObserver:singleton
                                                          selector:@selector(handleInterruption:)
@@ -371,46 +372,6 @@ static const NSString *ItemStatusContext;
 }
 
 #pragma mark - General
-- (void)updateNowPlayingInfoWithAudio:(id)audio {
-    if (!audio) {
-        return;
-    }
-
-    NSDictionary *audioMetaData = @{};
-    if ([audio isKindOfClass:[Episode class]]) {
-        Episode *episode = (Episode*)audio;
-        if ( episode.programName && episode.title && episode.audio ) {
-            audioMetaData = @{ MPMediaItemPropertyArtist : episode.programName,
-                               MPMediaItemPropertyTitle : episode.title,
-                               MPMediaItemPropertyPlaybackDuration : episode.audio.duration };
-        }
-    } else if ([audio isKindOfClass:[Segment class]]) {
-        Segment *segment = (Segment*)audio;
-        if ( segment.programName && segment.title && segment.audio ) {
-            audioMetaData = @{ MPMediaItemPropertyArtist : segment.programName,
-                               MPMediaItemPropertyTitle : segment.title,
-                               MPMediaItemPropertyPlaybackDuration : segment.audio.duration};
-        }
-    } else if ([audio isKindOfClass:[Program class]]) {
-        Program *program = (Program*)audio;
-        if ( program.title ) {
-            audioMetaData = @{ MPMediaItemPropertyArtist : @"89.3 KPCC",
-                               MPMediaItemPropertyTitle : program.title };
-        }
-    } else if ([audio isKindOfClass:[AudioChunk class]]) {
-        AudioChunk *chunk = (AudioChunk*)audio;
-        if (chunk.programTitle && chunk.audioTitle && chunk.audioDuration) {
-            audioMetaData = @{ MPMediaItemPropertyArtist : chunk.programTitle,
-                               MPMediaItemPropertyTitle : chunk.audioTitle,
-                               MPMediaItemPropertyPlaybackDuration : chunk.audioDuration};
-        }
-    } else {
-        audioMetaData = @{ MPMediaItemPropertyArtist : @"89.3 KPCC"};
-    }
-
-    [[MPNowPlayingInfoCenter defaultCenter] setNowPlayingInfo:audioMetaData];
-}
-
 - (void)startObservingTime {
     
     AVPlayer *audioPlayer = self.audioPlayer._player;
@@ -768,6 +729,8 @@ static const NSString *ItemStatusContext;
         NSLog(@"Setting avSessionId to %@",self.avSessionId);
     }];
 
+    [self.nowPlaying setPlayer:self.audioPlayer];
+
     [self startObservingTime];
     
     if ( self.currentAudioMode != AudioModeLive ) {
@@ -801,6 +764,8 @@ static const NSString *ItemStatusContext;
     [self resetFlags];
     
     self.audioPlayer = nil;
+
+    [self.nowPlaying setPlayer:nil];
 
     self.minSeekableDate = nil;
     self.maxSeekableDate = nil;
@@ -856,29 +821,21 @@ static const NSString *ItemStatusContext;
 - (void)playQueueItem:(AudioChunk*)chunk {
     Bookmark *b = [[ContentManager shared] bookmarkForAudioChunk:chunk];
     [[QueueManager shared] setCurrentBookmark:b];
-    [self playQueueItemWithUrl:chunk.audioUrl];
-}
 
-- (void)playQueueItemWithUrl:(NSString *)url {
-    
-#ifdef DEBUG
-    NSLog(@"playing queue item with url: %@", url);
-#endif
-    
-    if ( !url ) {
+    if (!chunk.audioUrl) {
         if ( [self.delegate respondsToSelector:@selector(onDemandAudioFailed)] ) {
             [self.delegate onDemandAudioFailed];
         }
         return;
     }
-    
+
+    [self.nowPlaying setAudio:chunk];
+
     [[SessionManager shared] startOnDemandSession];
     [[[Utils del] masterViewController] showOnDemandOnboarding];
-    
-    [self playAudioWithURL:url];
-    
-}
 
+    [self playAudioWithURL:chunk.audioUrl];
+}
 
 - (void)playLiveStream {
     [[QueueManager shared] setCurrentBookmark:nil];
@@ -911,7 +868,9 @@ static const NSString *ItemStatusContext;
 
 - (BOOL)isPlayingAudio {
     // FIXME: How should we be computing this?
-    return [self.audioPlayer._player rate] > 0.0f;
+    return [self.status playing];
+
+//    return [self.audioPlayer._player rate] > 0.0f;
 }
 
 - (BOOL)isActiveForAudioMode:(AudioMode)mode {

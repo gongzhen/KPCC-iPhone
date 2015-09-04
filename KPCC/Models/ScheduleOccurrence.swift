@@ -17,6 +17,8 @@ import CoreData
     @NSManaged var program_slug:String;
     @NSManaged var soft_starts_at:NSDate;
 
+    @objc var duration:NSTimeInterval = 0
+
     class func entityName() -> String {
         return "ScheduleOccurrence"
     }
@@ -45,6 +47,9 @@ import CoreData
         self.public_url = public_url
         self.program_slug = program_slug
         self.soft_starts_at = soft_starts_at
+
+        // compute duration
+        self.duration = self.ends_at.timeIntervalSinceReferenceDate - self.starts_at.timeIntervalSinceReferenceDate
     }
 
     //----------

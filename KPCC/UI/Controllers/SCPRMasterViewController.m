@@ -2220,7 +2220,7 @@ setForOnDemandUI;
     if (program != nil) {
         self.onDemandProgram = program;
         self.onDemandEpUrl = audioChunk.contentShareUrl;
-        [[AudioManager shared] updateNowPlayingInfoWithAudio:audioChunk];
+        [[[AudioManager shared] nowPlaying] setAudio:audioChunk];
         [[DesignManager shared] loadProgramImage:program.program_slug
                                     andImageView:self.programImageView
                                       completion:^(BOOL status) {
@@ -2289,7 +2289,9 @@ setForOnDemandUI;
                                       completion:^(BOOL status) {
                                           
                                           [self updateUIWithProgram:programObj];
-                                          [[AudioManager shared] updateNowPlayingInfoWithAudio:programObj];
+                                          AudioChunk *chunk = [[AudioChunk alloc] initWithScheduleOccurrence:programObj];
+                                          [[[AudioManager shared] nowPlaying] setAudio:chunk];
+//                                          [[AudioManager shared] updateNowPlayingInfoWithAudio:programObj];
                                           [self finishUpdatingForProgram];
                                           dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
                                               UIImage *blurred = [self.programImageView.image blurredImageWithRadius:20.0f
@@ -3507,7 +3509,8 @@ setForOnDemandUI;
     if ((self.queueContents)[newPage]) {
         AudioChunk *chunk = (self.queueContents)[newPage];
         self.onDemandEpUrl = chunk.contentShareUrl;
-        [[AudioManager shared] updateNowPlayingInfoWithAudio:chunk];
+
+        [[[AudioManager shared] nowPlaying] setAudio:chunk];
     }
     
     if (self.queueCurrentPage != newPage) {

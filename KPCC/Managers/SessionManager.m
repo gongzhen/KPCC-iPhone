@@ -617,21 +617,20 @@
     if ( [[AudioManager shared] currentAudioMode] == AudioModeOnDemand ) return;
     
     if ( force ) {
-        [self processTimer:nil];
+        [self fetchCurrentSchedule:^(id returnedObject) {
+
+        }];
+
         return;
     }
-    
-    NSDate *ct = [self vNow];
-    NSTimeInterval ctInSeconds = [ct timeIntervalSince1970];
+
     ScheduleOccurrence *s = self.currentSchedule;
-    if ( s ) {
-        NSDate *ends = s.ends_at;
-        NSTimeInterval eaInSeconds = [ends timeIntervalSince1970];
-        if ( (ctInSeconds*1.0f) >= eaInSeconds ) {
-            [self processTimer:nil];
-        }
+    if ( s && [s containsDate:[self vNow]]) {
+        // we're good
     } else {
-        [self processTimer:nil];
+        [self fetchCurrentSchedule:^(id returnedObject) {
+
+        }];
     }
     
 }
@@ -907,10 +906,6 @@
 }
 
 - (void)processTimer:(NSTimer*)timer {
-    [self setUpdaterArmed:YES];
-    [self fetchCurrentSchedule:^(id returnedObject) {
-        
-    }];
 }
 
 - (void)handleSessionMovingToBackground {

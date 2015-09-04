@@ -14,8 +14,11 @@
 typedef NS_ENUM(NSUInteger, AudioType) {
     AudioTypeEpisode = 0,
     AudioTypeSegment,
+    AudioTypeLiveStream,
     AudioTypeUnknown
 };
+
+@class ScheduleOccurrence;
 
 @interface AudioChunk : NSObject
 
@@ -30,5 +33,6 @@ typedef NS_ENUM(NSUInteger, AudioType) {
 
 - (instancetype)initWithEpisode:(Episode *)episode NS_DESIGNATED_INITIALIZER;
 - (instancetype)initWithSegment:(Segment *)segment NS_DESIGNATED_INITIALIZER;
+- (instancetype)initWithScheduleOccurrence:(ScheduleOccurrence *)sched NS_DESIGNATED_INITIALIZER;
 
 @end

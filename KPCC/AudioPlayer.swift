@@ -191,47 +191,58 @@ public struct AudioPlayerObserver<T> {
                         return
                     }
 
-                    let curDate = self._player.currentItem!.currentDate()
-
-                    var buffered: Double? = nil
-
-                    if !self._player.currentItem!.loadedTimeRanges.isEmpty {
-                        let loaded_range = self._player.currentItem!.loadedTimeRanges[0].CMTimeRangeValue
-                        buffered = CMTimeGetSeconds(CMTimeSubtract(CMTimeRangeGetEnd(loaded_range), time))
-                    }
-
-                    if curDate != nil {
-                        // This should be a stream session, with dates
-
-                        var seek_range: CMTimeRange
-                        var minDate: NSDate? = nil
-                        var maxDate: NSDate? = nil
-
-                        if !self._player.currentItem!.seekableTimeRanges.isEmpty {
-                            seek_range = self._player.currentItem!.seekableTimeRanges[0].CMTimeRangeValue
-
-                            // these calculations assume no discontinuities in the playlist data
-                            // FIXME: We really want to get these from the playlist... There has to be a way to get there
-                            minDate = NSDate(timeInterval: -1 * (CMTimeGetSeconds(time) - CMTimeGetSeconds(seek_range.start)), sinceDate:curDate!)
-                            maxDate = NSDate(timeInterval: CMTimeGetSeconds(CMTimeRangeGetEnd(seek_range)) - CMTimeGetSeconds(time), sinceDate:curDate!)
-                        }
-
-                        let dates = StreamDates(curDate: curDate!, minDate: minDate, maxDate: maxDate, buffered:buffered)
-
-                        self.currentDates = dates
-
-                        self.oTime.notify(dates)
-                    } else {
-                        // This is likely to be on-demand
-
-                        let duration = self.duration()
-
-                        let dates = StreamDates(curTime:time, duration:duration)
-
-                        self.oTime.notify(dates)
-                    }
+                    self._computeStreamDates()
             })
         }
+    }
+
+    //----------
+
+    private func _computeStreamDates() -> Void {
+        let time = self._player.currentItem!.currentTime()
+
+        let curDate = self._player.currentItem!.currentDate()
+
+        var buffered: Double? = nil
+
+        if !self._player.currentItem!.loadedTimeRanges.isEmpty {
+            let loaded_range = self._player.currentItem!.loadedTimeRanges[0].CMTimeRangeValue
+            buffered = CMTimeGetSeconds(CMTimeSubtract(CMTimeRangeGetEnd(loaded_range), time))
+        }
+
+        if curDate != nil {
+            // This should be a stream session, with dates
+
+            var seek_range: CMTimeRange
+            var minDate: NSDate? = nil
+            var maxDate: NSDate? = nil
+
+            if !self._player.currentItem!.seekableTimeRanges.isEmpty {
+                seek_range = self._player.currentItem!.seekableTimeRanges[0].CMTimeRangeValue
+
+                // these calculations assume no discontinuities in the playlist data
+                // FIXME: We really want to get these from the playlist... There has to be a way to get there
+                minDate = NSDate(timeInterval: -1 * (CMTimeGetSeconds(time) - CMTimeGetSeconds(seek_range.start)), sinceDate:curDate!)
+                maxDate = NSDate(timeInterval: CMTimeGetSeconds(CMTimeRangeGetEnd(seek_range)) - CMTimeGetSeconds(time), sinceDate:curDate!)
+            }
+
+            let dates = StreamDates(curDate: curDate!, minDate: minDate, maxDate: maxDate, buffered:buffered)
+
+            NSLog("_computeStreamDates emiting date of \(curDate)")
+
+            self.currentDates = dates
+
+            self.oTime.notify(dates)
+        } else {
+            // This is likely to be on-demand
+
+            let duration = self.duration()
+
+            let dates = StreamDates(curTime:time, duration:duration)
+
+            self.oTime.notify(dates)
+        }
+
     }
 
     //----------
@@ -514,6 +525,7 @@ public struct AudioPlayerObserver<T> {
 
             let seek_time = CMTimeAdd(self._player.currentItem!.currentTime(), CMTimeMakeWithSeconds(interval, 10))
             self._player.currentItem!.seekToTime(seek_time, toleranceBefore:kCMTimeZero, toleranceAfter:kCMTimeZero) {finished in
+                self._computeStreamDates()
                 self._setStatus(.Playing)
                 completion?(finished)
 //                self._emitEvent("seekByInterval landed \(self._dateFormat.stringFromDate(self._player.currentItem!.currentDate()!))")
@@ -556,10 +568,12 @@ public struct AudioPlayerObserver<T> {
                 self._player.play()
             }
 
-            let playFunc = { () -> Void in
+            let playFunc = { (finished:Bool) -> Void in
                 // we're already "playing". Just change our status
                 // FIXME: Add volume management?
+                self._computeStreamDates()
                 self._setStatus(.Playing)
+                completion?(finished)
             }
 
             // Set up common code for testing our landing position
@@ -574,17 +588,15 @@ public struct AudioPlayerObserver<T> {
                     if abs( Int(date.timeIntervalSinceReferenceDate - landed.timeIntervalSinceReferenceDate) ) <= self.seekTolerance {
                         // success! start playing
                         self._emitEvent(fsig+"hitting play")
-                        playFunc()
+                        playFunc(true)
 
-                        completion?(true)
                     } else {
                         // not quite... try again, as long as we have retries
                         if self._interactionIdx == seek_id {
                             switch retries {
                             case 0:
                                 self._emitEvent("seekToDate ran out of retries. Playing from here.")
-                                playFunc()
-                                completion?(true)
+                                playFunc(true)
                             case 1:
                                 // last try always uses time
                                 self._seekToDate(date, retries: retries-1, useTime:true, completion:completion)
@@ -602,7 +614,7 @@ public struct AudioPlayerObserver<T> {
                         switch retries {
                         case 0:
                             self._emitEvent("seekToDate is out of retries")
-                            completion?(false)
+                            playFunc(false)
 
                         case 1:
                             self._seekToDate(date, retries: retries-1, useTime:true, completion:completion)
@@ -610,7 +622,7 @@ public struct AudioPlayerObserver<T> {
                             self._seekToDate(date, retries: retries-1, completion:completion)
                         }
                     } else {
-                        completion?(false)
+                        playFunc(false)
                     }
                 }
             }
@@ -681,11 +693,15 @@ public struct AudioPlayerObserver<T> {
                 return;
             }
 
+            self._setStatus(.Seeking)
+
             if self._player.rate != 1.0 {
                 self._player.play()
             }
 
             self._player.currentItem!.seekToTime(time) { finished in
+                self._computeStreamDates()
+                self._setStatus(.Playing)
                 completion?(finished)
             }
         }

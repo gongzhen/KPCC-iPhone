@@ -12,6 +12,7 @@
 		07EB395E1B9723ED005A8DDB /* AudioPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07EB395D1B9723ED005A8DDB /* AudioPlayer.swift */; settings = {ASSET_TAGS = (); }; };
 		07EB39601B9731BC005A8DDB /* AVObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07EB395F1B9731BC005A8DDB /* AVObserver.swift */; settings = {ASSET_TAGS = (); }; };
 		07EB39621B973200005A8DDB /* AVStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07EB39611B973200005A8DDB /* AVStatus.swift */; settings = {ASSET_TAGS = (); }; };
+		07EB39641B989A09005A8DDB /* NowPlayingManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07EB39631B989A09005A8DDB /* NowPlayingManager.swift */; settings = {ASSET_TAGS = (); }; };
 		25263A881A32669E00BD5FF9 /* onboarding3.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 25263A871A32669E00BD5FF9 /* onboarding3.mp3 */; };
 		253030151B717CDD00B88468 /* SCPRProfileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 253030131B717CDD00B88468 /* SCPRProfileViewController.m */; };
 		253030161B717CDD00B88468 /* SCPRProfileViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 253030141B717CDD00B88468 /* SCPRProfileViewController.xib */; };
@@ -345,6 +346,7 @@
 		07EB395D1B9723ED005A8DDB /* AudioPlayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioPlayer.swift; sourceTree = "<group>"; };
 		07EB395F1B9731BC005A8DDB /* AVObserver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AVObserver.swift; sourceTree = "<group>"; };
 		07EB39611B973200005A8DDB /* AVStatus.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AVStatus.swift; sourceTree = "<group>"; };
+		07EB39631B989A09005A8DDB /* NowPlayingManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NowPlayingManager.swift; sourceTree = "<group>"; };
 		1B29166D1072B92AE58CD1BB /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 		25263A871A32669E00BD5FF9 /* onboarding3.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = onboarding3.mp3; path = Audio/onboarding3.mp3; sourceTree = "<group>"; };
 		253030121B717CDD00B88468 /* SCPRProfileViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCPRProfileViewController.h; path = SSO/SCPRProfileViewController.h; sourceTree = "<group>"; };
@@ -1484,6 +1486,7 @@
 				07EB395F1B9731BC005A8DDB /* AVObserver.swift */,
 				07EB39611B973200005A8DDB /* AVStatus.swift */,
 				07EB395D1B9723ED005A8DDB /* AudioPlayer.swift */,
+				07EB39631B989A09005A8DDB /* NowPlayingManager.swift */,
 			);
 			name = Managers;
 			sourceTree = "<group>";
@@ -1574,7 +1577,7 @@
 				ORGANIZATIONNAME = SCPR;
 				TargetAttributes = {
 					76A308C218C8FB940065D4B1 = {
-						DevelopmentTeam = 6N8RT3FVF6;
+						DevelopmentTeam = SXALEDSVFU;
 						SystemCapabilities = {
 							com.apple.BackgroundModes = {
 								enabled = 1;
@@ -1962,6 +1965,7 @@
 				25BBCD771A892D730015071E /* SCPRScrubbingUIViewController.m in Sources */,
 				25F2BC7E1A3B9B4D00108F73 /* SCPRGenericAvatarViewController.m in Sources */,
 				5248858E19CBA180005F59CC /* EpisodeAudio.m in Sources */,
+				07EB39641B989A09005A8DDB /* NowPlayingManager.swift in Sources */,
 				523E86D019C8A292006FC366 /* SCPRProgramDetailViewController.m in Sources */,
 				258FC47E1A01915E00282D59 /* UIColor+UICustom.m in Sources */,
 				258BD3B11A0C0FFF00E7560F /* SCPRProgressViewController.m in Sources */,
@@ -2104,8 +2108,9 @@
 				CLANG_CXX_LIBRARY = "libstdc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_WARN_ENUM_CONVERSION = NO;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Southern California Public Radio";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Southern California Public Radio";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -2259,7 +2264,7 @@
 					"\"UIKit\"",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "7de88d41-fd13-4035-a8ee-18dabe63e82c";
+				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "KPCC/UI/Controllers/KPCC-Bridging-Header.h";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
@@ -2468,8 +2473,9 @@
 				CLANG_CXX_LIBRARY = "libstdc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_WARN_ENUM_CONVERSION = NO;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Southern California Public Radio (SXALEDSVFU)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Southern California Public Radio (SXALEDSVFU)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -2624,7 +2630,7 @@
 					"\"UIKit\"",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "c7ce98c4-6bbb-40da-9762-1ee2c05d3016";
+				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "KPCC/UI/Controllers/KPCC-Bridging-Header.h";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
@@ -2873,8 +2879,9 @@
 				CLANG_CXX_LIBRARY = "libstdc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_WARN_ENUM_CONVERSION = NO;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Reed DeLapp (2L3CQSAF79)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Reed DeLapp (2L3CQSAF79)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -3028,7 +3035,7 @@
 					"\"UIKit\"",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "b328a2ff-6d3c-4aef-9c24-47d0cdcafc00";
+				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "KPCC/UI/Controllers/KPCC-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				TARGETED_DEVICE_FAMILY = 1;
@@ -3047,8 +3054,9 @@
 				CLANG_CXX_LIBRARY = "libstdc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_WARN_ENUM_CONVERSION = NO;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Southern California Public Radio (SXALEDSVFU)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Southern California Public Radio (SXALEDSVFU)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -3203,7 +3211,7 @@
 					"\"UIKit\"",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "45c63c60-e0e7-43dc-8945-6bb797ec74ae";
+				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "KPCC/UI/Controllers/KPCC-Bridging-Header.h";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;

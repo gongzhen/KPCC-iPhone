@@ -38,19 +38,19 @@ public struct KPCCPlayerObserver<T> {
     var _prevStatus: AudioStatus    = AudioStatus.New
     var _status: AudioStatus        = AudioStatus.New
 
-    @objc func observe(o:(AudioStatus) -> Void) -> Void {
+    func observe(o:(AudioStatus) -> Void) -> Void {
         self.oStatus.addObserver(o)
     }
 
-    @objc func status() -> AudioStatus {
+    func status() -> AudioStatus {
         return self._status
     }
 
-    @objc func toString() -> NSString {
+    func toString() -> NSString {
         return self._status.toString()
     }
 
-    @objc func setStatus(s:AudioStatus) -> Void {
+    func setStatus(s:AudioStatus) -> Void {
         if !(self._status == s) {
             self._prevStatus = self._status
             self._status = s
@@ -59,9 +59,18 @@ public struct KPCCPlayerObserver<T> {
         }
     }
 
-    @objc func stopped() -> Bool {
+    func stopped() -> Bool {
         switch (self._status) {
         case .New, .Stopped, .Error:
+            return true
+        default:
+            return false
+        }
+    }
+
+    func playing() -> Bool {
+        switch (self._status) {
+        case .Playing, .Waiting, .Seeking:
             return true
         default:
             return false

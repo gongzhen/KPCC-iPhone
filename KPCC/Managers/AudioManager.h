@@ -90,6 +90,7 @@ typedef NS_ENUM(NSUInteger, StreamStatus) {
 @property AVObserver *avobserver;
 @property NSString *avSessionId;
 @property AVStatus *status;
+@property NowPlayingManager *nowPlaying;
 
 //@property StreamStatus status;
 @property long lastPreRoll;
