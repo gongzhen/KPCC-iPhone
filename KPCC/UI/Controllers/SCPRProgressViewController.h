@@ -17,6 +17,7 @@ static NSInteger kThrottlingValue = 5;
 + (SCPRProgressViewController*)o;
 - (void)displayWithProgram:(ScheduleOccurrence*)program onView:(UIView*)viewController aboveSiblingView:(UIView*)anchorView;
 - (void)tick;
+- (void)update;
 - (void)hide;
 - (void)show;
 - (void)show:(BOOL)force;
@@ -49,7 +50,6 @@ static NSInteger kThrottlingValue = 5;
 @property BOOL firstTickFinished;
 @property BOOL uiHidden;
 @property BOOL freezeBit;
-@property BOOL mutex;
 @property NSInteger counter;
 
 @end

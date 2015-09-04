@@ -243,12 +243,51 @@
     
 }
 
+- (void)update {
+    NSDictionary *p = [[SessionManager shared] onboardingAudio];
+    ScheduleOccurrence *program = [[SessionManager shared] currentSchedule];
+
+    NSDate *currentDate = [[[AudioManager shared] audioPlayer] currentDate];
+    NSTimeInterval beginning = [program.soft_starts_at timeIntervalSince1970];
+    if ( [[AudioManager shared] currentAudioMode] == AudioModeOnboarding ) {
+        beginning = 0;
+    }
+
+    NSTimeInterval end = [program.ends_at timeIntervalSince1970];
+    if ( [[AudioManager shared] currentAudioMode] == AudioModeOnboarding ) {
+        end = beginning + [p[@"duration"] intValue];
+    }
+
+    NSTimeInterval duration = ( end - beginning );
+    if ( [[AudioManager shared] currentAudioMode] == AudioModeOnboarding ) {
+        duration = [p[@"duration"] intValue];
+    }
+
+
+    NSTimeInterval live = [[[SessionManager shared] vLive] timeIntervalSince1970];
+
+    if ( [[AudioManager shared] currentAudioMode] == AudioModeOnboarding ) {
+        live = CMTimeGetSeconds([[[AudioManager shared] audioPlayer] currentTime]);
+    }
+
+    NSTimeInterval current = [currentDate timeIntervalSince1970];
+    if ( [[AudioManager shared] currentAudioMode] == AudioModeOnboarding ) {
+        current = live;
+    }
+
+    NSTimeInterval liveDiff = ( live - beginning );
+    NSTimeInterval currentDiff = ( current - beginning );
+
+    dispatch_async(dispatch_get_main_queue(), ^{
+        self.currentBarLine.strokeEnd = (currentDiff / duration)*1.0f;
+        self.liveBarLine.strokeEnd = (liveDiff / duration)*1.0f;
+    });
+}
+
 
 - (void)tick {
-    
     if ( self.shuttling ) return;
-    if ( self.mutex ) return;
-    
+
     if ( [[AudioManager shared] currentAudioMode] != AudioModeOnboarding ) {
         self.throttle++;
         if ( self.throttle % kThrottlingValue != 0 ) {
@@ -257,60 +296,13 @@
             self.throttle = 1;
         }
     }
-    
+
     if ( [[AudioManager shared] currentAudioMode] == AudioModeOnDemand ) {
         [self hide];
         return;
     }
     
-    NSDictionary *p = [[SessionManager shared] onboardingAudio];
-    ScheduleOccurrence *program = [[SessionManager shared] currentSchedule];
-    
-    NSDate *currentDate = [[[AudioManager shared] audioPlayer] currentDate];
-    NSTimeInterval beginning = [program.soft_starts_at timeIntervalSince1970];
-    if ( [[AudioManager shared] currentAudioMode] == AudioModeOnboarding ) {
-        beginning = 0;
-    }
-    
-    NSTimeInterval end = [program.ends_at timeIntervalSince1970];
-    if ( [[AudioManager shared] currentAudioMode] == AudioModeOnboarding ) {
-        end = beginning + [p[@"duration"] intValue];
-    }
-    
-    NSTimeInterval duration = ( end - beginning );
-    if ( [[AudioManager shared] currentAudioMode] == AudioModeOnboarding ) {
-        duration = [p[@"duration"] intValue];
-    }
-    
-
-#ifndef SUPPRESS_V_LIVE
-    NSTimeInterval live = [[[SessionManager shared] vLive] timeIntervalSince1970];
-#else
-    NSTimeInterval live = [[NSDate date] timeIntervalSince1970];
-#endif
-
-    /*if ( [[SessionManager shared] secondsBehindLive] <= [[SessionManager shared] peakDrift] ) {
-        live -= [[SessionManager shared] secondsBehindLive];
-    }*/
-    
-    if ( [[AudioManager shared] currentAudioMode] == AudioModeOnboarding ) {
-        live = CMTimeGetSeconds([[[AudioManager shared] audioPlayer] currentTime]);
-        
-    }
-    
-    NSTimeInterval current = [currentDate timeIntervalSince1970];
-    if ( [[AudioManager shared] currentAudioMode] == AudioModeOnboarding ) {
-        current = live;
-    }
-    
-    NSTimeInterval liveDiff = ( live - beginning );
-    NSTimeInterval currentDiff = ( current - beginning );
-    
-    dispatch_async(dispatch_get_main_queue(), ^{
-        self.currentBarLine.strokeEnd = (currentDiff / duration)*1.0f;
-        self.liveBarLine.strokeEnd = (liveDiff / duration)*1.0f;
-    });
-    
+    [self update];
     
 }
 

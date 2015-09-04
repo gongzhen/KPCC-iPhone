@@ -1673,6 +1673,10 @@ setForOnDemandUI;
 }
 
 - (void)finishedWithScrubber {
+    [self.liveProgressViewController update];
+    [self tickOnDemand];
+    [self prettifyBehindLiveStatus];
+    [self adjustScrubbingState];
     
     [self wipeTargetsForScrubButtons];
     
