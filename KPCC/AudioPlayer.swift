@@ -570,7 +570,7 @@ public struct AudioPlayerObserver<T> {
                 self._player.play()
             }
 
-            let seek_time = CMTimeAdd(self._player.currentItem!.currentTime(), CMTimeMakeWithSeconds(interval, 10))
+            let seek_time = CMTimeAdd(self._player.currentItem!.currentTime(), CMTimeMakeWithSeconds(interval, 1000))
             self._player.currentItem!.seekToTime(seek_time, toleranceBefore:kCMTimeZero, toleranceAfter:kCMTimeZero) {finished in
                 self._computeStreamDates()
                 self._setStatus(.Playing)
@@ -684,7 +684,7 @@ public struct AudioPlayerObserver<T> {
             // also, a cold seek with seekToDate never works, so start with seekToTime
 
             if (cold || useTime || abs(offsetSeconds) < 60) {
-                let seek_time = CMTimeAdd(self._player.currentItem!.currentTime(), CMTimeMakeWithSeconds(offsetSeconds, 10))
+                let seek_time = CMTimeAdd(self._player.currentItem!.currentTime(), CMTimeMakeWithSeconds(offsetSeconds, 1000))
                 self._emitEvent(fsig+"seeking \(offsetSeconds) seconds.")
                 self._player.currentItem!.seekToTime(seek_time, toleranceBefore:kCMTimeZero, toleranceAfter:kCMTimeZero, completionHandler:testLanding)
             } else {
