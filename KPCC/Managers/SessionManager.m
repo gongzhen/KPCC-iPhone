@@ -119,9 +119,6 @@
         sbl = 0.0f;
     }
 
-    NSLog(@"vSecBehindLive is %f",sbl);
-    NSLog(@"Playhead is at %@. vLive is %@", [[AudioManager shared].audioPlayer currentDate], [[SessionManager shared] vLive]);
-
     return (NSTimeInterval)sbl;
 }
 

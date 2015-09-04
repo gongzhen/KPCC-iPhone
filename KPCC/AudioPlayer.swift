@@ -228,8 +228,6 @@ public struct AudioPlayerObserver<T> {
 
             let dates = StreamDates(curDate: curDate!, minDate: minDate, maxDate: maxDate, buffered:buffered)
 
-            NSLog("_computeStreamDates emiting date of \(curDate)")
-
             self.currentDates = dates
 
             self.oTime.notify(dates)

@@ -1813,8 +1813,6 @@ setForOnDemandUI;
     }
 
     NSTimeInterval ti = [[[SessionManager shared] vLive] timeIntervalSinceDate:ciCurrentDate];
-    NSLog(@"Time interval is %f",ti);
-    NSLog(@"vLive returned %@",[[SessionManager shared] vLive]);
 
     // EWR: Does this come into play for onboarding? i'm assuming 48 hours is to get 0
     if ( ti > 60*60*48 ) {
