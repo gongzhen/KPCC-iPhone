@@ -44,7 +44,6 @@ static NSInteger kCancelSleepTimerAlertTag = 44839;
 
 @property BOOL initialPlay;
 @property BOOL setPlaying;
-@property BOOL seekRequested;
 @property BOOL busyZoomAnim;
 @property BOOL jogging;
 @property BOOL setForLiveStreamUI;
@@ -70,7 +69,6 @@ static NSInteger kCancelSleepTimerAlertTag = 44839;
 @implementation SCPRMasterViewController
 
 @synthesize pulldownMenu,
-seekRequested,
 initialPlay,
 setPlaying,
 busyZoomAnim,
@@ -976,7 +974,7 @@ setForOnDemandUI;
             [[NetworkManager shared] fetchTritonAd:nil completion:^(TritonAd *tritonAd) {
                 if (tritonAd) {
                     self.preRollViewController.tritonAd = tritonAd;
-                    [[AudioManager shared] setSmooth:NO];
+//                    [[AudioManager shared] setSmooth:NO];
 
                     [self cloakForPreRoll:YES];
                     [self.preRollViewController primeUI:^{
@@ -1006,10 +1004,6 @@ setForOnDemandUI;
 }
 
 - (IBAction)playOrPauseTapped:(id)sender {
-    if (seekRequested) {
-        seekRequested = NO;
-    }
-    
     if ( [[AudioManager shared] currentAudioMode] == AudioModePreroll ) {
         [self handlePreRollControl:([self.preRollViewController.prerollPlayer rate] == 0.0)];
         return;
@@ -1182,14 +1176,12 @@ setForOnDemandUI;
 }
 
 - (void)rewindFifteen {
-    seekRequested = YES;
     [[AudioManager shared] backwardSeekFifteenSecondsWithCompletion:^{
         
     }];
 }
 
 - (void)fastForwardFifteen {
-    seekRequested = YES;
     [[AudioManager shared] forwardSeekFifteenSecondsWithCompletion:^{
         
     }];
@@ -1311,7 +1303,6 @@ setForOnDemandUI;
     
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.6f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         
-        seekRequested = YES;
         switch (distance) {
             case RewindDistanceFifteen:
                 [self rewindFifteen];
@@ -1394,7 +1385,6 @@ setForOnDemandUI;
     
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.66 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         
-        seekRequested = YES;
         [[AudioManager shared] forwardSeekLiveWithType:ScrubbingTypeBackToLive
                                             completion:nil];
         
@@ -1970,35 +1960,6 @@ setForOnDemandUI;
     }
     
     [self primeManualControlButton];
-}
-
-/**
- * Dev note: Not being called for now.. zooms in background program image slightly
- */
-- (void)scaleBackgroundImage {
-    POPSpringAnimation *scaleAnimation = [POPSpringAnimation animationWithPropertyNamed:kPOPLayerScaleXY];
-    
-    if ([[AudioManager shared] isStreamPlaying] || [[AudioManager shared] isStreamBuffering]) {
-        scaleAnimation.fromValue  = [NSValue valueWithCGSize:CGSizeMake(1.0f, 1.0f)];
-        scaleAnimation.toValue  = [NSValue valueWithCGSize:CGSizeMake(1.2f, 1.2f)];
-    } else {
-        scaleAnimation.fromValue  = [NSValue valueWithCGSize:CGSizeMake(1.2f, 1.2f)];
-        scaleAnimation.toValue  = [NSValue valueWithCGSize:CGSizeMake(1.0f, 1.0f)];
-    }
-    
-    scaleAnimation.springBounciness = 2.0f;
-    scaleAnimation.springSpeed = 2.0f;
-    
-    // Used to ensure animation only gets started once.
-    // This method stems from onRateChange: firing, which sometimes gets called rapidly.
-    [scaleAnimation setCompletionBlock:^(POPAnimation *animation, BOOL done) {
-        busyZoomAnim = NO;
-    }];
-    
-    if (!seekRequested && !busyZoomAnim) {
-        busyZoomAnim = YES;
-        [self.programImageView.layer pop_addAnimation:scaleAnimation forKey:@"scaleAnimation"];
-    }
 }
 
 - (void)setLiveStreamingUI:(BOOL)animated {
@@ -3338,6 +3299,8 @@ setForOnDemandUI;
         if (self.preRollOpen) {
             [self decloakForPreRoll:YES];
         }
+
+        [[AudioManager shared] setSmooth:YES];
         
         if ( self.initiateRewind ) {
             [self activateRewind:RewindDistanceBeginning];

@@ -109,7 +109,6 @@ typedef NS_ENUM(NSUInteger, StreamStatus) {
 @property CGFloat savedVolumeFromMute;
 @property Float64 onDemandSeekPosition;
 
-@property BOOL seekRequested;
 @property BOOL easeInAudio;
 @property BOOL waitForSeek;
 @property BOOL waitForOnDemandSeek;

@@ -401,17 +401,7 @@ static const NSString *ItemStatusContext;
             if ( [[SessionManager shared] dateIsReasonable:weakSelf.currentDate] ) {
                 [[SessionManager shared] setLastValidCurrentPlayerTime:weakSelf.currentDate];
             }
-            weakSelf.seekWillAffectBuffer = NO;
             weakSelf.audioOutputSourceChanging = NO;
-        }
-        
-        if ( weakSelf.dropoutOccurred ) {
-            weakSelf.dropoutOccurred = NO;
-#ifndef SUPPRESS_BITRATE_THROTTLING
-            if ( [Utils isIOS8] ) {
-                weakAudioPlayer.currentItem.preferredPeakBitRate = kPreferredPeakBitRateTolerance;
-            }
-#endif
         }
 
         NSArray *seekRange = weakAudioPlayer.currentItem.seekableTimeRanges;
@@ -438,16 +428,12 @@ static const NSString *ItemStatusContext;
 
             weakSelf.minSeekableDate = [NSDate dateWithTimeInterval:( -1 * (CMTimeGetSeconds(time) - CMTimeGetSeconds(range.start))) sinceDate:weakSelf.currentDate];
             weakSelf.maxSeekableDate = [NSDate dateWithTimeInterval:(CMTimeGetSeconds(CMTimeRangeGetEnd(range)) - CMTimeGetSeconds(time)) sinceDate:weakSelf.currentDate];
-//            NSLog(@"Range is %@ - %@",weakSelf.minSeekableDate,weakSelf.maxSeekableDate);
-//            CMTimeRangeShow(range);
 
             if ( weakSelf.frameCount % 10 == 0 ) {
                 if ( weakSelf.currentAudioMode == AudioModeOnDemand ) {
                     [[QueueManager shared] handleBookmarkingActivity];
                 }
                 
-                weakSelf.seekWillAffectBuffer = NO;
-                weakSelf.seekRequested = NO;
                 weakSelf.appGaveUp = NO;
                 
                 if ( [[SessionManager shared] sleepTimerArmed] ) {
@@ -918,7 +904,7 @@ static const NSString *ItemStatusContext;
     }
     
     if ( [self currentAudioMode] == AudioModeOnboarding ) {
-//        self.audioPlayer.volume = 0.0f;
+        self.audioPlayer.volume = 0.0f;
     }
     
     [self setUserPause:NO];
@@ -927,13 +913,12 @@ static const NSString *ItemStatusContext;
     [[SessionManager shared] setSessionPausedDate:nil];
 
     if ( self.smooth ) {
-//        self.savedVolume = self.audioPlayer.volume;
+        self.savedVolume = self.audioPlayer.volume;
         if ( self.savedVolume <= 0.0 ) {
             self.savedVolume = 1.0f;
         }
 
-        // FIXME: Reintroduce volume management
-//        self.audioPlayer.volume = 0.0f;
+        self.audioPlayer.volume = 0.0f;
     }
 
     [self.audioPlayer play];
@@ -993,22 +978,12 @@ static const NSString *ItemStatusContext;
 
 - (void)finishSwitchPlusMinus {
     if ( [self isActiveForAudioMode:AudioModeLive] ) {
-        if ( self.seekWillAffectBuffer ) {
-            
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.25f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                [[AudioManager shared] stopAudio];
-                [[AudioManager shared] setSmooth:YES];
-                [[AudioManager shared] playAudio];
-            });
-            
-        } else {
-            [self adjustAudioWithValue:-0.1f
-                            completion:^{
-                                [[AudioManager shared] stopAudio];
-                                [[AudioManager shared] setSmooth:YES];
-                                [[AudioManager shared] playAudio];
-                            }];
-        }
+        [self adjustAudioWithValue:-0.1f
+                        completion:^{
+                            [[AudioManager shared] stopAudio];
+                            [[AudioManager shared] setSmooth:YES];
+                            [[AudioManager shared] playAudio];
+                        }];
     }
 }
 

@@ -147,7 +147,15 @@ public struct AudioPlayerObserver<T> {
 
     //var _sessions:AudioSessionTracker? = nil
 
-    var volume:Double = 1.0;
+    var volume:Float {
+        get {
+            return self._player.volume
+        }
+
+        set {
+            self._player.volume = newValue
+        }
+    }
 
     //----------
 
