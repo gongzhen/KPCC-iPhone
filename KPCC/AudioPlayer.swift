@@ -256,7 +256,11 @@ public struct AudioPlayerObserver<T> {
             self._emitEvent("Item failed with error: \(msg)")
             self.stop()
         case .Stalled:
-            if self.currentDates!.hasDates() {
+            if self.status == .Seeking {
+                return;
+            }
+
+            if (self.currentDates != nil && self.currentDates!.hasDates()) {
                 self._emitEvent("Playback stalled at \(self._dateFormat.stringFromDate(self.currentDates!.curDate!)).")
             } else {
                 self._emitEvent("ONDEMAND AUDIO STALL?")

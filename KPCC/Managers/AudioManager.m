@@ -804,21 +804,9 @@ static const NSString *ItemStatusContext;
                                                   object:nil];
 }
 
-
-- (void)playAudioWithURL:(NSString *)url {
-    
-    if ( [url rangeOfString:@"?"].location == NSNotFound ) {
-        url = [url stringByAppendingString:[NSString stringWithFormat:@"?ua=KPCCiPhone-%@",[Utils urlSafeVersion]]];
-    } else {
-        url = [url stringByAppendingString:[NSString stringWithFormat:@"&ua=KPCCiPhone-%@", [Utils urlSafeVersion]]];
-    }
-
-    [self stopAudio];
-    [self buildStreamer:url];
-    [self playAudio];
-}
-
 - (void)playQueueItem:(AudioChunk*)chunk {
+    [self stopAudio];
+
     Bookmark *b = [[ContentManager shared] bookmarkForAudioChunk:chunk];
     [[QueueManager shared] setCurrentBookmark:b];
 
@@ -834,7 +822,39 @@ static const NSString *ItemStatusContext;
     [[SessionManager shared] startOnDemandSession];
     [[[Utils del] masterViewController] showOnDemandOnboarding];
 
-    [self playAudioWithURL:chunk.audioUrl];
+    NSString* url = [NSString stringWithString:chunk.audioUrl];
+    if ( [url rangeOfString:@"?"].location == NSNotFound ) {
+        url = [url stringByAppendingString:[NSString stringWithFormat:@"?ua=KPCCiPhone-%@",[Utils urlSafeVersion]]];
+    } else {
+        url = [url stringByAppendingString:[NSString stringWithFormat:@"&ua=KPCCiPhone-%@", [Utils urlSafeVersion]]];
+    }
+
+    [self buildStreamer:url];
+
+    // see if we have a bookmark for where to start in this audio file
+    Float64 resumeTime = 0;
+
+    if ( b ) {
+        Float64 duration = [b.duration floatValue];
+        if ( b.resumeTimeInSeconds > 0 && ( fabs(duration - resumeTime) <= 1.0 || resumeTime >= duration )) {
+            // invalid bookmark position. reset our stored value
+            b.resumeTimeInSeconds = @(0);
+        }
+
+        resumeTime = [b.resumeTimeInSeconds floatValue];
+    }
+
+    if (resumeTime == 0) {
+        NSLog(@"ondemand playAudio should start from 0.");
+        [self.audioPlayer play];
+    } else {
+        // seek
+        NSLog(@"ondemand playAudio should seek to %f.",resumeTime);
+
+        [self intervalSeekWithTimeInterval:(NSTimeInterval)resumeTime completion:^{
+            NSLog(@"ondemand playAudio seek to %f successful.",resumeTime);
+        }];
+    }
 }
 
 - (void)playLiveStream {
@@ -917,45 +937,6 @@ static const NSString *ItemStatusContext;
     }
 
     [self.audioPlayer play];
-
-//    [self getReadyPlayer:^{
-//        if ( self.currentAudioMode == AudioModeOnDemand ) {
-//            if ( CMTimeGetSeconds( self.audioPlayer.currentItem.currentTime ) == 0 ) {
-//                // see if we have a bookmark for where to start in this audio file
-//                Bookmark *b = [[QueueManager shared] currentBookmark];
-//
-//                Float64 resumeTime = 0;
-//
-//                if ( b ) {
-//                    Float64 duration = [b.duration floatValue];
-//                    if ( b.resumeTimeInSeconds > 0 && ( fabs(duration - resumeTime) <= 1.0 || resumeTime >= duration )) {
-//                        // invalid bookmark position. reset our stored value
-//                        b.resumeTimeInSeconds = @(0);
-//                    }
-//
-//                    resumeTime = [b.resumeTimeInSeconds floatValue];
-//                }
-//
-//                if (resumeTime == 0) {
-//                    NSLog(@"ondemand playAudio should start from 0.");
-//                    [self.audioPlayer play];
-//                } else {
-//                    // seek
-//                    NSLog(@"ondemand playAudio should seek to %f.",resumeTime);
-//
-//                    [self intervalSeekWithTimeInterval:(NSTimeInterval)resumeTime completion:^{
-//                        NSLog(@"ondemand playAudio seek to %f successful.",resumeTime);
-//                    }];
-//                }
-//            } else {
-//                NSLog(@"ondemand playAudio starting from non-zero: %f", CMTimeGetSeconds(self.audioPlayer.currentItem.currentTime));
-//                [self.audioPlayer play];
-//            }
-//        } else {
-//            [self.audioPlayer play];
-//        }
-//    }];
-
 }
 
 - (void)pauseAudio {

@@ -3850,8 +3850,6 @@ setForOnDemandUI;
         
         
     }
-    [[QueueManager shared] handleBookmarkingActivity];
-    
 }
 
 - (void)onSeekCompleted {
