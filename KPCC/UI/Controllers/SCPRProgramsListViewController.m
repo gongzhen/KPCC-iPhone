@@ -18,7 +18,7 @@
 /**
  * Programs with these slugs will be hidden from this table view.
  */
-#define HIDDEN_PROGRAMS @[ @"take-two-evenings", @"filmweek-marquee" ]
+#define HIDDEN_PROGRAMS @[ @"take-two-evenings", @"filmweek-marquee", @"reveal" ]
 
 
 @interface SCPRProgramsListViewController ()
@@ -98,13 +98,11 @@
         }
     }
 
-    // Sort Programs alphabetically.
-    NSArray *sortedPrograms;
-    sortedPrograms = [filteredPrograms sortedArrayUsingComparator:^NSComparisonResult(id a, id b) {
-        NSString *first = [(Program *)a sortTitle];
-        NSString *second = [(Program *)b sortTitle];
-        return [first compare:second];
-    }];
+    // Sort Programs by KPCC first, then alphabetically.
+    NSSortDescriptor *boolDescr = [[NSSortDescriptor alloc] initWithKey:@"is_kpcc" ascending:NO];
+    NSSortDescriptor *strDescr = [[NSSortDescriptor alloc] initWithKey:@"sortTitle" ascending:YES];
+    NSArray *sortDescriptors = @[boolDescr, strDescr];
+    NSArray *sortedPrograms = [filteredPrograms sortedArrayUsingDescriptors:sortDescriptors];
 
     self.programsList = sortedPrograms;
 

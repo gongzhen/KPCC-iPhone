@@ -19,6 +19,7 @@
 @dynamic is_recurring;
 @dynamic program_slug;
 @dynamic soft_starts_at;
+@dynamic is_kpcc;
 
 + (NSString *)entityName {
     return @"Program";
@@ -142,49 +143,32 @@
         return nil;
     }
 
-    /**
-     * We have to handle Program dictionaries in two possible forms at this point.
-     * One in the form returned from the /schedule endpoint, and one in the form
-     * from the /programs endpoint.
-     * See SCPRv4 API docs for details - https://github.com/SCPR/api-docs/tree/master/KPCC/v2
-     */
-    if ( ![Utils pureNil:dictionary[@"program"]]) {
+    if ( ![Utils pureNil:dictionary[@"title"]]) {
+        program.title = dictionary[@"title"];
+    }
 
-        if ( ![Utils pureNil:dictionary[@"title"]]) {
-            program.title = dictionary[@"title"];
-        }
+    if ( ![Utils pureNil:dictionary[@"program"][@"slug"]]) {
+        program.program_slug = dictionary[@"program"][@"slug"];
+    }
 
-        if ( ![Utils pureNil:dictionary[@"program"][@"slug"]]) {
-            program.program_slug = dictionary[@"program"][@"slug"];
-        }
+    if ( ![Utils pureNil:dictionary[@"starts_at"]]) {
+        program.starts_at = [Utils dateFromRFCString:dictionary[@"starts_at"]];
+    }
 
-        if ( ![Utils pureNil:dictionary[@"starts_at"]]) {
-            program.starts_at = [Utils dateFromRFCString:dictionary[@"starts_at"]];
-        }
+    if ( ![Utils pureNil:dictionary[@"ends_at"]]) {
+        program.ends_at = [Utils dateFromRFCString:dictionary[@"ends_at"]];
+    }
 
-        if ( ![Utils pureNil:dictionary[@"ends_at"]]) {
-            program.ends_at = [Utils dateFromRFCString:dictionary[@"ends_at"]];
-        }
+    if ( ![Utils pureNil:dictionary[@"public_url"]]) {
+        program.public_url = dictionary[@"public_url"];
+    }
+    if ( ![Utils pureNil:dictionary[@"soft_starts_at"]] ) {
+        program.soft_starts_at = [Utils dateFromRFCString:dictionary[@"soft_starts_at"]];
+    }
 
-        if ( ![Utils pureNil:dictionary[@"public_url"]]) {
-            program.public_url = dictionary[@"public_url"];
-        }
-        if ( ![Utils pureNil:dictionary[@"soft_starts_at"]] ) {
-            program.soft_starts_at = [Utils dateFromRFCString:dictionary[@"soft_starts_at"]];
-        }
-
-    } else {
-        if ( ![Utils pureNil:dictionary[@"title"]]) {
-            program.title = dictionary[@"title"];
-        }
-
-        if ( ![Utils pureNil:dictionary[@"slug"]]) {
-            program.program_slug = dictionary[@"slug"];
-        }
-        
-        if ( ![Utils pureNil:dictionary[@"public_url"]]) {
-            program.public_url = dictionary[@"public_url"];
-        }
+    if ( ![Utils pureNil:dictionary[@"is_kpcc"]] ) {
+        program.is_kpcc = [NSNumber numberWithBool:[dictionary[@"is_kpcc"] boolValue]];
+        NSLog(@"program is_kpcc: %ld",(long)program.is_kpcc.boolValue);
     }
 
     // TODO: Add more data fields as necessary.
@@ -280,6 +264,8 @@
     NSString* st = [NSString stringWithString:self.title];
     if (SEQ([st substringToIndex:4],@"The ")) {
         st = [st substringFromIndex:4];
+    } else if (SEQ([st substringToIndex:2],@"A ")) {
+        st = [st substringFromIndex:2];
     }
 
     return st;

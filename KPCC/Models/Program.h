@@ -18,6 +18,7 @@
 @property (nonatomic, retain) NSDate * starts_at;
 @property (nonatomic, retain) NSString * public_url;
 @property (nonatomic, retain) NSNumber * is_recurring;
+@property (nonatomic, retain) NSNumber * is_kpcc;
 @property (nonatomic, retain) NSString * program_slug;
 @property (nonatomic, retain) NSDate * soft_starts_at;
 
