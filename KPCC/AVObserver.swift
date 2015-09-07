@@ -59,6 +59,7 @@ import AVFoundation
     //----------
     
     func stop() {
+        NSLog("AVobserver stop called.")
         self._player.removeObserver(self,forKeyPath:"status")
         self._player.removeObserver(self, forKeyPath:"rate")
         self._player.currentItem!.removeObserver(self, forKeyPath: "status")
@@ -79,7 +80,7 @@ import AVFoundation
             self._once[status] = []
         }
         
-        self._once[status]?.append(callback)
+        self._once[status]!.append(callback)
     }
     
     //----------
@@ -89,7 +90,7 @@ import AVFoundation
             self._on[status] = []
         }
         
-        self._on[status]?.append(callback)
+        self._on[status]!.append(callback)
     }
     
     //----------
