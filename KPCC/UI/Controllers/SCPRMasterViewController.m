@@ -897,10 +897,8 @@ setForOnDemandUI;
 }
 
 - (void)onboarding_fin {
-    
     [[AudioManager shared] resetPlayer];
-    [[AudioManager shared] takedownAudioPlayer];
-    
+
     self.initialPlay = YES;
     
     [self adjustScrubbingState];

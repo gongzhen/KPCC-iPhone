@@ -415,12 +415,6 @@
 
     ScheduleOccurrence *p = [[SessionManager shared] currentSchedule];
     NSDate* seekDate = [p percentageToDate:finalValue];
-
-    if ( seekDate ) {
-        if ( [p.starts_at timeIntervalSince1970] >= [seekDate timeIntervalSince1970] ) {
-            seekDate = [p.starts_at dateByAddingTimeInterval:30.0f];
-        }
-    }
     
     self.positionBeforeScrub = [[[SessionManager shared] vNow] timeIntervalSince1970];
     NSLog(@"Position before scrub : %ld", (long)self.positionBeforeScrub);

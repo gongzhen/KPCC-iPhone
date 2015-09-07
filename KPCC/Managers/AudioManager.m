@@ -661,6 +661,7 @@ static const NSString *ItemStatusContext;
             } else {
                 self.tryAgain = YES;
                 [self resetPlayer];
+                [self playAudio];
             }
         }
     };
