@@ -2462,9 +2462,8 @@ setForOnDemandUI;
 
     switch ([[AudioManager shared] currentAudioMode]) {
         case AudioModeOnboarding:
-            okToShow = NO;
-            break;
         case AudioModeOnDemand:
+        case AudioModePreroll:
             okToShow = NO;
             break;
         default:
@@ -2490,11 +2489,6 @@ setForOnDemandUI;
         if ( okToShow ) {
             NSLog(@"Rewind Button - Hiding because the scrubber is up");
         }
-        okToShow = NO;
-    }
-    if ( [[AudioManager shared] prerollPlaying] ) {
-        if ( okToShow )
-            NSLog(@"Rewind Button - Hiding because preroll");
         okToShow = NO;
     }
     if ( [[SessionManager shared] sessionHasNoProgram] ) {

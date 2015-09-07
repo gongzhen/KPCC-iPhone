@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "TritonAd.h"
 #import "SCPRAppDelegate.h"
+#import "KPCC-Swift.h"
 
 @import AVFoundation;
 
@@ -32,6 +33,7 @@
 @property (nonatomic,strong) IBOutlet UIView *curtainView;
 
 @property (nonatomic,strong) AVPlayer *prerollPlayer;
+@property (nonatomic,strong) AVObserver *observer;
 
 @property (nonatomic, strong) id timeObserver;
 
