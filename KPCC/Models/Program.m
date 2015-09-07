@@ -147,28 +147,16 @@
         program.title = dictionary[@"title"];
     }
 
-    if ( ![Utils pureNil:dictionary[@"program"][@"slug"]]) {
-        program.program_slug = dictionary[@"program"][@"slug"];
-    }
-
-    if ( ![Utils pureNil:dictionary[@"starts_at"]]) {
-        program.starts_at = [Utils dateFromRFCString:dictionary[@"starts_at"]];
-    }
-
-    if ( ![Utils pureNil:dictionary[@"ends_at"]]) {
-        program.ends_at = [Utils dateFromRFCString:dictionary[@"ends_at"]];
+    if ( ![Utils pureNil:dictionary[@"slug"]]) {
+        program.program_slug = dictionary[@"slug"];
     }
 
     if ( ![Utils pureNil:dictionary[@"public_url"]]) {
         program.public_url = dictionary[@"public_url"];
     }
-    if ( ![Utils pureNil:dictionary[@"soft_starts_at"]] ) {
-        program.soft_starts_at = [Utils dateFromRFCString:dictionary[@"soft_starts_at"]];
-    }
 
     if ( ![Utils pureNil:dictionary[@"is_kpcc"]] ) {
         program.is_kpcc = [NSNumber numberWithBool:[dictionary[@"is_kpcc"] boolValue]];
-        NSLog(@"program is_kpcc: %ld",(long)program.is_kpcc.boolValue);
     }
 
     // TODO: Add more data fields as necessary.
