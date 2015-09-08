@@ -1901,13 +1901,6 @@ setForOnDemandUI;
                 self.liveDescriptionLabel.alpha = 1.0f;
             
         } completion:^(BOOL finished) {
-            if ([[AudioManager shared] isStreamPlaying] || [[AudioManager shared] isStreamBuffering]) {
-//                [self.playPauseButton fadeImage:[UIImage imageNamed:@"btn_pause.png"] duration:0.2];
-            } else {
-//                [self.playPauseButton fadeImage:[UIImage imageNamed:@"btn_play.png"] duration:0.2];
-            }
-            
-            
             [UIView animateWithDuration:0.1 animations:^{
                 if ( [AudioManager shared].currentAudioMode != AudioModeOnDemand ) {
                     [self.playPauseButton setAlpha:1.0];

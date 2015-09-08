@@ -575,18 +575,6 @@ static const NSString *ItemStatusContext;
     }
 }
 
-// FIXME: Does this code need to be moved?
-- (void)playerItemDidFinishPlaying {
-    [[SessionManager shared] endOnDemandSessionWithReason:OnDemandFinishedReasonEpisodeEnd];
-
-    if ( [[QueueManager shared] currentBookmark] ) {
-        [[ContentManager shared] destroyBookmark:[[QueueManager shared] currentBookmark]];
-        [[QueueManager shared] setCurrentBookmark:nil];
-    }
-
-    [[QueueManager shared] playNext];
-}
-
 - (void)onboardingSegmentCompleted {
     if ( self.onboardingSegment == 1 ) {
         [[UXmanager shared] presentLensOverRewindButton];
@@ -706,7 +694,14 @@ static const NSString *ItemStatusContext;
     // watch for item end
     [self.audioPlayer.observer on:StatusesItemEnded callback:^(NSString* msg, id obj) {
         if ([self currentAudioMode] == AudioModeOnDemand) {
-            [self playerItemDidFinishPlaying];
+            [[SessionManager shared] endOnDemandSessionWithReason:OnDemandFinishedReasonEpisodeEnd];
+
+            if ( [[QueueManager shared] currentBookmark] ) {
+                [[ContentManager shared] destroyBookmark:[[QueueManager shared] currentBookmark]];
+                [[QueueManager shared] setCurrentBookmark:nil];
+            }
+
+            [[QueueManager shared] playNext];
         }
     }];
 

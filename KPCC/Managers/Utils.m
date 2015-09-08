@@ -171,12 +171,6 @@ static char *alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz012
     return YES;
 }
 
-+ (NSDictionary*)gConfig {
-    NSString *path = [[NSBundle mainBundle] pathForResource:@"Config" ofType:@"plist"];
-    NSDictionary *globalConfig = [[NSDictionary alloc] initWithContentsOfFile:path];
-    return globalConfig;
-}
-
 + (BOOL)isRetina{
     return ([[UIScreen mainScreen] respondsToSelector:@selector(displayLinkWithTarget:selector:)] && ([UIScreen mainScreen].scale == 2.0))?1:0;
 }

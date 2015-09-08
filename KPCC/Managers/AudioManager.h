@@ -137,7 +137,6 @@ typedef NS_ENUM(NSUInteger, StreamStatus) {
 
 - (NSString*)streamingURL;
 
-- (void)playQueueItemWithUrl:(NSString *)url;
 - (void)playQueueItem:(AudioChunk*)chunk;
 - (void)playLiveStream;
 
@@ -192,8 +191,6 @@ typedef NS_ENUM(NSUInteger, StreamStatus) {
 @property (nonatomic, copy) NSDate *seekTargetReferenceDate;
 
 @property NSInteger interactionIdx;
-
-- (void)updateNowPlayingInfoWithAudio:(id)audio;
 
 - (void)seekToPercent:(CGFloat)percent;
 
