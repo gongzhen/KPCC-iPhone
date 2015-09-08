@@ -63,11 +63,10 @@ static AnalyticsManager *singleton = nil;
     NSDictionary *globalConfig = [Utils globalConfig];
     
     NSString *token = globalConfig[@"Flurry"][flurryToken];
-    [Flurry setCrashReportingEnabled:YES];
+    [Flurry setCrashReportingEnabled:NO];
     [Flurry setDebugLogEnabled:NO];
     [Flurry startSession:token];
     [Flurry setBackgroundSessionEnabled:NO];
-    
     
     self.mxp = [Mixpanel sharedInstanceWithToken:globalConfig[@"Mixpanel"][mixPanelToken]];
 
