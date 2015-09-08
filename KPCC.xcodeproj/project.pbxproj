@@ -671,10 +671,6 @@
 		76177299195B646300F69EFC /* Utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Utils.h; path = Managers/Utils.h; sourceTree = "<group>"; };
 		7617729A195B646300F69EFC /* Utils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Utils.m; path = Managers/Utils.m; sourceTree = "<group>"; };
 		761CC5A3195A2878006A6C7C /* Testflight-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Testflight-Info.plist"; sourceTree = "<group>"; };
-		76349CA218D372B30027C3B8 /* libTestFlight.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libTestFlight.a; sourceTree = "<group>"; };
-		76349CA318D372B30027C3B8 /* TestFlight+AsyncLogging.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TestFlight+AsyncLogging.h"; sourceTree = "<group>"; };
-		76349CA418D372B30027C3B8 /* TestFlight+ManualSessions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TestFlight+ManualSessions.h"; sourceTree = "<group>"; };
-		76349CA518D372B30027C3B8 /* TestFlight.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestFlight.h; sourceTree = "<group>"; };
 		76349CA918D3747E0027C3B8 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 		76349D1918D8C74F0027C3B8 /* NetworkManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NetworkManager.h; path = Managers/NetworkManager.h; sourceTree = "<group>"; };
 		76349D1A18D8C74F0027C3B8 /* NetworkManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NetworkManager.m; path = Managers/NetworkManager.m; sourceTree = "<group>"; };
@@ -1138,17 +1134,6 @@
 			path = Models;
 			sourceTree = "<group>";
 		};
-		76349CA118D372B30027C3B8 /* TestFlight */ = {
-			isa = PBXGroup;
-			children = (
-				76349CA218D372B30027C3B8 /* libTestFlight.a */,
-				76349CA318D372B30027C3B8 /* TestFlight+AsyncLogging.h */,
-				76349CA418D372B30027C3B8 /* TestFlight+ManualSessions.h */,
-				76349CA518D372B30027C3B8 /* TestFlight.h */,
-			);
-			path = TestFlight;
-			sourceTree = "<group>";
-		};
 		76349D1E18D8F8A30027C3B8 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
@@ -1509,7 +1494,6 @@
 		76E75F1C18CE4682008E3197 /* ThirdParty */ = {
 			isa = PBXGroup;
 			children = (
-				76349CA118D372B30027C3B8 /* TestFlight */,
 			);
 			path = ThirdParty;
 			sourceTree = "<group>";
