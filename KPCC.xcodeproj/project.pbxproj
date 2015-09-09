@@ -1511,6 +1511,7 @@
 				76A308C018C8FB940065D4B1 /* Frameworks */,
 				76A308C118C8FB940065D4B1 /* Resources */,
 				075636531B9FB76C001D1C55 /* ShellScript */,
+				07CBEF411BA088E900D11ED5 /* ShellScript */,
 				9E4DCD001A0847218C219F40 /* Copy Pods Resources */,
 				25AD968E1B4F3AF800858B65 /* Crashlytics */,
 			);
@@ -1833,6 +1834,19 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "cp \"${PROJECT_DIR}/../KPCC-Config/config/iphone/Config-${CONFIGURATION}.plist\" \"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/Config.plist\"\ncp \"${PROJECT_DIR}/../KPCC-Config/config/iphone/GoogleService-Info.plist\" \"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/GoogleService-Info.plist\"";
+		};
+		07CBEF411BA088E900D11ED5 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "git=/usr/bin/git\nbranch_name=`$git symbolic-ref HEAD | sed -e 's,.*/\\\\(.*\\\\),\\\\1,'`\ngit_count=`$git rev-list $branch_name |wc -l | sed 's/^ *//;s/ *$//'`\nsimple_branch_name=`$git rev-parse --abbrev-ref HEAD`\nshort_sha=`$git rev-parse --short HEAD`\n\nbuild_number=\"$git_count\"\nif [ $CONFIGURATION != \"Release\" ]; then\nbuild_number+=\"-$simple_branch_name-$short_sha\"\nfi\n\nplist=\"${TARGET_BUILD_DIR}/${INFOPLIST_PATH}\"\ndsym_plist=\"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}/Contents/Info.plist\"\n\n/usr/libexec/PlistBuddy -c \"Set :CFBundleVersion $build_number\" \"$plist\"\nif [ -f \"$DSYM_INFO_PLIST\" ] ; then\n/usr/libexec/PlistBuddy -c \"Set :CFBundleVersion $build_number\" \"$dsym_plist\"\nfi";
 		};
 		25AD968E1B4F3AF800858B65 /* Crashlytics */ = {
 			isa = PBXShellScriptBuildPhase;
