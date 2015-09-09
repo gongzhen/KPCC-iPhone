@@ -267,13 +267,8 @@ static NetworkManager *singleton = nil;
 }
 
 - (NSString*)serverBase {
-    NSString *key = @"production";
-#ifdef DEBUG
-    //key = @"staging";
-#endif
-    
     NSDictionary *globalConfig = [Utils globalConfig];
-    return globalConfig[@"SCPR"][key];
+    return globalConfig[@"SCPR"][@"api"];
 }
 
 @end

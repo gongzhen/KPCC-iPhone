@@ -88,7 +88,6 @@
 		259E450E1A1D583A00F5CD65 /* onboarding1.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 259E450C1A1D583A00F5CD65 /* onboarding1.mp3 */; };
 		259E450F1A1D583A00F5CD65 /* onboarding2.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 259E450D1A1D583A00F5CD65 /* onboarding2.mp3 */; };
 		25A6534B1AAE2BA300ABAAD6 /* Bookmark.m in Sources */ = {isa = PBXBuildFile; fileRef = 25A6534A1AAE2BA300ABAAD6 /* Bookmark.m */; };
-		25AD96941B5062E600858B65 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 25AD96931B5062E600858B65 /* GoogleService-Info.plist */; };
 		25B25B9B1B17DEF600ABE8B4 /* chevron_up.png in Resources */ = {isa = PBXBuildFile; fileRef = 25B25B991B17DEF600ABE8B4 /* chevron_up.png */; };
 		25B25B9C1B17DEF600ABE8B4 /* chevron_up@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 25B25B9A1B17DEF600ABE8B4 /* chevron_up@2x.png */; };
 		25B25B9F1B190EE200ABE8B4 /* SCPRXFSHeaderCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 25B25B9E1B190EE200ABE8B4 /* SCPRXFSHeaderCell.m */; };
@@ -300,7 +299,6 @@
 		768EAADF18D26C5500469734 /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 768EAADE18D26C5500469734 /* MediaPlayer.framework */; };
 		768EAAE118D26C9C00469734 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 768EAAE018D26C9C00469734 /* AVFoundation.framework */; };
 		7695FD15195E299000F63DE9 /* SCPRNavigationBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 7695FD14195E299000F63DE9 /* SCPRNavigationBar.m */; };
-		769B907A19C0D5C300E812C7 /* Config.plist in Resources */ = {isa = PBXBuildFile; fileRef = 769B907919C0D5C300E812C7 /* Config.plist */; };
 		769B907E19C1186E00E812C7 /* DesignManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 769B907D19C1186E00E812C7 /* DesignManager.m */; };
 		76A308C718C8FB940065D4B1 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 76A308C618C8FB940065D4B1 /* Foundation.framework */; };
 		76A308C918C8FB940065D4B1 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 76A308C818C8FB940065D4B1 /* CoreGraphics.framework */; };
@@ -452,7 +450,6 @@
 		25A653481AAA7CFC00ABAAD6 /* KPCC-Proprietary-301.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "KPCC-Proprietary-301.xcdatamodel"; sourceTree = "<group>"; };
 		25A653491AAE2BA300ABAAD6 /* Bookmark.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Bookmark.h; sourceTree = "<group>"; };
 		25A6534A1AAE2BA300ABAAD6 /* Bookmark.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Bookmark.m; sourceTree = "<group>"; };
-		25AD96931B5062E600858B65 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		25B25B991B17DEF600ABE8B4 /* chevron_up.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = chevron_up.png; sourceTree = "<group>"; };
 		25B25B9A1B17DEF600ABE8B4 /* chevron_up@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "chevron_up@2x.png"; sourceTree = "<group>"; };
 		25B25B9D1B190EE200ABE8B4 /* SCPRXFSHeaderCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCPRXFSHeaderCell.h; sourceTree = "<group>"; };
@@ -711,7 +708,6 @@
 		768EAAE018D26C9C00469734 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		7695FD13195E299000F63DE9 /* SCPRNavigationBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCPRNavigationBar.h; sourceTree = "<group>"; };
 		7695FD14195E299000F63DE9 /* SCPRNavigationBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SCPRNavigationBar.m; sourceTree = "<group>"; };
-		769B907919C0D5C300E812C7 /* Config.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Config.plist; sourceTree = "<group>"; };
 		769B907C19C1186E00E812C7 /* DesignManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DesignManager.h; path = Managers/DesignManager.h; sourceTree = "<group>"; };
 		769B907D19C1186E00E812C7 /* DesignManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DesignManager.m; path = Managers/DesignManager.m; sourceTree = "<group>"; };
 		76A308C318C8FB940065D4B1 /* KPCC.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = KPCC.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -1403,8 +1399,6 @@
 		76A308CC18C8FB940065D4B1 /* KPCC */ = {
 			isa = PBXGroup;
 			children = (
-				25AD96931B5062E600858B65 /* GoogleService-Info.plist */,
-				769B907919C0D5C300E812C7 /* Config.plist */,
 				76B9A9BC18F609FF007A6D8C /* Assets */,
 				769FD69918EB682E00AAF1F4 /* Classes */,
 				76E75F1C18CE4682008E3197 /* ThirdParty */,
@@ -1517,6 +1511,7 @@
 				76A308BF18C8FB940065D4B1 /* Sources */,
 				76A308C018C8FB940065D4B1 /* Frameworks */,
 				76A308C118C8FB940065D4B1 /* Resources */,
+				075636531B9FB76C001D1C55 /* ShellScript */,
 				9E4DCD001A0847218C219F40 /* Copy Pods Resources */,
 				25AD968E1B4F3AF800858B65 /* Crashlytics */,
 			);
@@ -1665,7 +1660,6 @@
 				52EFF86619C368C00059A0E3 /* program_avatar_weekend-edition-sunday.png in Resources */,
 				768C065E1995905D00F829EB /* chevron_down.png in Resources */,
 				52EFF79719C3688D0059A0E3 /* menu-microphone.png in Resources */,
-				25AD96941B5062E600858B65 /* GoogleService-Info.plist in Resources */,
 				7685BD60194BBCB90075BB16 /* playButton.png in Resources */,
 				52EFF86419C368C00059A0E3 /* program_avatar_weekend-edition-saturday@2x.png in Resources */,
 				25B25BAE1B1D093D00ABE8B4 /* SCPRPledgePINViewController.xib in Resources */,
@@ -1764,7 +1758,6 @@
 				254CC69B1A23A7A600560805 /* onboarding-tile@2x.jpg in Resources */,
 				25F30AE31AF98F1A00F27187 /* icon-up-next.png in Resources */,
 				25BBCD781A892D730015071E /* SCPRScrubbingUIViewController.xib in Resources */,
-				769B907A19C0D5C300E812C7 /* Config.plist in Resources */,
 				52EFF7E619C368C00059A0E3 /* program_avatar_airtalk.png in Resources */,
 				52EFF7F019C368C00059A0E3 /* program_avatar_ask-me-another@2x.png in Resources */,
 				52D0FC3419D20D29009AECEE /* program_avatar_q-with-jian-ghomeshi@2x.png in Resources */,
@@ -1828,6 +1821,19 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		075636531B9FB76C001D1C55 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "cp \"${PROJECT_DIR}/../KPCC-Config/config/iphone/Config-${CONFIGURATION}.plist\" \"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/Config.plist\"\ncp \"${PROJECT_DIR}/../KPCC-Config/config/iphone/GoogleService-Info.plist\" \"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/GoogleService-Info.plist\"";
+		};
 		25AD968E1B4F3AF800858B65 /* Crashlytics */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;

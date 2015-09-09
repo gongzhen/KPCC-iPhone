@@ -30,41 +30,14 @@
     [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback error:&error];
     [[AVAudioSession sharedInstance] setActive:YES error:&error];
     
-    NSString *path = [[NSBundle mainBundle] pathForResource:@"Config" ofType:@"plist"];
-    NSDictionary *globalConfig = [[NSDictionary alloc] initWithContentsOfFile:path];
+    NSDictionary *globalConfig = [Utils globalConfig];
     
     [[AnalyticsManager shared] setup];
     A0Lock *lock = [[UXmanager shared] lock];
     [lock applicationLaunchedWithOptions:launchOptions];
-    
-#ifndef PRODUCTION
-    //[[UXmanager shared].settings setSsoLoginType:SSOTypeNone];
-    //[[UXmanager shared].settings setSsoKey:nil];
-    //[[UXmanager shared] persist];
-    //[[UXmanager shared].settings setUserHasViewedOnboarding:NO];
-    //[[UXmanager shared].settings setUserHasViewedOnDemandOnboarding:NO];
-    [[UXmanager shared].settings setUserHasSelectedXFS:NO];
-    [[UXmanager shared].settings setXfsToken:@""];
-    [[UXmanager shared].settings setUserHasViewedXFSOnboarding:NO];
-#ifdef TESTING_SCRUBBER
-    [[UXmanager shared].settings setUserHasViewedOnDemandOnboarding:NO];
-    [[UXmanager shared].settings setUserHasViewedScrubbingOnboarding:NO];
-    [[UXmanager shared].settings setUserHasViewedLiveScrubbingOnboarding:NO];
-    [[UXmanager shared].settings setUserHasViewedScheduleOnboarding:NO];
-#endif
-    [[UXmanager shared] persist];
-#endif
-    
-#ifndef TURN_OFF_SANDBOX_CONFIG
-    
+
     [Parse setApplicationId:globalConfig[@"Parse"][@"ApplicationId"]
                   clientKey:globalConfig[@"Parse"][@"ClientKey"]];
-#endif
-    
-#ifdef TESTING_SCRUBBER
-    [[UXmanager shared].settings setUserHasViewedScrubbingOnboarding:NO];
-    [[UXmanager shared] persist];
-#endif
     
     // Apply application-wide styling
     [self applyStylesheet];

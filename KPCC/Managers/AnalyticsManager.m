@@ -40,35 +40,17 @@ static AnalyticsManager *singleton = nil;
 
 - (void)setup {
     
-    
-    NSString *mixPanelToken = @"SandboxToken";
-    NSString *flurryToken = @"DebugKey";
-    
-#ifdef PRODUCTION
-#ifdef PRERELEASE
-    mixPanelToken = @"SandboxToken";
-    flurryToken = @"DebugKey";
-#else
-    mixPanelToken = @"ProductionToken";
-    flurryToken = @"ProductionKey";
-#endif
-#endif
-    
-#ifdef BETA
-    mixPanelToken = @"BetaToken";
-#endif
-    
     [Fabric with:@[CrashlyticsKit]];
     
     NSDictionary *globalConfig = [Utils globalConfig];
     
-    NSString *token = globalConfig[@"Flurry"][flurryToken];
+    NSString *token = globalConfig[@"Flurry"][@"key"];
     [Flurry setCrashReportingEnabled:NO];
     [Flurry setDebugLogEnabled:NO];
     [Flurry startSession:token];
     [Flurry setBackgroundSessionEnabled:NO];
     
-    self.mxp = [Mixpanel sharedInstanceWithToken:globalConfig[@"Mixpanel"][mixPanelToken]];
+    self.mxp = [Mixpanel sharedInstanceWithToken:globalConfig[@"Mixpanel"][@"token"]];
 
     NSString *uuid = [[[UIDevice currentDevice] identifierForVendor] UUIDString];
     [self.mxp identify:uuid];
