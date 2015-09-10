@@ -14,7 +14,7 @@
 #import "NetworkManager.h"
 #import <Crashlytics/Crashlytics.h>
 #import <Fabric/Fabric.h>
-#import <NielsenAppApi/NielsenAppApi.h>
+//#import <NielsenAppApi/NielsenAppApi.h>
 
 static NSInteger kMaxAllowedExceptionsPerInterval = 5;
 static NSInteger kExceptionInterval = 60;
@@ -84,13 +84,13 @@ typedef NS_ENUM(NSInteger, ScrubbingType) {
 - (NSDictionary*)typicalOnDemandEpisodeInformation;
 
 // Nielsen
-@property (nonatomic, strong) NielsenAppApi *nielsenTracker;
-@property (nonatomic, strong) NSString *currentNielsenInfo;
-
-- (void)nielsenPlay;
-- (void)nielsenStop;
-- (void)nielsenTrack;
-- (NSString*)nielsenInfoForCurrentAudio;
-- (NSString*)nielsenInfoForKPCC;
+//@property (nonatomic, strong) NielsenAppApi *nielsenTracker;
+//@property (nonatomic, strong) NSString *currentNielsenInfo;
+//
+//- (void)nielsenPlay;
+//- (void)nielsenStop;
+//- (void)nielsenTrack;
+//- (NSString*)nielsenInfoForCurrentAudio;
+//- (NSString*)nielsenInfoForKPCC;
 
 @end

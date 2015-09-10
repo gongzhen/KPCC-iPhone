@@ -147,7 +147,7 @@
     [Flurry endTimedEvent:eventName
            withParameters:nil];
     
-    [[AnalyticsManager shared] nielsenStop];
+//    [[AnalyticsManager shared] nielsenStop];
 }
 
 #pragma mark - Sessions
@@ -197,7 +197,7 @@
                                                  @"streamId" : plus
                                                  }];
     
-    [[AnalyticsManager shared] nielsenPlay];
+//    [[AnalyticsManager shared] nielsenPlay];
 
 #endif
     
@@ -352,7 +352,7 @@
     if ( timed ) {
         [self handlePauseEventAgainstSessionAudio];
     } else {
-        [[AnalyticsManager shared] nielsenStop];
+//        [[AnalyticsManager shared] nielsenStop];
     }
     
     self.odSessionIsHot = NO;
