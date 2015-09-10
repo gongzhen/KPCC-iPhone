@@ -358,6 +358,7 @@ public struct AudioPlayerObserver<T> {
             // pass on that status yet if .Seeking
             if self.status != .Seeking {
                 self._setStatus(.Playing)
+                self._resetLiveDate()
             }
             // self._setStatus(.Playing)
         case .Paused:
@@ -367,13 +368,7 @@ public struct AudioPlayerObserver<T> {
             }
         case .LikelyToKeepUp:
             NSLog("playback should keep up")
-
-            // reset liveDate
-            self.oTime.once() { dates in
-                if let maxDate = dates.maxDate {
-                    self.liveDate = maxDate.dateByAddingTimeInterval(-60)
-                }
-            }
+            self._resetLiveDate()
 
         case .UnlikelyToKeepUp:
             NSLog("playback unlikely to keep up")
@@ -398,6 +393,16 @@ public struct AudioPlayerObserver<T> {
             self._emitEvent("Time jump! Last recorded time: \(lastRecordedTime). New time: \(newDate)")
         default:
             true
+        }
+    }
+
+    //----------
+
+    private func _resetLiveDate() {
+        self.oTime.once() { dates in
+            if let maxDate = dates.maxDate {
+                self.liveDate = maxDate.dateByAddingTimeInterval(-60)
+            }
         }
     }
 
