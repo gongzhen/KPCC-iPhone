@@ -23,6 +23,12 @@ import AVFoundation
         case PlayerFailed = 0, PlayerReady = 1, ItemFailed = 2, ItemReady = 3,
         Playing = 4, Paused = 5, Stalled = 6, TimeJump = 7, AccessLog = 8,
         ErrorLog = 9, LikelyToKeepUp = 10, UnlikelyToKeepUp = 11, ItemEnded = 12
+
+        func toString() -> String {
+            let statuses = ["PlayerFailed","PlayerReady","ItemFailed","ItemReady","Playing","Paused","Stalled","TimeJump","AccessLog","ErrorLog","LikelyToKeepUp","UnlikelyToKeepUp","ItemEnded"]
+
+            return statuses[self.rawValue]
+        }
     }
     
     let _itemNotifications = [

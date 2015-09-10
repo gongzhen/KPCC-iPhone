@@ -14,15 +14,26 @@ import MobileCoreServices
 
 public struct AudioPlayerObserver<T> {
     var observers: [(T) -> Void] = []
+    var once: [(T) -> Void] = []
 
     public mutating func addObserver(o:(T) -> Void) {
         observers.append(o)
     }
 
-    func notify(obj:T) {
+    public mutating func once(o:(T) -> Void) {
+        once.append(o)
+    }
+
+    mutating func notify(obj:T) {
         for o in observers {
             o(obj)
         }
+
+        for o in once {
+            o(obj)
+        }
+
+        once = []
     }
 }
 
@@ -113,6 +124,7 @@ public struct AudioPlayerObserver<T> {
     var _dateFormat: NSDateFormatter
 
     var currentDates: StreamDates?
+    var liveDate: NSDate?
 
     //----------
 
@@ -198,6 +210,11 @@ public struct AudioPlayerObserver<T> {
                     }
 
                     self._computeStreamDates()
+
+                    // tick liveDate one second
+                    if self.liveDate != nil {
+                        self.liveDate = self.liveDate?.dateByAddingTimeInterval(1.0)
+                    }
             })
         }
 
@@ -350,6 +367,14 @@ public struct AudioPlayerObserver<T> {
             }
         case .LikelyToKeepUp:
             NSLog("playback should keep up")
+
+            // reset liveDate
+            self.oTime.once() { dates in
+                if let maxDate = dates.maxDate {
+                    self.liveDate = maxDate.dateByAddingTimeInterval(-60)
+                }
+            }
+
         case .UnlikelyToKeepUp:
             NSLog("playback unlikely to keep up")
         case .TimeJump:
