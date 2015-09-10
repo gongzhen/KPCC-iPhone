@@ -27,6 +27,7 @@
 #import "SCPRUpcomingProgramViewController.h"
 #import "SCPRCompleteScheduleViewController.h"
 #import "SCPRBalloonViewController.h"
+#import "GenericProgram.h"
 
 @import MessageUI;
 
@@ -230,7 +231,6 @@
 - (void)remoteControlPlayOrPause;
 
 @property (NS_NONATOMIC_IOSONLY, readonly) BOOL uiIsJogging;
-@property (NS_NONATOMIC_IOSONLY, readonly) NSTimeInterval rewindAgainstStreamDelta;
 
 // Instance methods.
 - (void)cloakForMenu:(BOOL)animated;

@@ -25,16 +25,6 @@
     return shared;
 }
 
-- (void)timeBegin {
-    self.operationBeganDate = [NSDate date];
-}
-
-- (void)timeEnd:(NSString*)operationName {
-    NSDate *now = [NSDate date];
-    NSTimeInterval execution = [now timeIntervalSinceDate:self.operationBeganDate];
-    NSLog(@"%@ Running Time : %f",operationName,execution);
-}
-
 - (void)load {
     if ( self.settings ) {
         self.settings = nil;
@@ -71,10 +61,6 @@
 
 - (BOOL)userHasSeenScrubbingOnboarding {
     return self.settings.userHasViewedScrubbingOnboarding;
-}
-
-- (void)freezeProgressBar {
-    self.masterCtrl.liveProgressViewController.freezeBit = YES;
 }
 
 - (void)loadOnboarding {
@@ -474,7 +460,6 @@
     
     self.onboardingEnding = YES;
     self.fadeQueue = [[NSOperationQueue alloc] init];
-    [[AudioManager shared] setRelativeFauxDate:nil];
     [self.onboardingCtrl.view removeFromSuperview];
     [self fadePlayer:self.musicPlayer];
     

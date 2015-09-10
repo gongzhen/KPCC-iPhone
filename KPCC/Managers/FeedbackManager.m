@@ -30,8 +30,8 @@ static FeedbackManager *singleton = nil;
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url];
     [request setValue:@"application/json" forHTTPHeaderField:@"Accept"];
     NSString *authStr = [NSString stringWithFormat:@"%@:%@",
-                         [Utils gConfig][@"Desk"][@"AuthUser"],
-                         [Utils gConfig][@"Desk"][@"AuthPassword"]];
+                         [Utils globalConfig][@"Desk"][@"AuthUser"],
+                         [Utils globalConfig][@"Desk"][@"AuthPassword"]];
     NSData *authData = [authStr dataUsingEncoding:NSASCIIStringEncoding];
     NSString *authValue = [NSString stringWithFormat:@"Basic %@", [Utils base64:authData]];
     
@@ -66,8 +66,8 @@ static FeedbackManager *singleton = nil;
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url];
     [request setValue:@"application/json" forHTTPHeaderField:@"Accept"];
     NSString *authStr = [NSString stringWithFormat:@"%@:%@",
-                         [Utils gConfig][@"Desk"][@"AuthUser"],
-                         [Utils gConfig][@"Desk"][@"AuthPassword"]];
+                         [Utils globalConfig][@"Desk"][@"AuthUser"],
+                         [Utils globalConfig][@"Desk"][@"AuthPassword"]];
     NSData *authData = [authStr dataUsingEncoding:NSASCIIStringEncoding];
     NSString *authValue = [NSString stringWithFormat:@"Basic %@", [Utils base64:authData]];
     
@@ -135,8 +135,8 @@ static FeedbackManager *singleton = nil;
     [request setValue:[NSString stringWithFormat:@"%ld", (long)[requestData length]] forHTTPHeaderField:@"Content-Length"];
     
     NSString *authStr = [NSString stringWithFormat:@"%@:%@",
-                         [Utils gConfig][@"Desk"][@"AuthUser"],
-                         [Utils gConfig][@"Desk"][@"AuthPassword"]];
+                         [Utils globalConfig][@"Desk"][@"AuthUser"],
+                         [Utils globalConfig][@"Desk"][@"AuthPassword"]];
     NSData *authData = [authStr dataUsingEncoding:NSASCIIStringEncoding];
     NSString *authValue = [NSString stringWithFormat:@"Basic %@", [Utils base64:authData]];
     [request setValue:authValue forHTTPHeaderField:@"Authorization"];
@@ -264,8 +264,8 @@ static FeedbackManager *singleton = nil;
     [request setValue:[NSString stringWithFormat:@"%ld",(long) [requestData length]] forHTTPHeaderField:@"Content-Length"];
     
     NSString *authStr = [NSString stringWithFormat:@"%@:%@",
-                         [Utils gConfig][@"Desk"][@"AuthUser"],
-                         [Utils gConfig][@"Desk"][@"AuthPassword"]];
+                         [Utils globalConfig][@"Desk"][@"AuthUser"],
+                         [Utils globalConfig][@"Desk"][@"AuthPassword"]];
     
     NSData *authData = [authStr dataUsingEncoding:NSASCIIStringEncoding];
     NSString *authValue = [NSString stringWithFormat:@"Basic %@", [Utils base64:authData]];

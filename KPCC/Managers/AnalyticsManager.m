@@ -40,36 +40,17 @@ static AnalyticsManager *singleton = nil;
 
 - (void)setup {
     
-    
-    NSString *mixPanelToken = @"SandboxToken";
-    NSString *flurryToken = @"DebugKey";
-    
-#ifdef PRODUCTION
-#ifdef PRERELEASE
-    mixPanelToken = @"SandboxToken";
-    flurryToken = @"DebugKey";
-#else
-    mixPanelToken = @"ProductionToken";
-    flurryToken = @"ProductionKey";
-#endif
-#endif
-    
-#ifdef BETA
-    mixPanelToken = @"BetaToken";
-#endif
-    
     [Fabric with:@[CrashlyticsKit]];
     
     NSDictionary *globalConfig = [Utils globalConfig];
     
-    NSString *token = globalConfig[@"Flurry"][flurryToken];
-    [Flurry setCrashReportingEnabled:YES];
+    NSString *token = globalConfig[@"Flurry"][@"key"];
+    [Flurry setCrashReportingEnabled:NO];
     [Flurry setDebugLogEnabled:NO];
     [Flurry startSession:token];
     [Flurry setBackgroundSessionEnabled:NO];
     
-    
-    self.mxp = [Mixpanel sharedInstanceWithToken:globalConfig[@"Mixpanel"][mixPanelToken]];
+    self.mxp = [Mixpanel sharedInstanceWithToken:globalConfig[@"Mixpanel"][@"token"]];
 
     NSString *uuid = [[[UIDevice currentDevice] identifierForVendor] UUIDString];
     [self.mxp identify:uuid];
@@ -83,29 +64,29 @@ static AnalyticsManager *singleton = nil;
     // Optional: configure GAI options.
     GAI *gai = [GAI sharedInstance];
     gai.trackUncaughtExceptions = YES;  // report uncaught exceptions
-#ifndef PRODUCTION
-    gai.logger.logLevel = kGAILogLevelError;  // remove before app release
-#endif
-    
-#ifndef SUPPRESS_NIELSEN_TRACKING
-    NSString *theAppVersion = [Utils prettyVersion];
-    
-    NSDictionary* appInformation = @{
-                                     @"appid": @"TO BE PROVIDED",
-                                     @"appversion": theAppVersion,
-                                     @"appname": @"KPCC iPhone",
-                                     @"sfcode": @"us"
-                                     };
-    
-    
-    
-    NSData* jsonDataAppInfo = [NSJSONSerialization dataWithJSONObject:appInformation options:0 error:nil];
-    NSString* jsonStringAppInfo = [[NSString alloc] initWithBytes:[jsonDataAppInfo bytes] length:[jsonDataAppInfo length] encoding:NSUTF8StringEncoding];
-    
+//#ifndef PRODUCTION
+//    gai.logger.logLevel = kGAILogLevelError;  // remove before app release
+//#endif
 
-    self.nielsenTracker = [[NielsenAppApi sharedInstance] initWithAppInfo:jsonStringAppInfo];
-
-#endif
+//#ifndef SUPPRESS_NIELSEN_TRACKING
+//    NSString *theAppVersion = [Utils prettyVersion];
+//    
+//    NSDictionary* appInformation = @{
+//                                     @"appid": @"TO BE PROVIDED",
+//                                     @"appversion": theAppVersion,
+//                                     @"appname": @"KPCC iPhone",
+//                                     @"sfcode": @"us"
+//                                     };
+//    
+//    
+//    
+//    NSData* jsonDataAppInfo = [NSJSONSerialization dataWithJSONObject:appInformation options:0 error:nil];
+//    NSString* jsonStringAppInfo = [[NSString alloc] initWithBytes:[jsonDataAppInfo bytes] length:[jsonDataAppInfo length] encoding:NSUTF8StringEncoding];
+//    
+//
+//    self.nielsenTracker = [[NielsenAppApi sharedInstance] initWithAppInfo:jsonStringAppInfo];
+//
+//#endif
 
     
 }
@@ -234,25 +215,18 @@ static AnalyticsManager *singleton = nil;
     NSLog(@"User quality : %@",userQuality);
 }
 
-- (void)setAccessLog:(AVPlayerItemAccessLog *)accessLog {
+- (void)setAccessLog:(AVPlayerItemAccessLogEvent *)accessLog {
     _accessLog = accessLog;
     if ( accessLog ) {
         self.accessLogReceivedAt = [NSDate date];
     }
 }
 
-- (void)setErrorLog:(AVPlayerItemErrorLog *)errorLog {
+- (void)setErrorLog:(AVPlayerItemErrorLogEvent *)errorLog {
     _errorLog = errorLog;
     if ( errorLog ) {
         self.errorLogReceivedAt = [NSDate date];
     }
-}
-
-- (void)kTrackSession:(NSString *)modifier {
-#ifdef USE_KOCHAVA
-    [self.kTracker trackEvent:@"session"
-                             :modifier];
-#endif
 }
 
 - (void)trackHeadlinesDismissal {
@@ -422,9 +396,9 @@ static AnalyticsManager *singleton = nil;
     
     if ( !comments || SEQ(comments,@"") ) return;
     
-    self.accessLog = [[AudioManager shared].audioPlayer.currentItem accessLog];
-    self.errorLog = [[AudioManager shared].audioPlayer.currentItem errorLog];
-    
+//    self.accessLog = [[AudioManager shared].audioPlayer.currentItem accessLog];
+//    self.errorLog = [[AudioManager shared].audioPlayer.currentItem errorLog];
+
     if ( self.analyticsSuspensionTimer ) {
         if ( [self.analyticsSuspensionTimer isValid] ) {
             [self.analyticsSuspensionTimer invalidate];
@@ -455,18 +429,10 @@ static AnalyticsManager *singleton = nil;
     
 }
 
-- (void)forceAnalysis:(NSTimer*)timer {
-  /*  NSDictionary *ui = [timer userInfo];
-    [[AudioManager shared] setLoggingGateOpen:NO];
-    [self failStream:(NetworkHealth)[ui[@"cause"] intValue]
-            comments:ui[@"comments"]];
-   */
-}
-
 - (NSDictionary*)typicalLiveProgramInformation {
     
     NSMutableDictionary *programInfo = [NSMutableDictionary new];
-    Program *p = [[SessionManager shared] currentProgram];
+    ScheduleOccurrence *p = [[SessionManager shared] currentSchedule];
     if ( p ) {
         NSString *pTitle = p.title;
         if ( pTitle ) {
@@ -510,54 +476,13 @@ static AnalyticsManager *singleton = nil;
         nParams = [originalParams mutableCopy];
     }
     if ( self.errorLog ) {
-        if ( self.errorLog.events && self.errorLog.events.count > 0 ) {
-            
-            AVPlayerItemErrorLogEvent *event = self.errorLog.events.lastObject;
-            if ( event.playbackSessionID ) {
-                nParams[@"avPlayerSessionId"] = event.playbackSessionID;
-            }
-            /*nParams[@"errorStatusCode"] = @(event.errorStatusCode);
-            if ( event.errorDomain ) {
-                nParams[@"errorDomain"] = event.errorDomain;
-            }
-            if ( self.errorLogReceivedAt ) {
-                nParams[@"errorLogPostedAt"] = self.errorLogReceivedAt;
-            }
-            if ( event.errorComment ) {
-                nParams[@"errorComment"] = event.errorComment;
-            }*/
+
+        if ( self.errorLog.playbackSessionID ) {
+            nParams[@"avPlayerSessionId"] = self.errorLog.playbackSessionID;
         }
         self.errorLog = nil;
     }
     if ( self.accessLog ) {
-        if ( self.accessLog.events && self.accessLog.events.count > 0 ) {
-            
-          /*  AVPlayerItemAccessLogEvent *event = self.accessLog.events.lastObject;
-            if ( event.playbackSessionID ) {
-                nParams[@"avPlayerSessionId"] = event.playbackSessionID;
-            }
-            
-            nParams[@"numberOfStalls"] = @(event.numberOfStalls);
-            
-            [[SessionManager shared] setLastKnownBitrate:event.indicatedBitrate];
-            
-            if ( event.observedBitrateStandardDeviation >= 0.0 ) {
-                nParams[@"bitrateDeviation"] = @(event.observedBitrateStandardDeviation);
-            }
-            
-            nParams[@"indicatedBitrate"] = [NSString stringWithFormat:@"%1.1f",event.indicatedBitrate];
-            nParams[@"observedBitrate"] =  [NSString stringWithFormat:@"%1.1f",event.observedBitrate];
-            nParams[@"bytesTransferred"] = @(event.numberOfBytesTransferred);
-            
-            if ( self.accessLogReceivedAt ) {
-                nParams[@"accessLogPostedAt"] = self.accessLogReceivedAt;
-            }
-            
-            if ( event.URI ) {
-                nParams[@"uri"] = event.URI;
-            }
-           */
-        }
         self.accessLog = nil;
     }
     
@@ -568,17 +493,6 @@ static AnalyticsManager *singleton = nil;
         }
     }
     nParams[@"UID"] = [[[UIDevice currentDevice] identifierForVendor] UUIDString];
-    
-    /*NSError *misc = [[[AudioManager shared] audioPlayer] currentItem].error;
-    if ( misc ) {
-        for ( NSString *key in [[misc userInfo] allKeys] ) {
-            nParams[key] = [misc userInfo][key];
-        }
-    }
-    */
-    
-    //NSLog(@" •••••••• FINISHED LOGGIFYING ANALYTICS ••••••• ");
-    
     
     return nParams;
 }
@@ -612,48 +526,48 @@ static AnalyticsManager *singleton = nil;
     return english;
 }
 
-#pragma mark - Nielsen
-- (void)nielsenPlay {
-    [self.nielsenTracker play:[self nielsenInfoForCurrentAudio]];
-    [self.nielsenTracker loadMetadata:[self nielsenInfoForKPCC]];
-}
-
-- (void)nielsenStop {
-    [self.nielsenTracker stop];
-}
-
-- (void)nielsenTrack {
-    if ( [[AudioManager shared] currentAudioMode] == AudioModeLive ) {
-        [self.nielsenTracker playheadPosition:[[[SessionManager shared] vNow] timeIntervalSince1970]];
-    } else {
-        NSInteger seconds = CMTimeGetSeconds([[AudioManager shared].audioPlayer currentTime]);
-        [self.nielsenTracker playheadPosition:seconds];
-    }
-}
-
-- (NSString*)nielsenInfoForCurrentAudio {
-    if ( [[AudioManager shared] currentAudioMode] == AudioModeLive ) {
-        Program *p = [[SessionManager shared] currentProgram];
-        if ( p ) {
-            return [NSString stringWithFormat:@"{ \"channelName\" : \"%@\" }",p.title];
-        } else {
-            return [NSString stringWithFormat:@"{ \"channelName\" : \"KPCC Live\" }"];
-        }
-    } else {
-        AudioChunk *ac = [[QueueManager shared] currentChunk];
-        if ( ac ) {
-            return [NSString stringWithFormat:@"{ \"channelName\" : \"%@\" }",ac.programTitle];
-        } else {
-            return [NSString stringWithFormat:@"{ \"channelName\" : \"KPCC OD\" }"];
-        }
-    }
-    
-    return @"{ \"channelName\" : \"KPCC\" }";
-}
-
-- (NSString*)nielsenInfoForKPCC {
-    return @"{ \"dataSrc\" : \"cms\", \"type\" : \"radio\", \"assetid\" : \"KPCC-FM\", \"stationType\" : \"1\", \"provider\" : \"KPCC iPhone\" }";
-}
+//#pragma mark - Nielsen
+//- (void)nielsenPlay {
+//    [self.nielsenTracker play:[self nielsenInfoForCurrentAudio]];
+//    [self.nielsenTracker loadMetadata:[self nielsenInfoForKPCC]];
+//}
+//
+//- (void)nielsenStop {
+//    [self.nielsenTracker stop];
+//}
+//
+//- (void)nielsenTrack {
+//    if ( [[AudioManager shared] currentAudioMode] == AudioModeLive ) {
+//        [self.nielsenTracker playheadPosition:[[[SessionManager shared] vNow] timeIntervalSince1970]];
+//    } else {
+//        NSInteger seconds = CMTimeGetSeconds([[AudioManager shared].audioPlayer currentTime]);
+//        [self.nielsenTracker playheadPosition:seconds];
+//    }
+//}
+//
+//- (NSString*)nielsenInfoForCurrentAudio {
+//    if ( [[AudioManager shared] currentAudioMode] == AudioModeLive ) {
+//        ScheduleOccurrence *p = [[SessionManager shared] currentSchedule];
+//        if ( p ) {
+//            return [NSString stringWithFormat:@"{ \"channelName\" : \"%@\" }",p.title];
+//        } else {
+//            return [NSString stringWithFormat:@"{ \"channelName\" : \"KPCC Live\" }"];
+//        }
+//    } else {
+//        AudioChunk *ac = [[QueueManager shared] currentChunk];
+//        if ( ac ) {
+//            return [NSString stringWithFormat:@"{ \"channelName\" : \"%@\" }",ac.programTitle];
+//        } else {
+//            return [NSString stringWithFormat:@"{ \"channelName\" : \"KPCC OD\" }"];
+//        }
+//    }
+//    
+//    return @"{ \"channelName\" : \"KPCC\" }";
+//}
+//
+//- (NSString*)nielsenInfoForKPCC {
+//    return @"{ \"dataSrc\" : \"cms\", \"type\" : \"radio\", \"assetid\" : \"KPCC-FM\", \"stationType\" : \"1\", \"provider\" : \"KPCC iPhone\" }";
+//}
 
 
 #pragma mark - Events
@@ -710,7 +624,7 @@ static AnalyticsManager *singleton = nil;
     NSTimeInterval streamStarted = (NSTimeInterval)[[SessionManager shared] liveStreamSessionBegan];
     NSTimeInterval diff = [[NSDate date] timeIntervalSince1970] - streamStarted;
     
-    Program *p = [[SessionManager shared] currentProgram];
+    ScheduleOccurrence *p = [[SessionManager shared] currentSchedule];
     
     NSString *title = @"[UNKNOWN]";
     if ( p.title ) {

@@ -30,6 +30,7 @@
 #import "Utils.h"
 #import "SCPRLoginViewController.h"
 #import "SCPRProfileViewController.h"
+#import "GenericProgram.h"
 
 @import MessageUI;
 
@@ -43,12 +44,10 @@ static NSInteger kCancelSleepTimerAlertTag = 44839;
 
 @property BOOL initialPlay;
 @property BOOL setPlaying;
-@property BOOL seekRequested;
 @property BOOL busyZoomAnim;
 @property BOOL jogging;
 @property BOOL setForLiveStreamUI;
 @property BOOL setForOnDemandUI;
-@property BOOL dirtyFromRewind;
 @property BOOL queueBlurShown;
 @property BOOL queueLoading;
 
@@ -70,7 +69,6 @@ static NSInteger kCancelSleepTimerAlertTag = 44839;
 @implementation SCPRMasterViewController
 
 @synthesize pulldownMenu,
-seekRequested,
 initialPlay,
 setPlaying,
 busyZoomAnim,
@@ -104,30 +102,15 @@ setForOnDemandUI;
 
 - (void)remoteControlReceivedWithEvent:(UIEvent *)event {
     // Handle remote audio control events.
-    NSLog(@" >>>>>> EVENT RECEIVED FROM OTHER REMOTE CONTROL SOURCE <<<<<< ");
-    NSString *pretty = @"";
-    NSString *ammendment = @"";
     if (event.type == UIEventTypeRemoteControl) {
-        if (event.subtype == UIEventSubtypeRemoteControlTogglePlayPause) {
+        if ( event.subtype == UIEventSubtypeRemoteControlPause ) {
+//            [[AudioManager shared] pauseAudio];
             [self remoteControlPlayOrPause];
-            pretty = @"Toggle Play / Pause";
-        } else if ( event.subtype == UIEventSubtypeRemoteControlPause ) {
-            if ( [[AudioManager shared] isPlayingAudio] ) {
-                [self remoteControlPlayOrPause];
-            } else {
-                ammendment = @", but we're going to ignore it";
-            }
-            pretty = @"Hard Pause";
         } else if ( event.subtype == UIEventSubtypeRemoteControlPlay ) {
-            if ( ![[AudioManager shared] isPlayingAudio] ) {
-                [self remoteControlPlayOrPause];
-            } else {
-                ammendment = @", but we're going to ignore it";
-            }
-            pretty = @"Hard Play";
+//            [[AudioManager shared] playAudio];
+            [self remoteControlPlayOrPause];
         }
     }
-    NSLog(@"Received : %@%@",pretty,ammendment);
 }
 
 - (void)handleResponseForNotification {
@@ -152,7 +135,7 @@ setForOnDemandUI;
             return;
         }
     } else if ( [[AudioManager shared] currentAudioMode] == AudioModeLive ) {
-        if ( [[AudioManager shared] status] == StreamStatusPaused ) {
+        if ( [[[AudioManager shared] status] status] == AudioStatusPaused ) {
             [[AudioManager shared] resetPlayer];
         } else if ( [[SessionManager shared] sessionIsBehindLive] ) {
             [[SessionManager shared] setLastKnownPauseExplanation:PauseExplanationAppIsRespondingToPush];
@@ -336,7 +319,7 @@ setForOnDemandUI;
     
     // Initially flag as KPCC Live view
     setForLiveStreamUI = YES;
-    [self primeRemoteCommandCenter:YES];
+    [self primeRemoteCommandCenter];
     
     self.jogShuttle = [[SCPRJogShuttleViewController alloc] init];
     self.jogShuttle.view = self.rewindView;
@@ -383,11 +366,32 @@ setForOnDemandUI;
                                action:@selector(initialPlayTapped:)
                      forControlEvents:UIControlEventTouchUpInside
                               special:YES];
-    
+
+    // set up the playPause button
+
     [self.playPauseButton addTarget:self
                              action:@selector(playOrPauseTapped:)
                    forControlEvents:UIControlEventTouchUpInside
                             special:YES];
+
+    [[[AudioManager shared] status] observe:^(enum AudioStatus s) {
+        switch (s) {
+            case AudioStatusPlaying:
+            case AudioStatusSeeking:
+            case AudioStatusWaiting:
+                // set pause button
+                NSLog(@"Set playPauseButton to PAUSE based on status %ld",(long)s);
+                [self.playPauseButton fadeImage:[UIImage imageNamed:@"btn_pause.png"] duration:0.2];
+
+                break;
+            default:
+                // set play button
+                NSLog(@"Set playPauseButton to PLAY based on status %ld",(long)s);
+                [self.playPauseButton fadeImage:[UIImage imageNamed:@"btn_play.png"] duration:0.2];
+
+                break;
+        }
+    }];
     
     if ( [Utils isIOS8] ) {
         [self.shareButton addTarget:self
@@ -530,24 +534,6 @@ setForOnDemandUI;
     [self.navigationController popToRootViewControllerAnimated:YES];
     
     self.navigationItem.title = kMainLiveStreamTitle;
-}
-
-- (void)setupScroller7 {
-    self.mainContentScroller.translatesAutoresizingMaskIntoConstraints = NO;
-    self.mainContentScroller.pagingEnabled = YES;
-    self.upcomingScreen = [[SCPRUpcomingProgramViewController alloc] initWithNibName:@"SCPRUpcomingProgramViewController"
-                                                                              bundle:nil];
-    self.cpFullDetailScreen = [[SCPRCompleteScheduleViewController alloc] initWithNibName:@"SCPRCompleteScheduleViewController"
-                                                                                   bundle:nil];
-    
-    
-    self.upcomingScreen.view.frame = self.upcomingScreen.view.frame;
-    self.cpFullDetailScreen.view.frame = self.cpFullDetailScreen.view.frame;
-    
-    UIView *contentView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0,
-                                                                   self.mainContentScroller.frame.size.width*3.0,
-                                                                   self.view.frame.size.height-64.0)];
-    [self.mainContentScroller addSubview:contentView];
 }
 
 - (void)setupScroller {
@@ -694,27 +680,19 @@ setForOnDemandUI;
 }
 
 - (void)addPreRollController {
-    
     if ( ![[UXmanager shared] userHasSeenOnboarding] ) return;
     
     self.preRollViewController = [[SCPRPreRollViewController alloc] initWithNibName:nil bundle:nil];
     self.preRollViewController.delegate = self;
-    
-    [[NetworkManager shared] fetchTritonAd:nil completion:^(TritonAd *tritonAd) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            self.preRollViewController.tritonAd = tritonAd;
-            [self addChildViewController:self.preRollViewController];
-            
-            CGRect frame = self.view.bounds;
-            frame.origin.y = (-1)*self.view.bounds.size.height;
-            self.preRollViewController.view.frame = frame;
-            
-            [self.view addSubview:self.preRollViewController.view];
-            [self.preRollViewController didMoveToParentViewController:self];
-        });
-    }];
-    
 
+    [self addChildViewController:self.preRollViewController];
+    
+    CGRect frame = self.view.bounds;
+    frame.origin.y = (-1)*self.view.bounds.size.height;
+    self.preRollViewController.view.frame = frame;
+    
+    [self.view addSubview:self.preRollViewController.view];
+    [self.preRollViewController didMoveToParentViewController:self];
 }
 
 - (void)resetUI {
@@ -754,7 +732,7 @@ setForOnDemandUI;
             [self determinePlayState];
             
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.85 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                [[SessionManager shared] fetchCurrentProgram:^(id returnedObject) {
+                [[SessionManager shared] fetchCurrentSchedule:^(id returnedObject) {
                     [self addPreRollController];
                     [SCPRCloakViewController uncloak];
                     [[SessionManager shared] setExpiring:NO];
@@ -776,21 +754,7 @@ setForOnDemandUI;
     self.plainTextCountdownLabel.text = @"";
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.25 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         [self superPop];
-        if ( ![[AudioManager shared] isPlayingAudio] ) {
-            if ( [[AudioManager shared] currentAudioMode] != AudioModeLive ) {
-                [self goLive:YES];
-            } else {
-                if ( self.initialPlay ) {
-                    [self playAudio:NO];
-                } else {
-                    [self initialPlayTapped:nil];
-                }
-            }
-        } else {
-            if ( [[AudioManager shared] currentAudioMode] != AudioModeLive ) {
-                [self goLive:YES];
-            }
-        }
+        [self goLive:YES];
     });
    
 }
@@ -907,7 +871,7 @@ setForOnDemandUI;
 - (void)onboarding_beginOnboardingAudio {
     
   
-    [self.liveProgressViewController displayWithProgram:[[SessionManager shared] currentProgram]
+    [self.liveProgressViewController displayWithProgram:[[SessionManager shared] currentSchedule]
                                                  onView:self.view
                                        aboveSiblingView:self.playerControlsView];
     [self.liveProgressViewController show];
@@ -929,15 +893,12 @@ setForOnDemandUI;
 
 - (void)onboarding_beginOutro {
     
-    [[AudioManager shared] setTemporaryMutex:NO];
     [[AudioManager shared] playOnboardingAudio:3];
 }
 
 - (void)onboarding_fin {
-    
     [[AudioManager shared] resetPlayer];
-    [[AudioManager shared] takedownAudioPlayer];
-    
+
     self.initialPlay = YES;
     
     [self adjustScrubbingState];
@@ -978,17 +939,6 @@ setForOnDemandUI;
 
 - (IBAction)initialPlayTapped:(id)sender {
     
-#ifdef DEBUG
-   // [Utils crash];
-#endif
-    
-#ifdef FORCE_TEST_STREAM
-    self.preRollViewController.tritonAd = nil;
-#endif
-#ifdef BETA
-    self.preRollViewController.tritonAd = nil;
-#endif
-    
     if ( ![[UXmanager shared].settings userHasViewedOnboarding] ) {
         [[UXmanager shared] fadeOutBrandingWithCompletion:^{
             [self adjustScrubbingState];
@@ -998,25 +948,29 @@ setForOnDemandUI;
         }];
         return;
     }
-    
-    [[AudioManager shared] setSmooth:!self.preRollViewController.tritonAd];
 
-    [[SessionManager shared] fetchCurrentProgram:^(id returnedObject) {
+    [[SessionManager shared] fetchCurrentSchedule:^(id returnedObject) {
         [UIView animateWithDuration:0.15 animations:^{
             self.liveRewindAltButton.alpha = 0.0f;
         } completion:^(BOOL finished) {
-            if (self.preRollViewController.tritonAd) {
-                [self cloakForPreRoll:YES];
-                [self.preRollViewController primeUI:^{
-                    [self.preRollViewController showPreRollWithAnimation:YES completion:^(BOOL done) {
-                        [self primePlaybackUI:YES];
-                        [self.preRollViewController.prerollPlayer play];
+            // is there a preroll that we should play?
+            [[NetworkManager shared] fetchTritonAd:nil completion:^(TritonAd *tritonAd) {
+                if (tritonAd) {
+                    self.preRollViewController.tritonAd = tritonAd;
+//                    [[AudioManager shared] setSmooth:NO];
+
+                    [self cloakForPreRoll:YES];
+                    [self.preRollViewController primeUI:^{
+                        [self.preRollViewController showPreRollWithAnimation:YES completion:^(BOOL done) {
+                            [self primePlaybackUI:YES];
+                            [self.preRollViewController.prerollPlayer play];
+                        }];
                     }];
-                }];
-            } else {
-                [self primePlaybackUI:YES];
-                self.initialPlay = YES;
-            }
+                } else {
+                    [self primePlaybackUI:YES];
+                    self.initialPlay = YES;
+                }
+            }];
         }];
     }];
 
@@ -1033,10 +987,6 @@ setForOnDemandUI;
 }
 
 - (IBAction)playOrPauseTapped:(id)sender {
-    if (seekRequested) {
-        seekRequested = NO;
-    }
-    
     if ( [[AudioManager shared] currentAudioMode] == AudioModePreroll ) {
         [self handlePreRollControl:([self.preRollViewController.prerollPlayer rate] == 0.0)];
         return;
@@ -1050,7 +1000,7 @@ setForOnDemandUI;
         }
         
         if ( [[SessionManager shared] sessionIsExpired] ) {
-            [[SessionManager shared] fetchCurrentProgram:^(id returnedObject) {
+            [[SessionManager shared] fetchCurrentSchedule:^(id returnedObject) {
                 [self playAudio:YES];
             }];
         } else {
@@ -1065,8 +1015,9 @@ setForOnDemandUI;
             } else {
                 
                 self.scrubbingTriggerView.userInteractionEnabled = YES;
-                BOOL hard = [[AudioManager shared] status] == StreamStatusStopped ? YES : NO;
-                [self playAudio:hard];
+                // FIXME: Reimplement this
+//                BOOL hard = [[AudioManager shared] status] == StreamStatusStopped ? YES : NO;
+                [self playAudio:NO];
                 
             }
             
@@ -1136,20 +1087,6 @@ setForOnDemandUI;
     [self.playerControlsView layoutIfNeeded];
 }
 
-
-- (NSTimeInterval)rewindAgainstStreamDelta {
-    AVPlayerItem *item = [[AudioManager shared].audioPlayer currentItem];
-    NSTimeInterval current = [item.currentDate timeIntervalSince1970];
-    
-    if ( [[SessionManager shared] currentProgram] ) {
-        NSTimeInterval startOfProgram = [[[[SessionManager shared] currentProgram] soft_starts_at] timeIntervalSince1970];
-        return current - startOfProgram;
-    }
-    
-    return (NSTimeInterval)0;
-    
-}
-
 - (BOOL)uiIsJogging {
     if ( [self.liveDescriptionLabel.text isEqualToString:kRewindingText] ) return YES;
     if ( [self.liveDescriptionLabel.text isEqualToString:kForwardingText] ) return YES;
@@ -1157,15 +1094,15 @@ setForOnDemandUI;
 }
 
 -(void)skipBackwardEvent: (MPSkipIntervalCommandEvent *)skipEvent {
-    [self rewindFifteen];
+    [self seekBack30];
 }
 
 -(void)skipForwardEvent: (MPSkipIntervalCommandEvent *)skipEvent {
-    [self fastForwardFifteen];
+    [self seekFwd30];
 }
 
 - (IBAction)backToLiveTapped:(id)sender {
-    [[SessionManager shared] fetchCurrentProgram:^(id returnedObject) {
+    [[SessionManager shared] fetchCurrentSchedule:^(id returnedObject) {
         [self activateFastForward];
     }];
 }
@@ -1204,15 +1141,6 @@ setForOnDemandUI;
     }
 }
 
-- (IBAction)showPreRollTapped:(id)sender {
-    [self cloakForPreRoll:YES];
-    [self.preRollViewController primeUI:^{
-        [self.preRollViewController showPreRollWithAnimation:YES completion:^(BOOL done) {
-            
-        }];
-    }];
-}
-
 # pragma mark - Audio commands
 - (void)playAudio:(BOOL)hard {
     
@@ -1231,14 +1159,12 @@ setForOnDemandUI;
 }
 
 - (void)rewindFifteen {
-    seekRequested = YES;
     [[AudioManager shared] backwardSeekFifteenSecondsWithCompletion:^{
         
     }];
 }
 
 - (void)fastForwardFifteen {
-    seekRequested = YES;
     [[AudioManager shared] forwardSeekFifteenSecondsWithCompletion:^{
         
     }];
@@ -1248,47 +1174,34 @@ setForOnDemandUI;
     [self goLive:play smooth:YES];
 }
 
+// regardless of what we're currently doing, get to the live stream
 - (void)goLive:(BOOL)play smooth:(BOOL)smooth {
+
+    if ([[AudioManager shared] isActiveForAudioMode:AudioModeLive]) {
+        // we're good
+        return;
+    }
+
+    if ([[AudioManager shared] isActiveForAudioMode:AudioModeOnDemand]) {
+        // we're currently playing on-demand content. stop that, so that
+        // we can switch to live stream
+        [[AnalyticsManager shared] endTimedEvent:@"episodePlay"];
+        [[AudioManager shared] stopAudio];
+    }
     
     [[AudioManager shared] setSmooth:smooth];
     [self.liveProgressViewController hide];
-    
-    if ( [[AudioManager shared] currentAudioMode] == AudioModeLive ||
-        [[AudioManager shared] currentAudioMode] == AudioModeNeutral ) {
-        if ( [[AudioManager shared] status] == StreamStatusPaused ) {
-            if ( self.initialPlay ) {
-                [self playAudio:NO];
-            } else {
-                [self initialPlayTapped:nil];
-            }
-            return;
-        }
-        if ( [[AudioManager shared] status] == StreamStatusStopped ) {
-            if ( self.initialPlay ) {
-                [self playAudio:YES];
-            } else {
-                [self initialPlayTapped:nil];
-            }
-            return;
-        }
-        
-        return;
-    }
-    
-    [[AnalyticsManager shared] endTimedEvent:@"episodePlay"];
-    [[AudioManager shared] stopAudio];
-    
+
     self.liveStreamView.userInteractionEnabled = YES;
     self.playerControlsView.userInteractionEnabled = YES;
-    self.lockPlayback = !play;
-    
+
     [self.jogShuttle endAnimations];
     
     if ( [self cloaked] ) {
         [self decloakForXFS];
     }
     
-    [[SessionManager shared] fetchCurrentProgram:^(id returnedObject) {
+    [[SessionManager shared] fetchCurrentSchedule:^(id returnedObject) {
         
         [self setLiveStreamingUI:YES];
         [self treatUIforProgram];
@@ -1324,9 +1237,9 @@ setForOnDemandUI;
     self.shuttlingGate = YES;
     
     [[AudioManager shared] setCalibrating:YES];
-    [[SessionManager shared] setLocalLiveTime:0.0f];
-    
-    Program *cProgram = [[SessionManager shared] currentProgram];
+//    [[SessionManager shared] setLocalLiveTime:0.0f];
+
+    ScheduleOccurrence *cProgram = [[SessionManager shared] currentSchedule];
     [self.jogShuttle.view setAlpha:1.0f];
     
     BOOL sound = [AudioManager shared].currentAudioMode == AudioModeOnboarding ? NO : YES;
@@ -1336,7 +1249,6 @@ setForOnDemandUI;
                             withSound:sound
                            completion:^{
                                
-                               self.dirtyFromRewind = YES;
                                self.initiateRewind = NO;
                                self.jogging = NO;
                                
@@ -1362,7 +1274,6 @@ setForOnDemandUI;
                                    
                                    [[SessionManager shared] fetchOnboardingProgramWithSegment:2 completed:^(id returnedObject) {
                                        
-                                       [[AudioManager shared] setTemporaryMutex:NO];
                                        [[AudioManager shared] playOnboardingAudio:2];
                                        
                                    }];
@@ -1375,7 +1286,6 @@ setForOnDemandUI;
     
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.6f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         
-        seekRequested = YES;
         switch (distance) {
             case RewindDistanceFifteen:
                 [self rewindFifteen];
@@ -1420,11 +1330,11 @@ setForOnDemandUI;
     
     self.shuttlingGate = YES;
     [[AudioManager shared] setCalibrating:YES];
-    [[SessionManager shared] setLocalLiveTime:0.0f];
-    
+//    [[SessionManager shared] setLocalLiveTime:0.0f];
+
     [self.jogShuttle.view setAlpha:1.0];
     [[SessionManager shared] setSeekForwardRequested:YES];
-    [[SessionManager shared] fetchCurrentProgram:^(id returnedObject) {
+    [[SessionManager shared] fetchCurrentSchedule:^(id returnedObject) {
         [self.jogShuttle animateWithSpeed:0.8
                              hideableView:self.playPauseButton
                                 direction:SpinDirectionForward
@@ -1432,7 +1342,6 @@ setForOnDemandUI;
                                completion:^{
                                    
                                    self.jogging = NO;
-                                   self.dirtyFromRewind = NO;
                                    [self updateControlsAndUI:YES];
                                    
                                    [[SessionManager shared] setSeekForwardRequested:NO];
@@ -1459,7 +1368,6 @@ setForOnDemandUI;
     
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.66 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         
-        seekRequested = YES;
         [[AudioManager shared] forwardSeekLiveWithType:ScrubbingTypeBackToLive
                                             completion:nil];
         
@@ -1469,10 +1377,10 @@ setForOnDemandUI;
 - (void)handlePreRollControl:(BOOL)paused {
     if ( !paused ) {
         [self.preRollViewController.prerollPlayer pause];
-        [self.playPauseButton fadeImage:[UIImage imageNamed:@"btn_play.png"] duration:0.2];
+//        [self.playPauseButton fadeImage:[UIImage imageNamed:@"btn_play.png"] duration:0.2];
     } else {
         [self.preRollViewController.prerollPlayer play];
-        [self.playPauseButton fadeImage:[UIImage imageNamed:@"btn_pause.png"] duration:0.2];
+//        [self.playPauseButton fadeImage:[UIImage imageNamed:@"btn_pause.png"] duration:0.2];
     }
 }
 
@@ -1482,6 +1390,8 @@ setForOnDemandUI;
     SCPRScrubbingUIViewController *sUI = [[SCPRScrubbingUIViewController alloc]
                                           init];
     sUI.view = self.scrubbingUIView;
+
+    [sUI activateStatusObserver];
     
     self.scrubbingUI = sUI;
     self.scrubbingUI.rw30Button = self.mainBackward30Button;
@@ -1607,6 +1517,7 @@ setForOnDemandUI;
         }
         
         [self addCloseButton];
+
         if ( [[AudioManager shared] currentAudioMode] == AudioModeLive ) {
             [self.scrubbingUI tickLive:NO];
         }
@@ -1745,6 +1656,10 @@ setForOnDemandUI;
 }
 
 - (void)finishedWithScrubber {
+    [self.liveProgressViewController update];
+    [self tickOnDemand];
+    [self prettifyBehindLiveStatus];
+    [self adjustScrubbingState];
     
     [self wipeTargetsForScrubButtons];
     
@@ -1861,7 +1776,7 @@ setForOnDemandUI;
         return;
     }
     
-    NSDate *ciCurrentDate = [AudioManager shared].audioPlayer.currentItem.currentDate;
+    NSDate *ciCurrentDate = [[AudioManager shared].audioPlayer currentDate];
     if ( !ciCurrentDate ) {
         self.liveDescriptionLabel.text = @"";
         return;
@@ -1870,36 +1785,30 @@ setForOnDemandUI;
     if ( [[AudioManager shared] calibrating] ) {
         return;
     }
-    
-#ifndef SUPPRESS_V_LIVE
+
+    if ( [[NetworkManager shared] networkDown] ) {
+        [self.liveDescriptionLabel fadeText:@"NO NETWORK"];
+        return;
+    }
+
     NSTimeInterval ti = [[[SessionManager shared] vLive] timeIntervalSinceDate:ciCurrentDate];
-#else
-    NSTimeInterval ti = [[NSDate date] timeIntervalSinceDate:ciCurrentDate];
-#endif
-    
-#ifndef SUPPRESS_V_LIVE
+
+    // EWR: Does this come into play for onboarding? i'm assuming 48 hours is to get 0
     if ( ti > 60*60*48 ) {
         if ( [[SessionManager shared] sessionIsInRecess] ) {
             [self.liveDescriptionLabel fadeText:@"UP NEXT"];
         } else {
             [self.liveDescriptionLabel fadeText:@"LIVE"];
-            self.dirtyFromRewind = NO;
         }
         
         [self adjustScrubbingState];
         
         return;
     }
-#endif
-    
-    if ( [[NetworkManager shared] networkDown] ) {
-        [self.liveDescriptionLabel fadeText:@"NO NETWORK"];
-        return;
-    }
-    
+
     if ( ti > kVirtualMediumBehindLiveTolerance || [[AudioManager shared] ignoreDriftTolerance] ) {
         [self.liveDescriptionLabel fadeText:[NSString stringWithFormat:@"%@ BEHIND LIVE", [NSDate prettyTextFromSeconds:ti]]];
-        self.previousRewindThreshold = [[AudioManager shared].audioPlayer.currentItem.currentDate timeIntervalSince1970];
+        self.previousRewindThreshold = [[[AudioManager shared].audioPlayer currentDate] timeIntervalSince1970];
         
 
     } else {
@@ -1907,7 +1816,6 @@ setForOnDemandUI;
             [self.liveDescriptionLabel fadeText:@"UP NEXT"];
         } else {
             [self.liveDescriptionLabel fadeText:@"LIVE"];
-            self.dirtyFromRewind = NO;
         }
         
     }
@@ -1916,10 +1824,10 @@ setForOnDemandUI;
 }
 
 - (void)updateDataForUI {
-    [[SessionManager shared] fetchCurrentProgram:^(id returnedObject) {
+    [[SessionManager shared] fetchCurrentSchedule:^(id returnedObject) {
         if ( returnedObject ) {
             
-            [self.liveProgressViewController displayWithProgram:(Program*)returnedObject
+            [self.liveProgressViewController displayWithProgram:(ScheduleOccurrence*)returnedObject
                                                          onView:self.view
                                                aboveSiblingView:self.playerControlsView];
             [self.liveProgressViewController hide];
@@ -1993,13 +1901,6 @@ setForOnDemandUI;
                 self.liveDescriptionLabel.alpha = 1.0f;
             
         } completion:^(BOOL finished) {
-            if ([[AudioManager shared] isStreamPlaying] || [[AudioManager shared] isStreamBuffering]) {
-                [self.playPauseButton fadeImage:[UIImage imageNamed:@"btn_pause.png"] duration:0.2];
-            } else {
-                [self.playPauseButton fadeImage:[UIImage imageNamed:@"btn_play.png"] duration:0.2];
-            }
-            
-            
             [UIView animateWithDuration:0.1 animations:^{
                 if ( [AudioManager shared].currentAudioMode != AudioModeOnDemand ) {
                     [self.playPauseButton setAlpha:1.0];
@@ -2015,10 +1916,10 @@ setForOnDemandUI;
 }
 
 - (void)determinePlayState {
-    
-    if ( [[AudioManager shared] seekWillEffectBuffer] ) return;
-    
-    if ( [[AudioManager shared] status] == StreamStatusStopped || self.dirtyFromFailure || [[SessionManager shared] expiring] ) {
+
+    if ( [[[AudioManager shared] status] status] == AudioStatusSeeking) return;
+
+    if ( [[[AudioManager shared] status] status] == AudioStatusStopped || self.dirtyFromFailure || [[SessionManager shared] expiring] ) {
         if ( [[SessionManager shared] sessionIsInRecess] ) {
             self.liveDescriptionLabel.text = @"UP NEXT";
         } else {
@@ -2026,19 +1927,9 @@ setForOnDemandUI;
                 self.liveDescriptionLabel.text = @"ON NOW";
         }
     }
-    if ( [[AudioManager shared] status] == StreamStatusPaused ) {
+    if ( [[[AudioManager shared] status] status] == AudioStatusPaused) {
         if ( [[SessionManager shared] sessionIsBehindLive] ) {
-#ifndef SUPPRESS_V_LIVE
             [self prettifyBehindLiveStatus];
-#else
-            NSDate *ciCurrentDate = [AudioManager shared].audioPlayer.currentItem.currentDate;
-            NSTimeInterval ti = [[NSDate date] timeIntervalSinceDate:ciCurrentDate];
-            if ( ti > [[SessionManager shared] peakDrift] ) {
-                [self.liveDescriptionLabel setText:[NSString stringWithFormat:@"%@ BEHIND LIVE", [NSDate prettyTextFromSeconds:ti]]];
-            } else {
-                [self.liveDescriptionLabel setText:[NSString stringWithFormat:@"LIVE"]];
-            }
-#endif
         }
     }
     
@@ -2053,35 +1944,6 @@ setForOnDemandUI;
     [self primeManualControlButton];
 }
 
-/**
- * Dev note: Not being called for now.. zooms in background program image slightly
- */
-- (void)scaleBackgroundImage {
-    POPSpringAnimation *scaleAnimation = [POPSpringAnimation animationWithPropertyNamed:kPOPLayerScaleXY];
-    
-    if ([[AudioManager shared] isStreamPlaying] || [[AudioManager shared] isStreamBuffering]) {
-        scaleAnimation.fromValue  = [NSValue valueWithCGSize:CGSizeMake(1.0f, 1.0f)];
-        scaleAnimation.toValue  = [NSValue valueWithCGSize:CGSizeMake(1.2f, 1.2f)];
-    } else {
-        scaleAnimation.fromValue  = [NSValue valueWithCGSize:CGSizeMake(1.2f, 1.2f)];
-        scaleAnimation.toValue  = [NSValue valueWithCGSize:CGSizeMake(1.0f, 1.0f)];
-    }
-    
-    scaleAnimation.springBounciness = 2.0f;
-    scaleAnimation.springSpeed = 2.0f;
-    
-    // Used to ensure animation only gets started once.
-    // This method stems from onRateChange: firing, which sometimes gets called rapidly.
-    [scaleAnimation setCompletionBlock:^(POPAnimation *animation, BOOL done) {
-        busyZoomAnim = NO;
-    }];
-    
-    if (!seekRequested && !busyZoomAnim) {
-        busyZoomAnim = YES;
-        [self.programImageView.layer pop_addAnimation:scaleAnimation forKey:@"scaleAnimation"];
-    }
-}
-
 - (void)setLiveStreamingUI:(BOOL)animated {
     
     setForOnDemandUI = NO;
@@ -2093,8 +1955,7 @@ setForOnDemandUI;
     self.dividerLineLeftAnchor.constant = 5.0f;
     
     self.navigationItem.title = kMainLiveStreamTitle;
-    [self primeRemoteCommandCenter:YES];
-    
+
     self.mainContentScroller.alpha = 1.0f;
     
     if (![self.onDemandPlayerView isHidden]) {
@@ -2218,7 +2079,7 @@ setForOnDemandUI;
         [[Utils del] controlXFSAvailability:NO];
         [self adjustScrubbingState];
         
-        [[SessionManager shared] setCurrentProgram:nil];
+        [[SessionManager shared] setCurrentSchedule:nil];
         
         self.navigationItem.title = @"Programs";
         [self.progressView setProgress:0.0 animated:YES];
@@ -2227,9 +2088,7 @@ setForOnDemandUI;
         self.queueScrollView.alpha = 1.0f;
         self.onDemandPlayerView.alpha = 1.0f;
         self.queueDarkBgView.alpha = 0.0f;
-        
-        [self primeRemoteCommandCenter:NO];
-        
+
         // Make sure the larger play button is hidden ...
         if ( !self.initialPlay ) {
             [self primePlaybackUI:NO];
@@ -2299,7 +2158,7 @@ setForOnDemandUI;
     if (program != nil) {
         self.onDemandProgram = program;
         self.onDemandEpUrl = audioChunk.contentShareUrl;
-        [[AudioManager shared] updateNowPlayingInfoWithAudio:audioChunk];
+        [[[AudioManager shared] nowPlaying] setAudio:audioChunk];
         [[DesignManager shared] loadProgramImage:program.program_slug
                                     andImageView:self.programImageView
                                       completion:^(BOOL status) {
@@ -2347,9 +2206,11 @@ setForOnDemandUI;
 }
 
 - (void)treatUIforProgram {
-    Program *programObj = [[SessionManager shared] currentProgram];
+    ScheduleOccurrence *programObj = [[SessionManager shared] currentSchedule];
+
     // Only update background image when we're not in On Demand mode.
     if (!setForOnDemandUI){
+
         
         if ( !programObj || SEQ(programObj.program_slug,@"kpcc-live") ) {
             [self updateUIWithProgram:programObj];
@@ -2366,7 +2227,9 @@ setForOnDemandUI;
                                       completion:^(BOOL status) {
                                           
                                           [self updateUIWithProgram:programObj];
-                                          [[AudioManager shared] updateNowPlayingInfoWithAudio:programObj];
+                                          AudioChunk *chunk = [[AudioChunk alloc] initWithScheduleOccurrence:programObj];
+                                          [[[AudioManager shared] nowPlaying] setAudio:chunk];
+//                                          [[AudioManager shared] updateNowPlayingInfoWithAudio:programObj];
                                           [self finishUpdatingForProgram];
                                           dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
                                               UIImage *blurred = [self.programImageView.image blurredImageWithRadius:20.0f
@@ -2429,7 +2292,7 @@ setForOnDemandUI;
     });
 }
 
-- (void)updateUIWithProgram:(Program*)program {
+- (void)updateUIWithProgram:(ScheduleOccurrence*)program {
     
     if ([program title]) {
         if ([program title].length <= 14) {
@@ -2578,6 +2441,9 @@ setForOnDemandUI;
 }
 
 - (void)primeManualControlButton {
+
+    // 1) Should any control be showing?
+    // 2) Should the control be Rewind or Live?
     
     /*BOOL okToShow = ( [[AudioManager shared] status] == StreamStatusPaused &&
                      [[AudioManager shared] currentAudioMode] != AudioModeOnDemand &&
@@ -2585,19 +2451,35 @@ setForOnDemandUI;
     
     BOOL okToShow = YES;
 
-    if ( [[AudioManager shared] currentAudioMode] == AudioModeOnboarding ) {
-        NSLog(@"Rewind Button - Hiding because onboarding");
-        okToShow = NO;
+    switch ([[AudioManager shared] currentAudioMode]) {
+        case AudioModeOnboarding:
+        case AudioModeOnDemand:
+        case AudioModePreroll:
+            okToShow = NO;
+            break;
+        default:
+            // Leave it as YES
+            break;
     }
+
+    // turn it off while audio is playing or seeking
+    if (okToShow) {
+        switch ([[[AudioManager shared] status] status]) {
+            case AudioStatusPlaying:
+            case AudioStatusSeeking:
+            case AudioStatusWaiting:
+                okToShow = NO;
+                break;
+            default:
+                // leave it as YES
+                break;
+        }
+    }
+
     if ( self.scrubbing ) {
         if ( okToShow ) {
             NSLog(@"Rewind Button - Hiding because the scrubber is up");
         }
-        okToShow = NO;
-    }
-    if ( [[AudioManager shared] prerollPlaying] ) {
-        if ( okToShow )
-            NSLog(@"Rewind Button - Hiding because preroll");
         okToShow = NO;
     }
     if ( [[SessionManager shared] sessionHasNoProgram] ) {
@@ -2605,57 +2487,20 @@ setForOnDemandUI;
             NSLog(@"Rewind Button - Hiding because live stream has no clearly defined program");
         okToShow = NO;
     }
-    if ( [[AudioManager shared] status] == StreamStatusStopped && [[AudioManager shared] currentAudioMode] == AudioModeOnDemand ) {
-        if ( okToShow )
-            NSLog(@"Rewind Button - Hiding because onboarding initial state");
-        okToShow = NO;
-    }
-    if ( [[AudioManager shared] status] == StreamStatusPlaying || [[AudioManager shared] isPlayingAudio] ) {
-        
-        if ( ![[SessionManager shared] sessionIsBehindLive] ) {
-            if ( okToShow )
-                NSLog(@"Rewind Button - Hiding because audio is playing");
-            okToShow = NO;
-        }
-        
-    }
-    if ( [[AudioManager shared] calibrating] ) {
-        if ( okToShow )
-            NSLog(@"Rewind Button - Hiding because audio is still calibrating");
-    }
-    if ( [[AudioManager shared] currentAudioMode] == AudioModeOnDemand ) {
-        if ( okToShow )
-            NSLog(@"Rewind Button - Hiding because Audio Mode is onDemand");
-        okToShow = NO;
-    }
+
     if ( [[AudioManager shared] dropoutOccurred] ) {
         if ( okToShow )
             NSLog(@"Rewind Button - Hiding because a dropout has occurred");
         okToShow = NO;
     }
-    if ( [self jogging] || [[AudioManager shared] seekWillEffectBuffer] ) {
-        if ( okToShow )
-            NSLog(@"Rewind Button - Hiding because of the UI is jogging");
-        okToShow = NO;
-    }
-    if ( [self scrubbing] ) {
-        if ( okToShow )
-            NSLog(@"Rewind Button - Hiding because of scrubbing" );
-    }
-    if ( self.preRollViewController.tritonAd ) {
-        if ( self.initialPlay ) {
-            if ( okToShow )
-                NSLog(@"Rewind Button - Hiding because of a Triton Ad");
-            okToShow = NO;
-        }
-    }
-    
+
     [self.liveRewindAltButton removeTarget:nil
                                     action:nil
                           forControlEvents:UIControlEventAllEvents];
     
     [self.liveRewindAltButton setImageEdgeInsets:UIEdgeInsetsMake(0.0, 0.0, 0.0, 20.0)];
-    if ( [[SessionManager shared] sessionIsBehindLive] && [[AudioManager shared] status] != StreamStatusStopped ) {
+
+    if ( [[SessionManager shared] sessionIsBehindLive] ) {
         [self.liveRewindAltButton setImage:[UIImage imageNamed:@"btn_back_to_live_xtra-small.png"]
                                   forState:UIControlStateHighlighted];
         [self.liveRewindAltButton setImage:[UIImage imageNamed:@"btn_back_to_live_xtra-small.png"]
@@ -2677,7 +2522,8 @@ setForOnDemandUI;
                                   forState:UIControlStateNormal];
         [self.liveRewindAltButton setTitle:@"Rewind to the start of this show"
                                   forState:UIControlStateHighlighted];
-        
+
+        // FIXME: How can we collapse this to one path?
         if ( initialPlay ) {
             [self.liveRewindAltButton addTarget:self
                                          action:@selector(activateRewind:)
@@ -2698,13 +2544,13 @@ setForOnDemandUI;
             NSLog(@"Rewind Button - Hiding because we're in no-mans-land");
         okToShow = NO;
     }
-    
-    
+
     if ( [[UXmanager shared] onboardingEnding] ) {
         if ( okToShow )
             NSLog(@"Rewind Button - Hiding because onboarding is ending");
         okToShow = NO;
     }
+
     if ( [[NetworkManager shared] networkDown] ) {
         if ( okToShow )
             NSLog(@"Rewind Button - Hiding because program is nil");
@@ -2935,9 +2781,10 @@ setForOnDemandUI;
     BOOL back30 = YES;
     BOOL fwd30 = YES;
     BOOL scrubbing = YES;
+
+    enum AudioMode mode = [[AudioManager shared] currentAudioMode];
     
-    if ( [[AudioManager shared] currentAudioMode] != AudioModeLive &&
-        [[AudioManager shared] currentAudioMode] != AudioModeOnDemand ) {
+    if ( mode == AudioModeOnboarding || mode == AudioModeNeutral) {
         back30 = NO;
         fwd30 = NO;
         scrubbing = NO;
@@ -2947,7 +2794,7 @@ setForOnDemandUI;
         fwd30 = NO;
         scrubbing = NO;
     }
-    if ( ![[SessionManager shared] sessionIsBehindLive] ) {
+    if ( mode == AudioModeLive && ![[SessionManager shared] sessionIsBehindLive] ) {
         fwd30 = NO;
     }
     if ( self.scrubbing ) {
@@ -2965,8 +2812,11 @@ setForOnDemandUI;
     [self animatedStateForBackwardButton:back30];
     [self animatedStateForForwardButton:fwd30];
     self.scrubbingTriggerView.alpha = scrubbing ? 1.0f : 0.0f;
-    
-          
+
+    // Also update Remote Command Center functions
+    MPRemoteCommandCenter *rcc = [MPRemoteCommandCenter sharedCommandCenter];
+    [[rcc skipBackwardCommand] setEnabled:back30];
+    [[rcc skipForwardCommand] setEnabled:fwd30];
 }
 
 #pragma mark - XFS
@@ -3408,6 +3258,7 @@ setForOnDemandUI;
 }
 
 - (void)preRollCompleted {
+    NSLog(@"Finished playing preroll.");
 
     [self.preRollViewController removeFromParentViewController];
     [self.preRollViewController.view removeFromSuperview];
@@ -3426,6 +3277,8 @@ setForOnDemandUI;
         if (self.preRollOpen) {
             [self decloakForPreRoll:YES];
         }
+
+        [[AudioManager shared] setSmooth:YES];
         
         if ( self.initiateRewind ) {
             [self activateRewind:RewindDistanceBeginning];
@@ -3490,7 +3343,7 @@ setForOnDemandUI;
             self.queueScrollTimer = nil;
         }
         
-        if ( [[AudioManager shared] status] == StreamStatusPlaying ) {
+        if ( [[[AudioManager shared] status] status] == AudioStatusPlaying ) {
             if ( ![self.jogShuttle spinning] ) {
                 [self snapJogWheel];
             }
@@ -3595,7 +3448,8 @@ setForOnDemandUI;
     if ((self.queueContents)[newPage]) {
         AudioChunk *chunk = (self.queueContents)[newPage];
         self.onDemandEpUrl = chunk.contentShareUrl;
-        [[AudioManager shared] updateNowPlayingInfoWithAudio:chunk];
+
+        [[[AudioManager shared] nowPlaying] setAudio:chunk];
     }
     
     if (self.queueCurrentPage != newPage) {
@@ -3678,7 +3532,7 @@ setForOnDemandUI;
             
             self.homeIsNotRootViewController = YES;
             event = @"menuSelectionPrograms";
-            Program *prog = [[SessionManager shared] currentProgram];
+            id<GenericProgram> prog = [[SessionManager shared] currentSchedule];
             if (setForOnDemandUI && self.onDemandProgram != nil) {
                 prog = self.onDemandProgram;
             }
@@ -3849,11 +3703,6 @@ setForOnDemandUI;
     NSAssert([NSThread isMainThread],@"This is not the main thread...");
     
     if ( [[AudioManager shared] frameCount] % 10 == 0 ) {
-        if ( !self.menuOpen ) {
-            [self prettifyBehindLiveStatus];
-        }
-        
-
         if ( self.showLiveHelpScreens ) {
             self.showLiveHelpScreens = NO;
             SCPRAppDelegate *del = [Utils del];
@@ -3861,7 +3710,11 @@ setForOnDemandUI;
         }
         
         [self adjustScrollingState];
-        
+
+        if ( !self.menuOpen ) {
+            [self prettifyBehindLiveStatus];
+        }
+
         if ( [AudioManager shared].currentAudioMode == AudioModeLive ) {
             if ( self.liveRewindAltButton.alpha == 1.0 || self.liveRewindAltButton.layer.opacity == 1.0 )
                 [self primeManualControlButton];
@@ -3900,8 +3753,8 @@ setForOnDemandUI;
             }
         }
         
-        [[AnalyticsManager shared] nielsenTrack];
-        
+//        [[AnalyticsManager shared] nielsenTrack];
+
     }
     
     [self.liveProgressViewController tick];
@@ -3919,9 +3772,9 @@ setForOnDemandUI;
     if ( !self.onDemandPanning )
         [self rebootOnDemandUI];
     
-    if (CMTimeGetSeconds([[[[AudioManager shared].audioPlayer currentItem] asset] duration]) > 0) {
-        double currentTime = CMTimeGetSeconds([[[AudioManager shared].audioPlayer currentItem] currentTime]);
-        double duration = CMTimeGetSeconds([[[[AudioManager shared].audioPlayer currentItem] asset] duration]);
+    if (CMTimeGetSeconds([[AudioManager shared].audioPlayer duration]) > 0) {
+        double currentTime = CMTimeGetSeconds([[AudioManager shared].audioPlayer currentTime]);
+        double duration = CMTimeGetSeconds([[AudioManager shared].audioPlayer duration]);
         double progress = (currentTime / duration);
         
         [self.timeLabelOnDemand setText:[Utils elapsedTimeStringWithPosition:currentTime
@@ -3936,13 +3789,11 @@ setForOnDemandUI;
         
         
     }
-    [[QueueManager shared] handleBookmarkingActivity];
-    
 }
 
 - (void)onSeekCompleted {
     // Make sure UI gets set to "Playing" state after a seek.
-    [[SessionManager shared] fetchCurrentProgram:^(id returnedObject) {
+    [[SessionManager shared] fetchCurrentSchedule:^(id returnedObject) {
         [self.jogShuttle endAnimations];
     }];
 }
@@ -4036,37 +3887,31 @@ setForOnDemandUI;
     // Dispose of any resources that can be recreated.
 }
 
-- (void)primeRemoteCommandCenter:(BOOL)forLiveStream {
+- (void)primeRemoteCommandCenter {
     MPRemoteCommandCenter *rcc = [MPRemoteCommandCenter sharedCommandCenter];
-    
-    if (forLiveStream) {
-        [[rcc previousTrackCommand] setEnabled:NO];
-        MPSkipIntervalCommand *skipBackwardIntervalCommand = [rcc skipBackwardCommand];
-        [skipBackwardIntervalCommand setEnabled:YES];
-        [skipBackwardIntervalCommand addTarget:self action:@selector(skipBackwardEvent:)];
-        skipBackwardIntervalCommand.preferredIntervals = @[@(15)];
-        
-        [[rcc nextTrackCommand] setEnabled:NO];
-        MPSkipIntervalCommand *skipForwardIntervalCommand = [rcc skipForwardCommand];
-        skipForwardIntervalCommand.preferredIntervals = @[@(15)];  // Max 99
-        [skipForwardIntervalCommand setEnabled:YES];
-        [skipForwardIntervalCommand addTarget:self action:@selector(skipForwardEvent:)];
-    } else {
-        [[rcc skipBackwardCommand] setEnabled:NO];
-        MPRemoteCommand *prevTrackCommand = [rcc previousTrackCommand];
-        [prevTrackCommand addTarget:self action:@selector(prevEpisodeTapped:)];
-        [prevTrackCommand setEnabled:YES];
-        
-        [[rcc skipForwardCommand] setEnabled:NO];
-        MPRemoteCommand *nextTrackCommand = [rcc nextTrackCommand];
-        [nextTrackCommand addTarget:self action:@selector(nextEpisodeTapped:)];
-        [nextTrackCommand setEnabled:YES];
-    }
+
+    MPSkipIntervalCommand *skipBackwardIntervalCommand = [rcc skipBackwardCommand];
+    [skipBackwardIntervalCommand setEnabled:NO];
+    [skipBackwardIntervalCommand addTarget:self action:@selector(skipBackwardEvent:)];
+    skipBackwardIntervalCommand.preferredIntervals = @[@(30)];
+
+    MPSkipIntervalCommand *skipForwardIntervalCommand = [rcc skipForwardCommand];
+    skipForwardIntervalCommand.preferredIntervals = @[@(30)];
+    [skipForwardIntervalCommand setEnabled:NO];
+    [skipForwardIntervalCommand addTarget:self action:@selector(skipForwardEvent:)];
+
+//        MPRemoteCommand *prevTrackCommand = [rcc previousTrackCommand];
+//        [prevTrackCommand addTarget:self action:@selector(prevEpisodeTapped:)];
+//        [prevTrackCommand setEnabled:YES];
+//
+//        MPRemoteCommand *nextTrackCommand = [rcc nextTrackCommand];
+//        [nextTrackCommand addTarget:self action:@selector(nextEpisodeTapped:)];
+//        [nextTrackCommand setEnabled:YES];
     
     MPRemoteCommand *pauseCommand = [rcc pauseCommand];
     [pauseCommand setEnabled:YES];
     [pauseCommand addTarget:self action:@selector(pauseTapped:)];
-    
+
     MPRemoteCommand *playCommand = [rcc playCommand];
     [playCommand setEnabled:YES];
     [playCommand addTarget:self action:@selector(playTapped:)];

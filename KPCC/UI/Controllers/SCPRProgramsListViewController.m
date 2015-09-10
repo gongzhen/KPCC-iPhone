@@ -13,16 +13,17 @@
 #import "AnalyticsManager.h"
 #import <FXBlurView.h>
 #import "SCPRGenericAvatarViewController.h"
+#import "GenericProgram.h"
 
 /**
  * Programs with these slugs will be hidden from this table view.
  */
-#define HIDDEN_PROGRAMS @[ @"take-two-evenings", @"filmweek-marquee" ]
+#define HIDDEN_PROGRAMS @[ @"take-two-evenings", @"filmweek-marquee", @"reveal" ]
 
 
 @interface SCPRProgramsListViewController ()
 @property NSArray *programsList;
-@property Program *currentProgram;
+@property id<GenericProgram> currentProgram;
 @end
 
 
@@ -33,7 +34,7 @@
     return self;
 }
 
-- (instancetype)initWithBackgroundProgram:(Program *)program {
+- (instancetype)initWithBackgroundProgram:(id<GenericProgram>)program {
     self = [self initWithNibName:nil bundle:nil];
     self.currentProgram = program;
     self.title = @"Programs";
@@ -97,13 +98,11 @@
         }
     }
 
-    // Sort Programs alphabetically.
-    NSArray *sortedPrograms;
-    sortedPrograms = [filteredPrograms sortedArrayUsingComparator:^NSComparisonResult(id a, id b) {
-        NSString *first = [(Program *)a title];
-        NSString *second = [(Program *)b title];
-        return [first compare:second];
-    }];
+    // Sort Programs by KPCC first, then alphabetically.
+    NSSortDescriptor *boolDescr = [[NSSortDescriptor alloc] initWithKey:@"is_kpcc" ascending:NO];
+    NSSortDescriptor *strDescr = [[NSSortDescriptor alloc] initWithKey:@"sortTitle" ascending:YES];
+    NSArray *sortDescriptors = @[boolDescr, strDescr];
+    NSArray *sortedPrograms = [filteredPrograms sortedArrayUsingDescriptors:sortDescriptors];
 
     self.programsList = sortedPrograms;
 

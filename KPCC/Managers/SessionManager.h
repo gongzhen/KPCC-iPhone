@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "Utils.h"
 #import "Program.h"
+#import "KPCC-Swift.h"
 
 typedef NS_ENUM(NSUInteger, OnDemandFinishedReason) {
     OnDemandFinishedReasonEpisodeEnd = 0,
@@ -30,11 +31,7 @@ static CGFloat kVirtualBehindLiveTolerance = 10.0f;
 static CGFloat kVirtualMediumBehindLiveTolerance = 24.0f;
 static CGFloat kVirtualLargeBehindLiveTolerance = 120.0f;
 
-#ifndef PRODUCTION
 static NSInteger kProgramPollingPressure = 5;
-#else
-static NSInteger kProgramPollingPressure = 5;
-#endif
 
 @interface SessionManager : NSObject
 
@@ -79,18 +76,16 @@ static NSInteger kProgramPollingPressure = 5;
 @property NSInteger peakDrift;
 @property NSInteger minDrift;
 @property NSInteger curDrift;
-@property (nonatomic, strong) Program *currentProgram;
+@property (nonatomic, strong) ScheduleOccurrence *currentSchedule;
 
 @property NSInteger programFetchFailoverCount;
 
-- (void)fetchCurrentProgram:(CompletionBlockWithValue)completed;
-- (void)fetchProgramAtDate:(NSDate*)date completed:(CompletionBlockWithValue)completed;
+- (void)fetchCurrentSchedule:(CompletionBlockWithValue)completed;
+- (void)fetchScheduleAtDate:(NSDate*)date completed:(CompletionBlockWithValue)completed;
 - (void)fetchScheduleForTodayAndTomorrow:(CompletionBlockWithValue)completed;
 
 - (void)fetchOnboardingProgramWithSegment:(NSInteger)segment completed:(CompletionBlockWithValue)completed;
 
-- (void)armProgramUpdater;
-- (void)disarmProgramUpdater;
 - (void)resetCache;
 - (void)checkProgramUpdate:(BOOL)force;
 
@@ -107,14 +102,11 @@ static NSInteger kProgramPollingPressure = 5;
 // Drift
 - (NSDate*)vLive;
 - (NSDate*)vNow;
-- (NSInteger)calculatedDriftValue;
 
 - (NSTimeInterval)secondsBehindLive;
 - (NSTimeInterval)virtualSecondsBehindLive;
-- (NSInteger)medianDrift;
 
 - (void)processNotification:(UILocalNotification*)programUpdate;
-@property (NS_NONATOMIC_IOSONLY) BOOL ignoreProgramUpdating;
 @property (NS_NONATOMIC_IOSONLY) BOOL sessionIsExpired;
 @property (NS_NONATOMIC_IOSONLY) BOOL sessionIsBehindLive;
 
@@ -166,10 +158,6 @@ static NSInteger kProgramPollingPressure = 5;
 
 - (NSString*)startOnDemandSession;
 - (NSString*)endOnDemandSessionWithReason:(OnDemandFinishedReason)reason;
-- (void)trackOnDemandSession;
-- (BOOL)programDirty:(Program*)p;
-
-- (NSString*)prettyStringForPauseExplanation:(PauseExplanation)explanation;
 
 - (long)bufferLength;
 

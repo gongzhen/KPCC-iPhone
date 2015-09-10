@@ -59,31 +59,22 @@
 
 @property (nonatomic,strong) SCPRScrubberViewController *scrubberController;
 @property (nonatomic,weak) id parentControlView;
-@property CMTime lowerBoundThreshold;
 
 - (void)prerender;
-- (void)setupWithProgram:(NSDictionary*)program blurredImage:(UIImage*)image parent:(id)parent;
 - (void)takedown;
 - (void)scrubberWillAppear;
 - (void)printCurrentDate;
+- (void)activateStatusObserver;
 
 // Seeking
 - (void)muteUI;
 - (void)unmuteUI;
-- (void)killLatencyTimer;
-- (void)audioWillSeek;
 - (void)primeForAudioMode;
 - (void)postSeek;
 
 
 // Live
-- (double)livePercentage;
-- (double)percentageThroughCurrentProgram;
 - (void)tickLive:(BOOL)animated;
-
-- (CMTime)convertToTimeValueFromPercentage:(double)percent;
-- (NSInteger)convertToSecondsFromPercentage:(double)percent;
-- (NSDate*)convertToDateFromPercentage:(double)percent;
 
 - (void)recalibrateAfterScrub;
 - (void)behindLiveStatus;

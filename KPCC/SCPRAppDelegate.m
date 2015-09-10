@@ -17,15 +17,8 @@
 #import "UXmanager.h"
 #import "AnalyticsManager.h"
 #import <Parse/Parse.h>
-#import <ParseCrashReporting.h>
 
-#ifdef ENABLE_TESTFLIGHT
-#import "TestFlight.h"
-#endif
-
-
-
-
+#import "KPCC-Swift.h"
 
 @implementation SCPRAppDelegate
 
@@ -37,43 +30,14 @@
     [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback error:&error];
     [[AVAudioSession sharedInstance] setActive:YES error:&error];
     
-    NSString *path = [[NSBundle mainBundle] pathForResource:@"Config" ofType:@"plist"];
-    NSDictionary *globalConfig = [[NSDictionary alloc] initWithContentsOfFile:path];
+    NSDictionary *globalConfig = [Utils globalConfig];
     
     [[AnalyticsManager shared] setup];
     A0Lock *lock = [[UXmanager shared] lock];
     [lock applicationLaunchedWithOptions:launchOptions];
-    
-#ifndef PRODUCTION
-    //[[UXmanager shared].settings setSsoLoginType:SSOTypeNone];
-    //[[UXmanager shared].settings setSsoKey:nil];
-    //[[UXmanager shared] persist];
-    //[[UXmanager shared].settings setUserHasViewedOnboarding:NO];
-    //[[UXmanager shared].settings setUserHasViewedOnDemandOnboarding:NO];
-    [[UXmanager shared].settings setUserHasSelectedXFS:NO];
-    [[UXmanager shared].settings setXfsToken:@""];
-    [[UXmanager shared].settings setUserHasViewedXFSOnboarding:NO];
-#ifdef TESTING_SCRUBBER
-    [[UXmanager shared].settings setUserHasViewedOnDemandOnboarding:NO];
-    [[UXmanager shared].settings setUserHasViewedScrubbingOnboarding:NO];
-    [[UXmanager shared].settings setUserHasViewedLiveScrubbingOnboarding:NO];
-    [[UXmanager shared].settings setUserHasViewedScheduleOnboarding:NO];
-#endif
-    [[UXmanager shared] persist];
-#endif
-    
-#ifndef TURN_OFF_SANDBOX_CONFIG
-    
-    [ParseCrashReporting enable];
-    
+
     [Parse setApplicationId:globalConfig[@"Parse"][@"ApplicationId"]
                   clientKey:globalConfig[@"Parse"][@"ClientKey"]];
-#endif
-    
-#ifdef TESTING_SCRUBBER
-    [[UXmanager shared].settings setUserHasViewedScrubbingOnboarding:NO];
-    [[UXmanager shared] persist];
-#endif
     
     // Apply application-wide styling
     [self applyStylesheet];
@@ -307,7 +271,6 @@
     
     if ( [[AudioManager shared] currentAudioMode] != AudioModeOnboarding ) {
         if ( ![[SessionManager shared] sessionLeftDate] ) {
-            [[SessionManager shared] disarmProgramUpdater];
             [[SessionManager shared] setSessionLeftDate:[NSDate date]];
         }
     }
@@ -315,8 +278,6 @@
     if ( [[AudioManager shared] currentAudioMode] == AudioModePreroll ) {
         [[SessionManager shared] setUserLeavingForClickthrough:YES];
     }
-    
-    [[AnalyticsManager shared] kTrackSession:@"ended"];
     
     [[ContentManager shared] saveContext];
     // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later. 
@@ -346,7 +307,6 @@
     }
     
     [[AudioManager shared] interruptAutorecovery];
-    [[AnalyticsManager shared] kTrackSession:@"began"];
     [[SessionManager shared] setUserLeavingForClickthrough:NO];
     [[AudioManager shared] stopWaiting];
     [[ContentManager shared] sweepBookmarks];
@@ -420,12 +380,8 @@
 #pragma mark - Alarm Clock
 
 - (void)armAlarmClockWithDate:(NSDate *)date {
-#ifndef USE_PUSH_FOR_ALARM
     self.alarmDate = date;
-#ifndef PRODUCTION
-    self.alarmDate = [[NSDate date] dateByAddingTimeInterval:25.0];
-#endif
-    
+
     [[UIApplication sharedApplication] setIdleTimerDisabled:YES];
     
     NSInteger tisn = fabs([self.alarmDate timeIntervalSinceNow]);
@@ -465,20 +421,6 @@
     
     [[AnalyticsManager shared] logEvent:@"alarmClockArmed"
                          withParameters:nil];
-    
-#else
-    
-    PFInstallation *i = [PFInstallation currentInstallation];
-    [i addUniqueObject:kAlarmChannel
-                forKey:@"channels"];
-    i[@"activeFireDate"] = date;
-    [i saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-        
-        
-        
-    }];
-    
-#endif
 }
 
 - (void)buildTimer {

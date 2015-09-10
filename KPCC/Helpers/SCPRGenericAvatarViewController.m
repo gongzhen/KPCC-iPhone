@@ -40,7 +40,7 @@
     return resultingImage;
 }
 
-- (void)setupWithProgram:(Program *)program {
+- (void)setupWithProgram:(id<GenericProgram>)program {
     self.view.backgroundColor = [UIColor clearColor];
     self.seatView.layer.cornerRadius = self.view.frame.size.width / 2.0f;
     self.seatView.backgroundColor = [UIColor kpccSlateColor];

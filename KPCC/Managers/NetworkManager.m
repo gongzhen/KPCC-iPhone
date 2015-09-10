@@ -202,7 +202,7 @@ static NetworkManager *singleton = nil;
 
 
 - (void)fetchAllProgramInformation:(CompletionBlockWithValue)completion {
-    NSString *urlString = [NSString stringWithFormat:@"%@/programs?air_status=onair",kServerBase];
+    NSString *urlString = [NSString stringWithFormat:@"%@/programs?air_status=onair,online",kServerBase];
     [self requestFromSCPRWithEndpoint:urlString completion:^(id returnedObject) {
         completion(returnedObject);
     }];
@@ -225,6 +225,13 @@ static NetworkManager *singleton = nil;
 
 
 - (void)fetchTritonAd:(NSString *)params completion:(void (^)(TritonAd* tritonAd))completion {
+    #if TARGET_IPHONE_SIMULATOR
+    // EWR -- short-circuit preroll requests in the simulator
+    completion(nil);
+    return;
+    #endif
+
+
     AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
     manager.responseSerializer = [AFHTTPResponseSerializer serializer];
     NSString *idfa = [[[ASIdentifierManager sharedManager] advertisingIdentifier] UUIDString];
@@ -260,13 +267,8 @@ static NetworkManager *singleton = nil;
 }
 
 - (NSString*)serverBase {
-    NSString *key = @"production";
-#ifdef DEBUG
-    //key = @"staging";
-#endif
-    
     NSDictionary *globalConfig = [Utils globalConfig];
-    return globalConfig[@"SCPR"][key];
+    return globalConfig[@"SCPR"][@"api"];
 }
 
 @end
