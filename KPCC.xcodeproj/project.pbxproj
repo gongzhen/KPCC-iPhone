@@ -117,7 +117,6 @@
 		25BBCD8E1A893C350015071E /* onboarding-scrubber@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 25BBCD861A893C350015071E /* onboarding-scrubber@2x.png */; };
 		25C409B01A437B9400ADBFFE /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 25C409AF1A437B9400ADBFFE /* AdSupport.framework */; };
 		25E5532B1B61A79100C45B85 /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 25E553271B61A79100C45B85 /* Crashlytics.framework */; };
-		25E5532E1B61A79100C45B85 /* NielsenAppApi.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 25E5532A1B61A79100C45B85 /* NielsenAppApi.framework */; };
 		25E8BD9E1ABA034D007B99EB /* program_avatar_invisibilia.png in Resources */ = {isa = PBXBuildFile; fileRef = 25E8BD9C1ABA034D007B99EB /* program_avatar_invisibilia.png */; };
 		25E8BD9F1ABA034D007B99EB /* program_avatar_invisibilia@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 25E8BD9D1ABA034D007B99EB /* program_avatar_invisibilia@2x.png */; };
 		25E8BDA41ABB933C007B99EB /* SCPRTimerControlViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 25E8BDA21ABB933C007B99EB /* SCPRTimerControlViewController.m */; };
@@ -750,7 +749,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				257479BD1B6C4A3E00F72AF6 /* WebKit.framework in Frameworks */,
-				25E5532E1B61A79100C45B85 /* NielsenAppApi.framework in Frameworks */,
 				25C409B01A437B9400ADBFFE /* AdSupport.framework in Frameworks */,
 				25E5532B1B61A79100C45B85 /* Crashlytics.framework in Frameworks */,
 				76349CAA18D3747E0027C3B8 /* libz.dylib in Frameworks */,
