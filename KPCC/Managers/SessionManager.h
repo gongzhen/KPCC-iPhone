@@ -31,11 +31,7 @@ static CGFloat kVirtualBehindLiveTolerance = 10.0f;
 static CGFloat kVirtualMediumBehindLiveTolerance = 24.0f;
 static CGFloat kVirtualLargeBehindLiveTolerance = 120.0f;
 
-#ifndef PRODUCTION
 static NSInteger kProgramPollingPressure = 5;
-#else
-static NSInteger kProgramPollingPressure = 5;
-#endif
 
 @interface SessionManager : NSObject
 

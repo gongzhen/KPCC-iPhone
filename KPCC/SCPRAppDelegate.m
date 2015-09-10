@@ -380,12 +380,8 @@
 #pragma mark - Alarm Clock
 
 - (void)armAlarmClockWithDate:(NSDate *)date {
-#ifndef USE_PUSH_FOR_ALARM
     self.alarmDate = date;
-#ifndef PRODUCTION
-    self.alarmDate = [[NSDate date] dateByAddingTimeInterval:25.0];
-#endif
-    
+
     [[UIApplication sharedApplication] setIdleTimerDisabled:YES];
     
     NSInteger tisn = fabs([self.alarmDate timeIntervalSinceNow]);
@@ -425,20 +421,6 @@
     
     [[AnalyticsManager shared] logEvent:@"alarmClockArmed"
                          withParameters:nil];
-    
-#else
-    
-    PFInstallation *i = [PFInstallation currentInstallation];
-    [i addUniqueObject:kAlarmChannel
-                forKey:@"channels"];
-    i[@"activeFireDate"] = date;
-    [i saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-        
-        
-        
-    }];
-    
-#endif
 }
 
 - (void)buildTimer {
