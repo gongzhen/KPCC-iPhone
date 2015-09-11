@@ -55,7 +55,7 @@ import CoreData
     //----------
 
     @objc func containsDate(date:NSDate) -> Bool {
-        if (self.starts_at.timeIntervalSinceReferenceDate <= date.timeIntervalSinceReferenceDate && self.ends_at.timeIntervalSinceReferenceDate > date.timeIntervalSinceReferenceDate) {
+        if (self.starts_at.timeIntervalSinceReferenceDate - 5 <= date.timeIntervalSinceReferenceDate && self.ends_at.timeIntervalSinceReferenceDate > date.timeIntervalSinceReferenceDate) {
             return true
         } else {
             return false

@@ -492,6 +492,10 @@ static const NSString *ItemStatusContext;
     if (p) {
         self.savedVolume = 1.0f;
 
+        if (!self.audioPlayer) {
+            [self buildStreamer:nil];
+        }
+
         [self.audioPlayer seekToDate:p.soft_starts_at completion:^(BOOL finished) {
             if ([self.delegate respondsToSelector:@selector(onSeekCompleted)]) {
                 [self.delegate onSeekCompleted];
@@ -507,8 +511,6 @@ static const NSString *ItemStatusContext;
         [self.delegate onSeekCompleted];
 
         dispatch_async(dispatch_get_main_queue(), ^{
-            [self startObservingTime];
-
             if (completion) {
                 completion();
             }
