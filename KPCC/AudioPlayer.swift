@@ -287,6 +287,7 @@ public struct AudioPlayerObserver<T> {
                     } else {
                         self._emitEvent("NON-SENSICAL DATE JUMP? minDiff:\(minDiff) - createDiff:\(createDiff)")
                         // FIXME: what do we do?
+                        self._setStatus(.Error)
                     }
                 }
             }

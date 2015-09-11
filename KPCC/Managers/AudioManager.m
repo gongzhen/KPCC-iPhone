@@ -608,8 +608,19 @@ static const NSString *ItemStatusContext;
                 [self stopAudio];
             } else {
                 self.tryAgain = YES;
+
+                // do we have a position to restart with?
+                StreamDates* d = [self.audioPlayer currentDates];
+
                 [self resetPlayer];
-                [self playAudio];
+
+                if (d != nil && d.curDate != nil) {
+                    [self.audioPlayer seekToDate:d.curDate completion:^(BOOL finished) {
+                        NSLog(@"Finished seek on player retry.");
+                    }];
+                } else {
+                    [self playAudio];
+                }
             }
         }
     };
@@ -627,6 +638,10 @@ static const NSString *ItemStatusContext;
                 if ([self.delegate respondsToSelector:@selector(onRateChange)]) {
                     [self.delegate onRateChange];
                 }
+                break;
+
+            case AudioStatusError:
+                failure(@"Player reports error.",nil);
                 break;
 
             default:
