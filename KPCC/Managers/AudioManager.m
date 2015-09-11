@@ -507,6 +507,10 @@ static const NSString *ItemStatusContext;
 }
 
 - (void)forwardSeekLiveWithType:(NSInteger)type completion:(CompletionBlock)completion {
+    if (!self.audioPlayer) {
+        [self buildStreamer:nil];
+    }
+
     [self.audioPlayer seekToLive:^(BOOL finished) {
         [self.delegate onSeekCompleted];
 
