@@ -149,9 +149,7 @@
 
 - (void)endAnalyticsForAudio:(NSNotification*)note {
     NSString *eventName = [[AudioManager shared] currentAudioMode] == AudioModeLive ? @"liveStreamPlay" : @"episodePlay";
-    [Flurry endTimedEvent:eventName
-           withParameters:nil];
-    
+
 //    [[AnalyticsManager shared] nielsenStop];
 }
 

@@ -104,7 +104,8 @@ static NetworkManager *singleton = nil;
             }
             
             if ( [weakreach_ reachable] ) {
-                
+                NSLog(@"Reachability reports reachable.");
+
                 weakself_.timeReturned = [NSDate date];
                 
 
@@ -119,7 +120,7 @@ static NetworkManager *singleton = nil;
                 }
                 
             } else {
-                
+                NSLog(@"Reachability reports unreachable.");
 
                 weakself_.failTimer = [NSTimer scheduledTimerWithTimeInterval:kFailThreshold
                                                                        target:weakself_

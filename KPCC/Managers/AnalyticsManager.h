@@ -9,7 +9,6 @@
 #import <Foundation/Foundation.h>
 #include <mach/mach_time.h>
 #import "AudioManager.h"
-#import "Flurry.h"
 #import "Mixpanel.h"
 #import "NetworkManager.h"
 #import <Crashlytics/Crashlytics.h>
@@ -44,7 +43,6 @@ typedef NS_ENUM(NSInteger, ScrubbingType) {
 
 @property (nonatomic, strong) NSMutableDictionary *progressMap;
 
-@property BOOL flurryActiveInBackground;
 @property BOOL gaSessionStarted;
 
 @property NSInteger allowedExceptions;

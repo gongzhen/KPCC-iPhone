@@ -10,7 +10,6 @@
 #import "SCPRMasterViewController.h"
 #import "SCPRNavigationController.h"
 #import <AVFoundation/AVFoundation.h>
-#import "Flurry.h"
 #import "SessionManager.h"
 #import "NetworkManager.h"
 #import "SCPROnboardingViewController.h"
@@ -240,8 +239,6 @@
 - (void)applicationWillResignActive:(UIApplication *)application {
     
     if ( [[AudioManager shared] isPlayingAudio] ) {
-        [Flurry setBackgroundSessionEnabled:YES];
-        [[AnalyticsManager shared] setFlurryActiveInBackground:YES];
         [[SessionManager shared] handleSessionMovingToBackground];
         
     } else {
@@ -285,12 +282,7 @@
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application {
-    
-    if ( [[AnalyticsManager shared] flurryActiveInBackground] ) {
-        [Flurry setBackgroundSessionEnabled:NO];
-        [[AnalyticsManager shared] setFlurryActiveInBackground:NO];
-    }
-    
+        
     //[[AnalyticsManager shared] gaSessionStartWithScreenView:@"Session Begin"];
     
     if ( [[AudioManager shared] currentAudioMode] != AudioModeOnboarding ) {

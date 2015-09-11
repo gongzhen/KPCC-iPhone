@@ -44,12 +44,6 @@ static AnalyticsManager *singleton = nil;
     
     NSDictionary *globalConfig = [Utils globalConfig];
     
-    NSString *token = globalConfig[@"Flurry"][@"key"];
-    [Flurry setCrashReportingEnabled:NO];
-    [Flurry setDebugLogEnabled:NO];
-    [Flurry startSession:token];
-    [Flurry setBackgroundSessionEnabled:NO];
-    
     self.mxp = [Mixpanel sharedInstanceWithToken:globalConfig[@"Mixpanel"][@"token"]];
 
     NSString *uuid = [[[UIDevice currentDevice] identifierForVendor] UUIDString];
@@ -239,7 +233,6 @@ static AnalyticsManager *singleton = nil;
 }
 
 - (void)endTimedEvent:(NSString *)event {
-    [Flurry endTimedEvent:event withParameters:nil];
 }
 
 - (void)logEvent:(NSString *)event withParameters:(NSDictionary *)parameters {
@@ -251,9 +244,6 @@ static AnalyticsManager *singleton = nil;
     NSDictionary *cookedParams = [self logifiedParamsList:parameters];
     
     if ( timed ) {
-        [Flurry logEvent:event
-          withParameters:cookedParams
-                   timed:timed];
     }
     
     Mixpanel *mxp = [Mixpanel sharedInstance];
