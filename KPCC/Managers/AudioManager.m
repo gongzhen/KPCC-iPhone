@@ -557,6 +557,9 @@ static const NSString *ItemStatusContext;
     if ( urlString == nil || SEQ(urlString, kHLS) ) {
         url = [NSURL URLWithString:kHLS];
         self.currentAudioMode = AudioModeLive;
+
+        // FIXME: This belongs somewhere else
+        [[QueueManager shared] setCurrentBookmark:nil];
     } else {
         url = [NSURL URLWithString:urlString];
         self.currentAudioMode = AudioModeOnDemand;
@@ -638,14 +641,6 @@ static const NSString *ItemStatusContext;
 
     [self.audioPlayer.observer on:StatusesErrorLog callback:^(NSString* msg, AVPlayerItemErrorLogEvent *obj) {
         [[AnalyticsManager shared] setErrorLog:obj];
-
-        // FIXME: Still used?
-        if ( self.waitForLogTimer ) {
-            if ( [self.waitForLogTimer isValid] ) {
-                [self.waitForLogTimer invalidate];
-            }
-            self.waitForLogTimer = nil;
-        }
     }];
 
     // watch for item end
@@ -660,6 +655,41 @@ static const NSString *ItemStatusContext;
 
             [[QueueManager shared] playNext];
         }
+    }];
+
+    // Watch for stalls
+    [self.audioPlayer.observer on:StatusesStalled callback:^(NSString* msg, id obj) {
+        NSLog(@"Playback has stalled ... ");
+
+        // set a timer, not to do anything in particular, but just to try and
+        // nudge our stream by its very presence
+
+//        if ( self.kickstartTimer ) {
+//            if ( [self.kickstartTimer isValid] ) {
+//                [self.kickstartTimer invalidate];
+//            }
+//            self.kickstartTimer = nil;
+//        }
+//
+//        self.kickstartTimer = [NSTimer scheduledTimerWithTimeInterval:kImpatientWaitingTolerance
+//                                                               target:self
+//                                                             selector:@selector(impatientRestart)
+//                                                             userInfo:nil
+//                                                              repeats:NO];
+//
+//        if ( self.giveupTimer ) {
+//            if ( [self.giveupTimer isValid] ) {
+//                [self.giveupTimer invalidate];
+//            }
+//            self.giveupTimer = nil;
+//        }
+//
+//        self.giveupTimer = [NSTimer scheduledTimerWithTimeInterval:kGiveUpTolerance
+//                                                            target:self
+//                                                          selector:@selector(giveUpOnStream)
+//                                                          userInfo:nil
+//                                                           repeats:NO];
+
     }];
 
     // Watch for our session ID and stash it
@@ -828,8 +858,6 @@ static const NSString *ItemStatusContext;
 - (BOOL)isPlayingAudio {
     // FIXME: How should we be computing this?
     return [self.status playing];
-
-//    return [self.audioPlayer._player rate] > 0.0f;
 }
 
 - (BOOL)isActiveForAudioMode:(AudioMode)mode {
@@ -882,8 +910,6 @@ static const NSString *ItemStatusContext;
     [self.audioPlayer pause];
 
     self.localBufferSample = nil;
-    
-//    [[SessionManager shared] setLocalLiveTime:0.0f];
 
     if ( self.dropoutOccurred && !self.userPause ) {
         return;

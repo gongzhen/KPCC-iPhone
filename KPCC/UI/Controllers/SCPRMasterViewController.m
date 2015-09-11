@@ -1995,8 +1995,8 @@ setForOnDemandUI;
     [self.view layoutIfNeeded];
     
     self.liveDescriptionLabel.text = @"LIVE";
-    [[AudioManager shared] setCurrentAudioMode:AudioModeLive];
-    
+//    [[AudioManager shared] setCurrentAudioMode:AudioModeLive];
+
     [[AnalyticsManager shared] screen:@"liveStreamView"];
     
 }
@@ -2041,11 +2041,7 @@ setForOnDemandUI;
     self.onDemandPlayerView.backgroundColor = [UIColor clearColor];
     self.timeLabelOnDemand.text = @"LOADING...";
     self.queueLoading = YES;
-    
 
-    
-    [[SessionManager shared] setLocalLiveTime:0.0f];
-    
     UIImage *img = [[DesignManager shared] currentBlurredImage];
     self.queueBlurView.image = img;
     [[DesignManager shared] setProtectBlurredImage:YES];
@@ -2129,7 +2125,7 @@ setForOnDemandUI;
                 
                 weakSelf.queueBlurShown = YES;
                 
-                [[AudioManager shared] setCurrentAudioMode:AudioModeOnDemand];
+//                [[AudioManager shared] setCurrentAudioMode:AudioModeOnDemand];
                 [weakSelf.navigationController popToRootViewControllerAnimated:YES];
                 
                 [weakSelf.view bringSubviewToFront:weakSelf.scrubbingTriggerView];

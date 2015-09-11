@@ -77,9 +77,10 @@ static QueueManager *singleton = nil;
     return audioChunks;
 }
 
-// every 10 seconds, update our bookmark position for on-demand files
+// update our bookmark position for on-demand files, if we're more than 10 seconds in
 - (void)handleBookmarkingActivity {
     if ( [[AudioManager shared] currentAudioMode] != AudioModeOnDemand ) return;
+    
     CMTime currentTime = [[AudioManager shared].audioPlayer currentTime];
     NSInteger seconds = CMTimeGetSeconds(currentTime);
     if ( seconds > kBookmarkingTolerance ) {
