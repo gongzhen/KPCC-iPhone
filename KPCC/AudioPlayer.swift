@@ -64,6 +64,7 @@ public struct AudioPlayerObserver<T> {
     //----------
 
     @objc public class StreamDates: NSObject {
+        var creationDate: NSDate?
         var curDate:    NSDate?
         var minDate:    NSDate?
         var maxDate:    NSDate?
@@ -86,6 +87,8 @@ public struct AudioPlayerObserver<T> {
             self.buffered = buffered
             self.curTime = curTime
             self.duration = duration
+
+            self.creationDate = NSDate()
         }
 
         func hasDates() -> Bool {
@@ -123,6 +126,7 @@ public struct AudioPlayerObserver<T> {
 
     var _dateFormat: NSDateFormatter
 
+    private var _lastDates: StreamDates?
     var currentDates: StreamDates?
     var liveDate: NSDate?
 
@@ -220,15 +224,15 @@ public struct AudioPlayerObserver<T> {
 
         // -- watch for Reachability -- //
 
-        self._reachability!.whenReachable = { r in
+        self._reachability?.whenReachable = { r in
             self.setNetworkStatus()
         }
 
-        self._reachability!.whenUnreachable = { r in
+        self._reachability?.whenUnreachable = { r in
             self.setNetworkStatus()
         }
 
-        self._reachability!.startNotifier()
+        self._reachability?.startNotifier()
 
         // and a check right now...
         self.setNetworkStatus()
@@ -255,6 +259,39 @@ public struct AudioPlayerObserver<T> {
                     }
                 }
             }
+        }
+
+        // -- watch for non-sensical dates -- //
+        self.oTime.addObserver() { dates in
+            // at times, AVPlayer seems to lose its mind and jump us to the 
+            // beginning of the rewind buffer while not updating currentDate
+            // or currentTime. We want to detect that and flag it, so that 
+            // AudioManager can abort and set up a new player.
+
+            // only applies to live items
+            if !dates.hasDates() {
+                return
+            }
+
+            if self._lastDates != nil {
+                // did our minDate jump unexpectedly?
+                let minDiff = dates.minDate!.timeIntervalSinceReferenceDate - self._lastDates!.minDate!.timeIntervalSinceReferenceDate
+                let createDiff = dates.creationDate!.timeIntervalSinceReferenceDate - self._lastDates!.creationDate!.timeIntervalSinceReferenceDate
+
+                // we're looking for substantial jumps... let's start with an hour
+                if abs(minDiff) > 3600 {
+                    // is our create diff in this same ballpark? if so, this is probably ok
+                    if abs(createDiff) > (0.9 * abs(minDiff)) {
+                        // we'll say we're ok
+                        self._emitEvent("LARGE JUMP OK? minDiff:\(minDiff) - createDiff:\(createDiff)")
+                    } else {
+                        self._emitEvent("NON-SENSICAL DATE JUMP? minDiff:\(minDiff) - createDiff:\(createDiff)")
+                        // FIXME: what do we do?
+                    }
+                }
+            }
+
+            self._lastDates = dates
         }
     }
 
