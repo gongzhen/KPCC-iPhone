@@ -204,21 +204,13 @@ static const NSString *ItemStatusContext;
             self.dropoutOccurred = YES;
             
             NSLog(@"Playback has stalled ... ");
-            
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"playback-stalled"
-                                                                object:nil];
-            
-#ifndef SUPPRESS_LOCAL_SAMPLING
-//            [self invalidateTimeObserver];
-#endif
-#ifndef SUPPRESS_AGGRESSIVE_KICKSTART
+
             self.kickstartTimer = [NSTimer scheduledTimerWithTimeInterval:kImpatientWaitingTolerance
                                                                    target:self
                                                                  selector:@selector(impatientRestart)
                                                                  userInfo:nil
                                                                   repeats:NO];
-#endif
-            
+
             self.giveupTimer = [NSTimer scheduledTimerWithTimeInterval:kGiveUpTolerance
                                                                 target:self
                                                               selector:@selector(giveUpOnStream)
@@ -237,10 +229,7 @@ static const NSString *ItemStatusContext;
 - (void)giveUpOnStream {
     if ( self.dropoutOccurred ) {
         [self stopAudio];
-        
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"playback-stalled"
-                                                            object:nil];
-        
+
         SCPRAppDelegate *del = [Utils del];
         SCPRMasterViewController *master = (SCPRMasterViewController*)[del masterViewController];
         if ( [master scrubbing] ) {
@@ -267,35 +256,24 @@ static const NSString *ItemStatusContext;
 }
 
 - (void)attemptToRecover {
-#ifndef SUPPRESS_GIVEUP_TIMER
     if ( self.giveupTimer ) {
         if ( [self.giveupTimer isValid] ) {
             [self.giveupTimer invalidate];
         }
         self.giveupTimer = nil;
     }
-#endif
-    
-#ifndef SUPPRESS_AGGRESSIVE_KICKSTART
+
     if ( self.kickstartTimer ) {
         if ( [self.kickstartTimer isValid] ) {
             [self.kickstartTimer invalidate];
         }
         self.kickstartTimer = nil;
     }
-#endif
-    
+
     [self stopWaiting];
     
     self.localBufferSample = nil;
     self.dropoutOccurred = NO;
-
-    
-//    if ( self.audioPlayer.rate == 1.0f ) {
-//        if ( !self.timeObserver ) {
-//            [self startObservingTime];
-//        }
-//    }
 
     if ( !self.appGaveUp ) {
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
@@ -308,31 +286,16 @@ static const NSString *ItemStatusContext;
 }
 
 - (void)impatientRestart {
-#ifndef SUPPRESS_AGGRESSIVE_KICKSTART
-    if ( [self.audioPlayer rate] > 0.0 && self.dropoutOccurred ) {
-        [self.audioPlayer pause];
-        [self takedownAudioPlayer];
-        [self buildStreamer:kHLS];
-    }
-#endif
+//    if ( [self.audioPlayer rate] > 0.0 && self.dropoutOccurred ) {
+//        [self.audioPlayer pause];
+//        [self takedownAudioPlayer];
+//        [self buildStreamer:kHLS];
+//    }
 }
 
 - (void)waitPatiently {
 
     if ( [[UIApplication sharedApplication] applicationState] == UIApplicationStateBackground ) {
-#ifdef DEBUG
-        if ( self.multipurposeTimer ) {
-            if ( [self.multipurposeTimer isValid] ) {
-                [self.multipurposeTimer invalidate];
-            }
-            self.multipurposeTimer = nil;
-        }
-        
-        self.multipurposeTimer = [NSTimer scheduledTimerWithTimeInterval:1.0 target:self
-                                                                selector:@selector(timeRemaining)
-                                                                userInfo:nil
-                                                                 repeats:YES];
-#endif
         self.rescueTask = [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:^{
             NSLog(@"System is killing us off ... wrapping it up");
             self.dropoutOccurred = NO;
@@ -343,14 +306,6 @@ static const NSString *ItemStatusContext;
 }
 
 - (void)stopWaiting {
-#ifdef DEBUG
-    if ( self.multipurposeTimer ) {
-        if ( [self.multipurposeTimer isValid] ) {
-            [self.multipurposeTimer invalidate];
-        }
-        self.multipurposeTimer = nil;
-    }
-#endif
     if ( self.rescueTask > 0 ) {
         [[UIApplication sharedApplication] endBackgroundTask:self.rescueTask];
         self.rescueTask = 0;
@@ -386,8 +341,6 @@ static const NSString *ItemStatusContext;
         NSLog(@"startObservingTime called with an observer already in place.");
         return;
     }
-    
-//    [self invalidateTimeObserver];
 
     self.calibrating = YES;
     self.timeObserver = nil;
@@ -417,14 +370,12 @@ static const NSString *ItemStatusContext;
                 }];
             }
             
-#ifndef SUPPRESS_AGGRESSIVE_KICKSTART
             if ( weakSelf.kickstartTimer ) {
                 if ( [weakSelf.kickstartTimer isValid] ) {
                     [weakSelf.kickstartTimer invalidate];
                 }
                 weakSelf.kickstartTimer = nil;
             }
-#endif
 
             weakSelf.minSeekableDate = [NSDate dateWithTimeInterval:( -1 * (CMTimeGetSeconds(time) - CMTimeGetSeconds(range.start))) sinceDate:weakSelf.currentDate];
             weakSelf.maxSeekableDate = [NSDate dateWithTimeInterval:(CMTimeGetSeconds(CMTimeRangeGetEnd(range)) - CMTimeGetSeconds(time)) sinceDate:weakSelf.currentDate];

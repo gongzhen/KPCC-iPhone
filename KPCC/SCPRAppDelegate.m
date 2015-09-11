@@ -535,18 +535,11 @@
 }
 
 - (void)endAlarmClock {
-#ifdef USE_PUSH_FOR_ALARM
-    if ( self.alarmTask ) {
-        [[UIApplication sharedApplication] endBackgroundTask:self.alarmTask];
-        self.alarmTask = 0;
-    }
-#else
     self.alarmDate = nil;
     [[UXmanager shared].settings setAlarmFireDate:nil];
     [[UXmanager shared] persist];
     [[UIApplication sharedApplication] cancelAllLocalNotifications];
     [[UIApplication sharedApplication] setIdleTimerDisabled:NO];
-#endif
 }
 
 - (void)killBackgroundTask {
