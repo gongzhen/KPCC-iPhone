@@ -458,7 +458,13 @@ setForOnDemandUI;
         
         }
     }];
-    
+
+    // Watch for audio mode changes
+    [[NSNotificationCenter defaultCenter] addObserverForName:@"audio-mode-changed" object:nil queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification* note) {
+        // make sure our controls are appropriate
+        [self primeManualControlButton];
+    }];
+
 }
 
 - (void)viewWillAppear:(BOOL)animated {
