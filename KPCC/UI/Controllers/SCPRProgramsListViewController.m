@@ -8,6 +8,7 @@
 
 #import "SCPRProgramsListViewController.h"
 #import "SCPRProgramTableViewCell.h"
+#import "SCPRProgramTableViewHeader.h"
 #import "SCPRProgramDetailViewController.h"
 #import "DesignManager.h"
 #import "AnalyticsManager.h"
@@ -24,6 +25,10 @@
 @interface SCPRProgramsListViewController ()
 @property NSArray *programsList;
 @property id<GenericProgram> currentProgram;
+@property SCPRProgramTableViewHeader* kpccHeader;
+@property SCPRProgramTableViewHeader* otherHeader;
+@property NSArray* kpccPrograms;
+@property NSArray* otherPrograms;
 @end
 
 
@@ -88,40 +93,74 @@
 
     // Fetch all Programs from CoreData and filter, given HIDDEN_PROGRAMS.
     NSArray *storedPrograms = [Program fetchAllProgramsInContext:[[ContentManager shared] managedObjectContext]];
-    NSMutableArray *filteredPrograms = [[NSMutableArray alloc] initWithArray:storedPrograms];
+    NSMutableArray* kpccPrograms = [[NSMutableArray alloc] init];
+    NSMutableArray* otherPrograms = [[NSMutableArray alloc] init];
+
     for (Program *program in storedPrograms) {
+        BOOL matches = NO;
         for (NSString *hiddenSlug in HIDDEN_PROGRAMS) {
             if ([program.program_slug isEqualToString:hiddenSlug]) {
-                [filteredPrograms removeObject:program];
+                matches = YES;
                 break;
+            }
+        }
+
+        if (matches == NO) {
+            if ([[program is_kpcc] isEqual:@(YES)]) {
+                [kpccPrograms addObject:program];
+            } else {
+                [otherPrograms addObject:program];
             }
         }
     }
 
     // Sort Programs by KPCC first, then alphabetically.
-    NSSortDescriptor *boolDescr = [[NSSortDescriptor alloc] initWithKey:@"is_kpcc" ascending:NO];
     NSSortDescriptor *strDescr = [[NSSortDescriptor alloc] initWithKey:@"sortTitle" ascending:YES];
-    NSArray *sortDescriptors = @[boolDescr, strDescr];
-    NSArray *sortedPrograms = [filteredPrograms sortedArrayUsingDescriptors:sortDescriptors];
-
-    self.programsList = sortedPrograms;
+    NSArray *sortDescriptors = @[strDescr];
+    self.kpccPrograms = [kpccPrograms sortedArrayUsingDescriptors:sortDescriptors];
+    self.otherPrograms = [otherPrograms sortedArrayUsingDescriptors:sortDescriptors];
 
     UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 14)];
     self.programsTable.tableHeaderView = headerView;
+
+    // create our section headers
+
+    self.kpccHeader = [[SCPRProgramTableViewHeader alloc] initWithNibName:@"SCPRProgramTableViewHeader" bundle:nil];
+    self.kpccHeader.view.frame = self.kpccHeader.view.frame;
+    [self.kpccHeader setupWithText:@"KPCC Programs"];
+
+    self.otherHeader = [[SCPRProgramTableViewHeader alloc] initWithNibName:@"SCPRProgramTableViewHeader" bundle:nil];
+    self.otherHeader.view.frame = self.otherHeader.view.frame;
+    [self.otherHeader setupWithText:@"Other Programs"];
 }
 
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     // Return the number of sections.
-    return 1;
+    return 2;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     // Return the number of rows in the section.
-    return [self.programsList count];
+    if (section == 0) {
+        return [self.kpccPrograms count];
+    } else {
+        return [self.otherPrograms count];
+    }
 }
 
+- (UIView*)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
+    if (section == 0) {
+        return self.kpccHeader.view;
+    } else {
+        return self.otherHeader.view;
+    }
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
+    return 31.0f;
+}
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
 
@@ -133,8 +172,15 @@
         cell = (SCPRProgramTableViewCell*)obj[0];
     }
 
+    Program* program;
+    if ( indexPath.section == 0 ) {
+        program = self.kpccPrograms[ indexPath.row ];
+    } else {
+        program = self.otherPrograms[ indexPath.row ];
+    }
+
     cell.backgroundColor = [UIColor clearColor];
-    cell.programLabel.text = [NSString stringWithFormat:@"%@", [(self.programsList)[indexPath.row] title]];
+    cell.programLabel.text = [NSString stringWithFormat:@"%@", [program title]];
     
     cell.selectedBackgroundView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0,
                                                                            cell.frame.size.width,
@@ -142,11 +188,11 @@
     
     cell.selectedBackgroundView.backgroundColor = [[UIColor virtualWhiteColor] translucify:0.2];
     
-    NSString *iconNamed = [(self.programsList)[indexPath.row] program_slug];
+    NSString *iconNamed = [program program_slug];
     if (iconNamed) {
         UIImage *iconImg = [UIImage imageNamed:[NSString stringWithFormat:@"program_avatar_%@", iconNamed]];
         if ( !iconImg ) {
-            [cell.gav setupWithProgram:self.programsList[indexPath.row]];
+            [cell.gav setupWithProgram:program];
             cell.gav.view.alpha = 1.0f;
             cell.iconImageView.alpha = 0.0f;
         } else {
@@ -169,13 +215,20 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
 
-    SCPRProgramDetailViewController *programDetailViewController = [[SCPRProgramDetailViewController alloc]
-                                                                    initWithProgram:(self.programsList)[indexPath.row]];
+    Program* program;
+    if ( indexPath.section == 0 ) {
+        program = self.kpccPrograms[ indexPath.row ];
+    } else {
+        program = self.otherPrograms[ indexPath.row ];
+    }
 
-    programDetailViewController.program = (self.programsList)[indexPath.row];
+    SCPRProgramDetailViewController *programDetailViewController = [[SCPRProgramDetailViewController alloc]
+                                                                    initWithProgram:program];
+
+    programDetailViewController.program = program;
     [self.navigationController pushViewController:programDetailViewController animated:YES];
     
-    NSString *title = [NSString stringWithFormat:@"%@", [(self.programsList)[indexPath.row] title]];
+    NSString *title = [NSString stringWithFormat:@"%@", [program title]];
     if ( !title ) {
         title = @"[UNKNOWN]";
     }

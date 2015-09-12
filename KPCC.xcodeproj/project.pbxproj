@@ -10,6 +10,8 @@
 		07139B841B95E701007DBA91 /* ScheduleOccurrence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07139B831B95E701007DBA91 /* ScheduleOccurrence.swift */; settings = {ASSET_TAGS = (); }; };
 		075636581B9FBD91001D1C55 /* Pods.enterprise.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 075636571B9FBD91001D1C55 /* Pods.enterprise.xcconfig */; settings = {ASSET_TAGS = (); }; };
 		0775D0B71B8C1A6E009EDAE9 /* Empty.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0775D0B61B8C1A6E009EDAE9 /* Empty.mm */; };
+		07A24B4C1BA3A4F800197EB9 /* SCPRProgramTableViewHeader.xib in Resources */ = {isa = PBXBuildFile; fileRef = 07A24B4B1BA3A4F800197EB9 /* SCPRProgramTableViewHeader.xib */; settings = {ASSET_TAGS = (); }; };
+		07A24B4F1BA3A88900197EB9 /* SCPRProgramTableViewHeader.m in Sources */ = {isa = PBXBuildFile; fileRef = 07A24B4E1BA3A88900197EB9 /* SCPRProgramTableViewHeader.m */; settings = {ASSET_TAGS = (); }; };
 		07EB395E1B9723ED005A8DDB /* AudioPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07EB395D1B9723ED005A8DDB /* AudioPlayer.swift */; settings = {ASSET_TAGS = (); }; };
 		07EB39601B9731BC005A8DDB /* AVObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07EB395F1B9731BC005A8DDB /* AVObserver.swift */; settings = {ASSET_TAGS = (); }; };
 		07EB39621B973200005A8DDB /* AVStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07EB39611B973200005A8DDB /* AVStatus.swift */; settings = {ASSET_TAGS = (); }; };
@@ -342,6 +344,9 @@
 		075636571B9FBD91001D1C55 /* Pods.enterprise.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Pods.enterprise.xcconfig; path = "Pods/Target Support Files/Pods/Pods.enterprise.xcconfig"; sourceTree = "<group>"; };
 		075F6FAD1B8CFE2400E641F3 /* KPCCPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = KPCCPlayer.framework; path = "../../../Library/Developer/Xcode/DerivedData/KPCCPlayer-cfmdykrumzkmswepgfywosbqcrly/Build/Products/Debug-iphoneos/KPCCPlayer.framework"; sourceTree = "<group>"; };
 		0775D0B61B8C1A6E009EDAE9 /* Empty.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = Empty.mm; sourceTree = "<group>"; };
+		07A24B4B1BA3A4F800197EB9 /* SCPRProgramTableViewHeader.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SCPRProgramTableViewHeader.xib; sourceTree = "<group>"; };
+		07A24B4D1BA3A88900197EB9 /* SCPRProgramTableViewHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCPRProgramTableViewHeader.h; sourceTree = "<group>"; };
+		07A24B4E1BA3A88900197EB9 /* SCPRProgramTableViewHeader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SCPRProgramTableViewHeader.m; sourceTree = "<group>"; };
 		07EB395D1B9723ED005A8DDB /* AudioPlayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioPlayer.swift; sourceTree = "<group>"; };
 		07EB395F1B9731BC005A8DDB /* AVObserver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AVObserver.swift; sourceTree = "<group>"; };
 		07EB39611B973200005A8DDB /* AVStatus.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AVStatus.swift; sourceTree = "<group>"; };
@@ -1224,6 +1229,9 @@
 				52CC6D6019D100DE00C67322 /* SCPRProgramTableViewCell.h */,
 				52CC6D6119D100DE00C67322 /* SCPRProgramTableViewCell.m */,
 				2546AF6E1AB0CB6800E11D5B /* SCPRProgramTableViewCell.xib */,
+				07A24B4B1BA3A4F800197EB9 /* SCPRProgramTableViewHeader.xib */,
+				07A24B4D1BA3A88900197EB9 /* SCPRProgramTableViewHeader.h */,
+				07A24B4E1BA3A88900197EB9 /* SCPRProgramTableViewHeader.m */,
 				52D0FC1A19D1F24F009AECEE /* SCPRProgramDetailHeaderView.h */,
 				52D0FC1B19D1F24F009AECEE /* SCPRProgramDetailHeaderView.m */,
 				52D0FC1E19D1FC0C009AECEE /* SCPRProgramDetailTableViewCell.h */,
@@ -1648,6 +1656,7 @@
 				52EFF85A19C368C00059A0E3 /* program_avatar_this-american-life.png in Resources */,
 				52EFF80E19C368C00059A0E3 /* program_avatar_latino-usa.png in Resources */,
 				768C068A1995911600F829EB /* program_tile_generic.jpg in Resources */,
+				07A24B4C1BA3A4F800197EB9 /* SCPRProgramTableViewHeader.xib in Resources */,
 				25B25BB61B1D096D00ABE8B4 /* SCPRBalloonViewController.xib in Resources */,
 				52EFF84019C368C00059A0E3 /* program_avatar_science-friday@2x.png in Resources */,
 				768C0683199590CC00F829EB /* FreigSanProSem.otf in Resources */,
@@ -1966,6 +1975,7 @@
 				2537D8BD1A8BD7B700481CF8 /* SCPRTouchableScrubberView.m in Sources */,
 				25BBCD771A892D730015071E /* SCPRScrubbingUIViewController.m in Sources */,
 				25F2BC7E1A3B9B4D00108F73 /* SCPRGenericAvatarViewController.m in Sources */,
+				07A24B4F1BA3A88900197EB9 /* SCPRProgramTableViewHeader.m in Sources */,
 				5248858E19CBA180005F59CC /* EpisodeAudio.m in Sources */,
 				07EB39641B989A09005A8DDB /* NowPlayingManager.swift in Sources */,
 				523E86D019C8A292006FC366 /* SCPRProgramDetailViewController.m in Sources */,
