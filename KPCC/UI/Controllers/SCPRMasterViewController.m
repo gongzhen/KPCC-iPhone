@@ -105,10 +105,10 @@ setForOnDemandUI;
     if (event.type == UIEventTypeRemoteControl) {
         if ( event.subtype == UIEventSubtypeRemoteControlPause ) {
 //            [[AudioManager shared] pauseAudio];
-            [self remoteControlPlayOrPause];
+//            [self remoteControlPlayOrPause];
         } else if ( event.subtype == UIEventSubtypeRemoteControlPlay ) {
 //            [[AudioManager shared] playAudio];
-            [self remoteControlPlayOrPause];
+//            [self remoteControlPlayOrPause];
         }
     }
 }
@@ -1074,13 +1074,11 @@ setForOnDemandUI;
  */
 - (void)pauseTapped:(id)sender {
     NSLog(@" >>>>>> EVENT RECEIVED FROM COMMAND CENTER REMOTE <<<<<< ");
-    // Disabling this, seems redundant from the other remote control handling
-    // [self remoteControlPlayOrPause];
+    [self remoteControlPlayOrPause];
 }
 - (void)playTapped:(id)sender {
     NSLog(@" >>>>>> EVENT RECEIVED FROM COMMAND CENTER REMOTE <<<<<< ");
-    // Disabling this, seems redundant from the other remote control handling
-    // [self remoteControlPlayOrPause];
+    [self remoteControlPlayOrPause];
 }
 
 - (void)snapJogWheel {
