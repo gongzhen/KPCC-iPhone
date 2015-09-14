@@ -101,13 +101,10 @@
     if ( ![[UXmanager shared] userHasSeenOnboarding] ) {
         [[UXmanager shared] closeOutOnboarding];
     }
-    
-#ifndef TURN_OFF_SANDBOX_CONFIG
+
     [[PFInstallation currentInstallation] removeObject:kPushChannel
                                                 forKey:@"channels"];
     [[PFInstallation currentInstallation] saveInBackground];
-#endif
-    
 }
 
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
@@ -122,32 +119,8 @@
     [[UXmanager shared].settings setPushTokenData:deviceToken];
     [[UXmanager shared].settings setPushTokenString:hexToken];
     
-#ifndef TURN_OFF_SANDBOX_CONFIG
     PFInstallation *i = [PFInstallation currentInstallation];
-        
-#ifndef PRODUCTION
-    NSLog(@" ••••• Forcing sandbox channel only •••• ");
-    [i removeObject:@"listenLive" forKey:@"channels"];
-#ifdef RELEASE
-    [i removeObject:@"sandbox_listenLive" forKey:@"channels"];
-#endif
-    [i saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-        
-        [i setDeviceTokenFromData:deviceToken];
-        [i addUniqueObject:kPushChannel
-                    forKey:@"channels"];
-        
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [i saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-                [[UXmanager shared] persist];
-            }];
-        });
-    }];
-    
-    NSLog(@" ***** REGISTERING PUSH TOKEN : %@ *****", hexToken);
-    
-    return;
-#else
+
     NSLog(@" ••••• Got through to PFInstallation creation •••• ");
     
 
@@ -162,9 +135,6 @@
     });
 
     NSLog(@" ***** REGISTERING PUSH TOKEN : %@ *****", hexToken);
-#endif
-#endif
-    
 }
 
 
