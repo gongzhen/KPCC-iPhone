@@ -721,7 +721,7 @@ static const NSString *ItemStatusContext;
         [[SessionManager shared] setLocalLiveTime:0.0f];
     }
 
-    [self.status setStatus:AudioStatusStopped];
+    [self.status setStatus:AudioStatusNew];
 
     self.previousUrl = urlString;
 }

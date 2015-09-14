@@ -2789,6 +2789,13 @@ setForOnDemandUI;
         fwd30 = NO;
         scrubbing = NO;
     }
+
+    if ( mode == AudioModeLive && [[[AudioManager shared] status] status] == AudioStatusNew) {
+        back30 = NO;
+        fwd30 = NO;
+        scrubbing = NO;
+    }
+
     if ( [[SessionManager shared] sessionHasNoProgram] ) {
         back30 = NO;
         fwd30 = NO;

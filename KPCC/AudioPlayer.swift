@@ -401,7 +401,11 @@ public struct AudioPlayerObserver<T> {
             // self._setStatus(.Playing)
         case .Paused:
             // we pause as part of seeking, so don't pass on that status
-            if self.status != .Seeking {
+            switch (self.status) {
+            case .Seeking, .New:
+                // do nothing
+                true
+            default:
                 self._setStatus(.Paused)
             }
         case .LikelyToKeepUp:
