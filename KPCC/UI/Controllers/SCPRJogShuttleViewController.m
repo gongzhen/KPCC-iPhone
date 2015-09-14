@@ -269,32 +269,6 @@
 }
 
 - (void)completeWithCallback:(void (^)(void))completion {
-#ifdef USE_REWIND_UNCOILING
-    [CATransaction begin]; {
-        [CATransaction setCompletionBlock:^{
-            self.circleLayer.strokeEnd = 1.0f;
-            if ( completion ) {
-                dispatch_async(dispatch_get_main_queue(), completion);
-            }
-        }];
-        
-        CABasicAnimation *animation = [CABasicAnimation animationWithKeyPath:@"strokeEnd"];
-        animation.duration = 0.5;
-        animation.removedOnCompletion = NO;
-        
-        self.circleLayer.strokeColor = self.strokeColor.CGColor;
-        NSNumber *from = @(0.0);
-        NSNumber *to = @(1.0);
-        animation.fromValue = from;
-        animation.toValue = to;
-        animation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
-        animation.autoreverses = NO;
-        
-        [self.circleLayer addAnimation:animation forKey:@"completeCircle"];
-        
-    }
-    [CATransaction commit];
-#else
     self.spinning = NO;
     self.completionBit = NO;
     self.soundPlayedBit = NO;
@@ -303,7 +277,6 @@
     if ( completion ) {
         dispatch_async(dispatch_get_main_queue(), completion);
     }
-#endif
 }
 
 - (void)endAnimations {

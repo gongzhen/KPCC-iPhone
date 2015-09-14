@@ -178,19 +178,6 @@
                                               encoding:NSUTF8StringEncoding];
     NSLog(@" •••••••• >>>>>>>> User Info from Push : %@ <<<<<<<< ••••••••",dataStr);
     
-#ifdef USE_PUSH_FOR_ALARM
-    if ( userInfo[@"alarm"] ) {
-        NSLog(@"Alarm Received");
-        self.alarmTask = [application beginBackgroundTaskWithExpirationHandler:^{
-            
-        }];
-        
-        [self actOnNotification:userInfo];
-        completionHandler(UIBackgroundFetchResultNewData);
-        return;
-    }
-#endif
-    
     if ( [[UIApplication sharedApplication] applicationState] == UIApplicationStateBackground ) {
         NSLog(@" >>>>> ACTING ON PUSH NOW <<<<< ");
         [self actOnNotification:userInfo];
