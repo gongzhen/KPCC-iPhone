@@ -1389,11 +1389,6 @@ setForOnDemandUI;
     self.scrubbingUI.captionLabel = self.scrubberTimeLabel;
     self.scrubbingUI.liveProgressView = self.liveProgressScrubberView;
     self.scrubbingUI.liveStreamProgressAnchor = self.liveProgressScrubberAnchor;
-    self.scrubbingUI.liveProgressNeedleReadingLabel = self.liveProgressNeedleReadingLabel;
-    self.scrubbingUI.liveProgressNeedleView = self.liveProgressNeedleView;
-    self.scrubbingUI.flagAnchor = self.flagAnchor;
-    self.scrubbingUI.currentProgressNeedleView = self.currentProgressNeedleView;
-    self.scrubbingUI.currentProgressReadingLabel = self.currentProgressNeedleReadingLabel;
     self.scrubbingUI.scrubbingAvailable = YES;
     
     if ( [Utils isThreePointFive] ) {

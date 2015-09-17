@@ -194,14 +194,7 @@
 @property (nonatomic, strong) IBOutlet UILabel *timeNumbericScrubberLabel;
 @property (nonatomic, strong) IBOutlet UIView *liveProgressScrubberView;
 @property (nonatomic, strong) IBOutlet NSLayoutConstraint *liveProgressScrubberAnchor;
-@property (nonatomic, strong) IBOutlet UIView *liveProgressNeedleView;
-@property (nonatomic, strong) IBOutlet UILabel *liveProgressNeedleReadingLabel;
-@property (nonatomic, strong) IBOutlet UIView *currentProgressNeedleView;
-@property (nonatomic, strong) IBOutlet UILabel *currentProgressNeedleReadingLabel;
-@property IBOutlet NSLayoutConstraint *cpFlagAnchor;
-@property IBOutlet NSLayoutConstraint *cpLeftAnchor;
 @property IBOutlet NSLayoutConstraint *topGapScrubbingAnchor;
-@property IBOutlet NSLayoutConstraint *flagAnchor;
 @property IBOutlet NSLayoutConstraint *dividerLineLeftAnchor;
 @property IBOutlet NSLayoutConstraint *dividerLineRightAnchor;
 @property IBOutlet NSLayoutConstraint *scrollerTopConstraint;

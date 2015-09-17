@@ -77,25 +77,6 @@
 }
 
 - (void)primeForAudioMode {
-
-    
-#ifndef USE_FLAGS
-    [self.liveProgressNeedleReadingLabel removeFromSuperview];
-    [self.liveProgressNeedleView removeFromSuperview];
-    [self.currentProgressNeedleView removeFromSuperview];
-    [self.currentProgressReadingLabel removeFromSuperview];
-    
-    self.sampleTick = -1.0f;
-    
-    self.liveProgressNeedleView = nil;
-    self.liveProgressNeedleReadingLabel = nil;
-    self.currentProgressReadingLabel = nil;
-    self.currentProgressNeedleView = nil;
-    
-    //[self.timeBehindLiveLabel removeFromSuperview];
-    //self.timeBehindLiveLabel = nil;
-#endif
-    
     [[NSNotificationCenter defaultCenter] removeObserver:self
                                                  name:@"program-has-changed"
                                                object:nil];
@@ -110,19 +91,13 @@
                                                object:nil];
     
 
-    
-    self.currentProgressNeedleView.alpha = 0.0f;
-    self.currentProgressReadingLabel.alpha = 0.0f;
-    self.currentProgressNeedleView.translatesAutoresizingMaskIntoConstraints = NO;
-    
+
     if ( [[AudioManager shared] currentAudioMode] == AudioModeLive ) {
         
         self.liveProgressView.alpha = 1.0f;
         self.liveProgressView.backgroundColor = [[UIColor virtualWhiteColor] translucify:0.4f];
         self.scrubberController.liveProgressView = self.liveProgressView;
         self.scrubberController.liveProgressAnchor = self.liveStreamProgressAnchor;
-        self.currentProgressNeedleView.alpha = 0.0f;
-        self.currentProgressReadingLabel.alpha = 0.0f;
         self.timeBehindLiveLabel.text = @"YOUR LISTENING SPOT";
         ScheduleOccurrence *p = [[SessionManager shared] currentSchedule];
         
@@ -173,17 +148,7 @@
         self.timeNumericLabel.textColor = [UIColor whiteColor];
         self.timeBehindLiveLabel.textColor = [UIColor kpccOrangeColor];
         self.captionLabel.alpha = 0.0f;
-        
-        self.liveProgressNeedleView.alpha = 1.0f;
-        self.liveProgressNeedleReadingLabel.alpha = 1.0f;
-        [self.liveProgressNeedleReadingLabel proMediumFontize];
-        
-        [self.currentProgressReadingLabel proMediumFontize];
-        self.currentProgressReadingLabel.textColor = [UIColor kpccOrangeColor];
-        self.currentProgressNeedleView.backgroundColor = [UIColor kpccOrangeColor];
-        self.currentProgressNeedleView.alpha = 0.0f;
-        self.currentProgressReadingLabel.alpha = 0.0f;
-        
+
     } else if ( [[AudioManager shared] currentAudioMode] == AudioModeOnDemand ) {
         self.liveProgressView.alpha = 0.0f;
         self.lowerBoundLabel.alpha = 0.0f;
@@ -192,9 +157,7 @@
         self.timeBehindLiveLabel.alpha = 0.0f;
         self.captionLabel.alpha = 1.0f;
         self.maxPercentage = MAXFLOAT;
-        self.liveProgressNeedleReadingLabel.alpha = 0.0f;
-        self.liveProgressNeedleView.alpha = 0.0f;
-        
+
         [[self scrubbingIndicatorLabel] proLightFontize];
     }
 }
@@ -385,16 +348,9 @@
         
         [[self scrubbingIndicatorLabel] setAttributedText:fancyTime];
         
-        CGFloat where = percent * self.scrubbableView.frame.size.width;
-        self.cpLeftAnchor.constant = where;
-        
         [UIView animateWithDuration:0.25f animations:^{
             [self.view updateConstraintsIfNeeded];
             [self.view layoutIfNeeded];
-            
-            // Not needed ...
-            self.currentProgressReadingLabel.alpha = 0.0f;
-            self.currentProgressNeedleView.alpha = 0.0f;
         }];
         
     }
@@ -536,39 +492,17 @@
 }
 
 - (void)tickLive {
-    NSDate *vLive = [[SessionManager shared] vLive];
-    NSString *prettyTime = [NSDate stringFromDate:vLive
-                                       withFormat:@"h:mma"];
-    
-    self.liveProgressNeedleReadingLabel.text = [prettyTime lowercaseString];
-
     ScheduleOccurrence *p = [[SessionManager shared] currentSchedule];
 
     self.maxPercentage = [p dateToPercentage:[[SessionManager shared] vLive]];
 
     CGFloat percent = [p dateToPercentage:[[SessionManager shared] vNow]];
-    CGFloat where = percent * self.scrubbableView.frame.size.width;
-    self.cpLeftAnchor.constant = where;
-    
+
     CGFloat endPoint = self.scrubberController.view.frame.size.width * self.maxPercentage;
 
     [UIView animateWithDuration:0.25 animations:^{
         self.liveStreamProgressAnchor.constant = endPoint;
-        
-        if ( self.maxPercentage >= 0.85f ) {
-            self.flagAnchor.constant = self.liveProgressNeedleReadingLabel.frame.size.width;
-        } else {
-            self.flagAnchor.constant = 0.0f;
-        }
-        
-        if ( self.maxPercentage >= 1.0f ) {
-            self.liveProgressNeedleView.alpha = 0.0f;
-            self.liveProgressNeedleReadingLabel.alpha = 0.0f;
-        } else {
-            self.liveProgressNeedleReadingLabel.alpha = 1.0f;
-            self.liveProgressNeedleView.alpha = 1.0f;
-        }
-        
+
         [self behindLiveStatus];
 
         [self.scrubberController tick:percent];
@@ -604,18 +538,11 @@
                                                                                       attributes:@{ @"digits" : [[DesignManager shared] proLight:32.0f],
                                                                                                     @"period" : [[DesignManager shared] proLight:18.0f] }];
             [[self scrubbingIndicatorLabel] setAttributedText:fancyTime];
-            
-            // Not needed
-            self.currentProgressReadingLabel.alpha = 0.0f;
-            self.currentProgressNeedleView.alpha = 0.0f;
-            
+
         } else {
             
             [AudioManager shared].ignoreDriftTolerance = NO;
             self.timeBehindLiveLabel.alpha = 0.0f;
-            self.currentProgressReadingLabel.alpha = 0.0f;
-            self.currentProgressNeedleView.alpha = 0.0f;
-            
             
             [self.timeNumericLabel fadeText:@"LIVE"
                                    duration:0.225];

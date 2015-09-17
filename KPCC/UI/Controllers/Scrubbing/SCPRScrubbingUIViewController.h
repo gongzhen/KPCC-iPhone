@@ -31,13 +31,6 @@
 @property (nonatomic,strong) IBOutlet UILabel *timeNumericLabel;
 @property (nonatomic,strong) IBOutlet UIView *liveProgressView;
 @property (nonatomic,strong) IBOutlet NSLayoutConstraint *liveStreamProgressAnchor;
-@property (nonatomic,strong) IBOutlet UIView *liveProgressNeedleView;
-@property (nonatomic,strong) IBOutlet UILabel *liveProgressNeedleReadingLabel;
-@property (nonatomic,strong) IBOutlet UIView *currentProgressNeedleView;
-@property (nonatomic,strong) IBOutlet UILabel *currentProgressReadingLabel;
-@property (nonatomic,strong) IBOutlet NSLayoutConstraint *flagAnchor;
-@property (nonatomic,strong) IBOutlet NSLayoutConstraint *cpFlagAnchor;
-@property (nonatomic,strong) IBOutlet NSLayoutConstraint *cpLeftAnchor;
 
 @property NSInteger positionBeforeScrub;
 @property NSInteger newPositionDelta;
