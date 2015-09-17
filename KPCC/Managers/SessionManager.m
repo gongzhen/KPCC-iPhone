@@ -27,35 +27,9 @@
         mgr = [[SessionManager alloc] init];
         mgr.prevCheckedMinute = -1;
         mgr.peakDrift = kAllowableDriftCeiling;
-
-//        [[[AudioManager shared] status] observe:^(enum AudioStatus status) {
-//            switch (status) {
-//                case AudioStatusPlaying:
-//                    if ([[AudioManager shared] currentAudioMode] == AudioModeLive) {
-//                        [mgr setLocalLiveTimeFromSession];
-//                    }
-//                    break;
-//                default:
-//                    break;
-//            }
-//        }];
     });
     return mgr;
 }
-
-//- (void)setLocalLiveTimeFromSession {
-//    NSLog(@"setLocalLiveTimeFromSession registering for LikelyToKeepUp");
-//    [[[[AudioManager shared] audioPlayer] observer] once:StatusesLikelyToKeepUp callback:^(NSString* msg, id obj) {
-//        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-//            NSDate* maxDate = [[AudioManager shared] maxSeekableDate];
-//
-//            if (maxDate) {
-//                NSLog(@"setLocalLiveTimeFromSession: %@", maxDate);
-//                self.localLiveTime = [[maxDate dateByAddingTimeInterval:-60.0f] timeIntervalSince1970];
-//            }
-//        });
-//    }];
-//}
 
 #pragma mark - Session Mgmt
 // What is the "live" date for our stream?
@@ -68,9 +42,7 @@
     }
 
     NSDate *live = [[NSDate date] dateByAddingTimeInterval:-90.0f]; // Add in what we know is going to be slightly behind live
-//    if ( self.localLiveTime > 0.0f ) {
-//        live = [NSDate dateWithTimeIntervalSince1970:self.localLiveTime];
-//    }
+
     NSDate *plive = [[[AudioManager shared] audioPlayer] liveDate];
     if ( plive != nil ) {
         live = plive;

@@ -715,9 +715,7 @@ setForOnDemandUI;
         if ( self.preRollOpen ) {
             [self decloakForPreRoll:NO];
         }
-        
-        [[SessionManager shared] setLocalLiveTime:0.0f];
-        
+
         [UIView animateWithDuration:0.25 animations:^{
             self.playerControlsBottomYConstraint.constant = [self.originalFrames[@"playerControls"] floatValue];
             self.liveRewindBottomYConstraint.constant = [self.originalFrames[@"liveRewind"] floatValue];
@@ -1241,7 +1239,6 @@ setForOnDemandUI;
     self.shuttlingGate = YES;
     
     [[AudioManager shared] setCalibrating:YES];
-//    [[SessionManager shared] setLocalLiveTime:0.0f];
 
     ScheduleOccurrence *cProgram = [[SessionManager shared] currentSchedule];
     [self.jogShuttle.view setAlpha:1.0f];
@@ -1334,7 +1331,6 @@ setForOnDemandUI;
     
     self.shuttlingGate = YES;
     [[AudioManager shared] setCalibrating:YES];
-//    [[SessionManager shared] setLocalLiveTime:0.0f];
 
     [self.jogShuttle.view setAlpha:1.0];
     [[SessionManager shared] setSeekForwardRequested:YES];

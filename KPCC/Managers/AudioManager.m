@@ -421,10 +421,8 @@ static const NSString *ItemStatusContext;
 
 - (void)invalidateTimeObserver {
     if ( self.timeObserver ) {
-        [[SessionManager shared] setLocalLiveTime:0.0f];
-//        [self.audioPlayer removeTimeObserver:self.timeObserver];
+        [self.audioPlayer._player removeTimeObserver:self.timeObserver];
         self.timeObserver = nil;
-        self.localBufferSample = nil;
     }
 }
 
@@ -716,10 +714,6 @@ static const NSString *ItemStatusContext;
     [self.nowPlaying setPlayer:self.audioPlayer];
 
     [self startObservingTime];
-    
-    if ( self.currentAudioMode != AudioModeLive ) {
-        [[SessionManager shared] setLocalLiveTime:0.0f];
-    }
 
     [self.status setStatus:AudioStatusNew];
 
@@ -739,11 +733,6 @@ static const NSString *ItemStatusContext;
     }
     
     [self invalidateTimeObserver];
-
-    
-    [[SessionManager shared] resetCache];
-    
-    [[SessionManager shared] setLocalLiveTime:0.0f];
     
     [self resetFlags];
     
@@ -753,11 +742,6 @@ static const NSString *ItemStatusContext;
 
     self.minSeekableDate = nil;
     self.maxSeekableDate = nil;
-    
-    if ( self.avobserver != nil ) {
-        [self.avobserver stop];
-        self.avobserver = nil;
-    }
     
 }
 

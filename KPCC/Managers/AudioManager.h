@@ -87,7 +87,6 @@ typedef NS_ENUM(NSUInteger, StreamStatus) {
 @property AVPlayerItem *playerItem;
 @property AVAudioPlayer *localAudioPlayer;
 
-@property AVObserver *avobserver;
 @property NSString *avSessionId;
 @property AVStatus *status;
 @property NowPlayingManager *nowPlaying;

@@ -54,7 +54,6 @@ static NSInteger kProgramPollingPressure = 5;
 @property NSTimer *sleepTimer;
 
 @property NSInteger prevCheckedMinute;
-@property NSTimeInterval localLiveTime;
 
 @property int64_t liveStreamSessionBegan;
 @property int64_t liveStreamSessionEnded;
