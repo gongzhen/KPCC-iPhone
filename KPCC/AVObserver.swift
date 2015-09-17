@@ -18,7 +18,9 @@ import AVFoundation
     
     var _once   = [Statuses:[OnceClosure]]()
     var _on     = [Statuses:[OnceClosure]]()
-    
+
+    private var _destroyed = false
+
     @objc enum Statuses: Int {
         case PlayerFailed = 0, PlayerReady = 1, ItemFailed = 2, ItemReady = 3,
         Playing = 4, Paused = 5, Stalled = 6, TimeJump = 7, AccessLog = 8,
@@ -38,6 +40,11 @@ import AVFoundation
         AVPlayerItemNewErrorLogEntryNotification,
         AVPlayerItemDidPlayToEndTimeNotification
     ]
+
+    deinit {
+        // ensure stop is always called before we're dealloc'ed
+        self.stop()
+    }
     
     @objc init(player:AVPlayer,callback:CallbackClosure? = nil) {
         self._player = player
@@ -65,6 +72,10 @@ import AVFoundation
     //----------
     
     func stop() {
+        if self._destroyed {
+            return
+        }
+
         NSLog("AVobserver stop called.")
         self._player.removeObserver(self,forKeyPath:"status")
         self._player.removeObserver(self, forKeyPath:"rate")
@@ -77,6 +88,8 @@ import AVFoundation
         self._on.removeAll(keepCapacity: false)
 
         self._callback = nil
+
+        self._destroyed = true
     }
     
     //----------
