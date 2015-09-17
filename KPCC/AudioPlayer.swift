@@ -122,13 +122,13 @@ public struct AudioPlayerObserver<T> {
 
     var playing: Bool
 
-    var _timeObserver: AnyObject?
-
     var _dateFormat: NSDateFormatter
 
     private var _lastDates: StreamDates?
     var currentDates: StreamDates?
     var liveDate: NSDate?
+
+    private var _timeObserver: AnyObject?
 
     //----------
 
@@ -206,7 +206,7 @@ public struct AudioPlayerObserver<T> {
 
         self._getReadyPlayer() {cold in
             // observe time every second
-            self._player.addPeriodicTimeObserverForInterval(CMTimeMake(1,1), queue: nil,
+            self._timeObserver = self._player.addPeriodicTimeObserverForInterval(CMTimeMake(1,1), queue: nil,
                 usingBlock: {(time:CMTime) in
                     if self.status == .Seeking {
                         // we don't want to update anything mid-seek
@@ -294,6 +294,12 @@ public struct AudioPlayerObserver<T> {
 
             self._lastDates = dates
         }
+    }
+
+    //----------
+
+    deinit {
+        self.stop()
     }
 
     //----------
@@ -563,6 +569,13 @@ public struct AudioPlayerObserver<T> {
         // tear down player and observer
         self.pause()
         self.observer.stop()
+
+        // clean up our time observer
+        if self._timeObserver != nil {
+            self._player.removeTimeObserver(self._timeObserver!)
+        }
+
+        self._timeObserver = nil
 
         self.currentDates = nil
         self._setStatus(AudioStatus.Stopped)
