@@ -1160,18 +1160,6 @@ setForOnDemandUI;
     [[AudioManager shared] pauseAudio];
 }
 
-- (void)rewindFifteen {
-    [[AudioManager shared] backwardSeekFifteenSecondsWithCompletion:^{
-        
-    }];
-}
-
-- (void)fastForwardFifteen {
-    [[AudioManager shared] forwardSeekFifteenSecondsWithCompletion:^{
-        
-    }];
-}
-
 - (void)goLive:(BOOL)play {
     [self goLive:play smooth:YES];
 }
@@ -1288,9 +1276,6 @@ setForOnDemandUI;
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.6f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         
         switch (distance) {
-            case RewindDistanceFifteen:
-                [self rewindFifteen];
-                break;
             case RewindDistanceThirty:
                 break;
             case RewindDistanceOnboardingBeginning:
@@ -2002,13 +1987,7 @@ setForOnDemandUI;
 }
 
 
-- (void)setOnDemandUI:(BOOL)animated forProgram:(Program*)program withAudio:(NSArray*)array atCurrentIndex:(int)index {
-    
-    [[AudioManager shared] invalidateTimeObserver];
-    
-    if ( self.preRollViewController.tritonAd )
-        self.preRollViewController.tritonAd = nil;
-    
+- (void)setOnDemandUI:(BOOL)animated forProgram:(Program*)program withAudio:(NSArray*)array atCurrentIndex:(int)index {    
     self.queueBlurShown = NO;
     
     if ( [[AudioManager shared] isPlayingAudio] ) {
@@ -3436,9 +3415,6 @@ setForOnDemandUI;
 }
 
 - (void)queueScrollEnded {
-    
-    [[AudioManager shared] invalidateTimeObserver];
-    
     self.onDemandPanning = NO;
     
     [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationOptionCurveLinear animations:^{
@@ -3705,61 +3681,58 @@ setForOnDemandUI;
     
     NSAssert([NSThread isMainThread],@"This is not the main thread...");
     
-    if ( [[AudioManager shared] frameCount] % 10 == 0 ) {
-        if ( self.showLiveHelpScreens ) {
-            self.showLiveHelpScreens = NO;
-            SCPRAppDelegate *del = [Utils del];
-            [del onboardForLiveFunctionality];
-        }
-        
-        [self adjustScrollingState];
+    if ( self.showLiveHelpScreens ) {
+        self.showLiveHelpScreens = NO;
+        SCPRAppDelegate *del = [Utils del];
+        [del onboardForLiveFunctionality];
+    }
+    
+    [self adjustScrollingState];
 
+    if ( !self.menuOpen ) {
+        [self prettifyBehindLiveStatus];
+    }
+
+    if ( [AudioManager shared].currentAudioMode == AudioModeLive ) {
+        if ( self.liveRewindAltButton.alpha == 1.0 || self.liveRewindAltButton.layer.opacity == 1.0 )
+            [self primeManualControlButton];
+        
         if ( !self.menuOpen ) {
-            [self prettifyBehindLiveStatus];
-        }
-
-        if ( [AudioManager shared].currentAudioMode == AudioModeLive ) {
-            if ( self.liveRewindAltButton.alpha == 1.0 || self.liveRewindAltButton.layer.opacity == 1.0 )
-                [self primeManualControlButton];
-            
-            if ( !self.menuOpen ) {
-                if ( self.liveStreamView.layer.opacity < 1.0 ) {
-                    [UIView animateWithDuration:0.25 animations:^{
-                        NSLog(@"Opacity was affected");
-                        self.liveStreamView.layer.opacity = 1.0f;
-                    }];
-                    
-
-                }
+            if ( self.liveStreamView.layer.opacity < 1.0 ) {
+                [UIView animateWithDuration:0.25 animations:^{
+                    NSLog(@"Opacity was affected");
+                    self.liveStreamView.layer.opacity = 1.0f;
+                }];
                 
+
             }
+            
         }
-        
-        if ( [[AudioManager shared] currentAudioMode] == AudioModeOnDemand ) {
-            [self.progressView pop_removeAllAnimations];
-        } else {
-            if ( [[AudioManager shared] currentAudioMode] == AudioModeLive ||
-                [[AudioManager shared] currentAudioMode] == AudioModeOnboarding ) {
-                if ( !self.menuOpen && ![[UXmanager shared] notificationsPromptDisplaying] ) {
-                    if ( !self.preRollOpen ) {
-                        if ( ![[UXmanager shared] userHasSeenOnboarding] ) {
-                            if ( ![[UXmanager shared] notificationsPromptDisplaying] ) {
-                                [self.liveProgressViewController show];
-                            }
-                        } else {
-                            if ( self.initialPlay ) {
-                                [self.liveProgressViewController show:YES];
-                            }
+    }
+    
+    if ( [[AudioManager shared] currentAudioMode] == AudioModeOnDemand ) {
+        [self.progressView pop_removeAllAnimations];
+    } else {
+        if ( [[AudioManager shared] currentAudioMode] == AudioModeLive ||
+            [[AudioManager shared] currentAudioMode] == AudioModeOnboarding ) {
+            if ( !self.menuOpen && ![[UXmanager shared] notificationsPromptDisplaying] ) {
+                if ( !self.preRollOpen ) {
+                    if ( ![[UXmanager shared] userHasSeenOnboarding] ) {
+                        if ( ![[UXmanager shared] notificationsPromptDisplaying] ) {
+                            [self.liveProgressViewController show];
+                        }
+                    } else {
+                        if ( self.initialPlay ) {
+                            [self.liveProgressViewController show:YES];
                         }
                     }
                 }
             }
         }
+    }
         
 //        [[AnalyticsManager shared] nielsenTrack];
 
-    }
-    
     [self.liveProgressViewController tick];
     [self tickOnDemand];
     

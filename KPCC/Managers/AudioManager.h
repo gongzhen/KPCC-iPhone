@@ -166,8 +166,6 @@ typedef NS_ENUM(NSUInteger, StreamStatus) {
 @property (NS_NONATOMIC_IOSONLY, readonly) double observedMaxBitrate;
 @property (NS_NONATOMIC_IOSONLY, readonly) double observedMinBitrate;
 
-@property NSInteger frameCount;
-
 @property BOOL ignoreDriftTolerance;
 @property BOOL calibrating;
 
@@ -187,10 +185,6 @@ typedef NS_ENUM(NSUInteger, StreamStatus) {
 @property (nonatomic, strong) NSTimer *giveupTimer;
 @property (nonatomic, strong) NSTimer *waitForLogTimer;
 
-@property (nonatomic, copy) NSDate *seekTargetReferenceDate;
-
-@property NSInteger interactionIdx;
-
 - (void)seekToPercent:(CGFloat)percent;
 
 - (void)recalibrateAfterScrub;
@@ -203,9 +197,6 @@ typedef NS_ENUM(NSUInteger, StreamStatus) {
 
 - (void)backwardSeekToBeginningOfProgram;
 
-- (void)forwardSeekFifteenSecondsWithCompletion:(CompletionBlock)completion;
-- (void)backwardSeekFifteenSecondsWithCompletion:(CompletionBlock)completion;
-
 - (void)adjustAudioWithValue:(CGFloat)increment completion:(void (^)(void))completion;
 - (void)threadedAdjustWithValue:(CGFloat)increment completion:(void (^)(void))completion;
 - (void)takedownAudioPlayer;
@@ -214,8 +205,6 @@ typedef NS_ENUM(NSUInteger, StreamStatus) {
 
 - (BOOL)isPlayingAudio;
 - (BOOL)isActiveForAudioMode:(AudioMode)mode;
-- (void)invalidateTimeObserver;
-- (void)startObservingTime;
 
 - (void)loadXfsStreamUrlWithCompletion:(CompletionBlock)completion;
 

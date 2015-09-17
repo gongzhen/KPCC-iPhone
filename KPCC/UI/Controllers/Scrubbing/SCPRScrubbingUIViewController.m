@@ -569,12 +569,8 @@
             self.liveProgressNeedleView.alpha = 1.0f;
         }
         
-        self.sampleTick++;
-        if ( self.sampleTick % 10 == 0 ) {
-            self.sampleTick = 0;
-            [self behindLiveStatus];
-        }
-        
+        [self behindLiveStatus];
+
         [self.scrubberController tick:percent];
         
         [self.view layoutIfNeeded];

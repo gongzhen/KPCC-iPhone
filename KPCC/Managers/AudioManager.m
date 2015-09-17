@@ -35,10 +35,6 @@ static const NSString *ItemStatusContext;
             singleton.fadeQueue = [[NSOperationQueue alloc] init];
             singleton.savedVolumeFromMute = -1.0f;
             singleton.currentAudioMode = AudioModeNeutral;
-            singleton.localBufferSample = [NSMutableDictionary new];
-            singleton.frameCount = 1;
-
-            singleton.interactionIdx = 0;
 
             singleton.status = [[AVStatus alloc] init];
             singleton.nowPlaying = [[NowPlayingManager alloc] initWithStatus:singleton.status];
@@ -326,106 +322,6 @@ static const NSString *ItemStatusContext;
                                                                   
 }
 
-#pragma mark - General
-- (void)startObservingTime {
-    
-    AVPlayer *audioPlayer = self.audioPlayer._player;
-    __unsafe_unretained typeof(self) weakSelf = self;
-    __unsafe_unretained typeof(audioPlayer) weakAudioPlayer = audioPlayer;
-
-    if ( [[Utils del] alarmTask] > 0 ) {
-        [[Utils del] killBackgroundTask];
-    }
-
-    if (self.timeObserver) {
-        NSLog(@"startObservingTime called with an observer already in place.");
-        return;
-    }
-
-    self.calibrating = YES;
-    self.timeObserver = nil;
-    self.frameCount = 0;
-    
-    
-    self.timeObserver = [audioPlayer addPeriodicTimeObserverForInterval:CMTimeMake(1, 10) queue:NULL usingBlock:^(CMTime time) {
-                                                                      
-        if ( weakSelf.frameCount % 10 == 0 ) {
-            weakSelf.currentDate = weakAudioPlayer.currentItem.currentDate;
-            if ( [[SessionManager shared] dateIsReasonable:weakSelf.currentDate] ) {
-                [[SessionManager shared] setLastValidCurrentPlayerTime:weakSelf.currentDate];
-            }
-            weakSelf.audioOutputSourceChanging = NO;
-        }
-
-        NSArray *seekRange = weakAudioPlayer.currentItem.seekableTimeRanges;
-        if (seekRange && [seekRange count] > 0) {
-            CMTimeRange range = [seekRange[0] CMTimeRangeValue];
-            if ([weakSelf.delegate respondsToSelector:@selector(onTimeChange)]) {
-                [weakSelf.delegate onTimeChange];
-            }
-            
-            if ( weakSelf.smooth ) {
-                [weakSelf adjustAudioWithValue:0.0045 completion:^{
-                    
-                }];
-            }
-            
-            if ( weakSelf.kickstartTimer ) {
-                if ( [weakSelf.kickstartTimer isValid] ) {
-                    [weakSelf.kickstartTimer invalidate];
-                }
-                weakSelf.kickstartTimer = nil;
-            }
-
-            weakSelf.minSeekableDate = [NSDate dateWithTimeInterval:( -1 * (CMTimeGetSeconds(time) - CMTimeGetSeconds(range.start))) sinceDate:weakSelf.currentDate];
-            weakSelf.maxSeekableDate = [NSDate dateWithTimeInterval:(CMTimeGetSeconds(CMTimeRangeGetEnd(range)) - CMTimeGetSeconds(time)) sinceDate:weakSelf.currentDate];
-
-            if ( weakSelf.frameCount % 10 == 0 ) {
-                if ( weakSelf.currentAudioMode == AudioModeOnDemand ) {
-                    [[QueueManager shared] handleBookmarkingActivity];
-                }
-                
-                weakSelf.appGaveUp = NO;
-                
-                if ( [[SessionManager shared] sleepTimerArmed] ) {
-                    [[SessionManager shared] tickSleepTimer];
-                }
-                
-                [[SessionManager shared] checkProgramUpdate:NO];
-                
-
-                weakSelf.calibrating = NO;
-                weakSelf.audioOutputSourceChanging = NO;
-                
-            }
-
-            if ( weakSelf.frameCount == 300 ) {
-                // After 30 seconds, consider skip probation period over
-                weakSelf.skipCount = 0;
-                weakSelf.suppressSkipFixer = NO;
-                NSLog(@"Ending skip probation period");
-            }
-            
-            if ( weakSelf.frameCount % 10000 == 0 ) {
-                weakSelf.frameCount = 0;
-            }
-            
-            weakSelf.frameCount++;
-            
-        }
-        
-        
-    }];
-    
-}
-
-- (void)invalidateTimeObserver {
-    if ( self.timeObserver ) {
-        [self.audioPlayer._player removeTimeObserver:self.timeObserver];
-        self.timeObserver = nil;
-    }
-}
-
 #pragma mark - Scrubbing and Seeking
 - (void)seekToPercent:(CGFloat)percent {
     [self.audioPlayer seekToPercent:percent completion:^(BOOL finished) {
@@ -581,8 +477,47 @@ static const NSString *ItemStatusContext;
     self._avplayer = [AVPlayer playerWithURL:url];
     self.audioPlayer = [[AudioPlayer alloc] initWithPlayer:self._avplayer];
 
+    // -- Time Observer -- //
+
     [self.audioPlayer observeTime:^(StreamDates* d) {
-        //NSLog(@"curDate is %@",d.curDate);
+        // playing audio cancels an alarm
+        if ( [[Utils del] alarmTask] > 0 ) {
+            [[Utils del] killBackgroundTask];
+        }
+
+        // stash the date in our session
+        if ([d hasDates]) {
+            [[SessionManager shared] setLastValidCurrentPlayerTime:d.curDate];
+        }
+
+        // call our delegate if it wants to know about time changes
+        if ([self.delegate respondsToSelector:@selector(onTimeChange)]) {
+            [self.delegate onTimeChange];
+        }
+
+        // are we adjusting volume up?
+        if ( self.smooth ) {
+            [self adjustAudioWithValue:0.0045 completion:^{
+            }];
+        }
+
+        // trigger bookmarking update
+        if ( self.currentAudioMode == AudioModeOnDemand ) {
+            [[QueueManager shared] handleBookmarkingActivity];
+        }
+
+        // tick the sleep timer
+        if ( [[SessionManager shared] sleepTimerArmed] ) {
+            [[SessionManager shared] tickSleepTimer];
+        }
+
+        // make sure our schedule occurrence is still correct
+        [[SessionManager shared] checkProgramUpdate:NO];
+
+        // Still needed?
+        self.appGaveUp = NO;
+        self.calibrating = NO;
+        self.audioOutputSourceChanging = NO;
     }];
 
     [self.audioPlayer observeEvents:^(AudioEvent* e) {
@@ -713,8 +648,6 @@ static const NSString *ItemStatusContext;
 
     [self.nowPlaying setPlayer:self.audioPlayer];
 
-    [self startObservingTime];
-
     [self.status setStatus:AudioStatusNew];
 
     self.previousUrl = urlString;
@@ -731,8 +664,11 @@ static const NSString *ItemStatusContext;
     if ( self.audioPlayer ) {
         [self.audioPlayer stop];
     }
-    
-    [self invalidateTimeObserver];
+
+    if ( self.timeObserver ) {
+        [self.audioPlayer._player removeTimeObserver:self.timeObserver];
+        self.timeObserver = nil;
+    }
     
     [self resetFlags];
     
