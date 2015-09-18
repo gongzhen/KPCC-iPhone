@@ -1191,9 +1191,10 @@ setForOnDemandUI;
         [self decloakForXFS];
     }
     
+    [self setLiveStreamingUI:YES];
+
     [[SessionManager shared] fetchCurrentSchedule:^(id returnedObject) {
         
-        [self setLiveStreamingUI:YES];
         [self treatUIforProgram];
         
         if ( play ) {
@@ -3003,7 +3004,9 @@ setForOnDemandUI;
     [self pushToHiddenVector:self.liveRewindAltButton];
     [[Utils del] controlXFSAvailability:[[SessionManager shared] xFreeStreamIsAvailable]];
     [self pushToHiddenVector:[[[Utils del] xfsInterface] view]];
-    [self pushToHiddenVector:self.shareButton];
+
+    self.shareButton.alpha = 0.0f;
+
     [self commitHiddenVector];
     
     POPBasicAnimation *dividerFadeAnim = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
