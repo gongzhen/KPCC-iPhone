@@ -162,12 +162,6 @@
     }
 }
 
-- (void)printCurrentDate {
-    NSDate *cd = [[AudioManager shared].audioPlayer currentDate];
-    NSLog(@"Time is : %@",[NSDate stringFromDate:cd
-                                      withFormat:@"h:mm:ss a"]);
-}
-
 - (void)prerender {
   
     [self.scrubberController setupWithDelegate:self];
@@ -254,26 +248,6 @@
     self.rw30Button.userInteractionEnabled = NO;
     self.fw30Button.userInteractionEnabled = NO;
 }
-
-#pragma mark - Seeking
-//- (void)audioWillSeek {
-//    
-//    self.seekLatencyTimer = [NSTimer scheduledTimerWithTimeInterval:1.5
-//                                                             target:self
-//                                                           selector:@selector(muteUI)
-//                                                           userInfo:nil
-//                                                            repeats:NO];
-//    
-//}
-//
-//- (void)killLatencyTimer {
-//    if ( self.seekLatencyTimer ) {
-//        if ( [self.seekLatencyTimer isValid] ) {
-//            [self.seekLatencyTimer invalidate];
-//        }
-//        self.seekLatencyTimer = nil;
-//    }
-//}
 
 - (void)muteUI {
     self.uiIsMutedForSeek = YES;
@@ -375,8 +349,6 @@
     self.positionBeforeScrub = [[[SessionManager shared] vNow] timeIntervalSince1970];
     NSLog(@"Position before scrub : %ld", (long)self.positionBeforeScrub);
 
-    [self printCurrentDate];
-        
     if ( !seekDate ) {
         // a nil seekDate implies seeking to live
         [[[AudioManager shared] audioPlayer] seekToLive:^(BOOL finished){
@@ -403,14 +375,6 @@
     if ( [[AudioManager shared] currentAudioMode] == AudioModeLive ) {
         [[AudioManager shared] recalibrateAfterScrub];
     }
-    
-    [self printCurrentDate];
-    
-//    if ( [[AudioManager shared].audioPlayer rate] <= 0.0f ) {
-//        [[AudioManager shared].audioPlayer play];
-//    } else {
-//        [[AudioManager shared] startObservingTime];
-//    }
 
     [(SCPRMasterViewController*)self.parentControlView primeManualControlButton];
     
@@ -432,16 +396,6 @@
 }
 
 #pragma mark - AudioManager
-//- (void)onRateChange {
-//    if ( [[AudioManager shared] isStreamPlaying] || [[AudioManager shared] isStreamBuffering] ) {
-//        [self.playPauseButton fadeImage:[UIImage imageNamed:@"btn_pause.png"]
-//                               duration:0.2];
-//    } else {
-//        [self.playPauseButton fadeImage:[UIImage imageNamed:@"btn_play.png"]
-//                               duration:0.2];
-//    }
-//}
-
 - (void)onTimeChange {
     if (self.seeking) {
         return;
@@ -517,40 +471,16 @@
 }
 
 - (void)behindLiveStatus {
-    
-    
     [(SCPRMasterViewController*)self.parentControlView adjustScrubbingState];
     
     [UIView animateWithDuration:0.25f animations:^{
+        self.timeBehindLiveLabel.alpha = 0.0f;
         
-        CGFloat sbl = [[SessionManager shared] virtualSecondsBehindLive];
-        
-        if ( sbl > kVirtualMediumBehindLiveTolerance || [AudioManager shared].ignoreDriftTolerance ) {
-            
-            
-            
-            self.timeBehindLiveLabel.alpha = 0.0f;
-            /*[[self scrubbingIndicatorLabel] fadeText:[[NSDate stringFromDate:[[SessionManager shared] vNow]
-                                                                 withFormat:@"h:mm:ss a"] lowercaseString] duration:0.125];*/
-            
-            NSString *uglyString = [[NSDate stringFromDate:[[SessionManager shared] vNow] withFormat:@"h:mm:ss a"] lowercaseString];
-            NSAttributedString *fancyTime = [[DesignManager shared] standardTimeFormatWithString:uglyString
-                                                                                      attributes:@{ @"digits" : [[DesignManager shared] proLight:32.0f],
-                                                                                                    @"period" : [[DesignManager shared] proLight:18.0f] }];
-            [[self scrubbingIndicatorLabel] setAttributedText:fancyTime];
-
-        } else {
-            
-            [AudioManager shared].ignoreDriftTolerance = NO;
-            self.timeBehindLiveLabel.alpha = 0.0f;
-            
-            [self.timeNumericLabel fadeText:@"LIVE"
-                                   duration:0.225];
-            
-        }
-        
-        [AudioManager shared].ignoreDriftTolerance = sbl > kVirtualBehindLiveTolerance;
-        
+        NSString *uglyString = [[NSDate stringFromDate:[[SessionManager shared] vNow] withFormat:@"h:mm:ss a"] lowercaseString];
+        NSAttributedString *fancyTime = [[DesignManager shared] standardTimeFormatWithString:uglyString
+                                                                                  attributes:@{ @"digits" : [[DesignManager shared] proLight:32.0f],
+                                                                                                @"period" : [[DesignManager shared] proLight:18.0f] }];
+        [[self scrubbingIndicatorLabel] setAttributedText:fancyTime];
     }];
     
 }
