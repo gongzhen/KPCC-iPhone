@@ -368,7 +368,7 @@ public struct AudioPlayerObserver<T> {
             self._emitEvent("Item failed with error: \(msg)")
 //            self.stop()
         case .Stalled:
-            if self.status == .Seeking {
+            if self.status == .Seeking || self.status == .Paused {
                 return;
             }
 
