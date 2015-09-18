@@ -99,6 +99,14 @@ public struct AudioPlayerObserver<T> {
             }
         }
 
+        func hasBufferDates() -> Bool {
+            if self.minDate != nil && self.maxDate != nil {
+                return true
+            } else {
+                return false
+            }
+        }
+
         func percentToDate(percent:Float64) -> NSDate? {
             if minDate == nil || maxDate == nil {
                 return nil
@@ -273,7 +281,7 @@ public struct AudioPlayerObserver<T> {
                 return
             }
 
-            if self._lastDates != nil {
+            if self._lastDates != nil && self._lastDates!.hasDates() && dates.hasBufferDates() && self._lastDates!.hasBufferDates() {
                 // did our minDate jump unexpectedly?
                 let minDiff = dates.minDate!.timeIntervalSinceReferenceDate - self._lastDates!.minDate!.timeIntervalSinceReferenceDate
                 let createDiff = dates.creationDate!.timeIntervalSinceReferenceDate - self._lastDates!.creationDate!.timeIntervalSinceReferenceDate
