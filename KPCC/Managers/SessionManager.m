@@ -46,6 +46,8 @@
     NSDate *plive = [[[AudioManager shared] audioPlayer] liveDate];
     if ( plive != nil ) {
         live = plive;
+    } else {
+        NSLog(@"using fallback time for vLive");
     }
 
     return live;

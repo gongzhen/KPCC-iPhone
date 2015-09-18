@@ -142,9 +142,6 @@
 @property CGFloat deployedProgramTitleConstant;
 @property CGFloat threePointFivePlayControlsConstant;
 
-@property NSInteger onDemandGateCount;
-@property NSInteger previousRewindThreshold;
-
 // Onboarding
 @property BOOL automationMode;
 @property BOOL trainingUIisExposed;

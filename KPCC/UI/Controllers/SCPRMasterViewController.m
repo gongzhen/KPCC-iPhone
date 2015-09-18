@@ -420,7 +420,6 @@ setForOnDemandUI;
     
     [self setupTimerControls];
     
-    self.previousRewindThreshold = 0;
     self.mpvv = [[MPVolumeView alloc] initWithFrame:CGRectMake(-30.0, -300.0, 1.0, 1.0)];
     self.mpvv.alpha = 0.1;
     [self.view addSubview:self.mpvv];
@@ -1787,9 +1786,6 @@ setForOnDemandUI;
 
     if ( ti > kVirtualMediumBehindLiveTolerance || [[AudioManager shared] ignoreDriftTolerance] ) {
         [self.liveDescriptionLabel fadeText:[NSString stringWithFormat:@"%@ BEHIND LIVE", [NSDate prettyTextFromSeconds:ti]]];
-        self.previousRewindThreshold = [[[AudioManager shared].audioPlayer currentDate] timeIntervalSince1970];
-        
-
     } else {
         if ( [[SessionManager shared] sessionIsInRecess] ) {
             [self.liveDescriptionLabel fadeText:@"UP NEXT"];
@@ -1990,7 +1986,6 @@ setForOnDemandUI;
     
     [self snapJogWheel];
     
-    self.onDemandGateCount = 0;
     self.queueBlurView.alpha = 1.0f;
     self.queueBlurView.layer.opacity = 1.0f;
     
