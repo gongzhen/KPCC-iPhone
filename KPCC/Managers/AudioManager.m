@@ -768,6 +768,11 @@ static const NSString *ItemStatusContext;
         // seek
         NSLog(@"ondemand playAudio should seek to %f.",resumeTime);
 
+        // drop the volume so that we don't hear the initial play
+        self.audioPlayer.volume = 0.0f;
+        self.savedVolume = 1.0f;
+        self.smooth = YES;
+
         [self intervalSeekWithTimeInterval:(NSTimeInterval)resumeTime completion:^{
             NSLog(@"ondemand playAudio seek to %f successful.",resumeTime);
         }];

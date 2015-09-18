@@ -667,8 +667,8 @@ public struct AudioPlayerObserver<T> {
             self._player.currentItem!.seekToTime(seek_time, toleranceBefore:kCMTimeZero, toleranceAfter:kCMTimeZero) {finished in
                 self._computeStreamDates()
                 self._setStatus(.Playing)
+                self._player.play()
                 completion?(finished)
-//                self._emitEvent("seekByInterval landed \(self._dateFormat.stringFromDate(self._player.currentItem!.currentDate()!))")
             }
 
         }
@@ -676,8 +676,6 @@ public struct AudioPlayerObserver<T> {
 
     //----------
 
-    // FIXME: I thought I should just be able to call _seekToDate directly 
-    // with this signature?
     public func seekToDate(date:NSDate, completion:finishCallback? = nil) -> Void {
         self._seekToDate(date, completion:completion);
     }
@@ -713,6 +711,7 @@ public struct AudioPlayerObserver<T> {
                 // FIXME: Add volume management?
                 self._computeStreamDates()
                 self._setStatus(.Playing)
+                self._player.play()
                 completion?(finished)
             }
 
@@ -842,6 +841,7 @@ public struct AudioPlayerObserver<T> {
             self._player.currentItem!.seekToTime(time) { finished in
                 self._computeStreamDates()
                 self._setStatus(.Playing)
+                self._player.play()
                 completion?(finished)
             }
         }
@@ -853,6 +853,9 @@ public struct AudioPlayerObserver<T> {
         self._emitEvent("seekToLive called")
         self._seekToTime(kCMTimePositiveInfinity) { finished in
             self._emitEvent("_seekToTime landed at \(self._dateFormat.stringFromDate(self._player.currentItem!.currentDate()!))")
+
+            // FIXME: Let's set our live time using this hint
+
             completion?(finished)
         }
     }
