@@ -295,7 +295,7 @@ public struct AudioPlayerObserver<T> {
                     } else {
                         self._emitEvent("NON-SENSICAL DATE JUMP? minDiff:\(minDiff) - createDiff:\(createDiff)")
                         // FIXME: what do we do?
-                        self._setStatus(.Error)
+                        self.observer.triggerFailure("Non-sensical dates observed.")
                     }
                 }
             }
@@ -368,7 +368,7 @@ public struct AudioPlayerObserver<T> {
             self._emitEvent("Item failed with error: \(msg)")
 //            self.stop()
         case .Stalled:
-            if self.status == .Seeking || self.status == .Paused {
+            if self.status != .Playing {
                 return;
             }
 

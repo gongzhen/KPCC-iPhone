@@ -526,40 +526,53 @@ static const NSString *ItemStatusContext;
 
     // watch for failures
     void (^failure)(NSString*, id) = ^(NSString* msg, id obj) {
-        if ( [self currentAudioMode] == AudioModeOnDemand ) {
-            // FIXME: do we need to also be tearing down our now-broken
-            // player?
-            if ( [self.delegate respondsToSelector:@selector(onDemandAudioFailed)] ) {
-                [self.delegate onDemandAudioFailed];
-            }
-        } else {
-            NSLog(@"Triggering tryAgain logic after player/item failed.");
-            self.failoverCount++;
-            if ( self.failoverCount > kFailoverThreshold ) {
-                self.tryAgain = NO;
-                self.failoverCount = 0;
-                [self stopAudio];
-            } else {
-                self.tryAgain = YES;
-
-                // do we have a position to restart with?
-                StreamDates* d = [self.audioPlayer currentDates];
-
-                [self resetPlayer];
-
-                if (d != nil && d.curDate != nil) {
-                    [self.audioPlayer seekToDate:d.curDate completion:^(BOOL finished) {
-                        NSLog(@"Finished seek on player retry.");
-                    }];
+        switch ( [self.status status]) {
+            case AudioStatusPlaying:
+            case AudioStatusWaiting:
+            case AudioStatusSeeking:
+                if ( [self currentAudioMode] == AudioModeOnDemand ) {
+                    // FIXME: do we need to also be tearing down our now-broken
+                    // player?
+                    if ( [self.delegate respondsToSelector:@selector(onDemandAudioFailed)] ) {
+                        [self.delegate onDemandAudioFailed];
+                    }
                 } else {
-                    [self playAudio];
+                    NSLog(@"Triggering tryAgain logic after player/item failed.");
+                    self.failoverCount++;
+                    if ( self.failoverCount > kFailoverThreshold ) {
+                        self.tryAgain = NO;
+                        self.failoverCount = 0;
+                        [self stopAudio];
+                    } else {
+                        self.tryAgain = YES;
+
+                        // do we have a position to restart with?
+                        StreamDates* d = [self.audioPlayer currentDates];
+
+                        [self resetPlayer];
+
+                        if (d != nil && d.curDate != nil) {
+                            [self.audioPlayer seekToDate:d.curDate completion:^(BOOL finished) {
+                                NSLog(@"Finished seek on player retry.");
+                            }];
+                        } else {
+                            [self playAudio];
+                        }
+                    }
                 }
-            }
+
+                break;
+
+            default:
+                NSLog(@"Failure while player was not playing.");
+
+                break;
         }
     };
 
     [self.audioPlayer.observer on:StatusesItemFailed callback:failure];
     [self.audioPlayer.observer on:StatusesPlayerFailed callback:failure];
+    [self.audioPlayer.observer on:StatusesOtherFailed callback:failure];
 
     // watch for status changes and pass them on to our global status
     [self.audioPlayer observeStatus:^(AudioStatus status){

@@ -24,10 +24,11 @@ import AVFoundation
     @objc enum Statuses: Int {
         case PlayerFailed = 0, PlayerReady = 1, ItemFailed = 2, ItemReady = 3,
         Playing = 4, Paused = 5, Stalled = 6, TimeJump = 7, AccessLog = 8,
-        ErrorLog = 9, LikelyToKeepUp = 10, UnlikelyToKeepUp = 11, ItemEnded = 12
+        ErrorLog = 9, LikelyToKeepUp = 10, UnlikelyToKeepUp = 11,
+        ItemEnded = 12, OtherFailed = 13
 
         func toString() -> String {
-            let statuses = ["PlayerFailed","PlayerReady","ItemFailed","ItemReady","Playing","Paused","Stalled","TimeJump","AccessLog","ErrorLog","LikelyToKeepUp","UnlikelyToKeepUp","ItemEnded"]
+            let statuses = ["PlayerFailed","PlayerReady","ItemFailed","ItemReady","Playing","Paused","Stalled","TimeJump","AccessLog","ErrorLog","LikelyToKeepUp","UnlikelyToKeepUp","ItemEnded","OtherFailed"]
 
             return statuses[self.rawValue]
         }
@@ -158,6 +159,12 @@ import AVFoundation
         default:
             true
         }
+    }
+
+    //----------
+
+    func triggerFailure(msg:String) -> Void {
+        self._notify(Statuses.OtherFailed, msg: msg)
     }
     
     //----------
