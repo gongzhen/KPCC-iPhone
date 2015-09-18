@@ -1498,9 +1498,7 @@ setForOnDemandUI;
         
         [self addCloseButton];
 
-        if ( [[AudioManager shared] currentAudioMode] == AudioModeLive ) {
-            [self.scrubbingUI tickLive:NO];
-        }
+        [self.scrubbingUI onTimeChange];
     }];
     
 }
@@ -2404,6 +2402,7 @@ setForOnDemandUI;
     } else {
         self.initialPlayButton.alpha = 0.0f;
         self.initialControlsView.alpha = 0.0f;
+        self.initialControlsView.layer.opacity = 0.0f;
         self.initialPlay = YES;
         [self.playerControlsBottomYConstraint setConstant:0];
         self.lockAnimationUI = NO;
@@ -3078,7 +3077,8 @@ setForOnDemandUI;
     [self.playerControlsView.layer pop_addAnimation:controlsFadeIn forKey:@"controlsViewFadeAnimation"];
     [self.onDemandPlayerView.layer pop_addAnimation:controlsFadeIn forKey:@"onDemandViewFadeAnimation"];
     [self.liveStreamView.layer pop_addAnimation:cfi forKey:@"liveStreamViewFadeAnimation"];
-    if (!initialPlay) {
+
+    if (!initialPlay && !setForOnDemandUI) {
         [self.initialControlsView.layer pop_addAnimation:controlsFadeIn forKey:@"initialControlsViewFade"];
     }
     
