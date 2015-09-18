@@ -234,7 +234,7 @@ static DesignManager *singleton = nil;
 }
 
 - (void)fauxHideNavigationBar:(UIViewController *)root {
-    
+
     self.navbarMask = [[UIView alloc] initWithFrame:CGRectMake(0.0,-20.0,[[UIScreen mainScreen] bounds].size.width,84.0)];
     self.navbarMask.backgroundColor = [UIColor blackColor];
     
@@ -245,11 +245,14 @@ static DesignManager *singleton = nil;
                                            0.0);
     } completion:^(BOOL finished) {
         self.hiddenNavBar = bar;
+        [[UXmanager shared] hideMenuButton];
     }];
     
 }
 
 - (void)fauxRevealNavigationBar {
+    [[UXmanager shared] showMenuButton];
+
     [UIView animateWithDuration:0.25 animations:^{
         self.navbarMask.frame = CGRectMake(0.0, -20.0, self.navbarMask.frame.size.width,
                                            84.0);
