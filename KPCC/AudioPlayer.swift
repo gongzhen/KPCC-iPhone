@@ -457,6 +457,7 @@ public struct AudioPlayerObserver<T> {
     private func _resetLiveDate() {
         self.oTime.once() { dates in
             if let maxDate = dates.maxDate {
+                NSLog("Setting liveDate based on maxDate of \(maxDate)")
                 self.liveDate = maxDate.dateByAddingTimeInterval(-60)
             }
         }
@@ -852,9 +853,13 @@ public struct AudioPlayerObserver<T> {
     public func seekToLive(completion:finishCallback?) -> Void {
         self._emitEvent("seekToLive called")
         self._seekToTime(kCMTimePositiveInfinity) { finished in
-            self._emitEvent("_seekToTime landed at \(self._dateFormat.stringFromDate(self._player.currentItem!.currentDate()!))")
 
-            // FIXME: Let's set our live time using this hint
+            // we've asked to seek to live and landed here, so let's count this 
+            // as our live date.
+            if let curDate = self._player.currentItem?.currentDate() {
+                self._emitEvent("seekToLive landed at \(self._dateFormat.stringFromDate(curDate))")
+                self.liveDate = curDate
+            }
 
             completion?(finished)
         }
