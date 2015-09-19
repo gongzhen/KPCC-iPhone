@@ -363,16 +363,14 @@ public struct AudioPlayerObserver<T> {
         switch status {
         case .PlayerFailed:
             self._emitEvent("Player failed with error: \(msg)")
-//            self.stop()
         case .ItemFailed:
             self._emitEvent("Item failed with error: \(msg)")
-//            self.stop()
         case .Stalled:
             if self.status != .Playing {
                 return;
             }
 
-            if (self.currentDates != nil && self.currentDates!.hasDates()) {
+            if self.currentDates?.hasDates() ?? false {
                 self._emitEvent("Playback stalled at \(self._dateFormat.stringFromDate(self.currentDates!.curDate!)).")
             } else {
                 self._emitEvent("ONDEMAND AUDIO STALL?")
@@ -412,7 +410,6 @@ public struct AudioPlayerObserver<T> {
                 self._setStatus(.Playing)
                 self._resetLiveDate()
             }
-            // self._setStatus(.Playing)
         case .Paused:
             // we pause as part of seeking, so don't pass on that status
             switch (self.status) {
@@ -433,7 +430,7 @@ public struct AudioPlayerObserver<T> {
 
             let lastRecordedTime:String
 
-            if self.currentDates != nil && self.currentDates!.hasDates() {
+            if self.currentDates?.hasDates() ?? false {
                 lastRecordedTime = self._dateFormat.stringFromDate(self.currentDates!.curDate!)
             } else {
                 lastRecordedTime = "Unknown"
