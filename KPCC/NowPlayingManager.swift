@@ -13,14 +13,17 @@ import MediaPlayer
     var _audio:AudioChunk? = nil
     var _player:AudioPlayer? = nil
     let _status:AVStatus
+    let _art:MPMediaItemArtwork
 
     var _isPlaying:Bool = false
     var _playhead:Double?
 
     //----------
 
-    init(status:AVStatus) {
+    init(status:AVStatus,image:UIImage) {
         self._status = status
+
+        self._art = MPMediaItemArtwork.init(image:image)
 
         super.init()
 
@@ -78,7 +81,8 @@ import MediaPlayer
                 MPMediaItemPropertyArtist:                      self._audio!.programTitle,
                 MPNowPlayingInfoPropertyPlaybackRate:           self._isPlaying ? 1.0 : 0.0,
                 MPMediaItemPropertyPlaybackDuration:            self._audio!.audioDuration,
-                MPNowPlayingInfoPropertyElapsedPlaybackTime:    (self._playhead != nil) ? self._playhead! : 0.0,
+                MPNowPlayingInfoPropertyElapsedPlaybackTime:    self._playhead ?? 0.0,
+                MPMediaItemPropertyArtwork:                     self._art,
             ]
 
         } else {
@@ -86,8 +90,7 @@ import MediaPlayer
                 MPMediaItemPropertyTitle:                       "89.3 KPCC",
                 MPMediaItemPropertyArtist:                      "",
                 MPNowPlayingInfoPropertyPlaybackRate:           self._isPlaying ? 1.0 : 0.0,
-//                MPMediaItemPropertyPlaybackDuration:            nil,
-//                MPNowPlayingInfoPropertyElapsedPlaybackTime:    nil,
+                MPMediaItemPropertyArtwork:                     self._art,
             ]
         }
 

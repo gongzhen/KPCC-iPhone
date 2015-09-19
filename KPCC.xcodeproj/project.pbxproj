@@ -10,6 +10,7 @@
 		07139B841B95E701007DBA91 /* ScheduleOccurrence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07139B831B95E701007DBA91 /* ScheduleOccurrence.swift */; settings = {ASSET_TAGS = (); }; };
 		075636581B9FBD91001D1C55 /* Pods.enterprise.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 075636571B9FBD91001D1C55 /* Pods.enterprise.xcconfig */; settings = {ASSET_TAGS = (); }; };
 		0775D0B71B8C1A6E009EDAE9 /* Empty.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0775D0B61B8C1A6E009EDAE9 /* Empty.mm */; };
+		0778E9151BADAE00005B4F9F /* coverart.png in Resources */ = {isa = PBXBuildFile; fileRef = 0778E9141BADAE00005B4F9F /* coverart.png */; settings = {ASSET_TAGS = (); }; };
 		07A24B4C1BA3A4F800197EB9 /* SCPRProgramTableViewHeader.xib in Resources */ = {isa = PBXBuildFile; fileRef = 07A24B4B1BA3A4F800197EB9 /* SCPRProgramTableViewHeader.xib */; settings = {ASSET_TAGS = (); }; };
 		07A24B4F1BA3A88900197EB9 /* SCPRProgramTableViewHeader.m in Sources */ = {isa = PBXBuildFile; fileRef = 07A24B4E1BA3A88900197EB9 /* SCPRProgramTableViewHeader.m */; settings = {ASSET_TAGS = (); }; };
 		07EB395E1B9723ED005A8DDB /* AudioPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07EB395D1B9723ED005A8DDB /* AudioPlayer.swift */; settings = {ASSET_TAGS = (); }; };
@@ -344,6 +345,7 @@
 		075636571B9FBD91001D1C55 /* Pods.enterprise.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Pods.enterprise.xcconfig; path = "Pods/Target Support Files/Pods/Pods.enterprise.xcconfig"; sourceTree = "<group>"; };
 		075F6FAD1B8CFE2400E641F3 /* KPCCPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = KPCCPlayer.framework; path = "../../../Library/Developer/Xcode/DerivedData/KPCCPlayer-cfmdykrumzkmswepgfywosbqcrly/Build/Products/Debug-iphoneos/KPCCPlayer.framework"; sourceTree = "<group>"; };
 		0775D0B61B8C1A6E009EDAE9 /* Empty.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = Empty.mm; sourceTree = "<group>"; };
+		0778E9141BADAE00005B4F9F /* coverart.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = coverart.png; sourceTree = "<group>"; };
 		07A24B4B1BA3A4F800197EB9 /* SCPRProgramTableViewHeader.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SCPRProgramTableViewHeader.xib; sourceTree = "<group>"; };
 		07A24B4D1BA3A88900197EB9 /* SCPRProgramTableViewHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCPRProgramTableViewHeader.h; sourceTree = "<group>"; };
 		07A24B4E1BA3A88900197EB9 /* SCPRProgramTableViewHeader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SCPRProgramTableViewHeader.m; sourceTree = "<group>"; };
@@ -1252,6 +1254,7 @@
 		7685BD57194BBCB90075BB16 /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				0778E9141BADAE00005B4F9F /* coverart.png */,
 				257479B81B6C21FE00F72AF6 /* icon-lock-white.png */,
 				257479B91B6C21FE00F72AF6 /* icon-lock-white@2x.png */,
 				257479B41B6C205600F72AF6 /* kpcc-logo.png */,
@@ -1685,6 +1688,7 @@
 				52EFF7F419C368C00059A0E3 /* program_avatar_bbc-newshour@2x.png in Resources */,
 				52D0FC3619D20D29009AECEE /* program_avatar_the-frame.png in Resources */,
 				25B25BB81B1D096D00ABE8B4 /* SCPRXFSViewController.xib in Resources */,
+				0778E9151BADAE00005B4F9F /* coverart.png in Resources */,
 				52EFF7EA19C368C00059A0E3 /* program_avatar_all-things-considered.png in Resources */,
 				52EFF82E19C368C00059A0E3 /* program_avatar_on-being.png in Resources */,
 				259E44FF1A1D2CD300F5CD65 /* SCPROnboardingViewController.xib in Resources */,

@@ -37,7 +37,8 @@ static const NSString *ItemStatusContext;
             singleton.currentAudioMode = AudioModeNeutral;
 
             singleton.status = [[AVStatus alloc] init];
-            singleton.nowPlaying = [[NowPlayingManager alloc] initWithStatus:singleton.status];
+            UIImage* img = [UIImage imageNamed:@"coverart"];
+            singleton.nowPlaying = [[NowPlayingManager alloc] initWithStatus:singleton.status image:img];
             
             [[NSNotificationCenter defaultCenter] addObserver:singleton
                                                          selector:@selector(handleInterruption:)
