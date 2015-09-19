@@ -1784,7 +1784,7 @@ setForOnDemandUI;
         return;
     }
 
-    if ( ti > kVirtualMediumBehindLiveTolerance || [[AudioManager shared] ignoreDriftTolerance] ) {
+    if ( ti > kVirtualMediumBehindLiveTolerance ) { // || [[AudioManager shared] ignoreDriftTolerance] ) {
         [self.liveDescriptionLabel fadeText:[NSString stringWithFormat:@"%@ BEHIND LIVE", [NSDate prettyTextFromSeconds:ti]]];
     } else {
         if ( [[SessionManager shared] sessionIsInRecess] ) {
