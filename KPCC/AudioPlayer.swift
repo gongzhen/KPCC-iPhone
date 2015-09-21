@@ -181,7 +181,11 @@ public struct AudioPlayerObserver<T> {
 
     //----------
 
-    init(player:AVPlayer) {
+    convenience init(player:AVPlayer) {
+        self.init(player: player,hiResTick: false)
+    }
+
+    init(player:AVPlayer,hiResTick:Bool = false) {
         self.playing = false
 
         self._dateFormat = NSDateFormatter()
@@ -214,7 +218,9 @@ public struct AudioPlayerObserver<T> {
 
         self._getReadyPlayer() {cold in
             // observe time every second
-            self._timeObserver = self._player.addPeriodicTimeObserverForInterval(CMTimeMake(1,1), queue: nil,
+            let tick = hiResTick ? CMTimeMake(1,10) : CMTimeMake(1,1)
+
+            self._timeObserver = self._player.addPeriodicTimeObserverForInterval(tick, queue: nil,
                 usingBlock: {(time:CMTime) in
                     if self.status == .Seeking {
                         // we don't want to update anything mid-seek

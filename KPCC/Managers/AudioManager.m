@@ -487,8 +487,11 @@ static const NSString *ItemStatusContext;
         [self takedownAudioPlayer];
     }
 
+    // Note our current URL for Crashlytics
+    [[Crashlytics sharedInstance] setObjectValue:@"urlString" forKey:@"streamerUrl"];
+
     self._avplayer = [AVPlayer playerWithURL:url];
-    self.audioPlayer = [[AudioPlayer alloc] initWithPlayer:self._avplayer];
+    self.audioPlayer = [[AudioPlayer alloc] initWithPlayer:self._avplayer hiResTick:local];
 
     // -- Time Observer -- //
 
