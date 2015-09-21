@@ -141,7 +141,12 @@ static const NSString *ItemStatusContext;
     switch (interruptionType) {
         case AVAudioSessionInterruptionTypeBegan:
             // not much to do at the start of an interruption.
-            // FIXME: Should we stash our status?
+
+            // stash audioplayer status, so that we know we can look at prev
+            // when coming back from the interruption
+            if (self.audioPlayer != nil) {
+                [self.audioPlayer setPrevStatus:self.audioPlayer.status];
+            }
 
             break;
 
@@ -160,8 +165,16 @@ static const NSString *ItemStatusContext;
                     break;
 
                 default:
-                    // our AudioPlayer object contains its own logic on whether
-                    // to resume playback
+                    if ( self.audioPlayer != nil && [self.audioPlayer prevStatus] == AudioStatusPlaying ) {
+                        if ([self.audioPlayer currentDates] != nil && [[self.audioPlayer currentDates] hasDates]) {
+                            [self.audioPlayer seekToDate:[self.audioPlayer currentDates].curDate completion:^(BOOL finished) {
+                                CLS_LOG(@"Played by seeking after interruption.");
+                            }];
+                        } else {
+                            CLS_LOG("@Playing by hitting play after interruption.");
+                            [self.audioPlayer play];
+                        }
+                    }
 
                     break;
             }
