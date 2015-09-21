@@ -281,7 +281,6 @@ static const NSString *ItemStatusContext;
 
     [self stopWaiting];
     
-    self.localBufferSample = nil;
     self.dropoutOccurred = NO;
 
     if ( !self.appGaveUp ) {
@@ -490,8 +489,7 @@ static const NSString *ItemStatusContext;
     // Note our current URL for Crashlytics
     [[Crashlytics sharedInstance] setObjectValue:@"urlString" forKey:@"streamerUrl"];
 
-    self._avplayer = [AVPlayer playerWithURL:url];
-    self.audioPlayer = [[AudioPlayer alloc] initWithPlayer:self._avplayer hiResTick:local];
+    self.audioPlayer = [[AudioPlayer alloc] initWithUrl:url hiResTick:local];
 
     // -- Time Observer -- //
 
@@ -701,9 +699,6 @@ static const NSString *ItemStatusContext;
 
     [self.nowPlaying setPlayer:nil];
 
-    self.minSeekableDate = nil;
-    self.maxSeekableDate = nil;
-    
 }
 
 - (void)resetPlayer {
@@ -712,19 +707,10 @@ static const NSString *ItemStatusContext;
 }
 
 - (void)resetFlags {
-    self.localBufferSample = nil;
-    self.maxSeekableDate = nil;
-    self.minSeekableDate = nil;
     self.seekWillAffectBuffer = NO;
     self.dropoutOccurred = NO;
-    self.playerNeedsToSeekGenerally = NO;
-    self.playerNeedsToSeekToLive = NO;
-    self.waitForSeek = NO;
-    self.waitForOnDemandSeek = NO;
     self.currentAudioMode = AudioModeNeutral;
-    self.skipCount = 0;
     self.appGaveUp = NO;
-    self.suppressSkipFixer = NO;
 }
 
 - (void)sanitizeFromOnboarding {
@@ -874,8 +860,6 @@ static const NSString *ItemStatusContext;
     
     [self.audioPlayer pause];
 
-    self.localBufferSample = nil;
-
     if ( self.dropoutOccurred && !self.userPause ) {
         return;
     }
@@ -899,10 +883,6 @@ static const NSString *ItemStatusContext;
 
 - (void)stopAllAudio {
     [self stopAudio];
-
-    if (self.localAudioPlayer && self.localAudioPlayer.isPlaying) {
-        [self.localAudioPlayer stop];
-    }
     
     [[NSNotificationCenter defaultCenter] postNotificationName:@"panic"
                                                         object:nil];

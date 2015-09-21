@@ -181,18 +181,18 @@ public struct AudioPlayerObserver<T> {
 
     //----------
 
-    convenience init(player:AVPlayer) {
-        self.init(player: player,hiResTick: false)
+    convenience init(url:NSURL) {
+        self.init(url: url,hiResTick: false)
     }
 
-    init(player:AVPlayer,hiResTick:Bool = false) {
+    init(url:NSURL,hiResTick:Bool = false) {
         self.playing = false
 
         self._dateFormat = NSDateFormatter()
         self._dateFormat.dateFormat = "hh:mm:ss a"
 
-        self._player = player
-        self.observer = AVObserver(player:player)
+        self._player = AVPlayer.init(URL: url)
+        self.observer = AVObserver(player:self._player)
 
         super.init()
 

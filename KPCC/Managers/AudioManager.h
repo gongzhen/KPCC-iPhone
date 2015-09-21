@@ -80,22 +80,13 @@ typedef NS_ENUM(NSUInteger, StreamStatus) {
 
 @property (readwrite, unsafe_unretained) id<AudioManagerDelegate> delegate;
 
-@property AVPlayer *_avplayer;
 @property AudioPlayer *audioPlayer;
-@property AVPlayerItem *playerItem;
-@property AVAudioPlayer *localAudioPlayer;
 
 @property NSString *avSessionId;
 @property AVStatus *status;
 @property NowPlayingManager *nowPlaying;
 
 //@property StreamStatus status;
-@property long lastPreRoll;
-
-@property NSDate *currentDate;
-@property NSDate *minSeekableDate;
-@property NSDate *maxSeekableDate;
-@property NSDate *requestedSeekDate;
 
 @property (nonatomic,copy) NSString *xfsStreamUrl;
 
@@ -104,24 +95,15 @@ typedef NS_ENUM(NSUInteger, StreamStatus) {
 
 @property CGFloat savedVolume;
 @property CGFloat savedVolumeFromMute;
-@property Float64 onDemandSeekPosition;
 
-@property BOOL easeInAudio;
-@property BOOL waitForSeek;
-@property BOOL waitForOnDemandSeek;
-@property BOOL prerollPlaying;
 @property BOOL tryAgain;
-@property BOOL reactivate;
 @property BOOL dropoutOccurred;
 @property BOOL seekWillAffectBuffer;
 @property BOOL smooth;
 @property BOOL userPause;
 @property BOOL appGaveUp;
 @property BOOL audioOutputSourceChanging;
-@property BOOL suppressSkipFixer;
 
-
-@property (nonatomic, strong) NSMutableDictionary *localBufferSample;
 
 @property UIBackgroundTaskIdentifier rescueTask;
 
@@ -160,22 +142,10 @@ typedef NS_ENUM(NSUInteger, StreamStatus) {
 @property (NS_NONATOMIC_IOSONLY, getter=isStreamPlaying, readonly) BOOL streamPlaying;
 @property (NS_NONATOMIC_IOSONLY, getter=isStreamBuffering, readonly) BOOL streamBuffering;
 
-@property (NS_NONATOMIC_IOSONLY, readonly) double indicatedBitrate;
-@property (NS_NONATOMIC_IOSONLY, readonly) double observedMaxBitrate;
-@property (NS_NONATOMIC_IOSONLY, readonly) double observedMinBitrate;
-
 @property BOOL ignoreDriftTolerance;
 @property BOOL calibrating;
 
-@property BOOL playerNeedsToSeekToLive;
-@property BOOL playerNeedsToSeekGenerally;
-@property NSTimeInterval queuedTimeInterval;
-@property NSInteger queuedSeekType;
-@property (nonatomic, copy) CompletionBlock queuedCompletion;
-
 @property (nonatomic, copy) NSString *reasonToReportError;
-
-@property NSInteger skipCount;
 
 @property NSTimeInterval newPositionDelta;
 
