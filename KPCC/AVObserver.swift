@@ -171,14 +171,14 @@ import AVFoundation
     
     override func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?, change: [String : AnyObject]?, context: UnsafeMutablePointer<Void>) {
         
-        if object as! NSObject == self._player {
+        if object as? AVPlayer == self._player {
             switch keyPath! {
             case "status":
                 switch object!.status as AVPlayerStatus {
                 case AVPlayerStatus.ReadyToPlay:
                     self._notify(Statuses.PlayerReady, msg: "Player Ready to Play")
                 case AVPlayerStatus.Failed:
-                    self._notify(Statuses.PlayerFailed,msg: self._player.error!.localizedDescription, obj:self._player.error)
+                    self._notify(Statuses.PlayerFailed,msg: (self._player.error?.localizedDescription ?? "Unknown Error"), obj:self._player.error)
                 default:
                     true
                 }
@@ -195,14 +195,14 @@ import AVFoundation
             default:
                 true
             }
-        } else if (object as! NSObject) == self._player.currentItem {
+        } else if (object as? AVPlayerItem) == self._player.currentItem {
             switch keyPath! {
             case "status":
                 switch object!.status as AVPlayerItemStatus {
                 case AVPlayerItemStatus.ReadyToPlay:
                     self._notify(Statuses.ItemReady,msg:"Item Ready to Play")
                 case AVPlayerItemStatus.Failed:
-                    self._notify(Statuses.ItemFailed, msg: self._player.currentItem!.error!.localizedDescription, obj: self._player.currentItem!.error)
+                    self._notify(Statuses.ItemFailed, msg: (self._player.currentItem!.error?.localizedDescription ?? "Unknown Error"), obj: self._player.currentItem!.error)
                 default:
                     NSLog("curItem gave unhandled status")
                 }
