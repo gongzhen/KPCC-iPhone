@@ -145,9 +145,9 @@
 
     [self.observer stop];
 
-    self.prerollPlayer = nil;
     self.observer = nil;
-    
+    self.prerollPlayer = nil;
+
     [[AudioManager shared] setCurrentAudioMode:AudioModeNeutral];
     [[UXmanager shared] showMenuButton];
     
