@@ -90,36 +90,48 @@
                 }];
 
                 // Build preroll audio player
-                self.prerollPlayer = [AVPlayer playerWithURL:[NSURL URLWithString:self.tritonAd.audioCreativeUrl]];
+                self.prerollPlayer = [[AudioPlayer alloc] initWithUrl:[NSURL URLWithString:self.tritonAd.audioCreativeUrl] hiResTick:YES];
 
-                __block SCPRPreRollViewController *weakself_ = self;
-                self.timeObserver = [self.prerollPlayer addPeriodicTimeObserverForInterval:CMTimeMake(1, 10)
-                                                                                     queue:nil
-                                                                                usingBlock:^(CMTime time) {
-                                                                                    [weakself_ setAdProgress];
-                                                                                }];
+                [self.prerollPlayer observeTime:^(StreamDates* dates) {
+                    NSValue* v = [dates curTimeV];
 
-                self.observer = [[AVObserver alloc] initWithPlayer:self.prerollPlayer callback:^(enum Statuses status, NSString* msg, id obj) {
-                    switch (status) {
-                        case StatusesPlaying:
-                            [[[AudioManager shared] status] setStatus:AudioStatusPlaying];
-                            break;
-                        case StatusesPaused:
-                            [[[AudioManager shared] status] setStatus:AudioStatusPaused];
-                            break;
-                        case StatusesItemEnded:
-                            [self preRollCompleted];
-                            break;
+                    if (v != nil) {
+                        CMTime t = [v CMTimeValue];
+                        currentPresentedDuration = CMTimeGetSeconds(t);
 
-                        case StatusesPlayerFailed:
-                        case StatusesItemFailed:
-                            // FIXME: Need to account for potential failure here
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                            [self.adProgressView setProgress:(currentPresentedDuration/[self.tritonAd.audioCreativeDuration floatValue]) animated:YES];
+                        });
+                    }
+                }];
+
+                // pass selected status on to our global audio status
+                [self.prerollPlayer observeStatus:^(enum AudioStatus s) {
+                    switch (s) {
+                        case AudioStatusPlaying:
+                        case AudioStatusPaused:
+                            [[[AudioManager shared] status] setStatus:s];
                             break;
                         default:
-
                             break;
                     }
                 }];
+
+                // watch for the end of the preroll
+                [self.prerollPlayer.observer once:StatusesItemEnded callback:^(NSString* msg, id obj) {
+                    [self preRollCompleted];
+                }];
+
+                // watch for failures
+                void (^failure)(NSString*, id) = ^(NSString* msg, id obj) {
+                    // finish, but don't send our impression
+                    impressionSent = YES;
+                    [self preRollCompleted];
+                };
+
+                [self.prerollPlayer.observer on:StatusesItemFailed callback:failure];
+                [self.prerollPlayer.observer on:StatusesPlayerFailed callback:failure];
+                [self.prerollPlayer.observer on:StatusesOtherFailed callback:failure];
 
                 [SCPRSpinnerViewController finishSpinning];
 
@@ -135,17 +147,25 @@
     }];
 }
 
-- (void)preRollCompleted {
+- (void)playOrPause {
+    switch ([self.prerollPlayer status]) {
+        case AudioStatusPlaying:
+        case AudioStatusWaiting:
+            [self.prerollPlayer pause];
+            break;
+        case AudioStatusPaused:
+            [self.prerollPlayer play];
+            break;
+        default:
+            break;
+    }
+}
 
-    [self.prerollPlayer removeTimeObserver:self.timeObserver];
-    self.timeObserver = nil;
-    [self.prerollPlayer cancelPendingPrerolls];
+- (void)preRollCompleted {
+    [self.prerollPlayer stop];
     
     [[SessionManager shared] resetCache];
 
-    [self.observer stop];
-
-    self.observer = nil;
     self.prerollPlayer = nil;
 
     [[AudioManager shared] setCurrentAudioMode:AudioModeNeutral];
@@ -193,16 +213,6 @@
         }
         
     }];
-}
-
-- (void)setAdProgress {
-    if (self.tritonAd && self.prerollPlayer.rate > 0.0 ) {
-        currentPresentedDuration = CMTimeGetSeconds(self.prerollPlayer.currentItem.currentTime);
-        
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [self.adProgressView setProgress:(currentPresentedDuration/[self.tritonAd.audioCreativeDuration floatValue]) animated:YES];
-        });
-    }
 }
 
 - (void)didReceiveMemoryWarning {

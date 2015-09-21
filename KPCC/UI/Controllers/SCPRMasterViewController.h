@@ -110,8 +110,6 @@
 @property (nonatomic,strong) NSTimer *liveScrollTimer;
 
 // Pre-Roll
-- (void)handlePreRollControl:(BOOL)paused;
-
 @property (nonatomic,strong) SCPRPreRollViewController *preRollViewController;
 @property BOOL lockPreroll;
 @property BOOL updaterArmed;

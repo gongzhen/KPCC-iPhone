@@ -85,11 +85,7 @@ setForOnDemandUI;
 
 - (void)remoteControlPlayOrPause {
     if ( [[AudioManager shared] currentAudioMode] == AudioModePreroll ) {
-        if ( [self.preRollViewController.prerollPlayer rate] > 0.0 ) {
-            [self.preRollViewController.prerollPlayer pause];
-        } else {
-            [self.preRollViewController.prerollPlayer play];
-        }
+        [self.preRollViewController playOrPause];
         return;
     }
     
@@ -304,10 +300,10 @@ setForOnDemandUI;
                                                object:nil];
     
     
-    // Make sure the system follows our playback status - to support the playback when the app enters the background mode.
+//    // Make sure the system follows our playback status - to support the playback when the app enters the background mode.
     [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback error:nil];
     [[AVAudioSession sharedInstance] setActive: YES error: nil];
-    
+
     // Config blur view.
     [self.blurView setAlpha:0.0];
     [self.blurView setTintColor:[UIColor clearColor]];
@@ -488,6 +484,7 @@ setForOnDemandUI;
     }
     
     // Once the view has appeared we can register to begin receiving system audio controls.
+    NSLog(@"Become first responder.");
     [[UIApplication sharedApplication] beginReceivingRemoteControlEvents];
     [self becomeFirstResponder];
     
@@ -991,7 +988,7 @@ setForOnDemandUI;
 
 - (IBAction)playOrPauseTapped:(id)sender {
     if ( [[AudioManager shared] currentAudioMode] == AudioModePreroll ) {
-        [self handlePreRollControl:([self.preRollViewController.prerollPlayer rate] == 0.0)];
+        [self.preRollViewController playOrPause];
         return;
     }
     
@@ -1357,16 +1354,6 @@ setForOnDemandUI;
                                             completion:nil];
         
     });
-}
-
-- (void)handlePreRollControl:(BOOL)paused {
-    if ( !paused ) {
-        [self.preRollViewController.prerollPlayer pause];
-//        [self.playPauseButton fadeImage:[UIImage imageNamed:@"btn_play.png"] duration:0.2];
-    } else {
-        [self.preRollViewController.prerollPlayer play];
-//        [self.playPauseButton fadeImage:[UIImage imageNamed:@"btn_pause.png"] duration:0.2];
-    }
 }
 
 #pragma mark - Scrubbing
@@ -3847,6 +3834,7 @@ setForOnDemandUI;
 
 - (void)dealloc {
     //End receiving events.
+    NSLog(@"Resigning first responder.");
     [[UIApplication sharedApplication] endReceivingRemoteControlEvents];
     [self resignFirstResponder];
 }

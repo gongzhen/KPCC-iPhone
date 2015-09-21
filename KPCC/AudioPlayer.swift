@@ -35,6 +35,11 @@ public struct AudioPlayerObserver<T> {
 
         once = []
     }
+
+    private mutating func clear() -> Void {
+        observers = []
+        once = []
+    }
 }
 
 //----------
@@ -116,6 +121,14 @@ public struct AudioPlayerObserver<T> {
             let seconds:Double = duration * percent
 
             return minDate!.dateByAddingTimeInterval(seconds)
+        }
+
+        func curTimeV() -> NSValue? {
+            if self.curTime != nil {
+                return NSValue(CMTime: self.curTime!)
+            } else {
+                return nil
+            }
         }
     }
 
@@ -584,6 +597,16 @@ public struct AudioPlayerObserver<T> {
         }
 
         self._timeObserver = nil
+
+        // clear each of our observer types
+        // FIXME: I'm a) not sure this is necessary and b) sure there's a better 
+        // way to do this
+        self.oTime.clear()
+        self.oStatus.clear()
+        self.oErrorLog.clear()
+        self.oAccessLog.clear()
+        self.oEventLog.clear()
+        self.oNetwork.clear()
 
         self.currentDates = nil
         self._setStatus(AudioStatus.Stopped)

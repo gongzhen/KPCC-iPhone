@@ -25,6 +25,7 @@
 - (void)showPreRollWithAnimation:(BOOL)animated completion:(void (^)(BOOL done))completion;
 - (void)setAdProgress;
 - (void)primeUI:(CompletionBlock)completed;
+- (void)playOrPause;
 
 @property (nonatomic, strong) UITapGestureRecognizer *adTapper;
 @property (nonatomic,weak) id<SCPRPreRollControllerDelegate> delegate;
@@ -32,7 +33,7 @@
 @property (nonatomic,strong) IBOutlet UIImageView *adImageView;
 @property (nonatomic,strong) IBOutlet UIView *curtainView;
 
-@property (nonatomic,strong) AVPlayer *prerollPlayer;
+@property (nonatomic,strong) AudioPlayer *prerollPlayer;
 @property (nonatomic,strong) AVObserver *observer;
 
 @property (nonatomic, strong) id timeObserver;
