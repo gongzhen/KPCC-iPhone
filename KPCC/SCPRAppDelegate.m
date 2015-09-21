@@ -23,10 +23,10 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 
-    NSError* error;
-    [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback error:&error];
-    [[AVAudioSession sharedInstance] setActive:YES error:&error];
-    
+//    NSError* error;
+//    [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback error:&error];
+//    [[AVAudioSession sharedInstance] setActive:YES error:&error];
+
     NSDictionary *globalConfig = [Utils globalConfig];
     
     [[AnalyticsManager shared] setup];

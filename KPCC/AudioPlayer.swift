@@ -229,6 +229,35 @@ public struct AudioPlayerObserver<T> {
 
         self._setStatus(.New)
 
+        // activate audio session
+        do {
+            try AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryPlayback)
+        } catch {
+            self.observer.triggerFailure("Failed to set AVAudioSessionCategoryPlayback.")
+            return
+        }
+
+        do {
+            if #available(iOS 9.0, *) {
+                self._emitEvent("Setting AVAudioSessionModeSpokenAudio")
+                try AVAudioSession.sharedInstance().setMode(AVAudioSessionModeSpokenAudio)
+            } else {
+                self._emitEvent("Setting AVAudioSessionModeDefault")
+                try AVAudioSession.sharedInstance().setMode(AVAudioSessionModeDefault)
+            }
+        } catch {
+            self.observer.triggerFailure("Failed to set audio mode.")
+            return
+        }
+
+        do {
+            self._emitEvent("Setting audio session to active.")
+            try AVAudioSession.sharedInstance().setActive(true)
+        } catch {
+            self.observer.triggerFailure("Failed to set audio session to active.")
+            return
+        }
+
         self._getReadyPlayer() {cold in
             // observe time every second
             let tick = hiResTick ? CMTimeMake(1,10) : CMTimeMake(1,1)
@@ -610,6 +639,12 @@ public struct AudioPlayerObserver<T> {
 
         self.currentDates = nil
         self._setStatus(AudioStatus.Stopped)
+
+        do {
+            try AVAudioSession.sharedInstance().setActive(false)
+        } catch {
+            // do nothing...
+        }
 
         return true
     }
