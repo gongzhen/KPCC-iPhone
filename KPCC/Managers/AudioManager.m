@@ -99,7 +99,7 @@ static const NSString *ItemStatusContext;
 }
 
 - (void)audioHardwareRouteChanged:(NSNotification*)note {
-    NSLog(@"Received external audio route change notification...");
+    CLS_LOG(@"Received external audio route change notification...");
     NSLog(@"User Info : %@",[[note userInfo] description]);
     
     AVAudioSessionRouteDescription *previous = note.userInfo[AVAudioSessionRouteChangePreviousRouteKey];
@@ -109,7 +109,7 @@ static const NSString *ItemStatusContext;
         if ( previous ) {
             NSArray *outputs = [previous outputs];
             for ( AVAudioSessionPortDescription *port in outputs ) {
-                NSLog(@"Changing from %@ output",[port portName]);
+                CLS_LOG(@"Changing from %@ output",[port portName]);
                 if ( SEQ(port.portType,AVAudioSessionPortBuiltInSpeaker) ) {
                     userPause = NO;
                     break;
@@ -126,7 +126,7 @@ static const NSString *ItemStatusContext;
 
 - (void)handleInterruption:(NSNotification*)note {
     int interruptionType = [note.userInfo[AVAudioSessionInterruptionTypeKey] intValue];
-    NSLog(@"Options : %@",[note.userInfo description]);
+    CLS_LOG(@"Interruption Options : %@",[note.userInfo description]);
     NSNumber *options = note.userInfo[AVAudioSessionInterruptionOptionKey];
 
     BOOL resume = NO;
@@ -160,9 +160,8 @@ static const NSString *ItemStatusContext;
                     break;
 
                 default:
-                    if (self.audioPlayer && !self.userPause) {
-                        [self playAudio];
-                    }
+                    // our AudioPlayer object contains its own logic on whether
+                    // to resume playback
 
                     break;
             }
@@ -172,7 +171,7 @@ static const NSString *ItemStatusContext;
     }
     
     if ( interruptionType == AVAudioSessionInterruptionTypeEnded && !resume ) {
-        NSLog(@"Probably interrupted from another app, so don't resume");
+        CLS_LOG(@"Probably interrupted from another app, so don't resume");
         return;
     }
 
@@ -467,7 +466,7 @@ static const NSString *ItemStatusContext;
         self.currentAudioMode = AudioModeOnboarding;
     }
 
-    NSLog(@"In buildStreamer for %@",urlString);
+    CLS_LOG(@"In buildStreamer for %@",urlString);
     
     [[NetworkManager shared] setupFloatingReachabilityWithHost:urlString];
     
@@ -522,7 +521,7 @@ static const NSString *ItemStatusContext;
     }];
 
     [self.audioPlayer observeEvents:^(AudioEvent* e) {
-        NSLog(@"AP: %@",e.message);
+        CLS_LOG(@"AudioPlayer: %@",e.message);
     }];
 
     // watch for failures
@@ -538,7 +537,7 @@ static const NSString *ItemStatusContext;
                         [self.delegate onDemandAudioFailed];
                     }
                 } else {
-                    NSLog(@"Triggering tryAgain logic after player/item failed.");
+                    CLS_LOG(@"Triggering tryAgain logic after player/item failed.");
                     self.failoverCount++;
                     if ( self.failoverCount > kFailoverThreshold ) {
                         self.tryAgain = NO;
@@ -554,9 +553,10 @@ static const NSString *ItemStatusContext;
 
                         if (d != nil && d.curDate != nil) {
                             [self.audioPlayer seekToDate:d.curDate completion:^(BOOL finished) {
-                                NSLog(@"Finished seek on player retry.");
+                                CLS_LOG(@"Finished seek on player retry.");
                             }];
                         } else {
+                            CLS_LOG(@"No retry position. Hitting play.");
                             [self playAudio];
                         }
                     }
@@ -565,7 +565,7 @@ static const NSString *ItemStatusContext;
                 break;
 
             default:
-                NSLog(@"Failure while player was not playing.");
+                CLS_LOG(@"Failure while player was not playing.");
 
                 break;
         }
@@ -657,7 +657,7 @@ static const NSString *ItemStatusContext;
     // Watch for our session ID and stash it
     [self.audioPlayer.observer once:StatusesAccessLog callback:^(NSString *msg, AVPlayerItemAccessLogEvent *obj) {
         self.avSessionId = obj.playbackSessionID;
-        NSLog(@"Setting avSessionId to %@",self.avSessionId);
+        CLS_LOG(@"Setting avSessionId to %@",self.avSessionId);
     }];
 
     [self.nowPlaying setPlayer:self.audioPlayer];
@@ -763,11 +763,11 @@ static const NSString *ItemStatusContext;
     }
 
     if (resumeTime == 0) {
-        NSLog(@"ondemand playAudio should start from 0.");
+        CLS_LOG(@"ondemand playAudio should start from 0.");
         [self.audioPlayer play];
     } else {
         // seek
-        NSLog(@"ondemand playAudio should seek to %f.",resumeTime);
+        CLS_LOG(@"ondemand playAudio should seek to %f.",resumeTime);
 
         // drop the volume so that we don't hear the initial play
         self.audioPlayer.volume = 0.0f;
@@ -775,7 +775,7 @@ static const NSString *ItemStatusContext;
         self.smooth = YES;
 
         [self intervalSeekWithTimeInterval:(NSTimeInterval)resumeTime completion:^{
-            NSLog(@"ondemand playAudio seek to %f successful.",resumeTime);
+            CLS_LOG(@"ondemand playAudio seek to %f successful.",resumeTime);
         }];
     }
 }

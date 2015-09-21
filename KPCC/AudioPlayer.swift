@@ -420,13 +420,13 @@ public struct AudioPlayerObserver<T> {
                 self._setStatus(.Paused)
             }
         case .LikelyToKeepUp:
-            NSLog("playback should keep up")
+            self._emitEvent("playback should keep up")
             self._resetLiveDate()
 
         case .UnlikelyToKeepUp:
-            NSLog("playback unlikely to keep up")
+            self._emitEvent("playback unlikely to keep up")
         case .TimeJump:
-            NSLog("Player reports that time jumped.")
+            self._emitEvent("Player reports that time jumped.")
 
             let lastRecordedTime:String
 
@@ -454,7 +454,7 @@ public struct AudioPlayerObserver<T> {
     private func _resetLiveDate() {
         self.oTime.once() { dates in
             if let maxDate = dates.maxDate {
-                NSLog("Setting liveDate based on maxDate of \(maxDate)")
+                self._emitEvent("Setting liveDate based on maxDate of \(maxDate)")
                 self.liveDate = maxDate.dateByAddingTimeInterval(-60)
             }
         }
@@ -467,14 +467,10 @@ public struct AudioPlayerObserver<T> {
 
         switch self._reachability!.currentReachabilityStatus {
         case .ReachableViaWiFi:
-            NSLog("Reach is WIFI")
-
             s = .WIFI
         case .ReachableViaWWAN:
-            NSLog("Reach is cellular")
             s = .Cellular
         case .NotReachable:
-            NSLog("Reach is unreachable")
             s = .NotReachable
         }
 
