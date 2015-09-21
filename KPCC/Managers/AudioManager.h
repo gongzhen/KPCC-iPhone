@@ -80,8 +80,6 @@ typedef NS_ENUM(NSUInteger, StreamStatus) {
 
 @property (readwrite, unsafe_unretained) id<AudioManagerDelegate> delegate;
 
-@property (nonatomic,strong) id timeObserver;
-
 @property AVPlayer *_avplayer;
 @property AudioPlayer *audioPlayer;
 @property AVPlayerItem *playerItem;

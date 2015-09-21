@@ -691,11 +691,6 @@ static const NSString *ItemStatusContext;
     if ( self.audioPlayer ) {
         [self.audioPlayer stop];
     }
-
-    if ( self.timeObserver ) {
-        [self.audioPlayer._player removeTimeObserver:self.timeObserver];
-        self.timeObserver = nil;
-    }
     
     [self resetFlags];
     

@@ -129,8 +129,6 @@ static QueueManager *singleton = nil;
 }
 
 - (void)playItemAtPosition:(int)index {
-//    [[AudioManager shared] invalidateTimeObserver];
-
     if (![self isQueueEmpty]) {
         if (index >= 0 && index < [self.queue count]) {
             
