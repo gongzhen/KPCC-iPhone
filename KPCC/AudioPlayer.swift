@@ -338,21 +338,17 @@ public struct AudioPlayerObserver<T> {
 
         var buffered: Double? = nil
 
-        if !self._player.currentItem!.loadedTimeRanges.isEmpty {
-            let loaded_range = self._player.currentItem!.loadedTimeRanges[0].CMTimeRangeValue
+        if let loaded_range = self._player.currentItem!.loadedTimeRanges.first?.CMTimeRangeValue {
             buffered = CMTimeGetSeconds(CMTimeSubtract(CMTimeRangeGetEnd(loaded_range), time))
         }
 
         if curDate != nil {
             // This should be a stream session, with dates
 
-            var seek_range: CMTimeRange
             var minDate: NSDate? = nil
             var maxDate: NSDate? = nil
 
-            if !self._player.currentItem!.seekableTimeRanges.isEmpty {
-                seek_range = self._player.currentItem!.seekableTimeRanges[0].CMTimeRangeValue
-
+            if let seek_range = self._player.currentItem!.seekableTimeRanges.first?.CMTimeRangeValue {
                 // these calculations assume no discontinuities in the playlist data
                 // FIXME: We really want to get these from the playlist... There has to be a way to get there
                 minDate = NSDate(timeInterval: -1 * (CMTimeGetSeconds(time) - CMTimeGetSeconds(seek_range.start)), sinceDate:curDate!)
