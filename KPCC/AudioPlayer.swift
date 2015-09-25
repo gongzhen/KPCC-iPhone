@@ -505,10 +505,8 @@ public struct AudioPlayerObserver<T> {
     //----------
 
     public func bufferedSecs() -> Double? {
-        if ( self._player.currentItem?.loadedTimeRanges.count > 0 ) {
-            let loaded_range = self._player.currentItem!.loadedTimeRanges[0].CMTimeRangeValue
+        if let loaded_range = self._player.currentItem?.loadedTimeRanges.first?.CMTimeRangeValue {
             let buffered = CMTimeGetSeconds(CMTimeSubtract(CMTimeRangeGetEnd(loaded_range), self._player.currentTime()))
-
             return buffered
         } else {
             return nil
