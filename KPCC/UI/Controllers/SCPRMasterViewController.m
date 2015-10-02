@@ -143,10 +143,6 @@ setForOnDemandUI;
         }
     }
     
-    if ( self.preRollViewController.tritonAd ) {
-        self.preRollViewController.tritonAd = nil;
-    }
-    
     if ( self.initialPlay ) {
         [self playOrPauseTapped:nil];
     } else {
@@ -957,7 +953,6 @@ setForOnDemandUI;
             [[NetworkManager shared] fetchTritonAd:nil completion:^(TritonAd *tritonAd) {
                 if (tritonAd) {
                     self.preRollViewController.tritonAd = tritonAd;
-//                    [[AudioManager shared] setSmooth:NO];
 
                     [self cloakForPreRoll:YES];
                     [self.preRollViewController primeUI:^{
@@ -969,6 +964,8 @@ setForOnDemandUI;
                 } else {
                     [self primePlaybackUI:YES];
                     self.initialPlay = YES;
+
+                    [self activateInitialPlay];
                 }
             }];
         }];
@@ -976,9 +973,16 @@ setForOnDemandUI;
 
 }
 
+- (void)activateInitialPlay {
+    if ( self.initiateRewind ) {
+        [self activateRewind:RewindDistanceBeginning];
+    } else {
+        [self playAudio:YES];
+    }
+}
+
 - (void)specialRewind {
     self.initiateRewind = YES;
-    self.preRollViewController.tritonAd = nil;
     [UIView animateWithDuration:0.15 animations:^{
         self.liveDescriptionLabel.text = @"";
     }];
@@ -1208,7 +1212,6 @@ setForOnDemandUI;
 - (void)activateRewind:(RewindDistance)distance {
     
     self.initiateRewind = NO;
-    self.preRollViewController.tritonAd = nil;
     [self snapJogWheel];
     
     self.jogShuttle.forceSingleRotation = YES;
@@ -1399,7 +1402,7 @@ setForOnDemandUI;
 #else
     self.scrubbingTriggerView.backgroundColor = [UIColor clearColor];
 #endif
-    
+
     UIPanGestureRecognizer *pgr = [[UIPanGestureRecognizer alloc] initWithTarget:self
                                                                           action:@selector(bringUpScrubber)];
 
@@ -2280,12 +2283,7 @@ setForOnDemandUI;
             [self.programTitleYConstraint setConstant:programTitleConstant];
             
             [self.liveStreamView layoutIfNeeded];
-            if ( !self.preRollViewController.tritonAd ) {
-                if ( self.initiateRewind ) {
-                    self.playPauseButton.alpha = 0.0f;
-                }
-            }
-            
+
         } completion:^(BOOL finished) {
             POPSpringAnimation *bottomAnim = [POPSpringAnimation animationWithPropertyNamed:kPOPLayoutConstraintConstant];
             bottomAnim.toValue = @(0);
@@ -2343,36 +2341,21 @@ setForOnDemandUI;
                 
                 [self adjustScrubbingState];
                 
-                if ( !self.preRollViewController.tritonAd ) {
-                    if ( [[UXmanager shared] userHasSeenOnboarding] ) {
-                        self.initialPlay = YES;
-                        
-                        if ( [[UXmanager shared].settings userHasColdStartedAudioOnce] ) {
-                            if ( ![[UXmanager shared].settings userHasViewedScheduleOnboarding] ) {
-                                self.showLiveHelpScreens = YES;
-                            }
-                        } else {
-                            [[UXmanager shared].settings setUserHasColdStartedAudioOnce:YES];
-                            [[UXmanager shared] persist];
+                if ( [[UXmanager shared] userHasSeenOnboarding] ) {
+                    self.initialPlay = YES;
+
+                    if ( [[UXmanager shared].settings userHasColdStartedAudioOnce] ) {
+                        if ( ![[UXmanager shared].settings userHasViewedScheduleOnboarding] ) {
+                            self.showLiveHelpScreens = YES;
                         }
-                        
-                        if ( self.initiateRewind ) {
-                            [self activateRewind:RewindDistanceBeginning];
-                        } else {
-                            [self playAudio:YES];
-                        }
-                        
                     } else {
-                        [[UXmanager shared] beginAudio];
-                    }
-                } else {
-                    if ( ![[UXmanager shared].settings userHasColdStartedAudioOnce] ) {
                         [[UXmanager shared].settings setUserHasColdStartedAudioOnce:YES];
                         [[UXmanager shared] persist];
                     }
+
+                } else {
+                    [[UXmanager shared] beginAudio];
                 }
-                
-                
             }];
             
             [self.initialControlsView.layer pop_addAnimation:fadeControls forKey:@"fadeDownInitialControls"];
@@ -2600,7 +2583,6 @@ setForOnDemandUI;
     
     self.dirtyFromFailure = YES;
     self.promptedAboutFailureAlready = NO;
-    self.preRollViewController.tritonAd = nil;
     self.initialPlayButton.alpha = 1.0f;
     self.initialPlayButton.userInteractionEnabled = YES;
     
@@ -3216,7 +3198,7 @@ setForOnDemandUI;
 
 # pragma mark - SCPRPreRollControllerDelegate
 - (void)preRollStartedPlaying {
-    [self.playPauseButton fadeImage:[UIImage imageNamed:@"btn_pause.png"] duration:0.2];
+//    [self.playPauseButton fadeImage:[UIImage imageNamed:@"btn_pause.png"] duration:0.2];
 }
 
 - (void)preRollCompleted {
@@ -3241,12 +3223,8 @@ setForOnDemandUI;
         }
 
         [[AudioManager shared] setSmooth:YES];
-        
-        if ( self.initiateRewind ) {
-            [self activateRewind:RewindDistanceBeginning];
-        } else {
-            [self playAudio:YES];
-        }
+
+        [self activateInitialPlay];
     });
     
 }
