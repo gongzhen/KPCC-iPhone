@@ -89,6 +89,8 @@ typedef NS_ENUM(NSUInteger, StreamStatus) {
 //@property StreamStatus status;
 
 @property (nonatomic,copy) NSString *xfsStreamUrl;
+@property (nonatomic,copy) NSDate *xfsDriveStart;
+@property (nonatomic,copy) NSDate *xfsDriveEnd;
 
 @property (strong,nonatomic) NSDateFormatter *dateFormatter;
 @property (nonatomic,strong) NSOperationQueue *fadeQueue;

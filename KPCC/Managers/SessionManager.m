@@ -609,88 +609,38 @@
 
 #pragma mark - XFS
 - (void)xFreeStreamIsAvailableWithCompletion:(CompletionBlock)completion {
+
+    // KPCC Plus (XFS) is available if a) we have xfsDriveStart and xfsDriveEnd
+    // in AudioManager and b) now is between those two dates
+
+    BOOL available = NO;
+    if ([AudioManager shared].xfsDriveStart != nil && [AudioManager shared].xfsDriveEnd != nil) {
+        // is now between these dates?
+        if (
+            [[AudioManager shared].xfsDriveStart timeIntervalSinceNow] <= 0
+            && [[AudioManager shared].xfsDriveEnd timeIntervalSinceNow] > 0
+        ) {
+            // YES!
+            available = YES;
+        } else {
+            // NO
+        }
+    } else {
+        // NO
+    }
+
+    // last check... not available unless we have a stream URL
+    if ([AudioManager shared].xfsStreamUrl == nil) {
+        available = NO;
+    }
  
-    /*
-    [self setXFreeStreamIsAvailable:NO];
+    [self setXFreeStreamIsAvailable:available];
     [[NSNotificationCenter defaultCenter] postNotificationName:@"pledge-drive-status-updated"
                                                         object:nil];
     
     if ( completion ) {
         completion();
-    }
-    
-    return;
-    
-    
-
-
-
-    
-    if ( self.numberOfChecks == 2 ) {
-        [self setXFreeStreamIsAvailable:NO];
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"pledge-drive-status-updated"
-                                                            object:nil];
-    } else if ( self.numberOfChecks < 2 ) {
-        self.numberOfChecks++;
-        [self setXFreeStreamIsAvailable:YES];
-        
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"pledge-drive-status-updated"
-                                                            object:nil];
-    }
-    
-     */
-
-    NSString *endpoint = [NSString stringWithFormat:@"%@/schedule?pledge_status=true",kServerBase];
-    NSURL *url = [NSURL URLWithString:endpoint];
-    NSURLRequest *request = [NSURLRequest requestWithURL:url];
-    [NSURLConnection sendAsynchronousRequest:request
-                                       queue:[[NSOperationQueue alloc] init]
-                           completionHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError) {
-                               
-                               NSError *jsonError = nil;
-                               
-                               if ( !data || connectionError ) {
-                                   if ( connectionError ) {
-                                       NSLog(@"Connection error : %@",[connectionError localizedDescription]);
-                                   }
-                                   
-                                   [self setXFreeStreamIsAvailable:NO];
-                                   
-                                   return;
-                               }
-                               
-                               NSDictionary *responseObject = [NSJSONSerialization JSONObjectWithData:data
-                                                                                              options:NSJSONReadingMutableLeaves
-                                                                                                error:&jsonError];
-                               
-                               if (responseObject[@"meta"] && [responseObject[@"meta"][@"status"][@"code"] intValue] == 200) {
-                                   
-                                   if ( responseObject[@"pledge_drive"] ) {
-                                       
-                                       BOOL updated = [responseObject[@"pledge_drive"] boolValue];
-
-                                       [self setXFreeStreamIsAvailable:updated];
-                                       
-                                       dispatch_async(dispatch_get_main_queue(), ^{
-                                           [[NSNotificationCenter defaultCenter] postNotificationName:@"pledge-drive-status-updated"
-                                                                                               object:nil];
-                                       });
-                                       
-                                   } else {
-                                       
-                                       [self setXFreeStreamIsAvailable:NO];
-                                 
-                                       dispatch_async(dispatch_get_main_queue(), ^{
-                                           [[NSNotificationCenter defaultCenter] postNotificationName:@"pledge-drive-status-updated"
-                                                                                               object:nil];
-                                       });
-                                       
-                                   }
-                               }
-                               
-                           }];
- 
-    
+    }    
 }
 
 - (void)validateXFSToken:(NSString *)token completion:(CompletionBlockWithValue)completion {

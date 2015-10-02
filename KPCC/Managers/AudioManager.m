@@ -59,13 +59,28 @@ static const NSString *ItemStatusContext;
     
     PFQuery *settingsQuery = [PFQuery queryWithClassName:@"iPhoneSettings"];
     [settingsQuery whereKey:@"settingName"
-             containsString:@"kpccPlusStream"];
+             containsString:@"kpccPlus"];
     [settingsQuery findObjectsInBackgroundWithBlock:^( NSArray *objects, NSError *error ) {
        
         if ( !error && [objects count] > 0 ) {
+            NSArray *names = @[@"kpccPlusStream",@"kpccPlusDriveStart",@"kpccPlusDriveEnd"];
+            for ( PFObject *obj in objects) {
+                NSString *v = obj[@"settingValue"];
+
+                switch ([names indexOfObject:obj[@"settingName"]]) {
+                    case 0:
+                        self.xfsStreamUrl = v;
+                        break;
+                    case 1:
+                        self.xfsDriveStart = [Utils dateFromRFCString:v];
+                        break;
+                    case 2:
+                        self.xfsDriveEnd = [Utils dateFromRFCString:v];
+                        break;
+                }
+
+            }
             
-            PFObject *settings = [objects firstObject];
-            self.xfsStreamUrl = settings[@"settingValue"];
             if ( completion ) {
                 dispatch_async(dispatch_get_main_queue(), ^{
                     completion();
