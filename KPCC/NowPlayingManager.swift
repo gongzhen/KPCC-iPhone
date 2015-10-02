@@ -80,7 +80,7 @@ import MediaPlayer
                 MPMediaItemPropertyTitle:                       self._audio!.audioTitle,
                 MPMediaItemPropertyArtist:                      self._audio!.programTitle,
                 MPNowPlayingInfoPropertyPlaybackRate:           self._isPlaying ? 1.0 : 0.0,
-                MPMediaItemPropertyPlaybackDuration:            self._audio!.audioDuration,
+                MPMediaItemPropertyPlaybackDuration:            self._audio!.audioDuration ?? 0.0,
                 MPNowPlayingInfoPropertyElapsedPlaybackTime:    self._playhead ?? 0.0,
                 MPMediaItemPropertyArtwork:                     self._art,
             ]
