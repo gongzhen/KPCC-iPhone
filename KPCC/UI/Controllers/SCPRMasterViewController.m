@@ -2741,10 +2741,11 @@ setForOnDemandUI;
     if ( self.scrubbing ) {
         scrubbing = NO;
     }
+    // disable the scrubber trigger if schedule views are displayed
     if ( self.mainContentScroller.contentOffset.x > 0.0f ) {
         scrubbing = NO;
     }
-    if ( self.menuOpen || self.preRollOpen ) {
+    if ( self.menuOpen || self.preRollOpen || self.streamSelectorOpen ) {
         fwd30 = NO;
         back30 = NO;
         scrubbing = NO;
@@ -2763,6 +2764,8 @@ setForOnDemandUI;
 #pragma mark - XFS
 - (void)cloakForXFS {
     self.pulldownMenu.alpha = 1.0f;
+
+    self.streamSelectorOpen = YES;
     
     [self dismissXFSCoachingBalloon];
     
@@ -2770,7 +2773,8 @@ setForOnDemandUI;
     [self pushToHiddenVector:self.initialControlsView];
     [self pushToHiddenVector:self.playerControlsView];
     [self pushToHiddenVector:self.liveProgressViewController.view];
-    
+    [self pushToHiddenVector:self.scrubbingTriggerView];
+
     [[UXmanager shared] hideMenuButton];
     
     [self.pulldownMenu primeWithType:MenuTypeXFS];
@@ -2781,7 +2785,7 @@ setForOnDemandUI;
         self.queueBlurView.alpha = 1.0f;
         self.queueDarkBgView.alpha = 0.4f;
     } completion:^(BOOL finished) {
-        self.streamSelectorOpen = YES;
+
     }];
     
     [self commitHiddenVector];
@@ -2804,6 +2808,8 @@ setForOnDemandUI;
         
         self.streamSelectorOpen = NO;
         self.pulldownMenu.alpha = 0.0f;
+
+        [self adjustScrubbingState];
     }];
 }
 
