@@ -3478,6 +3478,7 @@ setForOnDemandUI;
     switch (indexPath.row) {
         case 0:
         {
+            self.homeIsNotRootViewController = NO;
             event = @"menuSelectionLiveStream";
             closeMenu = YES;
             if ( [AudioManager shared].currentAudioMode != AudioModeLive ) {
