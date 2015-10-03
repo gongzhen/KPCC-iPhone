@@ -372,7 +372,7 @@
 
 - (void)buildTimer {
     UILocalNotification *alarm = [[UILocalNotification alloc] init];
-    alarm.alertTitle = @"Time to wake up!";
+
     alarm.alertBody = @"It's time for your fix of KPCC";
     alarm.fireDate = self.alarmDate;
     alarm.soundName = @"alarm_beat.aif";
