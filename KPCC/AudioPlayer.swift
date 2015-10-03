@@ -409,15 +409,23 @@ public struct AudioPlayerObserver<T> {
                 }
             }
         case .AccessLog:
-            let log = obj as! AVPlayerItemAccessLogEvent
-            self._emitEvent("New access log entry: indicated:\(log.indicatedBitrate) -- switch:\(log.switchBitrate) -- stalls: \(log.numberOfStalls) -- durationListened: \(log.durationWatched)")
+            if obj != nil {
+                let log = obj as! AVPlayerItemAccessLogEvent
+                self._emitEvent("New access log entry: indicated:\(log.indicatedBitrate) -- switch:\(log.switchBitrate) -- stalls: \(log.numberOfStalls) -- durationListened: \(log.durationWatched)")
 
-            self.oAccessLog.notify(log)
+                self.oAccessLog.notify(log)
+            } else {
+                self._emitEvent("Access log notification, but no access log found.")
+            }
         case .ErrorLog:
-            let log = obj as! AVPlayerItemErrorLogEvent
-            self._emitEvent("New error log entry \(log.errorStatusCode): \(log.errorComment)")
+            if obj != nil {
+                let log = obj as! AVPlayerItemErrorLogEvent
+                self._emitEvent("New error log entry \(log.errorStatusCode): \(log.errorComment)")
 
-            self.oErrorLog.notify(log)
+                self.oErrorLog.notify(log)
+            } else {
+                self._emitEvent("Error log notification, but no error log found.")
+            }
         case .Playing:
             // we're hitting play as part of our seek operations, so don't
             // pass on that status yet if .Seeking

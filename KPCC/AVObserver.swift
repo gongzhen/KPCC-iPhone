@@ -147,12 +147,12 @@ import AVFoundation
             self._notify(Statuses.TimeJump,msg: "Time jumped.")
         case AVPlayerItemNewErrorLogEntryNotification:
             // try and pull the log...
-            let log:AVPlayerItemErrorLogEvent? = self._player.currentItem!.errorLog()!.events.last
+            let log:AVPlayerItemErrorLogEvent? = self._player.currentItem!.errorLog()?.events.last
             //let msg:String? = log?.errorComment
             // FIXME: How should we present this message?
             self._notify(Statuses.ErrorLog,msg: "Error",obj: log)
         case AVPlayerItemNewAccessLogEntryNotification:
-            let log:AVPlayerItemAccessLogEvent? = self._player.currentItem!.accessLog()!.events.last
+            let log:AVPlayerItemAccessLogEvent? = self._player.currentItem!.accessLog()?.events.last
             self._notify(Statuses.AccessLog,msg: "Access Log",obj: log)
         case AVPlayerItemDidPlayToEndTimeNotification:
             self._notify(Statuses.ItemEnded, msg:"Item played to end.")
