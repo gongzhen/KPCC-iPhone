@@ -88,7 +88,10 @@ setForOnDemandUI;
         [self.preRollViewController playOrPause];
         return;
     }
-    
+
+    // do we have an existing session that should be expired?
+    [[SessionManager shared] expireSessionIfExpired:YES];
+
     if ( self.initialPlay ) {
         [self playOrPauseTapped:nil];
     } else {
@@ -293,6 +296,11 @@ setForOnDemandUI;
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(primeManualControlButton)
                                                  name:UIApplicationWillEnterForegroundNotification
+                                               object:nil];
+
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(resetInitialPlay)
+                                                 name:@"session-reset"
                                                object:nil];
     
     
@@ -679,7 +687,13 @@ setForOnDemandUI;
 
 - (void)addPreRollController {
     if ( ![[UXmanager shared] userHasSeenOnboarding] ) return;
-    
+
+    if (self.preRollViewController != nil) {
+        [self.preRollViewController.view removeFromSuperview];
+        [self.preRollViewController removeFromParentViewController];
+        self.preRollViewController = nil;
+    }
+
     self.preRollViewController = [[SCPRPreRollViewController alloc] initWithNibName:nil bundle:nil];
     self.preRollViewController.delegate = self;
 
@@ -691,6 +705,13 @@ setForOnDemandUI;
     
     [self.view addSubview:self.preRollViewController.view];
     [self.preRollViewController didMoveToParentViewController:self];
+}
+
+- (void)resetInitialPlay {
+    CLS_LOG(@"Resetting MVC initialPlay");
+    // FIXME: The intention here is to reset so that we can show a new preroll.
+    self.initialPlay = NO;
+    [self addPreRollController];
 }
 
 - (void)resetUI {
@@ -707,6 +728,8 @@ setForOnDemandUI;
         if ( self.preRollOpen ) {
             [self decloakForPreRoll:NO];
         }
+
+        [self.scrubbingTriggerView setAlpha:0.0f];
 
         [UIView animateWithDuration:0.25 animations:^{
             self.playerControlsBottomYConstraint.constant = [self.originalFrames[@"playerControls"] floatValue];
@@ -945,32 +968,33 @@ setForOnDemandUI;
         return;
     }
 
-    [[SessionManager shared] fetchCurrentSchedule:^(id returnedObject) {
-        [UIView animateWithDuration:0.15 animations:^{
-            self.liveRewindAltButton.alpha = 0.0f;
-        } completion:^(BOOL finished) {
-            // is there a preroll that we should play?
-            [[NetworkManager shared] fetchTritonAd:nil completion:^(TritonAd *tritonAd) {
-                if (tritonAd) {
-                    self.preRollViewController.tritonAd = tritonAd;
+    [UIView animateWithDuration:0.15 animations:^{
+        self.liveRewindAltButton.alpha = 0.0f;
+    } completion:^(BOOL finished) {
+        // is there a preroll that we should play?
+        CLS_LOG(@"Attempting to fetch preroll.");
+        [[SessionManager shared] setLastPrerollTime:[NSDate date]];
+        [[NetworkManager shared] fetchTritonAd:nil completion:^(TritonAd *tritonAd) {
+            if (tritonAd) {
+                CLS_LOG(@"Received a preroll to play.");
+                self.preRollViewController.tritonAd = tritonAd;
 
-                    [self cloakForPreRoll:YES];
-                    [self.preRollViewController primeUI:^{
-                        [self.preRollViewController showPreRollWithAnimation:YES completion:^(BOOL done) {
-                            [self primePlaybackUI:YES];
-                            [self.preRollViewController.prerollPlayer play];
-                        }];
+                [self cloakForPreRoll:YES];
+                [self.preRollViewController primeUI:^{
+                    [self.preRollViewController showPreRollWithAnimation:YES completion:^(BOOL done) {
+                        [self primePlaybackUI:YES];
+                        [self.preRollViewController.prerollPlayer play];
                     }];
-                } else {
-                    [self primePlaybackUI:YES];
-                    self.initialPlay = YES;
+                }];
+            } else {
+                CLS_LOG(@"No preroll received.");
+                [self primePlaybackUI:YES];
+                self.initialPlay = YES;
 
-                    [self activateInitialPlay];
-                }
-            }];
+                [self activateInitialPlay];
+            }
         }];
     }];
-
 }
 
 - (void)activateInitialPlay {
@@ -997,56 +1021,18 @@ setForOnDemandUI;
     }
     
     if (![[AudioManager shared] isStreamPlaying]) {
-        
-        if ( [[AudioManager shared] currentAudioMode] == AudioModeOnDemand ) {
-            [self playAudio:NO];
-            return;
-        }
-        
-        if ( [[SessionManager shared] sessionIsExpired] ) {
-            [[SessionManager shared] fetchCurrentSchedule:^(id returnedObject) {
-                [self playAudio:YES];
-            }];
-        } else {
+        // we're currently paused / stopped
 
-            if ( self.dirtyFromFailure ) {
-                self.dirtyFromFailure = NO;
-                if ( [[AudioManager shared] currentAudioMode] == AudioModeOnDemand ) {
-                    [[QueueManager shared] playItemAtPosition:(int)[[QueueManager shared] currentlyPlayingIndex]];
-                } else {
-                    [self playAudio:YES];
-                }
-            } else {
-                
-                self.scrubbingTriggerView.userInteractionEnabled = YES;
-                // FIXME: Reimplement this
-//                BOOL hard = [[AudioManager shared] status] == StreamStatusStopped ? YES : NO;
-                [self playAudio:NO];
-                
-            }
-            
-        }
+        // start playing
+        [self playAudio:NO];
+
     } else {
+        // we're current playing
  
         [[AudioManager shared] setUserPause:YES];
-        
-#ifndef SUPPRESS_AGGRESSIVE_KICKSTART
-        if ( [[AudioManager shared] currentAudioMode] == AudioModeLive ) {
-            if ( [[AudioManager shared] dropoutOccurred] ) {
-                [[AudioManager shared] stopAllAudio];
-                [[AudioManager shared] takedownAudioPlayer];
-                [[AudioManager shared] buildStreamer:kHLS];
-            } else {
-                [self pauseAudio];
-            }
-        } else {
-            [self pauseAudio];
-        }
-#else
+
         [[SessionManager shared] setLastKnownPauseExplanation:PauseExplanationUserHasPausedExplicitly];
         [self pauseAudio];
-#endif
-        
     }
     
     [self primeManualControlButton];
@@ -1318,7 +1304,6 @@ setForOnDemandUI;
     [[AudioManager shared] setCalibrating:YES];
 
     [self.jogShuttle.view setAlpha:1.0];
-    [[SessionManager shared] setSeekForwardRequested:YES];
     [[SessionManager shared] fetchCurrentSchedule:^(id returnedObject) {
         [self.jogShuttle animateWithSpeed:0.8
                              hideableView:self.playPauseButton
@@ -1329,7 +1314,6 @@ setForOnDemandUI;
                                    self.jogging = NO;
                                    [self updateControlsAndUI:YES];
                                    
-                                   [[SessionManager shared] setSeekForwardRequested:NO];
                                    [[SessionManager shared] invalidateSession];
                                    [self primeManualControlButton];
                                    
@@ -2474,21 +2458,21 @@ setForOnDemandUI;
     
 
 
-    if ( [[SessionManager shared] sessionIsInRecess:NO] ) {
-        if ( okToShow )
-            NSLog(@"Rewind Button - Hiding because we're in no-mans-land");
-        okToShow = NO;
-    }
-
-    if ( [[UXmanager shared] onboardingEnding] ) {
-        if ( okToShow )
-            NSLog(@"Rewind Button - Hiding because onboarding is ending");
-        okToShow = NO;
-    }
+//    if ( [[SessionManager shared] sessionIsInRecess:NO] ) {
+//        if ( okToShow )
+//            NSLog(@"Rewind Button - Hiding because we're in no-mans-land");
+//        okToShow = NO;
+//    }
+//
+//    if ( [[UXmanager shared] onboardingEnding] ) {
+//        if ( okToShow )
+//            NSLog(@"Rewind Button - Hiding because onboarding is ending");
+//        okToShow = NO;
+//    }
 
     if ( [[NetworkManager shared] networkDown] ) {
         if ( okToShow )
-            NSLog(@"Rewind Button - Hiding because program is nil");
+            NSLog(@"Rewind Button - Hiding because network is down");
         okToShow = NO;
     }
     

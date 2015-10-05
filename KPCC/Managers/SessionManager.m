@@ -25,7 +25,6 @@
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         mgr = [[SessionManager alloc] init];
-        mgr.prevCheckedMinute = -1;
         mgr.peakDrift = kAllowableDriftCeiling;
     });
     return mgr;
@@ -99,32 +98,6 @@
     return (NSTimeInterval)sbl;
 }
 
-#pragma mark - Analytics
-- (void)handlePauseEventAgainstSessionAudio {
-    if ( self.killSessionTimer ) {
-        if ( [self.killSessionTimer isValid] ) {
-            [self.killSessionTimer invalidate];
-        }
-        self.killSessionTimer = nil;
-    }
-    
-    self.killSessionTimer = [NSTimer scheduledTimerWithTimeInterval:80.0f
-                                                             target:self
-                                                           selector:@selector(endAnalyticsForAudio:)
-                                                           userInfo:nil
-                                                            repeats:NO];
-}
-
-- (void)forceAnalyticsSessionEndForSessionAudio {
-    [self endAnalyticsForAudio:nil];
-}
-
-- (void)endAnalyticsForAudio:(NSNotification*)note {
-    NSString *eventName = [[AudioManager shared] currentAudioMode] == AudioModeLive ? @"liveStreamPlay" : @"episodePlay";
-
-//    [[AnalyticsManager shared] nielsenStop];
-}
-
 #pragma mark - Sessions
 - (void)trackLiveSession {
     if ( !self.sessionIsHot ) return;
@@ -158,11 +131,7 @@
         title = s.title;
     }
 
-    
-#if !TARGET_IPHONE_SIMULATOR
-    
     NSString *plus = [[UXmanager shared].settings userHasSelectedXFS] ? @"KPCC Plus" : @"KPCC Live";
-    
     
     [[AnalyticsManager shared] beginTimedEvent:@"liveStreamPlay"
                                     parameters:@{
@@ -174,9 +143,6 @@
     
 //    [[AnalyticsManager shared] nielsenPlay];
 
-#endif
-    
-    
 }
 
 - (void)trackRewindSession {
@@ -207,14 +173,10 @@
     }
 }
 
-- (NSString*)startLiveSession {
+- (void)startLiveSession {
+    if ( self.sessionIsHot ) return;
     
-    if ( self.sessionIsHot ) return @"";
-    
-    NSString *ct = [NSString stringWithFormat:@"%ld",(long)[[NSDate date] timeIntervalSince1970]];
-    NSString *sid = [Utils sha1:ct];
     self.sessionPausedDate = nil;
-    self.liveSessionID = sid;
     @synchronized(self) {
         self.sessionIsHot = YES;
     }
@@ -222,89 +184,48 @@
     self.liveStreamSessionBegan = (int64_t)[[NSDate date] timeIntervalSince1970];
     
     [self trackLiveSession];
-    
-    return sid;
 }
 
-- (NSString*)endLiveSession {
-    
+- (void)endLiveSession {
     if ( self.rewindSessionWillBegin ) {
         self.rewindSessionWillBegin = NO;
-        NSString *sid = self.liveSessionID;
-        if ( !sid ) {
-            NSString *ct = [NSString stringWithFormat:@"%ld",(long)[[NSDate date] timeIntervalSince1970]];
-            self.liveSessionID = [Utils sha1:ct];
-        }
-        
-        return @"";
+        return;
     }
-    
-    if ( [self sessionIsBehindLive] ) {
-        [self setSessionPausedDate:[[AudioManager shared].audioPlayer currentDate]];
-    } else {
-        [self setSessionPausedDate:[NSDate date]];
-    }
+
+    [self setSessionPausedDate:[NSDate date]];
     
     NSTimeInterval now = [[NSDate date] timeIntervalSince1970];
     NSTimeInterval sessionLength = fabs(now - self.liveStreamSessionBegan);
     NSString *pt = [NSDate prettyTextFromSeconds:sessionLength];
-    if ( sessionLength > 30000 ) return @"";
+    if ( sessionLength > 30000 ) return;
     
-    NSString *sid = self.liveSessionID;
-    if ( !sid ) {
-        NSString *ct = [NSString stringWithFormat:@"%ld",(long)[[NSDate date] timeIntervalSince1970]];
-        sid = [Utils sha1:ct];
-    }
     NSLog(@"Logging pause event for Live Stream...");
     
     ScheduleOccurrence *s = self.currentSchedule;
     NSString *title = s.title ? s.title : @"[UNKNOWN]";
     
     
-#if !TARGET_IPHONE_SIMULATOR
     [[AnalyticsManager shared] logEvent:@"liveStreamPause"
-                         withParameters:@{ @"kpccSessionId" : sid,
-                                           @"programTitle" : title,
+                         withParameters:@{ @"programTitle" : title,
                                            @"sessionLength" : pt,
                                            @"sessionLengthInSeconds" : [NSString stringWithFormat:@"%ld",(long)sessionLength] }];
-    [self handlePauseEventAgainstSessionAudio];
-#endif
-    
+
     self.sessionIsHot = NO;
-    self.liveSessionID = nil;
-    return sid;
 }
 
-- (NSString*)startOnDemandSession {
+- (void)startOnDemandSession {
+    if ( self.odSessionIsHot ) return;
     
-    if ( self.odSessionIsHot ) return @"";
-    
-    NSString *ct = [NSString stringWithFormat:@"%ld",(long)[[NSDate date] timeIntervalSince1970]];
-    NSString *sid = [Utils sha1:ct];
-    
-    self.odSessionID = sid;
     @synchronized(self) {
         self.odSessionIsHot = YES;
     }
     
     self.onDemandSessionBegan = (int64_t)[[NSDate date] timeIntervalSince1970];
-    
-    return sid;
 }
 
-- (NSString*)endOnDemandSessionWithReason:(OnDemandFinishedReason)reason {
-    
-    if ( !self.odSessionIsHot ) return @"";
+- (void)endOnDemandSessionWithReason:(OnDemandFinishedReason)reason {
+    if ( !self.odSessionIsHot ) return;
 
-    
-    NSString *sid = self.odSessionID;
-    if ( !sid ) {
-        NSString *ct = [NSString stringWithFormat:@"%ld",(long)[[NSDate date] timeIntervalSince1970]];
-        sid = [Utils sha1:ct];
-    }
-    
-    BOOL timed = NO;
-    
     NSString *event = @"";
     switch (reason) {
         case OnDemandFinishedReasonEpisodeEnd:
@@ -312,7 +233,6 @@
             break;
         case OnDemandFinishedReasonEpisodePaused:
             event = @"episodePaused";
-            timed = YES;
             break;
         case OnDemandFinishedReasonEpisodeSkipped:
             event = @"episodeSkipped";
@@ -324,15 +244,7 @@
     [[AnalyticsManager shared] logEvent:event
                          withParameters:[[AnalyticsManager shared] typicalOnDemandEpisodeInformation]];
     
-    if ( timed ) {
-        [self handlePauseEventAgainstSessionAudio];
-    } else {
-//        [[AnalyticsManager shared] nielsenStop];
-    }
-    
     self.odSessionIsHot = NO;
-    self.odSessionID = nil;
-    return sid;
 }
 
 - (CGFloat)acceptableBufferWindow {
@@ -727,36 +639,6 @@
     }
 }
 
-- (BOOL)sessionIsExpired {
-    
-    if ( [[AudioManager shared] currentAudioMode] == AudioModeOnDemand ) return NO;
-    if ( [[[AudioManager shared] status] status] == AudioStatusPaused ||
-            [[[AudioManager shared] status] status] == AudioStatusStopped ) {
-        NSDate *spd = [[SessionManager shared] sessionPausedDate];
-        if ( !spd ) {
-            spd = [[SessionManager shared] sessionLeftDate];
-        }
-        
-        if ( !spd ) return NO;
-        
-        NSDate *cit = [[AudioManager shared].audioPlayer currentDate];
-        if ( [[[AudioManager shared] status] status] != AudioStatusStopped ) {
-            if ( !cit ) {
-                // Some kind of audio abnormality, so expire this session
-                return YES;
-            }
-        }
-        
-        NSDate *aux = cit ? [spd earlierDate:cit] : spd;
-        if ( !aux || [[NSDate date] timeIntervalSinceDate:aux] > [self bufferLength] ) {
-            return YES;
-        }
-    }
-
-    return NO;
-    
-}
-
 - (BOOL)sessionIsInRecess {
     
    return [self sessionIsInRecess:YES];
@@ -810,14 +692,6 @@
     _sessionLeftDate = sessionLeftDate;
 }
 
-- (void)setSessionReturnedDate:(NSDate *)sessionReturnedDate {
-    _sessionReturnedDate = sessionReturnedDate;
-    if ( sessionReturnedDate && self.sessionLeftDate ) {
-        [self handleSessionReactivation];
-    }
-    
-}
-
 - (void)processNotification:(UILocalNotification*)programUpdate {
     
     if ( SEQ([programUpdate alertBody],kUpdateProgramKey) ) {
@@ -831,7 +705,6 @@
 }
 
 - (void)handleSessionMovingToBackground {
-    
     NSString *eventName = @"";
     NSInteger sessionBegan = 0;
     if ( [[AudioManager shared] currentAudioMode] == AudioModeLive ) {
@@ -851,59 +724,85 @@
                                   timed:NO];
 }
 
-- (void)handleSessionReactivation {
+- (void)handleSessionMovingToForeground {
     
     if ( [[AudioManager shared] currentAudioMode] == AudioModeOnboarding ) return;
     if ( ![[UXmanager shared].settings userHasViewedOnboarding] ) return;
-    if ( !self.sessionLeftDate || !self.sessionReturnedDate ) return;
-    if ( [self sessionIsExpired] ) {
-    
-        [self expireSession];
-        
-    } else {
-        if ( [[[AudioManager shared] status] status] != AudioStatusPaused ) {
-            
-            [self checkProgramUpdate:NO];
-            if ( [[AudioManager shared] isPlayingAudio] ) {
 
-                NSString *eventName = @"";
-                if ( [[AudioManager shared] currentAudioMode] == AudioModeLive ) {
-                    eventName = @"liveStreamReturnedToForeground";
-                }
-                if ( [[AudioManager shared] currentAudioMode] == AudioModeOnDemand ) {
-                    eventName = @"episodeAudioReturnedToForeground";
-                }
-                NSTimeInterval now = [[NSDate date] timeIntervalSince1970];
-                NSInteger diff = now - self.timeAudioWasPutInBackground;
-                
-                [[AnalyticsManager shared] logEvent:eventName
-                                     withParameters:@{ @"secondsSinceAppWasBackgrounded" : @(diff) }
-                                              timed:NO];
-            }
-            
+    if ( !self.sessionLeftDate ) return;
+
+    if ( [[AudioManager shared] isPlayingAudio] ) {
+        NSString *eventName = @"";
+        if ( [[AudioManager shared] currentAudioMode] == AudioModeLive ) {
+            eventName = @"liveStreamReturnedToForeground";
         }
+        if ( [[AudioManager shared] currentAudioMode] == AudioModeOnDemand ) {
+            eventName = @"episodeAudioReturnedToForeground";
+        }
+        NSTimeInterval now = [[NSDate date] timeIntervalSince1970];
+        NSInteger diff = now - self.timeAudioWasPutInBackground;
+        
+        [[AnalyticsManager shared] logEvent:eventName
+                             withParameters:@{ @"secondsSinceAppWasBackgrounded" : @(diff) }
+                                      timed:NO];
     }
-    
+
     self.timeAudioWasPutInBackground = 0.0f;
+    _sessionLeftDate = nil;
 }
 
-- (void)expireSession {
+- (void)expireSessionIfExpired:(BOOL)willPlay {
+    // A session should be expired if the user last played audio more than an hour ago
+    if ([self sessionIsExpired]) {
+        CLS_LOG(@"Marking session expired.");
+        [self expireSession:willPlay];
+    }
+}
+
+- (BOOL)sessionIsExpired {
+    // session expiration only applies to the live stream
+    if ( [[AudioManager shared] currentAudioMode] != AudioModeLive ) return NO;
+
+    // a session can only expire while it is paused or stopped
+    if ( [[[AudioManager shared] status] status] == AudioStatusPaused ||
+        [[[AudioManager shared] status] status] == AudioStatusStopped ) {
+
+        // when was the session last active?
+        NSDate *spd = [[SessionManager shared] sessionPausedDate];
+
+        if ( !spd ) return YES;
+
+        CLS_LOG(@"sessionIsExpired: Returning after %f seconds.",-1 * [spd timeIntervalSinceNow]);
+
+        // a session is expired if it was last active more than one hour ago
+        if (-1 * [spd timeIntervalSinceNow] > kSessionIdleExpiration) {
+            return YES;
+        }
+
+        // FIXME: check against buffer?
+        
+    }
+    
+    return NO;
+    
+}
+
+- (void)expireSession:(BOOL)willPlay {
     self.sessionReturnedDate = nil;
     self.sessionPausedDate = nil;
     self.expiring = YES;
-    
-    [[AudioManager shared] resetFlags];
-    
-    if ( [[AudioManager shared] audioPlayer] ) {
-        if ( [[AudioManager shared] isPlayingAudio] ) {
-            // Shouldn't happen, but...
-            [[AudioManager shared] stopAudio];
-        }
-        [[AudioManager shared] takedownAudioPlayer];
-    }
-    
+    self.lastPrerollTime = nil;
+
+    [[AudioManager shared] takedownAudioPlayer];
+
     SCPRMasterViewController *master = [[Utils del] masterViewController];
-    [master resetUI];
+
+    if (!willPlay) {
+        [master resetUI];
+    }
+
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"session-reset"
+                                                        object:nil];
 }
 
 - (BOOL)sessionIsInBackground {

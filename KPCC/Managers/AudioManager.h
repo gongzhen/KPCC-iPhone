@@ -135,12 +135,6 @@ typedef NS_ENUM(NSUInteger, StreamStatus) {
 - (void)playOnboardingAudio:(NSInteger)segment;
 - (void)sanitizeFromOnboarding;
 
-// Recovery
-- (void)waitPatiently;
-- (void)attemptToRecover;
-- (void)interruptAutorecovery;
-- (void)stopWaiting;
-
 @property (NS_NONATOMIC_IOSONLY, getter=isStreamPlaying, readonly) BOOL streamPlaying;
 @property (NS_NONATOMIC_IOSONLY, getter=isStreamBuffering, readonly) BOOL streamBuffering;
 

@@ -403,16 +403,6 @@ static AnalyticsManager *singleton = nil;
                                         @"networkInfo" : [[NetworkManager shared] networkInformation]
                                         } mutableCopy];
     
-    if ( [[SessionManager shared] liveSessionID] && !SEQ([[SessionManager shared] liveSessionID],@"") ) {
-        NSMutableDictionary *mD = [analysis mutableCopy];
-        mD[@"kpccSessionId"] = [[SessionManager shared] liveSessionID];
-        analysis = mD;
-    } else if ( [[SessionManager shared] odSessionID] && !SEQ([[SessionManager shared] odSessionID],@"") ) {
-        NSMutableDictionary *mD = [analysis mutableCopy];
-        mD[@"kpccSessionId"] = [[SessionManager shared] odSessionID];
-        analysis = mD;
-    }
-    
     NSLog(@"Sending stream failure report to analytics");
     [self logEvent:@"streamException" withParameters:analysis];
     

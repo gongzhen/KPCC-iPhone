@@ -56,7 +56,6 @@
 - (void)prerender;
 - (void)takedown;
 - (void)scrubberWillAppear;
-- (void)printCurrentDate;
 - (void)activateStatusObserver;
 
 // Seeking

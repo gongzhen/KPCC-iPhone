@@ -195,10 +195,6 @@
     
     if ( [[AudioManager shared] isPlayingAudio] ) {
         [[SessionManager shared] handleSessionMovingToBackground];
-        
-    } else {
-        //[[AnalyticsManager shared] gaSessionEnd];
-        [[SessionManager shared] forceAnalyticsSessionEndForSessionAudio];
     }
     
     if ( [[AudioManager shared] currentAudioMode] == AudioModeOnboarding ) {
@@ -227,49 +223,25 @@
         }
     }
     
-    if ( [[AudioManager shared] currentAudioMode] == AudioModePreroll ) {
-        [[SessionManager shared] setUserLeavingForClickthrough:YES];
-    }
-    
     [[ContentManager shared] saveContext];
     // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later. 
     // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application {
-        
-    //[[AnalyticsManager shared] gaSessionStartWithScreenView:@"Session Begin"];
-    
-    if ( [[AudioManager shared] currentAudioMode] != AudioModeOnboarding ) {
-        [[SessionManager shared] setSessionReturnedDate:[NSDate date]];
-        [self.masterViewController determinePlayState];
-    }
+    // when returning to the foreground, we need to figure out what to display
+    // to the user.
 
+    [[SessionManager shared] handleSessionMovingToForeground];
+    [[SessionManager shared] expireSessionIfExpired:NO];
     
-    NSString *push = [[UXmanager shared].settings latestPushJson];
-    if ( push && !SEQ(push,@"") ) {
-        NSLog(@"Push received while app was in background : %@",push);
-        [[UXmanager shared].settings setLatestPushJson:nil];
-        [[UXmanager shared] persist];
-    }
-    
-    [[AudioManager shared] interruptAutorecovery];
-    [[SessionManager shared] setUserLeavingForClickthrough:NO];
-    [[AudioManager shared] stopWaiting];
+    [self.masterViewController determinePlayState];
+
     [[ContentManager shared] sweepBookmarks];
-    if ( [[AudioManager shared] isPlayingAudio] && [[AudioManager shared] currentAudioMode] == AudioModeLive ) {
-        [[SessionManager shared] checkProgramUpdate:YES];
-    }
-    
-    
-    
-#ifdef DEBUG
-    if ( [[SessionManager shared] sessionPausedDate] ) {
-        NSLog(@"Session Paused : %@",[NSDate stringFromDate:[[SessionManager shared] sessionPausedDate]
-                                                 withFormat:@"HH:mm:ss a"]);
-    }
-#endif
-    // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
+
+//    if ( [[AudioManager shared] isPlayingAudio] && [[AudioManager shared] currentAudioMode] == AudioModeLive ) {
+//        [[SessionManager shared] checkProgramUpdate:YES];
+//    }
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application {

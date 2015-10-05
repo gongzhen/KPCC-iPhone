@@ -23,7 +23,6 @@
 @interface SCPRPreRollViewController : UIViewController
 
 - (void)showPreRollWithAnimation:(BOOL)animated completion:(void (^)(BOOL done))completion;
-- (void)setAdProgress;
 - (void)primeUI:(CompletionBlock)completed;
 - (void)playOrPause;
 
@@ -34,8 +33,6 @@
 @property (nonatomic,strong) IBOutlet UIView *curtainView;
 
 @property (nonatomic,strong) AudioPlayer *prerollPlayer;
-@property (nonatomic,strong) AVObserver *observer;
-
 @property (nonatomic, strong) id timeObserver;
 
 @end

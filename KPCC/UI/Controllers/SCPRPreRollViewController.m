@@ -180,7 +180,6 @@
 - (void)openClickThroughUrl {
     NSString *url = self.tritonAd.clickthroughUrl;
     if ( url && !SEQ(@"",url) ) {
-        [[SessionManager shared] setUserLeavingForClickthrough:YES];
         [[UIApplication sharedApplication] openURL:[NSURL URLWithString:url]];
     }
 }
