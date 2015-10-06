@@ -794,14 +794,17 @@ public struct AudioPlayerObserver<T> {
             // SEEK!
 
             // how far are we trying to go?
-            let offsetSeconds = date.timeIntervalSinceReferenceDate - self._player.currentItem!.currentDate()!.timeIntervalSinceReferenceDate
+            // FIXME: if we don't have a current date, is it more appropriate to 
+            // error rather than trying seekToDate?
+            let cdint = self._player.currentItem!.currentDate()?.timeIntervalSinceReferenceDate
+            let offsetSeconds:Double? = cdint != nil ? (date.timeIntervalSinceReferenceDate - cdint!) : nil
 
             // we'll cheat and use time for short seeks, which seem to
             // sometimes leave seekToDate stuck playing a loop
             // also, a cold seek with seekToDate never works, so start with seekToTime
 
-            if (cold || useTime || abs(offsetSeconds) < 60) {
-                let seek_time = CMTimeAdd(self._player.currentItem!.currentTime(), CMTimeMakeWithSeconds(offsetSeconds, 1000))
+            if (offsetSeconds != nil && cold || useTime || abs(offsetSeconds!) < 60) {
+                let seek_time = CMTimeAdd(self._player.currentItem!.currentTime(), CMTimeMakeWithSeconds(offsetSeconds!, 1000))
                 self._emitEvent(fsig+"seeking \(offsetSeconds) seconds.")
                 self._player.currentItem!.seekToTime(seek_time, toleranceBefore:kCMTimeZero, toleranceAfter:kCMTimeZero, completionHandler:testLanding)
             } else {
