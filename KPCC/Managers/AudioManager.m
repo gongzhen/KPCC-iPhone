@@ -83,10 +83,13 @@ static const NSString *ItemStatusContext;
             
             if ( completion ) {
                 dispatch_async(dispatch_get_main_queue(), ^{
+                    CLS_LOG(@"Parse xfs information has loaded.");
                     completion();
                 });
             }
             
+        } else {
+            CLS_LOG(@"Parse xfs information errored or returned nothing.");
         }
         
     }];
