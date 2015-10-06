@@ -16,3 +16,4 @@
 #import "Utils.h"
 #import "GenericProgram.h"
 #import "AudioChunk.h"
+#import <Crashlytics/Crashlytics.h>

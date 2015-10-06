@@ -154,6 +154,15 @@
             [self.prerollPlayer pause];
             break;
         case AudioStatusPaused:
+        case AudioStatusNew:
+            // make sure we can get an audio session
+            if (![[[AudioManager shared] status] beginAudioSession]) {
+                // abort...
+                CLS_LOG(@"Preroll play failed to get audio session. Aborting preroll.");
+                impressionSent = YES;
+                [self dismissTapped:nil];
+            }
+
             [self.prerollPlayer play];
             break;
         default:
@@ -191,6 +200,9 @@
             if (success) NSLog(@"impression sent successfully");
         }];
     }
+
+    // end our preroll audio session
+    [[[AudioManager shared] status] endAudioSession];
     
     [UIView animateWithDuration:0.3f animations:^{
         CGRect frame = CGRectMake(self.view.frame.origin.x,

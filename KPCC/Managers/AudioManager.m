@@ -174,13 +174,20 @@ static const NSString *ItemStatusContext;
                 case AudioModePreroll:
 
                     if ( mvc.preRollViewController && resume) {
-                        [mvc.preRollViewController.prerollPlayer play];
+                        [mvc.preRollViewController playOrPause];
                     }
 
                     break;
 
                 default:
                     if ( self.audioPlayer != nil && [self.audioPlayer prevStatus] == AudioStatusPlaying ) {
+                        // make sure we're able to start an audio session
+                        if (![self.status beginAudioSession]) {
+                            // abort...
+                            CLS_LOG(@"Failed to start audio session after interruption.");
+                            return;
+                        }
+
                         if ([self.audioPlayer currentDates] != nil && [[self.audioPlayer currentDates] hasDates]) {
                             [self.audioPlayer seekToDate:[self.audioPlayer currentDates].curDate completion:^(BOOL finished) {
                                 CLS_LOG(@"Played by seeking after interruption.");
@@ -623,7 +630,7 @@ static const NSString *ItemStatusContext;
 
     if (resumeTime == 0) {
         CLS_LOG(@"ondemand playAudio should start from 0.");
-        [self.audioPlayer play];
+        [self playAudio];
     } else {
         // seek
         CLS_LOG(@"ondemand playAudio should seek to %f.",resumeTime);
@@ -700,6 +707,15 @@ static const NSString *ItemStatusContext;
     if ( [self currentAudioMode] == AudioModeOnboarding ) {
         self.audioPlayer.volume = 0.0f;
     }
+
+    // make sure we're able to start an audio session
+    if ([self.status beginAudioSession]) {
+        // good to go
+    } else {
+        // abort...
+        [self.status setStatus:AudioStatusPaused];
+        return;
+    }
     
     [self setUserPause:NO];
     
@@ -741,6 +757,7 @@ static const NSString *ItemStatusContext;
     
     [self takedownAudioPlayer];
     [self.status setStatus:AudioStatusStopped];
+    [self.status endAudioSession];
 }
 
 - (void)stopAllAudio {

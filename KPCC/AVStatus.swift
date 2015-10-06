@@ -76,4 +76,49 @@ public struct KPCCPlayerObserver<T> {
             return false
         }
     }
+
+    //----------
+
+    func beginAudioSession() -> Bool {
+        CLSNSLogv("beginAudioSession Called",getVaList([]))
+
+        do {
+            try AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryPlayback)
+        } catch let err as NSError {
+            CLSNSLogv("Error setting audio category: %@",getVaList([err]))
+            return false
+        }
+
+        if #available(iOS 9.0, *) {
+            do {
+                CLSNSLogv("Setting SpokenAudio mode for iOS9",getVaList([]))
+                try AVAudioSession.sharedInstance().setMode(AVAudioSessionModeSpokenAudio)
+            } catch let err as NSError {
+                CLSNSLogv("Error setting spoken audio mode: %@",getVaList([err]))
+                return false
+            }
+        }
+
+        do {
+            try AVAudioSession.sharedInstance().setActive(true)
+        } catch let err as NSError {
+            CLSNSLogv("Failed to set audio session to active: %@",getVaList([err]))
+            return false
+        }
+
+        CLSNSLogv("beginAudioSession was successful.",getVaList([]))
+
+        return true
+    }
+
+    //----------
+
+    func endAudioSession() -> Void {
+        CLSNSLogv("endAudioSession Called",getVaList([]))
+        do {
+            try AVAudioSession.sharedInstance().setActive(false)
+        } catch let err as NSError {
+            CLSNSLogv("Failed to set audio session to inactive: %@",getVaList([err]))
+        }
+    }
 }

@@ -303,11 +303,6 @@ setForOnDemandUI;
                                                  name:@"session-reset"
                                                object:nil];
     
-    
-//    // Make sure the system follows our playback status - to support the playback when the app enters the background mode.
-    [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback error:nil];
-    [[AVAudioSession sharedInstance] setActive: YES error: nil];
-
     // Config blur view.
     [self.blurView setAlpha:0.0];
     [self.blurView setTintColor:[UIColor clearColor]];
@@ -978,7 +973,7 @@ setForOnDemandUI;
                 [self.preRollViewController primeUI:^{
                     [self.preRollViewController showPreRollWithAnimation:YES completion:^(BOOL done) {
                         [self primePlaybackUI:YES];
-                        [self.preRollViewController.prerollPlayer play];
+                        [self.preRollViewController playOrPause];
                     }];
                 }];
             } else {
