@@ -709,7 +709,6 @@ setForOnDemandUI;
 
 - (void)resetInitialPlay {
     CLS_LOG(@"Resetting MVC initialPlay");
-    // FIXME: The intention here is to reset so that we can show a new preroll.
     self.initialPlay = NO;
     [self addPreRollController];
 }
@@ -741,10 +740,6 @@ setForOnDemandUI;
             self.initialPlayButton.layer.opacity = 1.0f;
             self.initialPlayButton.alpha = 1.0f;
         } completion:^(BOOL finished) {
-            
-            [self.preRollViewController.view removeFromSuperview];
-            [self.preRollViewController removeFromParentViewController];
-            self.preRollViewController = nil;
             
             self.navigationItem.title = kMainLiveStreamTitle;
             
@@ -1039,13 +1034,6 @@ setForOnDemandUI;
     
 }
 
-- (IBAction)rewindToStartTapped:(id)sender {
-    
-    if ( self.jogging ) return;
-    [self activateRewind:RewindDistanceBeginning];
-    
-}
-
 - (IBAction)prevEpisodeTapped:(id)sender {
     [[QueueManager shared] playPrev];
 }
@@ -1087,12 +1075,6 @@ setForOnDemandUI;
 
 -(void)skipForwardEvent: (MPSkipIntervalCommandEvent *)skipEvent {
     [self seekFwd30];
-}
-
-- (IBAction)backToLiveTapped:(id)sender {
-    [[SessionManager shared] fetchCurrentSchedule:^(id returnedObject) {
-        [self activateFastForward];
-    }];
 }
 
 - (IBAction)shareButtonTapped:(id)sender {
@@ -3450,6 +3432,11 @@ setForOnDemandUI;
             event = @"menuSelectionLiveStream";
             closeMenu = YES;
             if ( [AudioManager shared].currentAudioMode != AudioModeLive ) {
+                if ( self.initialPlay && [SessionManager shared].lastPrerollTime == nil) {
+                    // we're returning to live stream, most likely after having
+                    // played an on-demand program.
+                    [self resetInitialPlay];
+                }
                 [self goLive:YES];
             }
             break;
