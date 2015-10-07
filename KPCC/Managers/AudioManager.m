@@ -61,8 +61,13 @@ static const NSString *ItemStatusContext;
     [settingsQuery whereKey:@"settingName"
              containsString:@"kpccPlus"];
     [settingsQuery findObjectsInBackgroundWithBlock:^( NSArray *objects, NSError *error ) {
+        if (error) {
+            CLS_LOG(@"loadXFS Parse query errored: %@",error);
+            if (completion) completion();
+            return;
+        }
        
-        if ( !error && [objects count] > 0 ) {
+        if ( [objects count] > 0 ) {
             NSArray *names = @[@"kpccPlusStream",@"kpccPlusDriveStart",@"kpccPlusDriveEnd"];
             for ( PFObject *obj in objects) {
                 NSString *v = obj[@"settingValue"];
@@ -78,20 +83,17 @@ static const NSString *ItemStatusContext;
                         self.xfsDriveEnd = [Utils dateFromRFCString:v];
                         break;
                 }
+            }
 
-            }
-            
-            if ( completion ) {
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    CLS_LOG(@"Parse xfs information has loaded.");
-                    completion();
-                });
-            }
-            
-        } else {
-            CLS_LOG(@"Parse xfs information errored or returned nothing.");
+            self.xfsCheckComplete = YES;
         }
-        
+
+        if ( completion ) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                CLS_LOG(@"Parse xfs information has loaded.");
+                completion();
+            });
+        }
     }];
     
 }
@@ -699,6 +701,11 @@ static const NSString *ItemStatusContext;
 }
 
 - (void)playAudio {
+    if (self.audioPlayer != nil && self.audioPlayer.status == AudioStatusPlaying) {
+        // we're good
+        return;
+    }
+
     [self.status setStatus:AudioStatusWaiting];
     
     [[ContentManager shared] saveContext];

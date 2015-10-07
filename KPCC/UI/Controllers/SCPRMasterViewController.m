@@ -535,7 +535,8 @@ setForOnDemandUI;
         [self decloakForMenu:YES];
     }
     */
-    
+
+    self.homeIsNotRootViewController = NO;
     [self.navigationController popToRootViewControllerAnimated:YES];
     
     self.navigationItem.title = kMainLiveStreamTitle;
@@ -1134,10 +1135,16 @@ setForOnDemandUI;
 // regardless of what we're currently doing, get to the live stream
 - (void)goLive:(BOOL)play smooth:(BOOL)smooth {
 
-    if ([[AudioManager shared] isActiveForAudioMode:AudioModeLive]) {
-        // we're good
-        return;
-    }
+//    if ([[AudioManager shared] isActiveForAudioMode:AudioModeLive]) {
+//        // we're good
+//
+//        if (play) {
+//            // make sure that we're playing
+//            [[AudioManager shared] playAudio];
+//        }
+//
+//        return;
+//    }
 
     if ([[AudioManager shared] isActiveForAudioMode:AudioModeOnDemand]) {
         // we're currently playing on-demand content. stop that, so that
@@ -1166,7 +1173,9 @@ setForOnDemandUI;
         
         if ( play ) {
             if ( self.initialPlay ) {
-                [self playAudio:YES];
+                // if we're already active for live stream, don't force a reset
+                BOOL forceReset = ![[AudioManager shared] isActiveForAudioMode:AudioModeLive];
+                [self playAudio:forceReset];
             } else {
                 [self initialPlayTapped:nil];
             }
@@ -1926,6 +1935,8 @@ setForOnDemandUI;
     
     self.liveDescriptionLabel.text = @"LIVE";
 //    [[AudioManager shared] setCurrentAudioMode:AudioModeLive];
+
+    [[Utils del] controlXFSAvailability:YES];
 
     [[AnalyticsManager shared] screen:@"liveStreamView"];
     

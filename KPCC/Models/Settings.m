@@ -31,6 +31,9 @@
     self.userPoints = [aDecoder decodeObjectForKey:@"userPoints"];
     self.ssoKey = [aDecoder decodeObjectForKey:@"ssoKey"];
     self.ssoLoginType = [aDecoder decodeIntegerForKey:@"ssoLoginType"];
+
+    self.xfsAvailable = [aDecoder decodeBoolForKey:@"xfsAvailable"];
+    self.xfsStreamUrl = [aDecoder decodeObjectForKey:@"xfsStreamUrl"];
     
     [[Utils del] setAlarmDate:self.alarmFireDate];
     
@@ -66,6 +69,12 @@
     
     [aCoder encodeObject:self.xfsToken
                   forKey:@"xfsToken"];
+
+    [aCoder encodeBool:self.xfsAvailable
+                forKey:@"xfsAvailable"];
+    [aCoder encodeObject:self.xfsStreamUrl
+                  forKey:@"xfsStreamUrl"];
+
     [aCoder encodeObject:self.userQualityMap
                   forKey:@"userQualityMap"];
     

@@ -522,30 +522,48 @@
 #pragma mark - XFS
 - (void)xFreeStreamIsAvailableWithCompletion:(CompletionBlock)completion {
 
-    // KPCC Plus (XFS) is available if a) we have xfsDriveStart and xfsDriveEnd
-    // in AudioManager and b) now is between those two dates
-
     BOOL available = NO;
-    if ([AudioManager shared].xfsDriveStart != nil && [AudioManager shared].xfsDriveEnd != nil) {
-        // is now between these dates?
-        if (
-            [[AudioManager shared].xfsDriveStart timeIntervalSinceNow] <= 0
-            && [[AudioManager shared].xfsDriveEnd timeIntervalSinceNow] > 0
-        ) {
-            // YES!
-            available = YES;
+
+    if ([AudioManager shared].xfsCheckComplete) {
+        // KPCC Plus (XFS) is available if a) we have xfsDriveStart and xfsDriveEnd
+        // in AudioManager and b) now is between those two dates
+
+        if ([AudioManager shared].xfsDriveStart != nil && [AudioManager shared].xfsDriveEnd != nil) {
+            // is now between these dates?
+            if (
+                [[AudioManager shared].xfsDriveStart timeIntervalSinceNow] <= 0
+                && [[AudioManager shared].xfsDriveEnd timeIntervalSinceNow] > 0
+                ) {
+                // YES!
+                available = YES;
+            } else {
+                // NO
+            }
         } else {
             // NO
         }
+
+        // cache this info locally
+        [[UXmanager shared].settings setXfsAvailable:available];
+        [[UXmanager shared].settings setXfsStreamUrl:[AudioManager shared].xfsStreamUrl];
+        [[UXmanager shared] persist];
+
     } else {
-        // NO
+        // our Parse load hasn't completed, so use cached information if we have it
+        BOOL cavail = [[UXmanager shared].settings xfsAvailable];
+
+        if (cavail) {
+            CLS_LOG(@"Using cached availability for XFS stream.");
+            available = YES;
+            [AudioManager shared].xfsStreamUrl = [[UXmanager shared].settings xfsStreamUrl];
+        }
     }
 
     // last check... not available unless we have a stream URL
     if ([AudioManager shared].xfsStreamUrl == nil) {
         available = NO;
     }
- 
+
     [self setXFreeStreamIsAvailable:available];
     [[NSNotificationCenter defaultCenter] postNotificationName:@"pledge-drive-status-updated"
                                                         object:nil];

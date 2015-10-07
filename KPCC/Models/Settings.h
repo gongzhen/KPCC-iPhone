@@ -21,6 +21,8 @@
 
 
 @property (nonatomic) BOOL userHasSelectedXFS;
+@property (nonatomic) BOOL xfsAvailable;
+@property (nonatomic, strong) NSString *xfsStreamUrl;
 
 @property (nonatomic, strong) NSData *pushTokenData;
 @property (nonatomic, strong) NSString *pushTokenString;
