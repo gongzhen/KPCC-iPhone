@@ -13,6 +13,10 @@
 		0778E9151BADAE00005B4F9F /* coverart.png in Resources */ = {isa = PBXBuildFile; fileRef = 0778E9141BADAE00005B4F9F /* coverart.png */; settings = {ASSET_TAGS = (); }; };
 		07A24B4C1BA3A4F800197EB9 /* SCPRProgramTableViewHeader.xib in Resources */ = {isa = PBXBuildFile; fileRef = 07A24B4B1BA3A4F800197EB9 /* SCPRProgramTableViewHeader.xib */; settings = {ASSET_TAGS = (); }; };
 		07A24B4F1BA3A88900197EB9 /* SCPRProgramTableViewHeader.m in Sources */ = {isa = PBXBuildFile; fileRef = 07A24B4E1BA3A88900197EB9 /* SCPRProgramTableViewHeader.m */; settings = {ASSET_TAGS = (); }; };
+		07A863B11BC5BD1700DFB42A /* program_avatar_welcome-to-vinci.png in Resources */ = {isa = PBXBuildFile; fileRef = 07A863AD1BC5BD1700DFB42A /* program_avatar_welcome-to-vinci.png */; settings = {ASSET_TAGS = (); }; };
+		07A863B21BC5BD1700DFB42A /* program_avatar_welcome-to-vinci@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 07A863AE1BC5BD1700DFB42A /* program_avatar_welcome-to-vinci@2x.png */; settings = {ASSET_TAGS = (); }; };
+		07A863B31BC5BD1700DFB42A /* program_avatar_wheel-thing.png in Resources */ = {isa = PBXBuildFile; fileRef = 07A863AF1BC5BD1700DFB42A /* program_avatar_wheel-thing.png */; settings = {ASSET_TAGS = (); }; };
+		07A863B41BC5BD1700DFB42A /* program_avatar_wheel-thing@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 07A863B01BC5BD1700DFB42A /* program_avatar_wheel-thing@2x.png */; settings = {ASSET_TAGS = (); }; };
 		07EB395E1B9723ED005A8DDB /* AudioPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07EB395D1B9723ED005A8DDB /* AudioPlayer.swift */; settings = {ASSET_TAGS = (); }; };
 		07EB39601B9731BC005A8DDB /* AVObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07EB395F1B9731BC005A8DDB /* AVObserver.swift */; settings = {ASSET_TAGS = (); }; };
 		07EB39621B973200005A8DDB /* AVStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07EB39611B973200005A8DDB /* AVStatus.swift */; settings = {ASSET_TAGS = (); }; };
@@ -349,6 +353,10 @@
 		07A24B4B1BA3A4F800197EB9 /* SCPRProgramTableViewHeader.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SCPRProgramTableViewHeader.xib; sourceTree = "<group>"; };
 		07A24B4D1BA3A88900197EB9 /* SCPRProgramTableViewHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCPRProgramTableViewHeader.h; sourceTree = "<group>"; };
 		07A24B4E1BA3A88900197EB9 /* SCPRProgramTableViewHeader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SCPRProgramTableViewHeader.m; sourceTree = "<group>"; };
+		07A863AD1BC5BD1700DFB42A /* program_avatar_welcome-to-vinci.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "program_avatar_welcome-to-vinci.png"; sourceTree = "<group>"; };
+		07A863AE1BC5BD1700DFB42A /* program_avatar_welcome-to-vinci@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "program_avatar_welcome-to-vinci@2x.png"; sourceTree = "<group>"; };
+		07A863AF1BC5BD1700DFB42A /* program_avatar_wheel-thing.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "program_avatar_wheel-thing.png"; sourceTree = "<group>"; };
+		07A863B01BC5BD1700DFB42A /* program_avatar_wheel-thing@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "program_avatar_wheel-thing@2x.png"; sourceTree = "<group>"; };
 		07EB395D1B9723ED005A8DDB /* AudioPlayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioPlayer.swift; sourceTree = "<group>"; };
 		07EB395F1B9731BC005A8DDB /* AVObserver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AVObserver.swift; sourceTree = "<group>"; };
 		07EB39611B973200005A8DDB /* AVStatus.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AVStatus.swift; sourceTree = "<group>"; };
@@ -1023,6 +1031,10 @@
 		52EFF79F19C368C00059A0E3 /* program_avatars */ = {
 			isa = PBXGroup;
 			children = (
+				07A863AD1BC5BD1700DFB42A /* program_avatar_welcome-to-vinci.png */,
+				07A863AE1BC5BD1700DFB42A /* program_avatar_welcome-to-vinci@2x.png */,
+				07A863AF1BC5BD1700DFB42A /* program_avatar_wheel-thing.png */,
+				07A863B01BC5BD1700DFB42A /* program_avatar_wheel-thing@2x.png */,
 				25E8BD9C1ABA034D007B99EB /* program_avatar_invisibilia.png */,
 				25E8BD9D1ABA034D007B99EB /* program_avatar_invisibilia@2x.png */,
 				52EFF7A019C368C00059A0E3 /* program_avatar_airtalk.png */,
@@ -1632,7 +1644,9 @@
 				52EFF79119C3688D0059A0E3 /* menu-glasses@2x.png in Resources */,
 				768C0675199590CC00F829EB /* FreigSanProBoldIt.otf in Resources */,
 				523E86D219C8A292006FC366 /* SCPRProgramDetailViewController.xib in Resources */,
+				07A863B41BC5BD1700DFB42A /* program_avatar_wheel-thing@2x.png in Resources */,
 				76A308E518C8FB940065D4B1 /* Images.xcassets in Resources */,
+				07A863B31BC5BD1700DFB42A /* program_avatar_wheel-thing.png in Resources */,
 				253030161B717CDD00B88468 /* SCPRProfileViewController.xib in Resources */,
 				52CF917619FEF306007BCFA8 /* btn_play.png in Resources */,
 				52CF917719FEF306007BCFA8 /* btn_play@2x.png in Resources */,
@@ -1719,6 +1733,7 @@
 				258C5D301B164C2100C19BE0 /* stream-antenna@2x.png in Resources */,
 				52EFF81019C368C00059A0E3 /* program_avatar_latino-usa@2x.png in Resources */,
 				52EFF82219C368C00059A0E3 /* program_avatar_morning-edition.png in Resources */,
+				07A863B21BC5BD1700DFB42A /* program_avatar_welcome-to-vinci@2x.png in Resources */,
 				25BBCD8C1A893C350015071E /* btn_forward_30@2x.png in Resources */,
 				768C0673199590CC00F829EB /* FreigSanProBold.otf in Resources */,
 				768C0677199590CC00F829EB /* FreigSanProBook.otf in Resources */,
@@ -1800,6 +1815,7 @@
 				52EFF86819C368C00059A0E3 /* program_avatar_weekend-edition-sunday@2x.png in Resources */,
 				52EFF84819C368C00059A0E3 /* program_avatar_splendid-table@2x.png in Resources */,
 				254CC6971A23A7A600560805 /* onboarding-logo@2x.png in Resources */,
+				07A863B11BC5BD1700DFB42A /* program_avatar_welcome-to-vinci.png in Resources */,
 				52EFF82419C368C00059A0E3 /* program_avatar_morning-edition@2x.png in Resources */,
 				768C06521995905D00F829EB /* btn_live_rewind_small.png in Resources */,
 				25263A881A32669E00BD5FF9 /* onboarding3.mp3 in Resources */,
