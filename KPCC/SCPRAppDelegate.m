@@ -510,7 +510,6 @@
 }
 
 - (void)controlXFSAvailability:(BOOL)available {
-    
 
     // Override here, kind of kludgy, but...
     if ( !self.xfsInterface.removeOnBalloonDismissal ) {
@@ -537,7 +536,11 @@
     if ( [self.masterViewController scrubbing] ) {
         available = NO;
     }
-    
+
+    if ( ![[UXmanager shared] userHasSeenOnboarding]) {
+        available = NO;
+    }
+
     self.xfsInterface.view.alpha = available ? 1.0f : 0.0f;
 }
 
