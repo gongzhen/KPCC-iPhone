@@ -790,10 +790,17 @@
 
         if ( !spd ) return YES;
 
-        CLS_LOG(@"sessionIsExpired: Returning after %f seconds.",-1 * [spd timeIntervalSinceNow]);
+        double secs = -1 * [spd timeIntervalSinceNow];
+
+        CLS_LOG(@"sessionIsExpired: Returning after %f seconds.",secs);
 
         // a session is expired if it was last active more than one hour ago
-        if (-1 * [spd timeIntervalSinceNow] > kSessionIdleExpiration) {
+
+        if (secs > kSessionIdleExpiration) {
+            // log a mixpanel event
+            [[AnalyticsManager shared] logEvent:@"liveStreamSessionExpired"
+                                 withParameters:@{ @"idle_seconds" : [NSNumber numberWithDouble:secs] }];
+
             return YES;
         }
 
