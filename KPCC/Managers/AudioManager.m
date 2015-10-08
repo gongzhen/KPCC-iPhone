@@ -767,7 +767,11 @@ static const NSString *ItemStatusContext;
     
     [self takedownAudioPlayer];
     [self.status setStatus:AudioStatusStopped];
-    [self.status endAudioSession];
+
+    // FIXME: This is dirty, but during onboarding we have two players running at once.
+    if ([[UXmanager shared].settings userHasViewedOnboarding]) {
+        [self.status endAudioSession];
+    }
 }
 
 - (void)stopAllAudio {
