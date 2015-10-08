@@ -2900,8 +2900,12 @@ setForOnDemandUI;
     
     self.pulldownMenu.alpha = 1.0f;
     [self.liveProgressViewController hide];
-    
-    [self dismissXFSCoachingBalloon];
+
+    // FIXME: I hate having to make this a conditional here... there has to be
+    // a better signal that lets us keep the balloon into normal view
+    if ( [[UXmanager shared].settings userHasViewedOnboarding]) {
+        [self dismissXFSCoachingBalloon];
+    }
     
     self.navigationItem.title = @"Menu";
     
