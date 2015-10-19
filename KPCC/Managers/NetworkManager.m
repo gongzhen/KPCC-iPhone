@@ -226,17 +226,12 @@ static NetworkManager *singleton = nil;
 
 
 - (void)fetchTritonAd:(NSString *)params completion:(void (^)(TritonAd* tritonAd))completion {
-    #if TARGET_IPHONE_SIMULATOR
-    // EWR -- short-circuit preroll requests in the simulator
-    completion(nil);
-    return;
-    #endif
-
-
     AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
     manager.responseSerializer = [AFHTTPResponseSerializer serializer];
     NSString *idfa = [[[ASIdentifierManager sharedManager] advertisingIdentifier] UUIDString];
-    NSString *tritonEndpoint = [NSString stringWithFormat:@"http://adserver.adtechus.com/?adrawdata/3.0/5511.1/3590534/0/0/header=yes;cookie=no;adct=text/xml;guid=%@",idfa];
+    
+    NSDictionary *globalConfig = [Utils globalConfig];
+    NSString *tritonEndpoint = [NSString stringWithFormat:globalConfig[@"AdServer"][@"Preroll"],idfa];
     
     
     [manager GET:tritonEndpoint parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
@@ -256,15 +251,18 @@ static NetworkManager *singleton = nil;
 }
 
 - (void)sendImpressionToTriton:(NSString*)impressionURL completion:(void (^)(BOOL success))completion {
-    
-    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
-    manager.responseSerializer = [AFHTTPResponseSerializer serializer];
-    [manager GET:impressionURL parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
-        completion(YES);
-    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        NSLog(@"send impression failure? %@", error);
-        completion(NO);
-    }];
+    if (impressionURL && !SEQ(impressionURL,@"")) {
+        AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+        manager.responseSerializer = [AFHTTPResponseSerializer serializer];
+        [manager GET:impressionURL parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
+            completion(YES);
+        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+            NSLog(@"send impression failure? %@", error);
+            completion(NO);
+        }];
+    } else {
+        NSLog(@"sendImpression: No impression URL.");
+    }
 }
 
 - (NSString*)serverBase {
