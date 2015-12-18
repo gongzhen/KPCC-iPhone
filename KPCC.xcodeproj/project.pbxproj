@@ -7,21 +7,20 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		07139B841B95E701007DBA91 /* ScheduleOccurrence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07139B831B95E701007DBA91 /* ScheduleOccurrence.swift */; settings = {ASSET_TAGS = (); }; };
-		075636581B9FBD91001D1C55 /* Pods.enterprise.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 075636571B9FBD91001D1C55 /* Pods.enterprise.xcconfig */; settings = {ASSET_TAGS = (); }; };
+		07139B841B95E701007DBA91 /* ScheduleOccurrence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07139B831B95E701007DBA91 /* ScheduleOccurrence.swift */; };
 		0775D0B71B8C1A6E009EDAE9 /* Empty.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0775D0B61B8C1A6E009EDAE9 /* Empty.mm */; };
-		0778E9151BADAE00005B4F9F /* coverart.png in Resources */ = {isa = PBXBuildFile; fileRef = 0778E9141BADAE00005B4F9F /* coverart.png */; settings = {ASSET_TAGS = (); }; };
-		07A24B4C1BA3A4F800197EB9 /* SCPRProgramTableViewHeader.xib in Resources */ = {isa = PBXBuildFile; fileRef = 07A24B4B1BA3A4F800197EB9 /* SCPRProgramTableViewHeader.xib */; settings = {ASSET_TAGS = (); }; };
-		07A24B4F1BA3A88900197EB9 /* SCPRProgramTableViewHeader.m in Sources */ = {isa = PBXBuildFile; fileRef = 07A24B4E1BA3A88900197EB9 /* SCPRProgramTableViewHeader.m */; settings = {ASSET_TAGS = (); }; };
-		07A863B11BC5BD1700DFB42A /* program_avatar_welcome-to-vinci.png in Resources */ = {isa = PBXBuildFile; fileRef = 07A863AD1BC5BD1700DFB42A /* program_avatar_welcome-to-vinci.png */; settings = {ASSET_TAGS = (); }; };
-		07A863B21BC5BD1700DFB42A /* program_avatar_welcome-to-vinci@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 07A863AE1BC5BD1700DFB42A /* program_avatar_welcome-to-vinci@2x.png */; settings = {ASSET_TAGS = (); }; };
-		07A863B31BC5BD1700DFB42A /* program_avatar_wheel-thing.png in Resources */ = {isa = PBXBuildFile; fileRef = 07A863AF1BC5BD1700DFB42A /* program_avatar_wheel-thing.png */; settings = {ASSET_TAGS = (); }; };
-		07A863B41BC5BD1700DFB42A /* program_avatar_wheel-thing@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 07A863B01BC5BD1700DFB42A /* program_avatar_wheel-thing@2x.png */; settings = {ASSET_TAGS = (); }; };
-		07EB395E1B9723ED005A8DDB /* AudioPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07EB395D1B9723ED005A8DDB /* AudioPlayer.swift */; settings = {ASSET_TAGS = (); }; };
-		07EB39601B9731BC005A8DDB /* AVObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07EB395F1B9731BC005A8DDB /* AVObserver.swift */; settings = {ASSET_TAGS = (); }; };
-		07EB39621B973200005A8DDB /* AVStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07EB39611B973200005A8DDB /* AVStatus.swift */; settings = {ASSET_TAGS = (); }; };
-		07EB39641B989A09005A8DDB /* NowPlayingManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07EB39631B989A09005A8DDB /* NowPlayingManager.swift */; settings = {ASSET_TAGS = (); }; };
-		07EB39671B9A3D84005A8DDB /* SReachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07EB39661B9A3D84005A8DDB /* SReachability.swift */; settings = {ASSET_TAGS = (); }; };
+		0778E9151BADAE00005B4F9F /* coverart.png in Resources */ = {isa = PBXBuildFile; fileRef = 0778E9141BADAE00005B4F9F /* coverart.png */; };
+		07A24B4C1BA3A4F800197EB9 /* SCPRProgramTableViewHeader.xib in Resources */ = {isa = PBXBuildFile; fileRef = 07A24B4B1BA3A4F800197EB9 /* SCPRProgramTableViewHeader.xib */; };
+		07A24B4F1BA3A88900197EB9 /* SCPRProgramTableViewHeader.m in Sources */ = {isa = PBXBuildFile; fileRef = 07A24B4E1BA3A88900197EB9 /* SCPRProgramTableViewHeader.m */; };
+		07A863B11BC5BD1700DFB42A /* program_avatar_welcome-to-vinci.png in Resources */ = {isa = PBXBuildFile; fileRef = 07A863AD1BC5BD1700DFB42A /* program_avatar_welcome-to-vinci.png */; };
+		07A863B21BC5BD1700DFB42A /* program_avatar_welcome-to-vinci@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 07A863AE1BC5BD1700DFB42A /* program_avatar_welcome-to-vinci@2x.png */; };
+		07A863B31BC5BD1700DFB42A /* program_avatar_wheel-thing.png in Resources */ = {isa = PBXBuildFile; fileRef = 07A863AF1BC5BD1700DFB42A /* program_avatar_wheel-thing.png */; };
+		07A863B41BC5BD1700DFB42A /* program_avatar_wheel-thing@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 07A863B01BC5BD1700DFB42A /* program_avatar_wheel-thing@2x.png */; };
+		07EB395E1B9723ED005A8DDB /* AudioPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07EB395D1B9723ED005A8DDB /* AudioPlayer.swift */; };
+		07EB39601B9731BC005A8DDB /* AVObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07EB395F1B9731BC005A8DDB /* AVObserver.swift */; };
+		07EB39621B973200005A8DDB /* AVStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07EB39611B973200005A8DDB /* AVStatus.swift */; };
+		07EB39641B989A09005A8DDB /* NowPlayingManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07EB39631B989A09005A8DDB /* NowPlayingManager.swift */; };
+		07EB39671B9A3D84005A8DDB /* SReachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07EB39661B9A3D84005A8DDB /* SReachability.swift */; };
 		25263A881A32669E00BD5FF9 /* onboarding3.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 25263A871A32669E00BD5FF9 /* onboarding3.mp3 */; };
 		253030151B717CDD00B88468 /* SCPRProfileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 253030131B717CDD00B88468 /* SCPRProfileViewController.m */; };
 		253030161B717CDD00B88468 /* SCPRProfileViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 253030141B717CDD00B88468 /* SCPRProfileViewController.xib */; };
@@ -1574,7 +1573,7 @@
 			attributes = {
 				CLASSPREFIX = SCPR;
 				LastSwiftUpdateCheck = 0700;
-				LastUpgradeCheck = 0700;
+				LastUpgradeCheck = 0720;
 				ORGANIZATIONNAME = SCPR;
 				TargetAttributes = {
 					76A308C218C8FB940065D4B1 = {
@@ -1758,7 +1757,6 @@
 				25F30AED1AFAB6B700F27187 /* SCPRCompleteScheduleViewController.xib in Resources */,
 				B5F9F74A1ABCE8FD00115DB3 /* icon-clock@2x.png in Resources */,
 				B5F9F7491ABCE8FD00115DB3 /* icon-clock.png in Resources */,
-				075636581B9FBD91001D1C55 /* Pods.enterprise.xcconfig in Resources */,
 				52EFF79B19C3688D0059A0E3 /* menu-settings.png in Resources */,
 				76A308D118C8FB940065D4B1 /* InfoPlist.strings in Resources */,
 				258C5D261B10048A00C19BE0 /* SCPRUpcomingProgramViewController7.xib in Resources */,
