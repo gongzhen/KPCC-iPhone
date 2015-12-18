@@ -13,7 +13,6 @@
 @property BOOL userHasViewedOnboarding;
 @property BOOL userHasViewedOnDemandOnboarding;
 @property BOOL userHasViewedScrubbingOnboarding;
-@property BOOL userHasConnectedWithKochava;
 @property BOOL userHasViewedLiveScrubbingOnboarding;
 @property BOOL userHasViewedScheduleOnboarding;
 @property BOOL userHasColdStartedAudioOnce;
@@ -22,10 +21,11 @@
 
 
 @property (nonatomic) BOOL userHasSelectedXFS;
+@property (nonatomic) BOOL xfsAvailable;
+@property (nonatomic, strong) NSString *xfsStreamUrl;
 
 @property (nonatomic, strong) NSData *pushTokenData;
 @property (nonatomic, strong) NSString *pushTokenString;
-@property (nonatomic, strong) NSString *latestPushJson;
 @property (nonatomic, strong) NSDate *lastBookmarkSweep;
 @property (nonatomic, strong) NSDate *alarmFireDate;
 @property (nonatomic, strong) NSString *xfsToken;

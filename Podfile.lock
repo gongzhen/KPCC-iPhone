@@ -48,7 +48,6 @@ PODS:
     - FBSDKCoreKit/arc
   - FBSDKLoginKit (4.4.0):
     - FBSDKCoreKit
-  - FlurrySDK/FlurrySDK (6.6.0)
   - FXBlurView (1.6.3)
   - Google/Analytics (1.0.7):
     - Google/Core
@@ -57,14 +56,13 @@ PODS:
     - GoogleNetworkingUtilities (~> 1.0)
     - GoogleSymbolUtilities (~> 1.0)
     - GoogleUtilities (~> 1.0)
-  - GoogleAnalytics (3.12.0)
+  - GoogleAnalytics (3.13.0)
   - GoogleNetworkingUtilities (1.0.0):
     - GoogleSymbolUtilities (~> 1.0)
   - GoogleSymbolUtilities (1.0.0)
   - GoogleUtilities (1.0.1):
     - GoogleSymbolUtilities (~> 1.0)
   - ISO8601DateFormatter (0.7)
-  - JDStatusBarNotification (1.5.2)
   - JWTDecode (0.2.2)
   - KSReachability (1.4.1)
   - libextobjc (0.4.1):
@@ -136,15 +134,11 @@ PODS:
   - Mixpanel (2.8.2):
     - Mixpanel/Mixpanel (= 2.8.2)
   - Mixpanel/Mixpanel (2.8.2)
-  - NewRelicAgent (5.1.2)
   - NSData+Base64 (1.0.0)
   - OAuthCore (0.0.1):
     - NSData+Base64
-  - Parse (1.7.5.3):
+  - Parse (1.8.1):
     - Bolts/Tasks (>= 1.2.0)
-  - ParseCrashReporting (1.7.5.3):
-    - Bolts/Tasks (>= 1.2.0)
-    - Parse (~> 1.7.5.3)
   - pop (1.0.7)
   - PSAlertView (2.0.3)
   - SimpleKeychain (0.4.0)
@@ -155,10 +149,8 @@ PODS:
 
 DEPENDENCIES:
   - AFNetworking (~> 2.0)
-  - FlurrySDK/FlurrySDK
   - FXBlurView (~> 1.6)
-  - Google/Analytics
-  - JDStatusBarNotification
+  - Google/Analytics (~> 1.0.7)
   - JWTDecode (~> 0.2)
   - KSReachability
   - Lock (~> 1.12)
@@ -166,9 +158,7 @@ DEPENDENCIES:
   - Lock-Twitter (~> 1.0)
   - Lock/Core (~> 1.16)
   - Mixpanel (~> 2.7)
-  - NewRelicAgent
   - Parse (~> 1.6)
-  - ParseCrashReporting
   - pop (~> 1.0)
   - SimpleKeychain
   - XMLDictionary (~> 1.4)
@@ -180,15 +170,13 @@ SPEC CHECKSUMS:
   CocoaLumberjack: 019d1361244274a6138c788c6cb80baabc13fb8f
   FBSDKCoreKit: 75bdd75c980e811db218488d99dd93b7740f4474
   FBSDKLoginKit: 02a9254a4c132412fa03577b0d53e936d068a7fb
-  FlurrySDK: 8478625434c06b323338f776758162756d92c3ed
   FXBlurView: c6d23f3d35af2c6282296a2930f61c6e2c788d01
   Google: 875f5a8ade86dd02e36586e4a54814843938c7f6
-  GoogleAnalytics: ef2e0b800ef3c1e62688cdfc959e0d3132bc246c
+  GoogleAnalytics: fcf1f1cad57ae1a9a53520018f0f680ceeeb8b49
   GoogleNetworkingUtilities: 292992ab31b7b4ba32809a0e8b40e324cdfb2c0c
   GoogleSymbolUtilities: a7b0feed1fe667c8d5e647177938d0ecd62d6948
   GoogleUtilities: e3475cd4d45134221d2f3f3626095a1c49b62041
   ISO8601DateFormatter: ab926648eebe497f4d167c0fd083992f959f1274
-  JDStatusBarNotification: a36d09ccbb047217572b074a61e7ca10dddc5f0a
   JWTDecode: c193d229af74dd72121515c976f930ccbed96a2a
   KSReachability: ddf4af6e6488c45c5c41c59e72d72d078062ee28
   libextobjc: a650fc1bf489a3d3a9bc2e621efa3e1006fc5471
@@ -197,15 +185,13 @@ SPEC CHECKSUMS:
   Lock-Twitter: 8168e4c3861f6cc6581d1b8d635f41e29a607cb3
   LUKeychainAccess: 6479edb12cf06e11ff3336f796959eedbc58f714
   Mixpanel: f4d71ac2a306e7cda6ad03d4a2be249a0fd7a967
-  NewRelicAgent: 7089e6a018d350bff1be872881ffd468af292fb0
   NSData+Base64: 4e84902c4db907a15673474677e57763ef3903e4
   OAuthCore: 43dce261db846a1fe20234d95654257e00e78581
-  Parse: 373adbb1ad2e34d383542c3b28f678c49ebe4881
-  ParseCrashReporting: 36d2e2770d7502d943b81c013acd5193946ced46
+  Parse: 2155953b1565494095d5fa5c83b3c77f2c677c09
   pop: 628ffc631644601567ee8bfaaaea493ebd7d0923
   PSAlertView: 16d35f5dba549418492cf68a750d4f0dca21f4a2
   SimpleKeychain: ed7fcbc2a235ad6919a3d2385ed4b44ab866d874
   TWReverseAuth: d2deef3521fa6bee32eabab67f114c2c4a53d4f5
   XMLDictionary: f9f51601ba76678b594ab485f2b00ec1fed23724
 
-COCOAPODS: 0.38.0
+COCOAPODS: 0.38.2

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="7706" systemVersion="14D136" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="8191" systemVersion="15A279b" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7703"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="8154"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="SCPRProgramsListViewController">
@@ -20,6 +20,7 @@
             <subviews>
                 <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" image="program_tile_generic.jpg" translatesAutoresizingMaskIntoConstraints="NO" id="52I-qm-4a2">
                     <rect key="frame" x="180" y="236" width="240" height="128"/>
+                    <animations/>
                     <constraints>
                         <constraint firstAttribute="height" constant="504" id="eFb-is-7pH"/>
                     </constraints>
@@ -36,15 +37,18 @@
                 </imageView>
                 <view hidden="YES" alpha="0.29999999999999999" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="w9p-jX-a1q" userLabel="Dark Bg View">
                     <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                    <animations/>
                     <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                     <color key="tintColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                 </view>
                 <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="NvT-Nl-DLX" customClass="FXBlurView">
                     <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                    <animations/>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                 </view>
                 <tableView clipsSubviews="YES" tag="123" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="62" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="Svz-zY-sUZ">
                     <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                    <animations/>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                     <color key="separatorColor" red="0.87058823529411766" green="0.89411764705882346" blue="1" alpha="0.29999999999999999" colorSpace="calibratedRGB"/>
                     <inset key="separatorInset" minX="8" minY="0.0" maxX="8" maxY="0.0"/>
@@ -55,6 +59,7 @@
                     </connections>
                 </tableView>
             </subviews>
+            <animations/>
             <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
             <constraints>
                 <constraint firstItem="Svz-zY-sUZ" firstAttribute="leading" secondItem="w9p-jX-a1q" secondAttribute="leading" id="8dr-Vj-tBJ"/>

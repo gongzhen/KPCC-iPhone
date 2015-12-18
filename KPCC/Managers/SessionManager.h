@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "Utils.h"
 #import "Program.h"
+#import "KPCC-Swift.h"
 
 typedef NS_ENUM(NSUInteger, OnDemandFinishedReason) {
     OnDemandFinishedReasonEpisodeEnd = 0,
@@ -30,10 +31,10 @@ static CGFloat kVirtualBehindLiveTolerance = 10.0f;
 static CGFloat kVirtualMediumBehindLiveTolerance = 24.0f;
 static CGFloat kVirtualLargeBehindLiveTolerance = 120.0f;
 
-#ifndef PRODUCTION
-static NSInteger kProgramPollingPressure = 5;
+#ifdef DEBUG
+static NSInteger kSessionIdleExpiration = 30;
 #else
-static NSInteger kProgramPollingPressure = 5;
+static NSInteger kSessionIdleExpiration = 3600;
 #endif
 
 @interface SessionManager : NSObject
@@ -43,11 +44,9 @@ static NSInteger kProgramPollingPressure = 5;
 @property (nonatomic, copy) NSDate *sessionLeftDate;
 @property (nonatomic, copy) NSDate *sessionReturnedDate;
 @property (nonatomic, copy) NSDate *sessionPausedDate;
-@property (nonatomic, copy) NSDate *lastProgramUpdate;
 @property (nonatomic, copy) NSDate *lastValidCurrentPlayerTime;
+@property (nonatomic, copy) NSDate *lastPrerollTime;
 
-@property (nonatomic, copy) NSString *liveSessionID;
-@property (nonatomic, copy) NSString *odSessionID;
 @property (nonatomic, strong) NSTimer *programUpdateTimer;
 @property (nonatomic,strong) NSDictionary *onboardingAudio;
 
@@ -55,9 +54,6 @@ static NSInteger kProgramPollingPressure = 5;
 @property (nonatomic) NSInteger originalSleepTimerRequest;
 
 @property NSTimer *sleepTimer;
-
-@property NSInteger prevCheckedMinute;
-@property NSTimeInterval localLiveTime;
 
 @property int64_t liveStreamSessionBegan;
 @property int64_t liveStreamSessionEnded;
@@ -67,7 +63,6 @@ static NSInteger kProgramPollingPressure = 5;
 @property BOOL useLocalNotifications;
 @property BOOL onboardingRewound;
 @property BOOL expiring;
-@property BOOL userLeavingForClickthrough;
 @property BOOL updaterArmed;
 @property BOOL sleepTimerArmed;
 @property BOOL xFreeStreamIsAvailable;
@@ -79,18 +74,16 @@ static NSInteger kProgramPollingPressure = 5;
 @property NSInteger peakDrift;
 @property NSInteger minDrift;
 @property NSInteger curDrift;
-@property (nonatomic, strong) Program *currentProgram;
+@property (nonatomic, strong) ScheduleOccurrence *currentSchedule;
 
 @property NSInteger programFetchFailoverCount;
 
-- (void)fetchCurrentProgram:(CompletionBlockWithValue)completed;
-- (void)fetchProgramAtDate:(NSDate*)date completed:(CompletionBlockWithValue)completed;
+- (void)fetchCurrentSchedule:(CompletionBlockWithValue)completed;
+- (void)fetchScheduleAtDate:(NSDate*)date completed:(CompletionBlockWithValue)completed;
 - (void)fetchScheduleForTodayAndTomorrow:(CompletionBlockWithValue)completed;
 
 - (void)fetchOnboardingProgramWithSegment:(NSInteger)segment completed:(CompletionBlockWithValue)completed;
 
-- (void)armProgramUpdater;
-- (void)disarmProgramUpdater;
 - (void)resetCache;
 - (void)checkProgramUpdate:(BOOL)force;
 
@@ -104,17 +97,13 @@ static NSInteger kProgramPollingPressure = 5;
 - (BOOL)sessionIsInBackground;
 - (void)tickSleepTimer;
 
-// Drift
 - (NSDate*)vLive;
 - (NSDate*)vNow;
-- (NSInteger)calculatedDriftValue;
 
 - (NSTimeInterval)secondsBehindLive;
 - (NSTimeInterval)virtualSecondsBehindLive;
-- (NSInteger)medianDrift;
 
 - (void)processNotification:(UILocalNotification*)programUpdate;
-@property (NS_NONATOMIC_IOSONLY) BOOL ignoreProgramUpdating;
 @property (NS_NONATOMIC_IOSONLY) BOOL sessionIsExpired;
 @property (NS_NONATOMIC_IOSONLY) BOOL sessionIsBehindLive;
 
@@ -133,8 +122,6 @@ static NSInteger kProgramPollingPressure = 5;
 @property BOOL rewindSessionIsHot;
 @property BOOL rewindSessionWillBegin;
 @property BOOL odSessionIsHot;
-@property BOOL seekForwardRequested;
-@property BOOL prerollDirty;
 @property BOOL genericImageForProgram;
 @property BOOL userIsSwitchingToKPCCPlus;
 
@@ -148,15 +135,16 @@ static NSInteger kProgramPollingPressure = 5;
 - (BOOL)virtualLiveAudioMode;
 
 - (void)handleSessionMovingToBackground;
-- (void)handleSessionReactivation;
+- (void)handleSessionMovingToForeground;
 
 - (void)invalidateSession;
-- (void)expireSession;
+- (void)expireSession:(BOOL)willPlay;
+- (void)expireSessionIfExpired:(BOOL)willPlay;
 
 - (void)startAudioSession;
 
-- (NSString*)startLiveSession;
-- (NSString*)endLiveSession;
+- (void)startLiveSession;
+- (void)endLiveSession;
 - (void)trackLiveSession;
 - (void)trackRewindSession;
 
@@ -164,12 +152,8 @@ static NSInteger kProgramPollingPressure = 5;
 
 
 
-- (NSString*)startOnDemandSession;
-- (NSString*)endOnDemandSessionWithReason:(OnDemandFinishedReason)reason;
-- (void)trackOnDemandSession;
-- (BOOL)programDirty:(Program*)p;
-
-- (NSString*)prettyStringForPauseExplanation:(PauseExplanation)explanation;
+- (void)startOnDemandSession;
+- (void)endOnDemandSessionWithReason:(OnDemandFinishedReason)reason;
 
 - (long)bufferLength;
 

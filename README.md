@@ -16,11 +16,6 @@ Config
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>Kochava</key>
-	<dict>
-		<key>AppKey</key>
-		<string>...</string>
-	</dict>
 	<key>LinkedIn</key>
 	<dict>
 		<key>AppKey</key>

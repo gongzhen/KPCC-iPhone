@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="8191" systemVersion="15A279b" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="8154"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="SCPRProgramTableViewHeader">
+            <connections>
+                <outlet property="bottomLine" destination="lai-Ie-IDY" id="l89-7y-7FR"/>
+                <outlet property="captionLabel" destination="Hbq-qL-99e" id="Xsr-xA-yOl"/>
+                <outlet property="topLine" destination="zim-VU-7Lb" id="zNn-Bp-0V2"/>
+                <outlet property="view" destination="iN0-l3-epB" id="vL3-bF-2Wl"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB">
+            <rect key="frame" x="0.0" y="0.0" width="600" height="31"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="zim-VU-7Lb" userLabel="TopLine">
+                    <rect key="frame" x="0.0" y="0.0" width="600" height="1"/>
+                    <animations/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="1" id="sgV-F9-tDb"/>
+                    </constraints>
+                </view>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lai-Ie-IDY" userLabel="BottomLine">
+                    <rect key="frame" x="0.0" y="30" width="600" height="1"/>
+                    <animations/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="1" id="cFB-A4-2IT"/>
+                    </constraints>
+                </view>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Hbq-qL-99e" userLabel="CaptionLabel">
+                    <rect key="frame" x="15" y="5" width="42" height="21"/>
+                    <animations/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="21" id="4QI-B4-1Ok"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                    <nil key="highlightedColor"/>
+                </label>
+            </subviews>
+            <animations/>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+            <constraints>
+                <constraint firstItem="zim-VU-7Lb" firstAttribute="trailing" secondItem="lai-Ie-IDY" secondAttribute="trailing" id="J3f-ZF-f6g"/>
+                <constraint firstItem="Hbq-qL-99e" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="15" id="WS7-FW-ypS"/>
+                <constraint firstItem="zim-VU-7Lb" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="alY-Gf-WsO"/>
+                <constraint firstItem="zim-VU-7Lb" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="nsT-oP-ekV"/>
+                <constraint firstAttribute="trailing" secondItem="zim-VU-7Lb" secondAttribute="trailing" id="rfp-y5-7oT"/>
+                <constraint firstAttribute="bottom" secondItem="lai-Ie-IDY" secondAttribute="bottom" id="v4q-jr-KWj"/>
+                <constraint firstItem="zim-VU-7Lb" firstAttribute="leading" secondItem="lai-Ie-IDY" secondAttribute="leading" id="yWa-D2-x27"/>
+                <constraint firstItem="Hbq-qL-99e" firstAttribute="top" secondItem="zim-VU-7Lb" secondAttribute="bottom" constant="4" id="zNa-do-vcz"/>
+            </constraints>
+            <nil key="simulatedStatusBarMetrics"/>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+        </view>
+    </objects>
+</document>

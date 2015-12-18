@@ -10,12 +10,7 @@
 #import <CoreData/CoreData.h>
 #import "SCPRAppDelegate.h"
 
-#ifndef PRODUCTION
 #define kBookmarkPreservationTolerance 60*60*24*90
-#else
-#define kBookmarkPreservationTolerance 60*60*24*90
-#endif
-
 #define kBookmarkCleaningFrequency 60*60*24
 
 @class Bookmark;

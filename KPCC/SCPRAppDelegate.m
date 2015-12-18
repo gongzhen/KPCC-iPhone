@@ -10,70 +10,27 @@
 #import "SCPRMasterViewController.h"
 #import "SCPRNavigationController.h"
 #import <AVFoundation/AVFoundation.h>
-#import "Flurry.h"
 #import "SessionManager.h"
 #import "NetworkManager.h"
 #import "SCPROnboardingViewController.h"
 #import "UXmanager.h"
 #import "AnalyticsManager.h"
 #import <Parse/Parse.h>
-#import <ParseCrashReporting.h>
 
-#ifdef ENABLE_TESTFLIGHT
-#import "TestFlight.h"
-#endif
-
-
-
-
+#import "KPCC-Swift.h"
 
 @implementation SCPRAppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-    
-    //[[AudioManager shared] resetPlayer];
-    
-    NSError* error;
-    [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback error:&error];
-    [[AVAudioSession sharedInstance] setActive:YES error:&error];
-    
-    NSString *path = [[NSBundle mainBundle] pathForResource:@"Config" ofType:@"plist"];
-    NSDictionary *globalConfig = [[NSDictionary alloc] initWithContentsOfFile:path];
+
+    NSDictionary *globalConfig = [Utils globalConfig];
     
     [[AnalyticsManager shared] setup];
     A0Lock *lock = [[UXmanager shared] lock];
     [lock applicationLaunchedWithOptions:launchOptions];
-    
-#ifndef PRODUCTION
-    //[[UXmanager shared].settings setSsoLoginType:SSOTypeNone];
-    //[[UXmanager shared].settings setSsoKey:nil];
-    //[[UXmanager shared] persist];
-    //[[UXmanager shared].settings setUserHasViewedOnboarding:NO];
-    //[[UXmanager shared].settings setUserHasViewedOnDemandOnboarding:NO];
-    [[UXmanager shared].settings setUserHasSelectedXFS:NO];
-    [[UXmanager shared].settings setXfsToken:@""];
-    [[UXmanager shared].settings setUserHasViewedXFSOnboarding:NO];
-#ifdef TESTING_SCRUBBER
-    [[UXmanager shared].settings setUserHasViewedOnDemandOnboarding:NO];
-    [[UXmanager shared].settings setUserHasViewedScrubbingOnboarding:NO];
-    [[UXmanager shared].settings setUserHasViewedLiveScrubbingOnboarding:NO];
-    [[UXmanager shared].settings setUserHasViewedScheduleOnboarding:NO];
-#endif
-    [[UXmanager shared] persist];
-#endif
-    
-#ifndef TURN_OFF_SANDBOX_CONFIG
-    
-    [ParseCrashReporting enable];
-    
+
     [Parse setApplicationId:globalConfig[@"Parse"][@"ApplicationId"]
                   clientKey:globalConfig[@"Parse"][@"ClientKey"]];
-#endif
-    
-#ifdef TESTING_SCRUBBER
-    [[UXmanager shared].settings setUserHasViewedScrubbingOnboarding:NO];
-    [[UXmanager shared] persist];
-#endif
     
     // Apply application-wide styling
     [self applyStylesheet];
@@ -138,13 +95,10 @@
     if ( ![[UXmanager shared] userHasSeenOnboarding] ) {
         [[UXmanager shared] closeOutOnboarding];
     }
-    
-#ifndef TURN_OFF_SANDBOX_CONFIG
+
     [[PFInstallation currentInstallation] removeObject:kPushChannel
                                                 forKey:@"channels"];
     [[PFInstallation currentInstallation] saveInBackground];
-#endif
-    
 }
 
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
@@ -159,32 +113,8 @@
     [[UXmanager shared].settings setPushTokenData:deviceToken];
     [[UXmanager shared].settings setPushTokenString:hexToken];
     
-#ifndef TURN_OFF_SANDBOX_CONFIG
     PFInstallation *i = [PFInstallation currentInstallation];
-        
-#ifndef PRODUCTION
-    NSLog(@" ••••• Forcing sandbox channel only •••• ");
-    [i removeObject:@"listenLive" forKey:@"channels"];
-#ifdef RELEASE
-    [i removeObject:@"sandbox_listenLive" forKey:@"channels"];
-#endif
-    [i saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-        
-        [i setDeviceTokenFromData:deviceToken];
-        [i addUniqueObject:kPushChannel
-                    forKey:@"channels"];
-        
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [i saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-                [[UXmanager shared] persist];
-            }];
-        });
-    }];
-    
-    NSLog(@" ***** REGISTERING PUSH TOKEN : %@ *****", hexToken);
-    
-    return;
-#else
+
     NSLog(@" ••••• Got through to PFInstallation creation •••• ");
     
 
@@ -199,9 +129,6 @@
     });
 
     NSLog(@" ***** REGISTERING PUSH TOKEN : %@ *****", hexToken);
-#endif
-#endif
-    
 }
 
 
@@ -214,19 +141,6 @@
     NSString *dataStr = [[NSString alloc] initWithData:data
                                               encoding:NSUTF8StringEncoding];
     NSLog(@" •••••••• >>>>>>>> User Info from Push : %@ <<<<<<<< ••••••••",dataStr);
-    
-#ifdef USE_PUSH_FOR_ALARM
-    if ( userInfo[@"alarm"] ) {
-        NSLog(@"Alarm Received");
-        self.alarmTask = [application beginBackgroundTaskWithExpirationHandler:^{
-            
-        }];
-        
-        [self actOnNotification:userInfo];
-        completionHandler(UIBackgroundFetchResultNewData);
-        return;
-    }
-#endif
     
     if ( [[UIApplication sharedApplication] applicationState] == UIApplicationStateBackground ) {
         NSLog(@" >>>>> ACTING ON PUSH NOW <<<<< ");
@@ -276,13 +190,7 @@
 - (void)applicationWillResignActive:(UIApplication *)application {
     
     if ( [[AudioManager shared] isPlayingAudio] ) {
-        [Flurry setBackgroundSessionEnabled:YES];
-        [[AnalyticsManager shared] setFlurryActiveInBackground:YES];
         [[SessionManager shared] handleSessionMovingToBackground];
-        
-    } else {
-        //[[AnalyticsManager shared] gaSessionEnd];
-        [[SessionManager shared] forceAnalyticsSessionEndForSessionAudio];
     }
     
     if ( [[AudioManager shared] currentAudioMode] == AudioModeOnboarding ) {
@@ -307,16 +215,9 @@
     
     if ( [[AudioManager shared] currentAudioMode] != AudioModeOnboarding ) {
         if ( ![[SessionManager shared] sessionLeftDate] ) {
-            [[SessionManager shared] disarmProgramUpdater];
             [[SessionManager shared] setSessionLeftDate:[NSDate date]];
         }
     }
-    
-    if ( [[AudioManager shared] currentAudioMode] == AudioModePreroll ) {
-        [[SessionManager shared] setUserLeavingForClickthrough:YES];
-    }
-    
-    [[AnalyticsManager shared] kTrackSession:@"ended"];
     
     [[ContentManager shared] saveContext];
     // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later. 
@@ -324,45 +225,19 @@
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application {
-    
-    if ( [[AnalyticsManager shared] flurryActiveInBackground] ) {
-        [Flurry setBackgroundSessionEnabled:NO];
-        [[AnalyticsManager shared] setFlurryActiveInBackground:NO];
-    }
-    
-    //[[AnalyticsManager shared] gaSessionStartWithScreenView:@"Session Begin"];
-    
-    if ( [[AudioManager shared] currentAudioMode] != AudioModeOnboarding ) {
-        [[SessionManager shared] setSessionReturnedDate:[NSDate date]];
-        [self.masterViewController determinePlayState];
-    }
+    // when returning to the foreground, we need to figure out what to display
+    // to the user.
 
+    [[SessionManager shared] handleSessionMovingToForeground];
+    [[SessionManager shared] expireSessionIfExpired:NO];
     
-    NSString *push = [[UXmanager shared].settings latestPushJson];
-    if ( push && !SEQ(push,@"") ) {
-        NSLog(@"Push received while app was in background : %@",push);
-        [[UXmanager shared].settings setLatestPushJson:nil];
-        [[UXmanager shared] persist];
-    }
-    
-    [[AudioManager shared] interruptAutorecovery];
-    [[AnalyticsManager shared] kTrackSession:@"began"];
-    [[SessionManager shared] setUserLeavingForClickthrough:NO];
-    [[AudioManager shared] stopWaiting];
+    [self.masterViewController determinePlayState];
+
     [[ContentManager shared] sweepBookmarks];
-    if ( [[AudioManager shared] isPlayingAudio] && [[AudioManager shared] currentAudioMode] == AudioModeLive ) {
-        [[SessionManager shared] checkProgramUpdate:YES];
-    }
-    
-    
-    
-#ifdef DEBUG
-    if ( [[SessionManager shared] sessionPausedDate] ) {
-        NSLog(@"Session Paused : %@",[NSDate stringFromDate:[[SessionManager shared] sessionPausedDate]
-                                                 withFormat:@"HH:mm:ss a"]);
-    }
-#endif
-    // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
+
+//    if ( [[AudioManager shared] isPlayingAudio] && [[AudioManager shared] currentAudioMode] == AudioModeLive ) {
+//        [[SessionManager shared] checkProgramUpdate:YES];
+//    }
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application {
@@ -420,12 +295,8 @@
 #pragma mark - Alarm Clock
 
 - (void)armAlarmClockWithDate:(NSDate *)date {
-#ifndef USE_PUSH_FOR_ALARM
     self.alarmDate = date;
-#ifndef PRODUCTION
-    self.alarmDate = [[NSDate date] dateByAddingTimeInterval:25.0];
-#endif
-    
+
     [[UIApplication sharedApplication] setIdleTimerDisabled:YES];
     
     NSInteger tisn = fabs([self.alarmDate timeIntervalSinceNow]);
@@ -465,25 +336,11 @@
     
     [[AnalyticsManager shared] logEvent:@"alarmClockArmed"
                          withParameters:nil];
-    
-#else
-    
-    PFInstallation *i = [PFInstallation currentInstallation];
-    [i addUniqueObject:kAlarmChannel
-                forKey:@"channels"];
-    i[@"activeFireDate"] = date;
-    [i saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-        
-        
-        
-    }];
-    
-#endif
 }
 
 - (void)buildTimer {
     UILocalNotification *alarm = [[UILocalNotification alloc] init];
-    alarm.alertTitle = @"Time to wake up!";
+
     alarm.alertBody = @"It's time for your fix of KPCC";
     alarm.fireDate = self.alarmDate;
     alarm.soundName = @"alarm_beat.aif";
@@ -593,18 +450,11 @@
 }
 
 - (void)endAlarmClock {
-#ifdef USE_PUSH_FOR_ALARM
-    if ( self.alarmTask ) {
-        [[UIApplication sharedApplication] endBackgroundTask:self.alarmTask];
-        self.alarmTask = 0;
-    }
-#else
     self.alarmDate = nil;
     [[UXmanager shared].settings setAlarmFireDate:nil];
     [[UXmanager shared] persist];
     [[UIApplication sharedApplication] cancelAllLocalNotifications];
     [[UIApplication sharedApplication] setIdleTimerDisabled:NO];
-#endif
 }
 
 - (void)killBackgroundTask {
@@ -660,7 +510,6 @@
 }
 
 - (void)controlXFSAvailability:(BOOL)available {
-    
 
     // Override here, kind of kludgy, but...
     if ( !self.xfsInterface.removeOnBalloonDismissal ) {
@@ -687,7 +536,11 @@
     if ( [self.masterViewController scrubbing] ) {
         available = NO;
     }
-    
+
+    if ( ![[UXmanager shared] userHasSeenOnboarding]) {
+        available = NO;
+    }
+
     self.xfsInterface.view.alpha = available ? 1.0f : 0.0f;
 }
 

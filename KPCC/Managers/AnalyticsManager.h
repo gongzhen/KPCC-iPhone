@@ -9,13 +9,11 @@
 #import <Foundation/Foundation.h>
 #include <mach/mach_time.h>
 #import "AudioManager.h"
-#import "Flurry.h"
 #import "Mixpanel.h"
 #import "NetworkManager.h"
-#import <NewRelicAgent/NewRelic.h>
 #import <Crashlytics/Crashlytics.h>
 #import <Fabric/Fabric.h>
-#import <NielsenAppApi/NielsenAppApi.h>
+//#import <NielsenAppApi/NielsenAppApi.h>
 
 static NSInteger kMaxAllowedExceptionsPerInterval = 5;
 static NSInteger kExceptionInterval = 60;
@@ -35,8 +33,8 @@ typedef NS_ENUM(NSInteger, ScrubbingType) {
 @property long lastErrorLoggedTime;
 @property NSString *lastErrorLoggedComments;
 @property (nonatomic, strong) NSTimer *analyticsSuspensionTimer;
-@property (nonatomic, strong) AVPlayerItemAccessLog *accessLog;
-@property (nonatomic, strong) AVPlayerItemErrorLog *errorLog;
+@property (nonatomic, strong) AVPlayerItemAccessLogEvent *accessLog;
+@property (nonatomic, strong) AVPlayerItemErrorLogEvent *errorLog;
 
 @property (nonatomic, strong) NSDate *errorLogReceivedAt;
 @property (nonatomic, strong) NSDate *accessLogReceivedAt;
@@ -45,7 +43,6 @@ typedef NS_ENUM(NSInteger, ScrubbingType) {
 
 @property (nonatomic, strong) NSMutableDictionary *progressMap;
 
-@property BOOL flurryActiveInBackground;
 @property BOOL gaSessionStarted;
 
 @property NSInteger allowedExceptions;
@@ -68,7 +65,6 @@ typedef NS_ENUM(NSInteger, ScrubbingType) {
 - (void)failStream:(NetworkHealth)cause comments:(NSString *)comments force:(BOOL)force;
 - (void)trackPlaybackStalled;
 
-- (void)kTrackSession:(NSString*)modifier;
 - (void)clearLogs;
 
 - (void)buildQualityMap;
@@ -86,13 +82,13 @@ typedef NS_ENUM(NSInteger, ScrubbingType) {
 - (NSDictionary*)typicalOnDemandEpisodeInformation;
 
 // Nielsen
-@property (nonatomic, strong) NielsenAppApi *nielsenTracker;
-@property (nonatomic, strong) NSString *currentNielsenInfo;
-
-- (void)nielsenPlay;
-- (void)nielsenStop;
-- (void)nielsenTrack;
-- (NSString*)nielsenInfoForCurrentAudio;
-- (NSString*)nielsenInfoForKPCC;
+//@property (nonatomic, strong) NielsenAppApi *nielsenTracker;
+//@property (nonatomic, strong) NSString *currentNielsenInfo;
+//
+//- (void)nielsenPlay;
+//- (void)nielsenStop;
+//- (void)nielsenTrack;
+//- (NSString*)nielsenInfoForCurrentAudio;
+//- (NSString*)nielsenInfoForKPCC;
 
 @end

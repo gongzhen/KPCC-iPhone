@@ -59,93 +59,124 @@
 }
 
 - (void)showPreRollWithAnimation:(BOOL)animated completion:(void (^)(BOOL done))completion {
-    [SCPRSpinnerViewController spinInCenterOfView:self.curtainView
-                                         appeared:^{
-                                             if (self.tritonAd) {
-                                                 
-                                                 [[AudioManager shared] setCurrentAudioMode:AudioModePreroll];
-                                                 
-                                                 if (animated) {
-                                                     
-                                                         
-                                                     // Set image for ad
-                                                     NSURL *imageUrl = [NSURL URLWithString:self.tritonAd.imageCreativeUrl];
-                                                     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:imageUrl];
-                                                     UIImageView *iv = self.adImageView;
-                                                     [iv setImageWithURLRequest:request placeholderImage:nil success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {
-                                                         self.adImageView.image = image;
-                                                         CATransition *transition = [CATransition animation];
-                                                         transition.duration = 0.25;
-                                                         transition.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
-                                                         transition.type = kCATransitionFade;
-                                                         
-                                                         [self.adImageView.layer addAnimation:transition
-                                                                                       forKey:nil];
-                                                         
-                                                         dispatch_async(dispatch_get_main_queue(), ^{
-                                                            if ( self.tritonAd.clickthroughUrl ) {
-                                                                [self.adImageView addGestureRecognizer:self.adTapper];
-                                                            }
-                                                             
-                                                         });
+    [SCPRSpinnerViewController spinInCenterOfView:self.curtainView appeared:^{
+        if (self.tritonAd) {
 
-                                                         
-                                                     } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error) {
-                                                         completion(false);
-                                                     }];
-                                                     
-                                                     
-                                                     __block SCPRPreRollViewController *weakself_ = self;
-                                                     self.prerollPlayer = [AVPlayer playerWithURL:[NSURL URLWithString:self.tritonAd.audioCreativeUrl]];
-                                                     self.timeObserver = [self.prerollPlayer addPeriodicTimeObserverForInterval:CMTimeMake(1, 10)
-                                                                                                                          queue:nil
-                                                                                                                     usingBlock:^(CMTime time) {
-                                                                                                                         [weakself_ setAdProgress];
-                                                                                                                     }];
-                                                     
-                                                     [[NSNotificationCenter defaultCenter] addObserver:self
-                                                                                              selector:@selector(preRollCompleted)
-                                                                                                  name:AVPlayerItemDidPlayToEndTimeNotification
-                                                                                                object:nil];
-                                                     
-                                                     
-                                                     [SCPRSpinnerViewController finishSpinning];
-                                                     [[AudioManager shared] setPrerollPlaying:YES];
-                                                     
-                                                     impressionSent = NO;
-                                                     dispatch_async(dispatch_get_main_queue(), ^{
-                                                         [self.delegate preRollStartedPlaying];
-                                                         completion(YES);
-                                                     });
-                                                         
-                                                     
-                                                 } else {
-                                                     completion(YES);
-                                                 }
-                                             }
-                                             
-                                             
-                                         }];
-    
+            [[AudioManager shared] setCurrentAudioMode:AudioModePreroll];
 
+            if (animated) {
+                // Set image for ad
+                NSURL *imageUrl = [NSURL URLWithString:self.tritonAd.imageCreativeUrl];
+                NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:imageUrl];
+                UIImageView *iv = self.adImageView;
+                [iv setImageWithURLRequest:request placeholderImage:nil success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {
+                    self.adImageView.image = image;
+                    CATransition *transition = [CATransition animation];
+                    transition.duration = 0.25;
+                    transition.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
+                    transition.type = kCATransitionFade;
+
+                    [self.adImageView.layer addAnimation:transition
+                                                   forKey:nil];
+
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        if ( self.tritonAd.clickthroughUrl ) {
+                            [self.adImageView addGestureRecognizer:self.adTapper];
+                        }
+
+                    });
+                } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error) {
+                    completion(false);
+                }];
+
+                // Build preroll audio player
+                self.prerollPlayer = [[AudioPlayer alloc] initWithUrl:[NSURL URLWithString:self.tritonAd.audioCreativeUrl] hiResTick:YES];
+
+                [self.prerollPlayer observeTime:^(StreamDates* dates) {
+                    NSValue* v = [dates curTimeV];
+
+                    if (v != nil) {
+                        CMTime t = [v CMTimeValue];
+                        currentPresentedDuration = CMTimeGetSeconds(t);
+
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                            [self.adProgressView setProgress:(currentPresentedDuration/[self.tritonAd.audioCreativeDuration floatValue]) animated:YES];
+                        });
+                    }
+                }];
+
+                // pass selected status on to our global audio status
+                [self.prerollPlayer observeStatus:^(enum AudioStatus s) {
+                    switch (s) {
+                        case AudioStatusPlaying:
+                        case AudioStatusPaused:
+                            [[[AudioManager shared] status] setStatus:s];
+                            break;
+                        default:
+                            break;
+                    }
+                }];
+
+                // watch for the end of the preroll
+                [self.prerollPlayer.observer once:StatusesItemEnded callback:^(NSString* msg, id obj) {
+                    [self preRollCompleted];
+                }];
+
+                // watch for failures
+                void (^failure)(NSString*, id) = ^(NSString* msg, id obj) {
+                    // finish, but don't send our impression
+                    impressionSent = YES;
+                    [self preRollCompleted];
+                };
+
+                [self.prerollPlayer.observer on:StatusesItemFailed callback:failure];
+                [self.prerollPlayer.observer on:StatusesPlayerFailed callback:failure];
+                [self.prerollPlayer.observer on:StatusesOtherFailed callback:failure];
+
+                [SCPRSpinnerViewController finishSpinning];
+
+                impressionSent = NO;
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [self.delegate preRollStartedPlaying];
+                    completion(YES);
+                });
+            } else {
+                 completion(YES);
+            }
+        }
+    }];
+}
+
+- (void)playOrPause {
+    switch ([self.prerollPlayer status]) {
+        case AudioStatusPlaying:
+        case AudioStatusWaiting:
+            [self.prerollPlayer pause];
+            break;
+        case AudioStatusPaused:
+        case AudioStatusNew:
+            // make sure we can get an audio session
+            if (![[[AudioManager shared] status] beginAudioSession]) {
+                // abort...
+                CLS_LOG(@"Preroll play failed to get audio session. Aborting preroll.");
+                impressionSent = YES;
+                [self dismissTapped:nil];
+            }
+
+            [self.prerollPlayer play];
+            break;
+        default:
+            break;
+    }
 }
 
 - (void)preRollCompleted {
-    
-    [[AudioManager shared] setPrerollPlaying:NO];
-    
-    [self.prerollPlayer removeTimeObserver:self.timeObserver];
-    self.timeObserver = nil;
-    [self.prerollPlayer cancelPendingPrerolls];
+    [self.prerollPlayer stop];
     
     [[SessionManager shared] resetCache];
-    
+
     self.prerollPlayer = nil;
-    
-    [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                    name:AVPlayerItemDidPlayToEndTimeNotification
-                                                  object:nil];
-    
+
     [[AudioManager shared] setCurrentAudioMode:AudioModeNeutral];
     [[UXmanager shared] showMenuButton];
     
@@ -158,7 +189,6 @@
 - (void)openClickThroughUrl {
     NSString *url = self.tritonAd.clickthroughUrl;
     if ( url && !SEQ(@"",url) ) {
-        [[SessionManager shared] setUserLeavingForClickthrough:YES];
         [[UIApplication sharedApplication] openURL:[NSURL URLWithString:url]];
     }
 }
@@ -170,6 +200,9 @@
             if (success) NSLog(@"impression sent successfully");
         }];
     }
+
+    // end our preroll audio session
+    [[[AudioManager shared] status] endAudioSession];
     
     [UIView animateWithDuration:0.3f animations:^{
         CGRect frame = CGRectMake(self.view.frame.origin.x,
@@ -191,16 +224,6 @@
         }
         
     }];
-}
-
-- (void)setAdProgress {
-    if (self.tritonAd && self.prerollPlayer.rate > 0.0 ) {
-        currentPresentedDuration = CMTimeGetSeconds(self.prerollPlayer.currentItem.currentTime);
-        
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [self.adProgressView setProgress:(currentPresentedDuration/[self.tritonAd.audioCreativeDuration floatValue]) animated:YES];
-        });
-    }
 }
 
 - (void)didReceiveMemoryWarning {

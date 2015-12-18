@@ -171,12 +171,6 @@ static char *alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz012
     return YES;
 }
 
-+ (NSDictionary*)gConfig {
-    NSString *path = [[NSBundle mainBundle] pathForResource:@"Config" ofType:@"plist"];
-    NSDictionary *globalConfig = [[NSDictionary alloc] initWithContentsOfFile:path];
-    return globalConfig;
-}
-
 + (BOOL)isRetina{
     return ([[UIScreen mainScreen] respondsToSelector:@selector(displayLinkWithTarget:selector:)] && ([UIScreen mainScreen].scale == 2.0))?1:0;
 }
@@ -298,75 +292,6 @@ static char *alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz012
                                      withString:@"-"];
     return u;
 }
-
-+ (NSDictionary*)accessLogToDictionary:(AVPlayerItemAccessLog*)accessLog {
-    NSString *logAsString = [[NSString alloc] initWithData:[accessLog extendedLogData]
-                                                  encoding:[accessLog extendedLogDataStringEncoding]];
-    
-    if ( !logAsString ) {
-        return nil;
-    }
-    
-    NSRange r = [logAsString rangeOfString:@"#Fields: "];
-    if ( r.location == NSNotFound ) {
-        return nil;
-    }
-    
-    logAsString = [logAsString substringFromIndex:r.location+r.length];
-    
-    NSArray *components = [logAsString componentsSeparatedByString:@" "];
-    NSArray *potentialComponents = [Utils reversedArrayFromArray:[kPotentialElements componentsSeparatedByString:@" "]];
-    
-    NSInteger lastIndex = -1;
-    for ( unsigned i = 0; i < [potentialComponents count]; i++ ) {
-        NSString *pC = potentialComponents[i];
-        for ( unsigned j = 0; j < [components count]; j++ ) {
-            if ( SEQ(components[j], pC) ) {
-                lastIndex = i;
-                break;
-            }
-        }
-    }
-    
-    NSMutableDictionary *neat = [NSMutableDictionary new];
-    if ( lastIndex > 0 ) {
-        for ( unsigned k = 0; k < lastIndex+1; k++ ) {
-            neat[potentialComponents[k]] = components[k+lastIndex];
-        }
-    }
-    
-    return [NSDictionary dictionaryWithDictionary:neat];
-    //return [NSDictionary new];
-}
-
-+ (NSDictionary*)errorLogToDictionary:(AVPlayerItemAccessLog *)errorLog {
-    /*NSString *logAsString = [[NSString alloc] initWithData:[errorLog extendedLogData]
-                                                  encoding:[errorLog extendedLogDataStringEncoding]];
-    NSArray *components = [logAsString componentsSeparatedByString:@" "];
-    NSArray *potentialComponents = [Utils reversedArrayFromArray:[kPotentialElements componentsSeparatedByString:@" "]];
-    
-    NSInteger lastIndex = -1;
-    for ( unsigned i = 0; i < [potentialComponents count]; i++ ) {
-        NSString *pC = potentialComponents[i];
-        for ( unsigned j = 0; j < [components count]; j++ ) {
-            if ( SEQ(components[j], pC) ) {
-                lastIndex = i;
-                break;
-            }
-        }
-    }
-    
-    NSMutableDictionary *neat = [NSMutableDictionary new];
-    if ( lastIndex > 0 ) {
-        for ( unsigned k = 0; k < lastIndex+1; k++ ) {
-            neat[potentialComponents[k]] = components[k+lastIndex];
-        }
-    }
-    
-    return [NSDictionary dictionaryWithDictionary:neat];*/
-    return [NSDictionary new];
-}
-
 
 + (NSArray*)reversedArrayFromArray:(NSArray *)inOrder {
 

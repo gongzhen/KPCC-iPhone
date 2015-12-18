@@ -7,6 +7,7 @@
 //
 
 #import "AudioChunk.h"
+#import "KPCC-Swift.h"
 
 @implementation AudioChunk
 
@@ -37,6 +38,18 @@
             self.type = AudioTypeSegment;
         }
     }
+    return self;
+}
+
+- (instancetype)initWithScheduleOccurrence:(ScheduleOccurrence *)sched {
+    if ((self = [super init])) {
+        self.audioDuration = [[NSNumber alloc] initWithDouble:sched.duration ];
+        self.audioTitle = sched.title;
+        self.programTitle = @"89.3 KPCC";
+        self.audioTimeStamp = sched.starts_at;
+        self.type = AudioTypeLiveStream;
+    }
+
     return self;
 }
 

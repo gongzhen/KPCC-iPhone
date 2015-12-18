@@ -189,8 +189,6 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
 
-    [[AudioManager shared] invalidateTimeObserver];
-    
     NSArray *audioChunks = [[QueueManager shared] enqueueEpisodes:self.episodesList
                                                  withCurrentIndex:indexPath.row
                                                   playImmediately:NO];
@@ -212,9 +210,6 @@
         title = seg.title;
         programTitle = seg.programName;
     }
-    
-
-    
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {

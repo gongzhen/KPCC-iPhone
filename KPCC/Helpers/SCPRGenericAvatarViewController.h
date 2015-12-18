@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "GenericProgram.h"
 
 @class Program;
 
@@ -15,7 +16,7 @@
 @property (nonatomic,strong) IBOutlet UIView *seatView;
 @property (nonatomic,strong) IBOutlet UILabel *initialLetter;
 
-- (UIImage*)avatarFromProgram:(Program*)program;
-- (void)setupWithProgram:(Program*)program;
+- (UIImage*)avatarFromProgram:(id<GenericProgram>)program;
+- (void)setupWithProgram:(id<GenericProgram>)program;
 
 @end

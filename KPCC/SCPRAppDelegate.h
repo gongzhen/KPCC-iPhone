@@ -7,28 +7,13 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "Program.h"
 #import "SCPRXFSViewController.h"
 
 
 #define TICK   NSDate *startTime = [NSDate date]
 #define TOCK   NSLog(@"Execution Time: %f  -- [ %s ]=[ Line %d ]", -[startTime timeIntervalSinceNow], __PRETTY_FUNCTION__, __LINE__)
 
-#ifdef PRODUCTION
-#define NSLog //
 #define kPushChannel @"listenLive"
-#define kAlarmChannel @"iPhoneAlarm"
-#else
-#ifdef RELEASE
-//#define kPushChannel @"sandbox_listenLive"
-#define kPushChannel @"private_listenLive"
-#define kAlarmChannel @"private_iPhoneAlarm"
-#else
-#define kPushChannel @"sandbox_listenLive"
-#define kAlarmChannel @"sandbox_iPhoneAlarm"
-#endif
-#endif
-
 
 @class SCPRMasterViewController;
 @class SCPRNavigationController;

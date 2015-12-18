@@ -27,6 +27,7 @@
 #import "SCPRUpcomingProgramViewController.h"
 #import "SCPRCompleteScheduleViewController.h"
 #import "SCPRBalloonViewController.h"
+#import "GenericProgram.h"
 
 @import MessageUI;
 
@@ -109,8 +110,6 @@
 @property (nonatomic,strong) NSTimer *liveScrollTimer;
 
 // Pre-Roll
-- (void)handlePreRollControl:(BOOL)paused;
-
 @property (nonatomic,strong) SCPRPreRollViewController *preRollViewController;
 @property BOOL lockPreroll;
 @property BOOL updaterArmed;
@@ -140,9 +139,6 @@
 @property CGFloat initialProgramTitleConstant;
 @property CGFloat deployedProgramTitleConstant;
 @property CGFloat threePointFivePlayControlsConstant;
-
-@property NSInteger onDemandGateCount;
-@property NSInteger previousRewindThreshold;
 
 // Onboarding
 @property BOOL automationMode;
@@ -193,14 +189,7 @@
 @property (nonatomic, strong) IBOutlet UILabel *timeNumbericScrubberLabel;
 @property (nonatomic, strong) IBOutlet UIView *liveProgressScrubberView;
 @property (nonatomic, strong) IBOutlet NSLayoutConstraint *liveProgressScrubberAnchor;
-@property (nonatomic, strong) IBOutlet UIView *liveProgressNeedleView;
-@property (nonatomic, strong) IBOutlet UILabel *liveProgressNeedleReadingLabel;
-@property (nonatomic, strong) IBOutlet UIView *currentProgressNeedleView;
-@property (nonatomic, strong) IBOutlet UILabel *currentProgressNeedleReadingLabel;
-@property IBOutlet NSLayoutConstraint *cpFlagAnchor;
-@property IBOutlet NSLayoutConstraint *cpLeftAnchor;
 @property IBOutlet NSLayoutConstraint *topGapScrubbingAnchor;
-@property IBOutlet NSLayoutConstraint *flagAnchor;
 @property IBOutlet NSLayoutConstraint *dividerLineLeftAnchor;
 @property IBOutlet NSLayoutConstraint *dividerLineRightAnchor;
 @property IBOutlet NSLayoutConstraint *scrollerTopConstraint;
@@ -230,7 +219,6 @@
 - (void)remoteControlPlayOrPause;
 
 @property (NS_NONATOMIC_IOSONLY, readonly) BOOL uiIsJogging;
-@property (NS_NONATOMIC_IOSONLY, readonly) NSTimeInterval rewindAgainstStreamDelta;
 
 // Instance methods.
 - (void)cloakForMenu:(BOOL)animated;

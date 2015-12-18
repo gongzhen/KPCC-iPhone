@@ -104,7 +104,8 @@ static NetworkManager *singleton = nil;
             }
             
             if ( [weakreach_ reachable] ) {
-                
+                NSLog(@"Reachability reports reachable.");
+
                 weakself_.timeReturned = [NSDate date];
                 
 
@@ -119,7 +120,7 @@ static NetworkManager *singleton = nil;
                 }
                 
             } else {
-                
+                NSLog(@"Reachability reports unreachable.");
 
                 weakself_.failTimer = [NSTimer scheduledTimerWithTimeInterval:kFailThreshold
                                                                        target:weakself_
@@ -202,7 +203,7 @@ static NetworkManager *singleton = nil;
 
 
 - (void)fetchAllProgramInformation:(CompletionBlockWithValue)completion {
-    NSString *urlString = [NSString stringWithFormat:@"%@/programs?air_status=onair",kServerBase];
+    NSString *urlString = [NSString stringWithFormat:@"%@/programs?air_status=onair,online",kServerBase];
     [self requestFromSCPRWithEndpoint:urlString completion:^(id returnedObject) {
         completion(returnedObject);
     }];
@@ -228,7 +229,9 @@ static NetworkManager *singleton = nil;
     AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
     manager.responseSerializer = [AFHTTPResponseSerializer serializer];
     NSString *idfa = [[[ASIdentifierManager sharedManager] advertisingIdentifier] UUIDString];
-    NSString *tritonEndpoint = [NSString stringWithFormat:@"http://adserver.adtechus.com/?adrawdata/3.0/5511.1/3590534/0/0/header=yes;cookie=no;adct=text/xml;guid=%@",idfa];
+    
+    NSDictionary *globalConfig = [Utils globalConfig];
+    NSString *tritonEndpoint = [NSString stringWithFormat:globalConfig[@"AdServer"][@"Preroll"],idfa];
     
     
     [manager GET:tritonEndpoint parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
@@ -248,25 +251,23 @@ static NetworkManager *singleton = nil;
 }
 
 - (void)sendImpressionToTriton:(NSString*)impressionURL completion:(void (^)(BOOL success))completion {
-    
-    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
-    manager.responseSerializer = [AFHTTPResponseSerializer serializer];
-    [manager GET:impressionURL parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
-        completion(YES);
-    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        NSLog(@"send impression failure? %@", error);
-        completion(NO);
-    }];
+    if (impressionURL && !SEQ(impressionURL,@"")) {
+        AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+        manager.responseSerializer = [AFHTTPResponseSerializer serializer];
+        [manager GET:impressionURL parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
+            completion(YES);
+        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+            NSLog(@"send impression failure? %@", error);
+            completion(NO);
+        }];
+    } else {
+        NSLog(@"sendImpression: No impression URL.");
+    }
 }
 
 - (NSString*)serverBase {
-    NSString *key = @"production";
-#ifdef DEBUG
-    //key = @"staging";
-#endif
-    
     NSDictionary *globalConfig = [Utils globalConfig];
-    return globalConfig[@"SCPR"][key];
+    return globalConfig[@"SCPR"][@"api"];
 }
 
 @end

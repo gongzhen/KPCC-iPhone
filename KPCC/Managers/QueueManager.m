@@ -77,9 +77,11 @@ static QueueManager *singleton = nil;
     return audioChunks;
 }
 
+// update our bookmark position for on-demand files, if we're more than 10 seconds in
 - (void)handleBookmarkingActivity {
     if ( [[AudioManager shared] currentAudioMode] != AudioModeOnDemand ) return;
-    CMTime currentTime = [[AudioManager shared].audioPlayer.currentItem currentTime];
+    
+    CMTime currentTime = [[AudioManager shared].audioPlayer currentTime];
     NSInteger seconds = CMTimeGetSeconds(currentTime);
     if ( seconds > kBookmarkingTolerance ) {
         if ( !self.currentBookmark ) {
@@ -90,23 +92,25 @@ static QueueManager *singleton = nil;
             
             b.resumeTimeInSeconds = @(seconds);
             self.currentBookmark = b;
-            
+
         } else {
             self.currentBookmark.resumeTimeInSeconds = @(seconds);
         }
+
     }
 }
 
 - (void)playNext {
-#ifdef DEBUG
-    NSLog(@"playNext fired");
-#endif
+    NSLog(@"QueueManager in playNext");
+
     if (![self isQueueEmpty]) {
         if (self.currentlyPlayingIndex + 1 < [self.queue count]) {
             AudioChunk *chunk = (self.queue)[self.currentlyPlayingIndex + 1];
             self.currentChunk = chunk;
             self.currentlyPlayingIndex += 1;
             [[[Utils del] masterViewController] setPositionForQueue:(int)self.currentlyPlayingIndex animated:YES];
+
+            NSLog(@"QueueManger playNext is starting next chunk.");
             [[AudioManager shared] playQueueItem:chunk];
         }
     }
@@ -125,8 +129,6 @@ static QueueManager *singleton = nil;
 }
 
 - (void)playItemAtPosition:(int)index {
-    [[AudioManager shared] invalidateTimeObserver];
-    
     if (![self isQueueEmpty]) {
         if (index >= 0 && index < [self.queue count]) {
             
