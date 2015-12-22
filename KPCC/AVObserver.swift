@@ -21,6 +21,10 @@ import AVFoundation
 
     private var _destroyed = false
 
+    var isDestroyed: Bool {
+        return _destroyed
+    }
+
     @objc enum Statuses: Int {
         case PlayerFailed = 0, PlayerReady = 1, ItemFailed = 2, ItemReady = 3,
         Playing = 4, Paused = 5, Stalled = 6, TimeJump = 7, AccessLog = 8,
@@ -80,8 +84,8 @@ import AVFoundation
         NSLog("AVobserver stop called.")
         self._player.removeObserver(self,forKeyPath:"status")
         self._player.removeObserver(self, forKeyPath:"rate")
-        self._player.currentItem!.removeObserver(self, forKeyPath: "status")
-        self._player.currentItem!.removeObserver(self, forKeyPath: "playbackLikelyToKeepUp")
+        self._player.currentItem?.removeObserver(self, forKeyPath: "status")
+        self._player.currentItem?.removeObserver(self, forKeyPath: "playbackLikelyToKeepUp")
         
         NSNotificationCenter.defaultCenter().removeObserver(self)
         

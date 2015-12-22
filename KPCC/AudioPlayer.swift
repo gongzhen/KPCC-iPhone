@@ -151,6 +151,8 @@ public struct AudioPlayerObserver<T> {
 
     private var _timeObserver: AnyObject?
 
+    private var _playerItem: AVPlayerItem?
+
     //----------
 
     public var oTime        = AudioPlayerObserver<StreamDates>()
@@ -208,6 +210,8 @@ public struct AudioPlayerObserver<T> {
         self.observer = AVObserver(player:self._player)
 
         super.init()
+
+        self._player.addObserver(self, forKeyPath: "currentItem", options: [ .New, .Initial ], context: nil)
 
         // set up an observer for player / item status
         self.observer.setCallback() { status,msg,obj in
@@ -326,6 +330,7 @@ public struct AudioPlayerObserver<T> {
     //----------
 
     deinit {
+        self._player.removeObserver(self, forKeyPath: "currentItem")
         self.stop()
     }
 
@@ -893,4 +898,18 @@ public struct AudioPlayerObserver<T> {
     }
 
     //----------
+
+    // Workaround added for KVO crash [Fabric #49]
+    // REASON: AVObserver does not handle case that AVPlayerItem (aka currentItem) is deallocated before the AVPlayer
+    // TODO: Fix KVO logic in AVObserver
+    public override func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?, change: [String : AnyObject]?, context: UnsafeMutablePointer<Void>) {
+        guard let keyPath = keyPath else { return }
+        if object as? AVPlayer == self._player && keyPath == "currentItem" {
+            if let _playerItem = _playerItem where self._player.currentItem == nil && !observer.isDestroyed {
+                _playerItem.removeObserver(observer, forKeyPath: "status")
+                _playerItem.removeObserver(observer, forKeyPath: "playbackLikelyToKeepUp")
+            }
+            _playerItem = self._player.currentItem
+        }
+    }
 }
