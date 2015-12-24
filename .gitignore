@@ -18,7 +18,7 @@ DerivedData
 .idea/
 KPCC/Config.plist
 KPCC/GoogleService-Info.plist
-Pods
+Pods/
 project.xcworkspace/
 xcuserdata/
 *.xccheckout
