@@ -237,13 +237,7 @@ static NetworkManager *singleton = nil;
     [manager GET:tritonEndpoint parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
         NSDictionary *convertedData = [NSDictionary dictionaryWithXMLData:responseObject];
         NSLog(@"convertedData %@", convertedData);
-
-        TritonAd *tritonAd = nil;
-        if (convertedData != nil && convertedData[@"Ad"]) {
-            tritonAd = [[TritonAd alloc] initWithDict:convertedData[@"Ad"]];
-        }
-
-        completion(tritonAd);
+        completion([[TritonAd alloc] initWithDictionary:convertedData[@"Ad"]]);
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         NSLog(@"failure? %@", error);
         completion(nil);
