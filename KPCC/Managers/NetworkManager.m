@@ -224,7 +224,6 @@ static NetworkManager *singleton = nil;
     }];
 }
 
-
 - (void)fetchTritonAd:(NSString *)params completion:(void (^)(TritonAd* tritonAd))completion {
     AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
     manager.responseSerializer = [AFHTTPResponseSerializer serializer];
@@ -232,8 +231,7 @@ static NetworkManager *singleton = nil;
     
     NSDictionary *globalConfig = [Utils globalConfig];
     NSString *tritonEndpoint = [NSString stringWithFormat:globalConfig[@"AdServer"][@"Preroll"],idfa];
-    
-    
+
     [manager GET:tritonEndpoint parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
         NSDictionary *convertedData = [NSDictionary dictionaryWithXMLData:responseObject];
         NSLog(@"convertedData %@", convertedData);

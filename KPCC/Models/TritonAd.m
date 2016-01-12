@@ -120,19 +120,19 @@
                                 }
                             }
                         }
-                        
+
                         if ([companionCreative[@"CompanionClickThrough"] isKindOfClass:[NSString class]]) {
                             _clickthroughUrl = companionCreative[@"CompanionClickThrough"];
                         }
-                        
+
                     }
-                    
+
                 }
-                
+
             }
-            
+
         }
-        
+
     }
 }
 
