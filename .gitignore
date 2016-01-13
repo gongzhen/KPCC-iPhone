@@ -1,4 +1,3 @@
-# Xcode
 .DS_Store
 build/
 *.pbxuser
@@ -9,19 +8,22 @@ build/
 !default.mode2v3
 *.perspectivev3
 !default.perspectivev3
-.DS_Store
-.DS_Store?
 ._*
 .Spotlight-V100
 .Trashes
 Icon?
 ehthumbs.db
 Thumbs.db
-xcuserdata
-# profile
-*.moved-aside
 DerivedData
 .idea/
 KPCC/Config.plist
 KPCC/GoogleService-Info.plist
-Pods
+Pods/
+project.xcworkspace/
+xcuserdata/
+*.xccheckout
+*.moved-aside
+*.xcuserstate
+*.xcscmblueprint
+Gemfile*
+.bundle/
