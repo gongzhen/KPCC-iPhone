@@ -224,38 +224,41 @@ static NetworkManager *singleton = nil;
     }];
 }
 
-
 - (void)fetchTritonAd:(NSString *)params completion:(void (^)(TritonAd* tritonAd))completion {
     AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
     manager.responseSerializer = [AFHTTPResponseSerializer serializer];
     NSString *idfa = [[[ASIdentifierManager sharedManager] advertisingIdentifier] UUIDString];
     
     NSDictionary *globalConfig = [Utils globalConfig];
-    NSString *tritonEndpoint = [NSString stringWithFormat:globalConfig[@"AdServer"][@"Preroll"],idfa];
-    
-    
+    NSString *tritonEndpoint = [NSString stringWithFormat:globalConfig[@"AdServer"][@"Preroll"], idfa];
+
     [manager GET:tritonEndpoint parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
         NSDictionary *convertedData = [NSDictionary dictionaryWithXMLData:responseObject];
         NSLog(@"convertedData %@", convertedData);
-        completion([[TritonAd alloc] initWithDictionary:convertedData[@"Ad"]]);
+        TritonAd *tritonAd;
+        if ([convertedData[@"Ad"] isKindOfClass:[NSDictionary class]]) {
+            tritonAd = [[TritonAd alloc] initWithDictionary:convertedData[@"Ad"]];
+        }
+        completion(tritonAd);
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         NSLog(@"failure? %@", error);
         completion(nil);
     }];
 }
 
-- (void)sendImpressionToTriton:(NSString*)impressionURL completion:(void (^)(BOOL success))completion {
-    if (impressionURL && !SEQ(impressionURL,@"")) {
+- (void)pingTritonUrl:(NSString*)url completion:(void (^)(BOOL success))completion
+{
+    if (url && !SEQ(url,@"")) {
         AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
         manager.responseSerializer = [AFHTTPResponseSerializer serializer];
-        [manager GET:impressionURL parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        [manager GET:url parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
             completion(YES);
         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-            NSLog(@"send impression failure? %@", error);
+            NSLog(@"Touching Triton URL Failure? %@", error);
             completion(NO);
         }];
     } else {
-        NSLog(@"sendImpression: No impression URL.");
+        NSLog(@"Touching Triton URL: No URL");
     }
 }
 

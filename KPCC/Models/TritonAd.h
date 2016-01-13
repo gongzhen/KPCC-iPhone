@@ -10,16 +10,13 @@
 
 @interface TritonAd : NSObject
 
-- (instancetype)initWithDictionary:(NSDictionary *)dictionary NS_DESIGNATED_INITIALIZER;
+- (instancetype)initWithDictionary:(NSDictionary *)dictionary;
 
-@property (strong, nonatomic) NSString *adId;
-@property (strong, nonatomic) NSString *impressionUrl;
+@property (strong, nonatomic) NSArray *impressionUrls;
 @property (strong, nonatomic) NSString *audioCreativeUrl;
 @property (strong, nonatomic) NSNumber *audioCreativeDuration;
 @property (strong, nonatomic) NSString *imageCreativeUrl;
-@property (strong, nonatomic) NSNumber *imageCreativeWidth;
-@property (strong, nonatomic) NSNumber *imageCreativeHeight;
-@property (strong, nonatomic) NSString *creativeTrackingUrl;
 @property (strong, nonatomic) NSString *clickthroughUrl;
+@property (strong, nonatomic) NSString *creativeTrackingUrl;
 
 @end
