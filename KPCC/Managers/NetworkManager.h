@@ -62,7 +62,7 @@ typedef NS_ENUM(NSInteger, NetworkHealth) {
 - (void)fetchEditions:(CompletionBlockWithValue)completion;
 - (void)requestFromSCPRWithEndpoint:(NSString *)endpoint completion:(CompletionBlockWithValue)completion;
 - (void)fetchTritonAd:(NSString *)params completion:(void (^)(TritonAd* tritonAd))completion;
-- (void)sendImpressionToTriton:(NSString*)impressionURL completion:(void (^)(BOOL success))completion;
+- (void)touchTritonUrl:(NSString*)url completion:(void (^)(BOOL success))completion;
 - (void)setupReachability;
 - (void)setupFloatingReachabilityWithHost:(NSString*)host;
 - (void)applyNotifiersToReachability:(KSReachability*)reachability;

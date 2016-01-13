@@ -83,7 +83,9 @@
                         if ( self.tritonAd.clickthroughUrl ) {
                             [self.adImageView addGestureRecognizer:self.adTapper];
                         }
-
+                        [[NetworkManager shared] touchTritonUrl:self.tritonAd.creativeTrackingUrl completion:^(BOOL success) {
+                            if (success) NSLog(@"creative tracking sent successfully");
+                        }];
                     });
                 } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error) {
                     completion(false);
@@ -196,9 +198,11 @@
 - (IBAction)dismissTapped:(id)sender {
     if (self.tritonAd && !impressionSent) {
         impressionSent = YES;
-        [[NetworkManager shared] sendImpressionToTriton:self.tritonAd.impressionUrl completion:^(BOOL success) {
-            if (success) NSLog(@"impression sent successfully");
-        }];
+        for (NSString *impressionUrl in self.tritonAd.impressionUrls) {
+            [[NetworkManager shared] touchTritonUrl:impressionUrl completion:^(BOOL success) {
+                if (success) NSLog(@"impression sent successfully");
+            }];
+        }
     }
 
     // end our preroll audio session
