@@ -246,7 +246,7 @@ static NetworkManager *singleton = nil;
     }];
 }
 
-- (void)touchTritonUrl:(NSString*)url completion:(void (^)(BOOL success))completion
+- (void)pingTritonUrl:(NSString*)url completion:(void (^)(BOOL success))completion
 {
     if (url && !SEQ(url,@"")) {
         AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];

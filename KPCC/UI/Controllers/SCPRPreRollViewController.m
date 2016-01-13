@@ -83,7 +83,7 @@
                         if ( self.tritonAd.clickthroughUrl ) {
                             [self.adImageView addGestureRecognizer:self.adTapper];
                         }
-                        [[NetworkManager shared] touchTritonUrl:self.tritonAd.creativeTrackingUrl completion:^(BOOL success) {
+                        [[NetworkManager shared] pingTritonUrl:self.tritonAd.creativeTrackingUrl completion:^(BOOL success) {
                             if (success) NSLog(@"creative tracking sent successfully");
                         }];
                     });
@@ -199,7 +199,7 @@
     if (self.tritonAd && !impressionSent) {
         impressionSent = YES;
         for (NSString *impressionUrl in self.tritonAd.impressionUrls) {
-            [[NetworkManager shared] touchTritonUrl:impressionUrl completion:^(BOOL success) {
+            [[NetworkManager shared] pingTritonUrl:impressionUrl completion:^(BOOL success) {
                 if (success) NSLog(@"impression sent successfully");
             }];
         }
