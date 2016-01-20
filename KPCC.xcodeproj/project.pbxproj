@@ -1530,8 +1530,8 @@
 				76A308BF18C8FB940065D4B1 /* Sources */,
 				76A308C018C8FB940065D4B1 /* Frameworks */,
 				76A308C118C8FB940065D4B1 /* Resources */,
-				075636531B9FB76C001D1C55 /* ShellScript */,
-				07CBEF411BA088E900D11ED5 /* ShellScript */,
+				075636531B9FB76C001D1C55 /* Copy Config Property Lists */,
+				07CBEF411BA088E900D11ED5 /* Increment Build Number */,
 				9E4DCD001A0847218C219F40 /* Copy Pods Resources */,
 				25AD968E1B4F3AF800858B65 /* Crashlytics */,
 				9C2049BE7ABD2A93FB5F3AFD /* Embed Pods Frameworks */,
@@ -1849,26 +1849,28 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		075636531B9FB76C001D1C55 /* ShellScript */ = {
+		075636531B9FB76C001D1C55 /* Copy Config Property Lists */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
+			name = "Copy Config Property Lists";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "cp \"${PROJECT_DIR}/../KPCC-Config/config/iphone/Config-${CONFIGURATION}.plist\" \"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/Config.plist\"\ncp \"${PROJECT_DIR}/../KPCC-Config/config/iphone/GoogleService-Info.plist\" \"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/GoogleService-Info.plist\"";
 		};
-		07CBEF411BA088E900D11ED5 /* ShellScript */ = {
+		07CBEF411BA088E900D11ED5 /* Increment Build Number */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
+			name = "Increment Build Number";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1887,7 +1889,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "if [[ \"${SDKROOT}\" != *Simulator* ]]\nthen\n./Fabric.framework/run 434d44032523439399b6658c29c147e8e869167e 4dc4d9cc0ade16f282932c7daef418996a1adaaf355390fc30594696d8936fb3\nfi";
+			shellScript = "if [ \"${CONFIGURATION}\" = \"Release\" ]; then\n  ./Fabric.framework/run 434d44032523439399b6658c29c147e8e869167e 4dc4d9cc0ade16f282932c7daef418996a1adaaf355390fc30594696d8936fb3\nfi";
 		};
 		25DF10EE1ADC36A500B6DC8B /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -2142,8 +2144,7 @@
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Southern California Public Radio (SXALEDSVFU)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Southern California Public Radio (SXALEDSVFU)";
+				"CODE_SIGN_IDENTITY[sdk=*]" = "";
 				COPY_PHASE_STRIP = YES;
 				ENABLE_NS_ASSERTIONS = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -2171,8 +2172,6 @@
 				CLANG_CXX_LIBRARY = "libstdc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_WARN_ENUM_CONVERSION = NO;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Southern California Public Radio";
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2220,7 +2219,6 @@
 				OTHER_LDFLAGS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = "${APP_UID}";
 				PRODUCT_NAME = "-$(TARGET_NAME)-";
-				PROVISIONING_PROFILE = "77be0513-10cc-4da4-af9b-5e98f915bffe";
 				SWIFT_OBJC_BRIDGING_HEADER = "KPCC/UI/Controllers/KPCC-Bridging-Header.h";
 				SWIFT_OBJC_INTERFACE_HEADER_NAME = "KPCC-Swift.h";
 				TARGETED_DEVICE_FAMILY = 1;
@@ -2295,8 +2293,7 @@
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -2336,8 +2333,7 @@
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Southern California Public Radio (SXALEDSVFU)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Southern California Public Radio (SXALEDSVFU)";
+				"CODE_SIGN_IDENTITY[sdk=*]" = "iPhone Distribution";
 				COPY_PHASE_STRIP = YES;
 				ENABLE_NS_ASSERTIONS = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -2365,8 +2361,6 @@
 				CLANG_CXX_LIBRARY = "libstdc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_WARN_ENUM_CONVERSION = NO;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2413,7 +2407,6 @@
 				OTHER_LDFLAGS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = "${APP_UID}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "KPCC/UI/Controllers/KPCC-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				TARGETED_DEVICE_FAMILY = 1;
@@ -2432,8 +2425,6 @@
 				CLANG_CXX_LIBRARY = "libstdc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_WARN_ENUM_CONVERSION = NO;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2481,7 +2472,6 @@
 				OTHER_LDFLAGS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = "${APP_UID}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "49ccb261-dce7-4231-a5e6-b5d1c7d16b27";
 				SWIFT_OBJC_BRIDGING_HEADER = "KPCC/UI/Controllers/KPCC-Bridging-Header.h";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
