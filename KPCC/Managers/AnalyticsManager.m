@@ -55,13 +55,6 @@ static AnalyticsManager *singleton = nil;
     [[GGLContext sharedInstance] configureWithError:&configureError];
     NSAssert(!configureError, @"Error configuring Google services: %@", configureError);
     
-    // Optional: configure GAI options.
-    GAI *gai = [GAI sharedInstance];
-    gai.trackUncaughtExceptions = YES;  // report uncaught exceptions
-//#ifndef PRODUCTION
-//    gai.logger.logLevel = kGAILogLevelError;  // remove before app release
-//#endif
-
 //#ifndef SUPPRESS_NIELSEN_TRACKING
 //    NSString *theAppVersion = [Utils prettyVersion];
 //    
