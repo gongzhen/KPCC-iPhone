@@ -141,10 +141,12 @@ static NSString *kCommentsPlaceholder = @"... Add your comments here";
     // Do any additional setup after loading the view from its nib.
 }
 
-- (void)viewWillAppear:(BOOL)animated {
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+
     [[AnalyticsManager shared] screen:@"feedbackView"];
 }
-
 
 #pragma mark - UI and Event Handling
 - (IBAction)buttonTapped:(id)sender {
