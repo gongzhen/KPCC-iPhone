@@ -378,7 +378,9 @@
 
                     NSLog(@"fetchSched got %@",scheduleObj);
                     
-                    [[ContentManager shared] saveContext];
+                    if (scheduleObj) {
+                        [[ContentManager shared] saveContext];
+                    }
                     
                     completed(scheduleObj);
                 });
@@ -446,7 +448,13 @@
             NSDate *now = [self vNow];
             NSDictionary *bookends = [now bookends];
 
-            ScheduleOccurrence *gs = [[ScheduleOccurrence alloc] initWithContext:[[ContentManager shared] managedObjectContext] title:kMainLiveStreamTitle ends_at:bookends[@"bottom"] starts_at:bookends[@"top"] public_url:@"http://www.scpr.org" program_slug:@"kpcc-live" soft_starts_at:bookends[@"top"]];
+            ScheduleOccurrence *gs = [[ScheduleOccurrence alloc] initWithContext:[[ContentManager shared] managedObjectContext]
+                                                                           title:kMainLiveStreamTitle
+                                                                         ends_at:bookends[@"bottom"]
+                                                                       starts_at:bookends[@"top"]
+                                                                  soft_starts_at:bookends[@"top"]
+                                                                      public_url:@"http://www.scpr.org"
+                                                                    program_slug:@"kpcc-live"];
 
             [[ContentManager shared] saveContext];
             

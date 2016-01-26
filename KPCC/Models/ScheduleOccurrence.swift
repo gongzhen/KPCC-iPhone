@@ -13,9 +13,9 @@ import CoreData
     @NSManaged var title:String;
     @NSManaged var ends_at:NSDate;
     @NSManaged var starts_at:NSDate;
+    @NSManaged var soft_starts_at:NSDate;
     @NSManaged var public_url:String;
     @NSManaged var program_slug:String;
-    @NSManaged var soft_starts_at:NSDate;
 
     @objc var duration:NSTimeInterval = 0
 
@@ -23,33 +23,61 @@ import CoreData
         return "ScheduleOccurrence"
     }
 
-    convenience init(dict:NSDictionary) {
-        let context = ContentManager.shared().managedObjectContext;
+    convenience init?(dict:NSDictionary) {
 
-        let title           = dict["title"] as! String
-        let ends_at         = Utils.dateFromRFCString(dict["ends_at"] as! String)
-        let starts_at       = Utils.dateFromRFCString(dict["starts_at"] as! String)
-        let soft_start      = Utils.dateFromRFCString(dict["soft_starts_at"] as! String)
-        let public_url      = dict["public_url"] as? String ?? ""
-        let program_slug    = (dict["program"]?["slug"] as? String ?? "")
+        guard let
+            context = ContentManager.shared().managedObjectContext
+            else {
+                return nil
+        }
 
-        self.init(context:context, title:title, ends_at:ends_at, starts_at:starts_at, public_url:public_url, program_slug:program_slug, soft_starts_at:soft_start)
+        guard let
+            title = dict["title"] as? String,
+            ends_at = dict["ends_at"] as? String,
+            starts_at = dict["starts_at"] as? String,
+            soft_starts_at = dict["soft_starts_at"] as? String,
+            public_url = dict["public_url"] as? String,
+            program_slug = dict["program"]?["slug"] as? String
+            else {
+                return nil
+        }
+
+        guard let
+            ends_at_date = Utils.dateFromRFCString(ends_at),
+            starts_at_date = Utils.dateFromRFCString(starts_at),
+            soft_starts_at_date = Utils.dateFromRFCString(soft_starts_at)
+            else {
+                return nil
+        }
+
+        self.init(
+            context: context,
+            title: title,
+            ends_at: ends_at_date,
+            starts_at: starts_at_date,
+            soft_starts_at: soft_starts_at_date,
+            public_url: public_url,
+            program_slug: program_slug
+        )
+
     }
 
-    init(context:NSManagedObjectContext, title:String, ends_at:NSDate, starts_at:NSDate, public_url:String, program_slug:String?, soft_starts_at:NSDate) {
+    init(context: NSManagedObjectContext, title: String, ends_at: NSDate, starts_at: NSDate, soft_starts_at: NSDate, public_url: String, program_slug: String) {
+
         let entityDescription = NSEntityDescription.entityForName("ScheduleOccurrence", inManagedObjectContext: context)!
 
-        super.init(entity:entityDescription,insertIntoManagedObjectContext:context)
+        super.init(entity: entityDescription, insertIntoManagedObjectContext: context)
 
-        self.title          = title
-        self.ends_at        = ends_at
-        self.starts_at      = starts_at
-        self.public_url     = public_url
-        self.program_slug   = program_slug ?? ""
+        self.title = title
+        self.ends_at = ends_at
+        self.starts_at = starts_at
         self.soft_starts_at = soft_starts_at
+        self.public_url = public_url
+        self.program_slug = program_slug
 
         // compute duration
         self.duration = self.ends_at.timeIntervalSinceReferenceDate - self.starts_at.timeIntervalSinceReferenceDate
+
     }
 
     //----------
