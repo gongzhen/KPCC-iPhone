@@ -1,4 +1,4 @@
-
+//
 //  main.m
 //  KPCC
 //
@@ -13,12 +13,6 @@
 int main(int argc, char * argv[])
 {
     @autoreleasepool {
-        @try {
-            return UIApplicationMain(argc, argv, nil, NSStringFromClass([SCPRAppDelegate class]));
-        }
-        @catch (NSException *exception) {
-            NSLog(@"Exception - %@",exception);
-            exit(EXIT_FAILURE);
-        }
+        return UIApplicationMain(argc, argv, nil, NSStringFromClass([SCPRAppDelegate class]));
     }
 }
