@@ -721,6 +721,18 @@ public struct AudioPlayerObserver<T> {
         let seek_id = ++self._interactionIdx
 
         self._getReadyPlayer() { cold in
+            guard let _ = self._player.currentItem else {
+                self._emitEvent(fsig+"seek aborted (currentItem is nil).")
+                completion?(false)
+                return
+            }
+
+            guard let _ = self._player.currentItem!.currentDate() else {
+                self._emitEvent(fsig+"seek aborted (currentDate is nil).")
+                completion?(false)
+                return
+            }
+
             if (self._interactionIdx != seek_id) {
                 self._emitEvent(fsig+"seek interrupted.")
                 completion?(false)
@@ -749,8 +761,18 @@ public struct AudioPlayerObserver<T> {
             let testLanding = { (finished:Bool) -> Void in
 
                 if finished {
+                    guard let _ = self._player.currentItem else {
+                        self._emitEvent(fsig+"seek aborted at landing (currentItem is nil).")
+                        playFunc(false)
+                        return
+                    }
+
                     // how close did we get?
-                    let landed = self._player.currentItem!.currentDate()!
+                    guard let landed = self._player.currentItem!.currentDate() else {
+                        self._emitEvent(fsig+"seek aborted at landing (currentDate is nil).")
+                        playFunc(false)
+                        return
+                    }
 
                     self._emitEvent(fsig+"landed at \(self._dateFormat.stringFromDate(landed))")
 
