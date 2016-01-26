@@ -25,10 +25,8 @@ import CoreData
 
     convenience init?(dict:NSDictionary) {
 
-        guard let
-            context = ContentManager.shared().managedObjectContext
-            else {
-                return nil
+        guard let context = ContentManager.shared().managedObjectContext else {
+            return nil
         }
 
         guard let
