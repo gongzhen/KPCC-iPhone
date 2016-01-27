@@ -11,7 +11,7 @@
 #import <CoreTelephony/CTTelephonyNetworkInfo.h>
 #import <CoreTelephony/CTCarrier.h>
 #import <AFNetworking.h>
-#import "TritonAd.h"
+#import "AudioAd.h"
 #import "Utils.h"
 #import <KSReachability/KSReachability.h>
 
@@ -61,7 +61,7 @@ typedef NS_ENUM(NSInteger, NetworkHealth) {
 - (void)fetchEpisodesForProgram:(NSString*)slug completion:(CompletionBlockWithValue)completion;
 - (void)fetchEditions:(CompletionBlockWithValue)completion;
 - (void)requestFromSCPRWithEndpoint:(NSString *)endpoint completion:(CompletionBlockWithValue)completion;
-- (void)fetchTritonAd:(NSString *)params completion:(void (^)(TritonAd* tritonAd))completion;
+- (void)fetchAudioAd:(NSString *)params completion:(void (^)(AudioAd* audioAd))completion;
 - (void)pingTritonUrl:(NSString*)url completion:(void (^)(BOOL success))completion;
 - (void)setupReachability;
 - (void)setupFloatingReachabilityWithHost:(NSString*)host;
