@@ -1421,7 +1421,6 @@
 			children = (
 				76B9A9BC18F609FF007A6D8C /* Assets */,
 				769FD69918EB682E00AAF1F4 /* Classes */,
-				76E75F1C18CE4682008E3197 /* ThirdParty */,
 				76A308E418C8FB940065D4B1 /* Images.xcassets */,
 				76A308CD18C8FB940065D4B1 /* Supporting Files */,
 				0775D0B61B8C1A6E009EDAE9 /* Empty.mm */,
@@ -1500,13 +1499,6 @@
 				7685BD57194BBCB90075BB16 /* Images */,
 			);
 			path = Assets;
-			sourceTree = "<group>";
-		};
-		76E75F1C18CE4682008E3197 /* ThirdParty */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = ThirdParty;
 			sourceTree = "<group>";
 		};
 		E35BF4FE069C4E903D03BDBD /* Pods */ = {
