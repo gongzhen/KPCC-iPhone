@@ -224,7 +224,7 @@ static NetworkManager *singleton = nil;
     }];
 }
 
-- (void)fetchTritonAd:(NSString *)params completion:(void (^)(TritonAd* tritonAd))completion {
+- (void)fetchAudioAd:(NSString *)params completion:(void (^)(AudioAd* audioAd))completion {
     AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
     manager.responseSerializer = [AFHTTPResponseSerializer serializer];
     NSString *idfa = [[[ASIdentifierManager sharedManager] advertisingIdentifier] UUIDString];
@@ -235,11 +235,11 @@ static NetworkManager *singleton = nil;
     [manager GET:tritonEndpoint parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
         NSDictionary *convertedData = [NSDictionary dictionaryWithXMLData:responseObject];
         NSLog(@"convertedData %@", convertedData);
-        TritonAd *tritonAd;
+        AudioAd *audioAd;
         if ([convertedData[@"Ad"] isKindOfClass:[NSDictionary class]]) {
-            tritonAd = [[TritonAd alloc] initWithDictionary:convertedData[@"Ad"]];
+            audioAd = [[AudioAd alloc] initWithDictionary:convertedData[@"Ad"]];
         }
-        completion(tritonAd);
+        completion(audioAd);
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         NSLog(@"failure? %@", error);
         completion(nil);

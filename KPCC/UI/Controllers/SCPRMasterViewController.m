@@ -969,10 +969,10 @@ setForOnDemandUI;
         // is there a preroll that we should play?
         CLS_LOG(@"Attempting to fetch preroll.");
         [[SessionManager shared] setLastPrerollTime:[NSDate date]];
-        [[NetworkManager shared] fetchTritonAd:nil completion:^(TritonAd *tritonAd) {
-            if (tritonAd) {
+        [[NetworkManager shared] fetchAudioAd:nil completion:^(AudioAd *audioAd) {
+            if (audioAd) {
                 CLS_LOG(@"Received a preroll to play.");
-                self.preRollViewController.tritonAd = tritonAd;
+                self.preRollViewController.audioAd = audioAd;
 
                 [self cloakForPreRoll:YES];
                 [self.preRollViewController primeUI:^{
@@ -2265,7 +2265,7 @@ setForOnDemandUI;
             bottomAnim.toValue = @(0);
             BOOL suppressDivider = NO;
             if ( [Utils isThreePointFive] ) {
-                if ( [self.preRollViewController tritonAd] ) {
+                if ( [self.preRollViewController audioAd] ) {
                     
                     bottomAnim.toValue = @(60.0);
                     suppressDivider = YES;
@@ -3192,7 +3192,7 @@ setForOnDemandUI;
 
     [self.preRollViewController removeFromParentViewController];
     [self.preRollViewController.view removeFromSuperview];
-    self.preRollViewController.tritonAd = nil;
+    self.preRollViewController.audioAd = nil;
     
     self.initialPlay = YES;
     
@@ -3616,7 +3616,7 @@ setForOnDemandUI;
 - (void)onRateChange {
     
     self.playStateGate = YES;
-    if ( !self.initiateRewind || self.preRollViewController.tritonAd ) {
+    if ( !self.initiateRewind || self.preRollViewController.audioAd ) {
         [self.liveProgressViewController setFreezeBit:YES];
         [self updateControlsAndUI:YES];
     }

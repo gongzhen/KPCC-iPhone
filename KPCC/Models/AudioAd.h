@@ -1,5 +1,5 @@
 //
-//  TritonAd.h
+//  AudioAd.h
 //  KPCC
 //
 //  Created by John Meeker on 10/21/14.
@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-@interface TritonAd : NSObject
+@interface AudioAd : NSObject
 
 - (instancetype)initWithDictionary:(NSDictionary *)dictionary;
 

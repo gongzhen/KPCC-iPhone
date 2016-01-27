@@ -1,16 +1,16 @@
 //
-//  TritonAd.m
+//  AudioAd.m
 //  KPCC
 //
 //  Created by John Meeker on 10/21/14.
 //  Copyright (c) 2014 SCPR. All rights reserved.
 //
 
-#import "TritonAd.h"
+#import "AudioAd.h"
 
-NSUInteger const kTritonAdMaxImpressionUrls = 10;
+NSUInteger const kAudioAdMaxImpressionUrls = 10;
 
-@implementation TritonAd
+@implementation AudioAd
 
 + (NSString *)stringValueForKey:(NSString *)key inDictionary:(NSDictionary *)dictionary
 {
@@ -79,7 +79,7 @@ NSUInteger const kTritonAdMaxImpressionUrls = 10;
 
 - (NSArray *)impressionUrls
 {
-    return [_impressionUrls subarrayWithRange:NSMakeRange(0, MIN(_impressionUrls.count, kTritonAdMaxImpressionUrls))];
+    return [_impressionUrls subarrayWithRange:NSMakeRange(0, MIN(_impressionUrls.count, kAudioAdMaxImpressionUrls))];
 }
 
 - (void)parseAudioCreative:(NSDictionary *)creative

@@ -60,13 +60,13 @@
 
 - (void)showPreRollWithAnimation:(BOOL)animated completion:(void (^)(BOOL done))completion {
     [SCPRSpinnerViewController spinInCenterOfView:self.curtainView appeared:^{
-        if (self.tritonAd) {
+        if (self.audioAd) {
 
             [[AudioManager shared] setCurrentAudioMode:AudioModePreroll];
 
             if (animated) {
                 // Set image for ad
-                NSURL *imageUrl = [NSURL URLWithString:self.tritonAd.imageCreativeUrl];
+                NSURL *imageUrl = [NSURL URLWithString:self.audioAd.imageCreativeUrl];
                 NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:imageUrl];
                 UIImageView *iv = self.adImageView;
                 [iv setImageWithURLRequest:request placeholderImage:nil success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {
@@ -80,10 +80,10 @@
                                                    forKey:nil];
 
                     dispatch_async(dispatch_get_main_queue(), ^{
-                        if ( self.tritonAd.clickthroughUrl ) {
+                        if ( self.audioAd.clickthroughUrl ) {
                             [self.adImageView addGestureRecognizer:self.adTapper];
                         }
-                        [[NetworkManager shared] pingTritonUrl:self.tritonAd.creativeTrackingUrl completion:^(BOOL success) {
+                        [[NetworkManager shared] pingTritonUrl:self.audioAd.creativeTrackingUrl completion:^(BOOL success) {
                             if (success) NSLog(@"creative tracking sent successfully");
                         }];
                     });
@@ -92,7 +92,7 @@
                 }];
 
                 // Build preroll audio player
-                self.prerollPlayer = [[AudioPlayer alloc] initWithUrl:[NSURL URLWithString:self.tritonAd.audioCreativeUrl] hiResTick:YES];
+                self.prerollPlayer = [[AudioPlayer alloc] initWithUrl:[NSURL URLWithString:self.audioAd.audioCreativeUrl] hiResTick:YES];
 
                 [self.prerollPlayer observeTime:^(StreamDates* dates) {
                     NSValue* v = [dates curTimeV];
@@ -102,7 +102,7 @@
                         currentPresentedDuration = CMTimeGetSeconds(t);
 
                         dispatch_async(dispatch_get_main_queue(), ^{
-                            [self.adProgressView setProgress:(currentPresentedDuration/[self.tritonAd.audioCreativeDuration floatValue]) animated:YES];
+                            [self.adProgressView setProgress:(currentPresentedDuration/[self.audioAd.audioCreativeDuration floatValue]) animated:YES];
                         });
                     }
                 }];
@@ -189,16 +189,16 @@
 
 # pragma mark - Actions
 - (void)openClickThroughUrl {
-    NSString *url = self.tritonAd.clickthroughUrl;
+    NSString *url = self.audioAd.clickthroughUrl;
     if ( url && !SEQ(@"",url) ) {
         [[UIApplication sharedApplication] openURL:[NSURL URLWithString:url]];
     }
 }
 
 - (IBAction)dismissTapped:(id)sender {
-    if (self.tritonAd && !impressionSent) {
+    if (self.audioAd && !impressionSent) {
         impressionSent = YES;
-        for (NSString *impressionUrl in self.tritonAd.impressionUrls) {
+        for (NSString *impressionUrl in self.audioAd.impressionUrls) {
             [[NetworkManager shared] pingTritonUrl:impressionUrl completion:^(BOOL success) {
                 if (success) NSLog(@"impression sent successfully");
             }];

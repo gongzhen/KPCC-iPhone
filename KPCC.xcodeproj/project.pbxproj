@@ -155,7 +155,7 @@
 		523E86D919CB694B006FC366 /* Episode.m in Sources */ = {isa = PBXBuildFile; fileRef = 523E86D819CB694B006FC366 /* Episode.m */; };
 		5248858E19CBA180005F59CC /* EpisodeAudio.m in Sources */ = {isa = PBXBuildFile; fileRef = 5248858D19CBA180005F59CC /* EpisodeAudio.m */; };
 		5257E9CC19E34A550055733F /* SCPRSlideInTransition.m in Sources */ = {isa = PBXBuildFile; fileRef = 5257E9CB19E34A550055733F /* SCPRSlideInTransition.m */; };
-		525C6CA419F701FA0076C13B /* TritonAd.m in Sources */ = {isa = PBXBuildFile; fileRef = 525C6CA319F701FA0076C13B /* TritonAd.m */; };
+		525C6CA419F701FA0076C13B /* AudioAd.m in Sources */ = {isa = PBXBuildFile; fileRef = 525C6CA319F701FA0076C13B /* AudioAd.m */; };
 		52CC6D5E19D0DC7100C67322 /* Segment.m in Sources */ = {isa = PBXBuildFile; fileRef = 52CC6D5D19D0DC7100C67322 /* Segment.m */; };
 		52CC6D6219D100DE00C67322 /* SCPRProgramTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 52CC6D6119D100DE00C67322 /* SCPRProgramTableViewCell.m */; };
 		52CC6D6619D110E300C67322 /* SCPRProgramsListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 52CC6D6519D110E300C67322 /* SCPRProgramsListViewController.m */; };
@@ -547,8 +547,8 @@
 		5248858D19CBA180005F59CC /* EpisodeAudio.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EpisodeAudio.m; sourceTree = "<group>"; };
 		5257E9CA19E34A550055733F /* SCPRSlideInTransition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCPRSlideInTransition.h; path = Transitions/SCPRSlideInTransition.h; sourceTree = "<group>"; };
 		5257E9CB19E34A550055733F /* SCPRSlideInTransition.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SCPRSlideInTransition.m; path = Transitions/SCPRSlideInTransition.m; sourceTree = "<group>"; };
-		525C6CA219F701FA0076C13B /* TritonAd.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TritonAd.h; sourceTree = "<group>"; };
-		525C6CA319F701FA0076C13B /* TritonAd.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TritonAd.m; sourceTree = "<group>"; };
+		525C6CA219F701FA0076C13B /* AudioAd.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioAd.h; sourceTree = "<group>"; };
+		525C6CA319F701FA0076C13B /* AudioAd.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AudioAd.m; sourceTree = "<group>"; };
 		52CC6D5C19D0DC7100C67322 /* Segment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Segment.h; sourceTree = "<group>"; };
 		52CC6D5D19D0DC7100C67322 /* Segment.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Segment.m; sourceTree = "<group>"; };
 		52CC6D6019D100DE00C67322 /* SCPRProgramTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCPRProgramTableViewCell.h; sourceTree = "<group>"; };
@@ -1134,8 +1134,8 @@
 				5248858D19CBA180005F59CC /* EpisodeAudio.m */,
 				52CC6D5C19D0DC7100C67322 /* Segment.h */,
 				52CC6D5D19D0DC7100C67322 /* Segment.m */,
-				525C6CA219F701FA0076C13B /* TritonAd.h */,
-				525C6CA319F701FA0076C13B /* TritonAd.m */,
+				525C6CA219F701FA0076C13B /* AudioAd.h */,
+				525C6CA319F701FA0076C13B /* AudioAd.m */,
 				52CF917B1A0036CA007BCFA8 /* AudioChunk.h */,
 				52CF917C1A0036CA007BCFA8 /* AudioChunk.m */,
 				07139B831B95E701007DBA91 /* ScheduleOccurrence.swift */,
@@ -2048,7 +2048,7 @@
 				25E8BDAB1ABC923E007B99EB /* SCPRSleepViewController.m in Sources */,
 				52CC6D6219D100DE00C67322 /* SCPRProgramTableViewCell.m in Sources */,
 				52D6B2001A02EEB90068B19A /* SCPRQueueScrollableView.m in Sources */,
-				525C6CA419F701FA0076C13B /* TritonAd.m in Sources */,
+				525C6CA419F701FA0076C13B /* AudioAd.m in Sources */,
 				76A3090418C93C880065D4B1 /* AudioManager.m in Sources */,
 				258E8E0A1A16AC5B00675E68 /* NSData+JSONAdditions.m in Sources */,
 				25BBCD6E1A85867F0015071E /* NSError+PrettyAnalytics.m in Sources */,
