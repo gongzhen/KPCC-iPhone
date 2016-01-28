@@ -1545,7 +1545,6 @@
 				76A308E618C8FB940065D4B1 /* Sources */,
 				76A308E718C8FB940065D4B1 /* Frameworks */,
 				76A308E818C8FB940065D4B1 /* Resources */,
-				25DF10EE1ADC36A500B6DC8B /* ShellScript */,
 				5B4E3696EC147E4E199BAECF /* Copy Pods Resources */,
 				6B1A6B6C96CF1113EC976B51 /* Embed Pods Frameworks */,
 			);
@@ -1885,19 +1884,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "if [ \"${CONFIGURATION}\" = \"Release\" ]; then\n  ./Fabric.framework/run 434d44032523439399b6658c29c147e8e869167e 4dc4d9cc0ade16f282932c7daef418996a1adaaf355390fc30594696d8936fb3\nfi";
-		};
-		25DF10EE1ADC36A500B6DC8B /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "";
 		};
 		2E850504DBEA4BBA8459FA23 /* Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
