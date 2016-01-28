@@ -40,7 +40,9 @@ static AnalyticsManager *singleton = nil;
 
 - (void)setup {
     
-    [Fabric with:@[CrashlyticsKit]];
+#ifdef RELEASE
+    [Fabric with:@[[Crashlytics class]]];
+#endif
     
     NSDictionary *globalConfig = [Utils globalConfig];
     
