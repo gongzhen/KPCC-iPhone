@@ -28,12 +28,6 @@ static long kStreamCorrectionTolerance = 60*5;
 #define kFailedConnectionAudioFile @"Wood_Crash"
 #define kFailedStreamAudioFile @"Glass_Crash"
 
-#ifdef DEBUG
-#	define SCPRDebugLog(fmt, ...) NSLog((@"%s [Line %d] " fmt), __PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__);
-#else
-#	define SCPRDebugLog(...)
-#endif
-
 @class AudioChunk;
 
 typedef NS_ENUM(NSUInteger, AudioMode) {
