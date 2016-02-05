@@ -26,6 +26,7 @@
     NSDictionary *globalConfig = [Utils globalConfig];
     
     [[AnalyticsManager shared] setup];
+
     A0Lock *lock = [[UXmanager shared] lock];
     [lock applicationLaunchedWithOptions:launchOptions];
 
