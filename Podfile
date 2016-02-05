@@ -16,5 +16,8 @@ target 'KPCC' do
   pod 'Lock-Facebook', '~> 2.0'
   pod 'Lock-Twitter', '~> 1.0'
   pod 'SimpleKeychain', '~> 0.4'
+  pod 'FBSDKCoreKit', '~> 4.4'
+  pod 'FBSDKShareKit', '~> 4.4'
+  pod 'FBSDKLoginKit', '~> 4.4'
 
 end
