@@ -61,7 +61,7 @@
 			</dict>
 		</array>
 	</dict>
-	<key>FacebookAppId</key>
+	<key>FacebookAppID</key>
 	<string>842051802522808</string>
 	<key>FacebookDisplayName</key>
 	<string>KPCC iPhone</string>
