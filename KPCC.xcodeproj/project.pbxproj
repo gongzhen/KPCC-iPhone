@@ -1914,7 +1914,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods/Pods-resources.sh\"\n";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-KPCC/Pods-KPCC-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		6B1A6B6C96CF1113EC976B51 /* Embed Pods Frameworks */ = {
@@ -1929,7 +1929,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods/Pods-frameworks.sh\"\n";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-KPCC/Pods-KPCC-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		91A9C88B4B9EDE80BF21F596 /* Check Pods Manifest.lock */ = {
