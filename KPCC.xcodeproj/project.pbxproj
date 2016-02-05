@@ -328,8 +328,6 @@
 		B5F9F74A1ABCE8FD00115DB3 /* icon-clock@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B5F9F7461ABCE8FD00115DB3 /* icon-clock@2x.png */; };
 		B5F9F74B1ABCE8FD00115DB3 /* icon-stopwatch.png in Resources */ = {isa = PBXBuildFile; fileRef = B5F9F7471ABCE8FD00115DB3 /* icon-stopwatch.png */; };
 		B5F9F74C1ABCE8FD00115DB3 /* icon-stopwatch@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B5F9F7481ABCE8FD00115DB3 /* icon-stopwatch@2x.png */; };
-		C902C9E15F3FE6D354EFE519 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C4832A831DF6416997B73FBF /* libPods.a */; };
-		D60D1CDDD065418D8BE73D8C /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C4832A831DF6416997B73FBF /* libPods.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -755,7 +753,6 @@
 		B5F9F7461ABCE8FD00115DB3 /* icon-clock@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-clock@2x.png"; sourceTree = "<group>"; };
 		B5F9F7471ABCE8FD00115DB3 /* icon-stopwatch.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-stopwatch.png"; sourceTree = "<group>"; };
 		B5F9F7481ABCE8FD00115DB3 /* icon-stopwatch@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-stopwatch@2x.png"; sourceTree = "<group>"; };
-		C4832A831DF6416997B73FBF /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -772,7 +769,6 @@
 				76A308C918C8FB940065D4B1 /* CoreGraphics.framework in Frameworks */,
 				76A308CB18C8FB940065D4B1 /* UIKit.framework in Frameworks */,
 				76A308C718C8FB940065D4B1 /* Foundation.framework in Frameworks */,
-				D60D1CDDD065418D8BE73D8C /* libPods.a in Frameworks */,
 				2574799B1B6965F800F72AF6 /* Fabric.framework in Frameworks */,
 				94612034188A450012173441 /* libPods-KPCC.a in Frameworks */,
 			);
@@ -785,7 +781,6 @@
 				76A308EC18C8FB950065D4B1 /* XCTest.framework in Frameworks */,
 				76A308EE18C8FB950065D4B1 /* UIKit.framework in Frameworks */,
 				76A308ED18C8FB950065D4B1 /* Foundation.framework in Frameworks */,
-				C902C9E15F3FE6D354EFE519 /* libPods.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1412,7 +1407,6 @@
 				76A308C818C8FB940065D4B1 /* CoreGraphics.framework */,
 				76A308CA18C8FB940065D4B1 /* UIKit.framework */,
 				76A308EB18C8FB950065D4B1 /* XCTest.framework */,
-				C4832A831DF6416997B73FBF /* libPods.a */,
 				5B19959CD2C659346CE0FA9B /* libPods-KPCC.a */,
 			);
 			name = Frameworks;
