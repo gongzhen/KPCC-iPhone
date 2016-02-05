@@ -152,7 +152,7 @@ DEPENDENCIES:
   - FXBlurView (~> 1.6)
   - Google/Analytics (~> 1.0.7)
   - JWTDecode (~> 0.2)
-  - KSReachability
+  - KSReachability (~> 1.4)
   - Lock (~> 1.12)
   - Lock-Facebook (~> 2.0)
   - Lock-Twitter (~> 1.0)
@@ -160,7 +160,7 @@ DEPENDENCIES:
   - Mixpanel (~> 2.7)
   - Parse (~> 1.6)
   - pop (~> 1.0)
-  - SimpleKeychain
+  - SimpleKeychain (~> 0.4)
   - XMLDictionary (~> 1.4)
 
 SPEC CHECKSUMS:
