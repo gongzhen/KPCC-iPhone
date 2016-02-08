@@ -26,12 +26,17 @@
     NSDictionary *globalConfig = [Utils globalConfig];
     
     [[AnalyticsManager shared] setup];
+
     A0Lock *lock = [[UXmanager shared] lock];
     [lock applicationLaunchedWithOptions:launchOptions];
 
     [Parse setApplicationId:globalConfig[@"Parse"][@"ApplicationId"]
                   clientKey:globalConfig[@"Parse"][@"ClientKey"]];
     
+#ifdef RELEASE
+    [[FBSDKApplicationDelegate sharedInstance] application:application didFinishLaunchingWithOptions:launchOptions];
+#endif
+
     // Apply application-wide styling
     [self applyStylesheet];
     
@@ -166,9 +171,16 @@
 }
 
 - (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation {
-    A0Lock *lock = [[UXmanager shared] lock];
-    [lock handleURL:url sourceApplication:sourceApplication];
-    return YES;
+    BOOL success = [[[UXmanager shared] lock] handleURL:url sourceApplication:sourceApplication];
+#ifdef RELEASE
+    if (! success) {
+        success = [[FBSDKApplicationDelegate sharedInstance] application:application
+                                                                 openURL:url
+                                                       sourceApplication:sourceApplication
+                                                              annotation:annotation];
+    }
+#endif
+    return success;
 }
 
 - (void)application:(UIApplication *)application handleActionWithIdentifier:(NSString *)identifier forLocalNotification:(UILocalNotification *)notification completionHandler:(void (^)())completionHandler {
@@ -255,6 +267,10 @@
     [self manuallyCheckAlarm];
     
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
+
+#ifdef RELEASE
+    [FBSDKAppEvents activateApp];
+#endif
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application {

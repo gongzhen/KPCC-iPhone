@@ -11,7 +11,6 @@
 #import "SCPRAppDelegate.h"
 #import <AVFoundation/AVFoundation.h>
 #import <Lock/Lock.h>
-#import <libextobjc/EXTScope.h>
 #import <SimpleKeychain/A0SimpleKeychain.h>
 
 @class SCPROnboardingViewController;

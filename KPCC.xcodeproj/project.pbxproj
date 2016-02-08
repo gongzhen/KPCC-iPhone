@@ -323,12 +323,11 @@
 		76B9A9AE18EF59FD007A6D8C /* SCPRUserReportViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 76B9A9AB18EF59FD007A6D8C /* SCPRUserReportViewController.xib */; };
 		76B9A9B618EF79F6007A6D8C /* SCPRFooterView.m in Sources */ = {isa = PBXBuildFile; fileRef = 76B9A9B518EF79F6007A6D8C /* SCPRFooterView.m */; };
 		76EF5E8A193E8D6B00568A9D /* Storyboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 76EF5E89193E8D6B00568A9D /* Storyboard.storyboard */; };
+		94612034188A450012173441 /* libPods-KPCC.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5B19959CD2C659346CE0FA9B /* libPods-KPCC.a */; };
 		B5F9F7491ABCE8FD00115DB3 /* icon-clock.png in Resources */ = {isa = PBXBuildFile; fileRef = B5F9F7451ABCE8FD00115DB3 /* icon-clock.png */; };
 		B5F9F74A1ABCE8FD00115DB3 /* icon-clock@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B5F9F7461ABCE8FD00115DB3 /* icon-clock@2x.png */; };
 		B5F9F74B1ABCE8FD00115DB3 /* icon-stopwatch.png in Resources */ = {isa = PBXBuildFile; fileRef = B5F9F7471ABCE8FD00115DB3 /* icon-stopwatch.png */; };
 		B5F9F74C1ABCE8FD00115DB3 /* icon-stopwatch@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B5F9F7481ABCE8FD00115DB3 /* icon-stopwatch@2x.png */; };
-		C902C9E15F3FE6D354EFE519 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C4832A831DF6416997B73FBF /* libPods.a */; };
-		D60D1CDDD065418D8BE73D8C /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C4832A831DF6416997B73FBF /* libPods.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -345,8 +344,6 @@
 		07139B831B95E701007DBA91 /* ScheduleOccurrence.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScheduleOccurrence.swift; sourceTree = "<group>"; };
 		0724AFD21B96068D00C8DE4D /* GenericProgram.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GenericProgram.h; sourceTree = "<group>"; };
 		0724AFD31B9620E400C8DE4D /* KPCC-Proprietary-340.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "KPCC-Proprietary-340.xcdatamodel"; sourceTree = "<group>"; };
-		075636571B9FBD91001D1C55 /* Pods.enterprise.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Pods.enterprise.xcconfig; path = "Pods/Target Support Files/Pods/Pods.enterprise.xcconfig"; sourceTree = "<group>"; };
-		075F6FAD1B8CFE2400E641F3 /* KPCCPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = KPCCPlayer.framework; path = "../../../Library/Developer/Xcode/DerivedData/KPCCPlayer-cfmdykrumzkmswepgfywosbqcrly/Build/Products/Debug-iphoneos/KPCCPlayer.framework"; sourceTree = "<group>"; };
 		0775D0B61B8C1A6E009EDAE9 /* Empty.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = Empty.mm; sourceTree = "<group>"; };
 		0778E9141BADAE00005B4F9F /* coverart.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = coverart.png; sourceTree = "<group>"; };
 		07A24B4B1BA3A4F800197EB9 /* SCPRProgramTableViewHeader.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SCPRProgramTableViewHeader.xib; sourceTree = "<group>"; };
@@ -362,7 +359,6 @@
 		07EB39631B989A09005A8DDB /* NowPlayingManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NowPlayingManager.swift; sourceTree = "<group>"; };
 		07EB39661B9A3D84005A8DDB /* SReachability.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SReachability.swift; sourceTree = "<group>"; };
 		07EB39681B9A50B9005A8DDB /* KPCC-Proprietary-340-1.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "KPCC-Proprietary-340-1.xcdatamodel"; sourceTree = "<group>"; };
-		1B29166D1072B92AE58CD1BB /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 		25263A871A32669E00BD5FF9 /* onboarding3.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = onboarding3.mp3; path = Audio/onboarding3.mp3; sourceTree = "<group>"; };
 		253030121B717CDD00B88468 /* SCPRProfileViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCPRProfileViewController.h; path = SSO/SCPRProfileViewController.h; sourceTree = "<group>"; };
 		253030131B717CDD00B88468 /* SCPRProfileViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SCPRProfileViewController.m; path = SSO/SCPRProfileViewController.m; sourceTree = "<group>"; };
@@ -671,6 +667,7 @@
 		52EFF87719C37D350059A0E3 /* SCPRMenuCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SCPRMenuCell.m; sourceTree = "<group>"; };
 		52EFF88519C3BC020059A0E3 /* item-chevron-right.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "item-chevron-right.png"; sourceTree = "<group>"; };
 		52EFF88619C3BC020059A0E3 /* item-chevron-right@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "item-chevron-right@2x.png"; sourceTree = "<group>"; };
+		5B19959CD2C659346CE0FA9B /* libPods-KPCC.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-KPCC.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		760E3C4A194FB61B00D86D91 /* Program.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Program.h; sourceTree = "<group>"; };
 		760E3C4B194FB61B00D86D91 /* Program.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Program.m; sourceTree = "<group>"; };
 		760EA99019521E98009B504E /* AVPlayer+Additions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "AVPlayer+Additions.h"; sourceTree = "<group>"; };
@@ -749,12 +746,13 @@
 		76EF5E84193E8BEC00568A9D /* KPCC-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "KPCC-Bridging-Header.h"; path = "UI/Controllers/KPCC-Bridging-Header.h"; sourceTree = "<group>"; };
 		76EF5E85193E8BEC00568A9D /* TestFlight-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "TestFlight-Bridging-Header.h"; path = "UI/Controllers/TestFlight-Bridging-Header.h"; sourceTree = "<group>"; };
 		76EF5E89193E8D6B00568A9D /* Storyboard.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Storyboard.storyboard; sourceTree = "<group>"; };
-		793A6CF463174F04B6B48648 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
+		8BD17A7B1C644E03000EADFE /* Pods-KPCC.debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = "Pods-KPCC.debug.xcconfig"; path = "Pods/Target Support Files/Pods-KPCC/Pods-KPCC.debug.xcconfig"; sourceTree = "<group>"; };
+		8BD17A7D1C644E10000EADFE /* Pods-KPCC.release.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = "Pods-KPCC.release.xcconfig"; path = "Pods/Target Support Files/Pods-KPCC/Pods-KPCC.release.xcconfig"; sourceTree = "<group>"; };
+		8BD17A7F1C644E1D000EADFE /* Pods-KPCC.enterprise.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = "Pods-KPCC.enterprise.xcconfig"; path = "Pods/Target Support Files/Pods-KPCC/Pods-KPCC.enterprise.xcconfig"; sourceTree = "<group>"; };
 		B5F9F7451ABCE8FD00115DB3 /* icon-clock.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-clock.png"; sourceTree = "<group>"; };
 		B5F9F7461ABCE8FD00115DB3 /* icon-clock@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-clock@2x.png"; sourceTree = "<group>"; };
 		B5F9F7471ABCE8FD00115DB3 /* icon-stopwatch.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-stopwatch.png"; sourceTree = "<group>"; };
 		B5F9F7481ABCE8FD00115DB3 /* icon-stopwatch@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-stopwatch@2x.png"; sourceTree = "<group>"; };
-		C4832A831DF6416997B73FBF /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -771,8 +769,8 @@
 				76A308C918C8FB940065D4B1 /* CoreGraphics.framework in Frameworks */,
 				76A308CB18C8FB940065D4B1 /* UIKit.framework in Frameworks */,
 				76A308C718C8FB940065D4B1 /* Foundation.framework in Frameworks */,
-				D60D1CDDD065418D8BE73D8C /* libPods.a in Frameworks */,
 				2574799B1B6965F800F72AF6 /* Fabric.framework in Frameworks */,
+				94612034188A450012173441 /* libPods-KPCC.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -783,7 +781,6 @@
 				76A308EC18C8FB950065D4B1 /* XCTest.framework in Frameworks */,
 				76A308EE18C8FB950065D4B1 /* UIKit.framework in Frameworks */,
 				76A308ED18C8FB950065D4B1 /* Foundation.framework in Frameworks */,
-				C902C9E15F3FE6D354EFE519 /* libPods.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1397,7 +1394,6 @@
 		76A308C518C8FB940065D4B1 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				075F6FAD1B8CFE2400E641F3 /* KPCCPlayer.framework */,
 				257479BC1B6C4A3E00F72AF6 /* WebKit.framework */,
 				2574799A1B6965F800F72AF6 /* Fabric.framework */,
 				25E553271B61A79100C45B85 /* Crashlytics.framework */,
@@ -1411,7 +1407,7 @@
 				76A308C818C8FB940065D4B1 /* CoreGraphics.framework */,
 				76A308CA18C8FB940065D4B1 /* UIKit.framework */,
 				76A308EB18C8FB950065D4B1 /* XCTest.framework */,
-				C4832A831DF6416997B73FBF /* libPods.a */,
+				5B19959CD2C659346CE0FA9B /* libPods-KPCC.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -1504,9 +1500,9 @@
 		E35BF4FE069C4E903D03BDBD /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				1B29166D1072B92AE58CD1BB /* Pods.debug.xcconfig */,
-				793A6CF463174F04B6B48648 /* Pods.release.xcconfig */,
-				075636571B9FBD91001D1C55 /* Pods.enterprise.xcconfig */,
+				8BD17A7F1C644E1D000EADFE /* Pods-KPCC.enterprise.xcconfig */,
+				8BD17A7D1C644E10000EADFE /* Pods-KPCC.release.xcconfig */,
+				8BD17A7B1C644E03000EADFE /* Pods-KPCC.debug.xcconfig */,
 			);
 			name = Pods;
 			sourceTree = "<group>";
@@ -1912,7 +1908,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods/Pods-resources.sh\"\n";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-KPCC/Pods-KPCC-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		6B1A6B6C96CF1113EC976B51 /* Embed Pods Frameworks */ = {
@@ -1927,7 +1923,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods/Pods-frameworks.sh\"\n";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-KPCC/Pods-KPCC-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		91A9C88B4B9EDE80BF21F596 /* Check Pods Manifest.lock */ = {
@@ -1957,7 +1953,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods/Pods-frameworks.sh\"\n";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-KPCC/Pods-KPCC-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		9E4DCD001A0847218C219F40 /* Copy Pods Resources */ = {
@@ -1972,7 +1968,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods/Pods-resources.sh\"\n";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-KPCC/Pods-KPCC-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -2145,13 +2141,12 @@
 		};
 		075636551B9FBBA9001D1C55 /* Enterprise */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 075636571B9FBD91001D1C55 /* Pods.enterprise.xcconfig */;
+			baseConfigurationReference = 8BD17A7F1C644E1D000EADFE /* Pods-KPCC.enterprise.xcconfig */;
 			buildSettings = {
 				APP_UID = org.scpr.iphone.KPCC;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = YES;
-				CLANG_CXX_LIBRARY = "libstdc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_WARN_ENUM_CONVERSION = NO;
 				ENABLE_BITCODE = NO;
@@ -2208,7 +2203,7 @@
 		};
 		075636561B9FBBA9001D1C55 /* Enterprise */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 075636571B9FBD91001D1C55 /* Pods.enterprise.xcconfig */;
+			baseConfigurationReference = 8BD17A7F1C644E1D000EADFE /* Pods-KPCC.enterprise.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = YES;
@@ -2330,13 +2325,12 @@
 		};
 		76A308FC18C8FB950065D4B1 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 1B29166D1072B92AE58CD1BB /* Pods.debug.xcconfig */;
+			baseConfigurationReference = 8BD17A7B1C644E03000EADFE /* Pods-KPCC.debug.xcconfig */;
 			buildSettings = {
 				APP_UID = org.americanpublicmedia.KPCCRadio;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = YES;
-				CLANG_CXX_LIBRARY = "libstdc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_WARN_ENUM_CONVERSION = NO;
 				ENABLE_BITCODE = NO;
@@ -2393,13 +2387,12 @@
 		};
 		76A308FD18C8FB950065D4B1 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 793A6CF463174F04B6B48648 /* Pods.release.xcconfig */;
+			baseConfigurationReference = 8BD17A7D1C644E10000EADFE /* Pods-KPCC.release.xcconfig */;
 			buildSettings = {
 				APP_UID = org.americanpublicmedia.KPCCRadio;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = YES;
-				CLANG_CXX_LIBRARY = "libstdc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_WARN_ENUM_CONVERSION = NO;
 				ENABLE_BITCODE = NO;
@@ -2455,7 +2448,7 @@
 		};
 		76A308FF18C8FB950065D4B1 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 1B29166D1072B92AE58CD1BB /* Pods.debug.xcconfig */;
+			baseConfigurationReference = 8BD17A7B1C644E03000EADFE /* Pods-KPCC.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = YES;
@@ -2510,7 +2503,7 @@
 		};
 		76A3090018C8FB950065D4B1 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 793A6CF463174F04B6B48648 /* Pods.release.xcconfig */;
+			baseConfigurationReference = 8BD17A7D1C644E10000EADFE /* Pods-KPCC.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = YES;
