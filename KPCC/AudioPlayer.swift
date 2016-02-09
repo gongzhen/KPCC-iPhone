@@ -223,14 +223,6 @@ public struct AudioPlayerObserver<T> {
             self._player.currentItem?.canUseNetworkResourcesForLiveStreamingWhilePaused = false
         }
 
-        // should we be limiting bandwidth?
-        if #available(iOS 8.0, *) {
-            if self.reduceBandwidthOnCellular && self._networkStatus == .Cellular {
-                self._emitEvent("Turning on bandwidth limiter for new player")
-                self._player.currentItem?.preferredPeakBitRate = 1000
-            }
-        }
-
         self._setStatus(.New)
 
         self._getReadyPlayer() {cold in
@@ -268,8 +260,17 @@ public struct AudioPlayerObserver<T> {
         // and a check right now...
         self.setNetworkStatus()
 
-        // -- set up bandwidth limiter -- //
+        // should we be limiting bandwidth?
+        if #available(iOS 8.0, *) {
+            if self.reduceBandwidthOnCellular && self._networkStatus == .Cellular {
+                if self._player.currentItem != nil {
+                    self._emitEvent("Turning on bandwidth limiter for new player")
+                    self._player.currentItem!.preferredPeakBitRate = 1000
+                }
+            }
+        }
 
+        // -- set up bandwidth limiter -- //
         if #available(iOS 8.0,*) {
             self.oNetwork.addObserver() { s in
                 if self.reduceBandwidthOnCellular {
