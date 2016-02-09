@@ -202,6 +202,8 @@
 - (void)applicationWillResignActive:(UIApplication *)application {
     
     if ( [[AudioManager shared] isPlayingAudio] ) {
+        [Flurry setBackgroundSessionEnabled:YES];
+        [[AnalyticsManager shared] setFlurryActiveInBackground:YES];
         [[SessionManager shared] handleSessionMovingToBackground];
     }
     
@@ -239,6 +241,11 @@
 - (void)applicationWillEnterForeground:(UIApplication *)application {
     // when returning to the foreground, we need to figure out what to display
     // to the user.
+
+    if ( [[AnalyticsManager shared] flurryActiveInBackground] ) {
+        [Flurry setBackgroundSessionEnabled:NO];
+        [[AnalyticsManager shared] setFlurryActiveInBackground:NO];
+    }
 
     [[SessionManager shared] handleSessionMovingToForeground];
     [[SessionManager shared] expireSessionIfExpired:NO];
