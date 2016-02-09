@@ -9,15 +9,14 @@
 #import "SCPRAppDelegate.h"
 #import "SCPRMasterViewController.h"
 #import "SCPRNavigationController.h"
-#import <AVFoundation/AVFoundation.h>
 #import "SessionManager.h"
 #import "NetworkManager.h"
 #import "SCPROnboardingViewController.h"
 #import "UXmanager.h"
 #import "AnalyticsManager.h"
-#import <Parse/Parse.h>
+#import "SCPRXFSViewController.h"
 
-#import "KPCC-Swift.h"
+NSString *const kPushChannel = @"listenLive";
 
 @implementation SCPRAppDelegate
 
@@ -202,6 +201,10 @@
 - (void)applicationWillResignActive:(UIApplication *)application {
     
     if ( [[AudioManager shared] isPlayingAudio] ) {
+#ifdef RELEASE
+        [Flurry setBackgroundSessionEnabled:YES];
+        [[AnalyticsManager shared] setFlurryActiveInBackground:YES];
+#endif
         [[SessionManager shared] handleSessionMovingToBackground];
     }
     
@@ -239,6 +242,13 @@
 - (void)applicationWillEnterForeground:(UIApplication *)application {
     // when returning to the foreground, we need to figure out what to display
     // to the user.
+
+#ifdef RELEASE
+    if ( [[AnalyticsManager shared] flurryActiveInBackground] ) {
+        [Flurry setBackgroundSessionEnabled:NO];
+        [[AnalyticsManager shared] setFlurryActiveInBackground:NO];
+    }
+#endif
 
     [[SessionManager shared] handleSessionMovingToForeground];
     [[SessionManager shared] expireSessionIfExpired:NO];

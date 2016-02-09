@@ -13,6 +13,7 @@
 #import "NetworkManager.h"
 #import <Crashlytics/Crashlytics.h>
 #import <Fabric/Fabric.h>
+#import <Flurry-iOS-SDK/Flurry.h>
 //#import <NielsenAppApi/NielsenAppApi.h>
 
 static NSInteger kMaxAllowedExceptionsPerInterval = 5;
@@ -43,6 +44,7 @@ typedef NS_ENUM(NSInteger, ScrubbingType) {
 
 @property (nonatomic, strong) NSMutableDictionary *progressMap;
 
+@property BOOL flurryActiveInBackground;
 @property BOOL gaSessionStarted;
 
 @property NSInteger allowedExceptions;

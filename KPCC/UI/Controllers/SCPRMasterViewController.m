@@ -31,6 +31,7 @@
 #import "SCPRLoginViewController.h"
 #import "SCPRProfileViewController.h"
 #import "GenericProgram.h"
+#import "SCPRXFSViewController.h"
 
 @import MessageUI;
 
