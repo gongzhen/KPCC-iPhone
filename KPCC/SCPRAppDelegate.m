@@ -201,8 +201,10 @@ NSString *const kPushChannel = @"listenLive";
 - (void)applicationWillResignActive:(UIApplication *)application {
     
     if ( [[AudioManager shared] isPlayingAudio] ) {
+#ifdef RELEASE
         [Flurry setBackgroundSessionEnabled:YES];
         [[AnalyticsManager shared] setFlurryActiveInBackground:YES];
+#endif
         [[SessionManager shared] handleSessionMovingToBackground];
     }
     
@@ -241,10 +243,12 @@ NSString *const kPushChannel = @"listenLive";
     // when returning to the foreground, we need to figure out what to display
     // to the user.
 
+#ifdef RELEASE
     if ( [[AnalyticsManager shared] flurryActiveInBackground] ) {
         [Flurry setBackgroundSessionEnabled:NO];
         [[AnalyticsManager shared] setFlurryActiveInBackground:NO];
     }
+#endif
 
     [[SessionManager shared] handleSessionMovingToForeground];
     [[SessionManager shared] expireSessionIfExpired:NO];
