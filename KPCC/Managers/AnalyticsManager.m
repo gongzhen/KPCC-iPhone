@@ -46,6 +46,12 @@ static AnalyticsManager *singleton = nil;
     
     NSDictionary *globalConfig = [Utils globalConfig];
     
+    NSString *token = globalConfig[@"Flurry"][@"key"];
+    [Flurry setCrashReportingEnabled:NO];
+    [Flurry setDebugLogEnabled:NO];
+    [Flurry startSession:token];
+    [Flurry setBackgroundSessionEnabled:NO];
+
     self.mxp = [Mixpanel sharedInstanceWithToken:globalConfig[@"Mixpanel"][@"token"]];
 
     NSString *uuid = [[[UIDevice currentDevice] identifierForVendor] UUIDString];
