@@ -14,8 +14,9 @@
 #import "SCPROnboardingViewController.h"
 #import "UXmanager.h"
 #import "AnalyticsManager.h"
-#import <Parse/Parse.h>
+#import "SCPRXFSViewController.h"
 
+NSString *const kPushChannel = @"listenLive";
 
 @implementation SCPRAppDelegate
 

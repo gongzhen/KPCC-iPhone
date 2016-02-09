@@ -7,16 +7,14 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <Parse/Parse.h>
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
-
-#import "SCPRXFSViewController.h"
-
-#define kPushChannel @"listenLive"
 #import <Flurry-iOS-SDK/Flurry.h>
 
 @class SCPRMasterViewController;
 @class SCPRNavigationController;
 @class SCPROnboardingViewController;
+@class SCPRXFSViewController;
 
 @interface SCPRAppDelegate : UIResponder <UIApplicationDelegate>
 
