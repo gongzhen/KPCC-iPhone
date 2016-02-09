@@ -9,7 +9,6 @@
 #import "SCPRAppDelegate.h"
 #import "SCPRMasterViewController.h"
 #import "SCPRNavigationController.h"
-#import <AVFoundation/AVFoundation.h>
 #import "SessionManager.h"
 #import "NetworkManager.h"
 #import "SCPROnboardingViewController.h"
