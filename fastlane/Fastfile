@@ -42,8 +42,9 @@ platform :ios do
   desc "Submit a new Beta Build to Apple TestFlight"
   desc "This will also make sure the profile is up to date"
   lane :beta do
+    ensure_git_branch(branch: 'develop')
     # match(type: "appstore") # more information: https://codesigning.guide
-    gym(scheme: "KPCC") # Build your app - more options available
+    gym(scheme: "KPCC-Release") # Build your app - more options available
     pilot
 
     # sh "your_script.sh"
@@ -52,9 +53,10 @@ platform :ios do
 
   desc "Deploy a new version to the App Store"
   lane :appstore do
+    ensure_git_branch(branch: 'develop')
     # match(type: "appstore")
     # snapshot
-    gym(scheme: "KPCC") # Build your app - more options available
+    gym(scheme: "KPCC-Release") # Build your app - more options available
     deliver(force: true)
     # frameit
   end
