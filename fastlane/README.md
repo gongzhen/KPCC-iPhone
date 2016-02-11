@@ -6,6 +6,11 @@ sudo gem install fastlane
 ```
 # Available Actions
 ## iOS
+### ios simreset
+```
+fastlane ios simreset
+```
+Reset Simulator
 ### ios test
 ```
 fastlane ios test
