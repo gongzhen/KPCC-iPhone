@@ -27,9 +27,16 @@ platform :ios do
 
   end
 
+  desc "Reset Simulator"
+  lane :simreset do
+    sh "osascript -e 'tell application \"Simulator\" to quit'"
+    sh "xcrun simctl erase all"
+  end
+
   desc "Runs all the tests"
   lane :test do |options|
     scan(scheme: "KPCC", device: options[:device])
+    simreset if options[:simreset]
   end
 
   desc "Submit a new Beta Build to Apple TestFlight"
