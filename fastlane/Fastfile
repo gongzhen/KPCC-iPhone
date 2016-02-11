@@ -12,6 +12,15 @@ platform :ios do
     cocoapods if Dir["#{path}/*"].empty?
   end
 
+  private_lane :delete_ipa do |options|
+    path = options[:path]
+    if File.extname(path) == '.ipa'
+      File.delete path if File.exist? path
+      path.sub! /\.ipa$/, '.app.dSYM.zip'
+      File.delete path if File.exist? path
+    end
+  end
+
   desc "Reset Simulator"
   lane :simreset do
     sh "osascript -e 'tell application \"Simulator\" to quit'"
@@ -28,15 +37,17 @@ platform :ios do
   desc "This will also make sure the profile is up to date"
   lane :beta do
     ensure_git_branch(branch: 'develop')
-    gym(scheme: "KPCC-Release")
+    path = gym(scheme: "KPCC-Release")
     pilot
+    delete_ipa(path: path)
   end
 
   desc "Deploy a new version to the App Store"
   lane :appstore do
     ensure_git_branch(branch: 'develop')
-    gym(scheme: "KPCC-Release")
+    path = gym(scheme: "KPCC-Release")
     deliver(force: true)
+    delete_ipa(path: path)
   end
 
   after_all do |lane|
