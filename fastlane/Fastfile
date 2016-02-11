@@ -28,8 +28,8 @@ platform :ios do
   end
 
   desc "Runs all the tests"
-  lane :test do
-    scan
+  lane :test do |options|
+    scan(scheme: "KPCC", device: options[:device])
   end
 
   desc "Submit a new Beta Build to Apple TestFlight"
