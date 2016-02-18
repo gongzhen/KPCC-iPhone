@@ -67,7 +67,6 @@ PODS:
     - GoogleSymbolUtilities (~> 1.0)
   - ISO8601DateFormatter (0.7)
   - JWTDecode (0.2.2)
-  - KSReachability (1.4.1)
   - libextobjc (0.4.1):
     - libextobjc/EXTADT (= 0.4.1)
     - libextobjc/EXTConcreteProtocol (= 0.4.1)
@@ -159,7 +158,6 @@ DEPENDENCIES:
   - FXBlurView (~> 1.6)
   - Google/Analytics (~> 1.0.7)
   - JWTDecode (~> 0.2)
-  - KSReachability (~> 1.4)
   - Lock (~> 1.12)
   - Lock-Facebook (~> 2.0)
   - Lock-Twitter (~> 1.0)
@@ -187,7 +185,6 @@ SPEC CHECKSUMS:
   GoogleUtilities: e3475cd4d45134221d2f3f3626095a1c49b62041
   ISO8601DateFormatter: ab926648eebe497f4d167c0fd083992f959f1274
   JWTDecode: c193d229af74dd72121515c976f930ccbed96a2a
-  KSReachability: ddf4af6e6488c45c5c41c59e72d72d078062ee28
   libextobjc: a650fc1bf489a3d3a9bc2e621efa3e1006fc5471
   Lock: dff57878cd3007ad9b3eae932444f225caa1b54f
   Lock-Facebook: 03bf60320d649bdfc33331f280ff5ef805941c60
