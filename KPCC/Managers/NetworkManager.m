@@ -29,33 +29,6 @@ static NetworkManager *singleton = nil;
     return singleton;
 }
 
-- (NSString*)networkInformation {
-    
-    NetworkStatus remoteHostStatus = [self.basicReachability currentReachabilityStatus];
-    NSString *nInfo = @"";
-    if ( remoteHostStatus == ReachableViaWiFi ) {
-        nInfo = @"Wi-Fi";
-    } else if ( remoteHostStatus == ReachableViaWWAN ) {
-        CTTelephonyNetworkInfo *netinfo = [[CTTelephonyNetworkInfo alloc] init];
-        CTCarrier *carrier = [netinfo subscriberCellularProvider];
-        NSString *carrierName = [carrier carrierName];
-        nInfo = carrierName;
-    } else {
-        nInfo = @"No Connection";
-    }
-    
-    return nInfo;
-}
-
-- (BOOL)wifi {
-    NetworkStatus remoteHostStatus = [self.basicReachability currentReachabilityStatus];
-    if ( remoteHostStatus == ReachableViaWiFi ) {
-        return YES;
-    }
-    
-    return NO;
-}
-
 - (void)trueFail {
     self.timeDropped = [NSDate date];
     self.networkDown = YES;

@@ -7,7 +7,6 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "Reachability.h"
 #import <CoreTelephony/CTTelephonyNetworkInfo.h>
 #import <CoreTelephony/CTCarrier.h>
 #import <AFNetworking.h>
@@ -38,16 +37,12 @@ typedef NS_ENUM(NSInteger, NetworkHealth) {
 
 + (NetworkManager*)shared;
 
-@property (nonatomic,strong) Reachability *basicReachability;
 @property (nonatomic,strong) NSDate *timeDropped;
 @property (nonatomic,strong) NSDate *timeReturned;
-@property (NS_NONATOMIC_IOSONLY, readonly, copy) NSString *networkInformation;
 
 @property BOOL networkDown;
 @property BOOL allowOneFail;
 @property BOOL audioWillBeInterrupted;
-
-- (BOOL)wifi;
 
 @property (nonatomic, strong) NSTimer *failTimer;
 
