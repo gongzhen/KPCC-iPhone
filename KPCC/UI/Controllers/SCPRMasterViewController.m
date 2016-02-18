@@ -424,8 +424,6 @@ setForOnDemandUI;
     
 
     [[AudioManager shared] loadXfsStreamUrlWithCompletion:^{
-        [[NetworkManager shared] setupReachability];
-
         [[SessionManager shared] xFreeStreamIsAvailableWithCompletion:^{
             CLS_LOG(@"Triggered xFreeStreamIsAvailableWithCompletion after loadXfs.");
         }];
