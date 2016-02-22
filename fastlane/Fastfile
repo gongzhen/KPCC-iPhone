@@ -22,6 +22,8 @@ default_platform :ios
 
 platform :ios do
 
+  APP_NAME = "KPCC"
+
   before_all do
     # ENV["SLACK_URL"] = "https://hooks.slack.com/services/..."
     path = File.expand_path "../Pods", File.dirname(__FILE__)
@@ -45,7 +47,10 @@ platform :ios do
 
   desc "Runs all the tests"
   lane :test do |options|
-    scan(scheme: "KPCC", device: options[:device])
+    scan(
+      scheme: APP_NAME,
+      device: options[:device]
+    )
     simreset if options[:simreset]
   end
 
@@ -53,15 +58,24 @@ platform :ios do
   desc "This will also make sure the profile is up to date"
   lane :beta do
     ensure_git_branch(branch: "develop")
-    path = gym(scheme: "KPCC-Release")
+    gym(scheme: "#{APP_NAME}-Release")
     pilot
     delete_ipa
+    attributes = [
+      APP_NAME,
+      get_version_number,
+      "(#{latest_testflight_build_number})"
+    ]
+    slack(
+      message: "TestFlight: There is an update available for #{attributes * ' '}",
+      default_payloads: []
+    )
   end
 
   desc "Deploy a new version to the App Store"
   lane :appstore do
     ensure_git_branch(branch: "develop")
-    path = gym(scheme: "KPCC-Release")
+    gym(scheme: "#{APP_NAME}-Release")
     deliver(force: true)
     delete_ipa
   end
