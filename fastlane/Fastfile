@@ -28,8 +28,8 @@ platform :ios do
     cocoapods if Dir["#{path}/*"].empty?
   end
 
-  private_lane :delete_ipa do |options|
-    path = options[:path]
+  private_lane :delete_ipa do
+    path = lane_context[SharedValues::IPA_OUTPUT_PATH]
     if File.extname(path) == ".ipa"
       File.delete path if File.exist? path
       path.sub! /\.ipa$/, ".app.dSYM.zip"
@@ -55,7 +55,7 @@ platform :ios do
     ensure_git_branch(branch: "develop")
     path = gym(scheme: "KPCC-Release")
     pilot
-    delete_ipa(path: path)
+    delete_ipa
   end
 
   desc "Deploy a new version to the App Store"
@@ -63,7 +63,7 @@ platform :ios do
     ensure_git_branch(branch: "develop")
     path = gym(scheme: "KPCC-Release")
     deliver(force: true)
-    delete_ipa(path: path)
+    delete_ipa
   end
 
   after_all do |lane|
