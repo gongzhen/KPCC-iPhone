@@ -22,17 +22,24 @@ default_platform :ios
 
 platform :ios do
 
+  APP_NAME = "KPCC"
+
   before_all do
-    # ENV["SLACK_URL"] = "https://hooks.slack.com/services/..."
+    if ENV["SLACK_URL"].to_s.empty?
+      exit unless prompt(
+        text: "WARNING: Environment variable `SLACK_URL` is NOT set.\nContinue without Slack integration?",
+        boolean: true
+      )
+    end
     path = File.expand_path "../Pods", File.dirname(__FILE__)
     cocoapods if Dir["#{path}/*"].empty?
   end
 
-  private_lane :delete_ipa do |options|
-    path = options[:path]
-    if File.extname(path) == '.ipa'
+  private_lane :delete_ipa do
+    path = lane_context[SharedValues::IPA_OUTPUT_PATH]
+    if File.extname(path) == ".ipa"
       File.delete path if File.exist? path
-      path.sub! /\.ipa$/, '.app.dSYM.zip'
+      path.sub! /\.ipa$/, ".app.dSYM.zip"
       File.delete path if File.exist? path
     end
   end
@@ -45,25 +52,29 @@ platform :ios do
 
   desc "Runs all the tests"
   lane :test do |options|
-    scan(scheme: "KPCC", device: options[:device])
+    scan(
+      scheme: APP_NAME,
+      device: options[:device]
+    )
     simreset if options[:simreset]
   end
 
   desc "Submit a new Beta Build to Apple TestFlight"
   desc "This will also make sure the profile is up to date"
   lane :beta do
-    ensure_git_branch(branch: 'develop')
-    path = gym(scheme: "KPCC-Release")
+    ensure_git_branch(branch: "develop")
+    gym(scheme: "#{APP_NAME}-Release")
     pilot
-    delete_ipa(path: path)
-  end
-
-  desc "Deploy a new version to the App Store"
-  lane :appstore do
-    ensure_git_branch(branch: 'develop')
-    path = gym(scheme: "KPCC-Release")
-    deliver(force: true)
-    delete_ipa(path: path)
+    delete_ipa
+    attributes = [
+      APP_NAME,
+      get_version_number,
+      "(#{latest_testflight_build_number})"
+    ]
+    slack(
+      message: "TestFlight: There is an update available for #{attributes * ' '}",
+      default_payloads: []
+    )
   end
 
   after_all do |lane|
