@@ -43,10 +43,9 @@ static AnalyticsManager *singleton = nil;
 #ifdef RELEASE
     [Fabric with:@[[Crashlytics class]]];
 #endif
-    
-    NSDictionary *globalConfig = [Utils globalConfig];
-    
+
 #ifdef RELEASE
+    NSDictionary *globalConfig = [Utils globalConfig];
     NSString *token = globalConfig[@"Flurry"][@"key"];
     [Flurry setCrashReportingEnabled:NO];
     [Flurry setDebugLogEnabled:NO];
@@ -54,12 +53,6 @@ static AnalyticsManager *singleton = nil;
     [Flurry setBackgroundSessionEnabled:NO];
 #endif
 
-    self.mxp = [Mixpanel sharedInstanceWithToken:globalConfig[@"Mixpanel"][@"token"]];
-
-    NSString *uuid = [[[UIDevice currentDevice] identifierForVendor] UUIDString];
-    [self.mxp identify:uuid];
-    [self.mxp.people set:@{ @"uuid" : uuid }];
-    
     // Configure tracker from GoogleService-Info.plist.
     NSError *configureError;
     [[GGLContext sharedInstance] configureWithError:&configureError];
@@ -207,8 +200,6 @@ static AnalyticsManager *singleton = nil;
     NSString *metricValue = userQuality;
     [tracker set:[GAIFields customMetricForIndex:1] value:metricValue];
     
-    [self.mxp.people set:@{ @"userQuality" : userQuality }];
-    
     NSLog(@"User quality : %@",userQuality);
 }
 
@@ -248,9 +239,6 @@ static AnalyticsManager *singleton = nil;
     
     if ( timed ) {
     }
-    
-    Mixpanel *mxp = [Mixpanel sharedInstance];
-    [mxp track:event properties:cookedParams];
     
     NSString *category = [self categoryForEvent:event];
     GAI *gai = [GAI sharedInstance];
