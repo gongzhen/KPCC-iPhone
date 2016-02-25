@@ -7,7 +7,6 @@ target 'KPCC' do
   pod 'FXBlurView', '~> 1.6'
   pod 'XMLDictionary', '~> 1.4'
   pod 'Parse', '~> 1.6'
-  pod 'Mixpanel', '~> 2.7'
   pod 'KSReachability', '~> 1.4'
   pod 'Google/Analytics', '~> 1.0.7'
   pod 'Lock', '~> 1.12'

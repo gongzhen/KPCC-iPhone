@@ -134,9 +134,6 @@ PODS:
     - libextobjc (~> 0.4)
     - Lock/Core
   - LUKeychainAccess (1.2.4)
-  - Mixpanel (2.8.2):
-    - Mixpanel/Mixpanel (= 2.8.2)
-  - Mixpanel/Mixpanel (2.8.2)
   - NSData+Base64 (1.0.0)
   - OAuthCore (0.0.1):
     - NSData+Base64
@@ -164,7 +161,6 @@ DEPENDENCIES:
   - Lock-Facebook (~> 2.0)
   - Lock-Twitter (~> 1.0)
   - Lock/Core (~> 1.16)
-  - Mixpanel (~> 2.7)
   - Parse (~> 1.6)
   - pop (~> 1.0)
   - SimpleKeychain (~> 0.4)
@@ -193,7 +189,6 @@ SPEC CHECKSUMS:
   Lock-Facebook: 03bf60320d649bdfc33331f280ff5ef805941c60
   Lock-Twitter: 8168e4c3861f6cc6581d1b8d635f41e29a607cb3
   LUKeychainAccess: 6479edb12cf06e11ff3336f796959eedbc58f714
-  Mixpanel: f4d71ac2a306e7cda6ad03d4a2be249a0fd7a967
   NSData+Base64: 4e84902c4db907a15673474677e57763ef3903e4
   OAuthCore: 43dce261db846a1fe20234d95654257e00e78581
   Parse: 2155953b1565494095d5fa5c83b3c77f2c677c09

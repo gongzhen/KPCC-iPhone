@@ -9,7 +9,6 @@
 #import <Foundation/Foundation.h>
 #include <mach/mach_time.h>
 #import "AudioManager.h"
-#import "Mixpanel.h"
 #import "NetworkManager.h"
 #import <Crashlytics/Crashlytics.h>
 #import <Fabric/Fabric.h>
@@ -40,7 +39,6 @@ typedef NS_ENUM(NSInteger, ScrubbingType) {
 @property (nonatomic, strong) NSDate *errorLogReceivedAt;
 @property (nonatomic, strong) NSDate *accessLogReceivedAt;
 @property (nonatomic, strong) NSDate *lastStreamException;
-@property (nonatomic, strong) Mixpanel *mxp;
 
 @property (nonatomic, strong) NSMutableDictionary *progressMap;
 
