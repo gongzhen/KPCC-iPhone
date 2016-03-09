@@ -83,7 +83,7 @@
                         if ( self.audioAd.clickthroughUrl ) {
                             [self.adImageView addGestureRecognizer:self.adTapper];
                         }
-                        [[NetworkManager shared] pingTritonUrl:self.audioAd.creativeTrackingUrl completion:^(BOOL success) {
+                        [[NetworkManager shared] pingAudioAdUrl:self.audioAd.creativeTrackingUrl completion:^(BOOL success) {
                             if (success) NSLog(@"creative tracking sent successfully");
                         }];
                     });
@@ -199,7 +199,7 @@
     if (self.audioAd && !impressionSent) {
         impressionSent = YES;
         for (NSString *impressionUrl in self.audioAd.impressionUrls) {
-            [[NetworkManager shared] pingTritonUrl:impressionUrl completion:^(BOOL success) {
+            [[NetworkManager shared] pingAudioAdUrl:impressionUrl completion:^(BOOL success) {
                 if (success) NSLog(@"impression sent successfully");
             }];
         }
