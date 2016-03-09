@@ -22,8 +22,6 @@
 		07EB39641B989A09005A8DDB /* NowPlayingManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07EB39631B989A09005A8DDB /* NowPlayingManager.swift */; };
 		07EB39671B9A3D84005A8DDB /* SReachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07EB39661B9A3D84005A8DDB /* SReachability.swift */; };
 		25263A881A32669E00BD5FF9 /* onboarding3.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 25263A871A32669E00BD5FF9 /* onboarding3.mp3 */; };
-		253030151B717CDD00B88468 /* SCPRProfileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 253030131B717CDD00B88468 /* SCPRProfileViewController.m */; };
-		253030161B717CDD00B88468 /* SCPRProfileViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 253030141B717CDD00B88468 /* SCPRProfileViewController.xib */; };
 		2537D8BD1A8BD7B700481CF8 /* SCPRTouchableScrubberView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2537D8BC1A8BD7B700481CF8 /* SCPRTouchableScrubberView.m */; };
 		2546AF6F1AB0CB6800E11D5B /* SCPRProgramTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2546AF6E1AB0CB6800E11D5B /* SCPRProgramTableViewCell.xib */; };
 		254831C11A41555700963078 /* UIView+PrintDimensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 254831C01A41555700963078 /* UIView+PrintDimensions.m */; };
@@ -48,10 +46,6 @@
 		2574799B1B6965F800F72AF6 /* Fabric.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2574799A1B6965F800F72AF6 /* Fabric.framework */; };
 		2574799E1B6AB69700F72AF6 /* menu-profile.png in Resources */ = {isa = PBXBuildFile; fileRef = 2574799C1B6AB69700F72AF6 /* menu-profile.png */; };
 		2574799F1B6AB69700F72AF6 /* menu-profile@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2574799D1B6AB69700F72AF6 /* menu-profile@2x.png */; };
-		257479A41B6AB90900F72AF6 /* SCPRLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 257479A21B6AB90900F72AF6 /* SCPRLoginViewController.m */; };
-		257479A51B6AB90900F72AF6 /* SCPRLoginViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 257479A31B6AB90900F72AF6 /* SCPRLoginViewController.xib */; };
-		257479A91B6ACEAC00F72AF6 /* SCPRSSOInputFieldCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 257479A71B6ACEAC00F72AF6 /* SCPRSSOInputFieldCell.m */; };
-		257479AA1B6ACEAC00F72AF6 /* SCPRSSOInputFieldCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 257479A81B6ACEAC00F72AF6 /* SCPRSSOInputFieldCell.xib */; };
 		257479AD1B6AD12D00F72AF6 /* onboarding-tile-blurry@2x.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 257479AC1B6AD12D00F72AF6 /* onboarding-tile-blurry@2x.jpg */; };
 		257479AF1B6AD14200F72AF6 /* onboarding-tile-blurry.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 257479AE1B6AD14200F72AF6 /* onboarding-tile-blurry.jpg */; };
 		257479B21B6AE08200F72AF6 /* icon-mail.png in Resources */ = {isa = PBXBuildFile; fileRef = 257479B01B6AE08200F72AF6 /* icon-mail.png */; };
@@ -360,9 +354,6 @@
 		07EB39661B9A3D84005A8DDB /* SReachability.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SReachability.swift; sourceTree = "<group>"; };
 		07EB39681B9A50B9005A8DDB /* KPCC-Proprietary-340-1.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "KPCC-Proprietary-340-1.xcdatamodel"; sourceTree = "<group>"; };
 		25263A871A32669E00BD5FF9 /* onboarding3.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = onboarding3.mp3; path = Audio/onboarding3.mp3; sourceTree = "<group>"; };
-		253030121B717CDD00B88468 /* SCPRProfileViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCPRProfileViewController.h; path = SSO/SCPRProfileViewController.h; sourceTree = "<group>"; };
-		253030131B717CDD00B88468 /* SCPRProfileViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SCPRProfileViewController.m; path = SSO/SCPRProfileViewController.m; sourceTree = "<group>"; };
-		253030141B717CDD00B88468 /* SCPRProfileViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = SCPRProfileViewController.xib; path = SSO/SCPRProfileViewController.xib; sourceTree = "<group>"; };
 		2537D8BB1A8BD7B700481CF8 /* SCPRTouchableScrubberView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCPRTouchableScrubberView.h; path = Scrubbing/SCPRTouchableScrubberView.h; sourceTree = "<group>"; };
 		2537D8BC1A8BD7B700481CF8 /* SCPRTouchableScrubberView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SCPRTouchableScrubberView.m; path = Scrubbing/SCPRTouchableScrubberView.m; sourceTree = "<group>"; };
 		2546AF6E1AB0CB6800E11D5B /* SCPRProgramTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SCPRProgramTableViewCell.xib; sourceTree = "<group>"; };
@@ -393,12 +384,6 @@
 		2574799A1B6965F800F72AF6 /* Fabric.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Fabric.framework; sourceTree = "<group>"; };
 		2574799C1B6AB69700F72AF6 /* menu-profile.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "menu-profile.png"; sourceTree = "<group>"; };
 		2574799D1B6AB69700F72AF6 /* menu-profile@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "menu-profile@2x.png"; sourceTree = "<group>"; };
-		257479A11B6AB90900F72AF6 /* SCPRLoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCPRLoginViewController.h; path = SSO/SCPRLoginViewController.h; sourceTree = "<group>"; };
-		257479A21B6AB90900F72AF6 /* SCPRLoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SCPRLoginViewController.m; path = SSO/SCPRLoginViewController.m; sourceTree = "<group>"; };
-		257479A31B6AB90900F72AF6 /* SCPRLoginViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = SCPRLoginViewController.xib; path = SSO/SCPRLoginViewController.xib; sourceTree = "<group>"; };
-		257479A61B6ACEAC00F72AF6 /* SCPRSSOInputFieldCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCPRSSOInputFieldCell.h; path = SSO/SCPRSSOInputFieldCell.h; sourceTree = "<group>"; };
-		257479A71B6ACEAC00F72AF6 /* SCPRSSOInputFieldCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SCPRSSOInputFieldCell.m; path = SSO/SCPRSSOInputFieldCell.m; sourceTree = "<group>"; };
-		257479A81B6ACEAC00F72AF6 /* SCPRSSOInputFieldCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = SCPRSSOInputFieldCell.xib; path = SSO/SCPRSSOInputFieldCell.xib; sourceTree = "<group>"; };
 		257479AC1B6AD12D00F72AF6 /* onboarding-tile-blurry@2x.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "onboarding-tile-blurry@2x.jpg"; sourceTree = "<group>"; };
 		257479AE1B6AD14200F72AF6 /* onboarding-tile-blurry.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "onboarding-tile-blurry.jpg"; sourceTree = "<group>"; };
 		257479B01B6AE08200F72AF6 /* icon-mail.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-mail.png"; sourceTree = "<group>"; };
@@ -804,22 +789,6 @@
 			name = Onboarding;
 			sourceTree = "<group>";
 		};
-		257479A01B6AB8E600F72AF6 /* SSO / Profile */ = {
-			isa = PBXGroup;
-			children = (
-				257479A11B6AB90900F72AF6 /* SCPRLoginViewController.h */,
-				257479A21B6AB90900F72AF6 /* SCPRLoginViewController.m */,
-				257479A31B6AB90900F72AF6 /* SCPRLoginViewController.xib */,
-				257479A61B6ACEAC00F72AF6 /* SCPRSSOInputFieldCell.h */,
-				257479A71B6ACEAC00F72AF6 /* SCPRSSOInputFieldCell.m */,
-				257479A81B6ACEAC00F72AF6 /* SCPRSSOInputFieldCell.xib */,
-				253030121B717CDD00B88468 /* SCPRProfileViewController.h */,
-				253030131B717CDD00B88468 /* SCPRProfileViewController.m */,
-				253030141B717CDD00B88468 /* SCPRProfileViewController.xib */,
-			);
-			name = "SSO / Profile";
-			sourceTree = "<group>";
-		};
 		257479AB1B6AD11500F72AF6 /* sso */ = {
 			isa = PBXGroup;
 			children = (
@@ -1189,7 +1158,6 @@
 		76658ABC18E0AF8500026176 /* View Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				257479A01B6AB8E600F72AF6 /* SSO / Profile */,
 				25B25BA91B1D091100ABE8B4 /* XFS */,
 				25F30AE51AFAB67C00F27187 /* Secondary Main Screens */,
 				25E8BDA01ABB8702007B99EB /* Wake / Sleep */,
@@ -1638,7 +1606,6 @@
 				07A863B41BC5BD1700DFB42A /* program_avatar_wheel-thing@2x.png in Resources */,
 				76A308E518C8FB940065D4B1 /* Images.xcassets in Resources */,
 				07A863B31BC5BD1700DFB42A /* program_avatar_wheel-thing.png in Resources */,
-				253030161B717CDD00B88468 /* SCPRProfileViewController.xib in Resources */,
 				52CF917619FEF306007BCFA8 /* btn_play.png in Resources */,
 				52CF917719FEF306007BCFA8 /* btn_play@2x.png in Resources */,
 				768C0679199590CC00F829EB /* FreigSanProBookIt.otf in Resources */,
@@ -1669,7 +1636,6 @@
 				52EFF84019C368C00059A0E3 /* program_avatar_science-friday@2x.png in Resources */,
 				768C0683199590CC00F829EB /* FreigSanProSem.otf in Resources */,
 				7685BD62194BBCB90075BB16 /* playButton@2x.png in Resources */,
-				257479AA1B6ACEAC00F72AF6 /* SCPRSSOInputFieldCell.xib in Resources */,
 				256DE7281A16B9D90022EB84 /* menu-feedback@2x.png in Resources */,
 				52EFF7F619C368C00059A0E3 /* program_avatar_bbc-world-service.png in Resources */,
 				52EFF86619C368C00059A0E3 /* program_avatar_weekend-edition-sunday.png in Resources */,
@@ -1697,7 +1663,6 @@
 				52EFF7EA19C368C00059A0E3 /* program_avatar_all-things-considered.png in Resources */,
 				52EFF82E19C368C00059A0E3 /* program_avatar_on-being.png in Resources */,
 				259E44FF1A1D2CD300F5CD65 /* SCPROnboardingViewController.xib in Resources */,
-				257479A51B6AB90900F72AF6 /* SCPRLoginViewController.xib in Resources */,
 				52D9227819D366C90018AD4B /* content-share.png in Resources */,
 				52EFF85619C368C00059A0E3 /* program_avatar_world.png in Resources */,
 				258E8E101A16AE0400675E68 /* SCPRFeedbackViewController.xib in Resources */,
@@ -1990,7 +1955,6 @@
 				52D0FC1C19D1F24F009AECEE /* SCPRProgramDetailHeaderView.m in Sources */,
 				254831C11A41555700963078 /* UIView+PrintDimensions.m in Sources */,
 				07139B841B95E701007DBA91 /* ScheduleOccurrence.swift in Sources */,
-				257479A91B6ACEAC00F72AF6 /* SCPRSSOInputFieldCell.m in Sources */,
 				258BB03E1A1C083B00B8FCFE /* Settings.m in Sources */,
 				254CC69E1A23B41D00560805 /* SCPRTriangleView.m in Sources */,
 				258C5D381B1678ED00C19BE0 /* SCPRCornerMaskView.m in Sources */,
@@ -2000,7 +1964,6 @@
 				25B25BAD1B1D093D00ABE8B4 /* SCPRPledgePINViewController.m in Sources */,
 				2594B53F1A30F8410013B93A /* SCPRKeyboardToolbar.m in Sources */,
 				25BBCD7D1A892DA30015071E /* SCPRScrubberViewController.m in Sources */,
-				253030151B717CDD00B88468 /* SCPRProfileViewController.m in Sources */,
 				2537D8BD1A8BD7B700481CF8 /* SCPRTouchableScrubberView.m in Sources */,
 				25BBCD771A892D730015071E /* SCPRScrubbingUIViewController.m in Sources */,
 				25F2BC7E1A3B9B4D00108F73 /* SCPRGenericAvatarViewController.m in Sources */,
@@ -2013,7 +1976,6 @@
 				52CF917A1A0032C7007BCFA8 /* QueueManager.m in Sources */,
 				25E8BDB01AC0920E007B99EB /* SCPRAlarmClockViewController.m in Sources */,
 				258BB0381A1C07FD00B8FCFE /* UXmanager.m in Sources */,
-				257479A41B6AB90900F72AF6 /* SCPRLoginViewController.m in Sources */,
 				25B25BB51B1D096D00ABE8B4 /* SCPRBalloonViewController.m in Sources */,
 				76B9A9AC18EF59FD007A6D8C /* SCPRUserReportViewController.m in Sources */,
 				76658AB918DCB51000026176 /* NSDate+Helper.m in Sources */,

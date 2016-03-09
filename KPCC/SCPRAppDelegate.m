@@ -26,9 +26,6 @@ NSString *const kPushChannel = @"listenLive";
     
     [[AnalyticsManager shared] setup];
 
-    A0Lock *lock = [[UXmanager shared] lock];
-    [lock applicationLaunchedWithOptions:launchOptions];
-
     [Parse setApplicationId:globalConfig[@"Parse"][@"ApplicationId"]
                   clientKey:globalConfig[@"Parse"][@"ClientKey"]];
     
@@ -170,7 +167,7 @@ NSString *const kPushChannel = @"listenLive";
 }
 
 - (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation {
-    BOOL success = [[[UXmanager shared] lock] handleURL:url sourceApplication:sourceApplication];
+    BOOL success = NO;
 #ifdef RELEASE
     if (! success) {
         success = [[FBSDKApplicationDelegate sharedInstance] application:application
