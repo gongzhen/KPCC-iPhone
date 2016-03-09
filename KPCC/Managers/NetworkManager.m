@@ -227,10 +227,12 @@ static NetworkManager *singleton = nil;
 - (void)fetchAudioAd:(NSString *)params completion:(void (^)(AudioAd* audioAd))completion {
     AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
     manager.responseSerializer = [AFHTTPResponseSerializer serializer];
-    NSString *idfa = [[[ASIdentifierManager sharedManager] advertisingIdentifier] UUIDString];
-    
+
+    ASIdentifierManager *identifierManager = [ASIdentifierManager sharedManager];
+    NSString *uuid = identifierManager.isAdvertisingTrackingEnabled ? identifierManager.advertisingIdentifier.UUIDString : @"";
+
     NSDictionary *globalConfig = [Utils globalConfig];
-    NSString *endpoint = [NSString stringWithFormat:globalConfig[@"AdServer"][@"Preroll"], idfa];
+    NSString *endpoint = [NSString stringWithFormat:globalConfig[@"AdServer"][@"Preroll"], uuid];
 
     [manager GET:endpoint parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
         NSDictionary *convertedData = [NSDictionary dictionaryWithXMLData:responseObject];
