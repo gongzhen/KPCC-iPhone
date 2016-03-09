@@ -9,9 +9,9 @@ target 'KPCC' do
   pod 'Parse', '~> 1.6'
   pod 'KSReachability', '~> 1.4'
   pod 'Google/Analytics', '~> 1.0.7'
-  pod 'FBSDKCoreKit', '~> 4.4'
-  pod 'FBSDKShareKit', '~> 4.4'
-  pod 'FBSDKLoginKit', '~> 4.4'
+  pod 'FBSDKCoreKit', '~> 4.10'
+  pod 'FBSDKShareKit', '~> 4.10'
+  pod 'FBSDKLoginKit', '~> 4.10'
   pod 'Flurry-iOS-SDK/FlurrySDK', '~> 7.3'
 
 end
