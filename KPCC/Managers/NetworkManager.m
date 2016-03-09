@@ -230,9 +230,9 @@ static NetworkManager *singleton = nil;
     NSString *idfa = [[[ASIdentifierManager sharedManager] advertisingIdentifier] UUIDString];
     
     NSDictionary *globalConfig = [Utils globalConfig];
-    NSString *tritonEndpoint = [NSString stringWithFormat:globalConfig[@"AdServer"][@"Preroll"], idfa];
+    NSString *endpoint = [NSString stringWithFormat:globalConfig[@"AdServer"][@"Preroll"], idfa];
 
-    [manager GET:tritonEndpoint parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
+    [manager GET:endpoint parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
         NSDictionary *convertedData = [NSDictionary dictionaryWithXMLData:responseObject];
         NSLog(@"convertedData %@", convertedData);
         AudioAd *audioAd;
@@ -246,7 +246,7 @@ static NetworkManager *singleton = nil;
     }];
 }
 
-- (void)pingTritonUrl:(NSString*)url completion:(void (^)(BOOL success))completion
+- (void)pingAudioAdUrl:(NSString*)url completion:(void (^)(BOOL success))completion
 {
     if (url && !SEQ(url,@"")) {
         AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
@@ -254,11 +254,11 @@ static NetworkManager *singleton = nil;
         [manager GET:url parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
             completion(YES);
         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-            NSLog(@"Touching Triton URL Failure? %@", error);
+            NSLog(@"Touching Audio Ad URL Failure? %@", error);
             completion(NO);
         }];
     } else {
-        NSLog(@"Touching Triton URL: No URL");
+        NSLog(@"Touching Audio Ad URL: No URL");
     }
 }
 
