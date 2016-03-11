@@ -57,28 +57,7 @@ static AnalyticsManager *singleton = nil;
     NSError *configureError;
     [[GGLContext sharedInstance] configureWithError:&configureError];
     NSAssert(!configureError, @"Error configuring Google services: %@", configureError);
-    
-//#ifndef SUPPRESS_NIELSEN_TRACKING
-//    NSString *theAppVersion = [Utils prettyVersion];
-//    
-//    NSDictionary* appInformation = @{
-//                                     @"appid": @"TO BE PROVIDED",
-//                                     @"appversion": theAppVersion,
-//                                     @"appname": @"KPCC iPhone",
-//                                     @"sfcode": @"us"
-//                                     };
-//    
-//    
-//    
-//    NSData* jsonDataAppInfo = [NSJSONSerialization dataWithJSONObject:appInformation options:0 error:nil];
-//    NSString* jsonStringAppInfo = [[NSString alloc] initWithBytes:[jsonDataAppInfo bytes] length:[jsonDataAppInfo length] encoding:NSUTF8StringEncoding];
-//    
-//
-//    self.nielsenTracker = [[NielsenAppApi sharedInstance] initWithAppInfo:jsonStringAppInfo];
-//
-//#endif
 
-    
 }
 
 - (void)buildQualityMap {
@@ -465,50 +444,6 @@ static AnalyticsManager *singleton = nil;
     
     return english;
 }
-
-//#pragma mark - Nielsen
-//- (void)nielsenPlay {
-//    [self.nielsenTracker play:[self nielsenInfoForCurrentAudio]];
-//    [self.nielsenTracker loadMetadata:[self nielsenInfoForKPCC]];
-//}
-//
-//- (void)nielsenStop {
-//    [self.nielsenTracker stop];
-//}
-//
-//- (void)nielsenTrack {
-//    if ( [[AudioManager shared] currentAudioMode] == AudioModeLive ) {
-//        [self.nielsenTracker playheadPosition:[[[SessionManager shared] vNow] timeIntervalSince1970]];
-//    } else {
-//        NSInteger seconds = CMTimeGetSeconds([[AudioManager shared].audioPlayer currentTime]);
-//        [self.nielsenTracker playheadPosition:seconds];
-//    }
-//}
-//
-//- (NSString*)nielsenInfoForCurrentAudio {
-//    if ( [[AudioManager shared] currentAudioMode] == AudioModeLive ) {
-//        ScheduleOccurrence *p = [[SessionManager shared] currentSchedule];
-//        if ( p ) {
-//            return [NSString stringWithFormat:@"{ \"channelName\" : \"%@\" }",p.title];
-//        } else {
-//            return [NSString stringWithFormat:@"{ \"channelName\" : \"KPCC Live\" }"];
-//        }
-//    } else {
-//        AudioChunk *ac = [[QueueManager shared] currentChunk];
-//        if ( ac ) {
-//            return [NSString stringWithFormat:@"{ \"channelName\" : \"%@\" }",ac.programTitle];
-//        } else {
-//            return [NSString stringWithFormat:@"{ \"channelName\" : \"KPCC OD\" }"];
-//        }
-//    }
-//    
-//    return @"{ \"channelName\" : \"KPCC\" }";
-//}
-//
-//- (NSString*)nielsenInfoForKPCC {
-//    return @"{ \"dataSrc\" : \"cms\", \"type\" : \"radio\", \"assetid\" : \"KPCC-FM\", \"stationType\" : \"1\", \"provider\" : \"KPCC iPhone\" }";
-//}
-
 
 #pragma mark - Events
 

@@ -140,8 +140,6 @@
                                                  @"programTitle" : title,
                                                  @"streamId" : plus
                                                  }];
-    
-//    [[AnalyticsManager shared] nielsenPlay];
 
 }
 
