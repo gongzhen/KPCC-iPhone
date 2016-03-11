@@ -37,12 +37,10 @@ platform :ios do
 
   private_lane :delete_ipa do
     path = lane_context[SharedValues::IPA_OUTPUT_PATH]
-    unless path.nil?
-      if File.extname(path) == ".ipa"
-        File.delete path if File.exist? path
-        path.sub! /\.ipa$/, ".app.dSYM.zip"
-        File.delete path if File.exist? path
-      end
+    if File.extname(path.to_s) == ".ipa"
+      File.delete path if File.exist? path
+      path.sub! /\.ipa$/, ".app.dSYM.zip"
+      File.delete path if File.exist? path
     end
   end
 
