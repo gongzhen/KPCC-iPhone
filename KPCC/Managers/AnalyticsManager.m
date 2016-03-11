@@ -213,12 +213,7 @@ static AnalyticsManager *singleton = nil;
 }
 
 - (void)logEvent:(NSString *)event withParameters:(NSDictionary *)parameters timed:(BOOL)timed {
-    
-    NSDictionary *cookedParams = [self logifiedParamsList:parameters];
-    
-    if ( timed ) {
-    }
-    
+
     NSString *category = [self categoryForEvent:event];
     GAI *gai = [GAI sharedInstance];
     id<GAITracker> tracker = [gai defaultTracker];
@@ -466,6 +461,7 @@ static AnalyticsManager *singleton = nil;
             break;
         case ScrubbingTypeSystem:
             method = @"system-time-repair";
+            break;
         case ScrubbingTypeUnknown:
         default:
             method = @"unknown";

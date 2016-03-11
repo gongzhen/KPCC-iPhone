@@ -198,18 +198,18 @@
                                             withAudio:audioChunks
                                        atCurrentIndex:(int)indexPath.row];
     
-    id episode = self.episodesList[indexPath.row];
-    NSString *title = @"[UNKNOWN]";
-    NSString *programTitle = @"[UNKNOWN]";
-    if ([episode isKindOfClass:[Episode class]]) {
-        Episode *ep = (Episode *) episode;
-        title = [ep.title stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-        programTitle = ep.programName;
-    } else {
-        Segment *seg = (Segment *) episode;
-        title = seg.title;
-        programTitle = seg.programName;
-    }
+//    id episode = self.episodesList[indexPath.row];
+//    NSString *title = @"[UNKNOWN]";
+//    NSString *programTitle = @"[UNKNOWN]";
+//    if ([episode isKindOfClass:[Episode class]]) {
+//        Episode *ep = (Episode *) episode;
+//        title = [ep.title stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+//        programTitle = ep.programName;
+//    } else {
+//        Segment *seg = (Segment *) episode;
+//        title = seg.title;
+//        programTitle = seg.programName;
+//    }
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {

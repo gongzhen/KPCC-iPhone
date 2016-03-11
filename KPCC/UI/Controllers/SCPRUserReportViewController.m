@@ -60,12 +60,11 @@
     NSString *reportToSend = self.userReportDetails.text;
     if (![reportToSend isEqualToString:@"What's happening..."]) {
         
-        long currentTimeSeconds = [[NSDate date] timeIntervalSince1970];
+//        long currentTimeSeconds = [[NSDate date] timeIntervalSince1970];
 
         // TODO: more descriptive logging on state of AVPlayer
-        NSString *audioPlayerStateString;
-        audioPlayerStateString = [[AudioManager shared] isStreamPlaying] ? @"playing" : @"not playing";
-        
+//        NSString *audioPlayerStateString = [[AudioManager shared] isStreamPlaying] ? @"playing" : @"not playing";
+
         /*[[AnalyticsManager shared] logEvent:@"userReportedIssue" withParameters:@{ @"UserReport" :  reportToSend,
                                                                                    @"StreamPlaying?" : [NSString stringWithFormat:@"%@", [[AudioManager shared] isStreamPlaying] == 1 ? @"YES" : @"NO"],
                                                                                    @"StreamState" : audioPlayerStateString,
