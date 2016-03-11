@@ -33,7 +33,7 @@ PODS:
   - FBSDKShareKit (4.10.0):
     - FBSDKCoreKit
   - Flurry-iOS-SDK/FlurrySDK (7.3.0)
-  - FXBlurView (1.6.3)
+  - FXBlurView (1.6.4)
   - Google/Analytics (1.0.7):
     - Google/Core
     - GoogleAnalytics (~> 3.12)
@@ -71,7 +71,7 @@ SPEC CHECKSUMS:
   FBSDKLoginKit: d3d4a2e9d31954deb00bfea964167a05ca1ea976
   FBSDKShareKit: 54587b4624706ace1e810cf83412a918141f807a
   Flurry-iOS-SDK: 054befae0fa0244fb000985bfe757d70f87a9f60
-  FXBlurView: c6d23f3d35af2c6282296a2930f61c6e2c788d01
+  FXBlurView: db786c2561cb49a09ae98407f52460096ab8a44f
   Google: 875f5a8ade86dd02e36586e4a54814843938c7f6
   GoogleAnalytics: fcf1f1cad57ae1a9a53520018f0f680ceeeb8b49
   GoogleNetworkingUtilities: 292992ab31b7b4ba32809a0e8b40e324cdfb2c0c
