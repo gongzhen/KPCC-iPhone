@@ -266,7 +266,6 @@
 		7617729B195B646300F69EFC /* Utils.m in Sources */ = {isa = PBXBuildFile; fileRef = 7617729A195B646300F69EFC /* Utils.m */; };
 		76349CAA18D3747E0027C3B8 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 76349CA918D3747E0027C3B8 /* libz.dylib */; };
 		76349D1B18D8C74F0027C3B8 /* NetworkManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 76349D1A18D8C74F0027C3B8 /* NetworkManager.m */; };
-		76349D2118D8F8A30027C3B8 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 76349D2018D8F8A30027C3B8 /* Reachability.m */; };
 		76658AB518DCB0DC00026176 /* AnalyticsManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 76658AB418DCB0DC00026176 /* AnalyticsManager.m */; };
 		76658AB918DCB51000026176 /* NSDate+Helper.m in Sources */ = {isa = PBXBuildFile; fileRef = 76658AB818DCB51000026176 /* NSDate+Helper.m */; };
 		7685BD5C194BBCB90075BB16 /* pauseButton.png in Resources */ = {isa = PBXBuildFile; fileRef = 7685BD58194BBCB90075BB16 /* pauseButton.png */; };
@@ -664,8 +663,6 @@
 		76349CA918D3747E0027C3B8 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 		76349D1918D8C74F0027C3B8 /* NetworkManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NetworkManager.h; path = Managers/NetworkManager.h; sourceTree = "<group>"; };
 		76349D1A18D8C74F0027C3B8 /* NetworkManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NetworkManager.m; path = Managers/NetworkManager.m; sourceTree = "<group>"; };
-		76349D1F18D8F8A30027C3B8 /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
-		76349D2018D8F8A30027C3B8 /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reachability.m; sourceTree = "<group>"; };
 		76349D2318D8F8D80027C3B8 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		76658AB318DCB0DB00026176 /* AnalyticsManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AnalyticsManager.h; path = Managers/AnalyticsManager.h; sourceTree = "<group>"; };
 		76658AB418DCB0DC00026176 /* AnalyticsManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AnalyticsManager.m; path = Managers/AnalyticsManager.m; sourceTree = "<group>"; };
@@ -1119,8 +1116,6 @@
 				258FC47D1A01915E00282D59 /* UIColor+UICustom.m */,
 				76658AB718DCB51000026176 /* NSDate+Helper.h */,
 				76658AB818DCB51000026176 /* NSDate+Helper.m */,
-				76349D1F18D8F8A30027C3B8 /* Reachability.h */,
-				76349D2018D8F8A30027C3B8 /* Reachability.m */,
 				760EA99019521E98009B504E /* AVPlayer+Additions.h */,
 				760EA99119521E98009B504E /* AVPlayer+Additions.m */,
 				254E176E19F863960022BF6B /* UILabel+Additions.h */,
@@ -2022,7 +2017,6 @@
 				7695FD15195E299000F63DE9 /* SCPRNavigationBar.m in Sources */,
 				760EA9961953724E009B504E /* ContentManager.m in Sources */,
 				769B907E19C1186E00E812C7 /* DesignManager.m in Sources */,
-				76349D2118D8F8A30027C3B8 /* Reachability.m in Sources */,
 				259E45051A1D2CF700F5CD65 /* SCPRTextCalloutViewController.m in Sources */,
 				7617729B195B646300F69EFC /* Utils.m in Sources */,
 			);

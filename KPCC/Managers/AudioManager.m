@@ -383,8 +383,6 @@ static const NSString *ItemStatusContext;
 
     CLS_LOG(@"In buildStreamer for %@",urlString);
     
-    [[NetworkManager shared] setupFloatingReachabilityWithHost:urlString];
-    
     if ( self.audioPlayer ) {
         [self takedownAudioPlayer];
     }

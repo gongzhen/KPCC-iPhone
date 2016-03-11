@@ -369,37 +369,6 @@ static AnalyticsManager *singleton = nil;
     return @"General";
 }
 
-- (void)failStream:(NetworkHealth)cause comments:(NSString *)comments {
-    [self failStream:cause comments:comments force:NO];
-}
-
-- (void)failStream:(NetworkHealth)cause comments:(NSString *)comments force:(BOOL)force {
-    
-    if ( !comments || SEQ(comments,@"") ) return;
-    
-//    self.accessLog = [[AudioManager shared].audioPlayer.currentItem accessLog];
-//    self.errorLog = [[AudioManager shared].audioPlayer.currentItem errorLog];
-
-    if ( self.analyticsSuspensionTimer ) {
-        if ( [self.analyticsSuspensionTimer isValid] ) {
-            [self.analyticsSuspensionTimer invalidate];
-        }
-        self.analyticsSuspensionTimer = nil;
-    }
-    
-    self.lastErrorLoggedComments = comments;
-    
-    NSMutableDictionary *analysis = [@{ @"cause" : [self stringForInterruptionCause:cause],
-                                        @"details" : comments,
-                                        @"networkInfo" : [[NetworkManager shared] networkInformation]
-                                        } mutableCopy];
-    
-    NSLog(@"Sending stream failure report to analytics");
-    [self logEvent:@"streamException" withParameters:analysis];
-    
-    
-}
-
 - (NSDictionary*)typicalLiveProgramInformation {
     
     NSMutableDictionary *programInfo = [NSMutableDictionary new];

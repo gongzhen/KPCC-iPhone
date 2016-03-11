@@ -61,8 +61,6 @@ typedef NS_ENUM(NSInteger, ScrubbingType) {
 - (void)gaSessionStartWithScreenView:(NSString*)screenName;
 - (void)gaSessionEnd;
 
-- (void)failStream:(NetworkHealth)cause comments:(NSString*)comments;
-- (void)failStream:(NetworkHealth)cause comments:(NSString *)comments force:(BOOL)force;
 - (void)trackPlaybackStalled;
 
 - (void)clearLogs;
