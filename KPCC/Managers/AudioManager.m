@@ -19,7 +19,6 @@
 #import "UXmanager.h"
 #import "SCPRMasterViewController.h"
 #import "Bookmark.h"
-#import <Parse/Parse.h>
 
 static AudioManager *singleton = nil;
 

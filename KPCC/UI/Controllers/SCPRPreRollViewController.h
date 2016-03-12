@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <Crashlytics/Crashlytics.h>
 #import "AudioAd.h"
 #import "SCPRAppDelegate.h"
 #import "KPCC-Swift.h"

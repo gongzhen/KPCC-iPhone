@@ -8,6 +8,7 @@
 
 import Foundation
 import AVFoundation
+import Crashlytics
 
 public struct KPCCPlayerObserver<T> {
     var observers: [(T) -> Void] = []

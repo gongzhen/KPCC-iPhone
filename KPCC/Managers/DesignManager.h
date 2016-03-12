@@ -6,8 +6,8 @@
 //  Copyright (c) 2014 SCPR. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
-
+#import <UIKit/UIKit.h>
+#import "SimpleCompletionBlocks.h"
 
 typedef NS_ENUM(NSInteger, SculptingStyle) {
     SculptingStyleNormal = 0,
