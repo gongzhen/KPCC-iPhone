@@ -14,3 +14,9 @@ target 'KPCC' do
   pod 'Flurry-iOS-SDK/FlurrySDK', '~> 7.3'
 
 end
+
+target 'KPCCTests' do
+
+  pod 'OCMock', '~> 3.2'
+
+end
