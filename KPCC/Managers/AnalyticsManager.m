@@ -165,7 +165,7 @@ static AnalyticsManager *singleton = nil;
     NSNumber *currentPoints = [[UXmanager shared].settings userPoints];
     positives += [currentPoints intValue];
     
-    NSInteger numberOfDays = abs([[NSDate midnightThisMorning] daysBetween:history]);
+    NSInteger numberOfDays = [[NSDate midnightThisMorning] daysBetween:history];
     CGFloat percent = (positives / (numberOfDays * 1.0f))*100.0;
     
     [[UXmanager shared].settings setUserPoints:@(positives)];

@@ -3435,7 +3435,7 @@ setForOnDemandUI;
 - (void)menuItemSelected:(NSIndexPath *)indexPath {
     
     BOOL closeMenu = NO;
-    NSString *event = @"";
+//    NSString *event = @"";
     switch (indexPath.row) {
         case 0:
         {

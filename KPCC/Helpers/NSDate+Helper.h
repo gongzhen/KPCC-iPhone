@@ -24,8 +24,6 @@
 + (NSString *)stringForDisplayFromDate:(NSDate *)date;
 + (NSString *)stringForDisplayFromDate:(NSDate *)date prefixed:(BOOL)prefixed;
 
-- (NSDate*)simpleDate;
-
 - (NSDate*)dateChangedBy:(NSInteger)days;
 @property (NS_NONATOMIC_IOSONLY, readonly, copy) NSDate *beginningOfWeek;
 @property (NS_NONATOMIC_IOSONLY, readonly, copy) NSDate *beginningOfDay;

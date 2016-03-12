@@ -281,5 +281,6 @@
 
 @property BOOL userIsLoggingIn;
 
+- (IBAction)initialPlayTapped:(id)sender;
 
 @end

@@ -127,8 +127,6 @@ static NSInteger kSessionIdleExpiration = 3600;
 
 // Analytics
 @property (nonatomic, strong) NSTimer *killSessionTimer;
-- (void)forceAnalyticsSessionEndForSessionAudio;
-- (void)handlePauseEventAgainstSessionAudio;
 
 @property NSTimeInterval timeAudioWasPutInBackground;
 
