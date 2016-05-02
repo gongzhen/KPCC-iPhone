@@ -28,9 +28,8 @@
 #import "SCPRPledgePINViewController.h"
 #import "SCPRBalloonViewController.h"
 #import "Utils.h"
-#import "SCPRLoginViewController.h"
-#import "SCPRProfileViewController.h"
 #import "GenericProgram.h"
+#import "SCPRXFSViewController.h"
 
 @import MessageUI;
 
@@ -969,10 +968,10 @@ setForOnDemandUI;
         // is there a preroll that we should play?
         CLS_LOG(@"Attempting to fetch preroll.");
         [[SessionManager shared] setLastPrerollTime:[NSDate date]];
-        [[NetworkManager shared] fetchTritonAd:nil completion:^(TritonAd *tritonAd) {
-            if (tritonAd) {
+        [[NetworkManager shared] fetchAudioAd:nil completion:^(AudioAd *audioAd) {
+            if (audioAd) {
                 CLS_LOG(@"Received a preroll to play.");
-                self.preRollViewController.tritonAd = tritonAd;
+                self.preRollViewController.audioAd = audioAd;
 
                 [self cloakForPreRoll:YES];
                 [self.preRollViewController primeUI:^{
@@ -2265,7 +2264,7 @@ setForOnDemandUI;
             bottomAnim.toValue = @(0);
             BOOL suppressDivider = NO;
             if ( [Utils isThreePointFive] ) {
-                if ( [self.preRollViewController tritonAd] ) {
+                if ( [self.preRollViewController audioAd] ) {
                     
                     bottomAnim.toValue = @(60.0);
                     suppressDivider = YES;
@@ -3192,7 +3191,7 @@ setForOnDemandUI;
 
     [self.preRollViewController removeFromParentViewController];
     [self.preRollViewController.view removeFromSuperview];
-    self.preRollViewController.tritonAd = nil;
+    self.preRollViewController.audioAd = nil;
     
     self.initialPlay = YES;
     
@@ -3517,32 +3516,6 @@ setForOnDemandUI;
             [[UIApplication sharedApplication] openURL:url];
             break;
         }
-        /*case 5: {
-            
-            if ( [[UXmanager shared] userLoginType] == SSOTypeNone ) {
-                
-                [[NSNotificationCenter defaultCenter] addObserver:self
-                                                         selector:@selector(pushToProfile)
-                                                             name:@"tokens-stored"
-                                                           object:nil];
-                
-                SCPRLoginViewController *login = [[SCPRLoginViewController alloc] initWithNibName:@"SCPRLoginViewController"
-                                                                                           bundle:nil];
-                login.view.frame = CGRectMake(0.0f,0.0f,self.view.frame.size.width,
-                                              self.view.frame.size.height);
-                
-                [self presentViewController:login
-                                   animated:YES
-                                 completion:^{
-                                     self.userIsLoggingIn = YES;
-                                     [login.view layoutIfNeeded];
-                                 }];
-                
-            } else {
-                [self pushToProfile];
-            }
-            break;
-        }*/
         case 5: {
             
             self.homeIsNotRootViewController = YES;
@@ -3568,37 +3541,6 @@ setForOnDemandUI;
     }
 }
 
-- (void)pushToProfile {
-
-    if ( [[UXmanager shared].settings ssoLoginType] != SSOTypeNone ) {
-        
-        if ( self.userIsLoggingIn ) {
-            [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                            name:@"tokens-stored"
-                                                          object:nil];
-            [self dismissViewControllerAnimated:YES completion:^{
-                SCPRProfileViewController *profile = [[SCPRProfileViewController alloc] initWithNibName:@"SCPRProfileViewController"
-                                                                                             bundle:nil];
-                self.userIsLoggingIn = NO;
-                
-                profile.view = profile.view;
-                [profile setup];
-                
-                [self.navigationController pushViewController:profile animated:YES];
-            }];
-        } else {
-            SCPRProfileViewController *profile = [[SCPRProfileViewController alloc] initWithNibName:@"SCPRProfileViewController"
-                                                                                             bundle:nil];
-            
-            profile.view = profile.view;
-            [profile setup];
-            
-            [self.navigationController pushViewController:profile animated:YES];
-        }
-
-    }
-}
-
 - (void)pullDownAnimated:(BOOL)open {
     // Notifications used in SCPRNavigationController.
     if (open) {
@@ -3616,7 +3558,7 @@ setForOnDemandUI;
 - (void)onRateChange {
     
     self.playStateGate = YES;
-    if ( !self.initiateRewind || self.preRollViewController.tritonAd ) {
+    if ( !self.initiateRewind || self.preRollViewController.audioAd ) {
         [self.liveProgressViewController setFreezeBit:YES];
         [self updateControlsAndUI:YES];
     }

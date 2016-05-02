@@ -7,24 +7,21 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		07139B841B95E701007DBA91 /* ScheduleOccurrence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07139B831B95E701007DBA91 /* ScheduleOccurrence.swift */; settings = {ASSET_TAGS = (); }; };
-		075636581B9FBD91001D1C55 /* Pods.enterprise.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 075636571B9FBD91001D1C55 /* Pods.enterprise.xcconfig */; settings = {ASSET_TAGS = (); }; };
+		07139B841B95E701007DBA91 /* ScheduleOccurrence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07139B831B95E701007DBA91 /* ScheduleOccurrence.swift */; };
 		0775D0B71B8C1A6E009EDAE9 /* Empty.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0775D0B61B8C1A6E009EDAE9 /* Empty.mm */; };
-		0778E9151BADAE00005B4F9F /* coverart.png in Resources */ = {isa = PBXBuildFile; fileRef = 0778E9141BADAE00005B4F9F /* coverart.png */; settings = {ASSET_TAGS = (); }; };
-		07A24B4C1BA3A4F800197EB9 /* SCPRProgramTableViewHeader.xib in Resources */ = {isa = PBXBuildFile; fileRef = 07A24B4B1BA3A4F800197EB9 /* SCPRProgramTableViewHeader.xib */; settings = {ASSET_TAGS = (); }; };
-		07A24B4F1BA3A88900197EB9 /* SCPRProgramTableViewHeader.m in Sources */ = {isa = PBXBuildFile; fileRef = 07A24B4E1BA3A88900197EB9 /* SCPRProgramTableViewHeader.m */; settings = {ASSET_TAGS = (); }; };
-		07A863B11BC5BD1700DFB42A /* program_avatar_welcome-to-vinci.png in Resources */ = {isa = PBXBuildFile; fileRef = 07A863AD1BC5BD1700DFB42A /* program_avatar_welcome-to-vinci.png */; settings = {ASSET_TAGS = (); }; };
-		07A863B21BC5BD1700DFB42A /* program_avatar_welcome-to-vinci@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 07A863AE1BC5BD1700DFB42A /* program_avatar_welcome-to-vinci@2x.png */; settings = {ASSET_TAGS = (); }; };
-		07A863B31BC5BD1700DFB42A /* program_avatar_wheel-thing.png in Resources */ = {isa = PBXBuildFile; fileRef = 07A863AF1BC5BD1700DFB42A /* program_avatar_wheel-thing.png */; settings = {ASSET_TAGS = (); }; };
-		07A863B41BC5BD1700DFB42A /* program_avatar_wheel-thing@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 07A863B01BC5BD1700DFB42A /* program_avatar_wheel-thing@2x.png */; settings = {ASSET_TAGS = (); }; };
-		07EB395E1B9723ED005A8DDB /* AudioPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07EB395D1B9723ED005A8DDB /* AudioPlayer.swift */; settings = {ASSET_TAGS = (); }; };
-		07EB39601B9731BC005A8DDB /* AVObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07EB395F1B9731BC005A8DDB /* AVObserver.swift */; settings = {ASSET_TAGS = (); }; };
-		07EB39621B973200005A8DDB /* AVStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07EB39611B973200005A8DDB /* AVStatus.swift */; settings = {ASSET_TAGS = (); }; };
-		07EB39641B989A09005A8DDB /* NowPlayingManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07EB39631B989A09005A8DDB /* NowPlayingManager.swift */; settings = {ASSET_TAGS = (); }; };
-		07EB39671B9A3D84005A8DDB /* SReachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07EB39661B9A3D84005A8DDB /* SReachability.swift */; settings = {ASSET_TAGS = (); }; };
+		0778E9151BADAE00005B4F9F /* coverart.png in Resources */ = {isa = PBXBuildFile; fileRef = 0778E9141BADAE00005B4F9F /* coverart.png */; };
+		07A24B4C1BA3A4F800197EB9 /* SCPRProgramTableViewHeader.xib in Resources */ = {isa = PBXBuildFile; fileRef = 07A24B4B1BA3A4F800197EB9 /* SCPRProgramTableViewHeader.xib */; };
+		07A24B4F1BA3A88900197EB9 /* SCPRProgramTableViewHeader.m in Sources */ = {isa = PBXBuildFile; fileRef = 07A24B4E1BA3A88900197EB9 /* SCPRProgramTableViewHeader.m */; };
+		07A863B11BC5BD1700DFB42A /* program_avatar_welcome-to-vinci.png in Resources */ = {isa = PBXBuildFile; fileRef = 07A863AD1BC5BD1700DFB42A /* program_avatar_welcome-to-vinci.png */; };
+		07A863B21BC5BD1700DFB42A /* program_avatar_welcome-to-vinci@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 07A863AE1BC5BD1700DFB42A /* program_avatar_welcome-to-vinci@2x.png */; };
+		07A863B31BC5BD1700DFB42A /* program_avatar_wheel-thing.png in Resources */ = {isa = PBXBuildFile; fileRef = 07A863AF1BC5BD1700DFB42A /* program_avatar_wheel-thing.png */; };
+		07A863B41BC5BD1700DFB42A /* program_avatar_wheel-thing@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 07A863B01BC5BD1700DFB42A /* program_avatar_wheel-thing@2x.png */; };
+		07EB395E1B9723ED005A8DDB /* AudioPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07EB395D1B9723ED005A8DDB /* AudioPlayer.swift */; };
+		07EB39601B9731BC005A8DDB /* AVObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07EB395F1B9731BC005A8DDB /* AVObserver.swift */; };
+		07EB39621B973200005A8DDB /* AVStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07EB39611B973200005A8DDB /* AVStatus.swift */; };
+		07EB39641B989A09005A8DDB /* NowPlayingManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07EB39631B989A09005A8DDB /* NowPlayingManager.swift */; };
+		07EB39671B9A3D84005A8DDB /* SReachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07EB39661B9A3D84005A8DDB /* SReachability.swift */; };
 		25263A881A32669E00BD5FF9 /* onboarding3.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 25263A871A32669E00BD5FF9 /* onboarding3.mp3 */; };
-		253030151B717CDD00B88468 /* SCPRProfileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 253030131B717CDD00B88468 /* SCPRProfileViewController.m */; };
-		253030161B717CDD00B88468 /* SCPRProfileViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 253030141B717CDD00B88468 /* SCPRProfileViewController.xib */; };
 		2537D8BD1A8BD7B700481CF8 /* SCPRTouchableScrubberView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2537D8BC1A8BD7B700481CF8 /* SCPRTouchableScrubberView.m */; };
 		2546AF6F1AB0CB6800E11D5B /* SCPRProgramTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2546AF6E1AB0CB6800E11D5B /* SCPRProgramTableViewCell.xib */; };
 		254831C11A41555700963078 /* UIView+PrintDimensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 254831C01A41555700963078 /* UIView+PrintDimensions.m */; };
@@ -49,10 +46,6 @@
 		2574799B1B6965F800F72AF6 /* Fabric.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2574799A1B6965F800F72AF6 /* Fabric.framework */; };
 		2574799E1B6AB69700F72AF6 /* menu-profile.png in Resources */ = {isa = PBXBuildFile; fileRef = 2574799C1B6AB69700F72AF6 /* menu-profile.png */; };
 		2574799F1B6AB69700F72AF6 /* menu-profile@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2574799D1B6AB69700F72AF6 /* menu-profile@2x.png */; };
-		257479A41B6AB90900F72AF6 /* SCPRLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 257479A21B6AB90900F72AF6 /* SCPRLoginViewController.m */; };
-		257479A51B6AB90900F72AF6 /* SCPRLoginViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 257479A31B6AB90900F72AF6 /* SCPRLoginViewController.xib */; };
-		257479A91B6ACEAC00F72AF6 /* SCPRSSOInputFieldCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 257479A71B6ACEAC00F72AF6 /* SCPRSSOInputFieldCell.m */; };
-		257479AA1B6ACEAC00F72AF6 /* SCPRSSOInputFieldCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 257479A81B6ACEAC00F72AF6 /* SCPRSSOInputFieldCell.xib */; };
 		257479AD1B6AD12D00F72AF6 /* onboarding-tile-blurry@2x.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 257479AC1B6AD12D00F72AF6 /* onboarding-tile-blurry@2x.jpg */; };
 		257479AF1B6AD14200F72AF6 /* onboarding-tile-blurry.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 257479AE1B6AD14200F72AF6 /* onboarding-tile-blurry.jpg */; };
 		257479B21B6AE08200F72AF6 /* icon-mail.png in Resources */ = {isa = PBXBuildFile; fileRef = 257479B01B6AE08200F72AF6 /* icon-mail.png */; };
@@ -156,7 +149,7 @@
 		523E86D919CB694B006FC366 /* Episode.m in Sources */ = {isa = PBXBuildFile; fileRef = 523E86D819CB694B006FC366 /* Episode.m */; };
 		5248858E19CBA180005F59CC /* EpisodeAudio.m in Sources */ = {isa = PBXBuildFile; fileRef = 5248858D19CBA180005F59CC /* EpisodeAudio.m */; };
 		5257E9CC19E34A550055733F /* SCPRSlideInTransition.m in Sources */ = {isa = PBXBuildFile; fileRef = 5257E9CB19E34A550055733F /* SCPRSlideInTransition.m */; };
-		525C6CA419F701FA0076C13B /* TritonAd.m in Sources */ = {isa = PBXBuildFile; fileRef = 525C6CA319F701FA0076C13B /* TritonAd.m */; };
+		525C6CA419F701FA0076C13B /* AudioAd.m in Sources */ = {isa = PBXBuildFile; fileRef = 525C6CA319F701FA0076C13B /* AudioAd.m */; };
 		52CC6D5E19D0DC7100C67322 /* Segment.m in Sources */ = {isa = PBXBuildFile; fileRef = 52CC6D5D19D0DC7100C67322 /* Segment.m */; };
 		52CC6D6219D100DE00C67322 /* SCPRProgramTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 52CC6D6119D100DE00C67322 /* SCPRProgramTableViewCell.m */; };
 		52CC6D6619D110E300C67322 /* SCPRProgramsListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 52CC6D6519D110E300C67322 /* SCPRProgramsListViewController.m */; };
@@ -324,12 +317,11 @@
 		76B9A9AE18EF59FD007A6D8C /* SCPRUserReportViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 76B9A9AB18EF59FD007A6D8C /* SCPRUserReportViewController.xib */; };
 		76B9A9B618EF79F6007A6D8C /* SCPRFooterView.m in Sources */ = {isa = PBXBuildFile; fileRef = 76B9A9B518EF79F6007A6D8C /* SCPRFooterView.m */; };
 		76EF5E8A193E8D6B00568A9D /* Storyboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 76EF5E89193E8D6B00568A9D /* Storyboard.storyboard */; };
+		94612034188A450012173441 /* libPods-KPCC.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5B19959CD2C659346CE0FA9B /* libPods-KPCC.a */; };
 		B5F9F7491ABCE8FD00115DB3 /* icon-clock.png in Resources */ = {isa = PBXBuildFile; fileRef = B5F9F7451ABCE8FD00115DB3 /* icon-clock.png */; };
 		B5F9F74A1ABCE8FD00115DB3 /* icon-clock@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B5F9F7461ABCE8FD00115DB3 /* icon-clock@2x.png */; };
 		B5F9F74B1ABCE8FD00115DB3 /* icon-stopwatch.png in Resources */ = {isa = PBXBuildFile; fileRef = B5F9F7471ABCE8FD00115DB3 /* icon-stopwatch.png */; };
 		B5F9F74C1ABCE8FD00115DB3 /* icon-stopwatch@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B5F9F7481ABCE8FD00115DB3 /* icon-stopwatch@2x.png */; };
-		C902C9E15F3FE6D354EFE519 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C4832A831DF6416997B73FBF /* libPods.a */; };
-		D60D1CDDD065418D8BE73D8C /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C4832A831DF6416997B73FBF /* libPods.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -346,8 +338,6 @@
 		07139B831B95E701007DBA91 /* ScheduleOccurrence.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScheduleOccurrence.swift; sourceTree = "<group>"; };
 		0724AFD21B96068D00C8DE4D /* GenericProgram.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GenericProgram.h; sourceTree = "<group>"; };
 		0724AFD31B9620E400C8DE4D /* KPCC-Proprietary-340.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "KPCC-Proprietary-340.xcdatamodel"; sourceTree = "<group>"; };
-		075636571B9FBD91001D1C55 /* Pods.enterprise.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Pods.enterprise.xcconfig; path = "Pods/Target Support Files/Pods/Pods.enterprise.xcconfig"; sourceTree = "<group>"; };
-		075F6FAD1B8CFE2400E641F3 /* KPCCPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = KPCCPlayer.framework; path = "../../../Library/Developer/Xcode/DerivedData/KPCCPlayer-cfmdykrumzkmswepgfywosbqcrly/Build/Products/Debug-iphoneos/KPCCPlayer.framework"; sourceTree = "<group>"; };
 		0775D0B61B8C1A6E009EDAE9 /* Empty.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = Empty.mm; sourceTree = "<group>"; };
 		0778E9141BADAE00005B4F9F /* coverart.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = coverart.png; sourceTree = "<group>"; };
 		07A24B4B1BA3A4F800197EB9 /* SCPRProgramTableViewHeader.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SCPRProgramTableViewHeader.xib; sourceTree = "<group>"; };
@@ -363,11 +353,7 @@
 		07EB39631B989A09005A8DDB /* NowPlayingManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NowPlayingManager.swift; sourceTree = "<group>"; };
 		07EB39661B9A3D84005A8DDB /* SReachability.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SReachability.swift; sourceTree = "<group>"; };
 		07EB39681B9A50B9005A8DDB /* KPCC-Proprietary-340-1.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "KPCC-Proprietary-340-1.xcdatamodel"; sourceTree = "<group>"; };
-		1B29166D1072B92AE58CD1BB /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 		25263A871A32669E00BD5FF9 /* onboarding3.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = onboarding3.mp3; path = Audio/onboarding3.mp3; sourceTree = "<group>"; };
-		253030121B717CDD00B88468 /* SCPRProfileViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCPRProfileViewController.h; path = SSO/SCPRProfileViewController.h; sourceTree = "<group>"; };
-		253030131B717CDD00B88468 /* SCPRProfileViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SCPRProfileViewController.m; path = SSO/SCPRProfileViewController.m; sourceTree = "<group>"; };
-		253030141B717CDD00B88468 /* SCPRProfileViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = SCPRProfileViewController.xib; path = SSO/SCPRProfileViewController.xib; sourceTree = "<group>"; };
 		2537D8BB1A8BD7B700481CF8 /* SCPRTouchableScrubberView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCPRTouchableScrubberView.h; path = Scrubbing/SCPRTouchableScrubberView.h; sourceTree = "<group>"; };
 		2537D8BC1A8BD7B700481CF8 /* SCPRTouchableScrubberView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SCPRTouchableScrubberView.m; path = Scrubbing/SCPRTouchableScrubberView.m; sourceTree = "<group>"; };
 		2546AF6E1AB0CB6800E11D5B /* SCPRProgramTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SCPRProgramTableViewCell.xib; sourceTree = "<group>"; };
@@ -398,12 +384,6 @@
 		2574799A1B6965F800F72AF6 /* Fabric.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Fabric.framework; sourceTree = "<group>"; };
 		2574799C1B6AB69700F72AF6 /* menu-profile.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "menu-profile.png"; sourceTree = "<group>"; };
 		2574799D1B6AB69700F72AF6 /* menu-profile@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "menu-profile@2x.png"; sourceTree = "<group>"; };
-		257479A11B6AB90900F72AF6 /* SCPRLoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCPRLoginViewController.h; path = SSO/SCPRLoginViewController.h; sourceTree = "<group>"; };
-		257479A21B6AB90900F72AF6 /* SCPRLoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SCPRLoginViewController.m; path = SSO/SCPRLoginViewController.m; sourceTree = "<group>"; };
-		257479A31B6AB90900F72AF6 /* SCPRLoginViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = SCPRLoginViewController.xib; path = SSO/SCPRLoginViewController.xib; sourceTree = "<group>"; };
-		257479A61B6ACEAC00F72AF6 /* SCPRSSOInputFieldCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCPRSSOInputFieldCell.h; path = SSO/SCPRSSOInputFieldCell.h; sourceTree = "<group>"; };
-		257479A71B6ACEAC00F72AF6 /* SCPRSSOInputFieldCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SCPRSSOInputFieldCell.m; path = SSO/SCPRSSOInputFieldCell.m; sourceTree = "<group>"; };
-		257479A81B6ACEAC00F72AF6 /* SCPRSSOInputFieldCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = SCPRSSOInputFieldCell.xib; path = SSO/SCPRSSOInputFieldCell.xib; sourceTree = "<group>"; };
 		257479AC1B6AD12D00F72AF6 /* onboarding-tile-blurry@2x.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "onboarding-tile-blurry@2x.jpg"; sourceTree = "<group>"; };
 		257479AE1B6AD14200F72AF6 /* onboarding-tile-blurry.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "onboarding-tile-blurry.jpg"; sourceTree = "<group>"; };
 		257479B01B6AE08200F72AF6 /* icon-mail.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-mail.png"; sourceTree = "<group>"; };
@@ -548,8 +528,8 @@
 		5248858D19CBA180005F59CC /* EpisodeAudio.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EpisodeAudio.m; sourceTree = "<group>"; };
 		5257E9CA19E34A550055733F /* SCPRSlideInTransition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCPRSlideInTransition.h; path = Transitions/SCPRSlideInTransition.h; sourceTree = "<group>"; };
 		5257E9CB19E34A550055733F /* SCPRSlideInTransition.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SCPRSlideInTransition.m; path = Transitions/SCPRSlideInTransition.m; sourceTree = "<group>"; };
-		525C6CA219F701FA0076C13B /* TritonAd.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TritonAd.h; sourceTree = "<group>"; };
-		525C6CA319F701FA0076C13B /* TritonAd.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TritonAd.m; sourceTree = "<group>"; };
+		525C6CA219F701FA0076C13B /* AudioAd.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioAd.h; sourceTree = "<group>"; };
+		525C6CA319F701FA0076C13B /* AudioAd.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AudioAd.m; sourceTree = "<group>"; };
 		52CC6D5C19D0DC7100C67322 /* Segment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Segment.h; sourceTree = "<group>"; };
 		52CC6D5D19D0DC7100C67322 /* Segment.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Segment.m; sourceTree = "<group>"; };
 		52CC6D6019D100DE00C67322 /* SCPRProgramTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCPRProgramTableViewCell.h; sourceTree = "<group>"; };
@@ -672,6 +652,7 @@
 		52EFF87719C37D350059A0E3 /* SCPRMenuCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SCPRMenuCell.m; sourceTree = "<group>"; };
 		52EFF88519C3BC020059A0E3 /* item-chevron-right.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "item-chevron-right.png"; sourceTree = "<group>"; };
 		52EFF88619C3BC020059A0E3 /* item-chevron-right@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "item-chevron-right@2x.png"; sourceTree = "<group>"; };
+		5B19959CD2C659346CE0FA9B /* libPods-KPCC.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-KPCC.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		760E3C4A194FB61B00D86D91 /* Program.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Program.h; sourceTree = "<group>"; };
 		760E3C4B194FB61B00D86D91 /* Program.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Program.m; sourceTree = "<group>"; };
 		760EA99019521E98009B504E /* AVPlayer+Additions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "AVPlayer+Additions.h"; sourceTree = "<group>"; };
@@ -750,12 +731,13 @@
 		76EF5E84193E8BEC00568A9D /* KPCC-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "KPCC-Bridging-Header.h"; path = "UI/Controllers/KPCC-Bridging-Header.h"; sourceTree = "<group>"; };
 		76EF5E85193E8BEC00568A9D /* TestFlight-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "TestFlight-Bridging-Header.h"; path = "UI/Controllers/TestFlight-Bridging-Header.h"; sourceTree = "<group>"; };
 		76EF5E89193E8D6B00568A9D /* Storyboard.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Storyboard.storyboard; sourceTree = "<group>"; };
-		793A6CF463174F04B6B48648 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
+		8BD17A7B1C644E03000EADFE /* Pods-KPCC.debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = "Pods-KPCC.debug.xcconfig"; path = "Pods/Target Support Files/Pods-KPCC/Pods-KPCC.debug.xcconfig"; sourceTree = "<group>"; };
+		8BD17A7D1C644E10000EADFE /* Pods-KPCC.release.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = "Pods-KPCC.release.xcconfig"; path = "Pods/Target Support Files/Pods-KPCC/Pods-KPCC.release.xcconfig"; sourceTree = "<group>"; };
+		8BD17A7F1C644E1D000EADFE /* Pods-KPCC.enterprise.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = "Pods-KPCC.enterprise.xcconfig"; path = "Pods/Target Support Files/Pods-KPCC/Pods-KPCC.enterprise.xcconfig"; sourceTree = "<group>"; };
 		B5F9F7451ABCE8FD00115DB3 /* icon-clock.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-clock.png"; sourceTree = "<group>"; };
 		B5F9F7461ABCE8FD00115DB3 /* icon-clock@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-clock@2x.png"; sourceTree = "<group>"; };
 		B5F9F7471ABCE8FD00115DB3 /* icon-stopwatch.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-stopwatch.png"; sourceTree = "<group>"; };
 		B5F9F7481ABCE8FD00115DB3 /* icon-stopwatch@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-stopwatch@2x.png"; sourceTree = "<group>"; };
-		C4832A831DF6416997B73FBF /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -772,8 +754,8 @@
 				76A308C918C8FB940065D4B1 /* CoreGraphics.framework in Frameworks */,
 				76A308CB18C8FB940065D4B1 /* UIKit.framework in Frameworks */,
 				76A308C718C8FB940065D4B1 /* Foundation.framework in Frameworks */,
-				D60D1CDDD065418D8BE73D8C /* libPods.a in Frameworks */,
 				2574799B1B6965F800F72AF6 /* Fabric.framework in Frameworks */,
+				94612034188A450012173441 /* libPods-KPCC.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -784,7 +766,6 @@
 				76A308EC18C8FB950065D4B1 /* XCTest.framework in Frameworks */,
 				76A308EE18C8FB950065D4B1 /* UIKit.framework in Frameworks */,
 				76A308ED18C8FB950065D4B1 /* Foundation.framework in Frameworks */,
-				C902C9E15F3FE6D354EFE519 /* libPods.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -806,22 +787,6 @@
 				254CC6951A23A7A600560805 /* onboarding-tile@2x.jpg */,
 			);
 			name = Onboarding;
-			sourceTree = "<group>";
-		};
-		257479A01B6AB8E600F72AF6 /* SSO / Profile */ = {
-			isa = PBXGroup;
-			children = (
-				257479A11B6AB90900F72AF6 /* SCPRLoginViewController.h */,
-				257479A21B6AB90900F72AF6 /* SCPRLoginViewController.m */,
-				257479A31B6AB90900F72AF6 /* SCPRLoginViewController.xib */,
-				257479A61B6ACEAC00F72AF6 /* SCPRSSOInputFieldCell.h */,
-				257479A71B6ACEAC00F72AF6 /* SCPRSSOInputFieldCell.m */,
-				257479A81B6ACEAC00F72AF6 /* SCPRSSOInputFieldCell.xib */,
-				253030121B717CDD00B88468 /* SCPRProfileViewController.h */,
-				253030131B717CDD00B88468 /* SCPRProfileViewController.m */,
-				253030141B717CDD00B88468 /* SCPRProfileViewController.xib */,
-			);
-			name = "SSO / Profile";
 			sourceTree = "<group>";
 		};
 		257479AB1B6AD11500F72AF6 /* sso */ = {
@@ -1135,8 +1100,8 @@
 				5248858D19CBA180005F59CC /* EpisodeAudio.m */,
 				52CC6D5C19D0DC7100C67322 /* Segment.h */,
 				52CC6D5D19D0DC7100C67322 /* Segment.m */,
-				525C6CA219F701FA0076C13B /* TritonAd.h */,
-				525C6CA319F701FA0076C13B /* TritonAd.m */,
+				525C6CA219F701FA0076C13B /* AudioAd.h */,
+				525C6CA319F701FA0076C13B /* AudioAd.m */,
 				52CF917B1A0036CA007BCFA8 /* AudioChunk.h */,
 				52CF917C1A0036CA007BCFA8 /* AudioChunk.m */,
 				07139B831B95E701007DBA91 /* ScheduleOccurrence.swift */,
@@ -1193,7 +1158,6 @@
 		76658ABC18E0AF8500026176 /* View Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				257479A01B6AB8E600F72AF6 /* SSO / Profile */,
 				25B25BA91B1D091100ABE8B4 /* XFS */,
 				25F30AE51AFAB67C00F27187 /* Secondary Main Screens */,
 				25E8BDA01ABB8702007B99EB /* Wake / Sleep */,
@@ -1398,7 +1362,6 @@
 		76A308C518C8FB940065D4B1 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				075F6FAD1B8CFE2400E641F3 /* KPCCPlayer.framework */,
 				257479BC1B6C4A3E00F72AF6 /* WebKit.framework */,
 				2574799A1B6965F800F72AF6 /* Fabric.framework */,
 				25E553271B61A79100C45B85 /* Crashlytics.framework */,
@@ -1412,7 +1375,7 @@
 				76A308C818C8FB940065D4B1 /* CoreGraphics.framework */,
 				76A308CA18C8FB940065D4B1 /* UIKit.framework */,
 				76A308EB18C8FB950065D4B1 /* XCTest.framework */,
-				C4832A831DF6416997B73FBF /* libPods.a */,
+				5B19959CD2C659346CE0FA9B /* libPods-KPCC.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -1422,7 +1385,6 @@
 			children = (
 				76B9A9BC18F609FF007A6D8C /* Assets */,
 				769FD69918EB682E00AAF1F4 /* Classes */,
-				76E75F1C18CE4682008E3197 /* ThirdParty */,
 				76A308E418C8FB940065D4B1 /* Images.xcassets */,
 				76A308CD18C8FB940065D4B1 /* Supporting Files */,
 				0775D0B61B8C1A6E009EDAE9 /* Empty.mm */,
@@ -1503,19 +1465,12 @@
 			path = Assets;
 			sourceTree = "<group>";
 		};
-		76E75F1C18CE4682008E3197 /* ThirdParty */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = ThirdParty;
-			sourceTree = "<group>";
-		};
 		E35BF4FE069C4E903D03BDBD /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				1B29166D1072B92AE58CD1BB /* Pods.debug.xcconfig */,
-				793A6CF463174F04B6B48648 /* Pods.release.xcconfig */,
-				075636571B9FBD91001D1C55 /* Pods.enterprise.xcconfig */,
+				8BD17A7F1C644E1D000EADFE /* Pods-KPCC.enterprise.xcconfig */,
+				8BD17A7D1C644E10000EADFE /* Pods-KPCC.release.xcconfig */,
+				8BD17A7B1C644E03000EADFE /* Pods-KPCC.debug.xcconfig */,
 			);
 			name = Pods;
 			sourceTree = "<group>";
@@ -1531,10 +1486,11 @@
 				76A308BF18C8FB940065D4B1 /* Sources */,
 				76A308C018C8FB940065D4B1 /* Frameworks */,
 				76A308C118C8FB940065D4B1 /* Resources */,
-				075636531B9FB76C001D1C55 /* ShellScript */,
-				07CBEF411BA088E900D11ED5 /* ShellScript */,
+				075636531B9FB76C001D1C55 /* Copy Config Property Lists */,
+				07CBEF411BA088E900D11ED5 /* Increment Build Number */,
 				9E4DCD001A0847218C219F40 /* Copy Pods Resources */,
-				25AD968E1B4F3AF800858B65 /* Crashlytics */,
+				25AD968E1B4F3AF800858B65 /* Fabric */,
+				9C2049BE7ABD2A93FB5F3AFD /* Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -1553,8 +1509,8 @@
 				76A308E618C8FB940065D4B1 /* Sources */,
 				76A308E718C8FB940065D4B1 /* Frameworks */,
 				76A308E818C8FB940065D4B1 /* Resources */,
-				25DF10EE1ADC36A500B6DC8B /* ShellScript */,
 				5B4E3696EC147E4E199BAECF /* Copy Pods Resources */,
+				6B1A6B6C96CF1113EC976B51 /* Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -1574,13 +1530,16 @@
 			attributes = {
 				CLASSPREFIX = SCPR;
 				LastSwiftUpdateCheck = 0700;
-				LastUpgradeCheck = 0700;
+				LastUpgradeCheck = 0720;
 				ORGANIZATIONNAME = SCPR;
 				TargetAttributes = {
 					76A308C218C8FB940065D4B1 = {
 						DevelopmentTeam = SXALEDSVFU;
 						SystemCapabilities = {
 							com.apple.BackgroundModes = {
+								enabled = 1;
+							};
+							com.apple.Push = {
 								enabled = 1;
 							};
 						};
@@ -1647,7 +1606,6 @@
 				07A863B41BC5BD1700DFB42A /* program_avatar_wheel-thing@2x.png in Resources */,
 				76A308E518C8FB940065D4B1 /* Images.xcassets in Resources */,
 				07A863B31BC5BD1700DFB42A /* program_avatar_wheel-thing.png in Resources */,
-				253030161B717CDD00B88468 /* SCPRProfileViewController.xib in Resources */,
 				52CF917619FEF306007BCFA8 /* btn_play.png in Resources */,
 				52CF917719FEF306007BCFA8 /* btn_play@2x.png in Resources */,
 				768C0679199590CC00F829EB /* FreigSanProBookIt.otf in Resources */,
@@ -1678,7 +1636,6 @@
 				52EFF84019C368C00059A0E3 /* program_avatar_science-friday@2x.png in Resources */,
 				768C0683199590CC00F829EB /* FreigSanProSem.otf in Resources */,
 				7685BD62194BBCB90075BB16 /* playButton@2x.png in Resources */,
-				257479AA1B6ACEAC00F72AF6 /* SCPRSSOInputFieldCell.xib in Resources */,
 				256DE7281A16B9D90022EB84 /* menu-feedback@2x.png in Resources */,
 				52EFF7F619C368C00059A0E3 /* program_avatar_bbc-world-service.png in Resources */,
 				52EFF86619C368C00059A0E3 /* program_avatar_weekend-edition-sunday.png in Resources */,
@@ -1706,7 +1663,6 @@
 				52EFF7EA19C368C00059A0E3 /* program_avatar_all-things-considered.png in Resources */,
 				52EFF82E19C368C00059A0E3 /* program_avatar_on-being.png in Resources */,
 				259E44FF1A1D2CD300F5CD65 /* SCPROnboardingViewController.xib in Resources */,
-				257479A51B6AB90900F72AF6 /* SCPRLoginViewController.xib in Resources */,
 				52D9227819D366C90018AD4B /* content-share.png in Resources */,
 				52EFF85619C368C00059A0E3 /* program_avatar_world.png in Resources */,
 				258E8E101A16AE0400675E68 /* SCPRFeedbackViewController.xib in Resources */,
@@ -1758,7 +1714,6 @@
 				25F30AED1AFAB6B700F27187 /* SCPRCompleteScheduleViewController.xib in Resources */,
 				B5F9F74A1ABCE8FD00115DB3 /* icon-clock@2x.png in Resources */,
 				B5F9F7491ABCE8FD00115DB3 /* icon-clock.png in Resources */,
-				075636581B9FBD91001D1C55 /* Pods.enterprise.xcconfig in Resources */,
 				52EFF79B19C3688D0059A0E3 /* menu-settings.png in Resources */,
 				76A308D118C8FB940065D4B1 /* InfoPlist.strings in Resources */,
 				258C5D261B10048A00C19BE0 /* SCPRUpcomingProgramViewController7.xib in Resources */,
@@ -1849,58 +1804,47 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		075636531B9FB76C001D1C55 /* ShellScript */ = {
+		075636531B9FB76C001D1C55 /* Copy Config Property Lists */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
+			name = "Copy Config Property Lists";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "cp \"${PROJECT_DIR}/../KPCC-Config/config/iphone/Config-${CONFIGURATION}.plist\" \"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/Config.plist\"\ncp \"${PROJECT_DIR}/../KPCC-Config/config/iphone/GoogleService-Info.plist\" \"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/GoogleService-Info.plist\"";
 		};
-		07CBEF411BA088E900D11ED5 /* ShellScript */ = {
+		07CBEF411BA088E900D11ED5 /* Increment Build Number */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
+			name = "Increment Build Number";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "git=/usr/bin/git\nbranch_name=`$git symbolic-ref HEAD | sed -e 's,.*/\\\\(.*\\\\),\\\\1,'`\ngit_count=`$git rev-list $branch_name |wc -l | sed 's/^ *//;s/ *$//'`\nsimple_branch_name=`$git rev-parse --abbrev-ref HEAD`\nshort_sha=`$git rev-parse --short HEAD`\n\nbuild_number=\"$git_count\"\nif [ $CONFIGURATION != \"Release\" ]; then\nbuild_number+=\"-$simple_branch_name-$short_sha\"\nfi\n\nplist=\"${TARGET_BUILD_DIR}/${INFOPLIST_PATH}\"\ndsym_plist=\"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}/Contents/Info.plist\"\n\n/usr/libexec/PlistBuddy -c \"Set :CFBundleVersion $build_number\" \"$plist\"\nif [ -f \"$DSYM_INFO_PLIST\" ] ; then\n/usr/libexec/PlistBuddy -c \"Set :CFBundleVersion $build_number\" \"$dsym_plist\"\nfi";
 		};
-		25AD968E1B4F3AF800858B65 /* Crashlytics */ = {
+		25AD968E1B4F3AF800858B65 /* Fabric */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = Crashlytics;
+			name = Fabric;
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "if [[ \"${SDKROOT}\" != *Simulator* ]]\nthen\n./Fabric.framework/run 434d44032523439399b6658c29c147e8e869167e 4dc4d9cc0ade16f282932c7daef418996a1adaaf355390fc30594696d8936fb3\nfi";
-		};
-		25DF10EE1ADC36A500B6DC8B /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "";
+			shellScript = "if [ \"${CONFIGURATION}\" = \"Release\" ]; then\n  ./Fabric.framework/run 434d44032523439399b6658c29c147e8e869167e 4dc4d9cc0ade16f282932c7daef418996a1adaaf355390fc30594696d8936fb3\nfi";
 		};
 		2E850504DBEA4BBA8459FA23 /* Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -1929,7 +1873,22 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods/Pods-resources.sh\"\n";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-KPCC/Pods-KPCC-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		6B1A6B6C96CF1113EC976B51 /* Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-KPCC/Pods-KPCC-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		91A9C88B4B9EDE80BF21F596 /* Check Pods Manifest.lock */ = {
@@ -1947,6 +1906,21 @@
 			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
 		};
+		9C2049BE7ABD2A93FB5F3AFD /* Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-KPCC/Pods-KPCC-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 		9E4DCD001A0847218C219F40 /* Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -1959,7 +1933,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods/Pods-resources.sh\"\n";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-KPCC/Pods-KPCC-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -1981,7 +1955,6 @@
 				52D0FC1C19D1F24F009AECEE /* SCPRProgramDetailHeaderView.m in Sources */,
 				254831C11A41555700963078 /* UIView+PrintDimensions.m in Sources */,
 				07139B841B95E701007DBA91 /* ScheduleOccurrence.swift in Sources */,
-				257479A91B6ACEAC00F72AF6 /* SCPRSSOInputFieldCell.m in Sources */,
 				258BB03E1A1C083B00B8FCFE /* Settings.m in Sources */,
 				254CC69E1A23B41D00560805 /* SCPRTriangleView.m in Sources */,
 				258C5D381B1678ED00C19BE0 /* SCPRCornerMaskView.m in Sources */,
@@ -1991,7 +1964,6 @@
 				25B25BAD1B1D093D00ABE8B4 /* SCPRPledgePINViewController.m in Sources */,
 				2594B53F1A30F8410013B93A /* SCPRKeyboardToolbar.m in Sources */,
 				25BBCD7D1A892DA30015071E /* SCPRScrubberViewController.m in Sources */,
-				253030151B717CDD00B88468 /* SCPRProfileViewController.m in Sources */,
 				2537D8BD1A8BD7B700481CF8 /* SCPRTouchableScrubberView.m in Sources */,
 				25BBCD771A892D730015071E /* SCPRScrubbingUIViewController.m in Sources */,
 				25F2BC7E1A3B9B4D00108F73 /* SCPRGenericAvatarViewController.m in Sources */,
@@ -2004,7 +1976,6 @@
 				52CF917A1A0032C7007BCFA8 /* QueueManager.m in Sources */,
 				25E8BDB01AC0920E007B99EB /* SCPRAlarmClockViewController.m in Sources */,
 				258BB0381A1C07FD00B8FCFE /* UXmanager.m in Sources */,
-				257479A41B6AB90900F72AF6 /* SCPRLoginViewController.m in Sources */,
 				25B25BB51B1D096D00ABE8B4 /* SCPRBalloonViewController.m in Sources */,
 				76B9A9AC18EF59FD007A6D8C /* SCPRUserReportViewController.m in Sources */,
 				76658AB918DCB51000026176 /* NSDate+Helper.m in Sources */,
@@ -2024,7 +1995,7 @@
 				25E8BDAB1ABC923E007B99EB /* SCPRSleepViewController.m in Sources */,
 				52CC6D6219D100DE00C67322 /* SCPRProgramTableViewCell.m in Sources */,
 				52D6B2001A02EEB90068B19A /* SCPRQueueScrollableView.m in Sources */,
-				525C6CA419F701FA0076C13B /* TritonAd.m in Sources */,
+				525C6CA419F701FA0076C13B /* AudioAd.m in Sources */,
 				76A3090418C93C880065D4B1 /* AudioManager.m in Sources */,
 				258E8E0A1A16AC5B00675E68 /* NSData+JSONAdditions.m in Sources */,
 				25BBCD6E1A85867F0015071E /* NSError+PrettyAnalytics.m in Sources */,
@@ -2112,11 +2083,11 @@
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Southern California Public Radio (SXALEDSVFU)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Southern California Public Radio (SXALEDSVFU)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = YES;
 				ENABLE_NS_ASSERTIONS = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_PREPROCESSOR_DEFINITIONS = "PRODUCTION=1";
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
@@ -2132,17 +2103,14 @@
 		};
 		075636551B9FBBA9001D1C55 /* Enterprise */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 075636571B9FBD91001D1C55 /* Pods.enterprise.xcconfig */;
+			baseConfigurationReference = 8BD17A7F1C644E1D000EADFE /* Pods-KPCC.enterprise.xcconfig */;
 			buildSettings = {
 				APP_UID = org.scpr.iphone.KPCC;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = YES;
-				CLANG_CXX_LIBRARY = "libstdc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_WARN_ENUM_CONVERSION = NO;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Southern California Public Radio";
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2153,8 +2121,6 @@
 				GCC_PREFIX_HEADER = "KPCC/KPCC-Prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(inherited)",
-					"COCOAPODS=1",
-					"PRODUCTION=1",
 					"SUPPRESS_DIMENSION_PRINTING=1",
 					"SUPPRESS_AGGRESSIVE_KICKSTART=1",
 				);
@@ -2190,7 +2156,6 @@
 				OTHER_LDFLAGS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = "${APP_UID}";
 				PRODUCT_NAME = "-$(TARGET_NAME)-";
-				PROVISIONING_PROFILE = "77be0513-10cc-4da4-af9b-5e98f915bffe";
 				SWIFT_OBJC_BRIDGING_HEADER = "KPCC/UI/Controllers/KPCC-Bridging-Header.h";
 				SWIFT_OBJC_INTERFACE_HEADER_NAME = "KPCC-Swift.h";
 				TARGETED_DEVICE_FAMILY = 1;
@@ -2200,12 +2165,11 @@
 		};
 		075636561B9FBBA9001D1C55 /* Enterprise */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 075636571B9FBD91001D1C55 /* Pods.enterprise.xcconfig */;
+			baseConfigurationReference = 8BD17A7F1C644E1D000EADFE /* Pods-KPCC.enterprise.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = YES;
 				FRAMEWORK_SEARCH_PATHS = (
-					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
 					"$(DEVELOPER_FRAMEWORKS_DIR)",
 					"$(PROJECT_DIR)",
@@ -2265,17 +2229,13 @@
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
-					"$(inherited)",
-				);
+				GCC_PREPROCESSOR_DEFINITIONS = "DEBUG=1";
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
@@ -2306,11 +2266,11 @@
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Southern California Public Radio (SXALEDSVFU)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Southern California Public Radio (SXALEDSVFU)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = YES;
 				ENABLE_NS_ASSERTIONS = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_PREPROCESSOR_DEFINITIONS = "RELEASE=1";
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
@@ -2326,17 +2286,14 @@
 		};
 		76A308FC18C8FB950065D4B1 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 1B29166D1072B92AE58CD1BB /* Pods.debug.xcconfig */;
+			baseConfigurationReference = 8BD17A7B1C644E03000EADFE /* Pods-KPCC.debug.xcconfig */;
 			buildSettings = {
 				APP_UID = org.americanpublicmedia.KPCCRadio;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = YES;
-				CLANG_CXX_LIBRARY = "libstdc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_WARN_ENUM_CONVERSION = NO;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2346,7 +2303,6 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "KPCC/KPCC-Prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
 					"$(inherited)",
 					"SUPPRESS_AGGRESSIVE_KICKSTART=1",
 					"SUPPRESS_DIMENSION_PRINTING=1",
@@ -2383,7 +2339,6 @@
 				OTHER_LDFLAGS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = "${APP_UID}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "KPCC/UI/Controllers/KPCC-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				TARGETED_DEVICE_FAMILY = 1;
@@ -2393,17 +2348,14 @@
 		};
 		76A308FD18C8FB950065D4B1 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 793A6CF463174F04B6B48648 /* Pods.release.xcconfig */;
+			baseConfigurationReference = 8BD17A7D1C644E10000EADFE /* Pods-KPCC.release.xcconfig */;
 			buildSettings = {
 				APP_UID = org.americanpublicmedia.KPCCRadio;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = YES;
-				CLANG_CXX_LIBRARY = "libstdc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_WARN_ENUM_CONVERSION = NO;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2414,8 +2366,6 @@
 				GCC_PREFIX_HEADER = "KPCC/KPCC-Prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(inherited)",
-					"COCOAPODS=1",
-					"RELEASE=1",
 					"SUPPRESS_AGGRESSIVE_KICKSTART=1",
 					"SUPPRESS_DIMENSION_PRINTING=1",
 				);
@@ -2451,7 +2401,6 @@
 				OTHER_LDFLAGS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = "${APP_UID}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "49ccb261-dce7-4231-a5e6-b5d1c7d16b27";
 				SWIFT_OBJC_BRIDGING_HEADER = "KPCC/UI/Controllers/KPCC-Bridging-Header.h";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
@@ -2460,12 +2409,11 @@
 		};
 		76A308FF18C8FB950065D4B1 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 1B29166D1072B92AE58CD1BB /* Pods.debug.xcconfig */;
+			baseConfigurationReference = 8BD17A7B1C644E03000EADFE /* Pods-KPCC.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = YES;
 				FRAMEWORK_SEARCH_PATHS = (
-					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
 					"$(DEVELOPER_FRAMEWORKS_DIR)",
 					"$(PROJECT_DIR)",
@@ -2515,12 +2463,11 @@
 		};
 		76A3090018C8FB950065D4B1 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 793A6CF463174F04B6B48648 /* Pods.release.xcconfig */;
+			baseConfigurationReference = 8BD17A7D1C644E10000EADFE /* Pods-KPCC.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = YES;
 				FRAMEWORK_SEARCH_PATHS = (
-					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
 					"$(DEVELOPER_FRAMEWORKS_DIR)",
 					"$(PROJECT_DIR)",

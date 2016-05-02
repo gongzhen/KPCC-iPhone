@@ -151,6 +151,8 @@ public struct AudioPlayerObserver<T> {
 
     private var _timeObserver: AnyObject?
 
+    private var _playerItem: AVPlayerItem?
+
     //----------
 
     public var oTime        = AudioPlayerObserver<StreamDates>()
@@ -209,6 +211,8 @@ public struct AudioPlayerObserver<T> {
 
         super.init()
 
+        self._player.addObserver(self, forKeyPath: "currentItem", options: [ .New, .Initial ], context: nil)
+
         // set up an observer for player / item status
         self.observer.setCallback() { status,msg,obj in
             self._handleObservation(status, msg:msg, obj:obj)
@@ -217,14 +221,6 @@ public struct AudioPlayerObserver<T> {
         // ios9 adds a feature to limit paused buffering
         if #available(iOS 9.0, *) {
             self._player.currentItem?.canUseNetworkResourcesForLiveStreamingWhilePaused = false
-        }
-
-        // should we be limiting bandwidth?
-        if #available(iOS 8.0, *) {
-            if self.reduceBandwidthOnCellular && self._networkStatus == .Cellular {
-                self._emitEvent("Turning on bandwidth limiter for new player")
-                self._player.currentItem?.preferredPeakBitRate = 1000
-            }
         }
 
         self._setStatus(.New)
@@ -264,8 +260,17 @@ public struct AudioPlayerObserver<T> {
         // and a check right now...
         self.setNetworkStatus()
 
-        // -- set up bandwidth limiter -- //
+        // should we be limiting bandwidth?
+        if #available(iOS 8.0, *) {
+            if self.reduceBandwidthOnCellular && self._networkStatus == .Cellular {
+                if self._player.currentItem != nil {
+                    self._emitEvent("Turning on bandwidth limiter for new player")
+                    self._player.currentItem!.preferredPeakBitRate = 1000
+                }
+            }
+        }
 
+        // -- set up bandwidth limiter -- //
         if #available(iOS 8.0,*) {
             self.oNetwork.addObserver() { s in
                 if self.reduceBandwidthOnCellular {
@@ -326,6 +331,7 @@ public struct AudioPlayerObserver<T> {
     //----------
 
     deinit {
+        self._player.removeObserver(self, forKeyPath: "currentItem")
         self.stop()
     }
 
@@ -716,6 +722,18 @@ public struct AudioPlayerObserver<T> {
         let seek_id = ++self._interactionIdx
 
         self._getReadyPlayer() { cold in
+            guard let _ = self._player.currentItem else {
+                self._emitEvent(fsig+"seek aborted (currentItem is nil).")
+                completion?(false)
+                return
+            }
+
+            guard let _ = self._player.currentItem!.currentDate() else {
+                self._emitEvent(fsig+"seek aborted (currentDate is nil).")
+                completion?(false)
+                return
+            }
+
             if (self._interactionIdx != seek_id) {
                 self._emitEvent(fsig+"seek interrupted.")
                 completion?(false)
@@ -744,8 +762,18 @@ public struct AudioPlayerObserver<T> {
             let testLanding = { (finished:Bool) -> Void in
 
                 if finished {
+                    guard let _ = self._player.currentItem else {
+                        self._emitEvent(fsig+"seek aborted at landing (currentItem is nil).")
+                        playFunc(false)
+                        return
+                    }
+
                     // how close did we get?
-                    let landed = self._player.currentItem!.currentDate()!
+                    guard let landed = self._player.currentItem!.currentDate() else {
+                        self._emitEvent(fsig+"seek aborted at landing (currentDate is nil).")
+                        playFunc(false)
+                        return
+                    }
 
                     self._emitEvent(fsig+"landed at \(self._dateFormat.stringFromDate(landed))")
 
@@ -893,4 +921,18 @@ public struct AudioPlayerObserver<T> {
     }
 
     //----------
+
+    // Workaround added for KVO crash [Fabric #49]
+    // REASON: AVObserver does not handle case that AVPlayerItem (aka currentItem) is deallocated before the AVPlayer
+    // TODO: Fix KVO logic in AVObserver
+    public override func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?, change: [String : AnyObject]?, context: UnsafeMutablePointer<Void>) {
+        guard let keyPath = keyPath else { return }
+        if object as? AVPlayer == self._player && keyPath == "currentItem" {
+            if let _playerItem = _playerItem where self._player.currentItem == nil && !observer.isDestroyed {
+                _playerItem.removeObserver(observer, forKeyPath: "status")
+                _playerItem.removeObserver(observer, forKeyPath: "playbackLikelyToKeepUp")
+            }
+            _playerItem = self._player.currentItem
+        }
+    }
 }

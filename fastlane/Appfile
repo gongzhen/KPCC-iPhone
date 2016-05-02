@@ -1,0 +1,3 @@
+app_identifier "org.americanpublicmedia.KPCCRadio"
+team_name "Southern California Public Radio"
+apple_id `git config --get user.email`.chomp!

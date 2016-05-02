@@ -9,10 +9,10 @@
 #import <Foundation/Foundation.h>
 #include <mach/mach_time.h>
 #import "AudioManager.h"
-#import "Mixpanel.h"
 #import "NetworkManager.h"
 #import <Crashlytics/Crashlytics.h>
 #import <Fabric/Fabric.h>
+#import <Flurry-iOS-SDK/Flurry.h>
 //#import <NielsenAppApi/NielsenAppApi.h>
 
 static NSInteger kMaxAllowedExceptionsPerInterval = 5;
@@ -39,10 +39,10 @@ typedef NS_ENUM(NSInteger, ScrubbingType) {
 @property (nonatomic, strong) NSDate *errorLogReceivedAt;
 @property (nonatomic, strong) NSDate *accessLogReceivedAt;
 @property (nonatomic, strong) NSDate *lastStreamException;
-@property (nonatomic, strong) Mixpanel *mxp;
 
 @property (nonatomic, strong) NSMutableDictionary *progressMap;
 
+@property BOOL flurryActiveInBackground;
 @property BOOL gaSessionStarted;
 
 @property NSInteger allowedExceptions;

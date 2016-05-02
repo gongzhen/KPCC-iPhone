@@ -224,44 +224,43 @@ static NetworkManager *singleton = nil;
     }];
 }
 
-
-- (void)fetchTritonAd:(NSString *)params completion:(void (^)(TritonAd* tritonAd))completion {
+- (void)fetchAudioAd:(NSString *)params completion:(void (^)(AudioAd* audioAd))completion {
     AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
     manager.responseSerializer = [AFHTTPResponseSerializer serializer];
-    NSString *idfa = [[[ASIdentifierManager sharedManager] advertisingIdentifier] UUIDString];
-    
+
+    ASIdentifierManager *identifierManager = [ASIdentifierManager sharedManager];
+    NSString *uuid = identifierManager.isAdvertisingTrackingEnabled ? identifierManager.advertisingIdentifier.UUIDString : @"";
+
     NSDictionary *globalConfig = [Utils globalConfig];
-    NSString *tritonEndpoint = [NSString stringWithFormat:globalConfig[@"AdServer"][@"Preroll"],idfa];
-    
-    
-    [manager GET:tritonEndpoint parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
+    NSString *endpoint = [NSString stringWithFormat:globalConfig[@"AdServer"][@"Preroll"], uuid];
+
+    [manager GET:endpoint parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
         NSDictionary *convertedData = [NSDictionary dictionaryWithXMLData:responseObject];
         NSLog(@"convertedData %@", convertedData);
-
-        TritonAd *tritonAd = nil;
-        if (convertedData != nil && convertedData[@"Ad"]) {
-            tritonAd = [[TritonAd alloc] initWithDict:convertedData[@"Ad"]];
+        AudioAd *audioAd;
+        if ([convertedData[@"Ad"] isKindOfClass:[NSDictionary class]]) {
+            audioAd = [[AudioAd alloc] initWithDictionary:convertedData[@"Ad"]];
         }
-
-        completion(tritonAd);
+        completion(audioAd);
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         NSLog(@"failure? %@", error);
         completion(nil);
     }];
 }
 
-- (void)sendImpressionToTriton:(NSString*)impressionURL completion:(void (^)(BOOL success))completion {
-    if (impressionURL && !SEQ(impressionURL,@"")) {
+- (void)pingAudioAdUrl:(NSString*)url completion:(void (^)(BOOL success))completion
+{
+    if (url && !SEQ(url,@"")) {
         AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
         manager.responseSerializer = [AFHTTPResponseSerializer serializer];
-        [manager GET:impressionURL parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        [manager GET:url parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
             completion(YES);
         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-            NSLog(@"send impression failure? %@", error);
+            NSLog(@"Touching Audio Ad URL Failure? %@", error);
             completion(NO);
         }];
     } else {
-        NSLog(@"sendImpression: No impression URL.");
+        NSLog(@"Touching Audio Ad URL: No URL");
     }
 }
 

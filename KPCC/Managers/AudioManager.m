@@ -390,7 +390,9 @@ static const NSString *ItemStatusContext;
     }
 
     // Note our current URL for Crashlytics
+#ifdef RELEASE
     [[Crashlytics sharedInstance] setObjectValue:urlString forKey:@"streamerUrl"];
+#endif
 
     self.audioPlayer = [[AudioPlayer alloc] initWithUrl:url hiResTick:local];
 

@@ -9,15 +9,14 @@
 #import "SCPRAppDelegate.h"
 #import "SCPRMasterViewController.h"
 #import "SCPRNavigationController.h"
-#import <AVFoundation/AVFoundation.h>
 #import "SessionManager.h"
 #import "NetworkManager.h"
 #import "SCPROnboardingViewController.h"
 #import "UXmanager.h"
 #import "AnalyticsManager.h"
-#import <Parse/Parse.h>
+#import "SCPRXFSViewController.h"
 
-#import "KPCC-Swift.h"
+NSString *const kPushChannel = @"listenLive";
 
 @implementation SCPRAppDelegate
 
@@ -26,12 +25,14 @@
     NSDictionary *globalConfig = [Utils globalConfig];
     
     [[AnalyticsManager shared] setup];
-    A0Lock *lock = [[UXmanager shared] lock];
-    [lock applicationLaunchedWithOptions:launchOptions];
 
     [Parse setApplicationId:globalConfig[@"Parse"][@"ApplicationId"]
                   clientKey:globalConfig[@"Parse"][@"ClientKey"]];
     
+#ifdef RELEASE
+    [[FBSDKApplicationDelegate sharedInstance] application:application didFinishLaunchingWithOptions:launchOptions];
+#endif
+
     // Apply application-wide styling
     [self applyStylesheet];
     
@@ -166,9 +167,16 @@
 }
 
 - (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation {
-    A0Lock *lock = [[UXmanager shared] lock];
-    [lock handleURL:url sourceApplication:sourceApplication];
-    return YES;
+    BOOL success = NO;
+#ifdef RELEASE
+    if (! success) {
+        success = [[FBSDKApplicationDelegate sharedInstance] application:application
+                                                                 openURL:url
+                                                       sourceApplication:sourceApplication
+                                                              annotation:annotation];
+    }
+#endif
+    return success;
 }
 
 - (void)application:(UIApplication *)application handleActionWithIdentifier:(NSString *)identifier forLocalNotification:(UILocalNotification *)notification completionHandler:(void (^)())completionHandler {
@@ -190,6 +198,10 @@
 - (void)applicationWillResignActive:(UIApplication *)application {
     
     if ( [[AudioManager shared] isPlayingAudio] ) {
+#ifdef RELEASE
+        [Flurry setBackgroundSessionEnabled:YES];
+        [[AnalyticsManager shared] setFlurryActiveInBackground:YES];
+#endif
         [[SessionManager shared] handleSessionMovingToBackground];
     }
     
@@ -228,6 +240,13 @@
     // when returning to the foreground, we need to figure out what to display
     // to the user.
 
+#ifdef RELEASE
+    if ( [[AnalyticsManager shared] flurryActiveInBackground] ) {
+        [Flurry setBackgroundSessionEnabled:NO];
+        [[AnalyticsManager shared] setFlurryActiveInBackground:NO];
+    }
+#endif
+
     [[SessionManager shared] handleSessionMovingToForeground];
     [[SessionManager shared] expireSessionIfExpired:NO];
     
@@ -255,6 +274,10 @@
     [self manuallyCheckAlarm];
     
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
+
+#ifdef RELEASE
+    [FBSDKAppEvents activateApp];
+#endif
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application {

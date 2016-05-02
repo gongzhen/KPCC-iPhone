@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "TritonAd.h"
+#import "AudioAd.h"
 #import "SCPRAppDelegate.h"
 #import "KPCC-Swift.h"
 
@@ -28,7 +28,7 @@
 
 @property (nonatomic, strong) UITapGestureRecognizer *adTapper;
 @property (nonatomic,weak) id<SCPRPreRollControllerDelegate> delegate;
-@property (nonatomic,strong) TritonAd *tritonAd;
+@property (nonatomic,strong) AudioAd *audioAd;
 @property (nonatomic,strong) IBOutlet UIImageView *adImageView;
 @property (nonatomic,strong) IBOutlet UIView *curtainView;
 
