@@ -6,7 +6,7 @@ target 'KPCC' do
   pod 'pop', '~> 1.0'
   pod 'FXBlurView', '~> 1.6'
   pod 'XMLDictionary', '~> 1.4'
-  pod 'Parse', '~> 1.6'
+  pod 'Parse', '~> 1.13'
   pod 'Google/Analytics', '~> 1.3'
   pod 'FBSDKCoreKit', '~> 4.10'
   pod 'FBSDKShareKit', '~> 4.10'
