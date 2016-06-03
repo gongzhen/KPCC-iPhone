@@ -2,7 +2,7 @@ platform :ios, '7.0'
 
 target 'KPCC' do
 
-  pod 'AFNetworking', '~> 2.0'
+  pod 'AFNetworking', '~> 3.1'
   pod 'FBSDKCoreKit', '~> 4.12'
   pod 'FBSDKShareKit', '~> 4.12'
   pod 'FBSDKLoginKit', '~> 4.12'
