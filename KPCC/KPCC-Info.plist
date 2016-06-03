@@ -65,6 +65,8 @@
 	<string>842051802522808</string>
 	<key>FacebookDisplayName</key>
 	<string>KPCC iPhone</string>
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>
