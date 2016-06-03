@@ -1480,7 +1480,7 @@
 				76A308C018C8FB940065D4B1 /* Frameworks */,
 				76A308C118C8FB940065D4B1 /* Resources */,
 				075636531B9FB76C001D1C55 /* Copy Config Property Lists */,
-				07CBEF411BA088E900D11ED5 /* Increment Build Number */,
+				07CBEF411BA088E900D11ED5 /* Write Build Number to Info Property Lists */,
 				25AD968E1B4F3AF800858B65 /* Fabric */,
 				0D7063E687FF3A23E18500F8 /* [CP] Embed Pods Frameworks */,
 				ABA2088CBE2D7EC683FE09C9 /* [CP] Copy Pods Resources */,
@@ -1811,14 +1811,14 @@
 			shellPath = /bin/sh;
 			shellScript = "cp \"${PROJECT_DIR}/../KPCC-Config/config/iphone/Config-${CONFIGURATION}.plist\" \"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/Config.plist\"\ncp \"${PROJECT_DIR}/../KPCC-Config/config/iphone/GoogleService-Info.plist\" \"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/GoogleService-Info.plist\"";
 		};
-		07CBEF411BA088E900D11ED5 /* Increment Build Number */ = {
+		07CBEF411BA088E900D11ED5 /* Write Build Number to Info Property Lists */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "Increment Build Number";
+			name = "Write Build Number to Info Property Lists";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
