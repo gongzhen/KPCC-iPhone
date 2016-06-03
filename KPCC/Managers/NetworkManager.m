@@ -37,9 +37,9 @@ static NetworkManager *singleton = nil;
 }
 
 - (void)requestFromSCPRWithEndpoint:(NSString *)endpoint completion:(CompletionBlockWithValue)completion {
-    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+    AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
     manager.responseSerializer = [AFJSONResponseSerializer serializerWithReadingOptions: NSJSONReadingMutableContainers];
-    [manager GET:endpoint parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
+    [manager GET:endpoint parameters:nil progress:nil success:^(NSURLSessionTask *task, id responseObject) {
         
         if (responseObject[@"meta"] && [responseObject[@"meta"][@"status"][@"code"] intValue] == 200) {
             
@@ -80,7 +80,7 @@ static NetworkManager *singleton = nil;
             
         }
         
-    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+    } failure:^(NSURLSessionTask *operation, NSError *error) {
         dispatch_async(dispatch_get_main_queue(), ^{
             completion(nil);
         });
@@ -113,7 +113,7 @@ static NetworkManager *singleton = nil;
 }
 
 - (void)fetchAudioAd:(NSString *)params completion:(void (^)(AudioAd* audioAd))completion {
-    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+    AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
     manager.responseSerializer = [AFHTTPResponseSerializer serializer];
 
     ASIdentifierManager *identifierManager = [ASIdentifierManager sharedManager];
@@ -122,7 +122,7 @@ static NetworkManager *singleton = nil;
     NSDictionary *globalConfig = [Utils globalConfig];
     NSString *endpoint = [NSString stringWithFormat:globalConfig[@"AdServer"][@"Preroll"], uuid];
 
-    [manager GET:endpoint parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
+    [manager GET:endpoint parameters:nil progress:nil success:^(NSURLSessionTask *task, id responseObject) {
         NSDictionary *convertedData = [NSDictionary dictionaryWithXMLData:responseObject];
         NSLog(@"convertedData %@", convertedData);
         AudioAd *audioAd;
@@ -130,7 +130,7 @@ static NetworkManager *singleton = nil;
             audioAd = [[AudioAd alloc] initWithDictionary:convertedData[@"Ad"]];
         }
         completion(audioAd);
-    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+    } failure:^(NSURLSessionTask *operation, NSError *error) {
         NSLog(@"failure? %@", error);
         completion(nil);
     }];
@@ -139,11 +139,11 @@ static NetworkManager *singleton = nil;
 - (void)pingAudioAdUrl:(NSString*)url completion:(void (^)(BOOL success))completion
 {
     if (url && !SEQ(url,@"")) {
-        AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+        AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
         manager.responseSerializer = [AFHTTPResponseSerializer serializer];
-        [manager GET:url parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        [manager GET:url parameters:nil progress:nil success:^(NSURLSessionTask *task, id responseObject) {
             completion(YES);
-        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        } failure:^(NSURLSessionTask *operation, NSError *error) {
             NSLog(@"Touching Audio Ad URL Failure? %@", error);
             completion(NO);
         }];
