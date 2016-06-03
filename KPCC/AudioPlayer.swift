@@ -577,7 +577,7 @@ public struct AudioPlayerObserver<T> {
     //----------
 
     public func play() -> Bool{
-        self._interactionIdx++
+        self._interactionIdx += 1
         self._setStatus(.Waiting)
         self.getPlayer().play()
         return true
@@ -586,7 +586,7 @@ public struct AudioPlayerObserver<T> {
     //----------
 
     public func pause() -> Bool {
-        self._interactionIdx++
+        self._interactionIdx += 1
         self._setStatus(.Waiting)
         self.getPlayer().pause()
         return true
@@ -676,7 +676,8 @@ public struct AudioPlayerObserver<T> {
         self._emitEvent("seekByInterval called for \(interval)")
 
         // get a seek sequence number
-        let seek_id = ++self._interactionIdx
+        self._interactionIdx += 1
+        let seek_id = self._interactionIdx
 
         self._getReadyPlayer() { cold in
             if (self._interactionIdx != seek_id) {
@@ -719,7 +720,8 @@ public struct AudioPlayerObserver<T> {
         self._emitEvent(fsig + "called for \(self._dateFormat.stringFromDate(date))")
 
         // get a seek sequence number
-        let seek_id = ++self._interactionIdx
+        self._interactionIdx += 1
+        let seek_id = self._interactionIdx
 
         self._getReadyPlayer() { cold in
             guard let _ = self._player.currentItem else {
@@ -879,7 +881,8 @@ public struct AudioPlayerObserver<T> {
     private func _seekToTime(time:CMTime,completion:finishCallback?) -> Void {
         self._emitEvent("_seekToTime called for \(time)")
 
-        let seek_id = ++self._interactionIdx
+        self._interactionIdx += 1
+        let seek_id = self._interactionIdx
 
         self._getReadyPlayer() { cold in
             if (self._interactionIdx != seek_id) {
