@@ -11,7 +11,7 @@ target 'KPCC' do
   pod 'FBSDKCoreKit', '~> 4.10'
   pod 'FBSDKShareKit', '~> 4.10'
   pod 'FBSDKLoginKit', '~> 4.10'
-  pod 'Flurry-iOS-SDK/FlurrySDK', '~> 7.3'
+  pod 'Flurry-iOS-SDK/FlurrySDK', '~> 7.6'
 
 end
 
