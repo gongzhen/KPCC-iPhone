@@ -13,7 +13,6 @@
 #import <Crashlytics/Crashlytics.h>
 #import <Fabric/Fabric.h>
 #import <Flurry-iOS-SDK/Flurry.h>
-//#import <NielsenAppApi/NielsenAppApi.h>
 
 static NSInteger kMaxAllowedExceptionsPerInterval = 5;
 static NSInteger kExceptionInterval = 60;
@@ -61,8 +60,6 @@ typedef NS_ENUM(NSInteger, ScrubbingType) {
 - (void)gaSessionStartWithScreenView:(NSString*)screenName;
 - (void)gaSessionEnd;
 
-- (void)failStream:(NetworkHealth)cause comments:(NSString*)comments;
-- (void)failStream:(NetworkHealth)cause comments:(NSString *)comments force:(BOOL)force;
 - (void)trackPlaybackStalled;
 
 - (void)clearLogs;
@@ -80,15 +77,5 @@ typedef NS_ENUM(NSInteger, ScrubbingType) {
 - (NSDictionary*)logifiedParamsList:(NSDictionary*)originalParams;
 - (NSDictionary*)typicalLiveProgramInformation;
 - (NSDictionary*)typicalOnDemandEpisodeInformation;
-
-// Nielsen
-//@property (nonatomic, strong) NielsenAppApi *nielsenTracker;
-//@property (nonatomic, strong) NSString *currentNielsenInfo;
-//
-//- (void)nielsenPlay;
-//- (void)nielsenStop;
-//- (void)nielsenTrack;
-//- (NSString*)nielsenInfoForCurrentAudio;
-//- (NSString*)nielsenInfoForKPCC;
 
 @end

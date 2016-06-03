@@ -228,11 +228,11 @@
     programDetailViewController.program = program;
     [self.navigationController pushViewController:programDetailViewController animated:YES];
     
-    NSString *title = [NSString stringWithFormat:@"%@", [program title]];
-    if ( !title ) {
-        title = @"[UNKNOWN]";
-    }
-    
+//    NSString *title = [NSString stringWithFormat:@"%@", [program title]];
+//    if ( !title ) {
+//        title = @"[UNKNOWN]";
+//    }
+
     /*[[AnalyticsManager shared] logEvent:@"programSelected"
                          withParameters:@{ @"programTitle" : title }];*/
 }

@@ -11,6 +11,7 @@
 
 @interface Episode : NSObject
 
+- (instancetype)init __unavailable;
 - (instancetype)initWithDict:(NSDictionary *)episodeDict NS_DESIGNATED_INITIALIZER;
 @property (NS_NONATOMIC_IOSONLY, readonly) BOOL hasEpisodeAudio;
 
