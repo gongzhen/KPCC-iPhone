@@ -11,6 +11,7 @@ target 'KPCC' do
   pod 'Google/Analytics', '~> 1.3'
   pod 'Lock', '~> 1.26'
   pod 'Parse', '~> 1.13'
+  pod 'SimpleKeychain', '~> 0.7'
   pod 'XMLDictionary', '~> 1.4'
   pod 'pop', '~> 1.0'
 
