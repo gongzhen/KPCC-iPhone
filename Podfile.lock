@@ -75,6 +75,7 @@ PODS:
   - Parse (1.13.0):
     - Bolts/Tasks (~> 1.6)
   - pop (1.0.9)
+  - SimpleKeychain (0.7.0)
   - XMLDictionary (1.4)
 
 DEPENDENCIES:
@@ -89,6 +90,7 @@ DEPENDENCIES:
   - OCMock (~> 3.2)
   - Parse (~> 1.13)
   - pop (~> 1.0)
+  - SimpleKeychain (~> 0.7)
   - XMLDictionary (~> 1.4)
 
 SPEC CHECKSUMS:
@@ -111,8 +113,9 @@ SPEC CHECKSUMS:
   OCMock: 18c9b7e67d4c2770e95bb77a9cc1ae0c91fe3835
   Parse: f51c24d2feb412e4b2d6cc73d37cb24e8d0089bc
   pop: f667631a5108a2e60d9e8797c9b32ddaf2080bce
+  SimpleKeychain: b50cef3b87939d480ea1143425c00f5b4b70fe21
   XMLDictionary: f9f51601ba76678b594ab485f2b00ec1fed23724
 
-PODFILE CHECKSUM: 52645f2cf62f7f0447e127c927312e4a8cbaba61
+PODFILE CHECKSUM: b761b7193bed1e53f17c44899af45060c55219bf
 
 COCOAPODS: 1.0.1
