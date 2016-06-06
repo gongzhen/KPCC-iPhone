@@ -258,7 +258,6 @@
 		52EFF87819C37D350059A0E3 /* SCPRMenuCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 52EFF87719C37D350059A0E3 /* SCPRMenuCell.m */; };
 		52EFF88719C3BC020059A0E3 /* item-chevron-right.png in Resources */ = {isa = PBXBuildFile; fileRef = 52EFF88519C3BC020059A0E3 /* item-chevron-right.png */; };
 		52EFF88919C3BC020059A0E3 /* item-chevron-right@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 52EFF88619C3BC020059A0E3 /* item-chevron-right@2x.png */; };
-		58280A2473F961E1409C29D3 /* libPods-KPCC.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 097C05A4B699338AA1FD9241 /* libPods-KPCC.a */; };
 		67E591B6A493BD6F01AAEA90 /* libPods-KPCCTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8F1B3A3C5B1AFBBBABCC68B5 /* libPods-KPCCTests.a */; };
 		760E3C4C194FB61B00D86D91 /* Program.m in Sources */ = {isa = PBXBuildFile; fileRef = 760E3C4B194FB61B00D86D91 /* Program.m */; };
 		760EA99219521E98009B504E /* AVPlayer+Additions.m in Sources */ = {isa = PBXBuildFile; fileRef = 760EA99119521E98009B504E /* AVPlayer+Additions.m */; };
@@ -324,6 +323,7 @@
 		B5F9F74A1ABCE8FD00115DB3 /* icon-clock@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B5F9F7461ABCE8FD00115DB3 /* icon-clock@2x.png */; };
 		B5F9F74B1ABCE8FD00115DB3 /* icon-stopwatch.png in Resources */ = {isa = PBXBuildFile; fileRef = B5F9F7471ABCE8FD00115DB3 /* icon-stopwatch.png */; };
 		B5F9F74C1ABCE8FD00115DB3 /* icon-stopwatch@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B5F9F7481ABCE8FD00115DB3 /* icon-stopwatch@2x.png */; };
+		F8B89D8CCF084CC24141C44C /* Pods_KPCC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5EEF9D0A5791A805E9A95672 /* Pods_KPCC.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -354,7 +354,6 @@
 		07EB39631B989A09005A8DDB /* NowPlayingManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NowPlayingManager.swift; sourceTree = "<group>"; };
 		07EB39661B9A3D84005A8DDB /* SReachability.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SReachability.swift; sourceTree = "<group>"; };
 		07EB39681B9A50B9005A8DDB /* KPCC-Proprietary-340-1.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "KPCC-Proprietary-340-1.xcdatamodel"; sourceTree = "<group>"; };
-		097C05A4B699338AA1FD9241 /* libPods-KPCC.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-KPCC.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		127FFE4E6B2AEAF414A909CD /* Pods-KPCCTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KPCCTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-KPCCTests/Pods-KPCCTests.debug.xcconfig"; sourceTree = "<group>"; };
 		25263A871A32669E00BD5FF9 /* onboarding3.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = onboarding3.mp3; path = Audio/onboarding3.mp3; sourceTree = "<group>"; };
 		2537D8BB1A8BD7B700481CF8 /* SCPRTouchableScrubberView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCPRTouchableScrubberView.h; path = Scrubbing/SCPRTouchableScrubberView.h; sourceTree = "<group>"; };
@@ -653,6 +652,7 @@
 		52EFF87719C37D350059A0E3 /* SCPRMenuCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SCPRMenuCell.m; sourceTree = "<group>"; };
 		52EFF88519C3BC020059A0E3 /* item-chevron-right.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "item-chevron-right.png"; sourceTree = "<group>"; };
 		52EFF88619C3BC020059A0E3 /* item-chevron-right@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "item-chevron-right@2x.png"; sourceTree = "<group>"; };
+		5EEF9D0A5791A805E9A95672 /* Pods_KPCC.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_KPCC.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		760E3C4A194FB61B00D86D91 /* Program.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Program.h; sourceTree = "<group>"; };
 		760E3C4B194FB61B00D86D91 /* Program.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Program.m; sourceTree = "<group>"; };
 		760EA99019521E98009B504E /* AVPlayer+Additions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "AVPlayer+Additions.h"; sourceTree = "<group>"; };
@@ -758,7 +758,7 @@
 				257479BD1B6C4A3E00F72AF6 /* WebKit.framework in Frameworks */,
 				2574799B1B6965F800F72AF6 /* Fabric.framework in Frameworks */,
 				25E5532B1B61A79100C45B85 /* Crashlytics.framework in Frameworks */,
-				58280A2473F961E1409C29D3 /* libPods-KPCC.a in Frameworks */,
+				F8B89D8CCF084CC24141C44C /* Pods_KPCC.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1378,8 +1378,8 @@
 				2574799A1B6965F800F72AF6 /* Fabric.framework */,
 				25E553271B61A79100C45B85 /* Crashlytics.framework */,
 				76A308EB18C8FB950065D4B1 /* XCTest.framework */,
-				097C05A4B699338AA1FD9241 /* libPods-KPCC.a */,
 				8F1B3A3C5B1AFBBBABCC68B5 /* libPods-KPCCTests.a */,
+				5EEF9D0A5791A805E9A95672 /* Pods_KPCC.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
