@@ -316,6 +316,7 @@
 		76B9A9AE18EF59FD007A6D8C /* SCPRUserReportViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 76B9A9AB18EF59FD007A6D8C /* SCPRUserReportViewController.xib */; };
 		76B9A9B618EF79F6007A6D8C /* SCPRFooterView.m in Sources */ = {isa = PBXBuildFile; fileRef = 76B9A9B518EF79F6007A6D8C /* SCPRFooterView.m */; };
 		76EF5E8A193E8D6B00568A9D /* Storyboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 76EF5E89193E8D6B00568A9D /* Storyboard.storyboard */; };
+		8B8657C01D026E30004F3251 /* Lock.strings in Resources */ = {isa = PBXBuildFile; fileRef = 8B8657BF1D026E30004F3251 /* Lock.strings */; };
 		8B8657C61D027036004F3251 /* ComparableFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B8657C51D027036004F3251 /* ComparableFunctions.swift */; };
 		B5F9F7491ABCE8FD00115DB3 /* icon-clock.png in Resources */ = {isa = PBXBuildFile; fileRef = B5F9F7451ABCE8FD00115DB3 /* icon-clock.png */; };
 		B5F9F74A1ABCE8FD00115DB3 /* icon-clock@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B5F9F7461ABCE8FD00115DB3 /* icon-clock@2x.png */; };
@@ -723,6 +724,7 @@
 		76B9A9B518EF79F6007A6D8C /* SCPRFooterView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SCPRFooterView.m; sourceTree = "<group>"; };
 		76EF5E84193E8BEC00568A9D /* KPCC-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "KPCC-Bridging-Header.h"; path = "UI/Controllers/KPCC-Bridging-Header.h"; sourceTree = "<group>"; };
 		76EF5E89193E8D6B00568A9D /* Storyboard.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Storyboard.storyboard; sourceTree = "<group>"; };
+		8B8657BF1D026E30004F3251 /* Lock.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = Lock.strings; sourceTree = "<group>"; };
 		8B8657C51D027036004F3251 /* ComparableFunctions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ComparableFunctions.swift; sourceTree = "<group>"; };
 		8BE520321C93B57800048AAD /* SimpleCompletionBlocks.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SimpleCompletionBlocks.h; sourceTree = "<group>"; };
 		8F1B3A3C5B1AFBBBABCC68B5 /* libPods-KPCCTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-KPCCTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -1393,6 +1395,7 @@
 				76A308CE18C8FB940065D4B1 /* KPCC-Info.plist */,
 				76A308CF18C8FB940065D4B1 /* InfoPlist.strings */,
 				76A308D218C8FB940065D4B1 /* main.m */,
+				8B8657BF1D026E30004F3251 /* Lock.strings */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -1738,6 +1741,7 @@
 				25BBCD781A892D730015071E /* SCPRScrubbingUIViewController.xib in Resources */,
 				52EFF7E619C368C00059A0E3 /* program_avatar_airtalk.png in Resources */,
 				52EFF7F019C368C00059A0E3 /* program_avatar_ask-me-another@2x.png in Resources */,
+				8B8657C01D026E30004F3251 /* Lock.strings in Resources */,
 				52D0FC3419D20D29009AECEE /* program_avatar_q-with-jian-ghomeshi@2x.png in Resources */,
 				52EFF81819C368C00059A0E3 /* program_avatar_loh-life@2x.png in Resources */,
 				52EFF7F219C368C00059A0E3 /* program_avatar_bbc-newshour.png in Resources */,
