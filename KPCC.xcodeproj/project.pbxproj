@@ -1521,7 +1521,7 @@
 		76A308BB18C8FB940065D4B1 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				CLASSPREFIX = SCPR;
+				CLASSPREFIX = "";
 				LastSwiftUpdateCheck = 0700;
 				LastUpgradeCheck = 0720;
 				ORGANIZATIONNAME = SCPR;
