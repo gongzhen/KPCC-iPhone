@@ -261,17 +261,14 @@ public struct AudioPlayerObserver<T> {
         self.setNetworkStatus()
 
         // should we be limiting bandwidth?
-        if #available(iOS 8.0, *) {
             if self.reduceBandwidthOnCellular && self._networkStatus == .Cellular {
                 if self._player.currentItem != nil {
                     self._emitEvent("Turning on bandwidth limiter for new player")
                     self._player.currentItem!.preferredPeakBitRate = 1000
                 }
             }
-        }
 
         // -- set up bandwidth limiter -- //
-        if #available(iOS 8.0,*) {
             self.oNetwork.addObserver() { s in
                 if self.reduceBandwidthOnCellular {
                     if self._player.currentItem != nil {
@@ -291,7 +288,6 @@ public struct AudioPlayerObserver<T> {
                     }
                 }
             }
-        }
 
         // -- watch for non-sensical dates -- //
         self.oTime.addObserver() { dates in
