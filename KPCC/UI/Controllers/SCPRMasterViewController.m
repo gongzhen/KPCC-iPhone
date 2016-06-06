@@ -1088,7 +1088,7 @@ setForOnDemandUI;
                                                 applicationActivities:nil];
         
         controller.excludedActivityTypes = @[UIActivityTypeAirDrop];
-        [controller setCompletionHandler:^(NSString *activityType, BOOL completed) {
+        controller.completionWithItemsHandler = ^(NSString *activityType, BOOL completed, NSArray *returnedItems, NSError *activityError) {
             if ( completed ) {
                 
                 NSArray *activityTokens = [[activityType capitalizedString] componentsSeparatedByString:@"."];
@@ -1098,7 +1098,7 @@ setForOnDemandUI;
                                                        @"episodeTitle" : self.onDemandProgram.title,
                                                        @"programTitle" : pt }];
             }
-        }];
+        };
         
         [self presentViewController:controller animated:YES completion:^{
             

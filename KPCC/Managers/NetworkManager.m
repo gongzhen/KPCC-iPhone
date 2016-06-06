@@ -10,6 +10,7 @@
 #import <XMLDictionary/XMLDictionary.h>
 #import "AudioManager.h"
 #import "AnalyticsManager.h"
+#import <AFNetworking/AFNetworking.h>
 
 @import AdSupport;
 

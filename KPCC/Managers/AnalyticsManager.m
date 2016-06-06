@@ -82,7 +82,7 @@ static AnalyticsManager *singleton = nil;
         NSInteger finish = 15;
         if ( day > 15 ) {
             NSCalendar *cal = [NSCalendar currentCalendar];
-            NSRange rng = [cal rangeOfUnit:NSDayCalendarUnit inUnit:NSMonthCalendarUnit forDate:[NSDate date]];
+            NSRange rng = [cal rangeOfUnit:NSCalendarUnitDay inUnit:NSCalendarUnitMonth forDate:[NSDate date]];
             NSUInteger numberOfDaysInMonth = rng.length;
             finish = numberOfDaysInMonth;
             start = 15;

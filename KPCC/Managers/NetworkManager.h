@@ -9,7 +9,6 @@
 #import <Foundation/Foundation.h>
 #import <CoreTelephony/CTTelephonyNetworkInfo.h>
 #import <CoreTelephony/CTCarrier.h>
-#import <AFNetworking.h>
 #import "AudioAd.h"
 #import "Utils.h"
 #import "SimpleCompletionBlocks.h"

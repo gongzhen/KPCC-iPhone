@@ -12,7 +12,7 @@
 #import "SCPRProgramDetailViewController.h"
 #import "DesignManager.h"
 #import "AnalyticsManager.h"
-#import <FXBlurView.h>
+#import "FXBlurView.h"
 #import "SCPRGenericAvatarViewController.h"
 #import "GenericProgram.h"
 
