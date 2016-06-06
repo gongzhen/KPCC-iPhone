@@ -2,6 +2,8 @@ platform :ios, '8.0'
 
 target 'KPCC' do
 
+  use_frameworks!
+
   pod 'AFNetworking', '~> 3.1'
   pod 'FBSDKCoreKit', '~> 4.12'
   pod 'FBSDKShareKit', '~> 4.12'
