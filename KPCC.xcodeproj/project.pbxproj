@@ -316,6 +316,7 @@
 		76B9A9AE18EF59FD007A6D8C /* SCPRUserReportViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 76B9A9AB18EF59FD007A6D8C /* SCPRUserReportViewController.xib */; };
 		76B9A9B618EF79F6007A6D8C /* SCPRFooterView.m in Sources */ = {isa = PBXBuildFile; fileRef = 76B9A9B518EF79F6007A6D8C /* SCPRFooterView.m */; };
 		76EF5E8A193E8D6B00568A9D /* Storyboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 76EF5E89193E8D6B00568A9D /* Storyboard.storyboard */; };
+		8B8657C61D027036004F3251 /* ComparableFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B8657C51D027036004F3251 /* ComparableFunctions.swift */; };
 		B5F9F7491ABCE8FD00115DB3 /* icon-clock.png in Resources */ = {isa = PBXBuildFile; fileRef = B5F9F7451ABCE8FD00115DB3 /* icon-clock.png */; };
 		B5F9F74A1ABCE8FD00115DB3 /* icon-clock@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B5F9F7461ABCE8FD00115DB3 /* icon-clock@2x.png */; };
 		B5F9F74B1ABCE8FD00115DB3 /* icon-stopwatch.png in Resources */ = {isa = PBXBuildFile; fileRef = B5F9F7471ABCE8FD00115DB3 /* icon-stopwatch.png */; };
@@ -722,6 +723,7 @@
 		76B9A9B518EF79F6007A6D8C /* SCPRFooterView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SCPRFooterView.m; sourceTree = "<group>"; };
 		76EF5E84193E8BEC00568A9D /* KPCC-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "KPCC-Bridging-Header.h"; path = "UI/Controllers/KPCC-Bridging-Header.h"; sourceTree = "<group>"; };
 		76EF5E89193E8D6B00568A9D /* Storyboard.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Storyboard.storyboard; sourceTree = "<group>"; };
+		8B8657C51D027036004F3251 /* ComparableFunctions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ComparableFunctions.swift; sourceTree = "<group>"; };
 		8BE520321C93B57800048AAD /* SimpleCompletionBlocks.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SimpleCompletionBlocks.h; sourceTree = "<group>"; };
 		8F1B3A3C5B1AFBBBABCC68B5 /* libPods-KPCCTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-KPCCTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		915B96DFAD2801AC0915A39A /* Pods-KPCCTests.enterprise.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KPCCTests.enterprise.xcconfig"; path = "Pods/Target Support Files/Pods-KPCCTests/Pods-KPCCTests.enterprise.xcconfig"; sourceTree = "<group>"; };
@@ -1135,6 +1137,7 @@
 				25BBCD6C1A85867F0015071E /* NSError+PrettyAnalytics.h */,
 				25BBCD6D1A85867F0015071E /* NSError+PrettyAnalytics.m */,
 				8BE520321C93B57800048AAD /* SimpleCompletionBlocks.h */,
+				8B8657C51D027036004F3251 /* ComparableFunctions.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -1986,6 +1989,7 @@
 				255943EA19F1A7620007294D /* SCPRJogShuttleViewController.m in Sources */,
 				25E8BDAB1ABC923E007B99EB /* SCPRSleepViewController.m in Sources */,
 				52CC6D6219D100DE00C67322 /* SCPRProgramTableViewCell.m in Sources */,
+				8B8657C61D027036004F3251 /* ComparableFunctions.swift in Sources */,
 				52D6B2001A02EEB90068B19A /* SCPRQueueScrollableView.m in Sources */,
 				525C6CA419F701FA0076C13B /* AudioAd.m in Sources */,
 				76A3090418C93C880065D4B1 /* AudioManager.m in Sources */,
