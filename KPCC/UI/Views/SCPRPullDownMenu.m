@@ -432,15 +432,15 @@
 
     BOOL isStatusBarShowing = ![[UIApplication sharedApplication] isStatusBarHidden];
 
-    if (UIInterfaceOrientationIsLandscape(self.window.rootViewController.interfaceOrientation)) {
-        if (isStatusBarShowing) { topMargin = [UIApplication.sharedApplication statusBarFrame].size.width; }
-        topMargin += topMarginLandscape;
-    }
-    else
-    {
+//    if (UIInterfaceOrientationIsLandscape(self.window.rootViewController.interfaceOrientation)) {
+//        if (isStatusBarShowing) { topMargin = [UIApplication.sharedApplication statusBarFrame].size.width; }
+//        topMargin += topMarginLandscape;
+//    }
+//    else
+//    {
         if (isStatusBarShowing) { topMargin = [UIApplication.sharedApplication statusBarFrame].size.height; }
         topMargin += (/*([menuItems count] * cellHeight) +*/ topMarginPortrait);
-    }
+//    }
 
     if (masterNavigationController != nil)
     {
