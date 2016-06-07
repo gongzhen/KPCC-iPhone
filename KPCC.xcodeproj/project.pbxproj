@@ -320,6 +320,8 @@
 		8B8657C21D026F6D004F3251 /* UIFontExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B8657C11D026F6D004F3251 /* UIFontExtension.swift */; };
 		8B8657C61D027036004F3251 /* ComparableFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B8657C51D027036004F3251 /* ComparableFunctions.swift */; };
 		8B8657C81D027070004F3251 /* UIColorExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B8657C71D027070004F3251 /* UIColorExtension.swift */; };
+		8BB4B72A1D0657A100A621BA /* UserProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BB4B7281D0657A100A621BA /* UserProfileViewController.swift */; };
+		8BB4B72B1D0657A100A621BA /* UserProfileViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8BB4B7291D0657A100A621BA /* UserProfileViewController.xib */; };
 		B5F9F7491ABCE8FD00115DB3 /* icon-clock.png in Resources */ = {isa = PBXBuildFile; fileRef = B5F9F7451ABCE8FD00115DB3 /* icon-clock.png */; };
 		B5F9F74A1ABCE8FD00115DB3 /* icon-clock@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B5F9F7461ABCE8FD00115DB3 /* icon-clock@2x.png */; };
 		B5F9F74B1ABCE8FD00115DB3 /* icon-stopwatch.png in Resources */ = {isa = PBXBuildFile; fileRef = B5F9F7471ABCE8FD00115DB3 /* icon-stopwatch.png */; };
@@ -732,6 +734,8 @@
 		8B8657C11D026F6D004F3251 /* UIFontExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIFontExtension.swift; sourceTree = "<group>"; };
 		8B8657C51D027036004F3251 /* ComparableFunctions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ComparableFunctions.swift; sourceTree = "<group>"; };
 		8B8657C71D027070004F3251 /* UIColorExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIColorExtension.swift; sourceTree = "<group>"; };
+		8BB4B7281D0657A100A621BA /* UserProfileViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserProfileViewController.swift; sourceTree = "<group>"; };
+		8BB4B7291D0657A100A621BA /* UserProfileViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = UserProfileViewController.xib; sourceTree = "<group>"; };
 		8BE520321C93B57800048AAD /* SimpleCompletionBlocks.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SimpleCompletionBlocks.h; sourceTree = "<group>"; };
 		8F1B3A3C5B1AFBBBABCC68B5 /* libPods-KPCCTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-KPCCTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		915B96DFAD2801AC0915A39A /* Pods-KPCCTests.enterprise.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KPCCTests.enterprise.xcconfig"; path = "Pods/Target Support Files/Pods-KPCCTests/Pods-KPCCTests.enterprise.xcconfig"; sourceTree = "<group>"; };
@@ -1194,6 +1198,8 @@
 				523126A619EDB78C008A47A7 /* SCPRPreRollViewController.xib */,
 				258BD3AF1A0C0FFF00E7560F /* SCPRProgressViewController.h */,
 				258BD3B01A0C0FFF00E7560F /* SCPRProgressViewController.m */,
+				8BB4B7281D0657A100A621BA /* UserProfileViewController.swift */,
+				8BB4B7291D0657A100A621BA /* UserProfileViewController.xib */,
 			);
 			name = "View Controllers";
 			path = Controllers;
@@ -1687,6 +1693,7 @@
 				52EFF7E819C368C00059A0E3 /* program_avatar_airtalk@2x.png in Resources */,
 				52EFF84A19C368C00059A0E3 /* program_avatar_take-two.png in Resources */,
 				52EFF83019C368C00059A0E3 /* program_avatar_on-being@2x.png in Resources */,
+				8BB4B72B1D0657A100A621BA /* UserProfileViewController.xib in Resources */,
 				768C0685199590CC00F829EB /* FreigSanProSemIt.otf in Resources */,
 				52EFF85019C368C00059A0E3 /* program_avatar_tavis-smiley-show@2x.png in Resources */,
 				25E8BD9E1ABA034D007B99EB /* program_avatar_invisibilia.png in Resources */,
@@ -2008,6 +2015,7 @@
 				52D6B2001A02EEB90068B19A /* SCPRQueueScrollableView.m in Sources */,
 				525C6CA419F701FA0076C13B /* AudioAd.m in Sources */,
 				76A3090418C93C880065D4B1 /* AudioManager.m in Sources */,
+				8BB4B72A1D0657A100A621BA /* UserProfileViewController.swift in Sources */,
 				258E8E0A1A16AC5B00675E68 /* NSData+JSONAdditions.m in Sources */,
 				25BBCD6E1A85867F0015071E /* NSError+PrettyAnalytics.m in Sources */,
 				258FC47B1A018F3D00282D59 /* SCPRSpinnerViewController.m in Sources */,
