@@ -22,7 +22,7 @@
 #define kMenuItemDonate     @"Donate"
 #define kMenuItemSettings   @"Settings"
 #define kMenuItemFeedback   @"Feedback"
-#define kMenuItemProfile @"Profile"
+#define kMenuItemProfile    @"Profile"
 
 #define kIconKPCCLive   @"antenna"
 #define kIconPrograms   @"microphone"
@@ -58,8 +58,7 @@
                                                                         kMenuItemShortList,
                                                                         kMenuItemAlarm,
                                                                         kMenuItemDonate,
-                                                                        /* TODO: When the rest of the SSO flow is complete, re-enable it in the menu
-                                                                         kMenuItemProfile,*/
+                                                                        kMenuItemProfile,
                                                                         kMenuItemFeedback,
                                   
                                                                         //

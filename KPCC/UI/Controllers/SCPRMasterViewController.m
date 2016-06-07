@@ -3517,6 +3517,15 @@ setForOnDemandUI;
         case 5: {
             
             self.homeIsNotRootViewController = YES;
+//            event = @"menuSelectionProfile";
+            [self.navigationController pushViewController:UserProfileViewController.new animated:YES];
+
+            break;
+            
+        }
+        case 6: {
+            
+            self.homeIsNotRootViewController = YES;
 //            event = @"menuSelectionFeedback";
             SCPRFeedbackViewController *fbVC = [[SCPRFeedbackViewController alloc] initWithNibName:@"SCPRFeedbackViewController"
                                                                                             bundle:nil];
