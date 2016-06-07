@@ -315,6 +315,7 @@
 		76B9A9AE18EF59FD007A6D8C /* SCPRUserReportViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 76B9A9AB18EF59FD007A6D8C /* SCPRUserReportViewController.xib */; };
 		76B9A9B618EF79F6007A6D8C /* SCPRFooterView.m in Sources */ = {isa = PBXBuildFile; fileRef = 76B9A9B518EF79F6007A6D8C /* SCPRFooterView.m */; };
 		76EF5E8A193E8D6B00568A9D /* Storyboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 76EF5E89193E8D6B00568A9D /* Storyboard.storyboard */; };
+		8B46CC361D06326800B853C9 /* AuthenticationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B46CC351D06326800B853C9 /* AuthenticationManager.swift */; };
 		8B8657C01D026E30004F3251 /* Lock.strings in Resources */ = {isa = PBXBuildFile; fileRef = 8B8657BF1D026E30004F3251 /* Lock.strings */; };
 		8B8657C21D026F6D004F3251 /* UIFontExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B8657C11D026F6D004F3251 /* UIFontExtension.swift */; };
 		8B8657C61D027036004F3251 /* ComparableFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B8657C51D027036004F3251 /* ComparableFunctions.swift */; };
@@ -726,6 +727,7 @@
 		76B9A9B518EF79F6007A6D8C /* SCPRFooterView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SCPRFooterView.m; sourceTree = "<group>"; };
 		76EF5E84193E8BEC00568A9D /* KPCC-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "KPCC-Bridging-Header.h"; path = "UI/Controllers/KPCC-Bridging-Header.h"; sourceTree = "<group>"; };
 		76EF5E89193E8D6B00568A9D /* Storyboard.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Storyboard.storyboard; sourceTree = "<group>"; };
+		8B46CC351D06326800B853C9 /* AuthenticationManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AuthenticationManager.swift; path = Managers/AuthenticationManager.swift; sourceTree = "<group>"; };
 		8B8657BF1D026E30004F3251 /* Lock.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = Lock.strings; sourceTree = "<group>"; };
 		8B8657C11D026F6D004F3251 /* UIFontExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIFontExtension.swift; sourceTree = "<group>"; };
 		8B8657C51D027036004F3251 /* ComparableFunctions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ComparableFunctions.swift; sourceTree = "<group>"; };
@@ -1452,6 +1454,7 @@
 				07EB395D1B9723ED005A8DDB /* AudioPlayer.swift */,
 				07EB39631B989A09005A8DDB /* NowPlayingManager.swift */,
 				07EB39661B9A3D84005A8DDB /* SReachability.swift */,
+				8B46CC351D06326800B853C9 /* AuthenticationManager.swift */,
 			);
 			name = Managers;
 			sourceTree = "<group>";
@@ -1958,6 +1961,7 @@
 				76349D1B18D8C74F0027C3B8 /* NetworkManager.m in Sources */,
 				254CC6A31A255A1E00560805 /* SCPRButton.m in Sources */,
 				25F30AFA1AFABB3E00F27187 /* SCPRScheduleHeaderViewController.m in Sources */,
+				8B46CC361D06326800B853C9 /* AuthenticationManager.swift in Sources */,
 				52D0FC1C19D1F24F009AECEE /* SCPRProgramDetailHeaderView.m in Sources */,
 				254831C11A41555700963078 /* UIView+PrintDimensions.m in Sources */,
 				07139B841B95E701007DBA91 /* ScheduleOccurrence.swift in Sources */,
