@@ -15,6 +15,7 @@
 #import "UXmanager.h"
 #import "AnalyticsManager.h"
 #import "SCPRXFSViewController.h"
+#import <Lock/Lock.h>
 
 NSString *const kPushChannel = @"listenLive";
 
@@ -24,6 +25,12 @@ NSString *const kPushChannel = @"listenLive";
 
     NSDictionary *globalConfig = [Utils globalConfig];
     
+    AuthenticationManager *authenticationManager = AuthenticationManager.sharedInstance;
+    [authenticationManager registerThemeWithBundle:NSBundle.mainBundle];
+    [authenticationManager initializeLockWithClientId:globalConfig[@"Auth0"][@"ClientId"]
+                                               domain:globalConfig[@"Auth0"][@"Domain"]];
+    [authenticationManager.lock applicationLaunchedWithOptions:launchOptions];
+
     [[AnalyticsManager shared] setup];
 
     [Parse setApplicationId:globalConfig[@"Parse"][@"ApplicationId"]
@@ -167,7 +174,7 @@ NSString *const kPushChannel = @"listenLive";
 }
 
 - (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation {
-    BOOL success = NO;
+    BOOL success = [AuthenticationManager.sharedInstance.lock handleURL:url sourceApplication:sourceApplication];
 #ifdef RELEASE
     if (! success) {
         success = [[FBSDKApplicationDelegate sharedInstance] application:application
