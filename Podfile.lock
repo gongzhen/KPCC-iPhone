@@ -14,6 +14,10 @@ PODS:
   - AFNetworking/Serialization (3.1.0)
   - AFNetworking/UIKit (3.1.0):
     - AFNetworking/NSURLSession
+  - Alamofire (3.4.0)
+  - Auth0 (0.3.0):
+    - Alamofire (~> 3.0)
+    - JWTDecode (~> 1.0)
   - Bolts (1.7.0):
     - Bolts/AppLinks (= 1.7.0)
     - Bolts/Tasks (= 1.7.0)
@@ -52,6 +56,7 @@ PODS:
   - GoogleSymbolUtilities (1.0.3)
   - GoogleUtilities (1.1.0):
     - GoogleSymbolUtilities (~> 1.0.0)
+  - JWTDecode (1.0.0)
   - Lock (1.26.0):
     - CocoaLumberjack (~> 2.0)
     - Lock/Core (= 1.26.0)
@@ -80,6 +85,7 @@ PODS:
 
 DEPENDENCIES:
   - AFNetworking (~> 3.1)
+  - Auth0 (~> 0.3)
   - FBSDKCoreKit (~> 4.12)
   - FBSDKLoginKit (~> 4.12)
   - FBSDKShareKit (~> 4.12)
@@ -95,6 +101,8 @@ DEPENDENCIES:
 
 SPEC CHECKSUMS:
   AFNetworking: 5e0e199f73d8626b11e79750991f5d173d1f8b67
+  Alamofire: c19a627cefd6a95f840401c49ab1f124e07f54ee
+  Auth0: 6d0b0bf044995a541bfa1c63ba3f567cdff4a7b1
   Bolts: a0058fa3b331c5a1e4402d534f2dae36dbff31e4
   CocoaLumberjack: 97fab7ee5f507fe54445cca7ea80f926729cfd15
   FBSDKCoreKit: 6e56d5a2a64a755ad4efb5dbeee8f82fb1b99775
@@ -108,6 +116,7 @@ SPEC CHECKSUMS:
   GoogleNetworkingUtilities: 292992ab31b7b4ba32809a0e8b40e324cdfb2c0c
   GoogleSymbolUtilities: 82ad9f93d3615244b3f4ce440f5ab2515e8b4f56
   GoogleUtilities: 8ed9134debe11719097881711464752900668f10
+  JWTDecode: d172edcb1607cc15aed85d58eceedcbb675a4534
   Lock: d863c3aebe57d2e8f3e5f40c9c5ba695ec2f1162
   Masonry: 281802d04d787ea2973179ee8bcb50500579ede2
   OCMock: 18c9b7e67d4c2770e95bb77a9cc1ae0c91fe3835
@@ -116,6 +125,6 @@ SPEC CHECKSUMS:
   SimpleKeychain: b50cef3b87939d480ea1143425c00f5b4b70fe21
   XMLDictionary: f9f51601ba76678b594ab485f2b00ec1fed23724
 
-PODFILE CHECKSUM: a3cdace1fa7c7ea5693f4e61a836ed2f51e2c585
+PODFILE CHECKSUM: 49f8916302d8c350bfc9df19d1d8b8df05319e35
 
 COCOAPODS: 1.0.1
