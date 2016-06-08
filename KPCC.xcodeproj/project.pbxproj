@@ -101,7 +101,6 @@
 		25B25BBA1B1E2EA200ABE8B4 /* pfsu-errors.json in Resources */ = {isa = PBXBuildFile; fileRef = 25B25BB91B1E2EA200ABE8B4 /* pfsu-errors.json */; };
 		25B59A5619FEF93700D4885C /* SCPRShortListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 25B59A5419FEF93700D4885C /* SCPRShortListViewController.m */; };
 		25B59A5719FEF93700D4885C /* SCPRShortListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 25B59A5519FEF93700D4885C /* SCPRShortListViewController.xib */; };
-		25BBCD6E1A85867F0015071E /* NSError+PrettyAnalytics.m in Sources */ = {isa = PBXBuildFile; fileRef = 25BBCD6D1A85867F0015071E /* NSError+PrettyAnalytics.m */; };
 		25BBCD771A892D730015071E /* SCPRScrubbingUIViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 25BBCD751A892D730015071E /* SCPRScrubbingUIViewController.m */; };
 		25BBCD781A892D730015071E /* SCPRScrubbingUIViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 25BBCD761A892D730015071E /* SCPRScrubbingUIViewController.xib */; };
 		25BBCD7D1A892DA30015071E /* SCPRScrubberViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 25BBCD7B1A892DA20015071E /* SCPRScrubberViewController.m */; };
@@ -470,8 +469,6 @@
 		25B59A5319FEF93700D4885C /* SCPRShortListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCPRShortListViewController.h; path = Headlines/SCPRShortListViewController.h; sourceTree = "<group>"; };
 		25B59A5419FEF93700D4885C /* SCPRShortListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SCPRShortListViewController.m; path = Headlines/SCPRShortListViewController.m; sourceTree = "<group>"; };
 		25B59A5519FEF93700D4885C /* SCPRShortListViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = SCPRShortListViewController.xib; path = Headlines/SCPRShortListViewController.xib; sourceTree = "<group>"; };
-		25BBCD6C1A85867F0015071E /* NSError+PrettyAnalytics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSError+PrettyAnalytics.h"; sourceTree = "<group>"; };
-		25BBCD6D1A85867F0015071E /* NSError+PrettyAnalytics.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSError+PrettyAnalytics.m"; sourceTree = "<group>"; };
 		25BBCD741A892D730015071E /* SCPRScrubbingUIViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCPRScrubbingUIViewController.h; path = Scrubbing/SCPRScrubbingUIViewController.h; sourceTree = "<group>"; };
 		25BBCD751A892D730015071E /* SCPRScrubbingUIViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SCPRScrubbingUIViewController.m; path = Scrubbing/SCPRScrubbingUIViewController.m; sourceTree = "<group>"; };
 		25BBCD761A892D730015071E /* SCPRScrubbingUIViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = SCPRScrubbingUIViewController.xib; path = Scrubbing/SCPRScrubbingUIViewController.xib; sourceTree = "<group>"; };
@@ -1148,8 +1145,6 @@
 				25F2BC7B1A3B9B4D00108F73 /* SCPRGenericAvatarViewController.h */,
 				25F2BC7C1A3B9B4D00108F73 /* SCPRGenericAvatarViewController.m */,
 				25F2BC7D1A3B9B4D00108F73 /* SCPRGenericAvatarViewController.xib */,
-				25BBCD6C1A85867F0015071E /* NSError+PrettyAnalytics.h */,
-				25BBCD6D1A85867F0015071E /* NSError+PrettyAnalytics.m */,
 				8BE520321C93B57800048AAD /* SimpleCompletionBlocks.h */,
 				8B8701BF1D077BC7004AF390 /* StringExtension.swift */,
 				8B8657C71D027070004F3251 /* UIColorExtension.swift */,
@@ -2021,7 +2016,6 @@
 				76A3090418C93C880065D4B1 /* AudioManager.m in Sources */,
 				8BB4B72A1D0657A100A621BA /* UserProfileViewController.swift in Sources */,
 				258E8E0A1A16AC5B00675E68 /* NSData+JSONAdditions.m in Sources */,
-				25BBCD6E1A85867F0015071E /* NSError+PrettyAnalytics.m in Sources */,
 				258FC47B1A018F3D00282D59 /* SCPRSpinnerViewController.m in Sources */,
 				258E8E0F1A16AE0400675E68 /* SCPRFeedbackViewController.m in Sources */,
 				259E44FE1A1D2CD300F5CD65 /* SCPROnboardingViewController.m in Sources */,
