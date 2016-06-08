@@ -9,7 +9,6 @@
 import Foundation
 
 typealias Block = () -> Void
-typealias CompletionBlock = (Bool) -> Void
 
 struct Dispatch {
 
