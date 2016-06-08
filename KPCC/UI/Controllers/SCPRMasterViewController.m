@@ -743,7 +743,7 @@ setForOnDemandUI;
             [self determinePlayState];
             
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.85 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                [[SessionManager shared] fetchCurrentSchedule:^(id returnedObject) {
+                [[SessionManager shared] fetchCurrentSchedule:^(id object) {
                     [self addPreRollController];
                     [SCPRCloakViewController uncloak];
                     [[SessionManager shared] setExpiring:NO];
@@ -844,7 +844,7 @@ setForOnDemandUI;
     [self.programTitleLabel proLightFontize];
     self.liveProgressViewController.view.alpha = 0.0f;
     
-    [[SessionManager shared] fetchOnboardingProgramWithSegment:1 completed:^(id returnedObject) {
+    [[SessionManager shared] fetchOnboardingProgramWithSegment:1 completed:^(id object) {
         [self.blurView setNeedsDisplay];
         self.programTitleLabel.text = @"";
         [SCPRCloakViewController uncloak];
@@ -1164,7 +1164,7 @@ setForOnDemandUI;
     
     [self setLiveStreamingUI:YES];
 
-    [[SessionManager shared] fetchCurrentSchedule:^(id returnedObject) {
+    [[SessionManager shared] fetchCurrentSchedule:^(id object) {
         
         [self treatUIforProgram];
         
@@ -1234,7 +1234,7 @@ setForOnDemandUI;
                                    
                                } else {
                                    
-                                   [[SessionManager shared] fetchOnboardingProgramWithSegment:2 completed:^(id returnedObject) {
+                                   [[SessionManager shared] fetchOnboardingProgramWithSegment:2 completed:^(id object) {
                                        
                                        [[AudioManager shared] playOnboardingAudio:2];
                                        
@@ -1291,7 +1291,7 @@ setForOnDemandUI;
     [[AudioManager shared] setCalibrating:YES];
 
     [self.jogShuttle.view setAlpha:1.0];
-    [[SessionManager shared] fetchCurrentSchedule:^(id returnedObject) {
+    [[SessionManager shared] fetchCurrentSchedule:^(id object) {
         [self.jogShuttle animateWithSpeed:0.8
                              hideableView:self.playPauseButton
                                 direction:SpinDirectionForward
@@ -1760,16 +1760,16 @@ setForOnDemandUI;
 }
 
 - (void)updateDataForUI {
-    [[SessionManager shared] fetchCurrentSchedule:^(id returnedObject) {
-        if ( returnedObject ) {
+    [[SessionManager shared] fetchCurrentSchedule:^(id object) {
+        if ( object ) {
             
-            [self.liveProgressViewController displayWithProgram:(ScheduleOccurrence*)returnedObject
+            [self.liveProgressViewController displayWithProgram:(ScheduleOccurrence*)object
                                                          onView:self.view
                                                aboveSiblingView:self.playerControlsView];
             [self.liveProgressViewController hide];
             [self determinePlayState];
             
-            //[self.upcomingScreen primeWithProgramBasedOnCurrent:returnedObject];
+            //[self.upcomingScreen primeWithProgramBasedOnCurrent:object];
             [self.cpFullDetailScreen setupSchedule];
             
             if ( [[Utils del] userRespondedToPushWhileClosed] ) {
@@ -3666,7 +3666,7 @@ setForOnDemandUI;
 
 - (void)onSeekCompleted {
     // Make sure UI gets set to "Playing" state after a seek.
-    [[SessionManager shared] fetchCurrentSchedule:^(id returnedObject) {
+    [[SessionManager shared] fetchCurrentSchedule:^(id object) {
         [self.jogShuttle endAnimations];
     }];
 }

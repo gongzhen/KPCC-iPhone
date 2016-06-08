@@ -63,10 +63,10 @@ NSString *const kPushChannel = @"listenLive";
     navigationController.navigationBarHidden = YES;
 
     // Fetch initial list of Programs from SCPRV4 and store in CoreData for later usage.
-    [[NetworkManager shared] fetchAllProgramInformation:^(id returnedObject) {
+    [[NetworkManager shared] fetchAllProgramInformation:^(id object) {
         
-        //NSAssert([returnedObject isKindOfClass:[NSArray class]],@"Expecting an Array Here...");
-        NSArray *content = (NSArray*)returnedObject;
+        //NSAssert([object isKindOfClass:[NSArray class]],@"Expecting an Array Here...");
+        NSArray *content = (NSArray*)object;
         if ([content count] == 0) {
             return;
         }

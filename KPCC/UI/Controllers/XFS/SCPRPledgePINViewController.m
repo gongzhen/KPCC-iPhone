@@ -115,9 +115,9 @@
                                          andText:@""];
             self.spinner.alpha = 1.0f;
         } completion:^(BOOL finished) {
-            [[SessionManager shared] validateXFSToken:self.pinNumber completion:^(id returnedObject) {
+            [[SessionManager shared] validateXFSToken:self.pinNumber completion:^(id object) {
            
-                NSDictionary *result = (NSDictionary*)returnedObject;
+                NSDictionary *result = (NSDictionary*)object;
                 SCPRXFSViewController *svc = (SCPRXFSViewController*)self.parentXFSViewController;
                 if ( result[@"success"] ) {
                     

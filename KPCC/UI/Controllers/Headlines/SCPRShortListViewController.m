@@ -20,7 +20,7 @@
 
 @interface SCPRShortListViewController ()
 
-- (void)extractTitleFromString:(NSString*)fullHTML completed:(CompletionBlockWithValue)completed;
+- (void)extractTitleFromString:(NSString*)fullHTML completed:(BlockWithObject)completed;
 
 @end
 
@@ -84,10 +84,10 @@ static NSString *kShortListMenuURL = @"http://www.scpr.org/short-list/latest#no-
     [SCPRSpinnerViewController spinInCenterOfViewController:self appeared:^{
         [[SessionManager shared] setUserIsViewingHeadlines:YES];
 #ifdef USE_API
-        [[NetworkManager shared] fetchEditions:^(id returnedObject) {
+        [[NetworkManager shared] fetchEditions:^(id object) {
             
-            NSAssert([returnedObject isKindOfClass:[NSArray class]],@"Expecting an array here");
-            NSArray *editions = (NSArray*)returnedObject;
+            NSAssert([object isKindOfClass:[NSArray class]],@"Expecting an array here");
+            NSArray *editions = (NSArray*)object;
             if ( [editions count] > 0 ) {
                 NSDictionary *lead = editions[0];
                 self.abstracts = lead[@"abstracts"];
@@ -161,13 +161,13 @@ static NSString *kShortListMenuURL = @"http://www.scpr.org/short-list/latest#no-
                 NSString *jsonString = [self.detailWebView stringByEvaluatingJavaScriptFromString:
                                         @"document.getElementsByTagName('head')[0].innerHTML;"];
                 
-                [self extractTitleFromString:jsonString completed:^(id returnedObject) {
+                [self extractTitleFromString:jsonString completed:^(id object) {
                     
                     [SCPRSpinnerViewController finishSpinning];
                     
-                    NSLog(@"Title : %@",(NSString*)returnedObject);
+                    NSLog(@"Title : %@",(NSString*)object);
                     self.cachedTitle = self.navigationItem.title;
-                    self.navigationItem.title = (NSString*)returnedObject;
+                    self.navigationItem.title = (NSString*)object;
                     
                     SCPRAppDelegate *del = (SCPRAppDelegate*)[UIApplication sharedApplication].delegate;
                     SCPRNavigationController *navigation = [del masterNavigationController];
@@ -322,7 +322,7 @@ static NSString *kShortListMenuURL = @"http://www.scpr.org/short-list/latest#no-
 
 
 #pragma mark - Utilities
-- (void)extractTitleFromString:(NSString *)fullHTML completed:(CompletionBlockWithValue)completed {
+- (void)extractTitleFromString:(NSString *)fullHTML completed:(BlockWithObject)completed {
     
     NSError *error = nil;
     
@@ -379,7 +379,7 @@ static NSString *kShortListMenuURL = @"http://www.scpr.org/short-list/latest#no-
     
 }
 
-- (void)findConcreteObjecrBasedOnUrl:(NSString *)url completion:(CompletionBlockWithValue)completion {
+- (void)findConcreteObjecrBasedOnUrl:(NSString *)url completion:(BlockWithObject)completion {
 
 }
 

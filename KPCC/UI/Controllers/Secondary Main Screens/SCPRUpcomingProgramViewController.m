@@ -73,9 +73,9 @@
     }
 
     NSLog(@"primeWith fetching NEXT program for %@",cpEndsAt);
-    [[SessionManager shared] fetchScheduleAtDate:cpEndsAt completed:^(id returnedObject) {
+    [[SessionManager shared] fetchScheduleAtDate:cpEndsAt completed:^(id object) {
         
-        [self setupWithNextProgram:(ScheduleOccurrence*)returnedObject];
+        [self setupWithNextProgram:(ScheduleOccurrence*)object];
         
     }];
 }

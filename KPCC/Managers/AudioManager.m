@@ -334,7 +334,7 @@ static const NSString *ItemStatusContext;
 
     if ( cp != nil && ![cp containsDate:vNow]) {
         NSLog(@"Scrub will force program update for vNow : %@",[NSDate stringFromDate:vNow withFormat:@"h:mm:s a"]);
-        [[SessionManager shared] fetchCurrentSchedule:^(id returnedObject) {
+        [[SessionManager shared] fetchCurrentSchedule:^(id object) {
             
         }];
     }

@@ -7,4 +7,4 @@
 //
 
 typedef void (^Block)(void);
-typedef void (^CompletionBlockWithValue)(id returnedObject);
+typedef void (^BlockWithObject)(id object);

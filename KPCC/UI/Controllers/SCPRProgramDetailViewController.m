@@ -83,10 +83,10 @@
                                           [[DesignManager shared] setCurrentBlurredImage:blurred];
                                           
                                           [[NetworkManager shared] fetchEpisodesForProgram:_program.program_slug
-                                                                                completion:^(id returnedObject) {
+                                                                                completion:^(id object) {
                                                                                     
-                                                                                    NSAssert([returnedObject isKindOfClass:[NSArray class]],@"Expecting an Array here");
-                                                                                    NSArray *content = (NSArray*)returnedObject;
+                                                                                    NSAssert([object isKindOfClass:[NSArray class]],@"Expecting an Array here");
+                                                                                    NSArray *content = (NSArray*)object;
                                                                                     if ([content count] == 0) {
                                                                                         return;
                                                                                     }
