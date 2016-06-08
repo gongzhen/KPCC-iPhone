@@ -48,7 +48,7 @@
 
 
 # pragma mark - Presentations
-- (void)primeUI:(CompletionBlock)completed {
+- (void)primeUI:(Block)completed {
     [UIView animateWithDuration:0.3f animations:^{
         CGRect frame = CGRectMake(self.view.frame.origin.x, 0, self.view.frame.size.width, self.view.frame.size.height);
         self.view.frame = frame;

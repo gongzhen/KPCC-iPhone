@@ -6,5 +6,5 @@
 //  Copyright © 2016 SCPR. All rights reserved.
 //
 
-typedef void (^CompletionBlock)(void);
+typedef void (^Block)(void);
 typedef void (^CompletionBlockWithValue)(id returnedObject);

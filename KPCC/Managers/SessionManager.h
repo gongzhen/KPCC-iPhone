@@ -90,9 +90,9 @@ static NSInteger kSessionIdleExpiration = 3600;
 - (CGFloat)acceptableBufferWindow;
 
 - (BOOL)sleepTimerActive;
-- (void)armSleepTimerWithSeconds:(NSInteger)seconds completed:(CompletionBlock)completed;
-- (void)disarmSleepTimerWithCompletion:(CompletionBlock)completed;
-- (void)cancelSleepTimerWithCompletion:(CompletionBlock)completed;
+- (void)armSleepTimerWithSeconds:(NSInteger)seconds completed:(Block)completed;
+- (void)disarmSleepTimerWithCompletion:(Block)completed;
+- (void)cancelSleepTimerWithCompletion:(Block)completed;
 
 - (BOOL)sessionIsInBackground;
 - (void)tickSleepTimer;
@@ -112,7 +112,7 @@ static NSInteger kSessionIdleExpiration = 3600;
 - (BOOL)sessionIsInRecess:(BOOL)respectPause;
 
 // XFS
-- (void)xFreeStreamIsAvailableWithCompletion:(CompletionBlock)completion;
+- (void)xFreeStreamIsAvailableWithCompletion:(Block)completion;
 - (void)validateXFSToken:(NSString*)token completion:(CompletionBlockWithValue)completion;
 #ifdef DEBUG
 @property NSInteger numberOfChecks;

@@ -58,7 +58,7 @@ static NSInteger kCancelSleepTimerAlertTag = 44839;
 
 - (void)playAudio:(BOOL)hard;
 - (void)setDataForOnDemand:(Program *)program andAudioChunk:(AudioChunk*)audioChunk;
-- (void)setDataForOnDemand:(Program *)program andAudioChunk:(AudioChunk*)audioChunk completion:(CompletionBlock)completion;
+- (void)setDataForOnDemand:(Program *)program andAudioChunk:(AudioChunk*)audioChunk completion:(Block)completion;
 - (void)lockUI:(id)note;
 - (void)unlockUI:(id)note;
 - (void)finishUpdatingForProgram;
@@ -2081,7 +2081,7 @@ setForOnDemandUI;
     
 }
 
-- (void)setDataForOnDemand:(Program *)program andAudioChunk:(AudioChunk*)audioChunk completion:(CompletionBlock)completion {
+- (void)setDataForOnDemand:(Program *)program andAudioChunk:(AudioChunk*)audioChunk completion:(Block)completion {
     if (program != nil) {
         self.onDemandProgram = program;
         self.onDemandEpUrl = audioChunk.contentShareUrl;

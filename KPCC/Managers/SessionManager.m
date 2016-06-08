@@ -260,7 +260,7 @@
     return self.sleepTimerArmed;
 }
 
-- (void)armSleepTimerWithSeconds:(NSInteger)seconds completed:(CompletionBlock)completed {
+- (void)armSleepTimerWithSeconds:(NSInteger)seconds completed:(Block)completed {
     
     [self disarmSleepTimerWithCompletion:nil];
 
@@ -308,13 +308,13 @@
                                                         object:nil];
 }
 
-- (void)cancelSleepTimerWithCompletion:(CompletionBlock)completed {
+- (void)cancelSleepTimerWithCompletion:(Block)completed {
     [[AnalyticsManager shared] logEvent:@"sleepTimerCanceled"
                          withParameters:nil];
     [self disarmSleepTimerWithCompletion:completed];
 }
 
-- (void)disarmSleepTimerWithCompletion:(CompletionBlock)completed {
+- (void)disarmSleepTimerWithCompletion:(Block)completed {
     if ( self.sleepTimer ) {
         if ( [self.sleepTimer isValid] ) {
             [self.sleepTimer invalidate];
@@ -526,7 +526,7 @@
 }
 
 #pragma mark - XFS
-- (void)xFreeStreamIsAvailableWithCompletion:(CompletionBlock)completion {
+- (void)xFreeStreamIsAvailableWithCompletion:(Block)completion {
 
     BOOL available = NO;
 

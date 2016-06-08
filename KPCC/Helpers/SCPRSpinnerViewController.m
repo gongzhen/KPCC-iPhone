@@ -33,7 +33,7 @@
     return spinner;
 }
 
-+ (void)spinInCenterOfView:(UIView *)view offset:(CGFloat)yOffset delay:(CGFloat)delay appeared:(CompletionBlock)appeared {
++ (void)spinInCenterOfView:(UIView *)view offset:(CGFloat)yOffset delay:(CGFloat)delay appeared:(Block)appeared {
     SCPRSpinnerViewController *spinner = [SCPRSpinnerViewController o];
     
     if ( spinner && spinner.isSpinning ) {
@@ -74,18 +74,18 @@
     }];
 }
 
-+ (void)spinInCenterOfView:(UIView *)view offset:(CGFloat)yOffset appeared:(CompletionBlock)appeared {
++ (void)spinInCenterOfView:(UIView *)view offset:(CGFloat)yOffset appeared:(Block)appeared {
     [SCPRSpinnerViewController spinInCenterOfView:view
                                            offset:yOffset
                                             delay:1.0
                                          appeared:appeared];
 }
 
-+ (void)spinInCenterOfView:(UIView *)view appeared:(CompletionBlock)appeared {
++ (void)spinInCenterOfView:(UIView *)view appeared:(Block)appeared {
     [SCPRSpinnerViewController spinInCenterOfView:view offset:0.0 appeared:appeared];
 }
 
-+ (void)spinInCenterOfViewController:(UIViewController *)viewController appeared:(CompletionBlock)appeared {
++ (void)spinInCenterOfViewController:(UIViewController *)viewController appeared:(Block)appeared {
     
     [SCPRSpinnerViewController spinInCenterOfView:viewController.view appeared:appeared];
     

@@ -73,7 +73,7 @@
 
 - (void)prepare;
 - (void)revealLensWithOrigin:(CGPoint)origin;
-- (void)revealBrandingWithCompletion:(CompletionBlock)completed;
+- (void)revealBrandingWithCompletion:(Block)completed;
 - (void)revealNotificationsPrompt;
 - (void)collapseNotificationsPrompt;
 - (void)hideLens;

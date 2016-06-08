@@ -51,7 +51,7 @@ typedef NS_ENUM(NSInteger, SSOType) {
 - (void)loadOnboarding;
 - (void)beginOnboarding:(SCPRMasterViewController*)masterCtrl;
 - (void)fadeInBranding;
-- (void)fadeOutBrandingWithCompletion:(CompletionBlock)completed;
+- (void)fadeOutBrandingWithCompletion:(Block)completed;
 - (void)beginAudio;
 - (void)presentLensOverRewindButton;
 - (void)listenForQueues;

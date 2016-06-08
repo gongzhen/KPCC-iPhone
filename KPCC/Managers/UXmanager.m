@@ -131,7 +131,7 @@
     }];
 }
 
-- (void)fadeOutBrandingWithCompletion:(CompletionBlock)completed {
+- (void)fadeOutBrandingWithCompletion:(Block)completed {
     
     
     [UIView animateWithDuration:0.25 animations:^{

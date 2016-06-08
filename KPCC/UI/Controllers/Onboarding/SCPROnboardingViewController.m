@@ -126,7 +126,7 @@
     [self.lensVC.view.layer pop_addAnimation:scaleAnimation forKey:@"popToInvisible"];
 }
 
-- (void)revealBrandingWithCompletion:(CompletionBlock)completed {
+- (void)revealBrandingWithCompletion:(Block)completed {
     self.brandingView.clipsToBounds = YES;
     
     if ( [Utils isIOS8] ) {
