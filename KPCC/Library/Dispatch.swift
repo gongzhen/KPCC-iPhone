@@ -8,7 +8,7 @@
 
 import Foundation
 
-typealias Block = () -> Void
+typealias Closure = () -> Void
 
 struct Dispatch {
 
@@ -54,17 +54,17 @@ extension Dispatch {
 
 extension Dispatch {
 
-    static func async(queueType queueType: QueueType = .Main, delay: Double? = nil, block: Block) {
-        async(queue: queueType.queue, delay: delay, block: block)
+    static func async(queueType queueType: QueueType = .Main, delay: Double? = nil, closure: Closure) {
+        async(queue: queueType.queue, delay: delay, closure: closure)
     }
 
-    static func async(queue queue: dispatch_queue_t, delay: Double? = nil, block: Block) {
+    static func async(queue queue: dispatch_queue_t, delay: Double? = nil, closure: Closure) {
         if let delay = delay where delay > 0.0 {
             let when = dispatch_time(DISPATCH_TIME_NOW, Int64(delay * Double(NSEC_PER_SEC)))
-            dispatch_after(when, queue, block)
+            dispatch_after(when, queue, closure)
         }
         else {
-            dispatch_async(queue, block)
+            dispatch_async(queue, closure)
         }
     }
 
@@ -72,8 +72,8 @@ extension Dispatch {
 
 extension Dispatch {
 
-    mutating func once(block: Block) {
-        dispatch_once(&predicate, block)
+    mutating func once(closure: Closure) {
+        dispatch_once(&predicate, closure)
     }
 
 }
