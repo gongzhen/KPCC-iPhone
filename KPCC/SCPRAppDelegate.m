@@ -27,8 +27,8 @@ NSString *const kPushChannel = @"listenLive";
     
     AuthenticationManager *authenticationManager = AuthenticationManager.sharedInstance;
     [authenticationManager registerThemeWithBundle:NSBundle.mainBundle];
-    [authenticationManager initializeLockWithClientId:globalConfig[@"Auth0"][@"ClientId"]
-                                               domain:globalConfig[@"Auth0"][@"Domain"]];
+    [authenticationManager initializeWithClientId:globalConfig[@"Auth0"][@"ClientId"]
+                                           domain:globalConfig[@"Auth0"][@"Domain"]];
     [authenticationManager.lock applicationLaunchedWithOptions:launchOptions];
 
     [[AnalyticsManager shared] setup];
