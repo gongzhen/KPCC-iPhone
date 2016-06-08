@@ -320,6 +320,7 @@
 		8B8657C21D026F6D004F3251 /* UIFontExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B8657C11D026F6D004F3251 /* UIFontExtension.swift */; };
 		8B8657C61D027036004F3251 /* ComparableFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B8657C51D027036004F3251 /* ComparableFunctions.swift */; };
 		8B8657C81D027070004F3251 /* UIColorExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B8657C71D027070004F3251 /* UIColorExtension.swift */; };
+		8B8701C01D077BC7004AF390 /* StringExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B8701BF1D077BC7004AF390 /* StringExtension.swift */; };
 		8BB4B72A1D0657A100A621BA /* UserProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BB4B7281D0657A100A621BA /* UserProfileViewController.swift */; };
 		8BB4B72B1D0657A100A621BA /* UserProfileViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8BB4B7291D0657A100A621BA /* UserProfileViewController.xib */; };
 		B5F9F7491ABCE8FD00115DB3 /* icon-clock.png in Resources */ = {isa = PBXBuildFile; fileRef = B5F9F7451ABCE8FD00115DB3 /* icon-clock.png */; };
@@ -734,6 +735,7 @@
 		8B8657C11D026F6D004F3251 /* UIFontExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIFontExtension.swift; sourceTree = "<group>"; };
 		8B8657C51D027036004F3251 /* ComparableFunctions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ComparableFunctions.swift; sourceTree = "<group>"; };
 		8B8657C71D027070004F3251 /* UIColorExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIColorExtension.swift; sourceTree = "<group>"; };
+		8B8701BF1D077BC7004AF390 /* StringExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StringExtension.swift; sourceTree = "<group>"; };
 		8BB4B7281D0657A100A621BA /* UserProfileViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserProfileViewController.swift; sourceTree = "<group>"; };
 		8BB4B7291D0657A100A621BA /* UserProfileViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = UserProfileViewController.xib; sourceTree = "<group>"; };
 		8BE520321C93B57800048AAD /* SimpleCompletionBlocks.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SimpleCompletionBlocks.h; sourceTree = "<group>"; };
@@ -1149,6 +1151,7 @@
 				25BBCD6C1A85867F0015071E /* NSError+PrettyAnalytics.h */,
 				25BBCD6D1A85867F0015071E /* NSError+PrettyAnalytics.m */,
 				8BE520321C93B57800048AAD /* SimpleCompletionBlocks.h */,
+				8B8701BF1D077BC7004AF390 /* StringExtension.swift */,
 				8B8657C71D027070004F3251 /* UIColorExtension.swift */,
 				8B8657C11D026F6D004F3251 /* UIFontExtension.swift */,
 				8B8657C51D027036004F3251 /* ComparableFunctions.swift */,
@@ -1971,6 +1974,7 @@
 				8B46CC361D06326800B853C9 /* AuthenticationManager.swift in Sources */,
 				52D0FC1C19D1F24F009AECEE /* SCPRProgramDetailHeaderView.m in Sources */,
 				254831C11A41555700963078 /* UIView+PrintDimensions.m in Sources */,
+				8B8701C01D077BC7004AF390 /* StringExtension.swift in Sources */,
 				07139B841B95E701007DBA91 /* ScheduleOccurrence.swift in Sources */,
 				258BB03E1A1C083B00B8FCFE /* Settings.m in Sources */,
 				254CC69E1A23B41D00560805 /* SCPRTriangleView.m in Sources */,
