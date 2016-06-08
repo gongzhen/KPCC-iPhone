@@ -11,7 +11,7 @@
 #import <CoreTelephony/CTCarrier.h>
 #import "AudioAd.h"
 #import "Utils.h"
-#import "SimpleCompletionBlocks.h"
+#import "BlockTypes.h"
 
 #define kServerBase [[NetworkManager shared] serverBase]
 #define kFailoverThreshold 10

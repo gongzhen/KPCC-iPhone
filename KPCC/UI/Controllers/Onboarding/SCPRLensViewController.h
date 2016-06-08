@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "SCPRAppDelegate.h"
-#import "SimpleCompletionBlocks.h"
+#import "BlockTypes.h"
 
 @interface SCPRLensViewController : UIViewController
 

@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "SimpleCompletionBlocks.h"
+#import "BlockTypes.h"
 
 typedef NS_ENUM(NSInteger, SculptingStyle) {
     SculptingStyleNormal = 0,
