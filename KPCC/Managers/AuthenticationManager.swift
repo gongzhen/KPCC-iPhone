@@ -245,7 +245,7 @@ extension A0UserProfile {
         }
     }
 
-    func newLockViewController(completion: CompletionBlock) -> A0LockViewController? {
+    func newLockViewController(completion: ((Bool) -> Void)) -> A0LockViewController? {
         if let lockVC = lock?.newLockViewController() {
             lockVC.onAuthenticationBlock = {
                 [ weak self ] profile, token in
@@ -261,7 +261,7 @@ extension A0UserProfile {
         return nil
     }
 
-    func refresh(completion: CompletionBlock) {
+    func refresh(completion: ((Bool) -> Void)) {
         guard let lock = lock, refreshToken = refreshToken else {
             completion(false)
             return
@@ -290,7 +290,7 @@ extension A0UserProfile {
         )
     }
 
-    func updateUser(name name: String?, phone: String?, completion: CompletionBlock) {
+    func updateUser(name name: String?, phone: String?, completion: ((Bool) -> Void)) {
         guard let auth0 = auth0, idToken = idToken else {
             completion(false)
             return
