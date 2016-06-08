@@ -21,6 +21,8 @@ import Lock
 
     func registerTheme(bundle bundle: NSBundle) {
 
+        self.theme.statusBarStyle = .Default
+
         let theme = A0Theme()
 
         theme.registerColor(
