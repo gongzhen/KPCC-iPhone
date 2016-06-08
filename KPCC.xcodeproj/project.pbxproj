@@ -322,6 +322,7 @@
 		8BECD9521D07E257008CFC51 /* StringExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BECD94F1D07E257008CFC51 /* StringExtension.swift */; };
 		8BECD9531D07E257008CFC51 /* UIColorExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BECD9501D07E257008CFC51 /* UIColorExtension.swift */; };
 		8BECD9541D07E257008CFC51 /* UIFontExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BECD9511D07E257008CFC51 /* UIFontExtension.swift */; };
+		8BECD9561D07E3D4008CFC51 /* Dispatch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BECD9551D07E3D4008CFC51 /* Dispatch.swift */; };
 		B5F9F7491ABCE8FD00115DB3 /* icon-clock.png in Resources */ = {isa = PBXBuildFile; fileRef = B5F9F7451ABCE8FD00115DB3 /* icon-clock.png */; };
 		B5F9F74A1ABCE8FD00115DB3 /* icon-clock@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B5F9F7461ABCE8FD00115DB3 /* icon-clock@2x.png */; };
 		B5F9F74B1ABCE8FD00115DB3 /* icon-stopwatch.png in Resources */ = {isa = PBXBuildFile; fileRef = B5F9F7471ABCE8FD00115DB3 /* icon-stopwatch.png */; };
@@ -736,6 +737,7 @@
 		8BECD94F1D07E257008CFC51 /* StringExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StringExtension.swift; sourceTree = "<group>"; };
 		8BECD9501D07E257008CFC51 /* UIColorExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIColorExtension.swift; sourceTree = "<group>"; };
 		8BECD9511D07E257008CFC51 /* UIFontExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIFontExtension.swift; sourceTree = "<group>"; };
+		8BECD9551D07E3D4008CFC51 /* Dispatch.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Dispatch.swift; sourceTree = "<group>"; };
 		8F1B3A3C5B1AFBBBABCC68B5 /* libPods-KPCCTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-KPCCTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		915B96DFAD2801AC0915A39A /* Pods-KPCCTests.enterprise.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KPCCTests.enterprise.xcconfig"; path = "Pods/Target Support Files/Pods-KPCCTests/Pods-KPCCTests.enterprise.xcconfig"; sourceTree = "<group>"; };
 		96EC8CD04938354B2CC35DA3 /* Pods-KPCC.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KPCC.release.xcconfig"; path = "Pods/Target Support Files/Pods-KPCC/Pods-KPCC.release.xcconfig"; sourceTree = "<group>"; };
@@ -1476,6 +1478,7 @@
 			isa = PBXGroup;
 			children = (
 				8BECD94C1D07E250008CFC51 /* ComparableFunctions.swift */,
+				8BECD9551D07E3D4008CFC51 /* Dispatch.swift */,
 			);
 			path = Library;
 			sourceTree = "<group>";
@@ -2016,6 +2019,7 @@
 				25B25BB71B1D096D00ABE8B4 /* SCPRXFSViewController.m in Sources */,
 				258BD3AE1A0BF65200E7560F /* UIButton+Additions.m in Sources */,
 				52EFF87419C375CA0059A0E3 /* SCPRPullDownMenu.m in Sources */,
+				8BECD9561D07E3D4008CFC51 /* Dispatch.swift in Sources */,
 				523126A719EDB78C008A47A7 /* SCPRPreRollViewController.m in Sources */,
 				52E68B8219B8F2D10028F8AE /* SCPRNavigationController.m in Sources */,
 				25E8BDA41ABB933C007B99EB /* SCPRTimerControlViewController.m in Sources */,
