@@ -191,8 +191,46 @@
 - (void)openClickThroughUrl {
     NSString *url = self.audioAd.clickthroughUrl;
     if ( url && !SEQ(@"",url) ) {
+        NSArray *urls = @[
+            @"https://s1715082578.t.eloqua.com/e/f2"
+        ];
+        for (NSString *baseURL in urls) {
+            NSURLComponents *urlComponents = [self extractLinkParamterWithBaseURL:baseURL fromURL:url];
+            if (urlComponents) {
+                [self submitUserProfileData:urlComponents];
+                return;
+            }
+        }
         [[UIApplication sharedApplication] openURL:[NSURL URLWithString:url]];
     }
+}
+
+- (NSURLComponents *)extractLinkParamterWithBaseURL:(NSString *)baseURL fromURL:(NSString *)url {
+    NSString *delimiter = [@";link=" stringByAppendingString:baseURL];
+    NSArray *parts = [url componentsSeparatedByString:delimiter];
+    if (parts.count == 2) {
+        NSString *link = [baseURL stringByAppendingString:parts.lastObject];
+        return [NSURLComponents componentsWithString:link];
+    }
+    return nil;
+}
+
+- (void)submitUserProfileData:(NSURLComponents *)urlComponents {
+    UIAlertController *alertController;
+    if (AuthenticationManager.sharedInstance.isAuthenticated) {
+        alertController = [UIAlertController alertControllerWithTitle:@"Ticket Tuesday"
+                                                              message:@"You have been entered into the drawing!"
+                                                       preferredStyle:UIAlertControllerStyleAlert];
+    }
+    else {
+        alertController = [UIAlertController alertControllerWithTitle:@"Not Logged In"
+                                                              message:@"You must be logged in to be entered into the drawing. Select 'Profile' from the menu and then tap 'Log In'."
+                                                       preferredStyle:UIAlertControllerStyleAlert];
+    }
+    [alertController addAction:[UIAlertAction actionWithTitle:@"OK"
+                                                        style:UIAlertActionStyleDefault
+                                                      handler:nil]];
+    [self presentViewController:alertController animated:YES completion:nil];
 }
 
 - (IBAction)dismissTapped:(id)sender {
