@@ -5,6 +5,7 @@ target 'KPCC' do
   use_frameworks!
 
   pod 'AFNetworking', '~> 3.1'
+  pod 'Auth0', '~> 0.3'
   pod 'FBSDKCoreKit', '~> 4.12'
   pod 'FBSDKShareKit', '~> 4.12'
   pod 'FBSDKLoginKit', '~> 4.12'
