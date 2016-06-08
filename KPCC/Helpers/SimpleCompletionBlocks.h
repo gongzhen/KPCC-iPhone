@@ -8,4 +8,3 @@
 
 typedef void (^CompletionBlock)(void);
 typedef void (^CompletionBlockWithValue)(id returnedObject);
-typedef void (^CompletionBlockWithBool)(BOOL aBool);
