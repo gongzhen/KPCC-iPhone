@@ -19,7 +19,6 @@
 #import "UXmanager.h"
 #import "SCPRMasterViewController.h"
 #import "Bookmark.h"
-#import <Parse/Parse.h>
 
 static AudioManager *singleton = nil;
 
@@ -382,8 +381,6 @@ static const NSString *ItemStatusContext;
     }
 
     CLS_LOG(@"In buildStreamer for %@",urlString);
-    
-    [[NetworkManager shared] setupFloatingReachabilityWithHost:urlString];
     
     if ( self.audioPlayer ) {
         [self takedownAudioPlayer];

@@ -10,6 +10,7 @@
 #import "Settings.h"
 #import "SCPRAppDelegate.h"
 #import <AVFoundation/AVFoundation.h>
+#import "SimpleCompletionBlocks.h"
 
 @class SCPROnboardingViewController;
 @class SCPRMasterViewController;

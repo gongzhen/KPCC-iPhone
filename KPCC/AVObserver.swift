@@ -64,7 +64,8 @@ import AVFoundation
         
         // also subscribe to notifications from currentItem
         for n in self._itemNotifications {
-            NSNotificationCenter.defaultCenter().addObserver(self, selector:"item_notification:", name: n, object: player.currentItem)
+            let selector = #selector(item_notification)
+            NSNotificationCenter.defaultCenter().addObserver(self, selector: selector, name: n, object: player.currentItem)
         }
     }
 

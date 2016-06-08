@@ -57,6 +57,8 @@
 
     UIImageView *reverseNewView = [[UIImageView alloc] initWithImage:viewImage];
     
+    menuFrameInScreen = CGRectZero;
+    menuFrameOffScreen = CGRectZero;
     
     if( [self.direction isEqualToString:@"leftToRight"] ){
         [inView insertSubview:toViewController.view aboveSubview:fromViewController.view];
@@ -122,7 +124,9 @@
             [transitionContext completeTransition:NO];
             return;
         }
-        menuView.frame = menuFrameInScreen;
+        if (! [self.direction isEqualToString:@"leftToRight"]) {
+            menuView.frame = menuFrameInScreen;
+        }
 
         [transitionContext completeTransition:YES];
     }];

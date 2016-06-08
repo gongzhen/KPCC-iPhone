@@ -29,117 +29,6 @@ static NetworkManager *singleton = nil;
     return singleton;
 }
 
-- (NetworkHealth)checkNetworkHealth {
-    if ( [self.floatingReachability reachable] ) {
-        if ( [self.anchoredStaticContentReachability reachable] ) {
-            if ( [self.anchoredReachability reachable] ) {
-                return NetworkHealthAllOK;
-            } else {
-                return NetworkHealthNetworkDown;
-            }
-        } else {
-            return NetworkHealthContentServerDown;
-        }
-    }
-    
-    return NetworkHealthStreamingServerDown;
-
-}
-
-- (NSString*)networkInformation {
-    
-    NetworkStatus remoteHostStatus = [self.basicReachability currentReachabilityStatus];
-    NSString *nInfo = @"";
-    if ( remoteHostStatus == ReachableViaWiFi ) {
-        nInfo = @"Wi-Fi";
-    } else if ( remoteHostStatus == ReachableViaWWAN ) {
-        CTTelephonyNetworkInfo *netinfo = [[CTTelephonyNetworkInfo alloc] init];
-        CTCarrier *carrier = [netinfo subscriberCellularProvider];
-        NSString *carrierName = [carrier carrierName];
-        nInfo = carrierName;
-    } else {
-        nInfo = @"No Connection";
-    }
-    
-    return nInfo;
-}
-
-- (void)setupReachability {
-    
-    
-    NSURL *contentUrl = [NSURL URLWithString:kServerBase];
-    NSString *contentServer = [contentUrl host];
-    
-    self.anchoredStaticContentReachability = [KSReachability reachabilityToHost:contentServer];
-    self.anchoredReachability = [KSReachability reachabilityToLocalNetwork];
-    [self applyNotifiersToReachability:self.anchoredReachability];
-    [self applyNotifiersToReachability:self.anchoredStaticContentReachability];
-    [self setupFloatingReachabilityWithHost:[[NSURL URLWithString:kHLS] host]];
-    
-    self.basicReachability = [Reachability reachabilityForInternetConnection];
-    
-}
-
-- (BOOL)wifi {
-    NetworkStatus remoteHostStatus = [self.basicReachability currentReachabilityStatus];
-    if ( remoteHostStatus == ReachableViaWiFi ) {
-        return YES;
-    }
-    
-    return NO;
-}
-
-- (void)applyNotifiersToReachability:(KSReachability *)reachability {
-#ifndef DISABLE_INTERRUPT
-    __block NetworkManager *weakself_ = self;
-    __block KSReachability *weakreach_ = reachability;
-    reachability.onReachabilityChanged = ^(KSReachability* reach) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            
-            if ( weakself_.failTimer ) {
-                if ( [weakself_.failTimer isValid] ) {
-                    [weakself_.failTimer invalidate];
-                }
-                weakself_.failTimer = nil;
-            }
-            
-            if ( [weakreach_ reachable] ) {
-                NSLog(@"Reachability reports reachable.");
-
-                weakself_.timeReturned = [NSDate date];
-                
-
-                
-                weakself_.networkDown = NO;
-                [[NSNotificationCenter defaultCenter] postNotificationName:@"network-status-good"
-                                                                object:nil];
-                
-                if ( weakself_.timeDropped && weakself_.timeReturned ) {
-                    weakself_.timeReturned = nil;
-                    weakself_.timeDropped = nil;
-                }
-                
-            } else {
-                NSLog(@"Reachability reports unreachable.");
-
-                weakself_.failTimer = [NSTimer scheduledTimerWithTimeInterval:kFailThreshold
-                                                                       target:weakself_
-                                                                     selector:@selector(trueFail)
-                                                                     userInfo:nil
-                                                                      repeats:NO];
-                
-            }
-        });
-    };
-#endif
-}
-
-- (void)setupFloatingReachabilityWithHost:(NSString *)host {
-    NSURL *url = [NSURL URLWithString:host];
-    self.floatingReachability = [KSReachability reachabilityToHost:[url host]];
-    [self applyNotifiersToReachability:self.floatingReachability];
-}
-
 - (void)trueFail {
     self.timeDropped = [NSDate date];
     self.networkDown = YES;
@@ -147,11 +36,10 @@ static NetworkManager *singleton = nil;
                                                         object:nil];
 }
 
-
 - (void)requestFromSCPRWithEndpoint:(NSString *)endpoint completion:(CompletionBlockWithValue)completion {
-    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+    AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
     manager.responseSerializer = [AFJSONResponseSerializer serializerWithReadingOptions: NSJSONReadingMutableContainers];
-    [manager GET:endpoint parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
+    [manager GET:endpoint parameters:nil progress:nil success:^(NSURLSessionTask *task, id responseObject) {
         
         if (responseObject[@"meta"] && [responseObject[@"meta"][@"status"][@"code"] intValue] == 200) {
             
@@ -192,7 +80,7 @@ static NetworkManager *singleton = nil;
             
         }
         
-    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+    } failure:^(NSURLSessionTask *operation, NSError *error) {
         dispatch_async(dispatch_get_main_queue(), ^{
             completion(nil);
         });
@@ -225,7 +113,7 @@ static NetworkManager *singleton = nil;
 }
 
 - (void)fetchAudioAd:(NSString *)params completion:(void (^)(AudioAd* audioAd))completion {
-    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+    AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
     manager.responseSerializer = [AFHTTPResponseSerializer serializer];
 
     ASIdentifierManager *identifierManager = [ASIdentifierManager sharedManager];
@@ -234,7 +122,7 @@ static NetworkManager *singleton = nil;
     NSDictionary *globalConfig = [Utils globalConfig];
     NSString *endpoint = [NSString stringWithFormat:globalConfig[@"AdServer"][@"Preroll"], uuid];
 
-    [manager GET:endpoint parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
+    [manager GET:endpoint parameters:nil progress:nil success:^(NSURLSessionTask *task, id responseObject) {
         NSDictionary *convertedData = [NSDictionary dictionaryWithXMLData:responseObject];
         NSLog(@"convertedData %@", convertedData);
         AudioAd *audioAd;
@@ -242,7 +130,7 @@ static NetworkManager *singleton = nil;
             audioAd = [[AudioAd alloc] initWithDictionary:convertedData[@"Ad"]];
         }
         completion(audioAd);
-    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+    } failure:^(NSURLSessionTask *operation, NSError *error) {
         NSLog(@"failure? %@", error);
         completion(nil);
     }];
@@ -251,11 +139,11 @@ static NetworkManager *singleton = nil;
 - (void)pingAudioAdUrl:(NSString*)url completion:(void (^)(BOOL success))completion
 {
     if (url && !SEQ(url,@"")) {
-        AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+        AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
         manager.responseSerializer = [AFHTTPResponseSerializer serializer];
-        [manager GET:url parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        [manager GET:url parameters:nil progress:nil success:^(NSURLSessionTask *task, id responseObject) {
             completion(YES);
-        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        } failure:^(NSURLSessionTask *operation, NSError *error) {
             NSLog(@"Touching Audio Ad URL Failure? %@", error);
             completion(NO);
         }];

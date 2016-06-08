@@ -8,8 +8,6 @@
 
 #import <UIKit/UIKit.h>
 #import <Parse/Parse.h>
-#import <FBSDKCoreKit/FBSDKCoreKit.h>
-#import <Flurry-iOS-SDK/Flurry.h>
 
 @class SCPRMasterViewController;
 @class SCPRNavigationController;

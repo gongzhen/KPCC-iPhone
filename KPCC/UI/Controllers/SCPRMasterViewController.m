@@ -422,8 +422,6 @@ setForOnDemandUI;
     
 
     [[AudioManager shared] loadXfsStreamUrlWithCompletion:^{
-        [[NetworkManager shared] setupReachability];
-
         [[SessionManager shared] xFreeStreamIsAvailableWithCompletion:^{
             CLS_LOG(@"Triggered xFreeStreamIsAvailableWithCompletion after loadXfs.");
         }];
@@ -3437,12 +3435,12 @@ setForOnDemandUI;
 - (void)menuItemSelected:(NSIndexPath *)indexPath {
     
     BOOL closeMenu = NO;
-    NSString *event = @"";
+//    NSString *event = @"";
     switch (indexPath.row) {
         case 0:
         {
             self.homeIsNotRootViewController = NO;
-            event = @"menuSelectionLiveStream";
+//            event = @"menuSelectionLiveStream";
             closeMenu = YES;
             if ( [AudioManager shared].currentAudioMode != AudioModeLive ) {
                 if ( self.initialPlay && [SessionManager shared].lastPrerollTime == nil) {
@@ -3459,7 +3457,7 @@ setForOnDemandUI;
         {
             
             self.homeIsNotRootViewController = YES;
-            event = @"menuSelectionPrograms";
+//            event = @"menuSelectionPrograms";
             id<GenericProgram> prog = [[SessionManager shared] currentSchedule];
             if (setForOnDemandUI && self.onDemandProgram != nil) {
                 prog = self.onDemandProgram;
@@ -3475,7 +3473,7 @@ setForOnDemandUI;
         case 2: {
             
             self.homeIsNotRootViewController = YES;
-            event = @"menuSelectionHeadlines";
+//            event = @"menuSelectionHeadlines";
             SCPRShortListViewController *slVC = [[SCPRShortListViewController alloc] initWithNibName:@"SCPRShortListViewController"
                                                                                               bundle:nil];
             slVC.view = slVC.view;
@@ -3488,7 +3486,7 @@ setForOnDemandUI;
             self.homeIsNotRootViewController = YES;
             closeMenu = YES;
             
-            event = @"menuSelectionWakeSleep";
+//            event = @"menuSelectionWakeSleep";
             SCPRTimerControlViewController *timer = [[SCPRTimerControlViewController alloc] initWithNibName:@"SCPRTimerControlViewController"
                                                                                                      bundle:nil];
             
@@ -3505,8 +3503,8 @@ setForOnDemandUI;
             break;
         }
         case 4: {
-            event = @"menuSelectionDonate";
-            
+//            event = @"menuSelectionDonate";
+
             [[AnalyticsManager shared] logEvent:@"userSelectedDonate"
                                  withParameters:nil];
             
@@ -3519,7 +3517,7 @@ setForOnDemandUI;
         case 5: {
             
             self.homeIsNotRootViewController = YES;
-            event = @"menuSelectionFeedback";
+//            event = @"menuSelectionFeedback";
             SCPRFeedbackViewController *fbVC = [[SCPRFeedbackViewController alloc] initWithNibName:@"SCPRFeedbackViewController"
                                                                                             bundle:nil];
             [self.navigationController pushViewController:fbVC animated:YES];
@@ -3622,8 +3620,6 @@ setForOnDemandUI;
             }
         }
     }
-        
-//        [[AnalyticsManager shared] nielsenTrack];
 
     [self.liveProgressViewController tick];
     [self tickOnDemand];

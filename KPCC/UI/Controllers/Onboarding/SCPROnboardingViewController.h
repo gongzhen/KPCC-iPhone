@@ -13,6 +13,7 @@
 #import "SCPRAppDelegate.h"
 #import "SCPRTextCalloutViewController.h"
 #import "SCPRButton.h"
+#import "SimpleCompletionBlocks.h"
 
 @interface SCPROnboardingViewController : UIViewController
 

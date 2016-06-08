@@ -384,9 +384,9 @@ static DesignManager *singleton = nil;
         
 #endif
     } else {
-        [button setImage:[UIImage imageNamed:nil]
+        [button setImage:nil
                 forState:UIControlStateNormal];
-        [button setImage:[UIImage imageNamed:nil]
+        [button setImage:nil
                 forState:UIControlStateHighlighted];
     }
 }

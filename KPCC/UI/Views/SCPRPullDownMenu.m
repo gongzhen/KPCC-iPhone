@@ -370,7 +370,7 @@
                          animations:^{
                              if (!fullyOpen)
                              {
-                                 NSInteger numberToUse = self.type == MenuTypeStandard ? [menuItems count] : 6;
+//                                 NSInteger numberToUse = self.type == MenuTypeStandard ? [menuItems count] : 6;
                                  self.frame = CGRectMake(0.0f,40.0f,self.frame.size.width,self.frame.size.height);
                                  fullyOpen = YES;
                              }

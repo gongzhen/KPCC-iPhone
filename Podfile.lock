@@ -1,87 +1,87 @@
 PODS:
-  - AFNetworking (2.6.3):
-    - AFNetworking/NSURLConnection (= 2.6.3)
-    - AFNetworking/NSURLSession (= 2.6.3)
-    - AFNetworking/Reachability (= 2.6.3)
-    - AFNetworking/Security (= 2.6.3)
-    - AFNetworking/Serialization (= 2.6.3)
-    - AFNetworking/UIKit (= 2.6.3)
-  - AFNetworking/NSURLConnection (2.6.3):
+  - AFNetworking (3.1.0):
+    - AFNetworking/NSURLSession (= 3.1.0)
+    - AFNetworking/Reachability (= 3.1.0)
+    - AFNetworking/Security (= 3.1.0)
+    - AFNetworking/Serialization (= 3.1.0)
+    - AFNetworking/UIKit (= 3.1.0)
+  - AFNetworking/NSURLSession (3.1.0):
     - AFNetworking/Reachability
     - AFNetworking/Security
     - AFNetworking/Serialization
-  - AFNetworking/NSURLSession (2.6.3):
-    - AFNetworking/Reachability
-    - AFNetworking/Security
-    - AFNetworking/Serialization
-  - AFNetworking/Reachability (2.6.3)
-  - AFNetworking/Security (2.6.3)
-  - AFNetworking/Serialization (2.6.3)
-  - AFNetworking/UIKit (2.6.3):
-    - AFNetworking/NSURLConnection
+  - AFNetworking/Reachability (3.1.0)
+  - AFNetworking/Security (3.1.0)
+  - AFNetworking/Serialization (3.1.0)
+  - AFNetworking/UIKit (3.1.0):
     - AFNetworking/NSURLSession
-  - Bolts (1.6.0):
-    - Bolts/AppLinks (= 1.6.0)
-    - Bolts/Tasks (= 1.6.0)
-  - Bolts/AppLinks (1.6.0):
+  - Bolts (1.7.0):
+    - Bolts/AppLinks (= 1.7.0)
+    - Bolts/Tasks (= 1.7.0)
+  - Bolts/AppLinks (1.7.0):
     - Bolts/Tasks
-  - Bolts/Tasks (1.6.0)
-  - FBSDKCoreKit (4.10.0):
-    - Bolts (~> 1.5)
-  - FBSDKLoginKit (4.10.0):
+  - Bolts/Tasks (1.7.0)
+  - FBSDKCoreKit (4.12.0):
+    - Bolts (~> 1.7)
+  - FBSDKLoginKit (4.12.0):
     - FBSDKCoreKit
-  - FBSDKShareKit (4.10.0):
+  - FBSDKShareKit (4.12.0):
     - FBSDKCoreKit
-  - Flurry-iOS-SDK/FlurrySDK (7.3.0)
-  - FXBlurView (1.6.3)
-  - Google/Analytics (1.0.7):
+  - Flurry-iOS-SDK/FlurrySDK (7.6.3)
+  - FXBlurView (1.6.4)
+  - Google/Analytics (1.3.2):
     - Google/Core
     - GoogleAnalytics (~> 3.12)
-  - Google/Core (1.0.7):
+  - Google/Core (1.3.2):
+    - GoogleInterchangeUtilities (~> 1.0)
     - GoogleNetworkingUtilities (~> 1.0)
     - GoogleSymbolUtilities (~> 1.0)
-    - GoogleUtilities (~> 1.0)
-  - GoogleAnalytics (3.13.0)
+    - GoogleUtilities (~> 1.1)
+  - GoogleAnalytics (3.14.0)
+  - GoogleInterchangeUtilities (1.1.0):
+    - GoogleSymbolUtilities (~> 1.0)
   - GoogleNetworkingUtilities (1.0.0):
     - GoogleSymbolUtilities (~> 1.0)
-  - GoogleSymbolUtilities (1.0.0)
-  - GoogleUtilities (1.0.1):
-    - GoogleSymbolUtilities (~> 1.0)
-  - KSReachability (1.4.1)
-  - Parse (1.8.1):
-    - Bolts/Tasks (>= 1.2.0)
-  - pop (1.0.7)
+  - GoogleSymbolUtilities (1.0.3)
+  - GoogleUtilities (1.1.0):
+    - GoogleSymbolUtilities (~> 1.0.0)
+  - OCMock (3.2.2)
+  - Parse (1.13.0):
+    - Bolts/Tasks (~> 1.6)
+  - pop (1.0.9)
   - XMLDictionary (1.4)
 
 DEPENDENCIES:
-  - AFNetworking (~> 2.0)
-  - FBSDKCoreKit (~> 4.10)
-  - FBSDKLoginKit (~> 4.10)
-  - FBSDKShareKit (~> 4.10)
-  - Flurry-iOS-SDK/FlurrySDK (~> 7.3)
+  - AFNetworking (~> 3.1)
+  - FBSDKCoreKit (~> 4.12)
+  - FBSDKLoginKit (~> 4.12)
+  - FBSDKShareKit (~> 4.12)
+  - Flurry-iOS-SDK/FlurrySDK (~> 7.6)
   - FXBlurView (~> 1.6)
-  - Google/Analytics (~> 1.0.7)
-  - KSReachability (~> 1.4)
-  - Parse (~> 1.6)
+  - Google/Analytics (~> 1.3)
+  - OCMock (~> 3.2)
+  - Parse (~> 1.13)
   - pop (~> 1.0)
   - XMLDictionary (~> 1.4)
 
 SPEC CHECKSUMS:
-  AFNetworking: cb8d14a848e831097108418f5d49217339d4eb60
-  Bolts: f52a250053bb517ca874523c3913776359ab3def
-  FBSDKCoreKit: 13bec8373fb3af94d44daf2aa1e0958687897fbd
-  FBSDKLoginKit: d3d4a2e9d31954deb00bfea964167a05ca1ea976
-  FBSDKShareKit: 54587b4624706ace1e810cf83412a918141f807a
-  Flurry-iOS-SDK: 054befae0fa0244fb000985bfe757d70f87a9f60
-  FXBlurView: c6d23f3d35af2c6282296a2930f61c6e2c788d01
-  Google: 875f5a8ade86dd02e36586e4a54814843938c7f6
-  GoogleAnalytics: fcf1f1cad57ae1a9a53520018f0f680ceeeb8b49
+  AFNetworking: 5e0e199f73d8626b11e79750991f5d173d1f8b67
+  Bolts: a0058fa3b331c5a1e4402d534f2dae36dbff31e4
+  FBSDKCoreKit: 6e56d5a2a64a755ad4efb5dbeee8f82fb1b99775
+  FBSDKLoginKit: 03f68a8d48c2c8bb81d7eb8097973d483543e1f6
+  FBSDKShareKit: df1491f064cffc8ebcc3fc8b71be94cc190c728e
+  Flurry-iOS-SDK: 5ea9c76a73ce16bff005d21a4f0b539d2c15d97d
+  FXBlurView: db786c2561cb49a09ae98407f52460096ab8a44f
+  Google: 97618e118111b998cce1d8dd1bd98b82301d72db
+  GoogleAnalytics: 9be1afdb8deeac4bb5f13ca7f7d3b9db2a1f43dc
+  GoogleInterchangeUtilities: d7f7174176fbcf9710f696f1acebad4dbd98ac03
   GoogleNetworkingUtilities: 292992ab31b7b4ba32809a0e8b40e324cdfb2c0c
-  GoogleSymbolUtilities: a7b0feed1fe667c8d5e647177938d0ecd62d6948
-  GoogleUtilities: e3475cd4d45134221d2f3f3626095a1c49b62041
-  KSReachability: ddf4af6e6488c45c5c41c59e72d72d078062ee28
-  Parse: 2155953b1565494095d5fa5c83b3c77f2c677c09
-  pop: 628ffc631644601567ee8bfaaaea493ebd7d0923
+  GoogleSymbolUtilities: 82ad9f93d3615244b3f4ce440f5ab2515e8b4f56
+  GoogleUtilities: 8ed9134debe11719097881711464752900668f10
+  OCMock: 18c9b7e67d4c2770e95bb77a9cc1ae0c91fe3835
+  Parse: f51c24d2feb412e4b2d6cc73d37cb24e8d0089bc
+  pop: f667631a5108a2e60d9e8797c9b32ddaf2080bce
   XMLDictionary: f9f51601ba76678b594ab485f2b00ec1fed23724
 
-COCOAPODS: 0.39.0
+PODFILE CHECKSUM: 35a195e562952e4c6b77d55b3bcd354ef3ddea38
+
+COCOAPODS: 1.0.1
