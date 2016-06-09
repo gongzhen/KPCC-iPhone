@@ -319,6 +319,7 @@
 		8B8E640B1D090DB500228251 /* UITableViewExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B8E640A1D090DB500228251 /* UITableViewExtension.swift */; };
 		8BB4B72A1D0657A100A621BA /* UserProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BB4B7281D0657A100A621BA /* UserProfileViewController.swift */; };
 		8BB4B72B1D0657A100A621BA /* UserProfileViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8BB4B7291D0657A100A621BA /* UserProfileViewController.xib */; };
+		8BD6E6711D09BDD10074F85D /* PreRollAdController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BD6E6701D09BDD10074F85D /* PreRollAdController.swift */; };
 		8BECD94D1D07E250008CFC51 /* ComparableFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BECD94C1D07E250008CFC51 /* ComparableFunctions.swift */; };
 		8BECD9521D07E257008CFC51 /* StringExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BECD94F1D07E257008CFC51 /* StringExtension.swift */; };
 		8BECD9531D07E257008CFC51 /* UIColorExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BECD9501D07E257008CFC51 /* UIColorExtension.swift */; };
@@ -733,6 +734,7 @@
 		8B8E640A1D090DB500228251 /* UITableViewExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UITableViewExtension.swift; sourceTree = "<group>"; };
 		8BB4B7281D0657A100A621BA /* UserProfileViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserProfileViewController.swift; sourceTree = "<group>"; };
 		8BB4B7291D0657A100A621BA /* UserProfileViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = UserProfileViewController.xib; sourceTree = "<group>"; };
+		8BD6E6701D09BDD10074F85D /* PreRollAdController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreRollAdController.swift; sourceTree = "<group>"; };
 		8BE520321C93B57800048AAD /* BlockTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BlockTypes.h; sourceTree = "<group>"; };
 		8BECD94C1D07E250008CFC51 /* ComparableFunctions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ComparableFunctions.swift; sourceTree = "<group>"; };
 		8BECD94F1D07E257008CFC51 /* StringExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StringExtension.swift; sourceTree = "<group>"; };
@@ -1481,6 +1483,7 @@
 			children = (
 				8BECD94C1D07E250008CFC51 /* ComparableFunctions.swift */,
 				8BECD9551D07E3D4008CFC51 /* Dispatch.swift */,
+				8BD6E6701D09BDD10074F85D /* PreRollAdController.swift */,
 			);
 			path = Library;
 			sourceTree = "<group>";
@@ -2008,6 +2011,7 @@
 				5248858E19CBA180005F59CC /* EpisodeAudio.m in Sources */,
 				07EB39641B989A09005A8DDB /* NowPlayingManager.swift in Sources */,
 				523E86D019C8A292006FC366 /* SCPRProgramDetailViewController.m in Sources */,
+				8BD6E6711D09BDD10074F85D /* PreRollAdController.swift in Sources */,
 				258FC47E1A01915E00282D59 /* UIColor+UICustom.m in Sources */,
 				258BD3B11A0C0FFF00E7560F /* SCPRProgressViewController.m in Sources */,
 				52CF917A1A0032C7007BCFA8 /* QueueManager.m in Sources */,
