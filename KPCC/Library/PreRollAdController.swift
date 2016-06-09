@@ -106,7 +106,7 @@ private class EloquaAction: CustomAction {
 
 }
 
-@objc class PreRollAdController: NSObject {
+class PreRollAdController: NSObject {
 
 }
 
