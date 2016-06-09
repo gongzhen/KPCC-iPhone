@@ -53,7 +53,7 @@ extension UserProfileViewController {
 extension UserProfileViewController {
 
     func textFieldEditingChanged(sender: AnyObject) {
-        if let alertController = presentedViewController as? UIAlertController {
+        if let textField = sender as? UITextField, alertController = textField.alertController {
             AuthenticationManager.validateUserProfileAlertController(alertController)
         }
     }
