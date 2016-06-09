@@ -39,8 +39,11 @@ extension UserProfileViewController {
 
         super.viewDidAppear(animated)
 
-        if let userProfile = authenticationManager.userProfile where authenticationManager.isAuthenticated {
-            if (userProfile.metadataName?.isEmpty ?? true) || (userProfile.metadataPhone?.isEmpty ?? true) {
+        if authenticationManager.isAuthenticated {
+            let userProfile = authenticationManager.userProfile
+            let nameEmpty = (userProfile?.metadataName?.isEmpty ?? true)
+            let phoneEmpty = (userProfile?.metadataPhone?.isEmpty ?? true)
+            if nameEmpty || phoneEmpty {
                 promptForNameAndPhone()
             }
         }
