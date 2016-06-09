@@ -56,16 +56,7 @@ extension UserProfileViewController {
 
     func textFieldEditingChanged(sender: AnyObject) {
         if let alertController = presentedViewController as? UIAlertController {
-            for action in alertController.actions {
-                if action.style == .Default {
-                    let name = alertController.textFields?.first?.text
-                    let phone = alertController.textFields?.last?.text
-                    let nameEmpty = (name?.isEmpty ?? true)
-                    let phoneValid = (phone?.isPhoneNumber ?? false)
-                    action.enabled = (!nameEmpty && phoneValid)
-                    break
-                }
-            }
+            AuthenticationManager.validateUserProfileAlertController(alertController)
         }
     }
 
@@ -175,7 +166,7 @@ private extension UserProfileViewController {
         tableView.reloadData()
     }
 
-    func promptForNameAndPhone() {
+    func promptForNameAndPhone_DELETE() {
 
         let userProfile = authenticationManager.userProfile
 
@@ -237,6 +228,16 @@ private extension UserProfileViewController {
 
         presentViewController(alertController, animated: true, completion: nil)
 
+    }
+
+    func promptForNameAndPhone() {
+        let action = #selector(textFieldEditingChanged)
+        let alertController = authenticationManager.newUserProfileAlertController(target: self, action: action) {
+            [ weak self ] _ in
+            guard let _self = self else { return }
+            _self.updateUI()
+        }
+        presentViewController(alertController, animated: true, completion: nil)
     }
 
 }

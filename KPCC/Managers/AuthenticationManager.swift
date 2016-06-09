@@ -259,6 +259,19 @@ extension AuthenticationManager {
 
     private static let _sharedInstance = AuthenticationManager()
 
+    static func validateUserProfileAlertController(alertController: UIAlertController) {
+        for action in alertController.actions {
+            if action.style == .Default {
+                let name = alertController.textFields?.first?.text
+                let phone = alertController.textFields?.last?.text
+                let nameEmpty = (name?.isEmpty ?? true)
+                let phoneValid = (phone?.isPhoneNumber ?? false)
+                action.enabled = (!nameEmpty && phoneValid)
+                break
+            }
+        }
+    }
+
 }
 
 extension AuthenticationManager {
@@ -292,6 +305,59 @@ extension AuthenticationManager {
             return lockVC
         }
         return nil
+    }
+
+    func newUserProfileAlertController(target target: AnyObject?, action: Selector, completion: ((Bool) -> Void)) -> UIAlertController {
+
+        let alertController = UIAlertController(
+            title: "One More Thing",
+            message: "If you ever win a contest or drawing, we'll need to contact you quickly.",
+            preferredStyle: .Alert
+        )
+
+        alertController.addTextFieldWithConfigurationHandler {
+            textField in
+            textField.placeholder = "First and Last Name"
+            textField.text = self.userProfile?.metadataName
+            textField.addTarget(target, action: action, forControlEvents: .EditingChanged)
+        }
+
+        alertController.addTextFieldWithConfigurationHandler {
+            textField in
+            textField.placeholder = "Phone Number"
+            textField.text = self.userProfile?.metadataPhone
+            textField.addTarget(target, action: action, forControlEvents: .EditingChanged)
+        }
+
+        alertController.addAction(
+            UIAlertAction(
+                title: "Cancel",
+                style: .Cancel,
+                handler: nil
+            )
+        )
+
+        alertController.addAction(
+            UIAlertAction(
+                title: "Submit",
+                style: .Default,
+                handler: {
+                    [ weak self ] _ in
+                    guard let _self = self else { return }
+                    let name = alertController.textFields?.first?.text
+                    let phone = alertController.textFields?.last?.text
+                    _self.updateUserProfile(name: name, phone: phone) {
+                        success in
+                        completion(success)
+                    }
+                }
+            )
+        )
+
+        alertController.actions.last?.enabled = false
+
+        return alertController
+
     }
 
     func fetchNewIdToken(completion: ((Bool) -> Void)) {
