@@ -9,18 +9,6 @@
 import UIKit
 import Lock
 
-class Value1TableViewCell: UITableViewCell {
-
-    override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
-        super.init(style: .Value1, reuseIdentifier: reuseIdentifier)
-    }
-
-    required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-    }
-
-}
-
 class UserProfileViewController: UITableViewController {
 
     lazy var authenticationManager = AuthenticationManager.sharedInstance
@@ -29,10 +17,7 @@ class UserProfileViewController: UITableViewController {
 
         super.viewDidLoad()
 
-        tableView.registerClass(
-            Value1TableViewCell.self,
-            forCellReuseIdentifier: String(Value1TableViewCell)
-        )
+        tableView.registerClass(style: .Value1)
 
         navigationItem.title = "Profile"
 
@@ -119,7 +104,7 @@ class UserProfileViewController: UITableViewController {
     }
 
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier(String(Value1TableViewCell))!
+        let cell = tableView.dequeueReusableCell(style: .Value1)
         if let userProfile = authenticationManager.userProfile {
             switch indexPath.row {
             case 0:
