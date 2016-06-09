@@ -117,6 +117,10 @@ extension A0UserProfile {
 
     private override init() {}
 
+}
+
+extension AuthenticationManager {
+
     func registerTheme(bundle bundle: NSBundle) {
 
         self.theme.statusBarStyle = .Default
@@ -338,6 +342,10 @@ extension A0UserProfile {
     func reset() {
         set(profile: nil, token: nil)
     }
+
+}
+
+extension AuthenticationManager {
 
     private func set(profile profile: A0UserProfile?, token: A0Token?) {
         set(profile: profile)
