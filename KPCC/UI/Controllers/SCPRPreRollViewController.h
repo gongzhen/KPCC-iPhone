@@ -8,7 +8,6 @@
 
 #import <UIKit/UIKit.h>
 #import <Crashlytics/Crashlytics.h>
-#import <Lock/Lock.h>
 #import "AudioAd.h"
 #import "SCPRAppDelegate.h"
 #import "KPCC-Swift.h"
