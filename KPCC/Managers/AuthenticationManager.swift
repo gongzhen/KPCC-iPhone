@@ -14,7 +14,7 @@ private let SimpleKeychainService = "Auth0"
 
 extension A0SimpleKeychain {
 
-    private enum Keychain {
+    private enum Attribute {
 
         case profile
         case idToken
@@ -35,7 +35,7 @@ extension A0SimpleKeychain {
 
     var profile: A0UserProfile? {
         get {
-            if let data = dataForKey(Keychain.profile.key) {
+            if let data = dataForKey(Attribute.profile.key) {
                 return NSKeyedUnarchiver.unarchiveObjectWithData(data) as? A0UserProfile
             }
             return nil
@@ -43,38 +43,38 @@ extension A0SimpleKeychain {
         set {
             if let newValue = newValue {
                 let data = NSKeyedArchiver.archivedDataWithRootObject(newValue)
-                setData(data, forKey: Keychain.profile.key)
+                setData(data, forKey: Attribute.profile.key)
             }
             else {
-                deleteEntryForKey(Keychain.profile.key)
+                deleteEntryForKey(Attribute.profile.key)
             }
         }
     }
 
     var idToken: String? {
         get {
-            return stringForKey(Keychain.idToken.key)
+            return stringForKey(Attribute.idToken.key)
         }
         set {
             if let newValue = newValue {
-                setString(newValue, forKey: Keychain.idToken.key)
+                setString(newValue, forKey: Attribute.idToken.key)
             }
             else {
-                deleteEntryForKey(Keychain.idToken.key)
+                deleteEntryForKey(Attribute.idToken.key)
             }
         }
     }
 
     var refreshToken: String? {
         get {
-            return stringForKey(Keychain.refreshToken.key)
+            return stringForKey(Attribute.refreshToken.key)
         }
         set {
             if let newValue = newValue {
-                setString(newValue, forKey: Keychain.refreshToken.key)
+                setString(newValue, forKey: Attribute.refreshToken.key)
             }
             else {
-                deleteEntryForKey(Keychain.refreshToken.key)
+                deleteEntryForKey(Attribute.refreshToken.key)
             }
         }
     }
