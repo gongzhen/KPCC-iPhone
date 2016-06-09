@@ -12,6 +12,75 @@ import SimpleKeychain
 
 private let SimpleKeychainService = "Auth0"
 
+extension A0SimpleKeychain {
+
+    private enum Keychain {
+
+        case profile
+        case idToken
+        case refreshToken
+
+        var key: String {
+            switch self {
+            case .profile:
+                return "profile"
+            case .idToken:
+                return "id_token"
+            case .refreshToken:
+                return "refresh_token"
+            }
+        }
+
+    }
+
+    var profile: A0UserProfile? {
+        get {
+            if let data = dataForKey(Keychain.profile.key) {
+                return NSKeyedUnarchiver.unarchiveObjectWithData(data) as? A0UserProfile
+            }
+            return nil
+        }
+        set {
+            if let newValue = newValue {
+                let data = NSKeyedArchiver.archivedDataWithRootObject(newValue)
+                setData(data, forKey: Keychain.profile.key)
+            }
+            else {
+                deleteEntryForKey(Keychain.profile.key)
+            }
+        }
+    }
+
+    var idToken: String? {
+        get {
+            return stringForKey(Keychain.idToken.key)
+        }
+        set {
+            if let newValue = newValue {
+                setString(newValue, forKey: Keychain.idToken.key)
+            }
+            else {
+                deleteEntryForKey(Keychain.idToken.key)
+            }
+        }
+    }
+
+    var refreshToken: String? {
+        get {
+            return stringForKey(Keychain.refreshToken.key)
+        }
+        set {
+            if let newValue = newValue {
+                setString(newValue, forKey: Keychain.refreshToken.key)
+            }
+            else {
+                deleteEntryForKey(Keychain.refreshToken.key)
+            }
+        }
+    }
+
+}
+
 extension A0UserProfile {
 
     var metaName: String? {
@@ -36,25 +105,6 @@ extension A0UserProfile {
 
 @objc class AuthenticationManager: NSObject {
 
-    private enum Keychain {
-
-        case profile
-        case idToken
-        case refreshToken
-
-        var key: String {
-            switch self {
-            case .profile:
-                return "profile"
-            case .idToken:
-                return "id_token"
-            case .refreshToken:
-                return "refresh_token"
-            }
-        }
-
-    }
-
     static let sharedInstance = AuthenticationManager()
 
     lazy var theme = A0Theme.sharedInstance()
@@ -68,52 +118,6 @@ extension A0UserProfile {
     }
 
     private (set) var userProfile: A0UserProfile?
-
-    private var profile: A0UserProfile? {
-        get {
-            if let data = simpleKeychain.dataForKey(Keychain.profile.key) {
-                return NSKeyedUnarchiver.unarchiveObjectWithData(data) as? A0UserProfile
-            }
-            return nil
-        }
-        set {
-            if let newValue = newValue {
-                let data = NSKeyedArchiver.archivedDataWithRootObject(newValue)
-                simpleKeychain.setData(data, forKey: Keychain.profile.key)
-            }
-            else {
-                simpleKeychain.deleteEntryForKey(Keychain.profile.key)
-            }
-        }
-    }
-
-    private var idToken: String? {
-        get {
-            return simpleKeychain.stringForKey(Keychain.idToken.key)
-        }
-        set {
-            if let newValue = newValue {
-                simpleKeychain.setString(newValue, forKey: Keychain.idToken.key)
-            }
-            else {
-                simpleKeychain.deleteEntryForKey(Keychain.idToken.key)
-            }
-        }
-    }
-
-    private var refreshToken: String? {
-        get {
-            return simpleKeychain.stringForKey(Keychain.refreshToken.key)
-        }
-        set {
-            if let newValue = newValue {
-                simpleKeychain.setString(newValue, forKey: Keychain.refreshToken.key)
-            }
-            else {
-                simpleKeychain.deleteEntryForKey(Keychain.refreshToken.key)
-            }
-        }
-    }
 
     private override init() {}
 
@@ -244,7 +248,7 @@ extension AuthenticationManager {
     func initialize(clientId clientId: String, domain: String) {
         auth0 = Auth0(domain: domain)
         lock = A0Lock(clientId: clientId, domain: domain)
-        if let profile = profile, _ = idToken, _ = refreshToken {
+        if let profile = simpleKeychain.profile, _ = simpleKeychain.idToken, _ = simpleKeychain.refreshToken {
             userProfile = profile
         }
     }
@@ -266,7 +270,7 @@ extension AuthenticationManager {
     }
 
     func refresh(completion: ((Bool) -> Void)) {
-        guard let lock = lock, refreshToken = refreshToken else {
+        guard let lock = lock, refreshToken = simpleKeychain.refreshToken else {
             completion(false)
             return
         }
@@ -295,7 +299,7 @@ extension AuthenticationManager {
     }
 
     func updateUser(name name: String?, phone: String?, completion: ((Bool) -> Void)) {
-        guard let auth0 = auth0, idToken = idToken else {
+        guard let auth0 = auth0, idToken = simpleKeychain.idToken else {
             completion(false)
             return
         }
@@ -353,13 +357,13 @@ extension AuthenticationManager {
     }
 
     private func set(profile profile: A0UserProfile?) {
-        self.userProfile = profile
-        self.profile = profile
+        userProfile = profile
+        simpleKeychain.profile = profile
     }
 
     private func set(token token: A0Token?) {
-        idToken = token?.idToken
-        refreshToken = token?.refreshToken
+        simpleKeychain.idToken = token?.idToken
+        simpleKeychain.refreshToken = token?.refreshToken
     }
 
 }
