@@ -288,12 +288,16 @@ extension AuthenticationManager {
         return nil
     }
 
-    func refresh(completion: ((Bool) -> Void)) {
+    func fetchNewIdToken(completion: ((Bool) -> Void)) {
+
         guard let lock = lock, refreshToken = simpleKeychain.refreshToken else {
             completion(false)
             return
         }
-        lock.apiClient().fetchNewIdTokenWithRefreshToken(
+
+        let apiClient = lock.apiClient()
+
+        apiClient.fetchNewIdTokenWithRefreshToken(
             refreshToken,
             parameters: nil,
             success: {
@@ -315,19 +319,23 @@ extension AuthenticationManager {
                 completion(false)
             }
         )
+
     }
 
-    func updateUser(name name: String?, phone: String?, completion: ((Bool) -> Void)) {
+    func updateUserProfile(name name: String?, phone: String?, completion: ((Bool) -> Void)) {
+
         guard let auth0 = auth0, idToken = simpleKeychain.idToken else {
             completion(false)
             return
         }
+
         let apiRequest = auth0.users(idToken).update(
             userMetadata: [
                 "name" : (name ?? ""),
                 "phone" : (phone ?? "")
             ]
         )
+
         apiRequest.responseJSON {
             [ weak self ] _, payload in
             let success = (payload != nil)
@@ -336,31 +344,44 @@ extension AuthenticationManager {
                 return
             }
             if success {
-                guard let lock = _self.lock else {
+                _self.fetchUserProfile {
+                    _ in
                     completion(success)
-                    return
                 }
-                lock.apiClient().fetchUserProfileWithIdToken(
-                    idToken,
-                    success: {
-                        [ weak self ] profile in
-                        guard let _self = self else {
-                            completion(success)
-                            return
-                        }
-                        _self.set(profile: profile)
-                        completion(success)
-                    },
-                    failure: {
-                        _ in
-                        completion(success)
-                    }
-                )
             }
             else {
                 completion(success)
             }
         }
+
+    }
+
+    func fetchUserProfile(completion: ((Bool) -> Void)) {
+
+        guard let lock = lock, idToken = simpleKeychain.idToken else {
+            completion(false)
+            return
+        }
+
+        let apiClient = lock.apiClient()
+
+        apiClient.fetchUserProfileWithIdToken(
+            idToken,
+            success: {
+                [ weak self ] profile in
+                guard let _self = self else {
+                    completion(false)
+                    return
+                }
+                _self.set(profile: profile)
+                completion(true)
+            },
+            failure: {
+                _ in
+                completion(false)
+            }
+        )
+
     }
 
     func reset() {

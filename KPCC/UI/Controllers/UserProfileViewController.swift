@@ -207,7 +207,7 @@ class UserProfileViewController: UITableViewController {
                 guard let _self = self else { return }
                 let name = alertController.textFields?.first?.text
                 let phone = alertController.textFields?.last?.text
-                _self.authenticationManager.updateUser(name: name, phone: phone) {
+                _self.authenticationManager.updateUserProfile(name: name, phone: phone) {
                     [ weak self ] _ in
                     guard let _self = self else { return }
                     _self.updateUI()
