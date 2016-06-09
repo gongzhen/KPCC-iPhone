@@ -398,19 +398,19 @@ extension AuthenticationManager {
 
 }
 
-extension AuthenticationManager {
+private extension AuthenticationManager {
 
-    private func set(profile profile: A0UserProfile?, token: A0Token?) {
+    func set(profile profile: A0UserProfile?, token: A0Token?) {
         set(profile: profile)
         set(token: token)
     }
 
-    private func set(profile profile: A0UserProfile?) {
+    func set(profile profile: A0UserProfile?) {
         userProfile = profile
         simpleKeychain.profile = profile
     }
 
-    private func set(token token: A0Token?) {
+    func set(token token: A0Token?) {
         simpleKeychain.idToken = token?.idToken
         simpleKeychain.refreshToken = token?.refreshToken
     }
