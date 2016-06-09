@@ -40,11 +40,9 @@ extension UserProfileViewController {
         super.viewDidAppear(animated)
 
         if authenticationManager.isAuthenticated {
-            let userProfile = authenticationManager.userProfile
-            let nameEmpty = (userProfile?.metadataName?.isEmpty ?? true)
-            let phoneEmpty = (userProfile?.metadataPhone?.isEmpty ?? true)
-            if nameEmpty || phoneEmpty {
-                promptForNameAndPhone()
+            let userProfileComplete = (authenticationManager.userProfile?.isComplete ?? false)
+            if (!userProfileComplete) {
+                presentUserProfileAlertController()
             }
         }
 
@@ -166,7 +164,7 @@ private extension UserProfileViewController {
         tableView.reloadData()
     }
 
-    func promptForNameAndPhone() {
+    func presentUserProfileAlertController() {
         let action = #selector(textFieldEditingChanged)
         let alertController = authenticationManager.newUserProfileAlertController(target: self, action: action) {
             [ weak self ] _ in
