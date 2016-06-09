@@ -82,11 +82,13 @@ extension UserProfileViewController {
     }
 
     func logOutTapped(sender: AnyObject) {
+
         let alertController = UIAlertController(
             title: nil,
             message: nil,
             preferredStyle: .ActionSheet
         )
+
         alertController.addAction(
             UIAlertAction(
                 title: "Log Out",
@@ -99,6 +101,7 @@ extension UserProfileViewController {
                 }
             )
         )
+
         alertController.addAction(
             UIAlertAction(
                 title: "Cancel",
@@ -106,7 +109,9 @@ extension UserProfileViewController {
                 handler: nil
             )
         )
+
         presentViewController(alertController, animated: true, completion: nil)
+
     }
 
 }
@@ -171,11 +176,13 @@ private extension UserProfileViewController {
     }
 
     func promptForNameAndPhone() {
+
         let alertController = UIAlertController(
             title: "One More Thing",
             message: "If you ever win a contest or drawing, we'll need to contact you quickly.",
             preferredStyle: .Alert
         )
+
         alertController.addTextFieldWithConfigurationHandler {
             textField in
             textField.placeholder = "First and Last Name"
@@ -186,6 +193,7 @@ private extension UserProfileViewController {
                 forControlEvents: .EditingChanged
             )
         }
+
         alertController.addTextFieldWithConfigurationHandler {
             textField in
             textField.placeholder = "Phone Number"
@@ -196,6 +204,7 @@ private extension UserProfileViewController {
                 forControlEvents: .EditingChanged
             )
         }
+
         alertController.addAction(
             UIAlertAction(
                 title: "Cancel",
@@ -203,6 +212,7 @@ private extension UserProfileViewController {
                 handler: nil
             )
         )
+
         let defaultAction = UIAlertAction(
             title: "Submit",
             style: .Default,
@@ -218,9 +228,13 @@ private extension UserProfileViewController {
                 }
             }
         )
+
         defaultAction.enabled = false
+
         alertController.addAction(defaultAction)
+
         presentViewController(alertController, animated: true, completion: nil)
+
     }
 
 }
