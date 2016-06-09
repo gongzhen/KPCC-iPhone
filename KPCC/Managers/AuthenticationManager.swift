@@ -223,6 +223,12 @@ extension A0UserProfile {
 
     }
 
+    var isComplete: Bool {
+        let nameEmpty = (metadataName?.isEmpty ?? true)
+        let phoneEmpty = (metadataPhone?.isEmpty ?? true)
+        return !nameEmpty && !phoneEmpty
+    }
+
     var metadataName: String? {
         return userMetadata[UserMetadata.name.key] as? String
     }
