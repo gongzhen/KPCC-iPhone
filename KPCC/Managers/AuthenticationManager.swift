@@ -322,12 +322,13 @@ extension AuthenticationManager {
             completion(false)
             return
         }
-        auth0.users(idToken).update(
+        let apiRequest = auth0.users(idToken).update(
             userMetadata: [
                 "name" : (name ?? ""),
                 "phone" : (phone ?? "")
             ]
-        ).responseJSON {
+        )
+        apiRequest.responseJSON {
             [ weak self ] _, payload in
             let success = (payload != nil)
             guard let _self = self else {
