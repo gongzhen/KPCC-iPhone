@@ -213,25 +213,25 @@ private extension UserProfileViewController {
             )
         )
 
-        let defaultAction = UIAlertAction(
-            title: "Submit",
-            style: .Default,
-            handler: {
-                [ weak self ] _ in
-                guard let _self = self else { return }
-                let name = alertController.textFields?.first?.text
-                let phone = alertController.textFields?.last?.text
-                _self.authenticationManager.updateUserProfile(name: name, phone: phone) {
+        alertController.addAction(
+            UIAlertAction(
+                title: "Submit",
+                style: .Default,
+                handler: {
                     [ weak self ] _ in
                     guard let _self = self else { return }
-                    _self.updateUI()
+                    let name = alertController.textFields?.first?.text
+                    let phone = alertController.textFields?.last?.text
+                    _self.authenticationManager.updateUserProfile(name: name, phone: phone) {
+                        [ weak self ] _ in
+                        guard let _self = self else { return }
+                        _self.updateUI()
+                    }
                 }
-            }
+            )
         )
 
-        defaultAction.enabled = false
-
-        alertController.addAction(defaultAction)
+        alertController.actions.last?.enabled = false
 
         presentViewController(alertController, animated: true, completion: nil)
 
