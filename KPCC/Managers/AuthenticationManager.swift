@@ -207,12 +207,28 @@ extension A0Theme {
 
 extension A0UserProfile {
 
+    enum UserMetadata {
+
+        case name
+        case phone
+
+        var key: String {
+            switch self {
+            case .name:
+                return "name"
+            case .phone:
+                return "phone"
+            }
+        }
+
+    }
+
     var metaName: String? {
-        return userMetadata["name"] as? String
+        return userMetadata[UserMetadata.name.key] as? String
     }
 
     var metaPhone: String? {
-        return userMetadata["phone"] as? String
+        return userMetadata[UserMetadata.phone.key] as? String
     }
 
     var isMetaNameEmpty: Bool {
@@ -329,10 +345,12 @@ extension AuthenticationManager {
             return
         }
 
+        typealias metadata = A0UserProfile.UserMetadata
+
         let apiRequest = auth0.users(idToken).update(
             userMetadata: [
-                "name" : (name ?? ""),
-                "phone" : (phone ?? "")
+                metadata.name.key : (name ?? ""),
+                metadata.phone.key : (phone ?? "")
             ]
         )
 
