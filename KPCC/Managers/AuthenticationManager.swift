@@ -231,16 +231,6 @@ extension A0UserProfile {
         return userMetadata[UserMetadata.phone.key] as? String
     }
 
-    var isMetaNameEmpty: Bool {
-        let count = (metaName?.characters.count ?? 0)
-        return (count > 0)
-    }
-
-    var isMetaPhoneEmpty: Bool {
-        let count = (metaPhone?.characters.count ?? 0)
-        return (count > 0)
-    }
-
 }
 
 @objc class AuthenticationManager: NSObject {
