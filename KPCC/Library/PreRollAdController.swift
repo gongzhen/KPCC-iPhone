@@ -11,7 +11,6 @@ import UIKit
 private protocol CustomAction {
 
     var baseURL: String { get }
-    var preRollAdController: PreRollAdController? { get set }
     var queryItems: [NSURLQueryItem]? { get set }
 
     func execute()
@@ -30,7 +29,6 @@ private extension CustomAction {
 private class EloquaAction: CustomAction {
 
     var baseURL = "https://s1715082578.t.eloqua.com/e/f2"
-    var preRollAdController: PreRollAdController?
     var queryItems: [NSURLQueryItem]?
 
     lazy var authenticationManager = AuthenticationManager.sharedInstance
@@ -136,7 +134,6 @@ private extension PreRollAdController {
     func customActionForURL(url: String) -> CustomAction? {
         for var customAction in PreRollAdController.customActions {
             if let urlComponents = extractLink(baseURL: customAction.baseURL, url: url) {
-                customAction.preRollAdController = self
                 customAction.queryItems = urlComponents.queryItems
                 return customAction
             }
