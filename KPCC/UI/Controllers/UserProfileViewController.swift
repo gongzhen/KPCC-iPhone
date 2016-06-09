@@ -51,7 +51,7 @@ class UserProfileViewController: UITableViewController {
         super.viewDidAppear(animated)
 
         if let userProfile = authenticationManager.userProfile where authenticationManager.isAuthenticated {
-            if !userProfile.isMetaNameEmpty || !userProfile.isMetaPhoneEmpty {
+            if (userProfile.metaName?.isEmpty ?? true) || (userProfile.metaPhone?.isEmpty ?? true) {
                 promptForNameAndPhone()
             }
         }
@@ -63,10 +63,9 @@ class UserProfileViewController: UITableViewController {
             if let defaultAction = alertController.actions.last {
                 let name = alertController.textFields?.first?.text
                 let phone = alertController.textFields?.last?.text
-                let nameCount = (name?.characters.count ?? 0)
-                let phoneCount = (phone?.characters.count ?? 0)
-                let isPhoneNumber = (phone?.isPhoneNumber ?? false)
-                defaultAction.enabled = ((nameCount > 0) && (phoneCount > 0) && isPhoneNumber)
+                let nameEmpty = (name?.isEmpty ?? true)
+                let phoneValid = (phone?.isPhoneNumber ?? false)
+                defaultAction.enabled = (!nameEmpty && phoneValid)
             }
         }
     }
