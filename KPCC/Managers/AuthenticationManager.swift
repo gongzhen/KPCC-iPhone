@@ -108,14 +108,14 @@ extension A0UserProfile {
     lazy var theme = A0Theme.sharedInstance()
     lazy var simpleKeychain = A0SimpleKeychain(service: SimpleKeychainService)
 
-    var auth0: Auth0?
-    var lock: A0Lock?
-
     var isAuthenticated: Bool {
         return (userProfile != nil)
     }
 
-    private (set) var userProfile: A0UserProfile?
+    private(set) var auth0: Auth0?
+    private(set) var lock: A0Lock?
+
+    private(set) var userProfile: A0UserProfile?
 
     private override init() {}
 
