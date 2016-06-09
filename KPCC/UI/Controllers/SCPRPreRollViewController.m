@@ -39,7 +39,6 @@ NSString *const EloquaBaseURL = @"https://s1715082578.t.eloqua.com/e/f2";
 {
     if (! _preRollAdController) {
         _preRollAdController = PreRollAdController.new;
-        _preRollAdController.viewController = self;
     }
     return _preRollAdController;
 }
