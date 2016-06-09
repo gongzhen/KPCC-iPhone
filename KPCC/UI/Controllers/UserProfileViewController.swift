@@ -177,24 +177,22 @@ private extension UserProfileViewController {
             preferredStyle: .Alert
         )
         alertController.addTextFieldWithConfigurationHandler {
-            [ weak self ] textField in
-            guard let _self = self else { return }
+            textField in
             textField.placeholder = "First and Last Name"
-            textField.text = _self.authenticationManager.userProfile?.metadataName
+            textField.text = self.authenticationManager.userProfile?.metadataName
             textField.addTarget(
                 self,
-                action: #selector(_self.textFieldEditingChanged),
+                action: #selector(self.textFieldEditingChanged),
                 forControlEvents: .EditingChanged
             )
         }
         alertController.addTextFieldWithConfigurationHandler {
-            [ weak self ] textField in
-            guard let _self = self else { return }
+            textField in
             textField.placeholder = "Phone Number"
-            textField.text = _self.authenticationManager.userProfile?.metadataPhone
+            textField.text = self.authenticationManager.userProfile?.metadataPhone
             textField.addTarget(
                 self,
-                action: #selector(_self.textFieldEditingChanged),
+                action: #selector(self.textFieldEditingChanged),
                 forControlEvents: .EditingChanged
             )
         }
