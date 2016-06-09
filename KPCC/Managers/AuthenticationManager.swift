@@ -239,7 +239,7 @@ extension A0UserProfile {
 
 }
 
-@objc class AuthenticationManager: NSObject {
+class AuthenticationManager: NSObject {
 
     lazy var theme = A0Theme.sharedInstance()
     lazy var simpleKeychain = A0SimpleKeychain(service: SimpleKeychainService)
