@@ -258,11 +258,18 @@ extension AuthenticationManager {
 extension AuthenticationManager {
 
     func initialize(clientId clientId: String, domain: String) {
+
         auth0 = Auth0(domain: domain)
         lock = A0Lock(clientId: clientId, domain: domain)
-        if let profile = simpleKeychain.profile, _ = simpleKeychain.idToken, _ = simpleKeychain.refreshToken {
+
+        let profile = simpleKeychain.profile
+        let idToken = simpleKeychain.idToken
+        let refreshToken = simpleKeychain.refreshToken
+
+        if let profile = profile, _ = idToken, _ = refreshToken {
             userProfile = profile
         }
+
     }
 
     func newLockViewController(completion: ((Bool) -> Void)) -> A0LockViewController? {
