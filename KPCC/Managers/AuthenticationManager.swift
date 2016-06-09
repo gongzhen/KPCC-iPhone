@@ -266,13 +266,14 @@ extension AuthenticationManager {
     private static let _sharedInstance = AuthenticationManager()
 
     static func validateUserProfileAlertController(alertController: UIAlertController) {
+        let name = alertController.textFields?.first?.text
+        let phone = alertController.textFields?.last?.text
+        let nameEmpty = (name?.isEmpty ?? true)
+        let phoneValid = (phone?.isPhoneNumber ?? false)
+        let enabled = (!nameEmpty && phoneValid)
         for action in alertController.actions {
             if action.style == .Default {
-                let name = alertController.textFields?.first?.text
-                let phone = alertController.textFields?.last?.text
-                let nameEmpty = (name?.isEmpty ?? true)
-                let phoneValid = (phone?.isPhoneNumber ?? false)
-                action.enabled = (!nameEmpty && phoneValid)
+                action.enabled = enabled
                 break
             }
         }
