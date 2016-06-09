@@ -177,6 +177,8 @@ private extension UserProfileViewController {
 
     func promptForNameAndPhone() {
 
+        let userProfile = authenticationManager.userProfile
+
         let alertController = UIAlertController(
             title: "One More Thing",
             message: "If you ever win a contest or drawing, we'll need to contact you quickly.",
@@ -186,7 +188,7 @@ private extension UserProfileViewController {
         alertController.addTextFieldWithConfigurationHandler {
             textField in
             textField.placeholder = "First and Last Name"
-            textField.text = self.authenticationManager.userProfile?.metadataName
+            textField.text = userProfile?.metadataName
             textField.addTarget(
                 self,
                 action: #selector(self.textFieldEditingChanged),
@@ -197,7 +199,7 @@ private extension UserProfileViewController {
         alertController.addTextFieldWithConfigurationHandler {
             textField in
             textField.placeholder = "Phone Number"
-            textField.text = self.authenticationManager.userProfile?.metadataPhone
+            textField.text = userProfile?.metadataPhone
             textField.addTarget(
                 self,
                 action: #selector(self.textFieldEditingChanged),
