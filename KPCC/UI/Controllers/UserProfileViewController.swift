@@ -56,12 +56,15 @@ extension UserProfileViewController {
 
     func textFieldEditingChanged(sender: AnyObject) {
         if let alertController = presentedViewController as? UIAlertController {
-            if let defaultAction = alertController.actions.last {
-                let name = alertController.textFields?.first?.text
-                let phone = alertController.textFields?.last?.text
-                let nameEmpty = (name?.isEmpty ?? true)
-                let phoneValid = (phone?.isPhoneNumber ?? false)
-                defaultAction.enabled = (!nameEmpty && phoneValid)
+            for action in alertController.actions {
+                if action.style == .Default {
+                    let name = alertController.textFields?.first?.text
+                    let phone = alertController.textFields?.last?.text
+                    let nameEmpty = (name?.isEmpty ?? true)
+                    let phoneValid = (phone?.isPhoneNumber ?? false)
+                    action.enabled = (!nameEmpty && phoneValid)
+                    break
+                }
             }
         }
     }
