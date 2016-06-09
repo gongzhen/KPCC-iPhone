@@ -13,6 +13,10 @@ class UserProfileViewController: UITableViewController {
 
     lazy var authenticationManager = AuthenticationManager.sharedInstance
 
+}
+
+extension UserProfileViewController {
+
     override func viewDidLoad() {
 
         super.viewDidLoad()
@@ -42,6 +46,10 @@ class UserProfileViewController: UITableViewController {
         }
 
     }
+
+}
+
+extension UserProfileViewController {
 
     func textFieldEditingChanged(sender: AnyObject) {
         if let alertController = presentedViewController as? UIAlertController {
@@ -95,6 +103,10 @@ class UserProfileViewController: UITableViewController {
         presentViewController(alertController, animated: true, completion: nil)
     }
 
+}
+
+extension UserProfileViewController {
+
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         return 1
     }
@@ -128,7 +140,11 @@ class UserProfileViewController: UITableViewController {
         return cell
     }
 
-    private func updateUI() {
+}
+
+private extension UserProfileViewController {
+
+    func updateUI() {
         if authenticationManager.isAuthenticated {
             navigationItem.rightBarButtonItem = UIBarButtonItem(
                 title: "Log Out",
@@ -148,7 +164,7 @@ class UserProfileViewController: UITableViewController {
         tableView.reloadData()
     }
 
-    private func promptForNameAndPhone() {
+    func promptForNameAndPhone() {
         let alertController = UIAlertController(
             title: "One More Thing",
             message: "If you ever win a contest or drawing, we'll need to contact you quickly.",
