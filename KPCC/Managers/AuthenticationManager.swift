@@ -105,8 +105,6 @@ extension A0UserProfile {
 
 @objc class AuthenticationManager: NSObject {
 
-    static let sharedInstance = AuthenticationManager()
-
     lazy var theme = A0Theme.sharedInstance()
     lazy var simpleKeychain = A0SimpleKeychain(service: SimpleKeychainService)
 
@@ -120,6 +118,16 @@ extension A0UserProfile {
     private (set) var userProfile: A0UserProfile?
 
     private override init() {}
+
+}
+
+extension AuthenticationManager {
+
+    static var sharedInstance: AuthenticationManager {
+        return _sharedInstance
+    }
+
+    private static let _sharedInstance = AuthenticationManager()
 
 }
 
