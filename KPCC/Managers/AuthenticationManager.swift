@@ -223,11 +223,11 @@ extension A0UserProfile {
 
     }
 
-    var metaName: String? {
+    var metadataName: String? {
         return userMetadata[UserMetadata.name.key] as? String
     }
 
-    var metaPhone: String? {
+    var metadataPhone: String? {
         return userMetadata[UserMetadata.phone.key] as? String
     }
 

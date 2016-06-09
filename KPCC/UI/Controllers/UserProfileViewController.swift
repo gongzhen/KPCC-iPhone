@@ -51,7 +51,7 @@ class UserProfileViewController: UITableViewController {
         super.viewDidAppear(animated)
 
         if let userProfile = authenticationManager.userProfile where authenticationManager.isAuthenticated {
-            if (userProfile.metaName?.isEmpty ?? true) || (userProfile.metaPhone?.isEmpty ?? true) {
+            if (userProfile.metadataName?.isEmpty ?? true) || (userProfile.metadataPhone?.isEmpty ?? true) {
                 promptForNameAndPhone()
             }
         }
@@ -127,10 +127,10 @@ class UserProfileViewController: UITableViewController {
                 cell.detailTextLabel?.text = userProfile.email
             case 1:
                 cell.textLabel?.text = "Name"
-                cell.detailTextLabel?.text = userProfile.metaName
+                cell.detailTextLabel?.text = userProfile.metadataName
             case 2:
                 cell.textLabel?.text = "Phone"
-                cell.detailTextLabel?.text = userProfile.metaPhone
+                cell.detailTextLabel?.text = userProfile.metadataPhone
             default:
                 cell.textLabel?.text = nil
                 cell.detailTextLabel?.text = nil
@@ -173,7 +173,7 @@ class UserProfileViewController: UITableViewController {
             [ weak self ] textField in
             guard let _self = self else { return }
             textField.placeholder = "First and Last Name"
-            textField.text = _self.authenticationManager.userProfile?.metaName
+            textField.text = _self.authenticationManager.userProfile?.metadataName
             textField.addTarget(
                 self,
                 action: #selector(_self.textFieldEditingChanged),
@@ -184,7 +184,7 @@ class UserProfileViewController: UITableViewController {
             [ weak self ] textField in
             guard let _self = self else { return }
             textField.placeholder = "Phone Number"
-            textField.text = _self.authenticationManager.userProfile?.metaPhone
+            textField.text = _self.authenticationManager.userProfile?.metadataPhone
             textField.addTarget(
                 self,
                 action: #selector(_self.textFieldEditingChanged),
