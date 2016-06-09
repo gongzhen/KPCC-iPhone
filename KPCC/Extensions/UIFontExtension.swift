@@ -6,7 +6,7 @@
 //  Copyright © 2016 Southern California Public Radio. All rights reserved.
 //
 
-@objc enum FreightSansPro: UInt {
+enum FreightSansPro: UInt {
 
     case Light
     case LightItalic
