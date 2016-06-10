@@ -82,6 +82,16 @@ extension PreRollAdController {
 
 extension PreRollAdController {
 
+    static var sharedInstance: PreRollAdController {
+        return _sharedInstance
+    }
+
+    private static let _sharedInstance = PreRollAdController()
+    
+}
+
+extension PreRollAdController {
+
     func openURL(url: String) {
         if let customAction = customActionForURL(url) {
             customAction.execute()

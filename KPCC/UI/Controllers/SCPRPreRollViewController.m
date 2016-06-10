@@ -27,19 +27,9 @@
 
 @property (nonatomic) NSTimer *timer;
 
-@property (strong, nonatomic) PreRollAdController *preRollAdController;
-
 @end
 
 @implementation SCPRPreRollViewController
-
-- (PreRollAdController *)preRollAdController
-{
-    if (! _preRollAdController) {
-        _preRollAdController = PreRollAdController.new;
-    }
-    return _preRollAdController;
-}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -200,7 +190,7 @@
 - (void)openClickThroughUrl {
     NSString *url = self.audioAd.clickthroughUrl;
     if ( url && !SEQ(@"",url) ) {
-        [self.preRollAdController openURL:url];
+        [PreRollAdController.sharedInstance openURL:url];
     }
 }
 
