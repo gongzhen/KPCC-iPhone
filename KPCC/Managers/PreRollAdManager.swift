@@ -8,46 +8,97 @@
 
 import UIKit
 
-private protocol CustomAction {
+private class CustomAction {
 
-    var baseURL: String { get }
-    var queryItems: [NSURLQueryItem]? { get set }
+    var baseURL: String
 
-    func execute()
+    private var queryItems: [NSURLQueryItem]?
 
-}
+    private func execute() {}
 
-private extension CustomAction {
+    init(baseURL: String) {
+        self.baseURL = baseURL
+    }
 
-    func presentViewController(viewControllerToPresent: UIViewController) {
-        let rootViewController = UIApplication.sharedApplication().keyWindow?.rootViewController
-        rootViewController?.presentViewController(viewControllerToPresent, animated: true, completion: nil)
+    func resumeDataTask(URL URL: String, method: String, data: [String: String]? = nil, completion: (Bool) -> Void) {
+        guard let URL = NSURL(string: URL) else { return }
+        let request = NSMutableURLRequest(URL: URL, HTTPMethod: method)
+        if let data = data {
+            request.setHTTPBodyWithDictionary(data)
+            request.addValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
+            request.addValue(String(request.HTTPBody?.length), forHTTPHeaderField: "Content-Length")
+        }
+        var backgroundTask = BackgroundTask("CustomAction.resumeDataTask(URL:method:data:completion:")
+        let task = NSURLSession.sharedSession().dataTaskWithRequest(request) {
+            _, response, _ in
+            if let response = response as? NSHTTPURLResponse {
+                completion(response.statusCode == 200)
+            }
+            else {
+                completion(false)
+            }
+            backgroundTask?.end()
+        }
+        task.resume()
     }
 
 }
 
 private class EloquaAction: CustomAction {
 
-    var baseURL = "https://s1715082578.t.eloqua.com/e/f2"
-    var queryItems: [NSURLQueryItem]?
-
     lazy var authenticationManager = AuthenticationManager.sharedInstance
 
-    func execute() {
+    init() {
+        super.init(baseURL: "https://s1715082578.t.eloqua.com/e/f2")
+    }
+
+    private override func execute() {
         if authenticationManager.isAuthenticated {
-            let alertController = UIAlertController(
-                title: "All set!",
-                message: "You've been entered to win.",
-                preferredStyle: .Alert
-            )
-            alertController.addAction(
-                UIAlertAction(
-                    title: "Hey, thanks!",
-                    style: .Default,
-                    handler: nil
+            if let email = authenticationManager.userProfile?.email {
+                var data = [ "emailAddress": email ]
+                if let queryItems = queryItems {
+                    for queryItem in queryItems {
+                        if let value = queryItem.value {
+                            data[queryItem.name] = value
+                        }
+                    }
+                }
+                resumeDataTask(URL: baseURL, method: "POST", data: data) {
+                    [ weak self ] _ in
+                    guard let _self = self else { return }
+                    let alertController = UIAlertController(
+                        title: "All set!",
+                        message: "You've been entered to win.",
+                        preferredStyle: .Alert
+                    )
+                    alertController.addAction(
+                        UIAlertAction(
+                            title: "Hey, thanks!",
+                            style: .Default,
+                            handler: nil
+                        )
+                    )
+                    Dispatch.async {
+                        _self.presentAlertController(alertController)
+                    }
+                }
+
+            }
+            else {
+                let alertController = UIAlertController(
+                    title: "Error",
+                    message: "An unexpected error occurred.",
+                    preferredStyle: .Alert
                 )
-            )
-            presentViewController(alertController)
+                alertController.addAction(
+                    UIAlertAction(
+                        title: "OK",
+                        style: .Default,
+                        handler: nil
+                    )
+                )
+                presentAlertController(alertController)
+            }
         }
         else {
             let alertController = UIAlertController(
@@ -62,32 +113,29 @@ private class EloquaAction: CustomAction {
                     handler: nil
                 )
             )
-            presentViewController(alertController)
+            presentAlertController(alertController)
         }
+    }
+
+    private func presentAlertController(alertController: UIAlertController, animated: Bool = true) {
+        let rootViewController = UIApplication.sharedApplication().delegate?.window??.rootViewController
+        rootViewController?.presentViewController(alertController, animated: animated, completion: nil)
     }
 
 }
 
 class PreRollAdManager: NSObject {
 
-}
-
-extension PreRollAdManager {
-
-    private static let customActions: [CustomAction] = {
-        return [ EloquaAction() ]
-    }()
-
-}
-
-extension PreRollAdManager {
-
     static var sharedInstance: PreRollAdManager {
         return _sharedInstance
     }
 
     private static let _sharedInstance = PreRollAdManager()
-    
+
+    private static let customActions: [CustomAction] = {
+        return [ EloquaAction() ]
+    }()
+
 }
 
 extension PreRollAdManager {
@@ -106,7 +154,7 @@ extension PreRollAdManager {
 private extension PreRollAdManager {
 
     func customActionForURL(url: String) -> CustomAction? {
-        for var customAction in PreRollAdManager.customActions {
+        for customAction in PreRollAdManager.customActions {
             if let urlComponents = extractLink(baseURL: customAction.baseURL, url: url) {
                 customAction.queryItems = urlComponents.queryItems
                 return customAction
