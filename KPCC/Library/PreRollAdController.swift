@@ -33,33 +33,21 @@ private class EloquaAction: CustomAction {
 
     lazy var authenticationManager = AuthenticationManager.sharedInstance
 
-    @objc func textFieldEditingChanged(sender: AnyObject) {
-        if let textField = sender as? UITextField, alertController = textField.alertController {
-            AuthenticationManager.validateUserProfileAlertController(alertController)
-        }
-    }
-
     func execute() {
         if authenticationManager.isAuthenticated {
-            let userProfileComplete = (authenticationManager.userProfile?.isComplete ?? false)
-            if userProfileComplete {
-                let alertController = UIAlertController(
-                    title: "All set!",
-                    message: "You've been entered to win.",
-                    preferredStyle: .Alert
+            let alertController = UIAlertController(
+                title: "All set!",
+                message: "You've been entered to win.",
+                preferredStyle: .Alert
+            )
+            alertController.addAction(
+                UIAlertAction(
+                    title: "Hey, thanks!",
+                    style: .Default,
+                    handler: nil
                 )
-                alertController.addAction(
-                    UIAlertAction(
-                        title: "Hey, thanks!",
-                        style: .Default,
-                        handler: nil
-                    )
-                )
-                presentViewController(alertController)
-            }
-            else {
-                presentUserProfileAlertController()
-            }
+            )
+            presentViewController(alertController)
         }
         else {
             let alertController = UIAlertController(
@@ -76,30 +64,6 @@ private class EloquaAction: CustomAction {
             )
             presentViewController(alertController)
         }
-    }
-
-    private func presentUserProfileAlertController() {
-        let action = #selector(textFieldEditingChanged)
-        let alertController = authenticationManager.newUserProfileAlertController(target: self, action: action) {
-            [ weak self ] success in
-            guard let _self = self else { return }
-            if success {
-                let alertController = UIAlertController(
-                    title: "All set!",
-                    message: "You've been entered to win.",
-                    preferredStyle: .Alert
-                )
-                alertController.addAction(
-                    UIAlertAction(
-                        title: "Hey, thanks!",
-                        style: .Default,
-                        handler: nil
-                    )
-                )
-                _self.presentViewController(alertController)
-            }
-        }
-        presentViewController(alertController)
     }
 
 }

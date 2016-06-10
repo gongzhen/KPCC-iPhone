@@ -6,7 +6,6 @@
 //  Copyright © 2016 Southern California Public Radio. All rights reserved.
 //
 
-import Auth0
 import Lock
 import SimpleKeychain
 
@@ -205,40 +204,6 @@ extension A0Theme {
 
 }
 
-extension A0UserProfile {
-
-    enum UserMetadata {
-
-        case name
-        case phone
-
-        var key: String {
-            switch self {
-            case .name:
-                return "name"
-            case .phone:
-                return "phone"
-            }
-        }
-
-    }
-
-    var isComplete: Bool {
-        let nameEmpty = (metadataName?.isEmpty ?? true)
-        let phoneEmpty = (metadataPhone?.isEmpty ?? true)
-        return !nameEmpty && !phoneEmpty
-    }
-
-    var metadataName: String? {
-        return userMetadata[UserMetadata.name.key] as? String
-    }
-
-    var metadataPhone: String? {
-        return userMetadata[UserMetadata.phone.key] as? String
-    }
-
-}
-
 class AuthenticationManager: NSObject {
 
     lazy var theme = A0Theme.sharedInstance()
@@ -248,9 +213,7 @@ class AuthenticationManager: NSObject {
         return (userProfile != nil)
     }
 
-    private(set) var auth0: Auth0?
     private(set) var lock: A0Lock?
-
     private(set) var userProfile: A0UserProfile?
 
     private override init() {}
@@ -265,27 +228,12 @@ extension AuthenticationManager {
 
     private static let _sharedInstance = AuthenticationManager()
 
-    static func validateUserProfileAlertController(alertController: UIAlertController) {
-        let name = alertController.textFields?.first?.text
-        let phone = alertController.textFields?.last?.text
-        let nameEmpty = (name?.isEmpty ?? true)
-        let phoneValid = (phone?.isPhoneNumber ?? false)
-        let enabled = (!nameEmpty && phoneValid)
-        for action in alertController.actions {
-            if action.style == .Default {
-                action.enabled = enabled
-                break
-            }
-        }
-    }
-
 }
 
 extension AuthenticationManager {
 
     func initialize(clientId clientId: String, domain: String) {
 
-        auth0 = Auth0(domain: domain)
         lock = A0Lock(clientId: clientId, domain: domain)
 
         let profile = simpleKeychain.profile
@@ -298,8 +246,25 @@ extension AuthenticationManager {
 
     }
 
+    func newSignUpViewController(completion: ((Bool) -> Void)) -> A0LockSignUpViewController? {
+        if let signUpVC = lock?.newSignUpViewController() {
+            signUpVC.onAuthenticationBlock = {
+                [ weak self ] profile, token in
+                guard let _self = self, profile = profile, token = token else {
+                    completion(false)
+                    return
+                }
+                _self.set(profile: profile, token: token)
+                completion(true)
+            }
+            return signUpVC
+        }
+        return nil
+    }
+
     func newLockViewController(completion: ((Bool) -> Void)) -> A0LockViewController? {
         if let lockVC = lock?.newLockViewController() {
+            lockVC.disableSignUp = true
             lockVC.onAuthenticationBlock = {
                 [ weak self ] profile, token in
                 guard let _self = self, profile = profile, token = token else {
@@ -312,59 +277,6 @@ extension AuthenticationManager {
             return lockVC
         }
         return nil
-    }
-
-    func newUserProfileAlertController(target target: AnyObject?, action: Selector, completion: ((Bool) -> Void)) -> UIAlertController {
-
-        let alertController = UIAlertController(
-            title: "One More Thing",
-            message: "If you ever win a contest or drawing, we'll need to contact you quickly.",
-            preferredStyle: .Alert
-        )
-
-        alertController.addTextFieldWithConfigurationHandler {
-            textField in
-            textField.placeholder = "First and Last Name"
-            textField.text = self.userProfile?.metadataName
-            textField.addTarget(target, action: action, forControlEvents: .EditingChanged)
-        }
-
-        alertController.addTextFieldWithConfigurationHandler {
-            textField in
-            textField.placeholder = "Phone Number"
-            textField.text = self.userProfile?.metadataPhone
-            textField.addTarget(target, action: action, forControlEvents: .EditingChanged)
-        }
-
-        alertController.addAction(
-            UIAlertAction(
-                title: "Cancel",
-                style: .Cancel,
-                handler: nil
-            )
-        )
-
-        alertController.addAction(
-            UIAlertAction(
-                title: "Submit",
-                style: .Default,
-                handler: {
-                    [ weak self ] _ in
-                    guard let _self = self else { return }
-                    let name = alertController.textFields?.first?.text
-                    let phone = alertController.textFields?.last?.text
-                    _self.updateUserProfile(name: name, phone: phone) {
-                        success in
-                        completion(success)
-                    }
-                }
-            )
-        )
-
-        alertController.actions.last?.enabled = false
-
-        return alertController
-
     }
 
     func fetchNewIdToken(completion: ((Bool) -> Void)) {
@@ -395,70 +307,6 @@ extension AuthenticationManager {
                     return
                 }
                 _self.reset()
-                completion(false)
-            }
-        )
-
-    }
-
-    func updateUserProfile(name name: String?, phone: String?, completion: ((Bool) -> Void)) {
-
-        guard let auth0 = auth0, idToken = simpleKeychain.idToken else {
-            completion(false)
-            return
-        }
-
-        typealias metadata = A0UserProfile.UserMetadata
-
-        let apiRequest = auth0.users(idToken).update(
-            userMetadata: [
-                metadata.name.key : (name ?? ""),
-                metadata.phone.key : (phone ?? "")
-            ]
-        )
-
-        apiRequest.responseJSON {
-            [ weak self ] _, payload in
-            let success = (payload != nil)
-            guard let _self = self else {
-                completion(success)
-                return
-            }
-            if success {
-                _self.fetchUserProfile {
-                    _ in
-                    completion(success)
-                }
-            }
-            else {
-                completion(success)
-            }
-        }
-
-    }
-
-    func fetchUserProfile(completion: ((Bool) -> Void)) {
-
-        guard let lock = lock, idToken = simpleKeychain.idToken else {
-            completion(false)
-            return
-        }
-
-        let apiClient = lock.apiClient()
-
-        apiClient.fetchUserProfileWithIdToken(
-            idToken,
-            success: {
-                [ weak self ] profile in
-                guard let _self = self else {
-                    completion(false)
-                    return
-                }
-                _self.set(profile: profile)
-                completion(true)
-            },
-            failure: {
-                _ in
                 completion(false)
             }
         )
