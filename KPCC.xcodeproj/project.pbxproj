@@ -318,6 +318,7 @@
 		8B8657C01D026E30004F3251 /* Lock.strings in Resources */ = {isa = PBXBuildFile; fileRef = 8B8657BF1D026E30004F3251 /* Lock.strings */; };
 		8B8B85AD1D0B3ADC00FA1D57 /* PreRollAdManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B8B85AC1D0B3ADC00FA1D57 /* PreRollAdManager.swift */; };
 		8B8B85AF1D0B3E0300FA1D57 /* NSMutableURLRequestExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B8B85AE1D0B3E0300FA1D57 /* NSMutableURLRequestExtension.swift */; };
+		8B8B85B11D0B496A00FA1D57 /* BackgroundTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B8B85B01D0B496A00FA1D57 /* BackgroundTask.swift */; };
 		8B8E640B1D090DB500228251 /* UITableViewExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B8E640A1D090DB500228251 /* UITableViewExtension.swift */; };
 		8BB306FC1D0A5AEF00532ADC /* SegmentedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BB306FB1D0A5AEF00532ADC /* SegmentedViewController.swift */; };
 		8BB4B72A1D0657A100A621BA /* UserProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BB4B7281D0657A100A621BA /* UserProfileViewController.swift */; };
@@ -735,6 +736,7 @@
 		8B8657BF1D026E30004F3251 /* Lock.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = Lock.strings; sourceTree = "<group>"; };
 		8B8B85AC1D0B3ADC00FA1D57 /* PreRollAdManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PreRollAdManager.swift; path = Managers/PreRollAdManager.swift; sourceTree = "<group>"; };
 		8B8B85AE1D0B3E0300FA1D57 /* NSMutableURLRequestExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSMutableURLRequestExtension.swift; sourceTree = "<group>"; };
+		8B8B85B01D0B496A00FA1D57 /* BackgroundTask.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BackgroundTask.swift; sourceTree = "<group>"; };
 		8B8E640A1D090DB500228251 /* UITableViewExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UITableViewExtension.swift; sourceTree = "<group>"; };
 		8BB306FB1D0A5AEF00532ADC /* SegmentedViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SegmentedViewController.swift; sourceTree = "<group>"; };
 		8BB4B7281D0657A100A621BA /* UserProfileViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserProfileViewController.swift; sourceTree = "<group>"; };
@@ -1486,6 +1488,7 @@
 		8BECD94B1D07E250008CFC51 /* Library */ = {
 			isa = PBXGroup;
 			children = (
+				8B8B85B01D0B496A00FA1D57 /* BackgroundTask.swift */,
 				8BECD94C1D07E250008CFC51 /* ComparableFunctions.swift */,
 				8BECD9551D07E3D4008CFC51 /* Dispatch.swift */,
 				8BB306FB1D0A5AEF00532ADC /* SegmentedViewController.swift */,
@@ -2075,6 +2078,7 @@
 				7695FD15195E299000F63DE9 /* SCPRNavigationBar.m in Sources */,
 				760EA9961953724E009B504E /* ContentManager.m in Sources */,
 				769B907E19C1186E00E812C7 /* DesignManager.m in Sources */,
+				8B8B85B11D0B496A00FA1D57 /* BackgroundTask.swift in Sources */,
 				8B8E640B1D090DB500228251 /* UITableViewExtension.swift in Sources */,
 				259E45051A1D2CF700F5CD65 /* SCPRTextCalloutViewController.m in Sources */,
 				7617729B195B646300F69EFC /* Utils.m in Sources */,
