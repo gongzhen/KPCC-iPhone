@@ -31,4 +31,14 @@ extension String {
         return (matches.first?.phoneNumber == self)
     }
 
+    var URLPathEncodedString: String {
+        let allowedCharacters = NSCharacterSet.URLPathAllowedCharacterSet()
+        return stringByAddingPercentEncodingWithAllowedCharacters(allowedCharacters)!
+    }
+
+    var URLQueryEncodedString: String {
+        let allowedCharacters = NSCharacterSet.URLQueryAllowedCharacterSet()
+        return stringByAddingPercentEncodingWithAllowedCharacters(allowedCharacters)!
+    }
+
 }
