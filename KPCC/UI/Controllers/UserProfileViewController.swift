@@ -186,6 +186,7 @@ private extension UserProfileViewController {
 
             let navigationController = UINavigationController(rootViewController: segmentedVC)
 
+            navigationController.navigationBar.barStyle = .Default
             navigationController.navigationBar.translucent = false
             navigationController.navigationBar.barTintColor = segmentedVC.view.backgroundColor
 

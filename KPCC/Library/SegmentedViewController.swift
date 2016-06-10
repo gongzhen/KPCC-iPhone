@@ -65,6 +65,7 @@ class SegmentedViewController: UIViewController {
     private(set) var selectedViewController: UIViewController? {
         didSet {
             if selectedViewController !== oldValue {
+                setNeedsStatusBarAppearanceUpdate()
                 updateNavigationItemAttributes()
             }
         }
@@ -76,6 +77,10 @@ class SegmentedViewController: UIViewController {
 }
 
 extension SegmentedViewController {
+
+    override func childViewControllerForStatusBarStyle() -> UIViewController? {
+        return selectedViewController
+    }
 
     override func viewDidLoad() {
 
