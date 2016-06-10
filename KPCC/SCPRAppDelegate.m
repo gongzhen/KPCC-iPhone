@@ -47,6 +47,7 @@ NSString *const kPushChannel = @"listenLive";
     // Initialize the window
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     self.window.backgroundColor = [UIColor blackColor];
+    self.window.tintColor = [UIColor colorWithRed:49.0/255.0 green:171.0/255.0 blue:212.0/255.0 alpha:1.0];
     
     // Launch our root view controller
     SCPRNavigationController *navigationController = [[UIStoryboard storyboardWithName:@"Storyboard" bundle:nil] instantiateInitialViewController];
