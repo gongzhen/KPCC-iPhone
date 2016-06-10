@@ -25,6 +25,19 @@ extension UserProfileViewController {
 
         navigationItem.title = "Profile"
 
+        let button = UIButton(type: .System)
+
+        button.frame = CGRect(x: 0.0, y: 0.0, width: tableView.frame.width, height: 48.0)
+        button.backgroundColor = UIColor(white: 0.95, alpha: 1.0)
+
+        button.addTarget(
+            self,
+            action: #selector(toggleAuthenticationButtonTapped),
+            forControlEvents: .TouchUpInside
+        )
+
+        tableView.tableFooterView = button
+
     }
 
     override func viewWillAppear(animated: Bool) {
@@ -58,49 +71,12 @@ extension UserProfileViewController {
         }
     }
 
-    func logInTapped(sender: AnyObject) {
-        let lockVC = authenticationManager.newLockViewController() {
-            [ weak self ] _ in
-            guard let _self = self else { return }
-            _self.dismissViewControllerAnimated(true, completion: nil)
-        }
-        if let lockVC = lockVC {
-            lockVC.closable = true
-            presentViewController(lockVC, animated: true, completion: nil)
-        }
+    func toggleAuthenticationButtonTapped(sender: AnyObject) {
+        authenticationManager.isAuthenticated ? logOut() : logIn()
     }
 
-    func logOutTapped(sender: AnyObject) {
-
-        let alertController = UIAlertController(
-            title: nil,
-            message: nil,
-            preferredStyle: .ActionSheet
-        )
-
-        alertController.addAction(
-            UIAlertAction(
-                title: "Log Out",
-                style: .Destructive,
-                handler: {
-                    [ weak self ] _ in
-                    guard let _self = self else { return }
-                    _self.authenticationManager.reset()
-                    _self.updateUI()
-                }
-            )
-        )
-
-        alertController.addAction(
-            UIAlertAction(
-                title: "Cancel",
-                style: .Cancel,
-                handler: nil
-            )
-        )
-
-        presentViewController(alertController, animated: true, completion: nil)
-
+    func editButtonTapped(sender: AnyObject) {
+        presentUserProfileAlertController()
     }
 
 }
@@ -112,7 +88,7 @@ extension UserProfileViewController {
     }
 
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 3
+        return authenticationManager.isAuthenticated ? 3 : 0
     }
 
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
@@ -146,22 +122,68 @@ private extension UserProfileViewController {
 
     func updateUI() {
         if authenticationManager.isAuthenticated {
+            if let button = tableView.tableFooterView as? UIButton {
+                button.setTitle("Log Out", forState: .Normal)
+            }
             navigationItem.rightBarButtonItem = UIBarButtonItem(
-                title: "Log Out",
+                title: "Edit",
                 style: .Plain,
                 target: self,
-                action: #selector(logOutTapped)
+                action: #selector(editButtonTapped)
             )
         }
         else {
-            navigationItem.rightBarButtonItem = UIBarButtonItem(
-                title: "Log In",
-                style: .Plain,
-                target: self,
-                action: #selector(logInTapped)
-            )
+            if let button = tableView.tableFooterView as? UIButton {
+                button.setTitle("Log In", forState: .Normal)
+            }
+            navigationItem.rightBarButtonItem = nil
         }
         tableView.reloadData()
+    }
+
+    func logIn() {
+        let lockVC = authenticationManager.newLockViewController() {
+            [ weak self ] _ in
+            guard let _self = self else { return }
+            _self.dismissViewControllerAnimated(true, completion: nil)
+        }
+        if let lockVC = lockVC {
+            lockVC.closable = true
+            presentViewController(lockVC, animated: true, completion: nil)
+        }
+    }
+
+    func logOut() {
+
+        let alertController = UIAlertController(
+            title: nil,
+            message: nil,
+            preferredStyle: .ActionSheet
+        )
+
+        alertController.addAction(
+            UIAlertAction(
+                title: "Log Out",
+                style: .Destructive,
+                handler: {
+                    [ weak self ] _ in
+                    guard let _self = self else { return }
+                    _self.authenticationManager.reset()
+                    _self.updateUI()
+                }
+            )
+        )
+
+        alertController.addAction(
+            UIAlertAction(
+                title: "Cancel",
+                style: .Cancel,
+                handler: nil
+            )
+        )
+
+        presentViewController(alertController, animated: true, completion: nil)
+
     }
 
     func presentUserProfileAlertController() {
