@@ -318,6 +318,7 @@
 		8B8657C01D026E30004F3251 /* Lock.strings in Resources */ = {isa = PBXBuildFile; fileRef = 8B8657BF1D026E30004F3251 /* Lock.strings */; };
 		8B8E640B1D090DB500228251 /* UITableViewExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B8E640A1D090DB500228251 /* UITableViewExtension.swift */; };
 		8BB306FA1D0A2CF000532ADC /* UITextFieldExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BB306F91D0A2CF000532ADC /* UITextFieldExtension.swift */; };
+		8BB306FC1D0A5AEF00532ADC /* SegmentedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BB306FB1D0A5AEF00532ADC /* SegmentedViewController.swift */; };
 		8BB4B72A1D0657A100A621BA /* UserProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BB4B7281D0657A100A621BA /* UserProfileViewController.swift */; };
 		8BB4B72B1D0657A100A621BA /* UserProfileViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8BB4B7291D0657A100A621BA /* UserProfileViewController.xib */; };
 		8BD6E6711D09BDD10074F85D /* PreRollAdController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BD6E6701D09BDD10074F85D /* PreRollAdController.swift */; };
@@ -734,6 +735,7 @@
 		8B8657BF1D026E30004F3251 /* Lock.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = Lock.strings; sourceTree = "<group>"; };
 		8B8E640A1D090DB500228251 /* UITableViewExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UITableViewExtension.swift; sourceTree = "<group>"; };
 		8BB306F91D0A2CF000532ADC /* UITextFieldExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UITextFieldExtension.swift; sourceTree = "<group>"; };
+		8BB306FB1D0A5AEF00532ADC /* SegmentedViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SegmentedViewController.swift; sourceTree = "<group>"; };
 		8BB4B7281D0657A100A621BA /* UserProfileViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserProfileViewController.swift; sourceTree = "<group>"; };
 		8BB4B7291D0657A100A621BA /* UserProfileViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = UserProfileViewController.xib; sourceTree = "<group>"; };
 		8BD6E6701D09BDD10074F85D /* PreRollAdController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreRollAdController.swift; sourceTree = "<group>"; };
@@ -1486,6 +1488,7 @@
 				8BECD94C1D07E250008CFC51 /* ComparableFunctions.swift */,
 				8BECD9551D07E3D4008CFC51 /* Dispatch.swift */,
 				8BD6E6701D09BDD10074F85D /* PreRollAdController.swift */,
+				8BB306FB1D0A5AEF00532ADC /* SegmentedViewController.swift */,
 			);
 			path = Library;
 			sourceTree = "<group>";
@@ -2059,6 +2062,7 @@
 				52CC6D6619D110E300C67322 /* SCPRProgramsListViewController.m in Sources */,
 				07EB395E1B9723ED005A8DDB /* AudioPlayer.swift in Sources */,
 				258E239F1A13FA84009F8F97 /* DataModel.xcdatamodeld in Sources */,
+				8BB306FC1D0A5AEF00532ADC /* SegmentedViewController.swift in Sources */,
 				5257E9CC19E34A550055733F /* SCPRSlideInTransition.m in Sources */,
 				8BECD9531D07E257008CFC51 /* UIColorExtension.swift in Sources */,
 				52CC6D5E19D0DC7100C67322 /* Segment.m in Sources */,
