@@ -2,10 +2,6 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>Auth0ClientId</key>
-	<string>ievRk7JzaNKynSpvQT96rssYJKt2RzWA</string>
-	<key>Auth0Domain</key>
-	<string>kpcc.auth0.com</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
@@ -41,7 +37,7 @@
 			<string>auth0</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>a0ievRk7JzaNKynSpvQT96rssYJKt2RzWA</string>
+				<string>a0mgxnOFrBAZoHjFBDKaM7RqGTUGTDCphO</string>
 			</array>
 		</dict>
 	</array>
@@ -172,6 +168,6 @@
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
-	<false/>
+	<true/>
 </dict>
 </plist>

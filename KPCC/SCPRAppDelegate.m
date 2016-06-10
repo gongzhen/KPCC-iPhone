@@ -15,6 +15,7 @@
 #import "UXmanager.h"
 #import "AnalyticsManager.h"
 #import "SCPRXFSViewController.h"
+#import <Lock/Lock.h>
 
 NSString *const kPushChannel = @"listenLive";
 
@@ -24,6 +25,13 @@ NSString *const kPushChannel = @"listenLive";
 
     NSDictionary *globalConfig = [Utils globalConfig];
     
+    [A0Theme.sharedInstance registerTheme:[A0Theme KPCCThemeWithBundle:NSBundle.mainBundle]];
+
+    AuthenticationManager *authenticationManager = AuthenticationManager.sharedInstance;
+    [authenticationManager initializeWithClientId:globalConfig[@"Auth0"][@"ClientId"]
+                                           domain:globalConfig[@"Auth0"][@"Domain"]];
+    [authenticationManager.lock applicationLaunchedWithOptions:launchOptions];
+
     [[AnalyticsManager shared] setup];
 
     [Parse setApplicationId:globalConfig[@"Parse"][@"ApplicationId"]
@@ -39,6 +47,7 @@ NSString *const kPushChannel = @"listenLive";
     // Initialize the window
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     self.window.backgroundColor = [UIColor blackColor];
+    self.window.tintColor = [UIColor colorWithRed:49.0/255.0 green:171.0/255.0 blue:212.0/255.0 alpha:1.0];
     
     // Launch our root view controller
     SCPRNavigationController *navigationController = [[UIStoryboard storyboardWithName:@"Storyboard" bundle:nil] instantiateInitialViewController];
@@ -56,10 +65,10 @@ NSString *const kPushChannel = @"listenLive";
     navigationController.navigationBarHidden = YES;
 
     // Fetch initial list of Programs from SCPRV4 and store in CoreData for later usage.
-    [[NetworkManager shared] fetchAllProgramInformation:^(id returnedObject) {
+    [[NetworkManager shared] fetchAllProgramInformation:^(id object) {
         
-        //NSAssert([returnedObject isKindOfClass:[NSArray class]],@"Expecting an Array Here...");
-        NSArray *content = (NSArray*)returnedObject;
+        //NSAssert([object isKindOfClass:[NSArray class]],@"Expecting an Array Here...");
+        NSArray *content = (NSArray*)object;
         if ([content count] == 0) {
             return;
         }
@@ -167,7 +176,7 @@ NSString *const kPushChannel = @"listenLive";
 }
 
 - (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation {
-    BOOL success = NO;
+    BOOL success = [AuthenticationManager.sharedInstance.lock handleURL:url sourceApplication:sourceApplication];
 #ifdef RELEASE
     if (! success) {
         success = [[FBSDKApplicationDelegate sharedInstance] application:application

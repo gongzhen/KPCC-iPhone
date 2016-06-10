@@ -148,11 +148,11 @@ typedef NS_ENUM(NSUInteger, StreamStatus) {
 
 - (void)recalibrateAfterScrub;
 
-- (void)forwardSeekLiveWithType:(NSInteger)type completion:(CompletionBlock)completion;
-- (void)forwardSeekThirtySecondsWithCompletion:(CompletionBlock)completion;
-- (void)backwardSeekThirtySecondsWithCompletion:(CompletionBlock)completion;
-- (void)seekToDate:(NSDate*)date completion:(CompletionBlock)completion;
-- (void)intervalSeekWithTimeInterval:(NSTimeInterval)interval completion:(CompletionBlock)completion;
+- (void)forwardSeekLiveWithType:(NSInteger)type completion:(Block)completion;
+- (void)forwardSeekThirtySecondsWithCompletion:(Block)completion;
+- (void)backwardSeekThirtySecondsWithCompletion:(Block)completion;
+- (void)seekToDate:(NSDate*)date completion:(Block)completion;
+- (void)intervalSeekWithTimeInterval:(NSTimeInterval)interval completion:(Block)completion;
 
 - (void)backwardSeekToBeginningOfProgram;
 
@@ -165,7 +165,7 @@ typedef NS_ENUM(NSUInteger, StreamStatus) {
 - (BOOL)isPlayingAudio;
 - (BOOL)isActiveForAudioMode:(AudioMode)mode;
 
-- (void)loadXfsStreamUrlWithCompletion:(CompletionBlock)completion;
+- (void)loadXfsStreamUrlWithCompletion:(Block)completion;
 
 - (NSString*)avPlayerSessionString;
 

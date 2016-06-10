@@ -54,7 +54,7 @@ static const NSString *ItemStatusContext;
     return singleton;
 }
 
-- (void)loadXfsStreamUrlWithCompletion:(CompletionBlock)completion {
+- (void)loadXfsStreamUrlWithCompletion:(Block)completion {
     
     PFQuery *settingsQuery = [PFQuery queryWithClassName:@"iPhoneSettings"];
     [settingsQuery whereKey:@"settingName"
@@ -265,7 +265,7 @@ static const NSString *ItemStatusContext;
     }
 }
 
-- (void)forwardSeekLiveWithType:(NSInteger)type completion:(CompletionBlock)completion {
+- (void)forwardSeekLiveWithType:(NSInteger)type completion:(Block)completion {
     if (!self.audioPlayer) {
         [self buildStreamer:nil];
     }
@@ -283,14 +283,14 @@ static const NSString *ItemStatusContext;
     }];
 }
 
-- (void)seekToDate:(NSDate *)date completion:(CompletionBlock)completion {
+- (void)seekToDate:(NSDate *)date completion:(Block)completion {
     
     NSDate *now = [[SessionManager shared] vNow];
     [self intervalSeekWithTimeInterval:(-1.0f*[now timeIntervalSinceDate:date]) completion:completion];
     
 }
 
-- (void)intervalSeekWithTimeInterval:(NSTimeInterval)interval completion:(CompletionBlock)completion {
+- (void)intervalSeekWithTimeInterval:(NSTimeInterval)interval completion:(Block)completion {
     [self.audioPlayer seekByInterval:interval completion:^(BOOL finished) {
         if (completion) {
             completion();
@@ -298,7 +298,7 @@ static const NSString *ItemStatusContext;
     }];
 }
 
-- (void)forwardSeekThirtySecondsWithCompletion:(CompletionBlock)completion {
+- (void)forwardSeekThirtySecondsWithCompletion:(Block)completion {
     NSTimeInterval forward = 30.0f;
     [self intervalSeekWithTimeInterval:forward completion:^{
         [[AnalyticsManager shared] trackSeekUsageWithType:ScrubbingTypeFwd30];
@@ -308,7 +308,7 @@ static const NSString *ItemStatusContext;
     }];
 }
 
-- (void)backwardSeekThirtySecondsWithCompletion:(CompletionBlock)completion {
+- (void)backwardSeekThirtySecondsWithCompletion:(Block)completion {
     NSTimeInterval backward = -30.0f;
     [self intervalSeekWithTimeInterval:backward completion:^{
         [[AnalyticsManager shared] trackSeekUsageWithType:ScrubbingTypeBack30];
@@ -318,12 +318,12 @@ static const NSString *ItemStatusContext;
     }];
 }
 
-- (void)forwardSeekFifteenSecondsWithCompletion:(CompletionBlock)completion {
+- (void)forwardSeekFifteenSecondsWithCompletion:(Block)completion {
     NSTimeInterval backward = 15.0f;
     [self intervalSeekWithTimeInterval:backward completion:completion];
 }
 
-- (void)backwardSeekFifteenSecondsWithCompletion:(CompletionBlock)completion {
+- (void)backwardSeekFifteenSecondsWithCompletion:(Block)completion {
     NSTimeInterval backward = -15.0f;
     [self intervalSeekWithTimeInterval:backward completion:completion];
 }
@@ -334,7 +334,7 @@ static const NSString *ItemStatusContext;
 
     if ( cp != nil && ![cp containsDate:vNow]) {
         NSLog(@"Scrub will force program update for vNow : %@",[NSDate stringFromDate:vNow withFormat:@"h:mm:s a"]);
-        [[SessionManager shared] fetchCurrentSchedule:^(id returnedObject) {
+        [[SessionManager shared] fetchCurrentSchedule:^(id object) {
             
         }];
     }

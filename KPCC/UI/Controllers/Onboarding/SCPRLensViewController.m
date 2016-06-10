@@ -56,7 +56,7 @@
     
 }
 
-- (void)squeezeWithAnchorView:(UIView*)anchorView completed:(CompletionBlock)completed {
+- (void)squeezeWithAnchorView:(UIView*)anchorView completed:(Block)completed {
     POPSpringAnimation *scaleAnimation = [POPSpringAnimation animationWithPropertyNamed:kPOPLayerScaleXY];
     scaleAnimation.fromValue  = [NSValue valueWithCGSize:CGSizeMake(1.0f, 1.0f)];
     scaleAnimation.toValue  = [NSValue valueWithCGSize:CGSizeMake(0.75f, 0.75f)];

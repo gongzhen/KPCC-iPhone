@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
 #import "SCPRAppDelegate.h"
-#import "SimpleCompletionBlocks.h"
+#import "BlockTypes.h"
 
 #define kBookmarkPreservationTolerance 60*60*24*90
 #define kBookmarkCleaningFrequency 60*60*24
@@ -38,6 +38,6 @@
 - (void)destroyBookmark:(Bookmark*)b;
 
 - (void)sweepBookmarks;
-- (void)sweepTaskWithCompletion:(CompletionBlockWithValue)completion;
+- (void)sweepTaskWithCompletion:(BlockWithObject)completion;
 
 @end

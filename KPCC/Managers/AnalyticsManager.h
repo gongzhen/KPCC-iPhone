@@ -12,7 +12,7 @@
 #import "NetworkManager.h"
 #import <Crashlytics/Crashlytics.h>
 #import <Fabric/Fabric.h>
-#import <Flurry-iOS-SDK/Flurry.h>
+#import <Flurry_iOS_SDK/Flurry.h>
 
 static NSInteger kMaxAllowedExceptionsPerInterval = 5;
 static NSInteger kExceptionInterval = 60;

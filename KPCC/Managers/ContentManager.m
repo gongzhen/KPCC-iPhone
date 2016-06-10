@@ -135,9 +135,9 @@ static ContentManager *singleton = nil;
         
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
             
-            [self sweepTaskWithCompletion:^(id returnedObject) {
+            [self sweepTaskWithCompletion:^(id object) {
                 
-                NSArray *expired = (NSArray*)returnedObject;
+                NSArray *expired = (NSArray*)object;
                 NSLog(@"Found %ld expired bookmarks",(long)[expired count]);
                 
                 for ( Bookmark *b in expired ) {
@@ -153,7 +153,7 @@ static ContentManager *singleton = nil;
     }
 }
 
-- (void)sweepTaskWithCompletion:(CompletionBlockWithValue)completion {
+- (void)sweepTaskWithCompletion:(BlockWithObject)completion {
     NSArray *bookmarks = [self allBookmarks];
     NSMutableArray *expired = [[bookmarks filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
         Bookmark *b = (Bookmark*)evaluatedObject;

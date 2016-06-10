@@ -9,10 +9,9 @@
 #import <Foundation/Foundation.h>
 #import <CoreTelephony/CTTelephonyNetworkInfo.h>
 #import <CoreTelephony/CTCarrier.h>
-#import <AFNetworking.h>
 #import "AudioAd.h"
 #import "Utils.h"
-#import "SimpleCompletionBlocks.h"
+#import "BlockTypes.h"
 
 #define kServerBase [[NetworkManager shared] serverBase]
 #define kFailoverThreshold 10
@@ -47,10 +46,10 @@ typedef NS_ENUM(NSInteger, NetworkHealth) {
 
 @property (nonatomic, strong) NSTimer *failTimer;
 
-- (void)fetchAllProgramInformation:(CompletionBlockWithValue)completion;
-- (void)fetchEpisodesForProgram:(NSString*)slug completion:(CompletionBlockWithValue)completion;
-- (void)fetchEditions:(CompletionBlockWithValue)completion;
-- (void)requestFromSCPRWithEndpoint:(NSString *)endpoint completion:(CompletionBlockWithValue)completion;
+- (void)fetchAllProgramInformation:(BlockWithObject)completion;
+- (void)fetchEpisodesForProgram:(NSString*)slug completion:(BlockWithObject)completion;
+- (void)fetchEditions:(BlockWithObject)completion;
+- (void)requestFromSCPRWithEndpoint:(NSString *)endpoint completion:(BlockWithObject)completion;
 - (void)fetchAudioAd:(NSString *)params completion:(void (^)(AudioAd* audioAd))completion;
 - (void)pingAudioAdUrl:(NSString*)url completion:(void (^)(BOOL success))completion;
 

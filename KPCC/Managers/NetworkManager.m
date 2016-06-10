@@ -10,6 +10,7 @@
 #import <XMLDictionary/XMLDictionary.h>
 #import "AudioManager.h"
 #import "AnalyticsManager.h"
+#import <AFNetworking/AFNetworking.h>
 
 @import AdSupport;
 
@@ -36,7 +37,7 @@ static NetworkManager *singleton = nil;
                                                         object:nil];
 }
 
-- (void)requestFromSCPRWithEndpoint:(NSString *)endpoint completion:(CompletionBlockWithValue)completion {
+- (void)requestFromSCPRWithEndpoint:(NSString *)endpoint completion:(BlockWithObject)completion {
     AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
     manager.responseSerializer = [AFJSONResponseSerializer serializerWithReadingOptions: NSJSONReadingMutableContainers];
     [manager GET:endpoint parameters:nil progress:nil success:^(NSURLSessionTask *task, id responseObject) {
@@ -90,25 +91,25 @@ static NetworkManager *singleton = nil;
 
 
 
-- (void)fetchAllProgramInformation:(CompletionBlockWithValue)completion {
+- (void)fetchAllProgramInformation:(BlockWithObject)completion {
     NSString *urlString = [NSString stringWithFormat:@"%@/programs?air_status=onair,online",kServerBase];
-    [self requestFromSCPRWithEndpoint:urlString completion:^(id returnedObject) {
-        completion(returnedObject);
+    [self requestFromSCPRWithEndpoint:urlString completion:^(id object) {
+        completion(object);
     }];
 }
 
-- (void)fetchEpisodesForProgram:(NSString *)slug completion:(CompletionBlockWithValue)completion {
+- (void)fetchEpisodesForProgram:(NSString *)slug completion:(BlockWithObject)completion {
     NSString *urlString = [NSString stringWithFormat:@"%@/episodes?program=%@&limit=8",kServerBase,slug];
     [self requestFromSCPRWithEndpoint:urlString
-                           completion:^(id returnedObject) {
-                               completion(returnedObject);
+                           completion:^(id object) {
+                               completion(object);
                            }];
 }
 
-- (void)fetchEditions:(CompletionBlockWithValue)completion {
+- (void)fetchEditions:(BlockWithObject)completion {
     NSString *urlString = [NSString stringWithFormat:@"%@/editions?limit=1",kServerBase];
-    [self requestFromSCPRWithEndpoint:urlString completion:^(id returnedObject) {
-        completion(returnedObject);
+    [self requestFromSCPRWithEndpoint:urlString completion:^(id object) {
+        completion(object);
     }];
 }
 

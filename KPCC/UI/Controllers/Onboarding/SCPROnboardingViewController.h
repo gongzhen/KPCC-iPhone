@@ -13,7 +13,7 @@
 #import "SCPRAppDelegate.h"
 #import "SCPRTextCalloutViewController.h"
 #import "SCPRButton.h"
-#import "SimpleCompletionBlocks.h"
+#import "BlockTypes.h"
 
 @interface SCPROnboardingViewController : UIViewController
 
@@ -73,7 +73,7 @@
 
 - (void)prepare;
 - (void)revealLensWithOrigin:(CGPoint)origin;
-- (void)revealBrandingWithCompletion:(CompletionBlock)completed;
+- (void)revealBrandingWithCompletion:(Block)completed;
 - (void)revealNotificationsPrompt;
 - (void)collapseNotificationsPrompt;
 - (void)hideLens;
