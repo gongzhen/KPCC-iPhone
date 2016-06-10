@@ -121,10 +121,8 @@ extension UserProfileViewController {
 private extension UserProfileViewController {
 
     func updateUI() {
+
         if authenticationManager.isAuthenticated {
-            if let button = tableView.tableFooterView as? UIButton {
-                button.setTitle("Log Out", forState: .Normal)
-            }
             navigationItem.rightBarButtonItem = UIBarButtonItem(
                 title: "Edit",
                 style: .Plain,
@@ -133,12 +131,16 @@ private extension UserProfileViewController {
             )
         }
         else {
-            if let button = tableView.tableFooterView as? UIButton {
-                button.setTitle("Log In", forState: .Normal)
-            }
             navigationItem.rightBarButtonItem = nil
         }
+
+        if let button = tableView.tableFooterView as? UIButton {
+            let title = (authenticationManager.isAuthenticated ? "Log Out" : "Log In")
+            button.setTitle(title, forState: .Normal)
+        }
+
         tableView.reloadData()
+
     }
 
     func logIn() {
