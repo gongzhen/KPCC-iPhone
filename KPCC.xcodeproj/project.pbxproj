@@ -316,11 +316,11 @@
 		76EF5E8A193E8D6B00568A9D /* Storyboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 76EF5E89193E8D6B00568A9D /* Storyboard.storyboard */; };
 		8B46CC361D06326800B853C9 /* AuthenticationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B46CC351D06326800B853C9 /* AuthenticationManager.swift */; };
 		8B8657C01D026E30004F3251 /* Lock.strings in Resources */ = {isa = PBXBuildFile; fileRef = 8B8657BF1D026E30004F3251 /* Lock.strings */; };
+		8B8B85AD1D0B3ADC00FA1D57 /* PreRollAdManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B8B85AC1D0B3ADC00FA1D57 /* PreRollAdManager.swift */; };
 		8B8E640B1D090DB500228251 /* UITableViewExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B8E640A1D090DB500228251 /* UITableViewExtension.swift */; };
 		8BB306FC1D0A5AEF00532ADC /* SegmentedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BB306FB1D0A5AEF00532ADC /* SegmentedViewController.swift */; };
 		8BB4B72A1D0657A100A621BA /* UserProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BB4B7281D0657A100A621BA /* UserProfileViewController.swift */; };
 		8BB4B72B1D0657A100A621BA /* UserProfileViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8BB4B7291D0657A100A621BA /* UserProfileViewController.xib */; };
-		8BD6E6711D09BDD10074F85D /* PreRollAdController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BD6E6701D09BDD10074F85D /* PreRollAdController.swift */; };
 		8BECD94D1D07E250008CFC51 /* ComparableFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BECD94C1D07E250008CFC51 /* ComparableFunctions.swift */; };
 		8BECD9521D07E257008CFC51 /* StringExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BECD94F1D07E257008CFC51 /* StringExtension.swift */; };
 		8BECD9531D07E257008CFC51 /* UIColorExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BECD9501D07E257008CFC51 /* UIColorExtension.swift */; };
@@ -732,11 +732,11 @@
 		76EF5E89193E8D6B00568A9D /* Storyboard.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Storyboard.storyboard; sourceTree = "<group>"; };
 		8B46CC351D06326800B853C9 /* AuthenticationManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AuthenticationManager.swift; path = Managers/AuthenticationManager.swift; sourceTree = "<group>"; };
 		8B8657BF1D026E30004F3251 /* Lock.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = Lock.strings; sourceTree = "<group>"; };
+		8B8B85AC1D0B3ADC00FA1D57 /* PreRollAdManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PreRollAdManager.swift; path = Managers/PreRollAdManager.swift; sourceTree = "<group>"; };
 		8B8E640A1D090DB500228251 /* UITableViewExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UITableViewExtension.swift; sourceTree = "<group>"; };
 		8BB306FB1D0A5AEF00532ADC /* SegmentedViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SegmentedViewController.swift; sourceTree = "<group>"; };
 		8BB4B7281D0657A100A621BA /* UserProfileViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserProfileViewController.swift; sourceTree = "<group>"; };
 		8BB4B7291D0657A100A621BA /* UserProfileViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = UserProfileViewController.xib; sourceTree = "<group>"; };
-		8BD6E6701D09BDD10074F85D /* PreRollAdController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreRollAdController.swift; sourceTree = "<group>"; };
 		8BE520321C93B57800048AAD /* BlockTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BlockTypes.h; sourceTree = "<group>"; };
 		8BECD94C1D07E250008CFC51 /* ComparableFunctions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ComparableFunctions.swift; sourceTree = "<group>"; };
 		8BECD94F1D07E257008CFC51 /* StringExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StringExtension.swift; sourceTree = "<group>"; };
@@ -1465,6 +1465,7 @@
 				07EB39631B989A09005A8DDB /* NowPlayingManager.swift */,
 				07EB39661B9A3D84005A8DDB /* SReachability.swift */,
 				8B46CC351D06326800B853C9 /* AuthenticationManager.swift */,
+				8B8B85AC1D0B3ADC00FA1D57 /* PreRollAdManager.swift */,
 			);
 			name = Managers;
 			sourceTree = "<group>";
@@ -1485,7 +1486,6 @@
 			children = (
 				8BECD94C1D07E250008CFC51 /* ComparableFunctions.swift */,
 				8BECD9551D07E3D4008CFC51 /* Dispatch.swift */,
-				8BD6E6701D09BDD10074F85D /* PreRollAdController.swift */,
 				8BB306FB1D0A5AEF00532ADC /* SegmentedViewController.swift */,
 			);
 			path = Library;
@@ -2007,6 +2007,7 @@
 				25B25BAD1B1D093D00ABE8B4 /* SCPRPledgePINViewController.m in Sources */,
 				2594B53F1A30F8410013B93A /* SCPRKeyboardToolbar.m in Sources */,
 				25BBCD7D1A892DA30015071E /* SCPRScrubberViewController.m in Sources */,
+				8B8B85AD1D0B3ADC00FA1D57 /* PreRollAdManager.swift in Sources */,
 				2537D8BD1A8BD7B700481CF8 /* SCPRTouchableScrubberView.m in Sources */,
 				25BBCD771A892D730015071E /* SCPRScrubbingUIViewController.m in Sources */,
 				25F2BC7E1A3B9B4D00108F73 /* SCPRGenericAvatarViewController.m in Sources */,
@@ -2014,7 +2015,6 @@
 				5248858E19CBA180005F59CC /* EpisodeAudio.m in Sources */,
 				07EB39641B989A09005A8DDB /* NowPlayingManager.swift in Sources */,
 				523E86D019C8A292006FC366 /* SCPRProgramDetailViewController.m in Sources */,
-				8BD6E6711D09BDD10074F85D /* PreRollAdController.swift in Sources */,
 				258FC47E1A01915E00282D59 /* UIColor+UICustom.m in Sources */,
 				258BD3B11A0C0FFF00E7560F /* SCPRProgressViewController.m in Sources */,
 				52CF917A1A0032C7007BCFA8 /* QueueManager.m in Sources */,

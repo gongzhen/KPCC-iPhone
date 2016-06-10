@@ -1,5 +1,5 @@
 //
-//  PreRollAdController.swift
+//  PreRollAdManager.swift
 //  KPCC
 //
 //  Created by Fuller, Christopher on 6/9/16.
@@ -68,11 +68,11 @@ private class EloquaAction: CustomAction {
 
 }
 
-class PreRollAdController: NSObject {
+class PreRollAdManager: NSObject {
 
 }
 
-extension PreRollAdController {
+extension PreRollAdManager {
 
     private static let customActions: [CustomAction] = {
         return [ EloquaAction() ]
@@ -80,17 +80,17 @@ extension PreRollAdController {
 
 }
 
-extension PreRollAdController {
+extension PreRollAdManager {
 
-    static var sharedInstance: PreRollAdController {
+    static var sharedInstance: PreRollAdManager {
         return _sharedInstance
     }
 
-    private static let _sharedInstance = PreRollAdController()
+    private static let _sharedInstance = PreRollAdManager()
     
 }
 
-extension PreRollAdController {
+extension PreRollAdManager {
 
     func openURL(url: String) {
         if let customAction = customActionForURL(url) {
@@ -103,10 +103,10 @@ extension PreRollAdController {
 
 }
 
-private extension PreRollAdController {
+private extension PreRollAdManager {
 
     func customActionForURL(url: String) -> CustomAction? {
-        for var customAction in PreRollAdController.customActions {
+        for var customAction in PreRollAdManager.customActions {
             if let urlComponents = extractLink(baseURL: customAction.baseURL, url: url) {
                 customAction.queryItems = urlComponents.queryItems
                 return customAction

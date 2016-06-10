@@ -190,7 +190,7 @@
 - (void)openClickThroughUrl {
     NSString *url = self.audioAd.clickthroughUrl;
     if ( url && !SEQ(@"",url) ) {
-        [PreRollAdController.sharedInstance openURL:url];
+        [PreRollAdManager.sharedInstance openURL:url];
     }
 }
 
