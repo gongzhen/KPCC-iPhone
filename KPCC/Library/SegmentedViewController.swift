@@ -16,8 +16,8 @@ struct NavigationItemAttributes: OptionSetType {
     static let Title              = NavigationItemAttributes(rawValue: 1 << 0)
     static let TitleView          = NavigationItemAttributes(rawValue: 1 << 1)
     static let BackBarButtonItem  = NavigationItemAttributes(rawValue: 1 << 2)
-    static let LeftBarButtonItem  = NavigationItemAttributes(rawValue: 1 << 2)
-    static let RightBarButtonItem = NavigationItemAttributes(rawValue: 1 << 2)
+    static let LeftBarButtonItem  = NavigationItemAttributes(rawValue: 1 << 3)
+    static let RightBarButtonItem = NavigationItemAttributes(rawValue: 1 << 4)
 
     static let All: NavigationItemAttributes = [
         .Title,
