@@ -63,6 +63,9 @@ class SegmentedViewController: UIViewController {
     }
 
     private(set) var selectedViewController: UIViewController? {
+        willSet {
+            cacheNavigationItemAttributes()
+        }
         didSet {
             if selectedViewController !== oldValue {
                 setNeedsStatusBarAppearanceUpdate()
@@ -73,6 +76,66 @@ class SegmentedViewController: UIViewController {
 
     private var segmentedControl = UISegmentedControl(items: nil)
     private var containerView = UIView(frame: CGRectZero)
+
+    private var cachedTitle: String?
+    private var cachedTitleView: UIView?
+    private var cachedBackBarButtonItem: UIBarButtonItem?
+    private var cachedLeftBarButtonItem: UIBarButtonItem?
+    private var cachedRightBarButtonItem: UIBarButtonItem?
+
+    deinit {
+        stopObservingUpdateInterfaceNotification()
+    }
+
+}
+
+extension SegmentedViewController: UpdateInterfaceNotification {
+
+    func updateInterface(notification: NSNotification) {
+
+        let margin: CGFloat = 4.0
+
+        let segmentedControlFrame = CGRect(
+            x: margin,
+            y: margin,
+            width: view.frame.width - (margin * 2.0),
+            height: segmentedControl.frame.height
+        )
+
+        segmentedControl.hidden = (viewControllers.count < 2)
+
+        let containerViewFrame: CGRect
+
+        if segmentedControl.hidden {
+            containerViewFrame = view.bounds
+        }
+        else {
+            let y = (segmentedControl.frame.height + (margin * 2.0))
+            containerViewFrame = CGRect(
+                x: 0.0,
+                y: y,
+                width: view.frame.width,
+                height: view.frame.height - y
+            )
+        }
+
+        let segmentedControlFrameChanged = (segmentedControlFrame != segmentedControl.frame)
+        let containerViewFrameChanged = (containerViewFrame != containerView.frame)
+
+        if segmentedControlFrameChanged || containerViewFrameChanged {
+
+            segmentedControl.removeFromSuperview()
+            containerView.removeFromSuperview()
+
+            segmentedControl.frame = segmentedControlFrame
+            containerView.frame = containerViewFrame
+
+            view.addSubview(segmentedControl)
+            view.addSubview(containerView)
+
+        }
+
+    }
 
 }
 
@@ -96,35 +159,15 @@ extension SegmentedViewController {
             forControlEvents: .ValueChanged
         )
 
+        startObservingUpdateInterfaceNotification()
+
     }
 
     override func viewWillAppear(animated: Bool) {
 
         super.viewWillAppear(animated)
 
-        segmentedControl.removeFromSuperview()
-        containerView.removeFromSuperview()
-
-        let margin: CGFloat = 4.0
-
-        segmentedControl.frame = CGRect(
-            x: margin,
-            y: margin,
-            width: view.frame.width - (margin * 2.0),
-            height: segmentedControl.frame.height
-        )
-
-        let y = (segmentedControl.frame.height + (margin * 2.0))
-
-        containerView.frame = CGRect(
-            x: 0.0,
-            y: y,
-            width: view.frame.width,
-            height: view.frame.height - y
-        )
-
-        view.addSubview(segmentedControl)
-        view.addSubview(containerView)
+        setNeedsUpdateInterface()
 
     }
 
@@ -142,6 +185,7 @@ extension SegmentedViewController {
         segmentedControl.insertSegmentWithTitle(title, atIndex: index, animated: animated)
         viewController.willMoveToParentViewController(self)
         addChildViewController(viewController)
+        setNeedsUpdateInterface()
     }
 
     func removeViewController(viewController: UIViewController, animated: Bool) {
@@ -150,6 +194,7 @@ extension SegmentedViewController {
             viewController.willMoveToParentViewController(nil)
             viewController.removeFromParentViewController()
             segmentedControl.removeSegmentAtIndex(index, animated: animated)
+            setNeedsUpdateInterface()
         }
     }
 
@@ -177,74 +222,88 @@ private extension SegmentedViewController {
             selectedVC.view.frame = containerView.bounds
             containerView.addSubview(selectedVC.view)
         }
+    }
+
+    func cacheNavigationItemAttributes() {
+
+        let selectedItem = selectedViewController?.navigationItem
+
+        if navigationItem.title != selectedItem?.title {
+            cachedTitle = navigationItem.title
+        }
+
+        if navigationItem.titleView != selectedItem?.titleView {
+            cachedTitleView = navigationItem.titleView
+        }
+
+        if navigationItem.backBarButtonItem != selectedItem?.backBarButtonItem {
+            cachedBackBarButtonItem = navigationItem.backBarButtonItem
+        }
+
+        if navigationItem.leftBarButtonItem != selectedItem?.leftBarButtonItem {
+            cachedLeftBarButtonItem = navigationItem.leftBarButtonItem
+        }
+
+        if navigationItem.rightBarButtonItem != selectedItem?.rightBarButtonItem {
+            cachedRightBarButtonItem = navigationItem.rightBarButtonItem
+        }
 
     }
 
     func updateNavigationItemAttributes() {
 
-        if navigationItemAttributes().contains(.Title) {
-            if let selectedVC = selectedViewController {
-                if let segmentVC = selectedVC as? SegmentViewController {
-                    if segmentVC.navigationItemAttributes().contains(.Title) {
-                        navigationItem.title = selectedVC.navigationItem.title
-                    }
-                }
+        var title: String? = cachedTitle
+        var titleView: UIView? = cachedTitleView
+        var backBarButtonItem: UIBarButtonItem? = cachedBackBarButtonItem
+        var leftBarButtonItem: UIBarButtonItem? = cachedLeftBarButtonItem
+        var rightBarButtonItem: UIBarButtonItem? = cachedRightBarButtonItem
+
+        if let selectedVC = selectedViewController, segmentVC = selectedVC as? SegmentViewController {
+
+            let attributes = segmentVC.navigationItemAttributes()
+
+            if attributes.contains(.Title) {
+                title = selectedVC.navigationItem.title
             }
-            else {
-                navigationItem.title = nil
+
+            if attributes.contains(.TitleView) {
+                titleView = selectedVC.navigationItem.titleView
             }
+
+            if attributes.contains(.BackBarButtonItem) {
+                backBarButtonItem = selectedVC.navigationItem.backBarButtonItem
+            }
+
+            if attributes.contains(.LeftBarButtonItem) {
+                leftBarButtonItem = selectedVC.navigationItem.leftBarButtonItem
+            }
+
+            if attributes.contains(.RightBarButtonItem) {
+                rightBarButtonItem = selectedVC.navigationItem.rightBarButtonItem
+            }
+
         }
 
-        if navigationItemAttributes().contains(.TitleView) {
-            if let selectedVC = selectedViewController {
-                if let segmentVC = selectedVC as? SegmentViewController {
-                    if segmentVC.navigationItemAttributes().contains(.TitleView) {
-                        navigationItem.titleView = selectedVC.navigationItem.titleView
-                    }
-                }
-            }
-            else {
-                navigationItem.titleView = nil
-            }
+        let attributes = navigationItemAttributes()
+
+        if attributes.contains(.Title) {
+            navigationItem.title = title
         }
 
-        if navigationItemAttributes().contains(.BackBarButtonItem) {
-            if let selectedVC = selectedViewController {
-                if let segmentVC = selectedVC as? SegmentViewController {
-                    if segmentVC.navigationItemAttributes().contains(.BackBarButtonItem) {
-                        navigationItem.backBarButtonItem = selectedVC.navigationItem.backBarButtonItem
-                    }
-                }
-            }
-            else {
-                navigationItem.backBarButtonItem = nil
-            }
+        if attributes.contains(.TitleView) {
+            navigationItem.titleView = titleView
         }
 
-        if navigationItemAttributes().contains(.LeftBarButtonItem) {
-            if let selectedVC = selectedViewController {
-                if let segmentVC = selectedVC as? SegmentViewController {
-                    if segmentVC.navigationItemAttributes().contains(.LeftBarButtonItem) {
-                        navigationItem.leftBarButtonItem = selectedVC.navigationItem.leftBarButtonItem
-                    }
-                }
-            }
-            else {
-                navigationItem.leftBarButtonItem = nil
-            }
+        if attributes.contains(.BackBarButtonItem) {
+            navigationItem.backBarButtonItem = backBarButtonItem
         }
 
-        if navigationItemAttributes().contains(.RightBarButtonItem) {
-            if let selectedVC = selectedViewController {
-                if let segmentVC = selectedVC as? SegmentViewController {
-                    if segmentVC.navigationItemAttributes().contains(.RightBarButtonItem) {
-                        navigationItem.rightBarButtonItem = selectedVC.navigationItem.rightBarButtonItem
-                    }
-                }
-            }
-            else {
-                navigationItem.rightBarButtonItem = nil
-            }
+        if attributes.contains(.LeftBarButtonItem) {
+            navigationItem.leftBarButtonItem = leftBarButtonItem
+        }
+
+        if attributes.contains(.RightBarButtonItem) {
+            navigationItem.rightBarButtonItem = rightBarButtonItem
         }
 
     }
