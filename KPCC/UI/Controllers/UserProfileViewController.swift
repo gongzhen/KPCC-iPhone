@@ -47,11 +47,11 @@ extension UserProfileViewController {
 extension UserProfileViewController {
 
     func signUp(sender: AnyObject) {
-        presentAuthenticationViewControllers(initialViewControllerIndex: 0)
+        presentAuthenticationViewController(0)
     }
 
     func logIn(sender: AnyObject) {
-        presentAuthenticationViewControllers(initialViewControllerIndex: 1)
+        presentAuthenticationViewController(1)
     }
 
     func logOut(sender: AnyObject) {
@@ -152,7 +152,20 @@ private extension UserProfileViewController {
         return button
     }
 
-    func presentAuthenticationViewControllers(initialViewControllerIndex selectedSegmentIndex: Int) {
+    func presentAuthenticationViewController(index: Int) {
+
+        let navigationController: UINavigationController
+
+        if let presentedViewController = presentedViewController as? UINavigationController {
+            navigationController = presentedViewController
+        }
+        else {
+            navigationController = UINavigationController()
+        }
+
+        navigationController.navigationBar.barStyle = .Default
+        navigationController.navigationBar.translucent = false
+        navigationController.navigationBar.barTintColor = UIColor(r: 242, g: 242, b: 242)
 
         let signUpVC = authenticationManager.newSignUpViewController() {
             [ weak self ] _ in
@@ -168,29 +181,42 @@ private extension UserProfileViewController {
 
         if let signUpVC = signUpVC, lockVC = lockVC {
 
-            signUpVC.navigationItem.title = "Sign Up"
-            lockVC.navigationItem.title = "Log In"
-
-            let segmentedVC = SegmentedViewController()
-
-            segmentedVC.navigationItem.leftBarButtonItem = UIBarButtonItem(
-                title: "Close",
-                style: .Plain,
+            signUpVC.navigationItem.leftBarButtonItem = UIBarButtonItem(
+                barButtonSystemItem: .Cancel,
                 target: self,
                 action: #selector(dismissViewController)
             )
 
-            segmentedVC.view.backgroundColor = UIColor(r: 242, g: 242, b: 242)
-            segmentedVC.viewControllers = [ signUpVC, lockVC ]
-            segmentedVC.selectedSegmentIndex = selectedSegmentIndex
+            signUpVC.navigationItem.rightBarButtonItem = UIBarButtonItem(
+                title: "Log In",
+                style: .Plain,
+                target: self,
+                action: #selector(logIn)
+            )
 
-            let navigationController = UINavigationController(rootViewController: segmentedVC)
+            lockVC.navigationItem.leftBarButtonItem = UIBarButtonItem(
+                barButtonSystemItem: .Cancel,
+                target: self,
+                action: #selector(dismissViewController)
+            )
 
-            navigationController.navigationBar.barStyle = .Default
-            navigationController.navigationBar.translucent = false
-            navigationController.navigationBar.barTintColor = segmentedVC.view.backgroundColor
+            lockVC.navigationItem.rightBarButtonItem = UIBarButtonItem(
+                title: "Sign Up",
+                style: .Plain,
+                target: self,
+                action: #selector(signUp)
+            )
 
-            presentViewController(navigationController, animated: true, completion: nil)
+            if index == 0 {
+                navigationController.viewControllers = [ signUpVC ]
+            }
+            else {
+                navigationController.viewControllers = [ lockVC ]
+            }
+
+            if navigationController != presentedViewController {
+                presentViewController(navigationController, animated: true, completion: nil)
+            }
 
         }
 

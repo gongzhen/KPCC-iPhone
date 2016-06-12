@@ -319,8 +319,8 @@
 		8B8B85AD1D0B3ADC00FA1D57 /* PreRollAdManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B8B85AC1D0B3ADC00FA1D57 /* PreRollAdManager.swift */; };
 		8B8B85AF1D0B3E0300FA1D57 /* NSMutableURLRequestExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B8B85AE1D0B3E0300FA1D57 /* NSMutableURLRequestExtension.swift */; };
 		8B8B85B11D0B496A00FA1D57 /* BackgroundTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B8B85B01D0B496A00FA1D57 /* BackgroundTask.swift */; };
+		8B8B85B31D0E041700FA1D57 /* UpdateInterfaceNotification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B8B85B21D0E041700FA1D57 /* UpdateInterfaceNotification.swift */; };
 		8B8E640B1D090DB500228251 /* UITableViewExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B8E640A1D090DB500228251 /* UITableViewExtension.swift */; };
-		8BB306FC1D0A5AEF00532ADC /* SegmentedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BB306FB1D0A5AEF00532ADC /* SegmentedViewController.swift */; };
 		8BB4B72A1D0657A100A621BA /* UserProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BB4B7281D0657A100A621BA /* UserProfileViewController.swift */; };
 		8BB4B72B1D0657A100A621BA /* UserProfileViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8BB4B7291D0657A100A621BA /* UserProfileViewController.xib */; };
 		8BECD94D1D07E250008CFC51 /* ComparableFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BECD94C1D07E250008CFC51 /* ComparableFunctions.swift */; };
@@ -737,8 +737,8 @@
 		8B8B85AC1D0B3ADC00FA1D57 /* PreRollAdManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PreRollAdManager.swift; path = Managers/PreRollAdManager.swift; sourceTree = "<group>"; };
 		8B8B85AE1D0B3E0300FA1D57 /* NSMutableURLRequestExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSMutableURLRequestExtension.swift; sourceTree = "<group>"; };
 		8B8B85B01D0B496A00FA1D57 /* BackgroundTask.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BackgroundTask.swift; sourceTree = "<group>"; };
+		8B8B85B21D0E041700FA1D57 /* UpdateInterfaceNotification.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UpdateInterfaceNotification.swift; sourceTree = "<group>"; };
 		8B8E640A1D090DB500228251 /* UITableViewExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UITableViewExtension.swift; sourceTree = "<group>"; };
-		8BB306FB1D0A5AEF00532ADC /* SegmentedViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SegmentedViewController.swift; sourceTree = "<group>"; };
 		8BB4B7281D0657A100A621BA /* UserProfileViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserProfileViewController.swift; sourceTree = "<group>"; };
 		8BB4B7291D0657A100A621BA /* UserProfileViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = UserProfileViewController.xib; sourceTree = "<group>"; };
 		8BE520321C93B57800048AAD /* BlockTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BlockTypes.h; sourceTree = "<group>"; };
@@ -1491,7 +1491,7 @@
 				8B8B85B01D0B496A00FA1D57 /* BackgroundTask.swift */,
 				8BECD94C1D07E250008CFC51 /* ComparableFunctions.swift */,
 				8BECD9551D07E3D4008CFC51 /* Dispatch.swift */,
-				8BB306FB1D0A5AEF00532ADC /* SegmentedViewController.swift */,
+				8B8B85B21D0E041700FA1D57 /* UpdateInterfaceNotification.swift */,
 			);
 			path = Library;
 			sourceTree = "<group>";
@@ -2065,13 +2065,13 @@
 				52CC6D6619D110E300C67322 /* SCPRProgramsListViewController.m in Sources */,
 				07EB395E1B9723ED005A8DDB /* AudioPlayer.swift in Sources */,
 				258E239F1A13FA84009F8F97 /* DataModel.xcdatamodeld in Sources */,
-				8BB306FC1D0A5AEF00532ADC /* SegmentedViewController.swift in Sources */,
 				5257E9CC19E34A550055733F /* SCPRSlideInTransition.m in Sources */,
 				8BECD9531D07E257008CFC51 /* UIColorExtension.swift in Sources */,
 				52CC6D5E19D0DC7100C67322 /* Segment.m in Sources */,
 				25F30AF51AFAB89600F27187 /* SCPRScheduleTableViewCell.m in Sources */,
 				760EA99219521E98009B504E /* AVPlayer+Additions.m in Sources */,
 				07EB39671B9A3D84005A8DDB /* SReachability.swift in Sources */,
+				8B8B85B31D0E041700FA1D57 /* UpdateInterfaceNotification.swift in Sources */,
 				52E68B8819B919300028F8AE /* SCPRMenuButton.m in Sources */,
 				07EB39621B973200005A8DDB /* AVStatus.swift in Sources */,
 				768C064819958FDA00F829EB /* SCPRMasterViewController.m in Sources */,
