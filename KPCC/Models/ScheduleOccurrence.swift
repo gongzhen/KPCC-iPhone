@@ -92,7 +92,7 @@ import CoreData
 
     func percentageToDate(percent: Double) -> NSDate {
         let duration = self.ends_at.timeIntervalSinceReferenceDate - self.starts_at.timeIntervalSinceReferenceDate
-        let seconds: Double = duration * min(max(0.0, percent), 1.0)
+        let seconds: Double = duration * clamp(0.0, percent, 1.0)
         return self.starts_at.dateByAddingTimeInterval(seconds)
     }
 
