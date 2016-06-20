@@ -25,8 +25,10 @@ private class CustomAction {
         let request = NSMutableURLRequest(URL: URL, HTTPMethod: method)
         if let data = data {
             request.setHTTPBodyWithDictionary(data)
-            request.addValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
-            request.addValue(String(request.HTTPBody?.length), forHTTPHeaderField: "Content-Length")
+            if let length = request.HTTPBody?.length where length > 0 {
+                request.addValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
+                request.addValue(String(length), forHTTPHeaderField: "Content-Length")
+            }
         }
         var backgroundTask = BackgroundTask("CustomAction.resumeDataTask(URL:method:data:completion:")
         let task = NSURLSession.sharedSession().dataTaskWithRequest(request) {
