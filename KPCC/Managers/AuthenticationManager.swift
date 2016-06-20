@@ -254,7 +254,8 @@ extension AuthenticationManager {
                     completion(false)
                     return
                 }
-                _self.set(profile: profile, token: token)
+                _self.set(profile: profile)
+                _self.set(token: token)
                 completion(true)
             }
             return signUpVC
@@ -271,7 +272,8 @@ extension AuthenticationManager {
                     completion(false)
                     return
                 }
-                _self.set(profile: profile, token: token)
+                _self.set(profile: profile)
+                _self.set(token: token)
                 completion(true)
             }
             return lockVC
@@ -314,17 +316,13 @@ extension AuthenticationManager {
     }
 
     func reset() {
-        set(profile: nil, token: nil)
+        set(profile: nil)
+        set(token: nil)
     }
 
 }
 
 private extension AuthenticationManager {
-
-    func set(profile profile: A0UserProfile?, token: A0Token?) {
-        set(profile: profile)
-        set(token: token)
-    }
 
     func set(profile profile: A0UserProfile?) {
         userProfile = profile
