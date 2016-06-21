@@ -315,6 +315,7 @@
 		76B9A9B618EF79F6007A6D8C /* SCPRFooterView.m in Sources */ = {isa = PBXBuildFile; fileRef = 76B9A9B518EF79F6007A6D8C /* SCPRFooterView.m */; };
 		76EF5E8A193E8D6B00568A9D /* Storyboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 76EF5E89193E8D6B00568A9D /* Storyboard.storyboard */; };
 		8B084A2B1D18986F00B677A8 /* Notification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B084A2A1D18986F00B677A8 /* Notification.swift */; };
+		8B084A2D1D18BB0200B677A8 /* AuthenticationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B084A2C1D18BB0200B677A8 /* AuthenticationViewController.swift */; };
 		8B46CC361D06326800B853C9 /* AuthenticationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B46CC351D06326800B853C9 /* AuthenticationManager.swift */; };
 		8B8657C01D026E30004F3251 /* Lock.strings in Resources */ = {isa = PBXBuildFile; fileRef = 8B8657BF1D026E30004F3251 /* Lock.strings */; };
 		8B8B85AD1D0B3ADC00FA1D57 /* PreRollAdManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B8B85AC1D0B3ADC00FA1D57 /* PreRollAdManager.swift */; };
@@ -734,6 +735,7 @@
 		76B9A9B518EF79F6007A6D8C /* SCPRFooterView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SCPRFooterView.m; sourceTree = "<group>"; };
 		76EF5E89193E8D6B00568A9D /* Storyboard.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Storyboard.storyboard; sourceTree = "<group>"; };
 		8B084A2A1D18986F00B677A8 /* Notification.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Notification.swift; sourceTree = "<group>"; };
+		8B084A2C1D18BB0200B677A8 /* AuthenticationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthenticationViewController.swift; sourceTree = "<group>"; };
 		8B46CC351D06326800B853C9 /* AuthenticationManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AuthenticationManager.swift; path = Managers/AuthenticationManager.swift; sourceTree = "<group>"; };
 		8B8657BF1D026E30004F3251 /* Lock.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = Lock.strings; sourceTree = "<group>"; };
 		8B8B85AC1D0B3ADC00FA1D57 /* PreRollAdManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PreRollAdManager.swift; path = Managers/PreRollAdManager.swift; sourceTree = "<group>"; };
@@ -1208,6 +1210,7 @@
 				258BD3B01A0C0FFF00E7560F /* SCPRProgressViewController.m */,
 				8BB4B7281D0657A100A621BA /* UserProfileViewController.swift */,
 				8BB4B7291D0657A100A621BA /* UserProfileViewController.xib */,
+				8B084A2C1D18BB0200B677A8 /* AuthenticationViewController.swift */,
 			);
 			name = "View Controllers";
 			path = Controllers;
@@ -2058,6 +2061,7 @@
 				258FC47B1A018F3D00282D59 /* SCPRSpinnerViewController.m in Sources */,
 				8BECD94D1D07E250008CFC51 /* ComparableFunctions.swift in Sources */,
 				258E8E0F1A16AE0400675E68 /* SCPRFeedbackViewController.m in Sources */,
+				8B084A2D1D18BB0200B677A8 /* AuthenticationViewController.swift in Sources */,
 				259E44FE1A1D2CD300F5CD65 /* SCPROnboardingViewController.m in Sources */,
 				52D0FC2019D1FC0C009AECEE /* SCPRProgramDetailTableViewCell.m in Sources */,
 				760E3C4C194FB61B00D86D91 /* Program.m in Sources */,
