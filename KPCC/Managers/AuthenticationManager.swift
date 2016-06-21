@@ -246,9 +246,9 @@ extension AuthenticationManager {
 
     }
 
-    func newSignUpViewController(completion: ((Bool) -> Void)) -> A0LockSignUpViewController? {
-        if let signUpVC = lock?.newSignUpViewController() {
-            signUpVC.onAuthenticationBlock = {
+    func newLockSignUpViewController(completion: ((Bool) -> Void)) -> A0LockSignUpViewController? {
+        if let lockSignUpVC = lock?.newSignUpViewController() {
+            lockSignUpVC.onAuthenticationBlock = {
                 [ weak self ] profile, token in
                 guard let _self = self, profile = profile, token = token else {
                     completion(false)
@@ -258,7 +258,7 @@ extension AuthenticationManager {
                 _self.set(token: token)
                 completion(true)
             }
-            return signUpVC
+            return lockSignUpVC
         }
         return nil
     }
