@@ -67,7 +67,12 @@ extension AuthenticationViewController {
 
         super.viewDidLoad()
 
-        view.backgroundColor = A0Theme.KPCCTheme().colorForKey(A0ThemeScreenBackgroundColor)
+        let theme = A0Theme.KPCCTheme()
+
+        view.backgroundColor = theme.colorForKey(
+            A0ThemeScreenBackgroundColor,
+            defaultColor: UIColor.whiteColor()
+        )
 
         navigationBar.barStyle = .Default
         navigationBar.translucent = false
