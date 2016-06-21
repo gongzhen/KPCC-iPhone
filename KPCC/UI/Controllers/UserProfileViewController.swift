@@ -39,9 +39,15 @@ extension UserProfileViewController {
 extension UserProfileViewController {
 
     func signUp(sender: AnyObject) {
+        let authenticationViewController = AuthenticationViewController()
+        authenticationViewController.showLockSignUpViewController()
+        presentViewController(authenticationViewController, animated: true, completion: nil)
     }
 
     func logIn(sender: AnyObject) {
+        let authenticationViewController = AuthenticationViewController()
+        authenticationViewController.showLockViewController()
+        presentViewController(authenticationViewController, animated: true, completion: nil)
     }
 
     func logOut(sender: AnyObject) {
