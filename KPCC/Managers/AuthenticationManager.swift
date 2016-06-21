@@ -10,6 +10,7 @@ import Lock
 import SimpleKeychain
 
 private let SimpleKeychainService = "Auth0"
+private let ThemeIconImageName = "KPCCLogo30"
 
 extension A0SimpleKeychain {
 
@@ -164,7 +165,7 @@ extension A0Theme {
         )
 
         theme.registerImageWithName(
-            "KPCCLogo30",
+            ThemeIconImageName,
             bundle: bundle,
             forKey: A0ThemeIconImageName
         )
