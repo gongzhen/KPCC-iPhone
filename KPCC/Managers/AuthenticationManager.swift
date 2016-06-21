@@ -82,7 +82,7 @@ extension A0SimpleKeychain {
 
 extension A0Theme {
 
-    static func KPCCTheme(bundle bundle: NSBundle) -> A0Theme {
+    static func KPCCTheme(bundle bundle: NSBundle = NSBundle.mainBundle()) -> A0Theme {
 
         let theme = A0Theme()
 
