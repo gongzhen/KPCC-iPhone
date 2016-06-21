@@ -14,7 +14,7 @@ private class CustomAction {
 
     private var queryItems: [NSURLQueryItem]?
 
-    private func execute() {}
+    private func execute(presentViewControllerBlock presentViewController: (UIViewController) -> Void) {}
 
     init(baseURL: String) {
         self.baseURL = baseURL
@@ -54,7 +54,7 @@ private class EloquaAction: CustomAction {
         super.init(baseURL: "https://s1715082578.t.eloqua.com/e/f2")
     }
 
-    private override func execute() {
+    private override func execute(presentViewControllerBlock presentViewController: (UIViewController) -> Void) {
         if authenticationManager.isAuthenticated {
             if let email = authenticationManager.userProfile?.email {
                 var data = [ "emailAddress": email ]
@@ -66,8 +66,7 @@ private class EloquaAction: CustomAction {
                     }
                 }
                 resumeDataTask(URL: baseURL, method: "POST", data: data) {
-                    [ weak self ] _ in
-                    guard let _self = self else { return }
+                    _ in
                     let alertController = UIAlertController(
                         title: "All set!",
                         message: "You've been entered to win.",
@@ -81,7 +80,7 @@ private class EloquaAction: CustomAction {
                         )
                     )
                     Dispatch.async {
-                        _self.presentAlertController(alertController)
+                        presentViewController(alertController)
                     }
                 }
 
@@ -99,7 +98,7 @@ private class EloquaAction: CustomAction {
                         handler: nil
                     )
                 )
-                presentAlertController(alertController)
+                presentViewController(alertController)
             }
         }
         else {
@@ -115,13 +114,8 @@ private class EloquaAction: CustomAction {
                     handler: nil
                 )
             )
-            presentAlertController(alertController)
+            presentViewController(alertController)
         }
-    }
-
-    private func presentAlertController(alertController: UIAlertController, animated: Bool = true) {
-        let rootViewController = UIApplication.sharedApplication().delegate?.window??.rootViewController
-        rootViewController?.presentViewController(alertController, animated: animated, completion: nil)
     }
 
 }
@@ -142,9 +136,9 @@ class PreRollAdManager: NSObject {
 
 extension PreRollAdManager {
 
-    func openURL(url: String) {
+    func openURL(url: String, presentViewControllerBlock presentViewController: (UIViewController) -> Void) {
         if let customAction = customActionForURL(url) {
-            customAction.execute()
+            customAction.execute(presentViewControllerBlock: presentViewController)
         }
         else if let URL = NSURL(string: url) {
             UIApplication.sharedApplication().openURL(URL)

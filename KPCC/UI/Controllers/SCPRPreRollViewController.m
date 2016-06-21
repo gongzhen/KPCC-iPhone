@@ -14,6 +14,7 @@
 #import "SCPRSpinnerViewController.h"
 #import "UXmanager.h"
 #import "SessionManager.h"
+#import "SCPRMasterViewController.h"
 
 #define kDefaultAdPresentationTime 10.0
 
@@ -190,7 +191,12 @@
 - (void)openClickThroughUrl {
     NSString *url = self.audioAd.clickthroughUrl;
     if ( url && !SEQ(@"",url) ) {
-        [PreRollAdManager.sharedInstance openURL:url];
+        if ([self.parentViewController isKindOfClass:[SCPRMasterViewController class]]) {
+            __weak SCPRMasterViewController *masterVC = (SCPRMasterViewController *)self.parentViewController;
+            [PreRollAdManager.sharedInstance openURL:url presentViewControllerBlock:^(UIViewController *viewController) {
+                [masterVC presentViewController:viewController animated:YES completion:nil];
+            }];
+        }
     }
 }
 
