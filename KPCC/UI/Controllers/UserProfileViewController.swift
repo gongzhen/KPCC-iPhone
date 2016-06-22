@@ -12,6 +12,12 @@ class UserProfileViewController: UITableViewController {
 
     lazy var authenticationManager = AuthenticationManager.sharedInstance
 
+    private lazy var authenticationMessageViewController = AuthenticationViewController.MessageViewController(
+        heading: "Success!",
+        message: "You're logged in. Now, back to the app.",
+        buttonTitle: "Go to your profile"
+    )
+
 }
 
 extension UserProfileViewController {
@@ -40,13 +46,15 @@ extension UserProfileViewController {
 
     func signUp(sender: AnyObject) {
         let authenticationViewController = AuthenticationViewController()
-        authenticationViewController.showLockSignUpViewController()
+        authenticationViewController.defaultAuthenticationMode = .SignUp
+        authenticationViewController.messageViewController = authenticationMessageViewController
         presentViewController(authenticationViewController, animated: true, completion: nil)
     }
 
     func logIn(sender: AnyObject) {
         let authenticationViewController = AuthenticationViewController()
-        authenticationViewController.showLockViewController()
+        authenticationViewController.defaultAuthenticationMode = .LogIn
+        authenticationViewController.messageViewController = authenticationMessageViewController
         presentViewController(authenticationViewController, animated: true, completion: nil)
     }
 
