@@ -16,6 +16,7 @@
 #import "AnalyticsManager.h"
 #import "SCPRXFSViewController.h"
 #import <Lock/Lock.h>
+#import "A0FacebookAuthenticator.h"
 
 NSString *const kPushChannel = @"listenLive";
 
@@ -30,6 +31,8 @@ NSString *const kPushChannel = @"listenLive";
     AuthenticationManager *authenticationManager = AuthenticationManager.sharedInstance;
     [authenticationManager initializeWithClientId:globalConfig[@"Auth0"][@"ClientId"]
                                            domain:globalConfig[@"Auth0"][@"Domain"]];
+    A0FacebookAuthenticator *facebookAuthenticator = [A0FacebookAuthenticator newAuthenticatorWithDefaultPermissions];
+    [authenticationManager.lock registerAuthenticators:@[ facebookAuthenticator ]];
     [authenticationManager.lock applicationLaunchedWithOptions:launchOptions];
 
     [[AnalyticsManager shared] setup];
