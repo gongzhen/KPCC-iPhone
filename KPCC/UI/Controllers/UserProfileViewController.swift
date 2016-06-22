@@ -12,6 +12,12 @@ class UserProfileViewController: UITableViewController {
 
     lazy var authenticationManager = AuthenticationManager.sharedInstance
 
+    private lazy var authenticationMessageViewController = AuthenticationViewController.MessageViewController(
+        heading: "Success!",
+        message: "You're logged in. Now, back to the app.",
+        buttonTitle: "Go to your profile"
+    )
+
 }
 
 extension UserProfileViewController {
@@ -38,20 +44,18 @@ extension UserProfileViewController {
 
 extension UserProfileViewController {
 
-    func dismissViewController(sender: AnyObject) {
-        dismissViewControllerAnimated(true, completion: nil)
-    }
-
-}
-
-extension UserProfileViewController {
-
     func signUp(sender: AnyObject) {
-        presentAuthenticationViewController(0)
+        let authenticationViewController = AuthenticationViewController()
+        authenticationViewController.defaultAuthenticationMode = .SignUp
+        authenticationViewController.messageViewController = authenticationMessageViewController
+        presentViewController(authenticationViewController, animated: true, completion: nil)
     }
 
     func logIn(sender: AnyObject) {
-        presentAuthenticationViewController(1)
+        let authenticationViewController = AuthenticationViewController()
+        authenticationViewController.defaultAuthenticationMode = .LogIn
+        authenticationViewController.messageViewController = authenticationMessageViewController
+        presentViewController(authenticationViewController, animated: true, completion: nil)
     }
 
     func logOut(sender: AnyObject) {
@@ -150,76 +154,6 @@ private extension UserProfileViewController {
         button.setTitle(title, forState: .Normal)
         button.addTarget(self, action: action, forControlEvents: .TouchUpInside)
         return button
-    }
-
-    func presentAuthenticationViewController(index: Int) {
-
-        let navigationController: UINavigationController
-
-        if let presentedViewController = presentedViewController as? UINavigationController {
-            navigationController = presentedViewController
-        }
-        else {
-            navigationController = UINavigationController()
-        }
-
-        navigationController.navigationBar.barStyle = .Default
-        navigationController.navigationBar.translucent = false
-        navigationController.navigationBar.barTintColor = UIColor(r: 242, g: 242, b: 242)
-
-        let signUpVC = authenticationManager.newSignUpViewController() {
-            [ weak self ] _ in
-            guard let _self = self else { return }
-            _self.dismissViewController(_self)
-        }
-
-        let lockVC = authenticationManager.newLockViewController() {
-            [ weak self ] _ in
-            guard let _self = self else { return }
-            _self.dismissViewController(_self)
-        }
-
-        if let signUpVC = signUpVC, lockVC = lockVC {
-
-            signUpVC.navigationItem.leftBarButtonItem = UIBarButtonItem(
-                barButtonSystemItem: .Cancel,
-                target: self,
-                action: #selector(dismissViewController)
-            )
-
-            signUpVC.navigationItem.rightBarButtonItem = UIBarButtonItem(
-                title: "Log In",
-                style: .Plain,
-                target: self,
-                action: #selector(logIn)
-            )
-
-            lockVC.navigationItem.leftBarButtonItem = UIBarButtonItem(
-                barButtonSystemItem: .Cancel,
-                target: self,
-                action: #selector(dismissViewController)
-            )
-
-            lockVC.navigationItem.rightBarButtonItem = UIBarButtonItem(
-                title: "Sign Up",
-                style: .Plain,
-                target: self,
-                action: #selector(signUp)
-            )
-
-            if index == 0 {
-                navigationController.viewControllers = [ signUpVC ]
-            }
-            else {
-                navigationController.viewControllers = [ lockVC ]
-            }
-
-            if navigationController != presentedViewController {
-                presentViewController(navigationController, animated: true, completion: nil)
-            }
-
-        }
-
     }
 
 }

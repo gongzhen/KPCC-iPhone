@@ -10,6 +10,7 @@ import Lock
 import SimpleKeychain
 
 private let SimpleKeychainService = "Auth0"
+private let ThemeIconImageName = "KPCCLogo30"
 
 extension A0SimpleKeychain {
 
@@ -82,7 +83,7 @@ extension A0SimpleKeychain {
 
 extension A0Theme {
 
-    static func KPCCTheme(bundle bundle: NSBundle) -> A0Theme {
+    static func KPCCTheme(bundle bundle: NSBundle = NSBundle.mainBundle()) -> A0Theme {
 
         let theme = A0Theme()
 
@@ -164,7 +165,7 @@ extension A0Theme {
         )
 
         theme.registerImageWithName(
-            "KPCCLogo30",
+            ThemeIconImageName,
             bundle: bundle,
             forKey: A0ThemeIconImageName
         )
@@ -246,18 +247,19 @@ extension AuthenticationManager {
 
     }
 
-    func newSignUpViewController(completion: ((Bool) -> Void)) -> A0LockSignUpViewController? {
-        if let signUpVC = lock?.newSignUpViewController() {
-            signUpVC.onAuthenticationBlock = {
+    func newLockSignUpViewController(completion: ((Bool) -> Void)) -> A0LockSignUpViewController? {
+        if let lockSignUpVC = lock?.newSignUpViewController() {
+            lockSignUpVC.onAuthenticationBlock = {
                 [ weak self ] profile, token in
                 guard let _self = self, profile = profile, token = token else {
                     completion(false)
                     return
                 }
-                _self.set(profile: profile, token: token)
+                _self.set(profile: profile)
+                _self.set(token: token)
                 completion(true)
             }
-            return signUpVC
+            return lockSignUpVC
         }
         return nil
     }
@@ -271,7 +273,8 @@ extension AuthenticationManager {
                     completion(false)
                     return
                 }
-                _self.set(profile: profile, token: token)
+                _self.set(profile: profile)
+                _self.set(token: token)
                 completion(true)
             }
             return lockVC
@@ -314,17 +317,13 @@ extension AuthenticationManager {
     }
 
     func reset() {
-        set(profile: nil, token: nil)
+        set(profile: nil)
+        set(token: nil)
     }
 
 }
 
 private extension AuthenticationManager {
-
-    func set(profile profile: A0UserProfile?, token: A0Token?) {
-        set(profile: profile)
-        set(token: token)
-    }
 
     func set(profile profile: A0UserProfile?) {
         userProfile = profile

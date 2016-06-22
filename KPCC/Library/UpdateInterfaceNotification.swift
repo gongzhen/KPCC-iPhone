@@ -36,11 +36,12 @@ extension UpdateInterfaceNotification {
     }
 
     func setNeedsUpdateInterface() {
-        NSNotificationQueue.defaultQueue().enqueueNotification(
-            NSNotification(name: NeedsUpdateInterfaceNotification, object: self),
-            postingStyle: .PostASAP,
-            coalesceMask: [ .CoalescingOnName, .CoalescingOnSender ],
-            forModes: nil
+        Notification.enqueue(
+            NSNotification(
+                name: NeedsUpdateInterfaceNotification,
+                object: self
+            ),
+            postingStyle: .PostASAP
         )
     }
 
