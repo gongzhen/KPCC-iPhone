@@ -257,7 +257,6 @@
 		52EFF87819C37D350059A0E3 /* SCPRMenuCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 52EFF87719C37D350059A0E3 /* SCPRMenuCell.m */; };
 		52EFF88719C3BC020059A0E3 /* item-chevron-right.png in Resources */ = {isa = PBXBuildFile; fileRef = 52EFF88519C3BC020059A0E3 /* item-chevron-right.png */; };
 		52EFF88919C3BC020059A0E3 /* item-chevron-right@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 52EFF88619C3BC020059A0E3 /* item-chevron-right@2x.png */; };
-		67E591B6A493BD6F01AAEA90 /* libPods-KPCCTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8F1B3A3C5B1AFBBBABCC68B5 /* libPods-KPCCTests.a */; };
 		760E3C4C194FB61B00D86D91 /* Program.m in Sources */ = {isa = PBXBuildFile; fileRef = 760E3C4B194FB61B00D86D91 /* Program.m */; };
 		760EA99219521E98009B504E /* AVPlayer+Additions.m in Sources */ = {isa = PBXBuildFile; fileRef = 760EA99119521E98009B504E /* AVPlayer+Additions.m */; };
 		760EA9961953724E009B504E /* ContentManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 760EA9951953724E009B504E /* ContentManager.m */; };
@@ -335,6 +334,7 @@
 		B5F9F74B1ABCE8FD00115DB3 /* icon-stopwatch.png in Resources */ = {isa = PBXBuildFile; fileRef = B5F9F7471ABCE8FD00115DB3 /* icon-stopwatch.png */; };
 		B5F9F74C1ABCE8FD00115DB3 /* icon-stopwatch@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B5F9F7481ABCE8FD00115DB3 /* icon-stopwatch@2x.png */; };
 		F8B89D8CCF084CC24141C44C /* Pods_KPCC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5EEF9D0A5791A805E9A95672 /* Pods_KPCC.framework */; };
+		FFDF253C558CC417AA607BE4 /* Pods_KPCCTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 41B17E49DE60C14A3D32C727 /* Pods_KPCCTests.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -525,6 +525,7 @@
 		25F30AF91AFABB3E00F27187 /* SCPRScheduleHeaderViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = SCPRScheduleHeaderViewController.xib; path = "Secondary Main Screens/SCPRScheduleHeaderViewController.xib"; sourceTree = "<group>"; };
 		25F30AFC1B0A9B1800F27187 /* onboarding-schedule-swipe-left@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "onboarding-schedule-swipe-left@2x.png"; sourceTree = "<group>"; };
 		25F30AFE1B0A9B5500F27187 /* onboarding-schedule-swipe-left.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "onboarding-schedule-swipe-left.png"; sourceTree = "<group>"; };
+		41B17E49DE60C14A3D32C727 /* Pods_KPCCTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_KPCCTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		523126A419EDB78C008A47A7 /* SCPRPreRollViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCPRPreRollViewController.h; sourceTree = "<group>"; };
 		523126A519EDB78C008A47A7 /* SCPRPreRollViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SCPRPreRollViewController.m; sourceTree = "<group>"; };
 		523126A619EDB78C008A47A7 /* SCPRPreRollViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SCPRPreRollViewController.xib; sourceTree = "<group>"; };
@@ -752,7 +753,6 @@
 		8BECD9511D07E257008CFC51 /* UIFontExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIFontExtension.swift; sourceTree = "<group>"; };
 		8BECD9551D07E3D4008CFC51 /* Dispatch.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Dispatch.swift; sourceTree = "<group>"; };
 		8BECD9571D07F6C4008CFC51 /* KPCC-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "KPCC-Bridging-Header.h"; sourceTree = "<group>"; };
-		8F1B3A3C5B1AFBBBABCC68B5 /* libPods-KPCCTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-KPCCTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		915B96DFAD2801AC0915A39A /* Pods-KPCCTests.enterprise.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KPCCTests.enterprise.xcconfig"; path = "Pods/Target Support Files/Pods-KPCCTests/Pods-KPCCTests.enterprise.xcconfig"; sourceTree = "<group>"; };
 		96EC8CD04938354B2CC35DA3 /* Pods-KPCC.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KPCC.release.xcconfig"; path = "Pods/Target Support Files/Pods-KPCC/Pods-KPCC.release.xcconfig"; sourceTree = "<group>"; };
 		9F75306D7C36C5253D851045 /* Pods-KPCCTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KPCCTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-KPCCTests/Pods-KPCCTests.release.xcconfig"; sourceTree = "<group>"; };
@@ -790,7 +790,7 @@
 				76A308EE18C8FB950065D4B1 /* UIKit.framework in Frameworks */,
 				76A308ED18C8FB950065D4B1 /* Foundation.framework in Frameworks */,
 				76A308EC18C8FB950065D4B1 /* XCTest.framework in Frameworks */,
-				67E591B6A493BD6F01AAEA90 /* libPods-KPCCTests.a in Frameworks */,
+				FFDF253C558CC417AA607BE4 /* Pods_KPCCTests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1397,8 +1397,8 @@
 				2574799A1B6965F800F72AF6 /* Fabric.framework */,
 				25E553271B61A79100C45B85 /* Crashlytics.framework */,
 				76A308EB18C8FB950065D4B1 /* XCTest.framework */,
-				8F1B3A3C5B1AFBBBABCC68B5 /* libPods-KPCCTests.a */,
 				5EEF9D0A5791A805E9A95672 /* Pods_KPCC.framework */,
+				41B17E49DE60C14A3D32C727 /* Pods_KPCCTests.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
