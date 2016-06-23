@@ -322,6 +322,8 @@
 		8B8B85B11D0B496A00FA1D57 /* BackgroundTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B8B85B01D0B496A00FA1D57 /* BackgroundTask.swift */; };
 		8B8B85B31D0E041700FA1D57 /* UpdateInterfaceNotification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B8B85B21D0E041700FA1D57 /* UpdateInterfaceNotification.swift */; };
 		8B8E640B1D090DB500228251 /* UITableViewExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B8E640A1D090DB500228251 /* UITableViewExtension.swift */; };
+		8BA331571D1C819500B68ED1 /* A0GoogleAuthenticator.m in Sources */ = {isa = PBXBuildFile; fileRef = 8BA331541D1C819500B68ED1 /* A0GoogleAuthenticator.m */; };
+		8BA331581D1C819500B68ED1 /* A0GoogleProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 8BA331561D1C819500B68ED1 /* A0GoogleProvider.m */; };
 		8BB4B72A1D0657A100A621BA /* UserProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BB4B7281D0657A100A621BA /* UserProfileViewController.swift */; };
 		8BB4B72B1D0657A100A621BA /* UserProfileViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8BB4B7291D0657A100A621BA /* UserProfileViewController.xib */; };
 		8BECD94D1D07E250008CFC51 /* ComparableFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BECD94C1D07E250008CFC51 /* ComparableFunctions.swift */; };
@@ -744,6 +746,10 @@
 		8B8B85B01D0B496A00FA1D57 /* BackgroundTask.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BackgroundTask.swift; sourceTree = "<group>"; };
 		8B8B85B21D0E041700FA1D57 /* UpdateInterfaceNotification.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UpdateInterfaceNotification.swift; sourceTree = "<group>"; };
 		8B8E640A1D090DB500228251 /* UITableViewExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UITableViewExtension.swift; sourceTree = "<group>"; };
+		8BA331531D1C819500B68ED1 /* A0GoogleAuthenticator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = A0GoogleAuthenticator.h; sourceTree = "<group>"; };
+		8BA331541D1C819500B68ED1 /* A0GoogleAuthenticator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = A0GoogleAuthenticator.m; sourceTree = "<group>"; };
+		8BA331551D1C819500B68ED1 /* A0GoogleProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = A0GoogleProvider.h; sourceTree = "<group>"; };
+		8BA331561D1C819500B68ED1 /* A0GoogleProvider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = A0GoogleProvider.m; sourceTree = "<group>"; };
 		8BB4B7281D0657A100A621BA /* UserProfileViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserProfileViewController.swift; sourceTree = "<group>"; };
 		8BB4B7291D0657A100A621BA /* UserProfileViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = UserProfileViewController.xib; sourceTree = "<group>"; };
 		8BE520321C93B57800048AAD /* BlockTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BlockTypes.h; sourceTree = "<group>"; };
@@ -1368,6 +1374,7 @@
 			children = (
 				76A308CC18C8FB940065D4B1 /* KPCC */,
 				76A308F118C8FB950065D4B1 /* KPCCTests */,
+				8BA331511D1C819500B68ED1 /* LocalFrameworks */,
 				76A308C518C8FB940065D4B1 /* Frameworks */,
 				76A308C418C8FB940065D4B1 /* Products */,
 				FCF5F3C2F2FCA9D3D47E15DB /* Pods */,
@@ -1488,6 +1495,25 @@
 				7685BD57194BBCB90075BB16 /* Images */,
 			);
 			path = Assets;
+			sourceTree = "<group>";
+		};
+		8BA331511D1C819500B68ED1 /* LocalFrameworks */ = {
+			isa = PBXGroup;
+			children = (
+				8BA331521D1C819500B68ED1 /* Lock-Google */,
+			);
+			path = LocalFrameworks;
+			sourceTree = "<group>";
+		};
+		8BA331521D1C819500B68ED1 /* Lock-Google */ = {
+			isa = PBXGroup;
+			children = (
+				8BA331531D1C819500B68ED1 /* A0GoogleAuthenticator.h */,
+				8BA331541D1C819500B68ED1 /* A0GoogleAuthenticator.m */,
+				8BA331551D1C819500B68ED1 /* A0GoogleProvider.h */,
+				8BA331561D1C819500B68ED1 /* A0GoogleProvider.m */,
+			);
+			path = "Lock-Google";
 			sourceTree = "<group>";
 		};
 		8BECD94B1D07E250008CFC51 /* Library */ = {
@@ -2005,6 +2031,7 @@
 				52CF917D1A0036CA007BCFA8 /* AudioChunk.m in Sources */,
 				76349D1B18D8C74F0027C3B8 /* NetworkManager.m in Sources */,
 				254CC6A31A255A1E00560805 /* SCPRButton.m in Sources */,
+				8BA331581D1C819500B68ED1 /* A0GoogleProvider.m in Sources */,
 				25F30AFA1AFABB3E00F27187 /* SCPRScheduleHeaderViewController.m in Sources */,
 				8B46CC361D06326800B853C9 /* AuthenticationManager.swift in Sources */,
 				52D0FC1C19D1F24F009AECEE /* SCPRProgramDetailHeaderView.m in Sources */,
@@ -2028,6 +2055,7 @@
 				07EB39641B989A09005A8DDB /* NowPlayingManager.swift in Sources */,
 				523E86D019C8A292006FC366 /* SCPRProgramDetailViewController.m in Sources */,
 				258FC47E1A01915E00282D59 /* UIColor+UICustom.m in Sources */,
+				8BA331571D1C819500B68ED1 /* A0GoogleAuthenticator.m in Sources */,
 				258BD3B11A0C0FFF00E7560F /* SCPRProgressViewController.m in Sources */,
 				52CF917A1A0032C7007BCFA8 /* QueueManager.m in Sources */,
 				25E8BDB01AC0920E007B99EB /* SCPRAlarmClockViewController.m in Sources */,
