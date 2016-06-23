@@ -83,6 +83,16 @@ extension A0SimpleKeychain {
 
 extension A0Theme {
 
+    struct KPCC {
+
+        static let HeadColor = UIColor(r: 248, g: 126, b: 33)
+        static let BodyColor = UIColor(r: 108, g: 117, b: 121)
+
+        static let HeadFont = UIFont(name: FreightSansPro.Book.name, size: 27.0)
+        static let BodyFont = UIFont(name: FreightSansPro.Book.name, size: 17.0)
+
+    }
+
     static func KPCCTheme(bundle bundle: NSBundle = NSBundle.mainBundle()) -> A0Theme {
 
         let theme = A0Theme()
@@ -141,26 +151,26 @@ extension A0Theme {
             forKey: A0ThemeTextFieldIconColor
         )
 
-        if let font = UIFont(name: FreightSansPro.Book.name, size: 27.0) {
+        if let font = KPCC.HeadFont {
             theme.registerFont(font, forKey: A0ThemeTitleFont)
         }
 
         theme.registerColor(
-            UIColor(r: 248, g: 126, b: 33),
+            KPCC.HeadColor,
             forKey: A0ThemeTitleTextColor
         )
 
-        if let font = UIFont(name: FreightSansPro.Book.name, size: 17.0) {
+        if let font = KPCC.BodyFont {
             theme.registerFont(font, forKey: A0ThemeDescriptionFont)
         }
 
         theme.registerColor(
-            UIColor(r: 108, g: 117, b: 121),
+            KPCC.BodyColor,
             forKey: A0ThemeDescriptionTextColor
         )
 
         theme.registerColor(
-            UIColor(r: 242, g: 242, b: 242),
+            UIColor.whiteColor(),
             forKey: A0ThemeScreenBackgroundColor
         )
 
@@ -180,7 +190,7 @@ extension A0Theme {
         }
 
         theme.registerColor(
-            UIColor(r: 108, g: 117, b: 121),
+            KPCC.BodyColor,
             forKey: A0ThemeSeparatorTextColor
         )
 
@@ -195,7 +205,7 @@ extension A0Theme {
         )
 
         theme.registerColor(
-            UIColor(r: 242, g: 242, b: 242),
+            UIColor.whiteColor(),
             forKey: A0ThemeCredentialBoxBackgroundColor
         )
 
@@ -249,7 +259,6 @@ extension AuthenticationManager {
 
     func newLockSignUpViewController(completion: ((Bool) -> Void)) -> A0LockSignUpViewController? {
         if let lockSignUpVC = lock?.newSignUpViewController() {
-            lockSignUpVC.useWebView = true
             lockSignUpVC.onAuthenticationBlock = {
                 [ weak self ] profile, token in
                 guard let _self = self, profile = profile, token = token else {
@@ -268,7 +277,6 @@ extension AuthenticationManager {
     func newLockViewController(completion: ((Bool) -> Void)) -> A0LockViewController? {
         if let lockVC = lock?.newLockViewController() {
             lockVC.disableSignUp = true
-            lockVC.useWebView = true
             lockVC.onAuthenticationBlock = {
                 [ weak self ] profile, token in
                 guard let _self = self, profile = profile, token = token else {

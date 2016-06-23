@@ -39,17 +39,6 @@ class AuthenticationViewController: UINavigationController {
 
 extension AuthenticationViewController {
 
-    private static var backgroundColor: UIColor {
-        return A0Theme.KPCCTheme().colorForKey(
-            A0ThemeScreenBackgroundColor,
-            defaultColor: UIColor.whiteColor()
-        )
-    }
-
-}
-
-extension AuthenticationViewController {
-
     enum AuthenticationMode {
         case SignUp
         case LogIn
@@ -80,6 +69,9 @@ extension AuthenticationViewController {
 
         private let headingLabel: UILabel = {
             let headingLabel = UILabel()
+            A0Theme.KPCCTheme().configureLabel(headingLabel)
+            headingLabel.textColor = A0Theme.KPCC.HeadColor
+            headingLabel.font = A0Theme.KPCC.HeadFont
             headingLabel.numberOfLines = 0
             headingLabel.textAlignment = .Center
             return headingLabel
@@ -87,12 +79,19 @@ extension AuthenticationViewController {
 
         private let messageLabel: UILabel = {
             let messageLabel = UILabel()
+            A0Theme.KPCCTheme().configureLabel(messageLabel)
+            messageLabel.textColor = A0Theme.KPCC.BodyColor
+            messageLabel.font = A0Theme.KPCC.BodyFont
             messageLabel.numberOfLines = 0
             messageLabel.textAlignment = .Center
             return messageLabel
         }()
 
-        private let button = UIButton(type: .System)
+        private let button: UIButton = {
+            let button = UIButton(type: .Custom)
+            A0Theme.KPCCTheme().configurePrimaryButton(button)
+            return button
+        }()
 
         convenience init(heading: String, message: String, buttonTitle: String) {
             self.init()
@@ -110,7 +109,7 @@ extension AuthenticationViewController {
 
             super.viewDidLoad()
 
-            view.backgroundColor = AuthenticationViewController.backgroundColor
+            view.backgroundColor = UIColor.whiteColor()
 
             activityIndicatorView.translatesAutoresizingMaskIntoConstraints = false
             headingLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -155,7 +154,7 @@ extension AuthenticationViewController {
 
             view.addConstraints(
                 NSLayoutConstraint.constraintsWithVisualFormat(
-                    "H:|-32-[headingLabel]-32-|",
+                    "H:|-20-[headingLabel]-20-|",
                     options: [],
                     metrics: nil,
                     views: views
@@ -164,7 +163,7 @@ extension AuthenticationViewController {
 
             view.addConstraints(
                 NSLayoutConstraint.constraintsWithVisualFormat(
-                    "H:|-32-[messageLabel]-32-|",
+                    "H:|-20-[messageLabel]-20-|",
                     options: [],
                     metrics: nil,
                     views: views
@@ -173,10 +172,22 @@ extension AuthenticationViewController {
 
             view.addConstraints(
                 NSLayoutConstraint.constraintsWithVisualFormat(
-                    "H:|-32-[button]-32-|",
+                    "H:|-20-[button]-20-|",
                     options: [],
                     metrics: nil,
                     views: views
+                )
+            )
+
+            button.addConstraint(
+                NSLayoutConstraint(
+                    item: button,
+                    attribute: .Height,
+                    relatedBy: .Equal,
+                    toItem: nil,
+                    attribute: .NotAnAttribute,
+                    multiplier: 1.0,
+                    constant: 55.0
                 )
             )
 
@@ -194,7 +205,7 @@ extension AuthenticationViewController {
 
             view.addConstraints(
                 NSLayoutConstraint.constraintsWithVisualFormat(
-                    "V:[headingLabel]-[messageLabel]-[button]",
+                    "V:[headingLabel]-10-[messageLabel]-22-[button]",
                     options: [],
                     metrics: nil,
                     views: views
@@ -219,9 +230,9 @@ extension AuthenticationViewController {
 
         navigationBar.barStyle = .Default
         navigationBar.translucent = false
-        navigationBar.barTintColor = AuthenticationViewController.backgroundColor
+        navigationBar.barTintColor = UIColor.whiteColor()
 
-        view.backgroundColor = AuthenticationViewController.backgroundColor
+        view.backgroundColor = UIColor.whiteColor()
 
     }
 
