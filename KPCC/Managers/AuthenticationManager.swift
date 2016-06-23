@@ -83,6 +83,12 @@ extension A0SimpleKeychain {
 
 extension A0Theme {
 
+    struct KPCC {
+
+        static let BackgroundColor = UIColor(r: 242, g: 242, b: 242)
+
+    }
+
     static func KPCCTheme(bundle bundle: NSBundle = NSBundle.mainBundle()) -> A0Theme {
 
         let theme = A0Theme()
@@ -160,7 +166,7 @@ extension A0Theme {
         )
 
         theme.registerColor(
-            UIColor(r: 242, g: 242, b: 242),
+            KPCC.BackgroundColor,
             forKey: A0ThemeScreenBackgroundColor
         )
 
@@ -195,7 +201,7 @@ extension A0Theme {
         )
 
         theme.registerColor(
-            UIColor(r: 242, g: 242, b: 242),
+            KPCC.BackgroundColor,
             forKey: A0ThemeCredentialBoxBackgroundColor
         )
 
