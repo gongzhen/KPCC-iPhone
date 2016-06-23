@@ -39,17 +39,6 @@ class AuthenticationViewController: UINavigationController {
 
 extension AuthenticationViewController {
 
-    private static var backgroundColor: UIColor {
-        return A0Theme.KPCCTheme().colorForKey(
-            A0ThemeScreenBackgroundColor,
-            defaultColor: UIColor.whiteColor()
-        )
-    }
-
-}
-
-extension AuthenticationViewController {
-
     enum AuthenticationMode {
         case SignUp
         case LogIn
@@ -110,7 +99,7 @@ extension AuthenticationViewController {
 
             super.viewDidLoad()
 
-            view.backgroundColor = AuthenticationViewController.backgroundColor
+            view.backgroundColor = A0Theme.KPCC.BackgroundColor
 
             activityIndicatorView.translatesAutoresizingMaskIntoConstraints = false
             headingLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -219,9 +208,9 @@ extension AuthenticationViewController {
 
         navigationBar.barStyle = .Default
         navigationBar.translucent = false
-        navigationBar.barTintColor = AuthenticationViewController.backgroundColor
+        navigationBar.barTintColor = A0Theme.KPCC.BackgroundColor
 
-        view.backgroundColor = AuthenticationViewController.backgroundColor
+        view.backgroundColor = A0Theme.KPCC.BackgroundColor
 
     }
 
