@@ -70,8 +70,8 @@ extension AuthenticationViewController {
         private let headingLabel: UILabel = {
             let headingLabel = UILabel()
             A0Theme.KPCCTheme().configureLabel(headingLabel)
-            headingLabel.textColor = A0Theme.KPCC.OrangeColor
-            headingLabel.font = A0Theme.KPCC.FontBook27
+            headingLabel.textColor = A0Theme.KPCC.HeadColor
+            headingLabel.font = A0Theme.KPCC.HeadFont
             headingLabel.numberOfLines = 0
             headingLabel.textAlignment = .Center
             return headingLabel
@@ -80,8 +80,8 @@ extension AuthenticationViewController {
         private let messageLabel: UILabel = {
             let messageLabel = UILabel()
             A0Theme.KPCCTheme().configureLabel(messageLabel)
-            messageLabel.textColor = A0Theme.KPCC.GrayColor
-            messageLabel.font = A0Theme.KPCC.FontBook17
+            messageLabel.textColor = A0Theme.KPCC.BodyColor
+            messageLabel.font = A0Theme.KPCC.BodyFont
             messageLabel.numberOfLines = 0
             messageLabel.textAlignment = .Center
             return messageLabel
