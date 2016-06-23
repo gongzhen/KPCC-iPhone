@@ -57,7 +57,7 @@
         authentication.scopes = scopes;
         authentication.delegate = self;
         authentication.uiDelegate = self;
-        authentication.allowsSignInWithWebView = YES;
+//        authentication.allowsSignInWithWebView = YES;
         _authentication = authentication;
         _onAuthentication = ^(NSError *error, NSString *token) {};
         _authenticating = NO;
