@@ -11,6 +11,7 @@ target 'KPCC' do
   pod 'FXBlurView', '~> 1.6'
   pod 'Flurry-iOS-SDK/FlurrySDK', '~> 7.6'
   pod 'Google/Analytics', '~> 1.3'
+  pod 'Google/SignIn', '~> 1.3'
   pod 'Lock', '~> 1.26'
   pod 'Lock-Facebook', '~> 2.2'
   pod 'Parse', '~> 1.13'
