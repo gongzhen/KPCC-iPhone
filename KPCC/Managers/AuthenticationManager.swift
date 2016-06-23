@@ -249,6 +249,7 @@ extension AuthenticationManager {
 
     func newLockSignUpViewController(completion: ((Bool) -> Void)) -> A0LockSignUpViewController? {
         if let lockSignUpVC = lock?.newSignUpViewController() {
+            lockSignUpVC.useWebView = true
             lockSignUpVC.onAuthenticationBlock = {
                 [ weak self ] profile, token in
                 guard let _self = self, profile = profile, token = token else {
@@ -267,6 +268,7 @@ extension AuthenticationManager {
     func newLockViewController(completion: ((Bool) -> Void)) -> A0LockViewController? {
         if let lockVC = lock?.newLockViewController() {
             lockVC.disableSignUp = true
+            lockVC.useWebView = true
             lockVC.onAuthenticationBlock = {
                 [ weak self ] profile, token in
                 guard let _self = self, profile = profile, token = token else {

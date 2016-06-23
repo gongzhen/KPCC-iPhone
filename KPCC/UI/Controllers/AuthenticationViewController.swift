@@ -277,7 +277,7 @@ private extension AuthenticationViewController {
 
         alertController.addAction(
             UIAlertAction(
-                title: "Continue",
+                title: "Yes",
                 style: .Default,
                 handler: {
                     [ weak self ] _ in
@@ -289,7 +289,7 @@ private extension AuthenticationViewController {
 
         alertController.addAction(
             UIAlertAction(
-                title: "Close",
+                title: "No",
                 style: .Cancel,
                 handler: nil
             )
