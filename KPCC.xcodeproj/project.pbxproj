@@ -257,7 +257,6 @@
 		52EFF87819C37D350059A0E3 /* SCPRMenuCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 52EFF87719C37D350059A0E3 /* SCPRMenuCell.m */; };
 		52EFF88719C3BC020059A0E3 /* item-chevron-right.png in Resources */ = {isa = PBXBuildFile; fileRef = 52EFF88519C3BC020059A0E3 /* item-chevron-right.png */; };
 		52EFF88919C3BC020059A0E3 /* item-chevron-right@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 52EFF88619C3BC020059A0E3 /* item-chevron-right@2x.png */; };
-		67E591B6A493BD6F01AAEA90 /* libPods-KPCCTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8F1B3A3C5B1AFBBBABCC68B5 /* libPods-KPCCTests.a */; };
 		760E3C4C194FB61B00D86D91 /* Program.m in Sources */ = {isa = PBXBuildFile; fileRef = 760E3C4B194FB61B00D86D91 /* Program.m */; };
 		760EA99219521E98009B504E /* AVPlayer+Additions.m in Sources */ = {isa = PBXBuildFile; fileRef = 760EA99119521E98009B504E /* AVPlayer+Additions.m */; };
 		760EA9961953724E009B504E /* ContentManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 760EA9951953724E009B504E /* ContentManager.m */; };
@@ -323,6 +322,8 @@
 		8B8B85B11D0B496A00FA1D57 /* BackgroundTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B8B85B01D0B496A00FA1D57 /* BackgroundTask.swift */; };
 		8B8B85B31D0E041700FA1D57 /* UpdateInterfaceNotification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B8B85B21D0E041700FA1D57 /* UpdateInterfaceNotification.swift */; };
 		8B8E640B1D090DB500228251 /* UITableViewExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B8E640A1D090DB500228251 /* UITableViewExtension.swift */; };
+		8BA331571D1C819500B68ED1 /* A0GoogleAuthenticator.m in Sources */ = {isa = PBXBuildFile; fileRef = 8BA331541D1C819500B68ED1 /* A0GoogleAuthenticator.m */; };
+		8BA331581D1C819500B68ED1 /* A0GoogleProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 8BA331561D1C819500B68ED1 /* A0GoogleProvider.m */; };
 		8BB4B72A1D0657A100A621BA /* UserProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BB4B7281D0657A100A621BA /* UserProfileViewController.swift */; };
 		8BB4B72B1D0657A100A621BA /* UserProfileViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8BB4B7291D0657A100A621BA /* UserProfileViewController.xib */; };
 		8BECD94D1D07E250008CFC51 /* ComparableFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BECD94C1D07E250008CFC51 /* ComparableFunctions.swift */; };
@@ -335,6 +336,7 @@
 		B5F9F74B1ABCE8FD00115DB3 /* icon-stopwatch.png in Resources */ = {isa = PBXBuildFile; fileRef = B5F9F7471ABCE8FD00115DB3 /* icon-stopwatch.png */; };
 		B5F9F74C1ABCE8FD00115DB3 /* icon-stopwatch@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B5F9F7481ABCE8FD00115DB3 /* icon-stopwatch@2x.png */; };
 		F8B89D8CCF084CC24141C44C /* Pods_KPCC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5EEF9D0A5791A805E9A95672 /* Pods_KPCC.framework */; };
+		FFDF253C558CC417AA607BE4 /* Pods_KPCCTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 41B17E49DE60C14A3D32C727 /* Pods_KPCCTests.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -525,6 +527,7 @@
 		25F30AF91AFABB3E00F27187 /* SCPRScheduleHeaderViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = SCPRScheduleHeaderViewController.xib; path = "Secondary Main Screens/SCPRScheduleHeaderViewController.xib"; sourceTree = "<group>"; };
 		25F30AFC1B0A9B1800F27187 /* onboarding-schedule-swipe-left@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "onboarding-schedule-swipe-left@2x.png"; sourceTree = "<group>"; };
 		25F30AFE1B0A9B5500F27187 /* onboarding-schedule-swipe-left.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "onboarding-schedule-swipe-left.png"; sourceTree = "<group>"; };
+		41B17E49DE60C14A3D32C727 /* Pods_KPCCTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_KPCCTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		523126A419EDB78C008A47A7 /* SCPRPreRollViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCPRPreRollViewController.h; sourceTree = "<group>"; };
 		523126A519EDB78C008A47A7 /* SCPRPreRollViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SCPRPreRollViewController.m; sourceTree = "<group>"; };
 		523126A619EDB78C008A47A7 /* SCPRPreRollViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SCPRPreRollViewController.xib; sourceTree = "<group>"; };
@@ -743,6 +746,10 @@
 		8B8B85B01D0B496A00FA1D57 /* BackgroundTask.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BackgroundTask.swift; sourceTree = "<group>"; };
 		8B8B85B21D0E041700FA1D57 /* UpdateInterfaceNotification.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UpdateInterfaceNotification.swift; sourceTree = "<group>"; };
 		8B8E640A1D090DB500228251 /* UITableViewExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UITableViewExtension.swift; sourceTree = "<group>"; };
+		8BA331531D1C819500B68ED1 /* A0GoogleAuthenticator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = A0GoogleAuthenticator.h; sourceTree = "<group>"; };
+		8BA331541D1C819500B68ED1 /* A0GoogleAuthenticator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = A0GoogleAuthenticator.m; sourceTree = "<group>"; };
+		8BA331551D1C819500B68ED1 /* A0GoogleProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = A0GoogleProvider.h; sourceTree = "<group>"; };
+		8BA331561D1C819500B68ED1 /* A0GoogleProvider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = A0GoogleProvider.m; sourceTree = "<group>"; };
 		8BB4B7281D0657A100A621BA /* UserProfileViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserProfileViewController.swift; sourceTree = "<group>"; };
 		8BB4B7291D0657A100A621BA /* UserProfileViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = UserProfileViewController.xib; sourceTree = "<group>"; };
 		8BE520321C93B57800048AAD /* BlockTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BlockTypes.h; sourceTree = "<group>"; };
@@ -752,7 +759,6 @@
 		8BECD9511D07E257008CFC51 /* UIFontExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIFontExtension.swift; sourceTree = "<group>"; };
 		8BECD9551D07E3D4008CFC51 /* Dispatch.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Dispatch.swift; sourceTree = "<group>"; };
 		8BECD9571D07F6C4008CFC51 /* KPCC-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "KPCC-Bridging-Header.h"; sourceTree = "<group>"; };
-		8F1B3A3C5B1AFBBBABCC68B5 /* libPods-KPCCTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-KPCCTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		915B96DFAD2801AC0915A39A /* Pods-KPCCTests.enterprise.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KPCCTests.enterprise.xcconfig"; path = "Pods/Target Support Files/Pods-KPCCTests/Pods-KPCCTests.enterprise.xcconfig"; sourceTree = "<group>"; };
 		96EC8CD04938354B2CC35DA3 /* Pods-KPCC.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KPCC.release.xcconfig"; path = "Pods/Target Support Files/Pods-KPCC/Pods-KPCC.release.xcconfig"; sourceTree = "<group>"; };
 		9F75306D7C36C5253D851045 /* Pods-KPCCTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KPCCTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-KPCCTests/Pods-KPCCTests.release.xcconfig"; sourceTree = "<group>"; };
@@ -790,7 +796,7 @@
 				76A308EE18C8FB950065D4B1 /* UIKit.framework in Frameworks */,
 				76A308ED18C8FB950065D4B1 /* Foundation.framework in Frameworks */,
 				76A308EC18C8FB950065D4B1 /* XCTest.framework in Frameworks */,
-				67E591B6A493BD6F01AAEA90 /* libPods-KPCCTests.a in Frameworks */,
+				FFDF253C558CC417AA607BE4 /* Pods_KPCCTests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1368,6 +1374,7 @@
 			children = (
 				76A308CC18C8FB940065D4B1 /* KPCC */,
 				76A308F118C8FB950065D4B1 /* KPCCTests */,
+				8BA331511D1C819500B68ED1 /* LocalFrameworks */,
 				76A308C518C8FB940065D4B1 /* Frameworks */,
 				76A308C418C8FB940065D4B1 /* Products */,
 				FCF5F3C2F2FCA9D3D47E15DB /* Pods */,
@@ -1397,8 +1404,8 @@
 				2574799A1B6965F800F72AF6 /* Fabric.framework */,
 				25E553271B61A79100C45B85 /* Crashlytics.framework */,
 				76A308EB18C8FB950065D4B1 /* XCTest.framework */,
-				8F1B3A3C5B1AFBBBABCC68B5 /* libPods-KPCCTests.a */,
 				5EEF9D0A5791A805E9A95672 /* Pods_KPCC.framework */,
+				41B17E49DE60C14A3D32C727 /* Pods_KPCCTests.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -1488,6 +1495,25 @@
 				7685BD57194BBCB90075BB16 /* Images */,
 			);
 			path = Assets;
+			sourceTree = "<group>";
+		};
+		8BA331511D1C819500B68ED1 /* LocalFrameworks */ = {
+			isa = PBXGroup;
+			children = (
+				8BA331521D1C819500B68ED1 /* Lock-Google */,
+			);
+			path = LocalFrameworks;
+			sourceTree = "<group>";
+		};
+		8BA331521D1C819500B68ED1 /* Lock-Google */ = {
+			isa = PBXGroup;
+			children = (
+				8BA331531D1C819500B68ED1 /* A0GoogleAuthenticator.h */,
+				8BA331541D1C819500B68ED1 /* A0GoogleAuthenticator.m */,
+				8BA331551D1C819500B68ED1 /* A0GoogleProvider.h */,
+				8BA331561D1C819500B68ED1 /* A0GoogleProvider.m */,
+			);
+			path = "Lock-Google";
 			sourceTree = "<group>";
 		};
 		8BECD94B1D07E250008CFC51 /* Library */ = {
@@ -2005,6 +2031,7 @@
 				52CF917D1A0036CA007BCFA8 /* AudioChunk.m in Sources */,
 				76349D1B18D8C74F0027C3B8 /* NetworkManager.m in Sources */,
 				254CC6A31A255A1E00560805 /* SCPRButton.m in Sources */,
+				8BA331581D1C819500B68ED1 /* A0GoogleProvider.m in Sources */,
 				25F30AFA1AFABB3E00F27187 /* SCPRScheduleHeaderViewController.m in Sources */,
 				8B46CC361D06326800B853C9 /* AuthenticationManager.swift in Sources */,
 				52D0FC1C19D1F24F009AECEE /* SCPRProgramDetailHeaderView.m in Sources */,
@@ -2028,6 +2055,7 @@
 				07EB39641B989A09005A8DDB /* NowPlayingManager.swift in Sources */,
 				523E86D019C8A292006FC366 /* SCPRProgramDetailViewController.m in Sources */,
 				258FC47E1A01915E00282D59 /* UIColor+UICustom.m in Sources */,
+				8BA331571D1C819500B68ED1 /* A0GoogleAuthenticator.m in Sources */,
 				258BD3B11A0C0FFF00E7560F /* SCPRProgressViewController.m in Sources */,
 				52CF917A1A0032C7007BCFA8 /* QueueManager.m in Sources */,
 				25E8BDB01AC0920E007B99EB /* SCPRAlarmClockViewController.m in Sources */,

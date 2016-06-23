@@ -17,6 +17,7 @@
 #import "SCPRXFSViewController.h"
 #import <Lock/Lock.h>
 #import "A0FacebookAuthenticator.h"
+#import "A0GoogleAuthenticator.h"
 
 NSString *const kPushChannel = @"listenLive";
 
@@ -33,7 +34,8 @@ NSString *const kPushChannel = @"listenLive";
                                            domain:globalConfig[@"Auth0"][@"Domain"]];
     NSArray *permissions = @[ @"public_profile", @"email" ];
     A0FacebookAuthenticator *facebookAuthenticator = [A0FacebookAuthenticator newAuthenticatorWithPermissions:permissions];
-    [authenticationManager.lock registerAuthenticators:@[ facebookAuthenticator ]];
+    A0GoogleAuthenticator *googleAuthenticator = [A0GoogleAuthenticator newAuthenticator];
+    [authenticationManager.lock registerAuthenticators:@[ facebookAuthenticator, googleAuthenticator ]];
     [authenticationManager.lock applicationLaunchedWithOptions:launchOptions];
 
     [[AnalyticsManager shared] setup];

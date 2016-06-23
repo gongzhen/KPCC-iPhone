@@ -42,6 +42,26 @@
 				<string>a0mgxnOFrBAZoHjFBDKaM7RqGTUGTDCphO</string>
 			</array>
 		</dict>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Viewer</string>
+			<key>CFBundleURLName</key>
+			<string>google</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.googleusercontent.apps.630795214876-os73gtm54hkiuu4oclubfb1tef6kdpkd</string>
+			</array>
+		</dict>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Viewer</string>
+			<key>CFBundleURLName</key>
+			<string>google-identifier</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>org.americanpublicmedia.KPCCRadio</string>
+			</array>
+		</dict>
 	</array>
 	<key>CFBundleVersion</key>
 	<string>UNKNOWN</string>

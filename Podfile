@@ -1,16 +1,17 @@
 platform :ios, '8.0'
 
+use_frameworks!
+
 target 'KPCC' do
 
-  use_frameworks!
-
   pod 'AFNetworking', '~> 3.1'
-  pod 'FBSDKCoreKit', '~> 4.12'
-  pod 'FBSDKShareKit', '~> 4.12'
-  pod 'FBSDKLoginKit', '~> 4.12'
+  pod 'FBSDKCoreKit', '~> 4.13'
+  pod 'FBSDKShareKit', '~> 4.13'
+  pod 'FBSDKLoginKit', '~> 4.13'
   pod 'FXBlurView', '~> 1.6'
   pod 'Flurry-iOS-SDK/FlurrySDK', '~> 7.6'
-  pod 'Google/Analytics', '~> 1.3'
+  pod 'Google/Analytics', '~> 3.0'
+  pod 'Google/SignIn', '~> 3.0'
   pod 'Lock', '~> 1.26'
   pod 'Lock-Facebook', '~> 2.2'
   pod 'Parse', '~> 1.13'
@@ -22,6 +23,6 @@ end
 
 target 'KPCCTests' do
 
-  pod 'OCMock', '~> 3.2'
+  pod 'OCMock', '~> 3.3'
 
 end
