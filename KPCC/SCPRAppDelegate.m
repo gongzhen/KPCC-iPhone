@@ -31,7 +31,8 @@ NSString *const kPushChannel = @"listenLive";
     AuthenticationManager *authenticationManager = AuthenticationManager.sharedInstance;
     [authenticationManager initializeWithClientId:globalConfig[@"Auth0"][@"ClientId"]
                                            domain:globalConfig[@"Auth0"][@"Domain"]];
-    A0FacebookAuthenticator *facebookAuthenticator = [A0FacebookAuthenticator newAuthenticatorWithDefaultPermissions];
+    NSArray *permissions = @[ @"public_profile", @"email" ];
+    A0FacebookAuthenticator *facebookAuthenticator = [A0FacebookAuthenticator newAuthenticatorWithPermissions:permissions];
     [authenticationManager.lock registerAuthenticators:@[ facebookAuthenticator ]];
     [authenticationManager.lock applicationLaunchedWithOptions:launchOptions];
 
