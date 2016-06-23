@@ -85,6 +85,11 @@ extension A0Theme {
 
     struct KPCC {
 
+        static let OrangeColor = UIColor(r: 248, g: 126, b: 33)
+        static let GrayColor = UIColor(r: 108, g: 117, b: 121)
+
+        static let FontBook27 = UIFont(name: FreightSansPro.Book.name, size: 27.0)
+        static let FontBook17 = UIFont(name: FreightSansPro.Book.name, size: 17.0)
 
     }
 
@@ -146,21 +151,21 @@ extension A0Theme {
             forKey: A0ThemeTextFieldIconColor
         )
 
-        if let font = UIFont(name: FreightSansPro.Book.name, size: 27.0) {
+        if let font = KPCC.FontBook27 {
             theme.registerFont(font, forKey: A0ThemeTitleFont)
         }
 
         theme.registerColor(
-            UIColor(r: 248, g: 126, b: 33),
+            KPCC.OrangeColor,
             forKey: A0ThemeTitleTextColor
         )
 
-        if let font = UIFont(name: FreightSansPro.Book.name, size: 17.0) {
+        if let font = KPCC.FontBook17 {
             theme.registerFont(font, forKey: A0ThemeDescriptionFont)
         }
 
         theme.registerColor(
-            UIColor(r: 108, g: 117, b: 121),
+            KPCC.GrayColor,
             forKey: A0ThemeDescriptionTextColor
         )
 
@@ -185,7 +190,7 @@ extension A0Theme {
         }
 
         theme.registerColor(
-            UIColor(r: 108, g: 117, b: 121),
+            KPCC.GrayColor,
             forKey: A0ThemeSeparatorTextColor
         )
 
