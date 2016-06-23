@@ -99,7 +99,7 @@ extension AuthenticationViewController {
 
             super.viewDidLoad()
 
-            view.backgroundColor = A0Theme.KPCC.BackgroundColor
+            view.backgroundColor = UIColor.whiteColor()
 
             activityIndicatorView.translatesAutoresizingMaskIntoConstraints = false
             headingLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -208,9 +208,9 @@ extension AuthenticationViewController {
 
         navigationBar.barStyle = .Default
         navigationBar.translucent = false
-        navigationBar.barTintColor = A0Theme.KPCC.BackgroundColor
+        navigationBar.barTintColor = UIColor.whiteColor()
 
-        view.backgroundColor = A0Theme.KPCC.BackgroundColor
+        view.backgroundColor = UIColor.whiteColor()
 
     }
 
