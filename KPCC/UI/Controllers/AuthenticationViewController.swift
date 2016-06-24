@@ -323,7 +323,9 @@ private extension AuthenticationViewController {
         if success {
             if let messageViewController = messageViewController {
                 Dispatch.async(delay: 0.3) {
-                    self.setViewControllers([ messageViewController ], animated: true)
+                    [ weak self ] in
+                    guard let _self = self else { return }
+                    _self.setViewControllers([ messageViewController ], animated: true)
                 }
             }
             else {

@@ -187,7 +187,9 @@ private extension UserProfileViewController {
             loggedInView.hidden = true
         }
         Dispatch.async {
-            self.emailAddress.text = self.authenticationManager.userProfile?.email
+            [ weak self ] in
+            guard let _self = self else { return }
+            _self.emailAddress.text = _self.authenticationManager.userProfile?.email
         }
     }
 
