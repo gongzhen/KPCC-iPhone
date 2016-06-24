@@ -7,16 +7,37 @@
 //
 
 import UIKit
+import MessageUI
+
+private let ContactUsRecipient = "kpccaccounts@scpr.org"
+private let ContactUsSubject = "Help me with my KPCC Account"
 
 class UserProfileViewController: UITableViewController {
 
     lazy var authenticationManager = AuthenticationManager.sharedInstance
+
+    @IBOutlet var loggedOutView: UIView!
+    @IBOutlet var loggedInView: UIView!
+
+    @IBOutlet weak var emailAddress: UILabel!
+
+    private let blurredImageView = UIImageView()
+
+    private lazy var mailComposeViewController = MFMailComposeViewController()
 
     private lazy var authenticationMessageViewController = AuthenticationViewController.MessageViewController(
         heading: "Success!",
         message: "You're logged in. Now, back to the app.",
         buttonTitle: "Go to your profile"
     )
+
+    init() {
+        super.init(nibName: String(UserProfileViewController), bundle: nil)
+    }
+
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+    }
 
 }
 
@@ -26,9 +47,24 @@ extension UserProfileViewController {
 
         super.viewDidLoad()
 
-        tableView.registerClass(style: .Value1)
+        loggedOutView.autoresizingMask = [ .FlexibleWidth, .FlexibleHeight ]
+        loggedInView.autoresizingMask = [ .FlexibleWidth, .FlexibleHeight ]
 
-        navigationItem.title = "Profile"
+        loggedOutView.frame = view.bounds
+        loggedInView.frame = view.bounds
+
+        view.addSubview(loggedOutView)
+        view.addSubview(loggedInView)
+
+        navigationItem.title = "Your Profile"
+
+        tableView.scrollEnabled = false
+
+        blurredImageView.frame = view.bounds
+        blurredImageView.alpha = 0.65
+        blurredImageView.image = DesignManager.shared().currentBlurredLiveImage
+
+        tableView.backgroundView = blurredImageView
 
     }
 
@@ -44,21 +80,21 @@ extension UserProfileViewController {
 
 extension UserProfileViewController {
 
-    func signUp(sender: AnyObject) {
+    @IBAction func signUp(sender: AnyObject) {
         let authenticationViewController = AuthenticationViewController()
         authenticationViewController.defaultAuthenticationMode = .SignUp
         authenticationViewController.messageViewController = authenticationMessageViewController
         presentViewController(authenticationViewController, animated: true, completion: nil)
     }
 
-    func logIn(sender: AnyObject) {
+    @IBAction func logIn(sender: AnyObject) {
         let authenticationViewController = AuthenticationViewController()
         authenticationViewController.defaultAuthenticationMode = .LogIn
         authenticationViewController.messageViewController = authenticationMessageViewController
         presentViewController(authenticationViewController, animated: true, completion: nil)
     }
 
-    func logOut(sender: AnyObject) {
+    @IBAction func logOut(sender: AnyObject) {
 
         let alertController = UIAlertController(
             title: nil,
@@ -91,35 +127,50 @@ extension UserProfileViewController {
 
     }
 
+    @IBAction func contactUs(sender: AnyObject) {
+        if MFMailComposeViewController.canSendMail() {
+            mailComposeViewController.mailComposeDelegate = self
+            mailComposeViewController.setToRecipients([ ContactUsRecipient ])
+            mailComposeViewController.setSubject(ContactUsSubject)
+            mailComposeViewController.view.tintColor = UIColor.blackColor()
+            presentViewController(mailComposeViewController, animated: true, completion: nil)
+        } else {
+            let alertController = UIAlertController(
+                title: "Unable to Compose Email",
+                message: "Please confirm your email settings and try again.",
+                preferredStyle: .Alert
+            )
+            alertController.addAction(
+                UIAlertAction(
+                    title: "Ok",
+                    style: .Default,
+                    handler: nil
+                )
+            )
+            presentViewController(alertController, animated: true, completion: nil)
+        }
+    }
+
 }
 
 extension UserProfileViewController {
 
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        return 1
+        return 0
     }
 
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return authenticationManager.isAuthenticated ? 1 : 0
+        return 0
     }
 
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(style: .Value1)
-        if let userProfile = authenticationManager.userProfile {
-            switch indexPath.row {
-            case 0:
-                cell.textLabel?.text = "Email"
-                cell.detailTextLabel?.text = userProfile.email
-            default:
-                cell.textLabel?.text = nil
-                cell.detailTextLabel?.text = nil
-            }
+}
+
+extension UserProfileViewController: MFMailComposeViewControllerDelegate {
+
+    func mailComposeController(controller: MFMailComposeViewController, didFinishWithResult result: MFMailComposeResult, error: NSError?) {
+        controller.dismissViewControllerAnimated(true) {
+            self.mailComposeViewController = MFMailComposeViewController()
         }
-        else {
-            cell.textLabel?.text = nil
-            cell.detailTextLabel?.text = nil
-        }
-        return cell
     }
 
 }
@@ -128,32 +179,16 @@ private extension UserProfileViewController {
 
     func updateUI() {
         if authenticationManager.isAuthenticated {
-            tableView.tableHeaderView = nil
-            tableView.tableFooterView = tableHeaderFooterViewButton(
-                title: "Log Out",
-                action: #selector(logOut)
-            )
+            loggedOutView.hidden = true
+            loggedInView.hidden = false
         }
         else {
-            tableView.tableHeaderView = tableHeaderFooterViewButton(
-                title: "Sign Up",
-                action: #selector(signUp)
-            )
-            tableView.tableFooterView = tableHeaderFooterViewButton(
-                title: "Log In",
-                action: #selector(logIn)
-            )
+            loggedOutView.hidden = false
+            loggedInView.hidden = true
         }
-        tableView.reloadData()
-    }
-
-    func tableHeaderFooterViewButton(title title: String, action: Selector) -> UIButton {
-        let button = UIButton(type: .System)
-        button.frame = CGRect(x: 0.0, y: 0.0, width: tableView.frame.width, height: 48.0)
-        button.backgroundColor = UIColor(white: 0.95, alpha: 1.0)
-        button.setTitle(title, forState: .Normal)
-        button.addTarget(self, action: action, forControlEvents: .TouchUpInside)
-        return button
+        Dispatch.async {
+            self.emailAddress.text = self.authenticationManager.userProfile?.email
+        }
     }
 
 }
