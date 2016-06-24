@@ -5,3 +5,4 @@
 #import "ContentManager.h"
 #import "GenericProgram.h"
 #import "AudioChunk.h"
+#import "DesignManager.h"
