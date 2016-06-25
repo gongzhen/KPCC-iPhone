@@ -132,22 +132,12 @@ extension UserProfileViewController {
             mailComposeViewController.mailComposeDelegate = self
             mailComposeViewController.setToRecipients([ ContactUsRecipient ])
             mailComposeViewController.setSubject(ContactUsSubject)
-            mailComposeViewController.view.tintColor = UIColor.blackColor()
+            mailComposeViewController.navigationBar.tintColor = UIColor.whiteColor()
             presentViewController(mailComposeViewController, animated: true, completion: nil)
         } else {
-            let alertController = UIAlertController(
-                title: "Unable to Compose Email",
-                message: "Please confirm your email settings and try again.",
-                preferredStyle: .Alert
-            )
-            alertController.addAction(
-                UIAlertAction(
-                    title: "Ok",
-                    style: .Default,
-                    handler: nil
-                )
-            )
-            presentViewController(alertController, animated: true, completion: nil)
+            let url = NSURL(string: "mailto:\(ContactUsRecipient)")
+            assert(url != nil, "URL cannot be nil")
+            UIApplication.sharedApplication().openURL(url!)
         }
     }
 
