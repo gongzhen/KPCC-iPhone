@@ -117,6 +117,7 @@
                 <constraint firstItem="V1s-Jq-yrx" firstAttribute="top" secondItem="mxw-Y3-HlM" secondAttribute="bottom" constant="20" id="tVo-vw-A0m"/>
                 <constraint firstItem="V1s-Jq-yrx" firstAttribute="centerX" secondItem="oE6-jD-oqd" secondAttribute="centerX" id="y85-3j-iPn"/>
             </constraints>
+            <nil key="simulatedStatusBarMetrics"/>
             <point key="canvasLocation" x="1534" y="554"/>
         </view>
         <view contentMode="scaleToFill" id="ftv-Gz-zuS">
@@ -124,7 +125,7 @@
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <subviews>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="D4F-he-EaB">
-                    <rect key="frame" x="508" y="16" width="76" height="18"/>
+                    <rect key="frame" x="508" y="12" width="76" height="18"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="76" id="f7S-Ma-Zp3"/>
                     </constraints>
@@ -173,7 +174,7 @@
                                 <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                             </state>
                             <state key="highlighted">
-                                <color key="titleColor" white="0.0" alpha="0.70007757092198586" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                                <color key="titleColor" white="0.0" alpha="0.5" colorSpace="custom" customColorSpace="calibratedWhite"/>
                             </state>
                             <connections>
                                 <action selector="contactUs:" destination="-1" eventType="touchUpInside" id="gF2-4p-Hyd"/>
@@ -206,11 +207,12 @@
                 <constraint firstItem="8K0-C4-Bwa" firstAttribute="leading" secondItem="ftv-Gz-zuS" secondAttribute="leading" id="TZ6-5X-Eex"/>
                 <constraint firstAttribute="trailingMargin" secondItem="D4F-he-EaB" secondAttribute="trailing" constant="8" id="U30-9y-N75"/>
                 <constraint firstAttribute="trailing" secondItem="8K0-C4-Bwa" secondAttribute="trailing" id="WTi-Il-I1f"/>
-                <constraint firstItem="D4F-he-EaB" firstAttribute="top" secondItem="ftv-Gz-zuS" secondAttribute="topMargin" constant="8" id="Y0T-Bv-7NL"/>
+                <constraint firstItem="D4F-he-EaB" firstAttribute="top" secondItem="ftv-Gz-zuS" secondAttribute="topMargin" constant="4" id="Y0T-Bv-7NL"/>
                 <constraint firstItem="uac-JR-FeM" firstAttribute="top" secondItem="wwi-hB-0if" secondAttribute="bottom" id="be8-SQ-QML"/>
                 <constraint firstItem="uac-JR-FeM" firstAttribute="leading" secondItem="ftv-Gz-zuS" secondAttribute="leadingMargin" constant="16" id="hGO-dW-bN9"/>
                 <constraint firstItem="wwi-hB-0if" firstAttribute="top" secondItem="ftv-Gz-zuS" secondAttribute="topMargin" constant="72" id="m0V-ar-lU2"/>
             </constraints>
+            <nil key="simulatedStatusBarMetrics"/>
             <point key="canvasLocation" x="2187" y="554"/>
         </view>
     </objects>
