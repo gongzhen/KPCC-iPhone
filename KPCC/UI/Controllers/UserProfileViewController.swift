@@ -132,7 +132,7 @@ extension UserProfileViewController {
             mailComposeViewController.mailComposeDelegate = self
             mailComposeViewController.setToRecipients([ ContactUsRecipient ])
             mailComposeViewController.setSubject(ContactUsSubject)
-            mailComposeViewController.view.tintColor = UIColor.blackColor()
+            mailComposeViewController.navigationBar.tintColor = UIColor.whiteColor()
             presentViewController(mailComposeViewController, animated: true, completion: nil)
         } else {
             let url = NSURL(string: "mailto:\(ContactUsRecipient)")
