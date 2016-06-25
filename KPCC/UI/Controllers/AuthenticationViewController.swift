@@ -231,6 +231,7 @@ extension AuthenticationViewController {
         navigationBar.barStyle = .Default
         navigationBar.translucent = false
         navigationBar.barTintColor = UIColor.whiteColor()
+        navigationBar.tintColor = UIColor(r: 43, g: 43, b: 43)
 
         view.backgroundColor = UIColor.whiteColor()
 
@@ -349,17 +350,28 @@ private extension AuthenticationViewController {
             _self.onAuthentication(success)
         }
         if let lockSignUpViewController = lockSignUpViewController {
-            lockSignUpViewController.navigationItem.leftBarButtonItem = UIBarButtonItem(
+            let navItem = lockSignUpViewController.navigationItem
+            navItem.leftBarButtonItem = UIBarButtonItem(
                 barButtonSystemItem: .Cancel,
                 target: self,
                 action: #selector(cancel)
             )
-            lockSignUpViewController.navigationItem.rightBarButtonItem = UIBarButtonItem(
+            navItem.rightBarButtonItem = UIBarButtonItem(
                 title: "Log In",
                 style: .Plain,
                 target: self,
                 action: #selector(toggle)
             )
+            if let font = UIFont(name: FreightSansPro.Medium.name, size: 19.0) {
+                navItem.leftBarButtonItem?.setTitleTextAttributes(
+                    [ NSFontAttributeName: font ],
+                    forState: .Normal
+                )
+                navItem.rightBarButtonItem?.setTitleTextAttributes(
+                    [ NSFontAttributeName: font ],
+                    forState: .Normal
+                )
+            }
         }
         return lockSignUpViewController
     }
@@ -371,17 +383,28 @@ private extension AuthenticationViewController {
             _self.onAuthentication(success)
         }
         if let lockViewController = lockViewController {
-            lockViewController.navigationItem.leftBarButtonItem = UIBarButtonItem(
+            let navItem = lockViewController.navigationItem
+            navItem.leftBarButtonItem = UIBarButtonItem(
                 barButtonSystemItem: .Cancel,
                 target: self,
                 action: #selector(cancel)
             )
-            lockViewController.navigationItem.rightBarButtonItem = UIBarButtonItem(
+            navItem.rightBarButtonItem = UIBarButtonItem(
                 title: "Sign Up",
                 style: .Plain,
                 target: self,
                 action: #selector(toggle)
             )
+            if let font = UIFont(name: FreightSansPro.Medium.name, size: 19.0) {
+                navItem.leftBarButtonItem?.setTitleTextAttributes(
+                    [ NSFontAttributeName: font ],
+                    forState: .Normal
+                )
+                navItem.rightBarButtonItem?.setTitleTextAttributes(
+                    [ NSFontAttributeName: font ],
+                    forState: .Normal
+                )
+            }
         }
         return lockViewController
     }
