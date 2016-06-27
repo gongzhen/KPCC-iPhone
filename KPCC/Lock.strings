@@ -42,7 +42,7 @@
 "OR" = "Or";
 "Permissions were not granted. Please authorize the app in Settings > Twitter" = "Permissions were not granted. Please authorize this app in Settings > Twitter.";
 "Permissions were not granted. Try again" = "Permissions were not granted. Try again.";
-"Please enter your email address. We will send you an email to reset your password." = "Enter your email address to reset your password.";
+"Please enter your email address. We will send you an email to reset your password." = "Enter your email address below.";
 "Please enter your email and password" = "Please enter your email and password.";
 "Please enter your username and password" = "Please enter your username and password.";
 "RESET PASSWORD" = "Reset Password";
