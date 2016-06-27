@@ -160,7 +160,7 @@ extension A0Theme {
             forKey: A0ThemeTitleTextColor
         )
 
-        if let font = KPCC.BodyFont {
+        if let font = UIFont(name: FreightSansPro.Book.name, size: 14.0) {
             theme.registerFont(font, forKey: A0ThemeDescriptionFont)
         }
 
