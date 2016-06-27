@@ -179,7 +179,15 @@ private extension UserProfileViewController {
         Dispatch.async {
             [ weak self ] in
             guard let _self = self else { return }
-            _self.emailAddress.text = _self.authenticationManager.userProfile?.email
+            let email = _self.authenticationManager.userProfile?.email
+            if let email = email {
+                _self.emailAddress.text = email
+                _self.emailAddress.textColor = UIColor.whiteColor()
+            }
+            else {
+                _self.emailAddress.text = "No Email Address Provided"
+                _self.emailAddress.textColor = UIColor.lightGrayColor()
+            }
         }
     }
 
