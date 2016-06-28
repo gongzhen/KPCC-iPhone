@@ -121,7 +121,7 @@ private class EloquaAction: CustomAction {
     }
 
     private override func execute(presentViewControllerBlock presentViewController: (UIViewController) -> Void) {
-        let authenticationViewController = AuthenticationViewController()
+        let authenticationViewController = AuthenticationViewController(originForAnalytics: "ticketTuesdayAd")
         authenticationViewController.cancelSignUpConfirmationMessage = "You can only enter to win if you create an account."
         authenticationViewController.cancelLogInConfirmationMessage = "You can only enter to win if you log into the app."
         authenticationViewController.messageViewController = authenticationMessageViewController
@@ -148,6 +148,12 @@ extension PreRollAdManager {
 
     func openURL(url: String, presentViewControllerBlock presentViewController: (UIViewController) -> Void) {
         if let customAction = customActionForURL(url) {
+            #if RELEASE
+                AnalyticsManager.shared().logEvent(
+                    "ticketTuesdayAdTapped",
+                    withParameters: customAction.queryItemsDictionary()
+                )
+            #endif
             customAction.execute(presentViewControllerBlock: presentViewController)
         }
         else if let URL = NSURL(string: url) {

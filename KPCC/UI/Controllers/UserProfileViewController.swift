@@ -75,14 +75,14 @@ extension UserProfileViewController {
 extension UserProfileViewController {
 
     @IBAction func signUp(sender: AnyObject) {
-        let authenticationViewController = AuthenticationViewController()
+        let authenticationViewController = AuthenticationViewController(originForAnalytics: "profileScreen")
         authenticationViewController.defaultAuthenticationMode = .SignUp
         authenticationViewController.messageViewController = authenticationMessageViewController
         presentViewController(authenticationViewController, animated: true, completion: nil)
     }
 
     @IBAction func logIn(sender: AnyObject) {
-        let authenticationViewController = AuthenticationViewController()
+        let authenticationViewController = AuthenticationViewController(originForAnalytics: "profileScreen")
         authenticationViewController.defaultAuthenticationMode = .LogIn
         authenticationViewController.messageViewController = authenticationMessageViewController
         presentViewController(authenticationViewController, animated: true, completion: nil)

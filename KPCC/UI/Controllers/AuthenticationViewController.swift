@@ -17,6 +17,7 @@ class AuthenticationViewController: UINavigationController {
     var cancelSignUpConfirmationMessage: String?
     var cancelLogInConfirmationMessage: String?
     var messageViewController: MessageViewController?
+    var originForAnalytics: String
 
     private var authenticationMode: AuthenticationMode = .SignUp {
         didSet {
@@ -33,6 +34,26 @@ class AuthenticationViewController: UINavigationController {
                 }
             }
         }
+    }
+
+    init(originForAnalytics: String) {
+        self.originForAnalytics = originForAnalytics
+        super.init(nibName: String(AuthenticationViewController), bundle: nil)
+    }
+
+    required convenience init?(coder aDecoder: NSCoder) {
+        if let originForAnalytics = aDecoder.decodeObjectForKey("originForAnalytics") as? String
+        {
+            self.init(originForAnalytics: originForAnalytics)
+        }
+        else {
+            return nil
+        }
+    }
+
+    override func encodeWithCoder(aCoder: NSCoder) {
+        super.encodeWithCoder(aCoder)
+        aCoder.encodeObject(originForAnalytics, forKey: "originForAnalytics")
     }
 
 }
@@ -347,6 +368,25 @@ private extension AuthenticationViewController {
         let lockSignUpViewController = authenticationManager.newLockSignUpViewController() {
             [ weak self ] success, profile in
             guard let _self = self else { return }
+            #if RELEASE
+                if success {
+                    let method: String
+                    if let identity = profile.identities.first as? A0UserIdentity {
+                        method = identity.connection
+                    }
+                    else {
+                        method = "unknown"
+                    }
+                    Answers.logSignUpWithMethod(method, success: true, customAttributes: [:])
+                    AnalyticsManager.shared().logEvent(
+                        "signedUp",
+                        withParameters: [
+                            "method": method,
+                            "origin": originForAnalytics
+                        ]
+                    )
+                }
+            #endif
             _self.onAuthentication(success)
         }
         if let lockSignUpViewController = lockSignUpViewController {
@@ -380,6 +420,25 @@ private extension AuthenticationViewController {
         let lockViewController = authenticationManager.newLockViewController() {
             [ weak self ] success, profile in
             guard let _self = self else { return }
+            #if RELEASE
+                if success {
+                    let method: String
+                    if let identity = profile.identities.first as? A0UserIdentity {
+                        method = identity.connection
+                    }
+                    else {
+                        method = "unknown"
+                    }
+                    Answers.logLoginWithMethod(method, success: true, customAttributes: [:])
+                    AnalyticsManager.shared().logEvent(
+                        "loggedIn",
+                        withParameters: [
+                            "method": method,
+                            "origin": originForAnalytics
+                        ]
+                    )
+                }
+            #endif
             _self.onAuthentication(success)
         }
         if let lockViewController = lockViewController {
