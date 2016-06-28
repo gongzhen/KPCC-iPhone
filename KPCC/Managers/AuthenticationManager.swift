@@ -109,7 +109,7 @@ extension A0Theme {
             forKey: A0ThemePrimaryButtonHighlightedColor
         )
 
-        if let font = UIFont(name: FreightSansPro.Semibold.name, size: 18.0) {
+        if let font = UIFont(name: FreightSansPro.Semibold.name, size: 16.0) {
             theme.registerFont(font, forKey: A0ThemePrimaryButtonFont)
         }
 
