@@ -6,11 +6,14 @@
 //  Copyright © 2016 Southern California Public Radio. All rights reserved.
 //
 
+import MessageUI
 import Lock
 import SimpleKeychain
 
 private let SimpleKeychainService = "Auth0"
 private let ThemeIconImageName = "KPCCLogo30"
+private let ContactUsRecipient = "kpccaccounts@scpr.org"
+private let ContactUsSubject = "Help me with my KPCC Account"
 
 extension A0SimpleKeychain {
 
@@ -227,6 +230,8 @@ class AuthenticationManager: NSObject {
     private(set) var lock: A0Lock?
     private(set) var userProfile: A0UserProfile?
 
+    private lazy var mailComposeViewController = MFMailComposeViewController()
+
     private override init() {}
 
 }
@@ -238,6 +243,16 @@ extension AuthenticationManager {
     }
 
     private static let _sharedInstance = AuthenticationManager()
+
+}
+
+extension AuthenticationManager: MFMailComposeViewControllerDelegate {
+
+    func mailComposeController(controller: MFMailComposeViewController, didFinishWithResult result: MFMailComposeResult, error: NSError?) {
+        controller.dismissViewControllerAnimated(true) {
+            self.mailComposeViewController = MFMailComposeViewController()
+        }
+    }
 
 }
 
@@ -255,6 +270,21 @@ extension AuthenticationManager {
             userProfile = profile
         }
 
+    }
+
+    func presentMailComposeViewController(presentFrom viewController: UIViewController) {
+        if MFMailComposeViewController.canSendMail() {
+            mailComposeViewController.mailComposeDelegate = self
+            mailComposeViewController.setToRecipients([ ContactUsRecipient ])
+            mailComposeViewController.setSubject(ContactUsSubject)
+            mailComposeViewController.navigationBar.tintColor = UIColor.whiteColor()
+            viewController.presentViewController(mailComposeViewController, animated: true, completion: nil)
+        }
+        else {
+            let url = NSURL(string: "mailto:\(ContactUsRecipient)")
+            assert(url != nil, "URL cannot be nil")
+            UIApplication.sharedApplication().openURL(url!)
+        }
     }
 
     func newLockSignUpViewController(completion: ((Bool) -> Void)) -> A0LockSignUpViewController? {

@@ -7,10 +7,6 @@
 //
 
 import UIKit
-import MessageUI
-
-private let ContactUsRecipient = "kpccaccounts@scpr.org"
-private let ContactUsSubject = "Help me with my KPCC Account"
 
 class UserProfileViewController: UITableViewController {
 
@@ -22,8 +18,6 @@ class UserProfileViewController: UITableViewController {
     @IBOutlet weak var emailAddress: UILabel!
 
     private let blurredImageView = UIImageView()
-
-    private lazy var mailComposeViewController = MFMailComposeViewController()
 
     private lazy var authenticationMessageViewController = AuthenticationViewController.MessageViewController(
         heading: "Success!",
@@ -128,17 +122,7 @@ extension UserProfileViewController {
     }
 
     @IBAction func contactUs(sender: AnyObject) {
-        if MFMailComposeViewController.canSendMail() {
-            mailComposeViewController.mailComposeDelegate = self
-            mailComposeViewController.setToRecipients([ ContactUsRecipient ])
-            mailComposeViewController.setSubject(ContactUsSubject)
-            mailComposeViewController.navigationBar.tintColor = UIColor.whiteColor()
-            presentViewController(mailComposeViewController, animated: true, completion: nil)
-        } else {
-            let url = NSURL(string: "mailto:\(ContactUsRecipient)")
-            assert(url != nil, "URL cannot be nil")
-            UIApplication.sharedApplication().openURL(url!)
-        }
+        authenticationManager.presentMailComposeViewController(presentFrom: self)
     }
 
 }
@@ -151,16 +135,6 @@ extension UserProfileViewController {
 
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return 0
-    }
-
-}
-
-extension UserProfileViewController: MFMailComposeViewControllerDelegate {
-
-    func mailComposeController(controller: MFMailComposeViewController, didFinishWithResult result: MFMailComposeResult, error: NSError?) {
-        controller.dismissViewControllerAnimated(true) {
-            self.mailComposeViewController = MFMailComposeViewController()
-        }
     }
 
 }
