@@ -22,7 +22,7 @@ class UserProfileViewController: UITableViewController {
     private lazy var authenticationMessageViewController = AuthenticationViewController.MessageViewController(
         heading: "Success!",
         message: "You're logged in. Now, back to the app.",
-        buttonTitle: "Go to your profile"
+        dismissButtonTitle: "Go to your profile"
     )
 
     init() {
