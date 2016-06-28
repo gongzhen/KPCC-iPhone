@@ -287,35 +287,35 @@ extension AuthenticationManager {
         }
     }
 
-    func newLockSignUpViewController(completion: ((Bool) -> Void)) -> A0LockSignUpViewController? {
+    func newLockSignUpViewController(completion: ((Bool, A0UserProfile?) -> Void)) -> A0LockSignUpViewController? {
         if let lockSignUpVC = lock?.newSignUpViewController() {
             lockSignUpVC.onAuthenticationBlock = {
                 [ weak self ] profile, token in
                 guard let _self = self, profile = profile, token = token else {
-                    completion(false)
+                    completion(false, nil)
                     return
                 }
                 _self.set(profile: profile)
                 _self.set(token: token)
-                completion(true)
+                completion(true, profile)
             }
             return lockSignUpVC
         }
         return nil
     }
 
-    func newLockViewController(completion: ((Bool) -> Void)) -> A0LockViewController? {
+    func newLockViewController(completion: ((Bool, A0UserProfile?) -> Void)) -> A0LockViewController? {
         if let lockVC = lock?.newLockViewController() {
             lockVC.disableSignUp = true
             lockVC.onAuthenticationBlock = {
                 [ weak self ] profile, token in
                 guard let _self = self, profile = profile, token = token else {
-                    completion(false)
+                    completion(false, nil)
                     return
                 }
                 _self.set(profile: profile)
                 _self.set(token: token)
-                completion(true)
+                completion(true, profile)
             }
             return lockVC
         }

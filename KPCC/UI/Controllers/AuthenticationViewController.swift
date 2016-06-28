@@ -345,7 +345,7 @@ private extension AuthenticationViewController {
 
     func newLockSignUpViewController() -> A0LockSignUpViewController? {
         let lockSignUpViewController = authenticationManager.newLockSignUpViewController() {
-            [ weak self ] success in
+            [ weak self ] success, profile in
             guard let _self = self else { return }
             _self.onAuthentication(success)
         }
@@ -378,7 +378,7 @@ private extension AuthenticationViewController {
 
     func newLockViewController() -> A0LockViewController? {
         let lockViewController = authenticationManager.newLockViewController() {
-            [ weak self ] success in
+            [ weak self ] success, profile in
             guard let _self = self else { return }
             _self.onAuthentication(success)
         }
