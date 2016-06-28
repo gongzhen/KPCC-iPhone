@@ -444,7 +444,7 @@ private extension AuthenticationViewController {
             #if RELEASE
                 if success {
                     let method: String
-                    if let identity = profile.identities.first as? A0UserIdentity {
+                    if let identity = profile?.identities.first as? A0UserIdentity {
                         method = identity.connection
                     }
                     else {
@@ -455,7 +455,7 @@ private extension AuthenticationViewController {
                         "signedUp",
                         withParameters: [
                             "method": method,
-                            "origin": originForAnalytics
+                            "origin": _self.originForAnalytics
                         ]
                     )
                 }
@@ -496,7 +496,7 @@ private extension AuthenticationViewController {
             #if RELEASE
                 if success {
                     let method: String
-                    if let identity = profile.identities.first as? A0UserIdentity {
+                    if let identity = profile?.identities.first as? A0UserIdentity {
                         method = identity.connection
                     }
                     else {
@@ -507,7 +507,7 @@ private extension AuthenticationViewController {
                         "loggedIn",
                         withParameters: [
                             "method": method,
-                            "origin": originForAnalytics
+                            "origin": _self.originForAnalytics
                         ]
                     )
                 }
