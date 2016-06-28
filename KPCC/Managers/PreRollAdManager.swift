@@ -74,33 +74,50 @@ private class EloquaAction: CustomAction {
 
             guard !activity else { return }
 
-            if let eloquaAction = eloquaAction, email = authenticationManager.userProfile?.email {
-                var data = eloquaAction.queryItemsDictionary()
-                data["emailAddress"] = email
-                activity = true
-                eloquaAction.resumeDataTask(URL: eloquaAction.baseURL, method: "POST", data: data) {
-                    success in
-                    Dispatch.async {
-                        [ weak self ] in
-                        guard let _self = self else { return }
-                        _self.activity = false
-                        if !success {
-                            _self.error()
+            if let eloquaAction = eloquaAction {
+                if let email = authenticationManager.userProfile?.email {
+                    var data = eloquaAction.queryItemsDictionary()
+                    data["emailAddress"] = email
+                    activity = true
+                    eloquaAction.resumeDataTask(URL: eloquaAction.baseURL, method: "POST", data: data) {
+                        success in
+                        Dispatch.async {
+                            [ weak self ] in
+                            guard let _self = self else { return }
+                            if !success {
+                                _self.error()
+                            }
+                            _self.activity = false
                         }
                     }
+                }
+                else {
+                    set(
+                        heading: "Sorry!",
+                        message: "We can't submit your information for giveaways, as your social profile settings do not allow visibility of your email address. We'll need that to contact you if you win. Contact us for assistance.",
+                        dismissButtonTitle: "Go to KPCC Live",
+                        actionButtonTitle: "Contact Us",
+                        actionClosure: {
+                            [ weak self ] in
+                            guard let _self = self else { return }
+                            _self.authenticationManager.presentMailComposeViewController(presentFrom: _self)
+                        }
+                    )
                 }
             }
             else {
                 error()
             }
 
+            eloquaAction = nil
+
         }
 
         private func error() {
             set(
-                heading: "Error",
+                heading: "Sorry!",
                 message: "An unexpected error occurred.",
-                buttonTitle: "Ok"
+                dismissButtonTitle: "Continue"
             )
         }
 
@@ -110,7 +127,7 @@ private class EloquaAction: CustomAction {
         let authenticationMessageViewController = MessageViewController(
             heading: "Success!",
             message: "You've been entered to win.",
-            buttonTitle: "Go to KPCC Live"
+            dismissButtonTitle: "Go to KPCC Live"
         )
         authenticationMessageViewController.eloquaAction = self
         return authenticationMessageViewController
@@ -121,7 +138,7 @@ private class EloquaAction: CustomAction {
     }
 
     private override func execute(presentViewControllerBlock presentViewController: (UIViewController) -> Void) {
-        let authenticationViewController = AuthenticationViewController()
+        let authenticationViewController = AuthenticationViewController(originForAnalytics: "ticketTuesdayAd")
         authenticationViewController.cancelSignUpConfirmationMessage = "You can only enter to win if you create an account."
         authenticationViewController.cancelLogInConfirmationMessage = "You can only enter to win if you log into the app."
         authenticationViewController.messageViewController = authenticationMessageViewController
@@ -148,6 +165,12 @@ extension PreRollAdManager {
 
     func openURL(url: String, presentViewControllerBlock presentViewController: (UIViewController) -> Void) {
         if let customAction = customActionForURL(url) {
+            #if RELEASE
+                AnalyticsManager.shared().logEvent(
+                    "ticketTuesdayAdTapped",
+                    withParameters: customAction.queryItemsDictionary()
+                )
+            #endif
             customAction.execute(presentViewControllerBlock: presentViewController)
         }
         else if let URL = NSURL(string: url) {

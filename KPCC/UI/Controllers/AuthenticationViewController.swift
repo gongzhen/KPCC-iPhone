@@ -17,6 +17,7 @@ class AuthenticationViewController: UINavigationController {
     var cancelSignUpConfirmationMessage: String?
     var cancelLogInConfirmationMessage: String?
     var messageViewController: MessageViewController?
+    var originForAnalytics: String
 
     private var authenticationMode: AuthenticationMode = .SignUp {
         didSet {
@@ -33,6 +34,26 @@ class AuthenticationViewController: UINavigationController {
                 }
             }
         }
+    }
+
+    init(originForAnalytics: String) {
+        self.originForAnalytics = originForAnalytics
+        super.init(nibName: String(AuthenticationViewController), bundle: nil)
+    }
+
+    required convenience init?(coder aDecoder: NSCoder) {
+        if let originForAnalytics = aDecoder.decodeObjectForKey("originForAnalytics") as? String
+        {
+            self.init(originForAnalytics: originForAnalytics)
+        }
+        else {
+            return nil
+        }
+    }
+
+    override func encodeWithCoder(aCoder: NSCoder) {
+        super.encodeWithCoder(aCoder)
+        aCoder.encodeObject(originForAnalytics, forKey: "originForAnalytics")
     }
 
 }
@@ -53,13 +74,15 @@ extension AuthenticationViewController {
                         activityIndicatorView.startAnimating()
                         headingLabel.hidden = true
                         messageLabel.hidden = true
-                        button.hidden = true
+                        dismissButton.hidden = true
+                        actionButton.hidden = true
                     }
                     else {
                         activityIndicatorView.stopAnimating()
                         headingLabel.hidden = false
                         messageLabel.hidden = false
-                        button.hidden = false
+                        dismissButton.hidden = false
+                        actionButton.hidden = (actionClosure == nil)
                     }
                 }
             }
@@ -87,22 +110,65 @@ extension AuthenticationViewController {
             return messageLabel
         }()
 
-        private let button: UIButton = {
-            let button = UIButton(type: .Custom)
-            A0Theme.KPCCTheme().configurePrimaryButton(button)
-            return button
+        private let dismissButton: UIButton = {
+            let dismissButton = UIButton(type: .Custom)
+            A0Theme.KPCCTheme().configurePrimaryButton(dismissButton)
+            return dismissButton
         }()
 
-        convenience init(heading: String, message: String, buttonTitle: String) {
+        private let actionButton: UIButton = {
+            let actionButton = UIButton(type: .Custom)
+            A0Theme.KPCCTheme().configurePrimaryButton(actionButton)
+            return actionButton
+        }()
+
+        private var actionClosure: Closure?
+
+        private var constraintsA: [NSLayoutConstraint]!
+        private var constraintsB: [NSLayoutConstraint]!
+
+        convenience init(heading: String, message: String, dismissButtonTitle: String, actionButtonTitle: String? = nil, actionClosure: Closure? = nil) {
             self.init()
-            set(heading: heading, message: message, buttonTitle: buttonTitle)
-            button.addTarget(self, action: #selector(dismiss), forControlEvents: .TouchUpInside)
+            set(
+                heading: heading,
+                message: message,
+                dismissButtonTitle: dismissButtonTitle,
+                actionButtonTitle: actionButtonTitle,
+                actionClosure: actionClosure
+            )
+            dismissButton.addTarget(
+                self,
+                action: #selector(dismiss),
+                forControlEvents: .TouchUpInside
+            )
+            actionButton.addTarget(
+                self,
+                action: #selector(action),
+                forControlEvents: .TouchUpInside
+            )
         }
 
-        func set(heading heading: String, message: String, buttonTitle: String) {
+        func set(heading heading: String, message: String, dismissButtonTitle: String, actionButtonTitle: String? = nil, actionClosure: Closure? = nil) {
+
             headingLabel.text = heading
             messageLabel.text = message
-            button.setTitle(buttonTitle, forState: .Normal)
+
+            dismissButton.setTitle(dismissButtonTitle, forState: .Normal)
+
+            if let actionButtonTitle = actionButtonTitle {
+                actionButton.setTitle(actionButtonTitle, forState: .Normal)
+            }
+
+            self.actionClosure = actionClosure
+
+            if let _ = view {
+                NSLayoutConstraint.deactivateConstraints(constraintsA)
+                NSLayoutConstraint.deactivateConstraints(constraintsB)
+                NSLayoutConstraint.activateConstraints((actionClosure == nil) ? constraintsA : constraintsB)
+            }
+
+            actionButton.hidden = (actionClosure == nil)
+
         }
 
         override func viewDidLoad() {
@@ -114,45 +180,47 @@ extension AuthenticationViewController {
             activityIndicatorView.translatesAutoresizingMaskIntoConstraints = false
             headingLabel.translatesAutoresizingMaskIntoConstraints = false
             messageLabel.translatesAutoresizingMaskIntoConstraints = false
-            button.translatesAutoresizingMaskIntoConstraints = false
+            dismissButton.translatesAutoresizingMaskIntoConstraints = false
+            actionButton.translatesAutoresizingMaskIntoConstraints = false
 
             view.addSubview(activityIndicatorView)
             view.addSubview(headingLabel)
             view.addSubview(messageLabel)
-            view.addSubview(button)
+            view.addSubview(dismissButton)
+            view.addSubview(actionButton)
 
             let views = [
                 "activityIndicatorView": activityIndicatorView,
                 "headingLabel": headingLabel,
                 "messageLabel": messageLabel,
-                "button": button
+                "dismissButton": dismissButton,
+                "actionButton": actionButton
             ]
 
-            view.addConstraint(
-                NSLayoutConstraint(
-                    item: view,
-                    attribute: .CenterX,
-                    relatedBy: .Equal,
-                    toItem: activityIndicatorView,
-                    attribute: .CenterX,
-                    multiplier: 1.0,
-                    constant: 0.0
-                )
+            NSLayoutConstraint.activateConstraints(
+                [
+                    NSLayoutConstraint(
+                        item: view,
+                        attribute: .CenterX,
+                        relatedBy: .Equal,
+                        toItem: activityIndicatorView,
+                        attribute: .CenterX,
+                        multiplier: 1.0,
+                        constant: 0.0
+                    ),
+                    NSLayoutConstraint(
+                        item: view,
+                        attribute: .CenterY,
+                        relatedBy: .Equal,
+                        toItem: activityIndicatorView,
+                        attribute: .CenterY,
+                        multiplier: 1.0,
+                        constant: 64.0
+                    )
+                ]
             )
 
-            view.addConstraint(
-                NSLayoutConstraint(
-                    item: view,
-                    attribute: .CenterY,
-                    relatedBy: .Equal,
-                    toItem: activityIndicatorView,
-                    attribute: .CenterY,
-                    multiplier: 1.0,
-                    constant: 64.0
-                )
-            )
-
-            view.addConstraints(
+            NSLayoutConstraint.activateConstraints(
                 NSLayoutConstraint.constraintsWithVisualFormat(
                     "H:|-20-[headingLabel]-20-|",
                     options: [],
@@ -161,7 +229,7 @@ extension AuthenticationViewController {
                 )
             )
 
-            view.addConstraints(
+            NSLayoutConstraint.activateConstraints(
                 NSLayoutConstraint.constraintsWithVisualFormat(
                     "H:|-20-[messageLabel]-20-|",
                     options: [],
@@ -170,42 +238,64 @@ extension AuthenticationViewController {
                 )
             )
 
-            view.addConstraints(
+            constraintsA = NSLayoutConstraint.constraintsWithVisualFormat(
+                "H:|-20-[actionButton(==0)][dismissButton]-20-|",
+                options: [],
+                metrics: nil,
+                views: views
+            )
+
+            constraintsB = NSLayoutConstraint.constraintsWithVisualFormat(
+                "H:|-20-[actionButton]-10-[dismissButton(==actionButton)]-20-|",
+                options: [],
+                metrics: nil,
+                views: views
+            )
+
+            NSLayoutConstraint.activateConstraints(
+                [
+                    NSLayoutConstraint(
+                        item: dismissButton,
+                        attribute: .Height,
+                        relatedBy: .Equal,
+                        toItem: nil,
+                        attribute: .NotAnAttribute,
+                        multiplier: 1.0,
+                        constant: 55.0
+                    ),
+                    NSLayoutConstraint(
+                        item: actionButton,
+                        attribute: .Height,
+                        relatedBy: .Equal,
+                        toItem: nil,
+                        attribute: .NotAnAttribute,
+                        multiplier: 1.0,
+                        constant: 55.0
+                    )
+                ]
+            )
+
+            NSLayoutConstraint.activateConstraints(
                 NSLayoutConstraint.constraintsWithVisualFormat(
-                    "H:|-20-[button]-20-|",
+                    "V:|-100-[headingLabel]-10-[messageLabel]",
                     options: [],
                     metrics: nil,
                     views: views
                 )
             )
 
-            button.addConstraint(
-                NSLayoutConstraint(
-                    item: button,
-                    attribute: .Height,
-                    relatedBy: .Equal,
-                    toItem: nil,
-                    attribute: .NotAnAttribute,
-                    multiplier: 1.0,
-                    constant: 55.0
-                )
-            )
-
-            view.addConstraint(
-                NSLayoutConstraint(
-                    item: view,
-                    attribute: .CenterY,
-                    relatedBy: .Equal,
-                    toItem: button,
-                    attribute: .CenterY,
-                    multiplier: 1.0,
-                    constant: 32.0
-                )
-            )
-
-            view.addConstraints(
+            NSLayoutConstraint.activateConstraints(
                 NSLayoutConstraint.constraintsWithVisualFormat(
-                    "V:[headingLabel]-10-[messageLabel]-22-[button]",
+                    "V:[messageLabel]-22-[dismissButton]",
+                    options: [],
+                    metrics: nil,
+                    views: views
+                )
+            )
+
+            NSLayoutConstraint.activateConstraints(
+                NSLayoutConstraint.constraintsWithVisualFormat(
+                    "V:[messageLabel]-22-[actionButton]",
                     options: [],
                     metrics: nil,
                     views: views
@@ -216,6 +306,10 @@ extension AuthenticationViewController {
 
         @objc private func dismiss() {
             dismissViewControllerAnimated(true, completion: nil)
+        }
+
+        @objc private func action() {
+            actionClosure?()
         }
 
     }
@@ -335,9 +429,9 @@ private extension AuthenticationViewController {
         }
         else {
             let messageViewController = MessageViewController(
-                heading: "Error",
+                heading: "Sorry!",
                 message: "An unexpected error occurred.",
-                buttonTitle: "Ok"
+                dismissButtonTitle: "Continue"
             )
             setViewControllers([ messageViewController ], animated: true)
         }
@@ -345,8 +439,27 @@ private extension AuthenticationViewController {
 
     func newLockSignUpViewController() -> A0LockSignUpViewController? {
         let lockSignUpViewController = authenticationManager.newLockSignUpViewController() {
-            [ weak self ] success in
+            [ weak self ] success, profile in
             guard let _self = self else { return }
+            #if RELEASE
+                if success {
+                    let method: String
+                    if let identity = profile.identities.first as? A0UserIdentity {
+                        method = identity.connection
+                    }
+                    else {
+                        method = "unknown"
+                    }
+                    Answers.logSignUpWithMethod(method, success: true, customAttributes: [:])
+                    AnalyticsManager.shared().logEvent(
+                        "signedUp",
+                        withParameters: [
+                            "method": method,
+                            "origin": originForAnalytics
+                        ]
+                    )
+                }
+            #endif
             _self.onAuthentication(success)
         }
         if let lockSignUpViewController = lockSignUpViewController {
@@ -378,8 +491,27 @@ private extension AuthenticationViewController {
 
     func newLockViewController() -> A0LockViewController? {
         let lockViewController = authenticationManager.newLockViewController() {
-            [ weak self ] success in
+            [ weak self ] success, profile in
             guard let _self = self else { return }
+            #if RELEASE
+                if success {
+                    let method: String
+                    if let identity = profile.identities.first as? A0UserIdentity {
+                        method = identity.connection
+                    }
+                    else {
+                        method = "unknown"
+                    }
+                    Answers.logLoginWithMethod(method, success: true, customAttributes: [:])
+                    AnalyticsManager.shared().logEvent(
+                        "loggedIn",
+                        withParameters: [
+                            "method": method,
+                            "origin": originForAnalytics
+                        ]
+                    )
+                }
+            #endif
             _self.onAuthentication(success)
         }
         if let lockViewController = lockViewController {

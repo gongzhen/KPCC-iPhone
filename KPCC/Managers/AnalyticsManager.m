@@ -14,7 +14,6 @@
 #import "Program.h"
 #import "QueueManager.h"
 #import "UXmanager.h"
-#import <Google/Analytics.h>
 #import "SCPRAppDelegate.h"
 
 static AnalyticsManager *singleton = nil;
@@ -325,6 +324,17 @@ static AnalyticsManager *singleton = nil;
 }
 
 - (NSString*)categoryForEvent:(NSString *)event {
+
+    NSArray *SSO = @[
+        @"signedUp",
+        @"loggedIn",
+        @"ticketTuesdayAdTapped"
+    ];
+
+    if ( [SSO containsObject:event] ) {
+        return @"SSO";
+    }
+    
     if ( [event rangeOfString:@"liveStream"].location != NSNotFound ) {
         return @"Live Stream";
     }
@@ -340,6 +350,7 @@ static AnalyticsManager *singleton = nil;
     if ( [event rangeOfString:@"sleep"].location == 0 ) {
         return @"Alarm / Sleep Timer";
     }
+
     return @"General";
 }
 

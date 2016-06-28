@@ -8,11 +8,12 @@
 
 #import <Foundation/Foundation.h>
 #include <mach/mach_time.h>
-#import "AudioManager.h"
-#import "NetworkManager.h"
 #import <Crashlytics/Crashlytics.h>
 #import <Fabric/Fabric.h>
 #import <Flurry_iOS_SDK/Flurry.h>
+#import <Google/Analytics.h>
+
+@class AVPlayerItemAccessLogEvent, AVPlayerItemErrorLogEvent;
 
 static NSInteger kMaxAllowedExceptionsPerInterval = 5;
 static NSInteger kExceptionInterval = 60;

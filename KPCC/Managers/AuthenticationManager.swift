@@ -6,11 +6,14 @@
 //  Copyright © 2016 Southern California Public Radio. All rights reserved.
 //
 
+import MessageUI
 import Lock
 import SimpleKeychain
 
 private let SimpleKeychainService = "Auth0"
 private let ThemeIconImageName = "KPCCLogo30"
+private let ContactUsRecipient = "kpccaccounts@scpr.org"
+private let ContactUsSubject = "Help me with my KPCC Account"
 
 extension A0SimpleKeychain {
 
@@ -109,7 +112,7 @@ extension A0Theme {
             forKey: A0ThemePrimaryButtonHighlightedColor
         )
 
-        if let font = UIFont(name: FreightSansPro.Semibold.name, size: 18.0) {
+        if let font = UIFont(name: FreightSansPro.Semibold.name, size: 16.0) {
             theme.registerFont(font, forKey: A0ThemePrimaryButtonFont)
         }
 
@@ -160,7 +163,7 @@ extension A0Theme {
             forKey: A0ThemeTitleTextColor
         )
 
-        if let font = KPCC.BodyFont {
+        if let font = UIFont(name: FreightSansPro.Book.name, size: 14.0) {
             theme.registerFont(font, forKey: A0ThemeDescriptionFont)
         }
 
@@ -227,6 +230,8 @@ class AuthenticationManager: NSObject {
     private(set) var lock: A0Lock?
     private(set) var userProfile: A0UserProfile?
 
+    private lazy var mailComposeViewController = MFMailComposeViewController()
+
     private override init() {}
 
 }
@@ -238,6 +243,16 @@ extension AuthenticationManager {
     }
 
     private static let _sharedInstance = AuthenticationManager()
+
+}
+
+extension AuthenticationManager: MFMailComposeViewControllerDelegate {
+
+    func mailComposeController(controller: MFMailComposeViewController, didFinishWithResult result: MFMailComposeResult, error: NSError?) {
+        controller.dismissViewControllerAnimated(true) {
+            self.mailComposeViewController = MFMailComposeViewController()
+        }
+    }
 
 }
 
@@ -257,35 +272,50 @@ extension AuthenticationManager {
 
     }
 
-    func newLockSignUpViewController(completion: ((Bool) -> Void)) -> A0LockSignUpViewController? {
+    func presentMailComposeViewController(presentFrom viewController: UIViewController) {
+        if MFMailComposeViewController.canSendMail() {
+            mailComposeViewController.mailComposeDelegate = self
+            mailComposeViewController.setToRecipients([ ContactUsRecipient ])
+            mailComposeViewController.setSubject(ContactUsSubject)
+            mailComposeViewController.navigationBar.tintColor = UIColor.whiteColor()
+            viewController.presentViewController(mailComposeViewController, animated: true, completion: nil)
+        }
+        else {
+            let url = NSURL(string: "mailto:\(ContactUsRecipient)")
+            assert(url != nil, "URL cannot be nil")
+            UIApplication.sharedApplication().openURL(url!)
+        }
+    }
+
+    func newLockSignUpViewController(completion: ((Bool, A0UserProfile?) -> Void)) -> A0LockSignUpViewController? {
         if let lockSignUpVC = lock?.newSignUpViewController() {
             lockSignUpVC.onAuthenticationBlock = {
                 [ weak self ] profile, token in
                 guard let _self = self, profile = profile, token = token else {
-                    completion(false)
+                    completion(false, nil)
                     return
                 }
                 _self.set(profile: profile)
                 _self.set(token: token)
-                completion(true)
+                completion(true, profile)
             }
             return lockSignUpVC
         }
         return nil
     }
 
-    func newLockViewController(completion: ((Bool) -> Void)) -> A0LockViewController? {
+    func newLockViewController(completion: ((Bool, A0UserProfile?) -> Void)) -> A0LockViewController? {
         if let lockVC = lock?.newLockViewController() {
             lockVC.disableSignUp = true
             lockVC.onAuthenticationBlock = {
                 [ weak self ] profile, token in
                 guard let _self = self, profile = profile, token = token else {
-                    completion(false)
+                    completion(false, nil)
                     return
                 }
                 _self.set(profile: profile)
                 _self.set(token: token)
-                completion(true)
+                completion(true, profile)
             }
             return lockVC
         }

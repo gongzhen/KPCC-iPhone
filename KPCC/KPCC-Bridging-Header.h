@@ -6,3 +6,4 @@
 #import "GenericProgram.h"
 #import "AudioChunk.h"
 #import "DesignManager.h"
+#import "AnalyticsManager.h"

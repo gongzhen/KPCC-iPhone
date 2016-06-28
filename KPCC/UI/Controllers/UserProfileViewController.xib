@@ -14,8 +14,10 @@
             <string>FreightSansProBook-Regular</string>
             <string>FreightSansProBook-Regular</string>
         </mutableArray>
+        <mutableArray key="FreigSanProMed.otf">
+            <string>FreightSansProMedium-Regular</string>
+        </mutableArray>
         <mutableArray key="FreigSanProSem.otf">
-            <string>FreightSansProSemibold-Regular</string>
             <string>FreightSansProSemibold-Regular</string>
             <string>FreightSansProSemibold-Regular</string>
             <string>FreightSansProSemibold-Regular</string>
@@ -125,19 +127,19 @@
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <subviews>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="D4F-he-EaB">
-                    <rect key="frame" x="508" y="12" width="76" height="18"/>
+                    <rect key="frame" x="511" y="17" width="76" height="14"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="76" id="f7S-Ma-Zp3"/>
                     </constraints>
-                    <fontDescription key="fontDescription" name="FreightSansProSemibold-Regular" family="FreightSans Pro" pointSize="14"/>
+                    <fontDescription key="fontDescription" name="FreightSansProMedium-Regular" family="FreightSans Pro" pointSize="12"/>
                     <color key="tintColor" white="1" alpha="0.80103058510638303" colorSpace="calibratedWhite"/>
                     <inset key="titleEdgeInsets" minX="3" minY="0.0" maxX="0.0" maxY="0.0"/>
                     <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="3" maxY="0.0"/>
                     <state key="normal" title="LOG OUT" image="LogOutIcon">
-                        <color key="titleColor" white="1" alpha="0.69991134751773065" colorSpace="calibratedWhite"/>
+                        <color key="titleColor" white="1" alpha="0.79956227836879457" colorSpace="calibratedWhite"/>
                     </state>
                     <state key="highlighted">
-                        <color key="titleColor" white="1" alpha="0.29798315602836889" colorSpace="calibratedWhite"/>
+                        <color key="titleColor" white="1" alpha="0.39996121453900718" colorSpace="calibratedWhite"/>
                     </state>
                     <connections>
                         <action selector="logOut:" destination="-1" eventType="touchUpInside" id="jIC-KA-jDz"/>
@@ -180,8 +182,8 @@
                                 <action selector="contactUs:" destination="-1" eventType="touchUpInside" id="gF2-4p-Hyd"/>
                             </connections>
                         </button>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Need to change your email address?" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FBL-sT-Ade">
-                            <rect key="frame" x="186" y="188" width="229" height="21"/>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Questions or issues with your account?" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FBL-sT-Ade">
+                            <rect key="frame" x="176" y="188" width="248" height="21"/>
                             <fontDescription key="fontDescription" name="FreightSansProBook-Regular" family="FreightSans Pro" pointSize="16"/>
                             <color key="textColor" white="0.0" alpha="0.5" colorSpace="calibratedWhite"/>
                             <nil key="highlightedColor"/>
@@ -205,9 +207,9 @@
                 <constraint firstAttribute="bottom" secondItem="8K0-C4-Bwa" secondAttribute="bottom" id="JsM-4w-oxQ"/>
                 <constraint firstItem="8K0-C4-Bwa" firstAttribute="top" secondItem="ftv-Gz-zuS" secondAttribute="top" constant="220" id="KfK-dY-tLk"/>
                 <constraint firstItem="8K0-C4-Bwa" firstAttribute="leading" secondItem="ftv-Gz-zuS" secondAttribute="leading" id="TZ6-5X-Eex"/>
-                <constraint firstAttribute="trailingMargin" secondItem="D4F-he-EaB" secondAttribute="trailing" constant="8" id="U30-9y-N75"/>
+                <constraint firstAttribute="trailingMargin" secondItem="D4F-he-EaB" secondAttribute="trailing" constant="5" id="U30-9y-N75"/>
                 <constraint firstAttribute="trailing" secondItem="8K0-C4-Bwa" secondAttribute="trailing" id="WTi-Il-I1f"/>
-                <constraint firstItem="D4F-he-EaB" firstAttribute="top" secondItem="ftv-Gz-zuS" secondAttribute="topMargin" constant="4" id="Y0T-Bv-7NL"/>
+                <constraint firstItem="D4F-he-EaB" firstAttribute="top" secondItem="ftv-Gz-zuS" secondAttribute="topMargin" constant="9" id="Y0T-Bv-7NL"/>
                 <constraint firstItem="uac-JR-FeM" firstAttribute="top" secondItem="wwi-hB-0if" secondAttribute="bottom" id="be8-SQ-QML"/>
                 <constraint firstItem="uac-JR-FeM" firstAttribute="leading" secondItem="ftv-Gz-zuS" secondAttribute="leadingMargin" constant="16" id="hGO-dW-bN9"/>
                 <constraint firstItem="wwi-hB-0if" firstAttribute="top" secondItem="ftv-Gz-zuS" secondAttribute="topMargin" constant="72" id="m0V-ar-lU2"/>
