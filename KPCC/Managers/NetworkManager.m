@@ -213,13 +213,14 @@ static NetworkManager *singleton = nil;
 }
 
 - (NSArray *)cookiesForURL:(NSURL *)url {
-    NSArray *cookies = [NSHTTPCookieStorage.sharedHTTPCookieStorage cookiesForURL:url];
+    NSHTTPCookieStorage *httpCookieStorage = [NSHTTPCookieStorage sharedHTTPCookieStorage];
+    NSArray *cookies = [httpCookieStorage cookiesForURL:url];
     for (NSHTTPCookie *cookie in cookies) {
         if (cookie.expiresDate.timeIntervalSinceNow < 0.0) {
-            [NSHTTPCookieStorage.sharedHTTPCookieStorage deleteCookie:cookie];
+            [httpCookieStorage deleteCookie:cookie];
         }
     }
-    return [NSHTTPCookieStorage.sharedHTTPCookieStorage cookiesForURL:url];
+    return [httpCookieStorage cookiesForURL:url];
 }
 
 - (void)fetchAudioAdWithCompletion:(void (^)(AudioAd *audioAd))completion {
