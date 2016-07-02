@@ -50,6 +50,7 @@ typedef NS_ENUM(NSInteger, NetworkHealth) {
 - (void)fetchEpisodesForProgram:(NSString*)slug completion:(BlockWithObject)completion;
 - (void)fetchEditions:(BlockWithObject)completion;
 - (void)requestFromSCPRWithEndpoint:(NSString *)endpoint completion:(BlockWithObject)completion;
+- (void)fetchAudioAdUsingCookies:(BOOL)useCookies completion:(void (^)(AudioAd *audioAd))completion;
 - (void)fetchAudioAdWithCompletion:(void (^)(AudioAd *audioAd))completion;
 - (void)pingAudioAdUrl:(NSString*)url completion:(void (^)(BOOL success))completion;
 

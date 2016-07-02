@@ -16,6 +16,9 @@
 
 #define kFailThreshold 5.5
 
+NSString *const kAdServerCookieFeatureValue = @"sso";
+NSUInteger const kAdServerCookieExpiresDays = 1825;
+
 static NetworkManager *singleton = nil;
 
 @implementation NetworkManager
@@ -111,6 +114,112 @@ static NetworkManager *singleton = nil;
     [self requestFromSCPRWithEndpoint:urlString completion:^(id object) {
         completion(object);
     }];
+}
+
+- (void)fetchAudioAdUsingCookies:(BOOL)useCookies completion:(void (^)(AudioAd *audioAd))completion {
+
+    if (useCookies) {
+
+        AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
+        manager.responseSerializer = [AFHTTPResponseSerializer serializer];
+
+        ASIdentifierManager *identifierManager = [ASIdentifierManager sharedManager];
+        NSString *uuid = identifierManager.isAdvertisingTrackingEnabled ? identifierManager.advertisingIdentifier.UUIDString : @"";
+
+        NSDictionary *globalConfig = [Utils globalConfig];
+        NSString *endpoint = [NSString stringWithFormat:globalConfig[@"AdServer"][@"Preroll"], uuid];
+        NSURL *url = [NSURL URLWithString:endpoint];
+
+        if ([self cookiesForURL:url].count) {
+            [self fetchAudioAdUsingCookiesWithCompletion:completion];
+        }
+        else {
+            __weak typeof(self) __self = self;
+            [self fetchAdServerCookiesWithCompletion:^{
+                if ([self cookiesForURL:url].count) {
+                    [__self fetchAudioAdUsingCookiesWithCompletion:completion];
+                }
+                else {
+                    completion(nil);
+                }
+            }];
+        }
+
+    }
+    else {
+        [self fetchAudioAdWithCompletion:completion];
+    }
+
+}
+
+- (void)fetchAdServerCookiesWithCompletion:(void (^)(void))completion {
+    AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
+    manager.responseSerializer = [AFHTTPResponseSerializer serializer];
+
+    NSDictionary *globalConfig = [Utils globalConfig];
+    NSString *endpoint = [NSString stringWithFormat:globalConfig[@"AdServer"][@"Cookie"], @"feature", kAdServerCookieFeatureValue, @(kAdServerCookieExpiresDays), NSDate.date.timeIntervalSinceNow];
+
+    NSURLRequest *urlRequest = [NSURLRequest requestWithURL:[NSURL URLWithString:endpoint]];
+
+    [[manager dataTaskWithRequest:urlRequest completionHandler:^(NSURLResponse *response, id responseObject, NSError *error) {
+        if (error) {
+            NSLog(@"failure? %@", error);
+        }
+        else {
+            if ([response isKindOfClass:NSHTTPURLResponse.class]) {
+                NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
+                NSArray *cookies = [NSHTTPCookie cookiesWithResponseHeaderFields:httpResponse.allHeaderFields
+                                                                          forURL:response.URL];
+                [NSHTTPCookieStorage.sharedHTTPCookieStorage setCookies:cookies
+                                                                 forURL:response.URL
+                                                        mainDocumentURL:nil];
+            }
+        }
+        completion();
+    }] resume];
+}
+
+- (void)fetchAudioAdUsingCookiesWithCompletion:(void (^)(AudioAd *audioAd))completion {
+    AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
+    manager.responseSerializer = [AFHTTPResponseSerializer serializer];
+
+    ASIdentifierManager *identifierManager = [ASIdentifierManager sharedManager];
+    NSString *uuid = identifierManager.isAdvertisingTrackingEnabled ? identifierManager.advertisingIdentifier.UUIDString : @"";
+
+    NSDictionary *globalConfig = [Utils globalConfig];
+    NSString *endpoint = [NSString stringWithFormat:globalConfig[@"AdServer"][@"Preroll"], uuid];
+
+    NSURL *url = [NSURL URLWithString:endpoint];
+    NSDictionary *headerFields = [NSHTTPCookie requestHeaderFieldsWithCookies:[self cookiesForURL:url]];
+
+    NSMutableURLRequest *urlRequest = [NSMutableURLRequest requestWithURL:url];
+    [urlRequest setAllHTTPHeaderFields:headerFields];
+
+    [[manager dataTaskWithRequest:urlRequest completionHandler:^(NSURLResponse *response, id responseObject, NSError *error) {
+        if (error) {
+            NSLog(@"failure? %@", error);
+            completion(nil);
+        }
+        else {
+            NSDictionary *convertedData = [NSDictionary dictionaryWithXMLData:responseObject];
+            NSLog(@"convertedData %@", convertedData);
+            AudioAd *audioAd;
+            if ([convertedData[@"Ad"] isKindOfClass:[NSDictionary class]]) {
+                audioAd = [[AudioAd alloc] initWithDictionary:convertedData[@"Ad"]];
+            }
+            completion(audioAd);
+        }
+    }] resume];
+}
+
+- (NSArray *)cookiesForURL:(NSURL *)url {
+    NSArray *cookies = [NSHTTPCookieStorage.sharedHTTPCookieStorage cookiesForURL:url];
+    for (NSHTTPCookie *cookie in cookies) {
+        if (cookie.expiresDate.timeIntervalSinceNow < 0.0) {
+            [NSHTTPCookieStorage.sharedHTTPCookieStorage deleteCookie:cookie];
+        }
+    }
+    return [NSHTTPCookieStorage.sharedHTTPCookieStorage cookiesForURL:url];
 }
 
 - (void)fetchAudioAdWithCompletion:(void (^)(AudioAd *audioAd))completion {
