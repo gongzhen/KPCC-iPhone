@@ -113,7 +113,7 @@ static NetworkManager *singleton = nil;
     }];
 }
 
-- (void)fetchAudioAd:(NSString *)params completion:(void (^)(AudioAd* audioAd))completion {
+- (void)fetchAudioAdWithCompletion:(void (^)(AudioAd *audioAd))completion {
     AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
     manager.responseSerializer = [AFHTTPResponseSerializer serializer];
 
