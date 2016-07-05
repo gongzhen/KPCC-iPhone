@@ -3581,9 +3581,11 @@ setForOnDemandUI;
     NSAssert([NSThread isMainThread],@"This is not the main thread...");
     
     if ( self.showLiveHelpScreens ) {
-        self.showLiveHelpScreens = NO;
-        SCPRAppDelegate *del = [Utils del];
-        [del onboardForLiveFunctionality];
+        if (! [self.presentedViewController isKindOfClass:[AuthenticationViewController class]]) {
+            self.showLiveHelpScreens = NO;
+            SCPRAppDelegate *del = [Utils del];
+            [del onboardForLiveFunctionality];
+        }
     }
     
     [self adjustScrollingState];
