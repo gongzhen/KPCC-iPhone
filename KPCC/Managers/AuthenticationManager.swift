@@ -88,11 +88,12 @@ extension A0Theme {
 
     struct KPCC {
 
-        static let HeadColor = UIColor(r: 248, g: 126, b: 33)
-        static let BodyColor = UIColor(r: 108, g: 117, b: 121)
-
         static let HeadFont = UIFont(name: FreightSansPro.Book.name, size: 26.0)
         static let BodyFont = UIFont(name: FreightSansPro.Book.name, size: 16.0)
+
+        static let HeadColor = UIColor(r: 248, g: 126, b: 33)
+        static let BodyColor = UIColor(r: 108, g: 117, b: 121)
+        static let LinkColor = UIColor(r: 49, g: 171, b: 212)
 
     }
 
@@ -103,7 +104,7 @@ extension A0Theme {
         theme.statusBarStyle = .Default
 
         theme.registerColor(
-            UIColor(r: 49, g: 171, b: 212),
+            KPCC.LinkColor,
             forKey: A0ThemePrimaryButtonNormalColor
         )
 
@@ -131,7 +132,7 @@ extension A0Theme {
         }
 
         theme.registerColor(
-            UIColor(r: 49, g: 171, b: 212),
+            KPCC.LinkColor,
             forKey: A0ThemeSecondaryButtonTextColor
         )
 
@@ -150,7 +151,7 @@ extension A0Theme {
         )
 
         theme.registerColor(
-            UIColor(r: 49, g: 171, b: 212),
+            KPCC.LinkColor,
             forKey: A0ThemeTextFieldIconColor
         )
 
