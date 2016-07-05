@@ -966,7 +966,7 @@ setForOnDemandUI;
         // is there a preroll that we should play?
         CLS_LOG(@"Attempting to fetch preroll.");
         [[SessionManager shared] setLastPrerollTime:[NSDate date]];
-        [[NetworkManager shared] fetchAudioAdWithCompletion:^(AudioAd *audioAd) {
+        [[NetworkManager shared] fetchAudioAdUsingCookies:YES completion:^(AudioAd *audioAd) {
             if (audioAd) {
                 CLS_LOG(@"Received a preroll to play.");
                 self.preRollViewController.audioAd = audioAd;
