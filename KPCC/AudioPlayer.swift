@@ -704,11 +704,11 @@ public struct AudioPlayerObserver<T> {
 
     //----------
 
-    public func seekToDate(date:NSDate, completion:finishCallback? = nil) -> Void {
+    public func seekToDate(date:NSDate, completion:Block? = nil) -> Void {
         self._seekToDate(date, completion:completion);
     }
 
-    public func _seekToDate(date: NSDate,retries:Int = 2,useTime:Bool = false,completion:finishCallback? = nil) -> Void {
+    public func _seekToDate(date: NSDate,retries:Int = 2,useTime:Bool = false,completion:Block? = nil) -> Void {
         let fsig = "seekToDate (" + ( useTime ? "time" : "date" ) + ") "
 
         // do we think we can do this?
@@ -722,19 +722,19 @@ public struct AudioPlayerObserver<T> {
         self._getReadyPlayer() { cold in
             guard let _ = self._player.currentItem else {
                 self._emitEvent(fsig+"seek aborted (currentItem is nil).")
-                completion?(false)
+                completion?()
                 return
             }
 
             guard let _ = self._player.currentItem!.currentDate() else {
                 self._emitEvent(fsig+"seek aborted (currentDate is nil).")
-                completion?(false)
+                completion?()
                 return
             }
 
             if (self._interactionIdx != seek_id) {
                 self._emitEvent(fsig+"seek interrupted.")
-                completion?(false)
+                completion?()
                 return;
             }
 
@@ -753,7 +753,7 @@ public struct AudioPlayerObserver<T> {
                 self._computeStreamDates()
                 self._setStatus(.Playing)
                 self._player.play()
-                completion?(finished)
+                completion?()
             }
 
             // Set up common code for testing our landing position
@@ -842,7 +842,7 @@ public struct AudioPlayerObserver<T> {
 
     //----------
 
-    public func seekToPercent(percent: Float64,completion:finishCallback? = nil) -> Bool {
+    public func seekToPercent(percent: Float64,completion:Block? = nil) -> Bool {
         let str_per = String(format:"%2f", percent)
         self._emitEvent("seekToPercent called for \(str_per)")
 
@@ -874,7 +874,7 @@ public struct AudioPlayerObserver<T> {
 
     //----------
 
-    private func _seekToTime(time:CMTime,completion:finishCallback?) -> Void {
+    private func _seekToTime(time:CMTime,completion:Block?) -> Void {
         self._emitEvent("_seekToTime called for \(time)")
 
         self._interactionIdx += 1
@@ -883,7 +883,7 @@ public struct AudioPlayerObserver<T> {
         self._getReadyPlayer() { cold in
             if (self._interactionIdx != seek_id) {
                 self._emitEvent("_seekToTime: seek interrupted.")
-                completion?(false)
+                completion?()
                 return;
             }
 
@@ -897,14 +897,14 @@ public struct AudioPlayerObserver<T> {
                 self._computeStreamDates()
                 self._setStatus(.Playing)
                 self._player.play()
-                completion?(finished)
+                completion?()
             }
         }
     }
 
     //----------
 
-    public func seekToLive(completion:finishCallback?) -> Void {
+    public func seekToLive(completion:Block?) -> Void {
         self._emitEvent("seekToLive called")
         self._seekToTime(kCMTimePositiveInfinity) { finished in
 
@@ -915,7 +915,7 @@ public struct AudioPlayerObserver<T> {
                 self.liveDate = curDate
             }
 
-            completion?(finished)
+            completion?()
         }
     }
 
