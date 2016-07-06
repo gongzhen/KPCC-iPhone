@@ -966,7 +966,7 @@ setForOnDemandUI;
         // is there a preroll that we should play?
         CLS_LOG(@"Attempting to fetch preroll.");
         [[SessionManager shared] setLastPrerollTime:[NSDate date]];
-        [[NetworkManager shared] fetchAudioAd:nil completion:^(AudioAd *audioAd) {
+        [[NetworkManager shared] fetchAudioAdUsingCookies:YES completion:^(AudioAd *audioAd) {
             if (audioAd) {
                 CLS_LOG(@"Received a preroll to play.");
                 self.preRollViewController.audioAd = audioAd;
@@ -3581,9 +3581,11 @@ setForOnDemandUI;
     NSAssert([NSThread isMainThread],@"This is not the main thread...");
     
     if ( self.showLiveHelpScreens ) {
-        self.showLiveHelpScreens = NO;
-        SCPRAppDelegate *del = [Utils del];
-        [del onboardForLiveFunctionality];
+        if (! [self.presentedViewController isKindOfClass:[AuthenticationViewController class]]) {
+            self.showLiveHelpScreens = NO;
+            SCPRAppDelegate *del = [Utils del];
+            [del onboardForLiveFunctionality];
+        }
     }
     
     [self adjustScrollingState];

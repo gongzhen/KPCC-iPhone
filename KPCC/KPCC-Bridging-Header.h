@@ -7,3 +7,4 @@
 #import "AudioChunk.h"
 #import "DesignManager.h"
 #import "AnalyticsManager.h"
+#import "SCPRJogShuttleViewController.h"

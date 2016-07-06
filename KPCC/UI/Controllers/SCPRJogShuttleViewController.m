@@ -116,6 +116,14 @@
 }
 
 - (void)animateIndefinitelyWithViewToHide:(UIView *)hideableView completion:(void (^)(void))completion {
+    [self animateIndefinitelyWithViewToHide:hideableView
+                                strokeColor:UIColor.whiteColor
+                                 completion:completion];
+}
+
+- (void)animateIndefinitelyWithViewToHide:(UIView *)hideableView
+                              strokeColor:(UIColor *)strokeColor
+                               completion:(void (^)(void))completion {
     
     if ( self.spinning ) {
         [self endAnimations];
@@ -126,7 +134,7 @@
     }
     
     self.tension = 0.75;
-    self.strokeColor = [UIColor whiteColor];
+    self.strokeColor = strokeColor;
     self.strokeWidth = 1.5f;
     self.direction = SpinDirectionForward;
     self.soundPlayedBit = YES;
