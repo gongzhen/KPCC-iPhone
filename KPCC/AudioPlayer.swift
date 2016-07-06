@@ -631,7 +631,7 @@ public struct AudioPlayerObserver<T> {
     }
 
     public func duration() -> CMTime {
-        return self._player.currentItem?.asset.duration ?? kCMTimeZero
+        return (self._player.currentItem?.asset.duration ?? kCMTimeZero)
     }
 
     //----------
