@@ -893,7 +893,18 @@ public struct AudioPlayerObserver<T> {
                 self._player.play()
             }
 
-            self._player.currentItem!.seekToTime(time) { finished in
+            guard let currentItem = self._player.currentItem else {
+                completion?()
+                return
+            }
+
+            var time = time
+
+            if CMTIME_IS_INDEFINITE(time) {
+                time = kCMTimePositiveInfinity
+            }
+
+            currentItem.seekToTime(time) { finished in
                 self._computeStreamDates()
                 self._setStatus(.Playing)
                 self._player.play()
