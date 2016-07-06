@@ -372,7 +372,10 @@
             if ( completed ) {
                 dispatch_async(dispatch_get_main_queue(), ^{
 
-                    ScheduleOccurrence *scheduleObj = [[ScheduleOccurrence alloc] initWithDict:object];
+                    NSManagedObjectContext *context = ContentManager.shared.managedObjectContext;
+
+                    ScheduleOccurrence *scheduleObj = [ScheduleOccurrence newScheduleOccurrenceWithContext:context
+                                                                                                dictionary:object];
 
                     NSLog(@"fetchSched got %@",scheduleObj);
                     
@@ -446,22 +449,28 @@
             NSDate *now = [self vNow];
             NSDictionary *bookends = [now bookends];
 
-            ScheduleOccurrence *gs = [[ScheduleOccurrence alloc] initWithContext:[[ContentManager shared] managedObjectContext]
-                                                                           title:kMainLiveStreamTitle
-                                                                         ends_at:bookends[@"bottom"]
-                                                                       starts_at:bookends[@"top"]
-                                                                  soft_starts_at:bookends[@"top"]
-                                                                      public_url:@"http://www.scpr.org"
-                                                                    program_slug:@"kpcc-live"];
+            NSManagedObjectContext *context = ContentManager.shared.managedObjectContext;
 
-            [[ContentManager shared] saveContext];
-            
-            self.currentSchedule = gs;
-            
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"program-has-changed"
-                                                                object:nil
-                                                              userInfo:nil];
-            
+            ScheduleOccurrence *gs = [ScheduleOccurrence newScheduleOccurrenceWithContext:context
+                                                                                    title:kMainLiveStreamTitle
+                                                                                  ends_at:bookends[@"bottom"]
+                                                                                starts_at:bookends[@"top"]
+                                                                           soft_starts_at:bookends[@"top"]
+                                                                               public_url:@"http://www.scpr.org"
+                                                                             program_slug:@"kpcc-live"];
+
+            if (gs) {
+
+                [[ContentManager shared] saveContext];
+
+                self.currentSchedule = gs;
+
+                [[NSNotificationCenter defaultCenter] postNotificationName:@"program-has-changed"
+                                                                    object:nil
+                                                                  userInfo:nil];
+
+            }
+
             completed(gs);
             
         }
