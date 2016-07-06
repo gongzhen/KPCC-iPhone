@@ -32,6 +32,10 @@ typedef NS_ENUM(NSUInteger, SpinDirection) {
 
 - (void)animateIndefinitelyWithViewToHide:(UIView*)hideableView completion:(void (^)(void))completion;
 
+- (void)animateIndefinitelyWithViewToHide:(UIView *)hideableView
+                              strokeColor:(UIColor *)strokeColor
+                               completion:(void (^)(void))completion;
+
 - (void)endAnimations;
 - (void)killAnimations;
 
