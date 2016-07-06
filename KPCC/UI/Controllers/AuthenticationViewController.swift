@@ -353,8 +353,8 @@ extension AuthenticationViewController {
                 actionButton.hidden = (actionClosure == nil)
 
                 UIView.animateWithDuration(
-                    0.3,
-                    delay: 0.3,
+                    0.5,
+                    delay: 0.25,
                     options: [],
                     animations: {
                         self.headingLabel.alpha = 1.0
