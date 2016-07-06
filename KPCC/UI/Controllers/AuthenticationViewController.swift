@@ -70,25 +70,16 @@ extension AuthenticationViewController {
         var activity = false {
             didSet {
                 if activity != oldValue {
-                    if activity {
-                        activityIndicatorView.startAnimating()
-                        headingLabel.hidden = true
-                        messageLabel.hidden = true
-                        dismissButton.hidden = true
-                        actionButton.hidden = true
-                    }
-                    else {
-                        activityIndicatorView.stopAnimating()
-                        headingLabel.hidden = false
-                        messageLabel.hidden = false
-                        dismissButton.hidden = false
-                        actionButton.hidden = (actionClosure == nil)
-                    }
+                    activityDidChange()
                 }
             }
         }
 
-        private let activityIndicatorView = UIActivityIndicatorView(activityIndicatorStyle: .Gray)
+        private let jogShuttleViewController: SCPRJogShuttleViewController = {
+            let jogShuttleViewController = SCPRJogShuttleViewController()
+            jogShuttleViewController.view.layoutIfNeeded()
+            return jogShuttleViewController
+        }()
 
         private let headingLabel: UILabel = {
             let headingLabel = UILabel()
@@ -177,20 +168,19 @@ extension AuthenticationViewController {
 
             view.backgroundColor = UIColor.whiteColor()
 
-            activityIndicatorView.translatesAutoresizingMaskIntoConstraints = false
+            jogShuttleViewController.view.translatesAutoresizingMaskIntoConstraints = false
             headingLabel.translatesAutoresizingMaskIntoConstraints = false
             messageLabel.translatesAutoresizingMaskIntoConstraints = false
             dismissButton.translatesAutoresizingMaskIntoConstraints = false
             actionButton.translatesAutoresizingMaskIntoConstraints = false
 
-            view.addSubview(activityIndicatorView)
+            view.addSubview(jogShuttleViewController.view)
             view.addSubview(headingLabel)
             view.addSubview(messageLabel)
             view.addSubview(dismissButton)
             view.addSubview(actionButton)
 
             let views = [
-                "activityIndicatorView": activityIndicatorView,
                 "headingLabel": headingLabel,
                 "messageLabel": messageLabel,
                 "dismissButton": dismissButton,
@@ -200,10 +190,28 @@ extension AuthenticationViewController {
             NSLayoutConstraint.activateConstraints(
                 [
                     NSLayoutConstraint(
+                        item: jogShuttleViewController.view,
+                        attribute: .Width,
+                        relatedBy: .Equal,
+                        toItem: nil,
+                        attribute: .NotAnAttribute,
+                        multiplier: 1.0,
+                        constant: 100.0
+                    ),
+                    NSLayoutConstraint(
+                        item: jogShuttleViewController.view,
+                        attribute: .Height,
+                        relatedBy: .Equal,
+                        toItem: nil,
+                        attribute: .NotAnAttribute,
+                        multiplier: 1.0,
+                        constant: 100.0
+                    ),
+                    NSLayoutConstraint(
                         item: view,
                         attribute: .CenterX,
                         relatedBy: .Equal,
-                        toItem: activityIndicatorView,
+                        toItem: jogShuttleViewController.view,
                         attribute: .CenterX,
                         multiplier: 1.0,
                         constant: 0.0
@@ -212,7 +220,7 @@ extension AuthenticationViewController {
                         item: view,
                         attribute: .CenterY,
                         relatedBy: .Equal,
-                        toItem: activityIndicatorView,
+                        toItem: jogShuttleViewController.view,
                         attribute: .CenterY,
                         multiplier: 1.0,
                         constant: 64.0
@@ -310,6 +318,55 @@ extension AuthenticationViewController {
 
         @objc private func action() {
             actionClosure?()
+        }
+
+        private func activityDidChange() {
+
+            if activity {
+
+                jogShuttleViewController.view.layoutIfNeeded()
+
+                jogShuttleViewController.animateIndefinitelyWithViewToHide(
+                    nil,
+                    strokeColor: A0Theme.KPCC.LinkColor,
+                    completion: nil
+                )
+
+                headingLabel.hidden = true
+                messageLabel.hidden = true
+                dismissButton.hidden = true
+                actionButton.hidden = true
+
+            }
+            else {
+
+                jogShuttleViewController.endAnimations()
+
+                headingLabel.alpha = 0.0
+                messageLabel.alpha = 0.0
+                dismissButton.alpha = 0.0
+                actionButton.alpha = 0.0
+
+                headingLabel.hidden = false
+                messageLabel.hidden = false
+                dismissButton.hidden = false
+                actionButton.hidden = (actionClosure == nil)
+
+                UIView.animateWithDuration(
+                    0.3,
+                    delay: 0.3,
+                    options: [],
+                    animations: {
+                        self.headingLabel.alpha = 1.0
+                        self.messageLabel.alpha = 1.0
+                        self.dismissButton.alpha = 1.0
+                        self.actionButton.alpha = 1.0
+                    },
+                    completion: nil
+                )
+
+            }
+
         }
 
     }
