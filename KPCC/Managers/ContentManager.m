@@ -169,21 +169,21 @@ static ContentManager *singleton = nil;
     }]];
 }
 
-- (void)sweepTaskWithCompletion:(BlockWithObject)completion {
-    NSArray *bookmarks = [self allBookmarks];
-    NSMutableArray *expired = [[bookmarks filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
-        Bookmark *b = (Bookmark*)evaluatedObject;
-        if ( [[b createdAt] isOlderThanInSeconds:kBookmarkPreservationTolerance] ) {
-            return YES;
-        }
-        
-        return NO;
-    }]] mutableCopy];
-    
-    dispatch_async(dispatch_get_main_queue(), ^{
-        completion(expired);
-    });
-}
+//- (void)sweepTaskWithCompletion:(BlockWithObject)completion {
+//    NSArray *bookmarks = [self allBookmarks];
+//    NSMutableArray *expired = [[bookmarks filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
+//        Bookmark *b = (Bookmark*)evaluatedObject;
+//        if ( [[b createdAt] isOlderThanInSeconds:kBookmarkPreservationTolerance] ) {
+//            return YES;
+//        }
+//        
+//        return NO;
+//    }]] mutableCopy];
+//    
+//    dispatch_async(dispatch_get_main_queue(), ^{
+//        completion(expired);
+//    });
+//}
 
 /**
  * Returns the base name of our managed object model.

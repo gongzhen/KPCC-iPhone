@@ -38,6 +38,5 @@
 - (void)destroyBookmark:(Bookmark*)b;
 
 - (void)sweepBookmarks;
-- (void)sweepTaskWithCompletion:(BlockWithObject)completion;
 
 @end
