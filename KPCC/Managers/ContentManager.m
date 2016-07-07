@@ -132,12 +132,16 @@ static ContentManager *singleton = nil;
     
     NSDate *lastSweep = [[UXmanager shared].settings lastBookmarkSweep];
     if ( !lastSweep || [lastSweep isOlderThanInSeconds:kBookmarkCleaningFrequency] ) {
-        
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
-            
-            [self sweepTaskWithCompletion:^(id object) {
-                
-                NSArray *expired = (NSArray*)object;
+
+        // Moving work to foreground in an attempt to fix non-reproducible crash
+        // https://fabric.io/scpr/ios/apps/org.americanpublicmedia.kpccradio/issues/56051b13f5d3a7f76b4f19b2
+        // Array filtering should not be expensive and will hopefully not have an adverse effect on UI updates on main thread
+
+//        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+
+//            [self sweepTaskWithCompletion:^(id object) {
+
+                NSArray *expired = [self sweepTask];
                 NSLog(@"Found %ld expired bookmarks",(long)[expired count]);
                 
                 for ( Bookmark *b in expired ) {
@@ -147,10 +151,22 @@ static ContentManager *singleton = nil;
                 [[UXmanager shared] persist];
                 [[ContentManager shared] saveContext];
                 
-            }];
-            
-        });
+//            }];
+
+//        });
     }
+}
+
+- (NSArray *)sweepTask {
+    NSArray *bookmarks = [self allBookmarks];
+    return [bookmarks filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
+        Bookmark *b = (Bookmark*)evaluatedObject;
+        if ( [[b createdAt] isOlderThanInSeconds:kBookmarkPreservationTolerance] ) {
+            return YES;
+        }
+
+        return NO;
+    }]];
 }
 
 - (void)sweepTaskWithCompletion:(BlockWithObject)completion {
