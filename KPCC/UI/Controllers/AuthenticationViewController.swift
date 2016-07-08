@@ -329,7 +329,7 @@ extension AuthenticationViewController {
                 jogShuttleViewController.animateIndefinitelyWithViewToHide(
                     nil,
                     strokeColor: A0Theme.KPCC.LinkColor,
-                    completion: nil
+                    completion: {}
                 )
 
                 headingLabel.hidden = true
