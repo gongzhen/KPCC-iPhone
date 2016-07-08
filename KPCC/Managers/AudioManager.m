@@ -743,7 +743,7 @@ static const NSString *ItemStatusContext;
     NSDate *date = self.audioPlayer.currentDate;
 
     if (date) {
-        [self.audioPlayer seekToDate:self.audioPlayer.currentDate completion:nil];
+        [self.audioPlayer seekToDate:date completion:nil];
     }
     else {
         [self.audioPlayer play];
