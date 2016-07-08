@@ -124,13 +124,11 @@ private class EloquaAction: CustomAction {
     }
 
     private lazy var authenticationMessageViewController: MessageViewController = {
-        let authenticationMessageViewController = MessageViewController(
+        return MessageViewController(
             heading: "Success!",
             message: "You've been entered to win.",
             dismissButtonTitle: "Go to KPCC Live"
         )
-        authenticationMessageViewController.eloquaAction = self
-        return authenticationMessageViewController
     }()
 
     init() {
@@ -138,11 +136,16 @@ private class EloquaAction: CustomAction {
     }
 
     private override func execute(presentViewControllerBlock presentViewController: (UIViewController) -> Void) {
+
+        authenticationMessageViewController.eloquaAction = self
+
         let authenticationViewController = AuthenticationViewController(originForAnalytics: "ticketTuesdayAd")
         authenticationViewController.cancelSignUpConfirmationMessage = "You can only enter to win if you create an account."
         authenticationViewController.cancelLogInConfirmationMessage = "You can only enter to win if you log into the app."
         authenticationViewController.messageViewController = authenticationMessageViewController
+
         presentViewController(authenticationViewController)
+
     }
 
 }
