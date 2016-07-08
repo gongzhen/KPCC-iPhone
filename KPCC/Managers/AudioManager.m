@@ -740,7 +740,14 @@ static const NSString *ItemStatusContext;
         self.audioPlayer.volume = 0.0f;
     }
 
-    [self.audioPlayer play];
+    NSDate *date = self.audioPlayer.currentDate;
+
+    if (date) {
+        [self.audioPlayer seekToDate:self.audioPlayer.currentDate completion:nil];
+    }
+    else {
+        [self.audioPlayer play];
+    }
 }
 
 - (void)pauseAudio {
