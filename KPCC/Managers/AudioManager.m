@@ -193,7 +193,7 @@ static const NSString *ItemStatusContext;
                         }
 
                         if ([self.audioPlayer currentDates] != nil && [[self.audioPlayer currentDates] hasDates]) {
-                            [self.audioPlayer seekToDate:[self.audioPlayer currentDates].curDate completion:^(BOOL finished) {
+                            [self.audioPlayer seekToDate:[self.audioPlayer currentDates].curDate completion:^{
                                 CLS_LOG(@"Played by seeking after interruption.");
                             }];
                         } else {
@@ -238,7 +238,7 @@ static const NSString *ItemStatusContext;
 
 #pragma mark - Scrubbing and Seeking
 - (void)seekToPercent:(CGFloat)percent {
-    [self.audioPlayer seekToPercent:percent completion:^(BOOL finished) {
+    [self.audioPlayer seekToPercent:percent completion:^{
         if ([self.delegate respondsToSelector:@selector(onSeekCompleted)]) {
             [self.delegate onSeekCompleted];
         }
@@ -255,7 +255,7 @@ static const NSString *ItemStatusContext;
             [self buildStreamer:nil];
         }
 
-        [self.audioPlayer seekToDate:p.soft_starts_at completion:^(BOOL finished) {
+        [self.audioPlayer seekToDate:p.soft_starts_at completion:^{
             if ([self.delegate respondsToSelector:@selector(onSeekCompleted)]) {
                 [self.delegate onSeekCompleted];
             }
@@ -270,7 +270,7 @@ static const NSString *ItemStatusContext;
         [self buildStreamer:nil];
     }
 
-    [self.audioPlayer seekToLive:^(BOOL finished) {
+    [self.audioPlayer seekToLive:^{
         [self.delegate onSeekCompleted];
 
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -468,7 +468,7 @@ static const NSString *ItemStatusContext;
                         [self resetPlayer];
 
                         if (d != nil && d.curDate != nil) {
-                            [self.audioPlayer seekToDate:d.curDate completion:^(BOOL finished) {
+                            [self.audioPlayer seekToDate:d.curDate completion:^{
                                 CLS_LOG(@"Finished seek on player retry.");
                             }];
                         } else {
@@ -740,7 +740,14 @@ static const NSString *ItemStatusContext;
         self.audioPlayer.volume = 0.0f;
     }
 
-    [self.audioPlayer play];
+    NSDate *date = self.audioPlayer.currentDate;
+
+    if (date) {
+        [self.audioPlayer seekToDate:self.audioPlayer.currentDate completion:nil];
+    }
+    else {
+        [self.audioPlayer play];
+    }
 }
 
 - (void)pauseAudio {
