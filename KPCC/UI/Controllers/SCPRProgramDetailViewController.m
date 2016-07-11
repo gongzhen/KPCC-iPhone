@@ -49,7 +49,7 @@
     self.blurView.blurRadius = 20.f;
     self.blurView.dynamic = NO;
     self.blurView.alpha = 0.0f;
-    self.programBgImage.contentMode = UIViewContentModeCenter;
+    self.programBgImage.contentMode = UIViewContentModeScaleAspectFill;
     self.curtainView.backgroundColor = [UIColor clearColor];
 
     
