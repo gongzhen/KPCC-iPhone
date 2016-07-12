@@ -9,6 +9,14 @@
 import UIKit
 import Lock
 
+extension UIDevice {
+
+    static var iPhone4s: Bool {
+        return (currentDevice().model == "iPhone4,1")
+    }
+
+}
+
 class AuthenticationViewController: UINavigationController {
 
     lazy var authenticationManager = AuthenticationManager.sharedInstance
@@ -23,7 +31,14 @@ class AuthenticationViewController: UINavigationController {
         didSet {
             switch authenticationMode {
             case .SignUp:
-                if let viewController = newLockSignUpViewController() {
+                let viewController: UIViewController?
+                if UIDevice.iPhone4s {
+                    viewController = newLockViewController()
+                }
+                else {
+                    viewController = newLockSignUpViewController()
+                }
+                if let viewController = viewController {
                     hideKeyboard()
                     viewControllers = [ viewController ]
                 }
@@ -401,6 +416,10 @@ extension AuthenticationViewController {
             }
         }
 
+        if UIDevice.iPhone4s {
+            setNavigationBarHidden(true, animated: false)
+        }
+
     }
 
 }
@@ -593,6 +612,10 @@ private extension AuthenticationViewController {
                     [ NSFontAttributeName: font ],
                     forState: .Normal
                 )
+            }
+            if UIDevice.iPhone4s {
+                lockViewController.closable = true
+                lockViewController.disableSignUp = false
             }
         }
         return lockViewController
