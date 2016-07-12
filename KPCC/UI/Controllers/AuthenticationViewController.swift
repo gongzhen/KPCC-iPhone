@@ -23,14 +23,14 @@ class AuthenticationViewController: UINavigationController {
         didSet {
             switch authenticationMode {
             case .SignUp:
-                if let lockSignUpViewController = newLockSignUpViewController() {
+                if let viewController = newLockSignUpViewController() {
                     hideKeyboard()
-                    viewControllers = [ lockSignUpViewController ]
+                    viewControllers = [ viewController ]
                 }
             case .LogIn:
-                if let lockViewController = newLockViewController() {
+                if let viewController = newLockViewController() {
                     hideKeyboard()
-                    viewControllers = [ lockViewController ]
+                    viewControllers = [ viewController ]
                 }
             }
         }
