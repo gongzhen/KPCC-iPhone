@@ -11,7 +11,7 @@ import Foundation
 extension String {
 
     var range: NSRange {
-        return NSMakeRange(0, self.characters.count)
+        return NSMakeRange(0, characters.count)
     }
 
     var isEmailAddress: Bool {
