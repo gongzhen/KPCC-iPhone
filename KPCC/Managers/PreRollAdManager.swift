@@ -137,6 +137,13 @@ private class EloquaAction: CustomAction {
 
     private override func execute(presentViewControllerBlock presentViewController: (UIViewController) -> Void) {
 
+        #if RELEASE
+            AnalyticsManager.shared().logEvent(
+                "ticketTuesdayAdTapped",
+                withParameters: customAction.queryItemsDictionary()
+            )
+        #endif
+
         authenticationMessageViewController.eloquaAction = self
 
         let authenticationViewController = AuthenticationViewController(originForAnalytics: "ticketTuesdayAd")
@@ -168,12 +175,6 @@ extension PreRollAdManager {
 
     func openURL(url: String, presentViewControllerBlock presentViewController: (UIViewController) -> Void) {
         if let customAction = customActionForURL(url) {
-            #if RELEASE
-                AnalyticsManager.shared().logEvent(
-                    "ticketTuesdayAdTapped",
-                    withParameters: customAction.queryItemsDictionary()
-                )
-            #endif
             customAction.execute(presentViewControllerBlock: presentViewController)
         }
         else if let URL = NSURL(string: url) {
