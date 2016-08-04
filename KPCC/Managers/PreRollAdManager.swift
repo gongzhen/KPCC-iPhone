@@ -9,17 +9,20 @@
 import UIKit
 
 private let EloquaActionBaseURL = "https://s1715082578.t.eloqua.com/e/f2"
+private let EloquaActionAnalyticsEvent = "eloquaFormAutoSubmitAdTapped"
 
 private class CustomAction {
 
-    var baseURL: String
+    private(set) var baseURL: String
+    private(set) var analyticsEvent: String
 
     private var queryItems: [NSURLQueryItem]?
 
     private func execute(presentViewControllerBlock presentViewController: (UIViewController) -> Void) {}
 
-    init(baseURL: String) {
+    init(baseURL: String, analyticsEvent: String) {
         self.baseURL = baseURL
+        self.analyticsEvent = analyticsEvent
     }
 
     func queryItemsDictionary() -> [String: String] {
@@ -132,7 +135,10 @@ private class EloquaAction: CustomAction {
     }()
 
     init() {
-        super.init(baseURL: EloquaActionBaseURL)
+        super.init(
+            baseURL: EloquaActionBaseURL,
+            analyticsEvent: EloquaActionAnalyticsEvent
+        )
     }
 
     private override func execute(presentViewControllerBlock presentViewController: (UIViewController) -> Void) {
@@ -170,7 +176,7 @@ extension PreRollAdManager {
         if let customAction = customActionForURL(url) {
             #if RELEASE
                 AnalyticsManager.shared().logEvent(
-                    "ticketTuesdayAdTapped",
+                    customAction.analyticsEvent,
                     withParameters: customAction.queryItemsDictionary()
                 )
             #endif

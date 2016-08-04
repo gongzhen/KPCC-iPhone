@@ -328,7 +328,7 @@ static AnalyticsManager *singleton = nil;
     NSArray *SSO = @[
         @"signedUp",
         @"loggedIn",
-        @"ticketTuesdayAdTapped"
+        @"eloquaFormAutoSubmitAdTapped"
     ];
 
     if ( [SSO containsObject:event] ) {
