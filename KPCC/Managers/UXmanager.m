@@ -33,6 +33,7 @@
     if ( data ) {
         self.settings = (Settings*)[NSKeyedUnarchiver unarchiveObjectWithData:data];
     } else {
+        self.isFirstAppLaunch = YES;
         self.settings = [Settings new];
     }
     

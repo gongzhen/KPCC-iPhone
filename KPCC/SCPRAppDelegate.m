@@ -38,6 +38,10 @@ NSString *const kPushChannel = @"listenLive";
     [authenticationManager.lock registerAuthenticators:@[ facebookAuthenticator, googleAuthenticator ]];
     [authenticationManager.lock applicationLaunchedWithOptions:launchOptions];
 
+    if (UXmanager.shared.isFirstAppLaunch) {
+        [authenticationManager reset];
+    }
+
     [[AnalyticsManager shared] setup];
 
     [Parse setApplicationId:globalConfig[@"Parse"][@"ApplicationId"]
