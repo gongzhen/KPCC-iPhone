@@ -17,6 +17,7 @@
 
 @interface UXmanager : NSObject<AVAudioPlayerDelegate>
 
+@property BOOL isFirstAppLaunch;
 @property (nonatomic,strong) Settings *settings;
 @property (nonatomic,weak) SCPROnboardingViewController *onboardingCtrl;
 @property (nonatomic,weak) SCPRMasterViewController *masterCtrl;
