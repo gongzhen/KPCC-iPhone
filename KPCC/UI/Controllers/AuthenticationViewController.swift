@@ -12,7 +12,12 @@ import Lock
 extension UIDevice {
 
     static var iPhone4s: Bool {
-        return (currentDevice().model == "iPhone4,1")
+        var systemInfo = utsname()
+        uname(&systemInfo)
+        let machine = withUnsafeMutablePointer(&systemInfo.machine) {
+            ptr in String.fromCString(UnsafePointer(ptr))
+        }
+        return (machine == "iPhone4,1")
     }
 
 }
