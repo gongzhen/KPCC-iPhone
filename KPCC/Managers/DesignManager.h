@@ -6,8 +6,8 @@
 //  Copyright (c) 2014 SCPR. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
-
+#import <UIKit/UIKit.h>
+#import "BlockTypes.h"
 
 typedef NS_ENUM(NSInteger, SculptingStyle) {
     SculptingStyleNormal = 0,
@@ -66,7 +66,7 @@ typedef NS_ENUM(NSInteger, SculptingStyle) {
 @property (nonatomic, weak) UIView *hiddenAccessory;
 @property (nonatomic, weak) UINavigationBar *hiddenNavBar;
 
-- (void)switchAccessoryForSpinner:(UIActivityIndicatorView *)spinner toReplace:(UIView *)toReplace callback:(CompletionBlock)callback;
+- (void)switchAccessoryForSpinner:(UIActivityIndicatorView *)spinner toReplace:(UIView *)toReplace callback:(Block)callback;
 - (void)restoreControlFromSpinner;
 
 #ifdef TEST_PROGRAM_IMAGE

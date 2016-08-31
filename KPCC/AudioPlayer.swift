@@ -261,17 +261,14 @@ public struct AudioPlayerObserver<T> {
         self.setNetworkStatus()
 
         // should we be limiting bandwidth?
-        if #available(iOS 8.0, *) {
             if self.reduceBandwidthOnCellular && self._networkStatus == .Cellular {
                 if self._player.currentItem != nil {
                     self._emitEvent("Turning on bandwidth limiter for new player")
                     self._player.currentItem!.preferredPeakBitRate = 1000
                 }
             }
-        }
 
         // -- set up bandwidth limiter -- //
-        if #available(iOS 8.0,*) {
             self.oNetwork.addObserver() { s in
                 if self.reduceBandwidthOnCellular {
                     if self._player.currentItem != nil {
@@ -291,7 +288,6 @@ public struct AudioPlayerObserver<T> {
                     }
                 }
             }
-        }
 
         // -- watch for non-sensical dates -- //
         self.oTime.addObserver() { dates in
@@ -577,7 +573,7 @@ public struct AudioPlayerObserver<T> {
     //----------
 
     public func play() -> Bool{
-        self._interactionIdx++
+        self._interactionIdx += 1
         self._setStatus(.Waiting)
         self.getPlayer().play()
         return true
@@ -586,7 +582,7 @@ public struct AudioPlayerObserver<T> {
     //----------
 
     public func pause() -> Bool {
-        self._interactionIdx++
+        self._interactionIdx += 1
         self._setStatus(.Waiting)
         self.getPlayer().pause()
         return true
@@ -635,7 +631,7 @@ public struct AudioPlayerObserver<T> {
     }
 
     public func duration() -> CMTime {
-        return self._player.currentItem!.asset.duration
+        return (self._player.currentItem?.asset.duration ?? kCMTimeZero)
     }
 
     //----------
@@ -676,7 +672,8 @@ public struct AudioPlayerObserver<T> {
         self._emitEvent("seekByInterval called for \(interval)")
 
         // get a seek sequence number
-        let seek_id = ++self._interactionIdx
+        self._interactionIdx += 1
+        let seek_id = self._interactionIdx
 
         self._getReadyPlayer() { cold in
             if (self._interactionIdx != seek_id) {
@@ -707,11 +704,11 @@ public struct AudioPlayerObserver<T> {
 
     //----------
 
-    public func seekToDate(date:NSDate, completion:finishCallback? = nil) -> Void {
+    public func seekToDate(date:NSDate, completion:Block? = nil) -> Void {
         self._seekToDate(date, completion:completion);
     }
 
-    public func _seekToDate(date: NSDate,retries:Int = 2,useTime:Bool = false,completion:finishCallback? = nil) -> Void {
+    public func _seekToDate(date: NSDate,retries:Int = 2,useTime:Bool = false,completion:Block? = nil) -> Void {
         let fsig = "seekToDate (" + ( useTime ? "time" : "date" ) + ") "
 
         // do we think we can do this?
@@ -719,24 +716,25 @@ public struct AudioPlayerObserver<T> {
         self._emitEvent(fsig + "called for \(self._dateFormat.stringFromDate(date))")
 
         // get a seek sequence number
-        let seek_id = ++self._interactionIdx
+        self._interactionIdx += 1
+        let seek_id = self._interactionIdx
 
         self._getReadyPlayer() { cold in
             guard let _ = self._player.currentItem else {
                 self._emitEvent(fsig+"seek aborted (currentItem is nil).")
-                completion?(false)
+                completion?()
                 return
             }
 
             guard let _ = self._player.currentItem!.currentDate() else {
                 self._emitEvent(fsig+"seek aborted (currentDate is nil).")
-                completion?(false)
+                completion?()
                 return
             }
 
             if (self._interactionIdx != seek_id) {
                 self._emitEvent(fsig+"seek interrupted.")
-                completion?(false)
+                completion?()
                 return;
             }
 
@@ -755,7 +753,7 @@ public struct AudioPlayerObserver<T> {
                 self._computeStreamDates()
                 self._setStatus(.Playing)
                 self._player.play()
-                completion?(finished)
+                completion?()
             }
 
             // Set up common code for testing our landing position
@@ -844,7 +842,7 @@ public struct AudioPlayerObserver<T> {
 
     //----------
 
-    public func seekToPercent(percent: Float64,completion:finishCallback? = nil) -> Bool {
+    public func seekToPercent(percent: Float64,completion:Block? = nil) -> Bool {
         let str_per = String(format:"%2f", percent)
         self._emitEvent("seekToPercent called for \(str_per)")
 
@@ -876,15 +874,16 @@ public struct AudioPlayerObserver<T> {
 
     //----------
 
-    private func _seekToTime(time:CMTime,completion:finishCallback?) -> Void {
+    private func _seekToTime(time:CMTime,completion:Block?) -> Void {
         self._emitEvent("_seekToTime called for \(time)")
 
-        let seek_id = ++self._interactionIdx
+        self._interactionIdx += 1
+        let seek_id = self._interactionIdx
 
         self._getReadyPlayer() { cold in
             if (self._interactionIdx != seek_id) {
                 self._emitEvent("_seekToTime: seek interrupted.")
-                completion?(false)
+                completion?()
                 return;
             }
 
@@ -894,18 +893,29 @@ public struct AudioPlayerObserver<T> {
                 self._player.play()
             }
 
-            self._player.currentItem!.seekToTime(time) { finished in
+            guard let currentItem = self._player.currentItem else {
+                completion?()
+                return
+            }
+
+            var time = time
+
+            if CMTIME_IS_INDEFINITE(time) {
+                time = kCMTimePositiveInfinity
+            }
+
+            currentItem.seekToTime(time) { finished in
                 self._computeStreamDates()
                 self._setStatus(.Playing)
                 self._player.play()
-                completion?(finished)
+                completion?()
             }
         }
     }
 
     //----------
 
-    public func seekToLive(completion:finishCallback?) -> Void {
+    public func seekToLive(completion:Block?) -> Void {
         self._emitEvent("seekToLive called")
         self._seekToTime(kCMTimePositiveInfinity) { finished in
 
@@ -916,7 +926,7 @@ public struct AudioPlayerObserver<T> {
                 self.liveDate = curDate
             }
 
-            completion?(finished)
+            completion?()
         }
     }
 

@@ -29,6 +29,6 @@
 @property BOOL finishing;
 @property BOOL pushing;
 
-- (void)findConcreteObjecrBasedOnUrl:(NSString*)url completion:(CompletionBlockWithValue)completion;
+- (void)findConcreteObjecrBasedOnUrl:(NSString*)url completion:(BlockWithObject)completion;
 
 @end

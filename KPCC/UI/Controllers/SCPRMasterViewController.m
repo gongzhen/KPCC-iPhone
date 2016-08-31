@@ -58,7 +58,7 @@ static NSInteger kCancelSleepTimerAlertTag = 44839;
 
 - (void)playAudio:(BOOL)hard;
 - (void)setDataForOnDemand:(Program *)program andAudioChunk:(AudioChunk*)audioChunk;
-- (void)setDataForOnDemand:(Program *)program andAudioChunk:(AudioChunk*)audioChunk completion:(CompletionBlock)completion;
+- (void)setDataForOnDemand:(Program *)program andAudioChunk:(AudioChunk*)audioChunk completion:(Block)completion;
 - (void)lockUI:(id)note;
 - (void)unlockUI:(id)note;
 - (void)finishUpdatingForProgram;
@@ -422,8 +422,6 @@ setForOnDemandUI;
     
 
     [[AudioManager shared] loadXfsStreamUrlWithCompletion:^{
-        [[NetworkManager shared] setupReachability];
-
         [[SessionManager shared] xFreeStreamIsAvailableWithCompletion:^{
             CLS_LOG(@"Triggered xFreeStreamIsAvailableWithCompletion after loadXfs.");
         }];
@@ -745,7 +743,7 @@ setForOnDemandUI;
             [self determinePlayState];
             
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.85 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                [[SessionManager shared] fetchCurrentSchedule:^(id returnedObject) {
+                [[SessionManager shared] fetchCurrentSchedule:^(id object) {
                     [self addPreRollController];
                     [SCPRCloakViewController uncloak];
                     [[SessionManager shared] setExpiring:NO];
@@ -846,7 +844,7 @@ setForOnDemandUI;
     [self.programTitleLabel proLightFontize];
     self.liveProgressViewController.view.alpha = 0.0f;
     
-    [[SessionManager shared] fetchOnboardingProgramWithSegment:1 completed:^(id returnedObject) {
+    [[SessionManager shared] fetchOnboardingProgramWithSegment:1 completed:^(id object) {
         [self.blurView setNeedsDisplay];
         self.programTitleLabel.text = @"";
         [SCPRCloakViewController uncloak];
@@ -968,7 +966,7 @@ setForOnDemandUI;
         // is there a preroll that we should play?
         CLS_LOG(@"Attempting to fetch preroll.");
         [[SessionManager shared] setLastPrerollTime:[NSDate date]];
-        [[NetworkManager shared] fetchAudioAd:nil completion:^(AudioAd *audioAd) {
+        [[NetworkManager shared] fetchAudioAdUsingCookies:YES completion:^(AudioAd *audioAd) {
             if (audioAd) {
                 CLS_LOG(@"Received a preroll to play.");
                 self.preRollViewController.audioAd = audioAd;
@@ -1090,7 +1088,7 @@ setForOnDemandUI;
                                                 applicationActivities:nil];
         
         controller.excludedActivityTypes = @[UIActivityTypeAirDrop];
-        [controller setCompletionHandler:^(NSString *activityType, BOOL completed) {
+        controller.completionWithItemsHandler = ^(NSString *activityType, BOOL completed, NSArray *returnedItems, NSError *activityError) {
             if ( completed ) {
                 
                 NSArray *activityTokens = [[activityType capitalizedString] componentsSeparatedByString:@"."];
@@ -1100,7 +1098,7 @@ setForOnDemandUI;
                                                        @"episodeTitle" : self.onDemandProgram.title,
                                                        @"programTitle" : pt }];
             }
-        }];
+        };
         
         [self presentViewController:controller animated:YES completion:^{
             
@@ -1166,7 +1164,7 @@ setForOnDemandUI;
     
     [self setLiveStreamingUI:YES];
 
-    [[SessionManager shared] fetchCurrentSchedule:^(id returnedObject) {
+    [[SessionManager shared] fetchCurrentSchedule:^(id object) {
         
         [self treatUIforProgram];
         
@@ -1236,7 +1234,7 @@ setForOnDemandUI;
                                    
                                } else {
                                    
-                                   [[SessionManager shared] fetchOnboardingProgramWithSegment:2 completed:^(id returnedObject) {
+                                   [[SessionManager shared] fetchOnboardingProgramWithSegment:2 completed:^(id object) {
                                        
                                        [[AudioManager shared] playOnboardingAudio:2];
                                        
@@ -1293,7 +1291,7 @@ setForOnDemandUI;
     [[AudioManager shared] setCalibrating:YES];
 
     [self.jogShuttle.view setAlpha:1.0];
-    [[SessionManager shared] fetchCurrentSchedule:^(id returnedObject) {
+    [[SessionManager shared] fetchCurrentSchedule:^(id object) {
         [self.jogShuttle animateWithSpeed:0.8
                              hideableView:self.playPauseButton
                                 direction:SpinDirectionForward
@@ -1762,16 +1760,16 @@ setForOnDemandUI;
 }
 
 - (void)updateDataForUI {
-    [[SessionManager shared] fetchCurrentSchedule:^(id returnedObject) {
-        if ( returnedObject ) {
+    [[SessionManager shared] fetchCurrentSchedule:^(id object) {
+        if ( object ) {
             
-            [self.liveProgressViewController displayWithProgram:(ScheduleOccurrence*)returnedObject
+            [self.liveProgressViewController displayWithProgram:(ScheduleOccurrence*)object
                                                          onView:self.view
                                                aboveSiblingView:self.playerControlsView];
             [self.liveProgressViewController hide];
             [self determinePlayState];
             
-            //[self.upcomingScreen primeWithProgramBasedOnCurrent:returnedObject];
+            //[self.upcomingScreen primeWithProgramBasedOnCurrent:object];
             [self.cpFullDetailScreen setupSchedule];
             
             if ( [[Utils del] userRespondedToPushWhileClosed] ) {
@@ -2083,7 +2081,7 @@ setForOnDemandUI;
     
 }
 
-- (void)setDataForOnDemand:(Program *)program andAudioChunk:(AudioChunk*)audioChunk completion:(CompletionBlock)completion {
+- (void)setDataForOnDemand:(Program *)program andAudioChunk:(AudioChunk*)audioChunk completion:(Block)completion {
     if (program != nil) {
         self.onDemandProgram = program;
         self.onDemandEpUrl = audioChunk.contentShareUrl;
@@ -3437,12 +3435,12 @@ setForOnDemandUI;
 - (void)menuItemSelected:(NSIndexPath *)indexPath {
     
     BOOL closeMenu = NO;
-    NSString *event = @"";
+//    NSString *event = @"";
     switch (indexPath.row) {
         case 0:
         {
             self.homeIsNotRootViewController = NO;
-            event = @"menuSelectionLiveStream";
+//            event = @"menuSelectionLiveStream";
             closeMenu = YES;
             if ( [AudioManager shared].currentAudioMode != AudioModeLive ) {
                 if ( self.initialPlay && [SessionManager shared].lastPrerollTime == nil) {
@@ -3459,7 +3457,7 @@ setForOnDemandUI;
         {
             
             self.homeIsNotRootViewController = YES;
-            event = @"menuSelectionPrograms";
+//            event = @"menuSelectionPrograms";
             id<GenericProgram> prog = [[SessionManager shared] currentSchedule];
             if (setForOnDemandUI && self.onDemandProgram != nil) {
                 prog = self.onDemandProgram;
@@ -3475,7 +3473,7 @@ setForOnDemandUI;
         case 2: {
             
             self.homeIsNotRootViewController = YES;
-            event = @"menuSelectionHeadlines";
+//            event = @"menuSelectionHeadlines";
             SCPRShortListViewController *slVC = [[SCPRShortListViewController alloc] initWithNibName:@"SCPRShortListViewController"
                                                                                               bundle:nil];
             slVC.view = slVC.view;
@@ -3488,7 +3486,7 @@ setForOnDemandUI;
             self.homeIsNotRootViewController = YES;
             closeMenu = YES;
             
-            event = @"menuSelectionWakeSleep";
+//            event = @"menuSelectionWakeSleep";
             SCPRTimerControlViewController *timer = [[SCPRTimerControlViewController alloc] initWithNibName:@"SCPRTimerControlViewController"
                                                                                                      bundle:nil];
             
@@ -3505,8 +3503,8 @@ setForOnDemandUI;
             break;
         }
         case 4: {
-            event = @"menuSelectionDonate";
-            
+//            event = @"menuSelectionDonate";
+
             [[AnalyticsManager shared] logEvent:@"userSelectedDonate"
                                  withParameters:nil];
             
@@ -3519,7 +3517,16 @@ setForOnDemandUI;
         case 5: {
             
             self.homeIsNotRootViewController = YES;
-            event = @"menuSelectionFeedback";
+//            event = @"menuSelectionProfile";
+            [self.navigationController pushViewController:UserProfileViewController.new animated:YES];
+
+            break;
+            
+        }
+        case 6: {
+            
+            self.homeIsNotRootViewController = YES;
+//            event = @"menuSelectionFeedback";
             SCPRFeedbackViewController *fbVC = [[SCPRFeedbackViewController alloc] initWithNibName:@"SCPRFeedbackViewController"
                                                                                             bundle:nil];
             [self.navigationController pushViewController:fbVC animated:YES];
@@ -3574,9 +3581,11 @@ setForOnDemandUI;
     NSAssert([NSThread isMainThread],@"This is not the main thread...");
     
     if ( self.showLiveHelpScreens ) {
-        self.showLiveHelpScreens = NO;
-        SCPRAppDelegate *del = [Utils del];
-        [del onboardForLiveFunctionality];
+        if (! [self.presentedViewController isKindOfClass:[AuthenticationViewController class]]) {
+            self.showLiveHelpScreens = NO;
+            SCPRAppDelegate *del = [Utils del];
+            [del onboardForLiveFunctionality];
+        }
     }
     
     [self adjustScrollingState];
@@ -3622,8 +3631,6 @@ setForOnDemandUI;
             }
         }
     }
-        
-//        [[AnalyticsManager shared] nielsenTrack];
 
     [self.liveProgressViewController tick];
     [self tickOnDemand];
@@ -3661,7 +3668,7 @@ setForOnDemandUI;
 
 - (void)onSeekCompleted {
     // Make sure UI gets set to "Playing" state after a seek.
-    [[SessionManager shared] fetchCurrentSchedule:^(id returnedObject) {
+    [[SessionManager shared] fetchCurrentSchedule:^(id object) {
         [self.jogShuttle endAnimations];
     }];
 }

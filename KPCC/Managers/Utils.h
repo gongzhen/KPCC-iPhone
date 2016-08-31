@@ -13,7 +13,7 @@
 #import "NSDate+Helper.h"
 #import "UIButton+Additions.h"
 #import "NSData+JSONAdditions.h"
-
+#import "BlockTypes.h"
 
 @import AVFoundation;
 

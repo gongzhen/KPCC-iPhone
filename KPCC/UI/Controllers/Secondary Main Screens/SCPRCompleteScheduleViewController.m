@@ -35,9 +35,9 @@
 
 - (void)setupSchedule {
     
-    [[SessionManager shared] fetchScheduleForTodayAndTomorrow:^(id returnedObject) {
+    [[SessionManager shared] fetchScheduleForTodayAndTomorrow:^(id object) {
         
-        if ( returnedObject ) {
+        if ( object ) {
             
             NSDate *now = [[SessionManager shared] vNow];
             NSDateComponents *comps = [[NSCalendar currentCalendar] components:NSCalendarUnitDay|NSCalendarUnitWeekday|NSCalendarUnitWeekOfMonth|NSCalendarUnitMonth|NSCalendarUnitYear
@@ -50,7 +50,7 @@
                 tomorrowWeekday = 1;
             }
             
-            self.programObjects = returnedObject;
+            self.programObjects = object;
             self.todayPrograms = [NSMutableArray new];
             self.tomorrowPrograms = [NSMutableArray new];
             

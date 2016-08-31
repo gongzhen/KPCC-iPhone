@@ -1,0 +1,66 @@
+/* 
+  Lock.strings
+  KPCC
+
+  Created by Fuller, Christopher on 6/3/16.
+  Copyright © 2016 Southern California Public Radio. All rights reserved.
+*/
+
+"ACCESS" = "Log In";
+"Auth0 configuration for your app is not available. Please try again later." = "Configuration for your app is not available. Please try later.";
+"Authentication failed" = "Authentication failed.";
+"Can't find connection name to use for authentication" = "Can't find a connection name to use for authentication.";
+"CANCEL" = "Cancel";
+"Could not connect to server" = "Could not connect to server.";
+"Couldn't found authentication method for unknown connection" = "Couldn't find authentication method for unknown connection.";
+"Couldn't request to reset your password" = "Couldn't request to reset your password.";
+"Couldn't start authentication using Safari" = "Couldn't start authentication using Safari.";
+"Couldnt get login screen configuration. Please try again." = "Couldn't get login screen configuration. Please try again.";
+"Couldnt get Sign Up screen configuration. Please try again." = "Couldn't get sign up screen configuration. Please try again.";
+"Failed to display login" = "Failed to display login.";
+"Failed to display Sign Up" = "Failed to display sign up.";
+"Failed to load Auth0 configuration" = "Failed to load configuration.";
+"Invalid credentials" = "Invalid credentials.";
+"Invalid login credentials" = "Invalid login credentials.";
+"Invalid phone number" = "Invalid phone number.";
+"Login with %@" = "Login with %@.";
+"Login with 37 Signals" = "Login with 37 Signals.";
+"Login with Evernote (Sandbox)" = "Login with Evernote (Sandbox).";
+"Login with Exact" = "Login with Exact.";
+"Login with Google" = "Login with Google.";
+"Login with Microsoft" = "Login with Microsoft.";
+"Login with Planning Center" = "Login with Planning Center.";
+"Login with Salesforce (Sandbox)" = "Login with Salesforce (Sandbox).";
+"Login with The City (Sandbox)" = "Login with The City (Sandbox).";
+"Login with The City" = "Login with The City.";
+"Login with Yahoo!" = "Login with Yahoo!.";
+"Login with 人人" = "Login with 人人.";
+"Login with 新浪微博" = "Login with 新浪微博.";
+"Login with 百度" = "Login with 百度.";
+"Login" = "Log In";
+"Or please enter your email and password" = "Or please enter your email and password.";
+"OR" = "Or";
+"Permissions were not granted. Please authorize the app in Settings > Twitter" = "Permissions were not granted. Please authorize this app in Settings > Twitter.";
+"Permissions were not granted. Try again" = "Permissions were not granted. Try again.";
+"Please enter your email address. We will send you an email to reset your password." = "Enter your email address below.";
+"Please enter your email and password" = "Please enter your email and password.";
+"Please enter your username and password" = "Please enter your username and password.";
+"RESET PASSWORD" = "Reset Password";
+"SEND" = "Submit";
+"SIGN UP" = "Sign Up";
+"SINGLE SIGN-ON ENABLED" = "Single sign-on enabled.";
+"The credentials you entered are invalid. Please try again" = "The credentials you entered are invalid. Please try again.";
+"The server could not be contacted" = "The server could not be contacted.";
+"The twitter account seems to be invalid. Please check it in Settings > Twitter and re-enter them." = "The Twitter account seems to be invalid. Please check it in Settings > Twitter and try again.";
+"The user does not exists. Please check the email and try again." = "This user does not exist. Please check the email and try again.";
+"There was an error contacting Facebook" = "There was an error contacting Facebook.";
+"There was an error contacting Google+" = "There was an error contacting Google+.";
+"There was an error contacting Twitter" = "There was an error contacting Twitter.";
+"There was an error logging in" = "There was an error logging in.";
+"There was an error signing up" = "There was an error signing up.";
+"There was no connection configured for the domain" = "There was no connection configured for the domain.";
+"User cancelled the login operation. Try again" = "User cancelled the login operation. Try again.";
+"You have no enabled connections for your application. Please check your configuration and try again" = "You have no enabled connections for your application. Please check your configuration and try again.";
+"You must enter a valid phone number" = "You must enter a valid phone number.";
+"You need to authorize the application" = "You need to authorize the application.";
+"You need to configure your auth0 scheme in CFBundleURLTypes in your app's Info.plist file" = "You need to configure your Auth0 scheme in CFBundleURLTypes in your app's Info.plist file.";

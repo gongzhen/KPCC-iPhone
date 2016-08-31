@@ -19,7 +19,6 @@
 #import "UXmanager.h"
 #import "SCPRMasterViewController.h"
 #import "Bookmark.h"
-#import <Parse/Parse.h>
 
 static AudioManager *singleton = nil;
 
@@ -55,7 +54,7 @@ static const NSString *ItemStatusContext;
     return singleton;
 }
 
-- (void)loadXfsStreamUrlWithCompletion:(CompletionBlock)completion {
+- (void)loadXfsStreamUrlWithCompletion:(Block)completion {
     
     PFQuery *settingsQuery = [PFQuery queryWithClassName:@"iPhoneSettings"];
     [settingsQuery whereKey:@"settingName"
@@ -194,7 +193,7 @@ static const NSString *ItemStatusContext;
                         }
 
                         if ([self.audioPlayer currentDates] != nil && [[self.audioPlayer currentDates] hasDates]) {
-                            [self.audioPlayer seekToDate:[self.audioPlayer currentDates].curDate completion:^(BOOL finished) {
+                            [self.audioPlayer seekToDate:[self.audioPlayer currentDates].curDate completion:^{
                                 CLS_LOG(@"Played by seeking after interruption.");
                             }];
                         } else {
@@ -239,7 +238,7 @@ static const NSString *ItemStatusContext;
 
 #pragma mark - Scrubbing and Seeking
 - (void)seekToPercent:(CGFloat)percent {
-    [self.audioPlayer seekToPercent:percent completion:^(BOOL finished) {
+    [self.audioPlayer seekToPercent:percent completion:^{
         if ([self.delegate respondsToSelector:@selector(onSeekCompleted)]) {
             [self.delegate onSeekCompleted];
         }
@@ -256,7 +255,7 @@ static const NSString *ItemStatusContext;
             [self buildStreamer:nil];
         }
 
-        [self.audioPlayer seekToDate:p.soft_starts_at completion:^(BOOL finished) {
+        [self.audioPlayer seekToDate:p.soft_starts_at completion:^{
             if ([self.delegate respondsToSelector:@selector(onSeekCompleted)]) {
                 [self.delegate onSeekCompleted];
             }
@@ -266,12 +265,12 @@ static const NSString *ItemStatusContext;
     }
 }
 
-- (void)forwardSeekLiveWithType:(NSInteger)type completion:(CompletionBlock)completion {
+- (void)forwardSeekLiveWithType:(NSInteger)type completion:(Block)completion {
     if (!self.audioPlayer) {
         [self buildStreamer:nil];
     }
 
-    [self.audioPlayer seekToLive:^(BOOL finished) {
+    [self.audioPlayer seekToLive:^{
         [self.delegate onSeekCompleted];
 
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -284,14 +283,14 @@ static const NSString *ItemStatusContext;
     }];
 }
 
-- (void)seekToDate:(NSDate *)date completion:(CompletionBlock)completion {
+- (void)seekToDate:(NSDate *)date completion:(Block)completion {
     
     NSDate *now = [[SessionManager shared] vNow];
     [self intervalSeekWithTimeInterval:(-1.0f*[now timeIntervalSinceDate:date]) completion:completion];
     
 }
 
-- (void)intervalSeekWithTimeInterval:(NSTimeInterval)interval completion:(CompletionBlock)completion {
+- (void)intervalSeekWithTimeInterval:(NSTimeInterval)interval completion:(Block)completion {
     [self.audioPlayer seekByInterval:interval completion:^(BOOL finished) {
         if (completion) {
             completion();
@@ -299,7 +298,7 @@ static const NSString *ItemStatusContext;
     }];
 }
 
-- (void)forwardSeekThirtySecondsWithCompletion:(CompletionBlock)completion {
+- (void)forwardSeekThirtySecondsWithCompletion:(Block)completion {
     NSTimeInterval forward = 30.0f;
     [self intervalSeekWithTimeInterval:forward completion:^{
         [[AnalyticsManager shared] trackSeekUsageWithType:ScrubbingTypeFwd30];
@@ -309,7 +308,7 @@ static const NSString *ItemStatusContext;
     }];
 }
 
-- (void)backwardSeekThirtySecondsWithCompletion:(CompletionBlock)completion {
+- (void)backwardSeekThirtySecondsWithCompletion:(Block)completion {
     NSTimeInterval backward = -30.0f;
     [self intervalSeekWithTimeInterval:backward completion:^{
         [[AnalyticsManager shared] trackSeekUsageWithType:ScrubbingTypeBack30];
@@ -319,12 +318,12 @@ static const NSString *ItemStatusContext;
     }];
 }
 
-- (void)forwardSeekFifteenSecondsWithCompletion:(CompletionBlock)completion {
+- (void)forwardSeekFifteenSecondsWithCompletion:(Block)completion {
     NSTimeInterval backward = 15.0f;
     [self intervalSeekWithTimeInterval:backward completion:completion];
 }
 
-- (void)backwardSeekFifteenSecondsWithCompletion:(CompletionBlock)completion {
+- (void)backwardSeekFifteenSecondsWithCompletion:(Block)completion {
     NSTimeInterval backward = -15.0f;
     [self intervalSeekWithTimeInterval:backward completion:completion];
 }
@@ -335,7 +334,7 @@ static const NSString *ItemStatusContext;
 
     if ( cp != nil && ![cp containsDate:vNow]) {
         NSLog(@"Scrub will force program update for vNow : %@",[NSDate stringFromDate:vNow withFormat:@"h:mm:s a"]);
-        [[SessionManager shared] fetchCurrentSchedule:^(id returnedObject) {
+        [[SessionManager shared] fetchCurrentSchedule:^(id object) {
             
         }];
     }
@@ -382,8 +381,6 @@ static const NSString *ItemStatusContext;
     }
 
     CLS_LOG(@"In buildStreamer for %@",urlString);
-    
-    [[NetworkManager shared] setupFloatingReachabilityWithHost:urlString];
     
     if ( self.audioPlayer ) {
         [self takedownAudioPlayer];
@@ -471,7 +468,7 @@ static const NSString *ItemStatusContext;
                         [self resetPlayer];
 
                         if (d != nil && d.curDate != nil) {
-                            [self.audioPlayer seekToDate:d.curDate completion:^(BOOL finished) {
+                            [self.audioPlayer seekToDate:d.curDate completion:^{
                                 CLS_LOG(@"Finished seek on player retry.");
                             }];
                         } else {
@@ -743,7 +740,14 @@ static const NSString *ItemStatusContext;
         self.audioPlayer.volume = 0.0f;
     }
 
-    [self.audioPlayer play];
+    NSDate *date = self.audioPlayer.currentDate;
+
+    if (date) {
+        [self.audioPlayer seekToDate:date completion:nil];
+    }
+    else {
+        [self.audioPlayer play];
+    }
 }
 
 - (void)pauseAudio {

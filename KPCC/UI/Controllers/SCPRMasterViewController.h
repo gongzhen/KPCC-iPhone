@@ -14,7 +14,6 @@
 #import "QueueManager.h"
 #import "Program.h"
 #import "FXBlurView.h"
-#import <pop/POP.h>
 #import "SCPRPullDownMenu.h"
 #import "Episode.h"
 #import "Segment.h"
@@ -281,5 +280,6 @@
 
 @property BOOL userIsLoggingIn;
 
+- (IBAction)initialPlayTapped:(id)sender;
 
 @end

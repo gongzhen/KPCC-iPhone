@@ -10,6 +10,9 @@ import Foundation
 import CoreData
 
 @objc class ScheduleOccurrence: NSManagedObject, GenericProgram {
+
+    private static let entityName = "ScheduleOccurrence"
+
     @NSManaged var title:String;
     @NSManaged var ends_at:NSDate;
     @NSManaged var starts_at:NSDate;
@@ -19,23 +22,15 @@ import CoreData
 
     @objc var duration:NSTimeInterval = 0
 
-    class func entityName() -> String {
-        return "ScheduleOccurrence"
-    }
-
-    convenience init?(dict:NSDictionary) {
-
-        guard let context = ContentManager.shared().managedObjectContext else {
-            return nil
-        }
+    static func newScheduleOccurrence(context context: NSManagedObjectContext, dictionary: NSDictionary) -> ScheduleOccurrence? {
 
         guard let
-            title = dict["title"] as? String,
-            ends_at = dict["ends_at"] as? String,
-            starts_at = dict["starts_at"] as? String,
-            soft_starts_at = dict["soft_starts_at"] as? String,
-            public_url = dict["public_url"] as? String,
-            program_slug = dict["program"]?["slug"] as? String
+            title = dictionary["title"] as? String,
+            ends_at = dictionary["ends_at"] as? String,
+            starts_at = dictionary["starts_at"] as? String,
+            soft_starts_at = dictionary["soft_starts_at"] as? String,
+            public_url = dictionary["public_url"] as? String,
+            program_slug = dictionary["program"]?["slug"] as? String
             else {
                 return nil
         }
@@ -48,7 +43,7 @@ import CoreData
                 return nil
         }
 
-        self.init(
+        return newScheduleOccurrence(
             context: context,
             title: title,
             ends_at: ends_at_date,
@@ -60,21 +55,28 @@ import CoreData
 
     }
 
-    init(context: NSManagedObjectContext, title: String, ends_at: NSDate, starts_at: NSDate, soft_starts_at: NSDate, public_url: String, program_slug: String) {
+    static func newScheduleOccurrence(context context: NSManagedObjectContext, title: String, ends_at: NSDate, starts_at: NSDate, soft_starts_at: NSDate, public_url: String, program_slug: String) -> ScheduleOccurrence? {
 
-        let entityDescription = NSEntityDescription.entityForName("ScheduleOccurrence", inManagedObjectContext: context)!
+        let object = NSEntityDescription.insertNewObjectForEntityForName(
+            entityName,
+            inManagedObjectContext: context
+        )
 
-        super.init(entity: entityDescription, insertIntoManagedObjectContext: context)
+        guard let scheduleOccurrence = object as? ScheduleOccurrence else {
+            return nil
+        }
 
-        self.title = title
-        self.ends_at = ends_at
-        self.starts_at = starts_at
-        self.soft_starts_at = soft_starts_at
-        self.public_url = public_url
-        self.program_slug = program_slug
+        scheduleOccurrence.title = title
+        scheduleOccurrence.ends_at = ends_at
+        scheduleOccurrence.starts_at = starts_at
+        scheduleOccurrence.soft_starts_at = soft_starts_at
+        scheduleOccurrence.public_url = public_url
+        scheduleOccurrence.program_slug = program_slug
 
         // compute duration
-        self.duration = self.ends_at.timeIntervalSinceReferenceDate - self.starts_at.timeIntervalSinceReferenceDate
+        scheduleOccurrence.duration = scheduleOccurrence.ends_at.timeIntervalSinceDate(scheduleOccurrence.starts_at)
+
+        return scheduleOccurrence
 
     }
 
@@ -90,15 +92,9 @@ import CoreData
 
     //----------
 
-    func percentageToDate(var percent:Double) -> NSDate {
-        if (percent > 1.0) {
-            percent = 1.0
-        } else if (percent < 0.0) {
-            percent = 0.0
-        }
-        
+    func percentageToDate(percent: Double) -> NSDate {
         let duration = self.ends_at.timeIntervalSinceReferenceDate - self.starts_at.timeIntervalSinceReferenceDate
-        let seconds:Double = duration * percent
+        let seconds: Double = duration * clamp(0.0, percent, 1.0)
         return self.starts_at.dateByAddingTimeInterval(seconds)
     }
 

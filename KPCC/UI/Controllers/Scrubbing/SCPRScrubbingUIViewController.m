@@ -336,7 +336,7 @@
 
     if ( [[AudioManager shared] currentAudioMode] == AudioModeOnDemand ) {
         // on-demand seeks are just based on percentage, so we're good
-        [[[AudioManager shared] audioPlayer] seekToPercent:(double)finalValue completion:^(BOOL finished) {
+        [[[AudioManager shared] audioPlayer] seekToPercent:(double)finalValue completion:^{
             [self postSeek];
         }];
 
@@ -351,14 +351,14 @@
 
     if ( !seekDate ) {
         // a nil seekDate implies seeking to live
-        [[[AudioManager shared] audioPlayer] seekToLive:^(BOOL finished){
+        [[[AudioManager shared] audioPlayer] seekToLive:^{
             [self postSeek];
         }];
         
         return;
     }
 
-    [[[AudioManager shared] audioPlayer] seekToDate:seekDate completion:^(BOOL finished){
+    [[[AudioManager shared] audioPlayer] seekToDate:seekDate completion:^{
         [self postSeek];
     }];
 

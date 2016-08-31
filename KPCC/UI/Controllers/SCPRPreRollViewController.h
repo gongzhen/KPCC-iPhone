@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <Crashlytics/Crashlytics.h>
 #import "AudioAd.h"
 #import "SCPRAppDelegate.h"
 #import "KPCC-Swift.h"
@@ -23,7 +24,7 @@
 @interface SCPRPreRollViewController : UIViewController
 
 - (void)showPreRollWithAnimation:(BOOL)animated completion:(void (^)(BOOL done))completion;
-- (void)primeUI:(CompletionBlock)completed;
+- (void)primeUI:(Block)completed;
 - (void)playOrPause;
 
 @property (nonatomic, strong) UITapGestureRecognizer *adTapper;

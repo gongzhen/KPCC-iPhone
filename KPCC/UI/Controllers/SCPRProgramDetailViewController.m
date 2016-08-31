@@ -49,7 +49,7 @@
     self.blurView.blurRadius = 20.f;
     self.blurView.dynamic = NO;
     self.blurView.alpha = 0.0f;
-    self.programBgImage.contentMode = UIViewContentModeCenter;
+    self.programBgImage.contentMode = UIViewContentModeScaleAspectFill;
     self.curtainView.backgroundColor = [UIColor clearColor];
 
     
@@ -83,10 +83,10 @@
                                           [[DesignManager shared] setCurrentBlurredImage:blurred];
                                           
                                           [[NetworkManager shared] fetchEpisodesForProgram:_program.program_slug
-                                                                                completion:^(id returnedObject) {
+                                                                                completion:^(id object) {
                                                                                     
-                                                                                    NSAssert([returnedObject isKindOfClass:[NSArray class]],@"Expecting an Array here");
-                                                                                    NSArray *content = (NSArray*)returnedObject;
+                                                                                    NSAssert([object isKindOfClass:[NSArray class]],@"Expecting an Array here");
+                                                                                    NSArray *content = (NSArray*)object;
                                                                                     if ([content count] == 0) {
                                                                                         return;
                                                                                     }
@@ -198,18 +198,18 @@
                                             withAudio:audioChunks
                                        atCurrentIndex:(int)indexPath.row];
     
-    id episode = self.episodesList[indexPath.row];
-    NSString *title = @"[UNKNOWN]";
-    NSString *programTitle = @"[UNKNOWN]";
-    if ([episode isKindOfClass:[Episode class]]) {
-        Episode *ep = (Episode *) episode;
-        title = [ep.title stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-        programTitle = ep.programName;
-    } else {
-        Segment *seg = (Segment *) episode;
-        title = seg.title;
-        programTitle = seg.programName;
-    }
+//    id episode = self.episodesList[indexPath.row];
+//    NSString *title = @"[UNKNOWN]";
+//    NSString *programTitle = @"[UNKNOWN]";
+//    if ([episode isKindOfClass:[Episode class]]) {
+//        Episode *ep = (Episode *) episode;
+//        title = [ep.title stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+//        programTitle = ep.programName;
+//    } else {
+//        Segment *seg = (Segment *) episode;
+//        title = seg.title;
+//        programTitle = seg.programName;
+//    }
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {

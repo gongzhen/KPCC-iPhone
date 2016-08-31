@@ -140,8 +140,6 @@
                                                  @"programTitle" : title,
                                                  @"streamId" : plus
                                                  }];
-    
-//    [[AnalyticsManager shared] nielsenPlay];
 
 }
 
@@ -262,7 +260,7 @@
     return self.sleepTimerArmed;
 }
 
-- (void)armSleepTimerWithSeconds:(NSInteger)seconds completed:(CompletionBlock)completed {
+- (void)armSleepTimerWithSeconds:(NSInteger)seconds completed:(Block)completed {
     
     [self disarmSleepTimerWithCompletion:nil];
 
@@ -310,13 +308,13 @@
                                                         object:nil];
 }
 
-- (void)cancelSleepTimerWithCompletion:(CompletionBlock)completed {
+- (void)cancelSleepTimerWithCompletion:(Block)completed {
     [[AnalyticsManager shared] logEvent:@"sleepTimerCanceled"
                          withParameters:nil];
     [self disarmSleepTimerWithCompletion:completed];
 }
 
-- (void)disarmSleepTimerWithCompletion:(CompletionBlock)completed {
+- (void)disarmSleepTimerWithCompletion:(Block)completed {
     if ( self.sleepTimer ) {
         if ( [self.sleepTimer isValid] ) {
             [self.sleepTimer invalidate];
@@ -342,7 +340,7 @@
 }
 
 #pragma mark - Program
-- (void)fetchOnboardingProgramWithSegment:(NSInteger)segment completed:(CompletionBlockWithValue)completed {
+- (void)fetchOnboardingProgramWithSegment:(NSInteger)segment completed:(BlockWithObject)completed {
     NSMutableDictionary *p = [NSMutableDictionary new];
     p[@"soft_starts_at"] = [NSDate date];
     p[@"starts_at"] = [NSDate date];
@@ -365,16 +363,19 @@
     
 }
 
-- (void)fetchScheduleAtDate:(NSDate *)date completed:(CompletionBlockWithValue)completed {
+- (void)fetchScheduleAtDate:(NSDate *)date completed:(BlockWithObject)completed {
     NSString *urlString = [NSString stringWithFormat:@"%@/schedule/at?time=%d",kServerBase,(int)[date timeIntervalSince1970]];
-    [[NetworkManager shared] requestFromSCPRWithEndpoint:urlString completion:^(id returnedObject) {
+    [[NetworkManager shared] requestFromSCPRWithEndpoint:urlString completion:^(id object) {
         // Create ScheduleOccurrence and insert into managed object context
-        if ( returnedObject && [(NSDictionary*)returnedObject count] > 0 ) {
+        if ( object && [(NSDictionary*)object count] > 0 ) {
             self.programFetchFailoverCount = 0;
             if ( completed ) {
                 dispatch_async(dispatch_get_main_queue(), ^{
 
-                    ScheduleOccurrence *scheduleObj = [[ScheduleOccurrence alloc] initWithDict:returnedObject];
+                    NSManagedObjectContext *context = ContentManager.shared.managedObjectContext;
+
+                    ScheduleOccurrence *scheduleObj = [ScheduleOccurrence newScheduleOccurrenceWithContext:context
+                                                                                                dictionary:object];
 
                     NSLog(@"fetchSched got %@",scheduleObj);
                     
@@ -407,7 +408,7 @@
     
 }
 
-- (void)fetchCurrentSchedule:(CompletionBlockWithValue)completed {
+- (void)fetchCurrentSchedule:(BlockWithObject)completed {
     
     if ( ![[UXmanager shared] onboardingEnding] && ![[UXmanager shared].settings userHasViewedOnboarding] ) {
         return;
@@ -424,12 +425,12 @@
         return;
     }
 
-    [self fetchScheduleAtDate:ct completed:^(id returnedObject) {
+    [self fetchScheduleAtDate:ct completed:^(id object) {
 #ifdef TESTING_SCHEDULE
-        returnedObject = nil;
+        object = nil;
 #endif
-        if ( returnedObject ) {
-            ScheduleOccurrence *scheduleObj = (ScheduleOccurrence*)returnedObject;
+        if ( object ) {
+            ScheduleOccurrence *scheduleObj = (ScheduleOccurrence*)object;
 
             self.currentSchedule = scheduleObj;
 
@@ -448,22 +449,28 @@
             NSDate *now = [self vNow];
             NSDictionary *bookends = [now bookends];
 
-            ScheduleOccurrence *gs = [[ScheduleOccurrence alloc] initWithContext:[[ContentManager shared] managedObjectContext]
-                                                                           title:kMainLiveStreamTitle
-                                                                         ends_at:bookends[@"bottom"]
-                                                                       starts_at:bookends[@"top"]
-                                                                  soft_starts_at:bookends[@"top"]
-                                                                      public_url:@"http://www.scpr.org"
-                                                                    program_slug:@"kpcc-live"];
+            NSManagedObjectContext *context = ContentManager.shared.managedObjectContext;
 
-            [[ContentManager shared] saveContext];
-            
-            self.currentSchedule = gs;
-            
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"program-has-changed"
-                                                                object:nil
-                                                              userInfo:nil];
-            
+            ScheduleOccurrence *gs = [ScheduleOccurrence newScheduleOccurrenceWithContext:context
+                                                                                    title:kMainLiveStreamTitle
+                                                                                  ends_at:bookends[@"bottom"]
+                                                                                starts_at:bookends[@"top"]
+                                                                           soft_starts_at:bookends[@"top"]
+                                                                               public_url:@"http://www.scpr.org"
+                                                                             program_slug:@"kpcc-live"];
+
+            if (gs) {
+
+                [[ContentManager shared] saveContext];
+
+                self.currentSchedule = gs;
+
+                [[NSNotificationCenter defaultCenter] postNotificationName:@"program-has-changed"
+                                                                    object:nil
+                                                                  userInfo:nil];
+
+            }
+
             completed(gs);
             
         }
@@ -473,7 +480,7 @@
 
 }
 
-- (void)fetchScheduleForTodayAndTomorrow:(CompletionBlockWithValue)completed {
+- (void)fetchScheduleForTodayAndTomorrow:(BlockWithObject)completed {
     
     NSDate *now = [[AudioManager shared].audioPlayer currentDate];
     if ( !now ) {
@@ -491,11 +498,11 @@
     timeUntilMidnight += 60*60*24;
     
     NSString *endpoint = [NSString stringWithFormat:@"%@/schedule?start_time=%ld&length=%ld",kServerBase,(long)[now timeIntervalSince1970],(long)timeUntilMidnight];
-    [[NetworkManager shared] requestFromSCPRWithEndpoint:endpoint completion:^(id returnedObject) {
+    [[NetworkManager shared] requestFromSCPRWithEndpoint:endpoint completion:^(id object) {
         
         if ( completed ) {
             dispatch_async(dispatch_get_main_queue(), ^{
-                completed(returnedObject);
+                completed(object);
             });
         }
         
@@ -509,7 +516,7 @@
     if ( [[AudioManager shared] currentAudioMode] == AudioModeOnDemand ) return;
     
     if ( force ) {
-        [self fetchCurrentSchedule:^(id returnedObject) {
+        [self fetchCurrentSchedule:^(id object) {
 
         }];
 
@@ -520,7 +527,7 @@
     if ( s && [s containsDate:[self vNow]]) {
         // we're good
     } else {
-        [self fetchCurrentSchedule:^(id returnedObject) {
+        [self fetchCurrentSchedule:^(id object) {
 
         }];
     }
@@ -528,7 +535,7 @@
 }
 
 #pragma mark - XFS
-- (void)xFreeStreamIsAvailableWithCompletion:(CompletionBlock)completion {
+- (void)xFreeStreamIsAvailableWithCompletion:(Block)completion {
 
     BOOL available = NO;
 
@@ -581,7 +588,7 @@
     }    
 }
 
-- (void)validateXFSToken:(NSString *)token completion:(CompletionBlockWithValue)completion {
+- (void)validateXFSToken:(NSString *)token completion:(BlockWithObject)completion {
     
     PFQuery *q = [PFQuery queryWithClassName:@"PfsUser"];
     [q whereKey:@"pledgeToken" equalTo:token];
@@ -721,7 +728,7 @@
 - (void)processNotification:(UILocalNotification*)programUpdate {
     
     if ( SEQ([programUpdate alertBody],kUpdateProgramKey) ) {
-        [self fetchCurrentSchedule:^(id returnedObject) {
+        [self fetchCurrentSchedule:^(id object) {
             
         }];
     }

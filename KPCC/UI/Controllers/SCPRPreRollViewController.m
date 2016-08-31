@@ -14,6 +14,7 @@
 #import "SCPRSpinnerViewController.h"
 #import "UXmanager.h"
 #import "SessionManager.h"
+#import "SCPRMasterViewController.h"
 
 #define kDefaultAdPresentationTime 10.0
 
@@ -26,7 +27,6 @@
 @property IBOutlet UIProgressView *adProgressView;
 
 @property (nonatomic) NSTimer *timer;
-
 
 @end
 
@@ -48,7 +48,7 @@
 
 
 # pragma mark - Presentations
-- (void)primeUI:(CompletionBlock)completed {
+- (void)primeUI:(Block)completed {
     [UIView animateWithDuration:0.3f animations:^{
         CGRect frame = CGRectMake(self.view.frame.origin.x, 0, self.view.frame.size.width, self.view.frame.size.height);
         self.view.frame = frame;
@@ -191,7 +191,12 @@
 - (void)openClickThroughUrl {
     NSString *url = self.audioAd.clickthroughUrl;
     if ( url && !SEQ(@"",url) ) {
-        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:url]];
+        if ([self.parentViewController isKindOfClass:[SCPRMasterViewController class]]) {
+            __weak SCPRMasterViewController *masterVC = (SCPRMasterViewController *)self.parentViewController;
+            [PreRollAdManager.sharedInstance openURL:url presentViewControllerBlock:^(UIViewController *viewController) {
+                [masterVC presentViewController:viewController animated:YES completion:nil];
+            }];
+        }
     }
 }
 

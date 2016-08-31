@@ -7,13 +7,11 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "Reachability.h"
 #import <CoreTelephony/CTTelephonyNetworkInfo.h>
 #import <CoreTelephony/CTCarrier.h>
-#import <AFNetworking.h>
 #import "AudioAd.h"
 #import "Utils.h"
-#import <KSReachability/KSReachability.h>
+#import "BlockTypes.h"
 
 #define kServerBase [[NetworkManager shared] serverBase]
 #define kFailoverThreshold 10
@@ -39,33 +37,22 @@ typedef NS_ENUM(NSInteger, NetworkHealth) {
 
 + (NetworkManager*)shared;
 
-@property (nonatomic,strong) KSReachability *anchoredReachability;
-@property (nonatomic,strong) KSReachability *anchoredStaticContentReachability;
-@property (nonatomic,strong) KSReachability *floatingReachability;
-@property (nonatomic,strong) KSReachableOperation *reachableOperation;
-@property (nonatomic,strong) Reachability *basicReachability;
 @property (nonatomic,strong) NSDate *timeDropped;
 @property (nonatomic,strong) NSDate *timeReturned;
-- (NetworkHealth)checkNetworkHealth;
-@property (NS_NONATOMIC_IOSONLY, readonly, copy) NSString *networkInformation;
 
 @property BOOL networkDown;
 @property BOOL allowOneFail;
 @property BOOL audioWillBeInterrupted;
 
-- (BOOL)wifi;
-
 @property (nonatomic, strong) NSTimer *failTimer;
 
-- (void)fetchAllProgramInformation:(CompletionBlockWithValue)completion;
-- (void)fetchEpisodesForProgram:(NSString*)slug completion:(CompletionBlockWithValue)completion;
-- (void)fetchEditions:(CompletionBlockWithValue)completion;
-- (void)requestFromSCPRWithEndpoint:(NSString *)endpoint completion:(CompletionBlockWithValue)completion;
-- (void)fetchAudioAd:(NSString *)params completion:(void (^)(AudioAd* audioAd))completion;
+- (void)fetchAllProgramInformation:(BlockWithObject)completion;
+- (void)fetchEpisodesForProgram:(NSString*)slug completion:(BlockWithObject)completion;
+- (void)fetchEditions:(BlockWithObject)completion;
+- (void)requestFromSCPRWithEndpoint:(NSString *)endpoint completion:(BlockWithObject)completion;
+- (void)fetchAudioAdUsingCookies:(BOOL)useCookies completion:(void (^)(AudioAd *audioAd))completion;
+- (void)fetchAudioAdWithCompletion:(void (^)(AudioAd *audioAd))completion;
 - (void)pingAudioAdUrl:(NSString*)url completion:(void (^)(BOOL success))completion;
-- (void)setupReachability;
-- (void)setupFloatingReachabilityWithHost:(NSString*)host;
-- (void)applyNotifiersToReachability:(KSReachability*)reachability;
 
 - (NSString*)serverBase;
 

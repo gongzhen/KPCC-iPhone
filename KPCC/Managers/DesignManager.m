@@ -384,9 +384,9 @@ static DesignManager *singleton = nil;
         
 #endif
     } else {
-        [button setImage:[UIImage imageNamed:nil]
+        [button setImage:nil
                 forState:UIControlStateNormal];
-        [button setImage:[UIImage imageNamed:nil]
+        [button setImage:nil
                 forState:UIControlStateHighlighted];
     }
 }
@@ -496,7 +496,7 @@ static DesignManager *singleton = nil;
 }
 
 #pragma mark - Utilities
-- (void)switchAccessoryForSpinner:(UIActivityIndicatorView *)spinner toReplace:(UIView *)toReplace callback:(CompletionBlock)callback {
+- (void)switchAccessoryForSpinner:(UIActivityIndicatorView *)spinner toReplace:(UIView *)toReplace callback:(Block)callback {
     if ( !spinner ) {
         spinner = WSPIN;
     }

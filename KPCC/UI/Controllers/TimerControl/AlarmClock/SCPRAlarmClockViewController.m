@@ -238,7 +238,7 @@
     return self.scrubbingSurface;
 }
 
-- (double)maxPercentage {
+- (CGFloat)maxPercentage {
     return 1.0f;
 }
 

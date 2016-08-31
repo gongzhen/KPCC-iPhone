@@ -22,7 +22,7 @@
 #define kMenuItemDonate     @"Donate"
 #define kMenuItemSettings   @"Settings"
 #define kMenuItemFeedback   @"Feedback"
-#define kMenuItemProfile @"Profile"
+#define kMenuItemProfile    @"Profile"
 
 #define kIconKPCCLive   @"antenna"
 #define kIconPrograms   @"microphone"
@@ -58,8 +58,7 @@
                                                                         kMenuItemShortList,
                                                                         kMenuItemAlarm,
                                                                         kMenuItemDonate,
-                                                                        /* TODO: When the rest of the SSO flow is complete, re-enable it in the menu
-                                                                         kMenuItemProfile,*/
+                                                                        kMenuItemProfile,
                                                                         kMenuItemFeedback,
                                   
                                                                         //
@@ -370,7 +369,7 @@
                          animations:^{
                              if (!fullyOpen)
                              {
-                                 NSInteger numberToUse = self.type == MenuTypeStandard ? [menuItems count] : 6;
+//                                 NSInteger numberToUse = self.type == MenuTypeStandard ? [menuItems count] : 6;
                                  self.frame = CGRectMake(0.0f,40.0f,self.frame.size.width,self.frame.size.height);
                                  fullyOpen = YES;
                              }
@@ -432,15 +431,15 @@
 
     BOOL isStatusBarShowing = ![[UIApplication sharedApplication] isStatusBarHidden];
 
-    if (UIInterfaceOrientationIsLandscape(self.window.rootViewController.interfaceOrientation)) {
-        if (isStatusBarShowing) { topMargin = [UIApplication.sharedApplication statusBarFrame].size.width; }
-        topMargin += topMarginLandscape;
-    }
-    else
-    {
+//    if (UIInterfaceOrientationIsLandscape(self.window.rootViewController.interfaceOrientation)) {
+//        if (isStatusBarShowing) { topMargin = [UIApplication.sharedApplication statusBarFrame].size.width; }
+//        topMargin += topMarginLandscape;
+//    }
+//    else
+//    {
         if (isStatusBarShowing) { topMargin = [UIApplication.sharedApplication statusBarFrame].size.height; }
         topMargin += (/*([menuItems count] * cellHeight) +*/ topMarginPortrait);
-    }
+//    }
 
     if (masterNavigationController != nil)
     {

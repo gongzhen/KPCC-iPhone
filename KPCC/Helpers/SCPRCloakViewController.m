@@ -26,14 +26,14 @@
     return cloak;
 }
 
-+ (void)cloakWithCustomCenteredView:(UIView *)customView useSpinner:(BOOL)useSpinner cloakAppeared:(CompletionBlock)cloakAppeared {
++ (void)cloakWithCustomCenteredView:(UIView *)customView useSpinner:(BOOL)useSpinner cloakAppeared:(Block)cloakAppeared {
     [SCPRCloakViewController cloakWithCustomCenteredView:customView
                                               useSpinner:useSpinner
                                                 blackout:YES
                                            cloakAppeared:cloakAppeared];
 }
 
-+ (void)cloakWithCustomCenteredView:(UIView *)customView useSpinner:(BOOL)useSpinner blackout:(BOOL)blackout cloakAppeared:(CompletionBlock)cloakAppeared  {
++ (void)cloakWithCustomCenteredView:(UIView *)customView useSpinner:(BOOL)useSpinner blackout:(BOOL)blackout cloakAppeared:(Block)cloakAppeared  {
     
     SCPRCloakViewController *cloak = [SCPRCloakViewController o];
     if ( [cloak cloaked] ) {
@@ -79,7 +79,7 @@
     
 }
 
-+ (void)cloakWithCustomCenteredView:(UIView *)customView cloakAppeared:(CompletionBlock)cloakAppeared {
++ (void)cloakWithCustomCenteredView:(UIView *)customView cloakAppeared:(Block)cloakAppeared {
     [SCPRCloakViewController cloakWithCustomCenteredView:customView
                                               useSpinner:NO
                                            cloakAppeared:cloakAppeared];

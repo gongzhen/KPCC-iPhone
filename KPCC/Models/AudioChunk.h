@@ -31,6 +31,7 @@ typedef NS_ENUM(NSUInteger, AudioType) {
 
 @property AudioType type;
 
+- (instancetype)init __unavailable;
 - (instancetype)initWithEpisode:(Episode *)episode NS_DESIGNATED_INITIALIZER;
 - (instancetype)initWithSegment:(Segment *)segment NS_DESIGNATED_INITIALIZER;
 - (instancetype)initWithScheduleOccurrence:(ScheduleOccurrence *)sched NS_DESIGNATED_INITIALIZER;
