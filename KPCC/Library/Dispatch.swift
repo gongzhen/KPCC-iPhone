@@ -54,6 +54,18 @@ extension Dispatch {
 
 extension Dispatch {
 
+    static func sync(queueType queueType: QueueType = .Main, closure: Closure) {
+        sync(queue: queueType.queue, closure: closure)
+    }
+
+    static func sync(queue queue: dispatch_queue_t, closure: Closure) {
+        dispatch_sync(queue, closure)
+    }
+
+}
+
+extension Dispatch {
+
     static func async(queueType queueType: QueueType = .Main, delay: Double? = nil, closure: Closure) {
         async(queue: queueType.queue, delay: delay, closure: closure)
     }

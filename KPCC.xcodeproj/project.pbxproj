@@ -313,19 +313,23 @@
 		76B9A9AE18EF59FD007A6D8C /* SCPRUserReportViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 76B9A9AB18EF59FD007A6D8C /* SCPRUserReportViewController.xib */; };
 		76B9A9B618EF79F6007A6D8C /* SCPRFooterView.m in Sources */ = {isa = PBXBuildFile; fileRef = 76B9A9B518EF79F6007A6D8C /* SCPRFooterView.m */; };
 		76EF5E8A193E8D6B00568A9D /* Storyboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 76EF5E89193E8D6B00568A9D /* Storyboard.storyboard */; };
-		8B084A2B1D18986F00B677A8 /* Notification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B084A2A1D18986F00B677A8 /* Notification.swift */; };
 		8B084A2D1D18BB0200B677A8 /* AuthenticationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B084A2C1D18BB0200B677A8 /* AuthenticationViewController.swift */; };
 		8B46CC361D06326800B853C9 /* AuthenticationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B46CC351D06326800B853C9 /* AuthenticationManager.swift */; };
 		8B8657C01D026E30004F3251 /* Lock.strings in Resources */ = {isa = PBXBuildFile; fileRef = 8B8657BF1D026E30004F3251 /* Lock.strings */; };
 		8B8B85AD1D0B3ADC00FA1D57 /* PreRollAdManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B8B85AC1D0B3ADC00FA1D57 /* PreRollAdManager.swift */; };
 		8B8B85AF1D0B3E0300FA1D57 /* NSMutableURLRequestExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B8B85AE1D0B3E0300FA1D57 /* NSMutableURLRequestExtension.swift */; };
 		8B8B85B11D0B496A00FA1D57 /* BackgroundTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B8B85B01D0B496A00FA1D57 /* BackgroundTask.swift */; };
-		8B8B85B31D0E041700FA1D57 /* UpdateInterfaceNotification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B8B85B21D0E041700FA1D57 /* UpdateInterfaceNotification.swift */; };
 		8B8E640B1D090DB500228251 /* UITableViewExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B8E640A1D090DB500228251 /* UITableViewExtension.swift */; };
 		8BA331571D1C819500B68ED1 /* A0GoogleAuthenticator.m in Sources */ = {isa = PBXBuildFile; fileRef = 8BA331541D1C819500B68ED1 /* A0GoogleAuthenticator.m */; };
 		8BA331581D1C819500B68ED1 /* A0GoogleProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 8BA331561D1C819500B68ED1 /* A0GoogleProvider.m */; };
 		8BB4B72A1D0657A100A621BA /* UserProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BB4B7281D0657A100A621BA /* UserProfileViewController.swift */; };
 		8BB4B72B1D0657A100A621BA /* UserProfileViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8BB4B7291D0657A100A621BA /* UserProfileViewController.xib */; };
+		8BDCBBE11D7752F300265DF2 /* InterfaceUpdatable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BDCBBE01D7752F300265DF2 /* InterfaceUpdatable.swift */; };
+		8BDCBBE31D7752FF00265DF2 /* NSNotificationQueueExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BDCBBE21D7752FF00265DF2 /* NSNotificationQueueExtension.swift */; };
+		8BDCBBE61D77534A00265DF2 /* KeyValueObservable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BDCBBE41D77534A00265DF2 /* KeyValueObservable.swift */; };
+		8BDCBBE71D77534A00265DF2 /* NotificationObservable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BDCBBE51D77534A00265DF2 /* NotificationObservable.swift */; };
+		8BDCBBE91D77537900265DF2 /* ObjectAssociable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BDCBBE81D77537900265DF2 /* ObjectAssociable.swift */; };
+		8BDCBBEB1D77539700265DF2 /* ClosureExecutable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BDCBBEA1D77539700265DF2 /* ClosureExecutable.swift */; };
 		8BECD94D1D07E250008CFC51 /* ComparableFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BECD94C1D07E250008CFC51 /* ComparableFunctions.swift */; };
 		8BECD9521D07E257008CFC51 /* StringExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BECD94F1D07E257008CFC51 /* StringExtension.swift */; };
 		8BECD9531D07E257008CFC51 /* UIColorExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BECD9501D07E257008CFC51 /* UIColorExtension.swift */; };
@@ -737,14 +741,12 @@
 		76B9A9B418EF79F6007A6D8C /* SCPRFooterView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCPRFooterView.h; sourceTree = "<group>"; };
 		76B9A9B518EF79F6007A6D8C /* SCPRFooterView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SCPRFooterView.m; sourceTree = "<group>"; };
 		76EF5E89193E8D6B00568A9D /* Storyboard.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Storyboard.storyboard; sourceTree = "<group>"; };
-		8B084A2A1D18986F00B677A8 /* Notification.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Notification.swift; sourceTree = "<group>"; };
 		8B084A2C1D18BB0200B677A8 /* AuthenticationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthenticationViewController.swift; sourceTree = "<group>"; };
 		8B46CC351D06326800B853C9 /* AuthenticationManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AuthenticationManager.swift; path = Managers/AuthenticationManager.swift; sourceTree = "<group>"; };
 		8B8657BF1D026E30004F3251 /* Lock.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = Lock.strings; sourceTree = "<group>"; };
 		8B8B85AC1D0B3ADC00FA1D57 /* PreRollAdManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PreRollAdManager.swift; path = Managers/PreRollAdManager.swift; sourceTree = "<group>"; };
 		8B8B85AE1D0B3E0300FA1D57 /* NSMutableURLRequestExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSMutableURLRequestExtension.swift; sourceTree = "<group>"; };
 		8B8B85B01D0B496A00FA1D57 /* BackgroundTask.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BackgroundTask.swift; sourceTree = "<group>"; };
-		8B8B85B21D0E041700FA1D57 /* UpdateInterfaceNotification.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UpdateInterfaceNotification.swift; sourceTree = "<group>"; };
 		8B8E640A1D090DB500228251 /* UITableViewExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UITableViewExtension.swift; sourceTree = "<group>"; };
 		8BA331531D1C819500B68ED1 /* A0GoogleAuthenticator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = A0GoogleAuthenticator.h; sourceTree = "<group>"; };
 		8BA331541D1C819500B68ED1 /* A0GoogleAuthenticator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = A0GoogleAuthenticator.m; sourceTree = "<group>"; };
@@ -752,6 +754,12 @@
 		8BA331561D1C819500B68ED1 /* A0GoogleProvider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = A0GoogleProvider.m; sourceTree = "<group>"; };
 		8BB4B7281D0657A100A621BA /* UserProfileViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserProfileViewController.swift; sourceTree = "<group>"; };
 		8BB4B7291D0657A100A621BA /* UserProfileViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = UserProfileViewController.xib; sourceTree = "<group>"; };
+		8BDCBBE01D7752F300265DF2 /* InterfaceUpdatable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InterfaceUpdatable.swift; sourceTree = "<group>"; };
+		8BDCBBE21D7752FF00265DF2 /* NSNotificationQueueExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSNotificationQueueExtension.swift; sourceTree = "<group>"; };
+		8BDCBBE41D77534A00265DF2 /* KeyValueObservable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeyValueObservable.swift; sourceTree = "<group>"; };
+		8BDCBBE51D77534A00265DF2 /* NotificationObservable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotificationObservable.swift; sourceTree = "<group>"; };
+		8BDCBBE81D77537900265DF2 /* ObjectAssociable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ObjectAssociable.swift; sourceTree = "<group>"; };
+		8BDCBBEA1D77539700265DF2 /* ClosureExecutable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ClosureExecutable.swift; sourceTree = "<group>"; };
 		8BE520321C93B57800048AAD /* BlockTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BlockTypes.h; sourceTree = "<group>"; };
 		8BECD94C1D07E250008CFC51 /* ComparableFunctions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ComparableFunctions.swift; sourceTree = "<group>"; };
 		8BECD94F1D07E257008CFC51 /* StringExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StringExtension.swift; sourceTree = "<group>"; };
@@ -1520,10 +1528,13 @@
 			isa = PBXGroup;
 			children = (
 				8B8B85B01D0B496A00FA1D57 /* BackgroundTask.swift */,
+				8BDCBBEA1D77539700265DF2 /* ClosureExecutable.swift */,
 				8BECD94C1D07E250008CFC51 /* ComparableFunctions.swift */,
 				8BECD9551D07E3D4008CFC51 /* Dispatch.swift */,
-				8B084A2A1D18986F00B677A8 /* Notification.swift */,
-				8B8B85B21D0E041700FA1D57 /* UpdateInterfaceNotification.swift */,
+				8BDCBBE01D7752F300265DF2 /* InterfaceUpdatable.swift */,
+				8BDCBBE41D77534A00265DF2 /* KeyValueObservable.swift */,
+				8BDCBBE51D77534A00265DF2 /* NotificationObservable.swift */,
+				8BDCBBE81D77537900265DF2 /* ObjectAssociable.swift */,
 			);
 			path = Library;
 			sourceTree = "<group>";
@@ -1532,6 +1543,7 @@
 			isa = PBXGroup;
 			children = (
 				8B8B85AE1D0B3E0300FA1D57 /* NSMutableURLRequestExtension.swift */,
+				8BDCBBE21D7752FF00265DF2 /* NSNotificationQueueExtension.swift */,
 				8BECD94F1D07E257008CFC51 /* StringExtension.swift */,
 				8BECD9501D07E257008CFC51 /* UIColorExtension.swift */,
 				8BECD9511D07E257008CFC51 /* UIFontExtension.swift */,
@@ -2023,6 +2035,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8BDCBBE11D7752F300265DF2 /* InterfaceUpdatable.swift in Sources */,
 				25B25B9F1B190EE200ABE8B4 /* SCPRXFSHeaderCell.m in Sources */,
 				25F30AEE1AFAB6B700F27187 /* SCPRUpcomingProgramViewController.m in Sources */,
 				258E8DFB1A16A6E800675E68 /* FeedbackManager.m in Sources */,
@@ -2032,6 +2045,7 @@
 				76349D1B18D8C74F0027C3B8 /* NetworkManager.m in Sources */,
 				254CC6A31A255A1E00560805 /* SCPRButton.m in Sources */,
 				8BA331581D1C819500B68ED1 /* A0GoogleProvider.m in Sources */,
+				8BDCBBE31D7752FF00265DF2 /* NSNotificationQueueExtension.swift in Sources */,
 				25F30AFA1AFABB3E00F27187 /* SCPRScheduleHeaderViewController.m in Sources */,
 				8B46CC361D06326800B853C9 /* AuthenticationManager.swift in Sources */,
 				52D0FC1C19D1F24F009AECEE /* SCPRProgramDetailHeaderView.m in Sources */,
@@ -2051,6 +2065,7 @@
 				25BBCD771A892D730015071E /* SCPRScrubbingUIViewController.m in Sources */,
 				25F2BC7E1A3B9B4D00108F73 /* SCPRGenericAvatarViewController.m in Sources */,
 				07A24B4F1BA3A88900197EB9 /* SCPRProgramTableViewHeader.m in Sources */,
+				8BDCBBE91D77537900265DF2 /* ObjectAssociable.swift in Sources */,
 				5248858E19CBA180005F59CC /* EpisodeAudio.m in Sources */,
 				07EB39641B989A09005A8DDB /* NowPlayingManager.swift in Sources */,
 				523E86D019C8A292006FC366 /* SCPRProgramDetailViewController.m in Sources */,
@@ -2061,6 +2076,7 @@
 				25E8BDB01AC0920E007B99EB /* SCPRAlarmClockViewController.m in Sources */,
 				258BB0381A1C07FD00B8FCFE /* UXmanager.m in Sources */,
 				8B8B85AF1D0B3E0300FA1D57 /* NSMutableURLRequestExtension.swift in Sources */,
+				8BDCBBE71D77534A00265DF2 /* NotificationObservable.swift in Sources */,
 				25B25BB51B1D096D00ABE8B4 /* SCPRBalloonViewController.m in Sources */,
 				76B9A9AC18EF59FD007A6D8C /* SCPRUserReportViewController.m in Sources */,
 				8BECD9541D07E257008CFC51 /* UIFontExtension.swift in Sources */,
@@ -2092,13 +2108,13 @@
 				8B084A2D1D18BB0200B677A8 /* AuthenticationViewController.swift in Sources */,
 				259E44FE1A1D2CD300F5CD65 /* SCPROnboardingViewController.m in Sources */,
 				52D0FC2019D1FC0C009AECEE /* SCPRProgramDetailTableViewCell.m in Sources */,
+				8BDCBBEB1D77539700265DF2 /* ClosureExecutable.swift in Sources */,
 				760E3C4C194FB61B00D86D91 /* Program.m in Sources */,
 				07EB39601B9731BC005A8DDB /* AVObserver.swift in Sources */,
 				259E45021A1D2CE400F5CD65 /* SCPRLensViewController.m in Sources */,
 				25B59A5619FEF93700D4885C /* SCPRShortListViewController.m in Sources */,
 				258CA0FD1A09636900A3C8DB /* SessionManager.m in Sources */,
 				52CC6D6619D110E300C67322 /* SCPRProgramsListViewController.m in Sources */,
-				8B084A2B1D18986F00B677A8 /* Notification.swift in Sources */,
 				07EB395E1B9723ED005A8DDB /* AudioPlayer.swift in Sources */,
 				258E239F1A13FA84009F8F97 /* DataModel.xcdatamodeld in Sources */,
 				5257E9CC19E34A550055733F /* SCPRSlideInTransition.m in Sources */,
@@ -2107,7 +2123,6 @@
 				25F30AF51AFAB89600F27187 /* SCPRScheduleTableViewCell.m in Sources */,
 				760EA99219521E98009B504E /* AVPlayer+Additions.m in Sources */,
 				07EB39671B9A3D84005A8DDB /* SReachability.swift in Sources */,
-				8B8B85B31D0E041700FA1D57 /* UpdateInterfaceNotification.swift in Sources */,
 				52E68B8819B919300028F8AE /* SCPRMenuButton.m in Sources */,
 				07EB39621B973200005A8DDB /* AVStatus.swift in Sources */,
 				768C064819958FDA00F829EB /* SCPRMasterViewController.m in Sources */,
@@ -2117,6 +2132,7 @@
 				8B8B85B11D0B496A00FA1D57 /* BackgroundTask.swift in Sources */,
 				8B8E640B1D090DB500228251 /* UITableViewExtension.swift in Sources */,
 				259E45051A1D2CF700F5CD65 /* SCPRTextCalloutViewController.m in Sources */,
+				8BDCBBE61D77534A00265DF2 /* KeyValueObservable.swift in Sources */,
 				7617729B195B646300F69EFC /* Utils.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
