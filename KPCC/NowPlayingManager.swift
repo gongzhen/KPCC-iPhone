@@ -50,12 +50,12 @@ import MediaPlayer
         self._player = p
 
         p?.observeTime() { dates in
-            if self._audio != nil {
+            if let audio = self._audio {
                 let playhead:Double
-                if dates.hasDates() {
+                if let curDate = dates.curDate where dates.hasDates() {
                     // live stream... compare curDate to the audioTimestamp in 
                     // the AudioChunk to get seconds elapsed
-                    playhead = dates.curDate!.timeIntervalSinceReferenceDate - self._audio!.audioTimeStamp.timeIntervalSinceReferenceDate
+                    playhead = curDate.timeIntervalSinceReferenceDate - audio.audioTimeStamp.timeIntervalSinceReferenceDate
 
                 } else {
                     // on-demand. curTime and duration are all we need
