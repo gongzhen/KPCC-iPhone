@@ -13,10 +13,6 @@
 
 @implementation SCPRScheduleTableViewCell
 
-- (void)awakeFromNib {
-    // Initialization code
-}
-
 + (NSString*)rui {
     return @"schedule-cell";
 }
