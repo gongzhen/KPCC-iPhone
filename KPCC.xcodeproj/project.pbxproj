@@ -1625,6 +1625,7 @@
 				TargetAttributes = {
 					76A308C218C8FB940065D4B1 = {
 						DevelopmentTeam = SXALEDSVFU;
+						LastSwiftMigration = 0800;
 						SystemCapabilities = {
 							com.apple.BackgroundModes = {
 								enabled = 1;
@@ -1636,6 +1637,7 @@
 					};
 					76A308E918C8FB940065D4B1 = {
 						DevelopmentTeam = YM7582VNY5;
+						LastSwiftMigration = 0800;
 						TestTargetID = 76A308C218C8FB940065D4B1;
 					};
 				};
@@ -2264,6 +2266,7 @@
 				PRODUCT_NAME = "-$(TARGET_NAME)-";
 				SWIFT_OBJC_BRIDGING_HEADER = "KPCC/KPCC-Bridging-Header.h";
 				SWIFT_OBJC_INTERFACE_HEADER_NAME = "KPCC-Swift.h";
+				SWIFT_VERSION = 2.3;
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
@@ -2313,6 +2316,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "org.scpr.iphone.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 2.3;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/KPCC.app/KPCC";
 				WRAPPER_EXTENSION = xctest;
 			};
@@ -2446,6 +2450,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "KPCC/KPCC-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 2.3;
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
@@ -2503,6 +2508,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "${APP_UID}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "KPCC/KPCC-Bridging-Header.h";
+				SWIFT_VERSION = 2.3;
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
@@ -2556,6 +2562,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "org.scpr.iphone.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 2.3;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/KPCC.app/KPCC";
 				WRAPPER_EXTENSION = xctest;
 			};
@@ -2605,6 +2612,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "org.scpr.iphone.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 2.3;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/KPCC.app/KPCC";
 				WRAPPER_EXTENSION = xctest;
 			};
