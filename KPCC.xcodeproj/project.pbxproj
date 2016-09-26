@@ -748,6 +748,7 @@
 		8B8B85AE1D0B3E0300FA1D57 /* NSMutableURLRequestExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSMutableURLRequestExtension.swift; sourceTree = "<group>"; };
 		8B8B85B01D0B496A00FA1D57 /* BackgroundTask.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BackgroundTask.swift; sourceTree = "<group>"; };
 		8B8E640A1D090DB500228251 /* UITableViewExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UITableViewExtension.swift; sourceTree = "<group>"; };
+		8B95D0761D99B24100CAA139 /* KPCC.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = KPCC.entitlements; sourceTree = "<group>"; };
 		8BA331531D1C819500B68ED1 /* A0GoogleAuthenticator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = A0GoogleAuthenticator.h; sourceTree = "<group>"; };
 		8BA331541D1C819500B68ED1 /* A0GoogleAuthenticator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = A0GoogleAuthenticator.m; sourceTree = "<group>"; };
 		8BA331551D1C819500B68ED1 /* A0GoogleProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = A0GoogleProvider.h; sourceTree = "<group>"; };
@@ -1421,6 +1422,7 @@
 		76A308CC18C8FB940065D4B1 /* KPCC */ = {
 			isa = PBXGroup;
 			children = (
+				8B95D0761D99B24100CAA139 /* KPCC.entitlements */,
 				76B9A9BC18F609FF007A6D8C /* Assets */,
 				769FD69918EB682E00AAF1F4 /* Classes */,
 				8BECD94B1D07E250008CFC51 /* Library */,
@@ -2226,6 +2228,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_WARN_ENUM_CONVERSION = NO;
+				CODE_SIGN_ENTITLEMENTS = KPCC/KPCC.entitlements;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2421,6 +2424,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_WARN_ENUM_CONVERSION = NO;
+				CODE_SIGN_ENTITLEMENTS = KPCC/KPCC.entitlements;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2480,6 +2484,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_WARN_ENUM_CONVERSION = NO;
+				CODE_SIGN_ENTITLEMENTS = KPCC/KPCC.entitlements;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
