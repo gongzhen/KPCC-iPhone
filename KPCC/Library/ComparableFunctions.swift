@@ -2,7 +2,7 @@
 //  ComparableFunctions.swift
 //  KPCC
 //
-//  Created by Fuller, Christopher on 6/3/16.
+//  Created by Fuller, Christopher on 6/19/16.
 //  Copyright © 2016 Southern California Public Radio. All rights reserved.
 //
 
