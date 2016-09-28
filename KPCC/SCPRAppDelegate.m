@@ -44,8 +44,10 @@ NSString *const kPushChannel = @"listenLive";
 
     [[AnalyticsManager shared] setup];
 
-    [Parse setApplicationId:globalConfig[@"Parse"][@"ApplicationId"]
-                  clientKey:globalConfig[@"Parse"][@"ClientKey"]];
+    [Parse initializeWithConfiguration:[ParseClientConfiguration configurationWithBlock:^(id<ParseMutableClientConfiguration> configuration) {
+        configuration.server = globalConfig[@"Parse"][@"Server"];
+        configuration.applicationId = globalConfig[@"Parse"][@"ApplicationId"];
+    }]];
     
     NSDictionary *settings = @{ kOSSettingsKeyAutoPrompt: @NO,
                                 kOSSettingsKeyInFocusDisplayOption: @(OSNotificationDisplayTypeNone) };
