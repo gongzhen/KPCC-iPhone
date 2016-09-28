@@ -60,7 +60,6 @@ static NSInteger kSessionIdleExpiration = 3600;
 @property int64_t onDemandSessionBegan;
 @property int64_t onDemandSessionEnded;
 
-@property BOOL useLocalNotifications;
 @property BOOL onboardingRewound;
 @property BOOL expiring;
 @property BOOL updaterArmed;
@@ -103,7 +102,6 @@ static NSInteger kSessionIdleExpiration = 3600;
 - (NSTimeInterval)secondsBehindLive;
 - (NSTimeInterval)virtualSecondsBehindLive;
 
-- (void)processNotification:(UILocalNotification*)programUpdate;
 @property (NS_NONATOMIC_IOSONLY) BOOL sessionIsExpired;
 @property (NS_NONATOMIC_IOSONLY) BOOL sessionIsBehindLive;
 

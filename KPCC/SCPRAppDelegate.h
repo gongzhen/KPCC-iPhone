@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import <Parse/Parse.h>
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
+#import <OneSignal/OneSignal.h>
 
 @class SCPRMasterViewController;
 @class SCPRNavigationController;
