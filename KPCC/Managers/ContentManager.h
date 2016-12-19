@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
+#import <Crashlytics/Crashlytics.h>
 #import "SCPRAppDelegate.h"
 #import "BlockTypes.h"
 

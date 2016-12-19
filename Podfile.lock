@@ -93,6 +93,7 @@ PODS:
     - Lock/CoreUI
   - Masonry (0.6.4)
   - OCMock (3.3)
+  - OneSignal (2.1.12)
   - Parse (1.13.0):
     - Bolts/Tasks (~> 1.6)
   - pop (1.0.9)
@@ -111,6 +112,7 @@ DEPENDENCIES:
   - Lock (~> 1.26)
   - Lock-Facebook (~> 2.2)
   - OCMock (~> 3.3)
+  - OneSignal (~> 2.1)
   - Parse (~> 1.13)
   - pop (~> 1.0)
   - SimpleKeychain (~> 0.7)
@@ -140,11 +142,12 @@ SPEC CHECKSUMS:
   Lock-Facebook: 09f2397cbc9ae2e1fc654f7e66248da30343e349
   Masonry: 281802d04d787ea2973179ee8bcb50500579ede2
   OCMock: d68685bde31f69cb61d518dcb39269080c78b5ed
+  OneSignal: b84b8e1e615a7956e1486f61cd150b3738075d11
   Parse: f51c24d2feb412e4b2d6cc73d37cb24e8d0089bc
   pop: f667631a5108a2e60d9e8797c9b32ddaf2080bce
   SimpleKeychain: b50cef3b87939d480ea1143425c00f5b4b70fe21
   XMLDictionary: f9f51601ba76678b594ab485f2b00ec1fed23724
 
-PODFILE CHECKSUM: 654e998dc6587875b6313f806479c4d6b8123ee9
+PODFILE CHECKSUM: 07c9b1e932d99e46e9b7d5306370b0abdc94feaa
 
 COCOAPODS: 1.0.1

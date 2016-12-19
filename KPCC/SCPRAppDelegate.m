@@ -44,9 +44,19 @@ NSString *const kPushChannel = @"listenLive";
 
     [[AnalyticsManager shared] setup];
 
-    [Parse setApplicationId:globalConfig[@"Parse"][@"ApplicationId"]
-                  clientKey:globalConfig[@"Parse"][@"ClientKey"]];
+    [Parse initializeWithConfiguration:[ParseClientConfiguration configurationWithBlock:^(id<ParseMutableClientConfiguration> configuration) {
+        configuration.server = globalConfig[@"Parse"][@"Server"];
+        configuration.applicationId = globalConfig[@"Parse"][@"ApplicationId"];
+    }]];
     
+    NSDictionary *settings = @{ kOSSettingsKeyAutoPrompt: @NO,
+                                kOSSettingsKeyInFocusDisplayOption: @(OSNotificationDisplayTypeNone) };
+
+    [OneSignal initWithLaunchOptions:launchOptions
+                               appId:globalConfig[@"OneSignal"][@"AppId"]
+            handleNotificationAction:nil
+                            settings:settings];
+
 #ifdef RELEASE
     [[FBSDKApplicationDelegate sharedInstance] application:application didFinishLaunchingWithOptions:launchOptions];
 #endif
@@ -97,12 +107,10 @@ NSString *const kPushChannel = @"listenLive";
 }
 
 - (void)application:(UIApplication *)application didRegisterUserNotificationSettings:(UIUserNotificationSettings *)notificationSettings {
-    UIUserNotificationType types = notificationSettings.types;
     
     [application registerForRemoteNotifications];
     
     [[UXmanager shared] setSuppressBalloon:YES];
-    [[SessionManager shared] setUseLocalNotifications:( types & UIUserNotificationTypeAlert )];
     if ( ![[UXmanager shared] userHasSeenOnboarding] ) {
         [[UXmanager shared] closeOutOnboarding];
     }
@@ -116,9 +124,6 @@ NSString *const kPushChannel = @"listenLive";
         [[UXmanager shared] closeOutOnboarding];
     }
 
-    [[PFInstallation currentInstallation] removeObject:kPushChannel
-                                                forKey:@"channels"];
-    [[PFInstallation currentInstallation] saveInBackground];
 }
 
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
@@ -132,20 +137,9 @@ NSString *const kPushChannel = @"listenLive";
     
     [[UXmanager shared].settings setPushTokenData:deviceToken];
     [[UXmanager shared].settings setPushTokenString:hexToken];
-    
-    PFInstallation *i = [PFInstallation currentInstallation];
 
-    NSLog(@" ••••• Got through to PFInstallation creation •••• ");
-    
-
-    [i setDeviceTokenFromData:deviceToken];
-    [i addUniqueObject:kPushChannel
-                                  forKey:@"channels"];
-    
     dispatch_async(dispatch_get_main_queue(), ^{
-        [i saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-            [[UXmanager shared] persist];
-        }];
+        [[UXmanager shared] persist];
     });
 
     NSLog(@" ***** REGISTERING PUSH TOKEN : %@ *****", hexToken);

@@ -14,6 +14,7 @@ target 'KPCC' do
   pod 'Google/SignIn', '~> 3.0'
   pod 'Lock', '~> 1.26'
   pod 'Lock-Facebook', '~> 2.2'
+  pod 'OneSignal', '~> 2.1'
   pod 'Parse', '~> 1.13'
   pod 'SimpleKeychain', '~> 0.7'
   pod 'XMLDictionary', '~> 1.4'

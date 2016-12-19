@@ -15,7 +15,7 @@ extension UIDevice {
         var systemInfo = utsname()
         uname(&systemInfo)
         let machine = withUnsafeMutablePointer(&systemInfo.machine) {
-            ptr in String.fromCString(UnsafePointer(ptr))
+            String.fromCString(UnsafePointer($0))
         }
         return (machine == "iPhone4,1")
     }

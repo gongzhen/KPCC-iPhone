@@ -233,7 +233,7 @@ static ContentManager *singleton = nil;
     }
     
     NSString *pathComponent = [NSString stringWithFormat:@"%@.sqlite",[self modelBase]];
-    NSURL *storeURL = [[self applicationDocumentsDirectory] URLByAppendingPathComponent:pathComponent];
+    NSURL *storeURL = [[self applicationCachesDirectory] URLByAppendingPathComponent:pathComponent];
     
     NSError *error = nil;
     NSDictionary *options = @{NSMigratePersistentStoresAutomaticallyOption: @YES, NSInferMappingModelAutomaticallyOption: @YES};
@@ -255,14 +255,16 @@ static ContentManager *singleton = nil;
          
          If you encounter schema incompatibility errors during development, you can reduce their frequency by:
          * Simply deleting the existing store:
-         [[NSFileManager defaultManager] removeItemAtURL:storeURL error:nil]
-         
+         */
+        [[NSFileManager defaultManager] removeItemAtURL:storeURL error:nil];
+        /*
          * Performing automatic lightweight migration by passing the following dictionary as the options parameter:
          [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], NSMigratePersistentStoresAutomaticallyOption, [NSNumber numberWithBool:YES], NSInferMappingModelAutomaticallyOption, nil];
          
          Lightweight migration will only work for a limited set of schema changes; consult "Core Data Model Versioning and Data Migration Programming Guide" for details.
          
          */
+        CLS_LOG(@"Unresolved error %@, %@", error, [error userInfo]);
         NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
         abort();
     }
@@ -276,7 +278,7 @@ static ContentManager *singleton = nil;
 /**
  * Returns the URL to the application's Documents directory.
  */
-- (NSURL *)applicationDocumentsDirectory {
+- (NSURL *)applicationCachesDirectory {
     return [[[NSFileManager defaultManager] URLsForDirectory:NSCachesDirectory inDomains:NSUserDomainMask] lastObject];
 }
 

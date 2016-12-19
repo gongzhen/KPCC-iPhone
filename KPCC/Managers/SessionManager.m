@@ -725,15 +725,6 @@
     _sessionLeftDate = sessionLeftDate;
 }
 
-- (void)processNotification:(UILocalNotification*)programUpdate {
-    
-    if ( SEQ([programUpdate alertBody],kUpdateProgramKey) ) {
-        [self fetchCurrentSchedule:^(id object) {
-            
-        }];
-    }
-}
-
 - (void)processTimer:(NSTimer*)timer {
 }
 

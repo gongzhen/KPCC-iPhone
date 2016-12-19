@@ -1049,6 +1049,10 @@ setForOnDemandUI;
     NSLog(@" >>>>>> EVENT RECEIVED FROM COMMAND CENTER REMOTE <<<<<< ");
     [self remoteControlPlayOrPause];
 }
+- (void)togglePlayPauseTapped:(id)sender {
+    NSLog(@" >>>>>> EVENT RECEIVED FROM COMMAND CENTER REMOTE <<<<<< ");
+    [self remoteControlPlayOrPause];
+}
 
 - (void)snapJogWheel {
     UIImage *img = self.playPauseButton.imageView.image;
@@ -3791,6 +3795,10 @@ setForOnDemandUI;
     MPRemoteCommand *playCommand = [rcc playCommand];
     [playCommand setEnabled:YES];
     [playCommand addTarget:self action:@selector(playTapped:)];
+
+    MPRemoteCommand *togglePlayPauseCommand = [rcc togglePlayPauseCommand];
+    [togglePlayPauseCommand setEnabled:YES];
+    [togglePlayPauseCommand addTarget:self action:@selector(togglePlayPauseTapped:)];
 }
 
 #pragma mark - UIAlertView

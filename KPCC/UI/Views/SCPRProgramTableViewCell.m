@@ -44,6 +44,7 @@
 }
 
 - (void)awakeFromNib {
+    [super awakeFromNib];
     [self.programLabel setFont:[UIFont fontWithName:@"FreightSansProLight-Regular" size:18.0f]];
     [self.programLabel setTextColor:[UIColor whiteColor]];
     self.rightChevronImageView.image = [UIImage imageNamed:@"item-chevron-right"];

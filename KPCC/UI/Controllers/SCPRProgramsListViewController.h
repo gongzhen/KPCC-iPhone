@@ -14,7 +14,7 @@
 
 @interface SCPRProgramsListViewController : UIViewController<UITableViewDataSource,UITableViewDelegate>
 
-- (instancetype)initWithBackgroundProgram:(Program *)program;
+- (instancetype)initWithBackgroundProgram:(id<GenericProgram>)program;
 
 @property IBOutlet UIImageView *programBgImage;
 @property IBOutlet UITableView *programsTable;
