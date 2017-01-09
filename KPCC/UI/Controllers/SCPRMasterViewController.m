@@ -3437,117 +3437,89 @@ setForOnDemandUI;
 # pragma mark - PulldownMenuDelegate
 
 - (void)menuItemSelected:(NSIndexPath *)indexPath {
-    
-    BOOL closeMenu = NO;
-//    NSString *event = @"";
-    switch (indexPath.row) {
-        case 0:
-        {
+    BOOL menuShouldClose = NO;
+
+	switch (indexPath.row) {
+        case 0: {
             self.homeIsNotRootViewController = NO;
-//            event = @"menuSelectionLiveStream";
-            closeMenu = YES;
-            if ( [AudioManager shared].currentAudioMode != AudioModeLive ) {
+            menuShouldClose = YES;
+
+			if ([AudioManager shared].currentAudioMode != AudioModeLive) {
                 if ( self.initialPlay && [SessionManager shared].lastPrerollTime == nil) {
                     // we're returning to live stream, most likely after having
                     // played an on-demand program.
-                    [self resetInitialPlay];
+
+					[self resetInitialPlay];
                 }
-                [self goLive:YES];
+
+				[self goLive:YES];
             }
             break;
         }
-            
-        case 1:
-        {
-            
+        case 1: {
             self.homeIsNotRootViewController = YES;
-//            event = @"menuSelectionPrograms";
-            id<GenericProgram> prog = [[SessionManager shared] currentSchedule];
+
+			id<GenericProgram> prog = [[SessionManager shared] currentSchedule];
             if (setForOnDemandUI && self.onDemandProgram != nil) {
                 prog = self.onDemandProgram;
             }
             
             [[DesignManager shared] setProtectBlurredImage:YES];
-            SCPRProgramsListViewController *vc = [[SCPRProgramsListViewController alloc] initWithBackgroundProgram:prog];
-            [self.navigationController pushViewController:vc animated:YES];
-            
+			SCPRProgramsListViewController *mySCPRProgramsListViewController = [[SCPRProgramsListViewController alloc] initWithBackgroundProgram:prog];
+			[self.navigationController pushViewController:mySCPRProgramsListViewController animated:YES];
+
             break;
         }
-            
         case 2: {
-            
             self.homeIsNotRootViewController = YES;
-//            event = @"menuSelectionHeadlines";
-            SCPRShortListViewController *slVC = [[SCPRShortListViewController alloc] initWithNibName:@"SCPRShortListViewController"
-                                                                                              bundle:nil];
-            slVC.view = slVC.view;
-            [self.navigationController pushViewController:slVC animated:YES];
-            break;
-            
+            SCPRShortListViewController *mySCPRShortListViewController = [[SCPRShortListViewController alloc] initWithNibName:@"SCPRShortListViewController" bundle:nil];
+            [self.navigationController pushViewController:mySCPRShortListViewController animated:YES];
+
+			break;
         }
         case 3: {
-            
             self.homeIsNotRootViewController = YES;
-            closeMenu = YES;
-            
-//            event = @"menuSelectionWakeSleep";
-            SCPRTimerControlViewController *timer = [[SCPRTimerControlViewController alloc] initWithNibName:@"SCPRTimerControlViewController"
-                                                                                                     bundle:nil];
+
+			SCPRTimerControlViewController *mySCPRTimerControlViewController = [[SCPRTimerControlViewController alloc] initWithNibName:@"SCPRTimerControlViewController" bundle:nil];
             
             CGSize bounds = [[UIScreen mainScreen] bounds].size;
-            timer.view.frame = CGRectMake(0.0,0.0,bounds.width,bounds.height);
-            
-            [self.navigationController pushViewController:timer
-                                                 animated:YES];
-            
-            [timer setup];
-            
+            mySCPRTimerControlViewController.view.frame = CGRectMake(0.0,0.0,bounds.width,bounds.height);
+            [self.navigationController pushViewController:mySCPRTimerControlViewController animated:YES];
+            [mySCPRTimerControlViewController setup];
+
             self.restoreTitle = YES;
-            
-            break;
+
+			break;
         }
         case 4: {
-//            event = @"menuSelectionDonate";
+            [[AnalyticsManager shared] logEvent:@"userSelectedDonate" withParameters:nil];
 
-            [[AnalyticsManager shared] logEvent:@"userSelectedDonate"
-                                 withParameters:nil];
-            
             NSString *urlStr = @"https://scprcontribute.publicradio.org/contribute.php?refId=iphone&askAmount=60";
             NSURL *url = [NSURL URLWithString:urlStr];
-            closeMenu = YES;
-            [[UIApplication sharedApplication] openURL:url];
-            break;
+
+			[[UIApplication sharedApplication] openURL:url];
+
+			break;
         }
         case 5: {
-            
             self.homeIsNotRootViewController = YES;
-//            event = @"menuSelectionProfile";
             [self.navigationController pushViewController:UserProfileViewController.new animated:YES];
 
-            break;
-            
+			break;
         }
         case 6: {
-            
             self.homeIsNotRootViewController = YES;
-//            event = @"menuSelectionFeedback";
-            SCPRFeedbackViewController *fbVC = [[SCPRFeedbackViewController alloc] initWithNibName:@"SCPRFeedbackViewController"
-                                                                                            bundle:nil];
-            [self.navigationController pushViewController:fbVC animated:YES];
-            
-            break;
-            
+            SCPRFeedbackViewController *mySCPRFeedbackViewController = [[SCPRFeedbackViewController alloc] initWithNibName:@"SCPRFeedbackViewController" bundle:nil];
+            [self.navigationController pushViewController:mySCPRFeedbackViewController animated:YES];
+
+			break;
         }
         default: {
-            closeMenu = YES;
-            break;
+			break;
         }
     }
-    
-    /*[[AnalyticsManager shared] logEvent:event
-                         withParameters:@{}];*/
-    
-    if ( closeMenu ) {
+
+    if (menuShouldClose == YES) {
         [self decloakForMenu:YES];
     }
 }
