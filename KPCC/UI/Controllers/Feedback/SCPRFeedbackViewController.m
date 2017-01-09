@@ -406,13 +406,14 @@ static NSString *kCommentsPlaceholder = @"Add your comments here…";
 
 	ValidationResult result = [self validate];
 
-	if (result == ValidationResultOK) {
-		dispatch_async(dispatch_get_main_queue(), ^{
-			CGPoint bottomOffset = CGPointMake(0, self.feedbackTable.contentSize.height - self.feedbackTable.bounds.size.height);
-			
-			[self.feedbackTable setContentOffset:bottomOffset animated:YES];
-		});
-	}
+	dispatch_async(dispatch_get_main_queue(), ^{
+		CGPoint bottomOffset = CGPointZero;
+		if (result == ValidationResultOK) {
+			bottomOffset = CGPointMake(0, self.feedbackTable.contentSize.height - self.feedbackTable.bounds.size.height);
+		}
+
+		[self.feedbackTable setContentOffset:bottomOffset animated:YES];
+	});
 }
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {
