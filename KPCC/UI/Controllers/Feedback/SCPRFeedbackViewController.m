@@ -38,7 +38,7 @@ static NSString *kCommentsPlaceholder = @"Add your comments here…";
     self.feedbackTable.backgroundColor = [UIColor clearColor];
     self.feedbackTable.backgroundView.backgroundColor = [UIColor clearColor];
     self.currentReason = @"Bug";
-    self.descriptionInputView.delegate = self;
+    self.descriptionTextField.delegate = self;
     self.emailTextField.delegate = self;
     self.splashBlurView.blurRadius = 7.0f;
     
@@ -58,9 +58,7 @@ static NSString *kCommentsPlaceholder = @"Add your comments here…";
     self.feedbackTable.separatorColor = [UIColor lightGrayColor];
     
     self.view.backgroundColor = [UIColor blackColor];
-    self.feedbackTable.separatorColor = [UIColor colorWithRed:222.f/255.f
-                                                        green:228.f/255.f
-                                                         blue:229.f/255.f alpha:0.3f];
+    self.feedbackTable.separatorColor = [UIColor colorWithRed:222.f/255.f green:228.f/255.f blue:229.f/255.f alpha:0.3f];
     
     NSString *versionText = [NSString stringWithFormat:@"KPCC iPhone v%@",[Utils prettyVersion]];
 
@@ -89,35 +87,32 @@ static NSString *kCommentsPlaceholder = @"Add your comments here…";
     
     [self.versionLabel proLightFontize];
     
-    NSMutableAttributedString *nph = [[NSMutableAttributedString alloc] initWithString:@"e.x. Ornette Coleman"
-                                                                            attributes:@{ NSForegroundColorAttributeName : [[UIColor virtualWhiteColor] translucify:0.63] }];
-    NSMutableAttributedString *eph = [[NSMutableAttributedString alloc] initWithString:@"you@domain.com"
-                                                                            attributes:@{ NSForegroundColorAttributeName : [[UIColor virtualWhiteColor] translucify:0.63] }];
-    NSMutableAttributedString *dph = [[NSMutableAttributedString alloc] initWithString:kCommentsPlaceholder
-                                                                            attributes:@{ NSForegroundColorAttributeName : [[UIColor virtualWhiteColor] translucify:0.63] }];
-    
+    NSMutableAttributedString *nph = [[NSMutableAttributedString alloc] initWithString:@"e.x. Ornette Coleman" attributes:@{ NSForegroundColorAttributeName : [[UIColor virtualWhiteColor] translucify:0.63] }];
+    NSMutableAttributedString *eph = [[NSMutableAttributedString alloc] initWithString:@"you@domain.com" attributes:@{ NSForegroundColorAttributeName : [[UIColor virtualWhiteColor] translucify:0.63] }];
+    NSMutableAttributedString *dph = [[NSMutableAttributedString alloc] initWithString:kCommentsPlaceholder attributes:@{ NSForegroundColorAttributeName : [[UIColor virtualWhiteColor] translucify:0.63] }];
+
     self.nameTextField.attributedPlaceholder = nph;
     self.emailTextField.attributedPlaceholder = eph;
-    self.descriptionInputView.attributedPlaceholder = dph;
+    self.descriptionTextField.attributedPlaceholder = dph;
     
     self.nameTextField.returnKeyType = UIReturnKeyNext;
     self.emailTextField.returnKeyType = UIReturnKeyDone;
-    self.descriptionInputView.returnKeyType = UIReturnKeyNext;
+    self.descriptionTextField.returnKeyType = UIReturnKeyNext;
     
     self.splashBlurView.backgroundColor = [UIColor clearColor];
     self.splashView.contentMode = UIViewContentModeScaleAspectFill;
     self.splashView.clipsToBounds = YES;
     
-    self.descriptionInputView.backgroundColor = [UIColor clearColor];
-    self.descriptionInputView.textColor = [UIColor whiteColor];
-    [self.descriptionInputView setFont:[[DesignManager shared] proLight:self.descriptionInputView.font.pointSize]];
+    self.descriptionTextField.backgroundColor = [UIColor clearColor];
+    self.descriptionTextField.textColor = [UIColor whiteColor];
+    [self.descriptionTextField setFont:[[DesignManager shared] proLight:self.descriptionTextField.font.pointSize]];
     
     self.splashBlurView.tintColor = [UIColor clearColor];
     self.nativeSpinner.alpha = 0.0f;
     
 #ifdef DEBUG
     //self.emailTextField.text = @"bhochberg@scpr.org";
-    //self.descriptionInputView.text = @"This is an iPhone Desk test to see if the API is working";
+    //self.descriptionTextField.text = @"This is an iPhone Desk test to see if the API is working";
     //self.nameTextField.text = @"Ben Hochberg";
 #endif
 
@@ -154,6 +149,17 @@ static NSString *kCommentsPlaceholder = @"Add your comments here…";
 	UIEdgeInsets contentInsets = UIEdgeInsetsZero;
 	self.feedbackTable.contentInset = contentInsets;
 	self.feedbackTable.scrollIndicatorInsets = contentInsets;
+
+	ValidationResult result = [self validate];
+
+	dispatch_async(dispatch_get_main_queue(), ^{
+		CGPoint bottomOffset = CGPointZero;
+		if (result == ValidationResultOK) {
+			bottomOffset = CGPointMake(0, self.feedbackTable.contentSize.height - self.feedbackTable.bounds.size.height);
+		}
+		
+		[self.feedbackTable setContentOffset:bottomOffset animated:YES];
+	});
 }
 
 #pragma mark - UI and Event Handling
@@ -162,12 +168,12 @@ static NSString *kCommentsPlaceholder = @"Add your comments here…";
     if (sender == self.doneButton) {
         [self.currentField resignFirstResponder];
     } else if (sender == self.nextButton) {
-        if ( self.currentField == self.descriptionInputView ) {
+        if (self.currentField == self.descriptionTextField) {
             [self.nameTextField becomeFirstResponder];
-        } else if ( self.currentField == self.nameTextField ) {
+        } else if (self.currentField == self.nameTextField) {
             [self.emailTextField becomeFirstResponder];
-        } else if ( self.currentField == self.emailTextField ) {
-            [self.descriptionInputView becomeFirstResponder];
+        } else if (self.currentField == self.emailTextField) {
+            [self.descriptionTextField becomeFirstResponder];
         }
     } else if (sender == self.authButton) {
         [UIView animateWithDuration:0.25 animations:^{
@@ -187,7 +193,7 @@ static NSString *kCommentsPlaceholder = @"Add your comments here…";
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(feedbackFailure) name:@"feedback_failure" object:nil];
 
-    [[FeedbackManager shared] validateCustomer:@{ @"message" : self.descriptionInputView.text,
+    [[FeedbackManager shared] validateCustomer:@{ @"message" : self.descriptionTextField.text,
                                                   @"email" : self.emailTextField.text,
                                                   @"date" : [NSDate date],
                                                   @"name" : self.nameTextField.text,
@@ -222,16 +228,19 @@ static NSString *kCommentsPlaceholder = @"Add your comments here…";
 }
 
 - (ValidationResult)validate {
-    if (!self.currentReason || SEQ(self.currentReason,@"")) {
+    if (!self.currentReason || [self.currentReason isEqualToString:@""]) {
         return ValidationResultNoReasonProvided;
     }
-    if (SEQ(self.emailTextField.text,@"") || ![Utils validateEmail:self.emailTextField.text]) {
+
+	if ([self.emailTextField.text isEqualToString:@""] || ![Utils validateEmail:self.emailTextField.text]) {
         return ValidationResultBadEmail;
     }
-    if (SEQ(self.nameTextField.text,@"")) {
+
+	if ([self.nameTextField.text isEqualToString:@""]) {
         return ValidationResultNoName;
     }
-    if (SEQ(self.descriptionInputView.text,@"")) {
+
+	if ([self.descriptionTextField.text isEqualToString:@""]) {
         return ValidationResultNoComments;
     }
 
@@ -267,7 +276,7 @@ static NSString *kCommentsPlaceholder = @"Add your comments here…";
 }
 
 - (void)checkForm {
-    ValidationResult result = [self validate];
+	ValidationResult result = [self validate];
 
 	if (result == ValidationResultOK) {
         [UIView animateWithDuration:0.22
@@ -304,14 +313,18 @@ static NSString *kCommentsPlaceholder = @"Add your comments here…";
 - (UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     if (indexPath.section == 2) {
         UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:@"n"];
-        if ( indexPath.row == 0 ) {
+        if (indexPath.row == 0) {
             cell.textLabel.text = @"Name";
             cell.accessoryView = self.nameTextField;
-        } else {
+
+			[self.nameTextField addTarget:self action:@selector(didChangeTextFieldContent:) forControlEvents:UIControlEventEditingChanged];
+		} else {
             cell.textLabel.text = @"Email";
             cell.accessoryView = self.emailTextField;
-        }
 
+			[self.emailTextField addTarget:self action:@selector(didChangeTextFieldContent:) forControlEvents:UIControlEventEditingChanged];
+		}
+		
 		[cell.textLabel proMediumFontize];
         cell.textLabel.textColor = [UIColor whiteColor];
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
@@ -335,6 +348,8 @@ static NSString *kCommentsPlaceholder = @"Add your comments here…";
         cell.textLabel.textColor = [UIColor whiteColor];
         cell.backgroundColor = [UIColor clearColor];
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
+
+		[self.descriptionTextField addTarget:self action:@selector(didChangeTextFieldContent:) forControlEvents:UIControlEventEditingChanged];
 
 		return cell;
     }
@@ -364,7 +379,7 @@ static NSString *kCommentsPlaceholder = @"Add your comments here…";
 		return;
     }
     
-    [self.descriptionInputView becomeFirstResponder];
+    [self.descriptionTextField becomeFirstResponder];
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -403,17 +418,6 @@ static NSString *kCommentsPlaceholder = @"Add your comments here…";
 - (void)textFieldDidEndEditing:(UITextField *)textField {
 	[self.view removeGestureRecognizer:self.tapper];
 	self.tapper = nil;
-
-	ValidationResult result = [self validate];
-
-	dispatch_async(dispatch_get_main_queue(), ^{
-		CGPoint bottomOffset = CGPointZero;
-		if (result == ValidationResultOK) {
-			bottomOffset = CGPointMake(0, self.feedbackTable.contentSize.height - self.feedbackTable.bounds.size.height);
-		}
-
-		[self.feedbackTable setContentOffset:bottomOffset animated:YES];
-	});
 }
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {
@@ -422,31 +426,49 @@ static NSString *kCommentsPlaceholder = @"Add your comments here…";
     } else if (textField == self.emailTextField) {
         [self.feedbackTable setContentOffset:CGPointMake(0.0, 0.0) animated:YES];
         [self.emailTextField resignFirstResponder];
-    } else if (textField == self.descriptionInputView) {
+    } else if (textField == self.descriptionTextField) {
         [self.nameTextField becomeFirstResponder];
     }
 
     return YES;
 }
 
+- (void)didChangeTextFieldContent:(id) sender {
+	[self checkForm];
+}
+
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
-    [self checkForm];
-    
-    return YES;
+	if (textField == self.emailTextField && [string containsString:@" "]) {
+		if (range.location == 0) {
+			// No spaces at the start of an email address! - JAC
+			return NO;
+		}
+
+		NSRange rangeOfAtSign	= [textField.text rangeOfString:@"@"];
+		if (rangeOfAtSign.location != NSNotFound && range.location > rangeOfAtSign.location) {
+			// No spaces in the middle of an email if they are not in the local part (before the '@' character)! - JAC
+			return NO;
+		}
+	}
+	return YES;
 }
 
 - (void)didTapBackground {
     [self.nameTextField resignFirstResponder];
     [self.emailTextField resignFirstResponder];
-    [self.descriptionInputView resignFirstResponder];
+    [self.descriptionTextField resignFirstResponder];
 
     self.nameTextField.userInteractionEnabled = YES;
     self.emailTextField.userInteractionEnabled = YES;
-    self.descriptionInputView.userInteractionEnabled = YES;
+    self.descriptionTextField.userInteractionEnabled = YES;
 }
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
+}
+
+- (void) dealloc {
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 @end

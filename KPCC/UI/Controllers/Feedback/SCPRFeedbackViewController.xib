@@ -1,15 +1,19 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.iPad.XIB" version="3.0" toolsVersion="7706" systemVersion="14D136" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" useAutolayout="YES">
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.iPad.XIB" version="3.0" toolsVersion="11762" systemVersion="16C67" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" useAutolayout="YES" colorMatched="YES">
+    <device id="ipad9_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7703"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="SCPRFeedbackViewController">
             <connections>
                 <outlet property="authButton" destination="38" id="51"/>
                 <outlet property="descriptionCell" destination="44" id="48"/>
-                <outlet property="descriptionInputView" destination="2Ic-Bd-yCr" id="wh5-50-cPX"/>
+                <outlet property="descriptionTextField" destination="2Ic-Bd-yCr" id="cM4-61-CkE"/>
                 <outlet property="doneButton" destination="18" id="27"/>
                 <outlet property="emailTextField" destination="49" id="50"/>
                 <outlet property="feedbackTable" destination="35" id="36"/>
@@ -33,7 +37,7 @@
                 </imageView>
                 <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="grouped" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" translatesAutoresizingMaskIntoConstraints="NO" id="35">
                     <rect key="frame" x="0.0" y="24" width="320" height="544"/>
-                    <color key="backgroundColor" white="1" alpha="0.0" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                    <color key="backgroundColor" red="1" green="1" blue="1" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
                 </tableView>
                 <toolbar opaque="NO" clearsContextBeforeDrawing="NO" alpha="0.0" contentMode="scaleToFill" barStyle="blackTranslucent" translatesAutoresizingMaskIntoConstraints="NO" id="17" customClass="SCPRKeyboardToolbar">
                     <rect key="frame" x="0.0" y="289" width="320" height="44"/>
@@ -54,7 +58,7 @@
                     </connections>
                 </toolbar>
             </subviews>
-            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <constraints>
                 <constraint firstAttribute="trailing" secondItem="17" secondAttribute="trailing" id="6Qb-4u-rbj"/>
                 <constraint firstItem="35" firstAttribute="top" secondItem="2" secondAttribute="top" constant="24" id="7pk-sm-Dtt"/>
@@ -86,11 +90,11 @@
                     </constraints>
                     <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
                     <state key="normal" title="Submit">
-                        <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
-                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     </state>
                     <state key="highlighted">
-                        <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     </state>
                 </button>
                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Dgh-rz-JFI">
@@ -103,7 +107,7 @@
                     <nil key="highlightedColor"/>
                 </label>
             </subviews>
-            <color key="backgroundColor" white="1" alpha="0.0" colorSpace="custom" customColorSpace="calibratedWhite"/>
+            <color key="backgroundColor" red="1" green="1" blue="1" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
             <constraints>
                 <constraint firstAttribute="centerX" secondItem="FZ6-FH-lQR" secondAttribute="centerX" id="3wk-bO-2KG"/>
                 <constraint firstItem="Dgh-rz-JFI" firstAttribute="leading" secondItem="37" secondAttribute="leading" constant="11" id="4Yc-hQ-8L1"/>
@@ -123,13 +127,14 @@
             <rect key="frame" x="0.0" y="0.0" width="328" height="50"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="44" id="5a1-gZ-Bvr">
-                <rect key="frame" x="0.0" y="0.0" width="328" height="227"/>
+                <rect key="frame" x="0.0" y="0.0" width="328" height="49"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="2Ic-Bd-yCr">
                         <rect key="frame" x="15" y="10" width="283" height="29"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                        <textInputTraits key="textInputTraits" enablesReturnKeyAutomatically="YES"/>
+                        <textInputTraits key="textInputTraits" autocapitalizationType="sentences" enablesReturnKeyAutomatically="YES"/>
                     </textField>
                 </subviews>
             </tableViewCellContentView>
@@ -139,7 +144,7 @@
             <rect key="frame" x="0.0" y="0.0" width="243" height="30"/>
             <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxY="YES"/>
             <fontDescription key="fontDescription" type="system" pointSize="12"/>
-            <textInputTraits key="textInputTraits" enablesReturnKeyAutomatically="YES"/>
+            <textInputTraits key="textInputTraits" autocapitalizationType="words" autocorrectionType="no" enablesReturnKeyAutomatically="YES"/>
             <connections>
                 <outlet property="delegate" destination="-1" id="54"/>
             </connections>
@@ -148,7 +153,7 @@
             <rect key="frame" x="0.0" y="0.0" width="243" height="30"/>
             <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxY="YES"/>
             <fontDescription key="fontDescription" type="system" pointSize="12"/>
-            <textInputTraits key="textInputTraits" enablesReturnKeyAutomatically="YES"/>
+            <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" keyboardType="emailAddress" enablesReturnKeyAutomatically="YES"/>
             <connections>
                 <outlet property="delegate" destination="-1" id="55"/>
             </connections>

@@ -31,7 +31,7 @@ typedef NS_ENUM(NSInteger, ValidationResult) {
 @property (nonatomic,strong) IBOutlet UITextField *emailTextField;
 @property (nonatomic,strong) IBOutlet UITextField *nameTextField;
 @property (nonatomic,strong) IBOutlet UILabel *descriptionLabel;
-@property (nonatomic,strong) IBOutlet UITextField *descriptionInputView;
+@property (nonatomic,strong) IBOutlet UITextField *descriptionTextField;
 @property (nonatomic,strong) IBOutlet SCPRKeyboardToolbar *toolbar;
 @property (nonatomic,strong) IBOutlet UIBarButtonItem *doneButton;
 @property (nonatomic,strong) IBOutlet UIBarButtonItem *nextButton;
