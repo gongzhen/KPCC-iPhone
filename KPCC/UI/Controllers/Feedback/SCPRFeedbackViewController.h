@@ -55,8 +55,6 @@ typedef NS_ENUM(NSInteger, ValidationResult) {
 @property (NS_NONATOMIC_IOSONLY, readonly) ValidationResult validate;
 - (void)failWithValidationResult:(ValidationResult)reason;
 
-- (void)showBar;
-- (void)hideBar;
 - (void)checkForm;
 
 @end
