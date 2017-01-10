@@ -268,11 +268,12 @@
         [delegate backPressed];
     } else if ( self.showPopArrow && self.proxyDelegate ) {
         [self.proxyDelegate popPressed];
-        self.showPopArrow = NO;
-        self.proxyDelegate = nil;
     } else {
         [delegate menuPressed];
     }
+
+	self.showPopArrow = NO;
+	self.proxyDelegate = nil;
 }
 
 - (void)setup {

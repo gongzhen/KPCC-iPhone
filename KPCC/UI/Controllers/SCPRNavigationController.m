@@ -74,12 +74,13 @@
 }
 
 - (void)pushViewController:(UIViewController *)viewController animated:(BOOL)animated{
-    if ([self respondsToSelector:@selector(interactivePopGestureRecognizer)]) {
-        self.interactivePopGestureRecognizer.enabled = NO;
-    }
+//    if ([self respondsToSelector:@selector(interactivePopGestureRecognizer)]) {
+//        self.interactivePopGestureRecognizer.enabled = NO;
+//    }
 
     [super pushViewController:viewController animated:animated];
-    [self addButton:viewController.navigationItem];
+
+	[self addButton:viewController.navigationItem];
     [self.menuButton animateToBack];
 }
 
@@ -95,21 +96,64 @@
 
 #pragma mark - UINavigationControllerDelegate
 
-- (void)navigationController:(UINavigationController *)navigationController didShowViewController:(UIViewController *)viewController animated:(BOOL)animate {
-    // Enable the gesture again once the new controller is shown
-    self.interactivePopGestureRecognizer.enabled = ([self respondsToSelector:@selector(interactivePopGestureRecognizer)] && [self.viewControllers count] > 1);
-}
+//- (void)navigationController:(UINavigationController *)navigationController didShowViewController:(UIViewController *)viewController animated:(BOOL)animate {
+//    // Enable the gesture again once the new controller is shown
+//    self.interactivePopGestureRecognizer.enabled = ([self respondsToSelector:@selector(interactivePopGestureRecognizer)] && [self.viewControllers count] > 1);
+//}
 
 - (void)navigationController:(UINavigationController *)navigationController willShowViewController:(UIViewController *)viewController animated:(BOOL)animated {
-    if (viewController == [[Utils del] masterViewController]) {
-        if ([[[Utils del] masterViewController] menuOpen]) {
-            [self.menuButton animateToClose];
-        } else {
-            [self.menuButton animateToMenu];
-        }
-    }
+	[[self transitionCoordinator] notifyWhenInteractionEndsUsingBlock:^(id<UIViewControllerTransitionCoordinatorContext> context) {
+		if ([context isCancelled]) {
+			UIViewController *fromViewController = [context viewControllerForKey:UITransitionContextFromViewControllerKey];
+			[self navigationController:navigationController willShowViewController:fromViewController animated:animated];
+
+			if ([self respondsToSelector:@selector(navigationController:didShowViewController:animated:)]) {
+				NSTimeInterval animationCompletion = [context transitionDuration] * [context percentComplete];
+
+				dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (uint64_t)animationCompletion * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+					[self navigationController:navigationController didShowViewController:fromViewController animated:animated];
+				});
+			}
+		}
+	}];
+
+	if (viewController == [[Utils del] masterViewController]) {
+		if ([[Utils del] masterViewController].menuOpen == YES) {
+			[self.menuButton animateToClose];
+		} else {
+			[self.menuButton animateToMenu];
+		}
+	}
 }
 
+- (void) navigationController:(UINavigationController *)navigationController didShowViewController:(UIViewController *)viewController animated:(BOOL)animated {
+	self.interactivePopGestureRecognizer.enabled = YES;
+
+	// Used to prevent freeze when left-edge gesture popping when there is only one VC in the navigation stack... - JAC
+	// See: http://stackoverflow.com/questions/36503224/ios-app-freezes-on-pushviewcontroller/36637556#36637556
+
+	if ([self respondsToSelector:@selector(interactivePopGestureRecognizer)]) {
+		if (viewController == [[Utils del] masterViewController]) {
+			if (self.viewControllers.count == 1) {
+				self.interactivePopGestureRecognizer.enabled = NO;
+			}
+		}
+	}
+
+	if (viewController == [[Utils del] masterViewController]) {
+		if ([[Utils del] masterViewController].menuOpen == YES) {
+			[self.menuButton animateToClose];
+		} else {
+			[self.menuButton animateToMenu];
+		}
+	} else {
+		if (self.menuButton.showPopArrow == YES) {
+			[self.menuButton animateToPop:self.menuButton.proxyDelegate];
+		} else {
+			[self.menuButton animateToBack];
+		}
+	}
+}
 
 #pragma mark - Navigation Animation Delegate
 
@@ -146,10 +190,10 @@
 
 - (void)menuPressed {
     if ([[[Utils del] masterViewController] menuOpen]) {
-        [[[Utils del] masterViewController] decloakForMenu:YES];
+		[[[Utils del] masterViewController] decloakForMenu:YES];
         [self.menuButton animateToMenu];
     } else {
-        [[[Utils del] masterViewController] cloakForMenu:YES];
+		[[[Utils del] masterViewController] cloakForMenu:YES];
         [self.menuButton animateToClose];
     }
 }

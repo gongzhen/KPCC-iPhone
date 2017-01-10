@@ -210,9 +210,11 @@ static NSString *kShortListMenuURL = @"http://www.scpr.org/short-list/latest#no-
                         self.currentObjectURL = str;
                         self.pushing = YES;
                         self.navigationItem.leftBarButtonItem.enabled = NO;
+						self.navigationController.interactivePopGestureRecognizer.enabled = NO;
                         self.detailInitialLoad = NO;
                         [self.detailWebView loadRequest:request];
-                    }];
+
+					}];
 
                 }
                 return NO;
@@ -268,6 +270,7 @@ static NSString *kShortListMenuURL = @"http://www.scpr.org/short-list/latest#no-
 
 - (void)unlockBackButton {
     self.navigationItem.leftBarButtonItem.enabled = YES;
+	self.navigationController.interactivePopGestureRecognizer.enabled = YES;
 }
 
 #pragma mark - MenuButtonDelegate
@@ -297,6 +300,7 @@ static NSString *kShortListMenuURL = @"http://www.scpr.org/short-list/latest#no-
         self.currentObjectURL = kShortListMenuURL;
         [self.detailWebView loadHTMLString:@"" baseURL:nil];
         self.navigationItem.leftBarButtonItem.enabled = YES;
+		self.navigationController.interactivePopGestureRecognizer.enabled = YES;
         self.pushing = NO;
         self.popping = NO;
 

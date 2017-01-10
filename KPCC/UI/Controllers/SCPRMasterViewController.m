@@ -160,10 +160,10 @@ setForOnDemandUI;
     
     [[AnalyticsManager shared] screen:@"liveStreamView"];
     
-    self.navigationController.interactivePopGestureRecognizer.enabled = NO;
-    self.hiddenVector = [NSMutableArray new];
-    
-    
+//    self.navigationController.interactivePopGestureRecognizer.enabled = NO;
+
+	self.hiddenVector = [NSMutableArray new];
+
     self.view.backgroundColor = [UIColor blackColor];
     self.horizDividerLine.layer.opacity = 0.0f;
     self.queueBlurView.layer.opacity = 0.0f;
@@ -3474,7 +3474,7 @@ setForOnDemandUI;
             self.homeIsNotRootViewController = YES;
             SCPRShortListViewController *mySCPRShortListViewController = [[SCPRShortListViewController alloc] initWithNibName:@"SCPRShortListViewController" bundle:nil];
             [self.navigationController pushViewController:mySCPRShortListViewController animated:YES];
-
+			NSLog(@"self.navigationController = %@ / %@", self.navigationController, mySCPRShortListViewController);
 			break;
         }
         case 3: {
