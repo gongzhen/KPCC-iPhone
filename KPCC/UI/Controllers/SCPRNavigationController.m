@@ -66,7 +66,7 @@
 }
 
 - (void)restoreLeftBarItem:(id<MenuButtonDelegate>)proxyDelegate {
-    if ( proxyDelegate == self.proxyDelegate ) {
+    if (proxyDelegate == self.proxyDelegate) {
         [self.menuButton animateToBack];
         [self.menuButton setProxyDelegate:nil];
         self.proxyDelegate = nil;
@@ -211,7 +211,8 @@
 - (void)handleMenuClosed:(NSNotification *)notification {
     // Handle when we close menu programatically, and update
     // menu button to proper state.
-    if (![self.menuButton showBackArrow]) {
+
+	if (![self.menuButton showBackArrow]) {
         if (![self.menuButton showMenu]) {
             [self.menuButton animateToMenu];
         }

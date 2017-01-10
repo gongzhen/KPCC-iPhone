@@ -140,7 +140,7 @@
     transformBottomAnimation.springSpeed = 20;
     transformBottomAnimation.dynamicsTension = 1000;
 
-    if (self.showBackArrow) {
+    if (self.showBackArrow || self.showPopArrow) {
         POPSpringAnimation *scaleTopAnimation = [POPSpringAnimation animation];
         scaleTopAnimation.property = [POPAnimatableProperty propertyWithName:kPOPLayerBounds];
         scaleTopAnimation.toValue = [NSValue valueWithCGRect:CGRectMake(0, 0, 24, 1)];
@@ -151,8 +151,10 @@
 
         [self.topLayer pop_addAnimation:scaleTopAnimation forKey:@"scaleTopAnimation"];
         [self.bottomLayer pop_addAnimation:scaleBottomAnimation forKey:@"scaleBottomAnimation"];
-        self.showBackArrow = NO;
-    }
+
+		self.showPopArrow	= NO;
+        self.showBackArrow	= NO;
+	}
 
     [self.topLayer pop_addAnimation:positionTopAnimation forKey:@"positionTopAnimation"];
     [self.topLayer pop_addAnimation:transformTopAnimation forKey:@"rotateTopAnimation"];

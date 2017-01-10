@@ -3487,8 +3487,6 @@ setForOnDemandUI;
             [self.navigationController pushViewController:mySCPRTimerControlViewController animated:YES];
             [mySCPRTimerControlViewController setup];
 
-            self.restoreTitle = YES;
-
 			break;
         }
         case 4: {

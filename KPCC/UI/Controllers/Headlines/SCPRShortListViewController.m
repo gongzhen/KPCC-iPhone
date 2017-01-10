@@ -72,16 +72,12 @@ static NSString *kShortListMenuURL = @"http://www.scpr.org/short-list/latest#no-
     self.detailWebView.delegate = self;
     self.cachedParentTitle = self.navigationItem.title;
     self.navigationItem.title = @"Headlines";
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction
-                                                                                           target:self
-                                                                                           action:@selector(share)];
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(share)];
     self.currentObjectURL = kShortListMenuURL;
-    
-    [[AnalyticsManager shared] logEvent:@"userIsViewingHeadlines"
-                         withParameters:nil
-                                  timed:YES];
-    
-    [SCPRSpinnerViewController spinInCenterOfViewController:self appeared:^{
+
+    [[AnalyticsManager shared] logEvent:@"userIsViewingHeadlines" withParameters:nil timed:YES];
+
+	[SCPRSpinnerViewController spinInCenterOfViewController:self appeared:^{
         [[SessionManager shared] setUserIsViewingHeadlines:YES];
 #ifdef USE_API
         [[NetworkManager shared] fetchEditions:^(id object) {
@@ -114,52 +110,45 @@ static NSString *kShortListMenuURL = @"http://www.scpr.org/short-list/latest#no-
 }
 
 - (void)share {
-    
-    if ( self.currentObjectURL ) {
-        UIActivityViewController *activities = [[UIActivityViewController alloc] initWithActivityItems:@[ self.currentObjectURL ]
-                                                                                 applicationActivities:nil];
+    if (self.currentObjectURL) {
+        UIActivityViewController *activities = [[UIActivityViewController alloc] initWithActivityItems:@[ self.currentObjectURL ] applicationActivities:nil];
         [self presentViewController:activities
                            animated:YES
                          completion:^{
-                           
                              [[DesignManager shared] normalizeBar];
-                             
                          }];
     }
 }
 
 #pragma mark - UIWebView
 - (void)webViewDidFinishLoad:(UIWebView *)webView {
-    
     if ( webView == self.slWebView ) {
         [SCPRSpinnerViewController finishSpinning];
-        if ( !self.initialLoad ) {
+
+		if (!self.initialLoad) {
             self.initialLoad = YES;
             [UIView animateWithDuration:0.55 animations:^{
                 [self.slWebView.layer setOpacity:1.0];
-                
             } completion:^(BOOL finished) {
-   
             }];
         }
     }
-    if ( webView == self.detailWebView ) {
-        
-        if ( self.popping ) {
+
+	if (webView == self.detailWebView) {
+        if (self.popping) {
             self.popping = NO;
             self.detailInitialLoad = NO;
             return;
         }
-        
-        if ( !self.detailInitialLoad ) {
+
+        if (!self.detailInitialLoad) {
             self.detailInitialLoad = YES;
             [SCPRSpinnerViewController finishSpinning];
 
             [UIView animateWithDuration:0.25 delay:0.0 options:UIViewAnimationOptionCurveEaseOut animations:^{
                 self.mainScrollView.contentOffset = CGPointMake(self.mainScrollView.frame.size.width, self.mainScrollView.contentOffset.y);
             } completion:^(BOOL finished) {
-                NSString *jsonString = [self.detailWebView stringByEvaluatingJavaScriptFromString:
-                                        @"document.getElementsByTagName('head')[0].innerHTML;"];
+                NSString *jsonString = [self.detailWebView stringByEvaluatingJavaScriptFromString:@"document.getElementsByTagName('head')[0].innerHTML;"];
                 
                 [self extractTitleFromString:jsonString completed:^(id object) {
                     
@@ -172,96 +161,76 @@ static NSString *kShortListMenuURL = @"http://www.scpr.org/short-list/latest#no-
                     SCPRAppDelegate *del = (SCPRAppDelegate*)[UIApplication sharedApplication].delegate;
                     SCPRNavigationController *navigation = [del masterNavigationController];
                     
-                    [navigation applyCustomLeftBarItem:CustomLeftBarItemPop
-                                         proxyDelegate:self];
+                    [navigation applyCustomLeftBarItem:CustomLeftBarItemPop proxyDelegate:self];
                     
                     self.pushing = NO;
-                    
                 }];
             }];
-                
         }
     }
-
-    
-    
-    
 }
 
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType {
-    
     NSString *str = [[request URL] absoluteString];
     if ( webView == self.slWebView ) {
-        
-        NSLog(@"Loading %@ ... ",str);
-        
         if ( self.initialLoad ) {
-            
-            if ( navigationType != UIWebViewNavigationTypeLinkClicked ) return YES;
-            
-            if ( [str rangeOfString:@"http"].location != NSNotFound ) {
-                
+			if ( navigationType != UIWebViewNavigationTypeLinkClicked ) {
+				return YES;
+			}
+
+			if ([str rangeOfString:@"http"].location != NSNotFound) {
                 NSLog(@"Headlines electing to load : %@",str);
                 
-                if ( !self.pushing ) {
-                    
+                if (!self.pushing) {
                     [SCPRSpinnerViewController spinInCenterOfViewController:self appeared:^{
                         self.detailWebView.delegate = self;
                         self.currentObjectURL = str;
                         self.pushing = YES;
-                        self.navigationItem.leftBarButtonItem.enabled = NO;
-						self.navigationController.interactivePopGestureRecognizer.enabled = NO;
+//                        self.navigationItem.leftBarButtonItem.enabled = NO;
+//						self.navigationController.interactivePopGestureRecognizer.enabled = NO;
                         self.detailInitialLoad = NO;
                         [self.detailWebView loadRequest:request];
-
 					}];
-
                 }
-                return NO;
+
+				return NO;
             }
-            if ( [str rangeOfString:@"about:blank"].location != NSNotFound ) {
+
+			if ([str rangeOfString:@"about:blank"].location != NSNotFound) {
                 return YES;
             }
             
             return YES;
         }
-        
     }
-    if ( webView == self.detailWebView ) {
+
+	if (webView == self.detailWebView) {
         if ( [str rangeOfString:@"share?obj_key"].location != NSNotFound ||
             [str rangeOfString:@"tweet?url"].location != NSNotFound ||
             [str rangeOfString:@"/sharer.php?"].location != NSNotFound ) {
-            [[[UIAlertView alloc] initWithTitle:@"Share from the App!"
-                                        message:@"If you'd like to share this item, use the share button in the upper right corner"
-                                       delegate:nil
-                              cancelButtonTitle:@"Will Do!"
-                              otherButtonTitles:nil] show];
-            return NO;
+            [[[UIAlertView alloc] initWithTitle:@"Share from the App!" message:@"If you'd like to share this item, use the share button in the upper right corner" delegate:nil cancelButtonTitle:@"Will Do!" otherButtonTitles:nil] show];
+
+			return NO;
         } else {
-            
-            if ( self.loadingTimer ) {
-                if ( [self.loadingTimer isValid] ) {
-                    [self.loadingTimer invalidate];
-                }
-                self.loadingTimer = nil;
-            }
-            
-            self.loadingTimer = [NSTimer scheduledTimerWithTimeInterval:0.25 target:self
-                                                               selector:@selector(unlockBackButton)
-                                                               userInfo:nil
-                                                                repeats:NO];
-            
+//            if (self.loadingTimer) {
+//                if ( [self.loadingTimer isValid] ) {
+//                    [self.loadingTimer invalidate];
+//                }
+//                self.loadingTimer = nil;
+//            }
+//
+//            self.loadingTimer = [NSTimer scheduledTimerWithTimeInterval:0.25 target:self selector:@selector(unlockBackButton) userInfo:nil repeats:NO];
+
             if ( navigationType != UIWebViewNavigationTypeLinkClicked ) {
                 return YES;
             }
             
             [[UIApplication sharedApplication] openURL:[request URL]];
             return NO;
-            
-            
         }
     }
-    return YES;
+
+	return YES;
 }
 
 - (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error {
@@ -269,38 +238,39 @@ static NSString *kShortListMenuURL = @"http://www.scpr.org/short-list/latest#no-
 }
 
 - (void)unlockBackButton {
-    self.navigationItem.leftBarButtonItem.enabled = YES;
-	self.navigationController.interactivePopGestureRecognizer.enabled = YES;
+//    self.navigationItem.leftBarButtonItem.enabled = YES;
+//	self.navigationController.interactivePopGestureRecognizer.enabled = YES;
 }
 
 #pragma mark - MenuButtonDelegate
 - (void)popPressed {
-    
-    if ( self.pushing ) return;
-    
+	if (self.pushing) {
+		return;
+	}
+
     [self.detailWebView stopLoading];
     self.detailWebView.delegate = nil;
-    if ( self.loadingTimer ) {
-        if ( [self.loadingTimer isValid] ) {
-            [self.loadingTimer invalidate];
-        }
-        self.loadingTimer = nil;
-    }
-    
+
+//	if (self.loadingTimer) {
+//        if ([self.loadingTimer isValid]) {
+//            [self.loadingTimer invalidate];
+//        }
+//        self.loadingTimer = nil;
+//    }
+
     self.popping = YES;
     SCPRAppDelegate *del = (SCPRAppDelegate*)[UIApplication sharedApplication].delegate;
     SCPRNavigationController *navigation = [del masterNavigationController];
     [navigation restoreLeftBarItem:self];
     self.navigationItem.title = self.cachedTitle;
-    
+
     [UIView animateWithDuration:0.25 delay:0.0 options:UIViewAnimationOptionCurveEaseOut animations:^{
         self.mainScrollView.contentOffset = CGPointMake(0.0, self.mainScrollView.contentOffset.y);
     } completion:^(BOOL finished) {
- 
         self.currentObjectURL = kShortListMenuURL;
         [self.detailWebView loadHTMLString:@"" baseURL:nil];
-        self.navigationItem.leftBarButtonItem.enabled = YES;
-		self.navigationController.interactivePopGestureRecognizer.enabled = YES;
+//        self.navigationItem.leftBarButtonItem.enabled = YES;
+//		self.navigationController.interactivePopGestureRecognizer.enabled = YES;
         self.pushing = NO;
         self.popping = NO;
 
@@ -337,15 +307,44 @@ static NSString *kShortListMenuURL = @"http://www.scpr.org/short-list/latest#no-
     
     __block NSString *title = @"";
     __block BOOL matched = NO;
-    [regex enumerateMatchesInString:fullHTML options:0 range:NSMakeRange(0, [fullHTML length]) usingBlock:^(NSTextCheckingResult *match, NSMatchingFlags flags, BOOL *stop) {
+
+	NSString *(^replaceEntities)(NSString*) = ^(NSString *inputString) {
+		NSArray *entityItems = @[
+								 @[@"&amp;", @"&"],
+								 @[@"&lt;", @"<"],
+								 @[@"&gt;", @">"],
+								 @[@"&bull;", @"•"],
+								 @[@"&deg;", @"°"],
+								 @[@"&copy;", @"©"],
+								 @[@"&reg;", @"®"],
+								 @[@"&mdash;", @"—"],
+								 @[@"&ndash;", @"–"],
+								 @[@"&nbsp;", @" "],
+								 @[@"&ldquo;", @"“"],
+								 @[@"&rdguo;", @"”"],
+								 @[@"&lsquo;", @"‘"],
+								 @[@"&rsquo;", @"’"],
+								 @[@"&hellip;", @"…"]
+								 ];
+		
+		for (NSArray *entityItem in entityItems) {
+			inputString = [inputString stringByReplacingOccurrencesOfString:entityItem[0] withString:entityItem[1]];
+		}
+
+		return inputString;
+	};
+
+	[regex enumerateMatchesInString:fullHTML options:0 range:NSMakeRange(0, [fullHTML length]) usingBlock:^(NSTextCheckingResult *match, NSMatchingFlags flags, BOOL *stop) {
         
         title = [fullHTML substringWithRange:[match rangeAtIndex:0]];
         title = [title substringToIndex:[title rangeOfString:@"</title>"].location];
         title = [title substringFromIndex:[title rangeOfString:@"<title>"].location + [@"<title>" length]];
-        
+
         *stop = YES;
         matched = YES;
-        
+		
+		title = replaceEntities(title);
+
         if ( completed ) {
             dispatch_async(dispatch_get_main_queue(), ^{
                 completed(title);
@@ -369,7 +368,9 @@ static NSString *kShortListMenuURL = @"http://www.scpr.org/short-list/latest#no-
             
             *stop = YES;
             matched = YES;
-            
+
+			title = replaceEntities(title);
+
             if ( completed ) {
                 dispatch_async(dispatch_get_main_queue(), ^{
                     completed(title);
