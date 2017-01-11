@@ -54,9 +54,10 @@ extension UserProfileViewController {
 
         tableView.scrollEnabled = false
 
-        blurredImageView.frame = view.bounds
-        blurredImageView.alpha = 0.65
-        blurredImageView.image = DesignManager.shared().currentBlurredLiveImage
+        blurredImageView.frame			= view.bounds
+        blurredImageView.alpha			= 0.65
+		blurredImageView.contentMode	= .ScaleAspectFill
+        blurredImageView.image			= DesignManager.shared().currentBlurredLiveImage
 
         tableView.backgroundView = blurredImageView
 

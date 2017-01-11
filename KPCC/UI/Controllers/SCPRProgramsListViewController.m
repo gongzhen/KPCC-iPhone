@@ -12,6 +12,7 @@
 #import "SCPRProgramDetailViewController.h"
 #import "DesignManager.h"
 #import "AnalyticsManager.h"
+#import "AudioManager.h"
 #import "FXBlurView.h"
 #import "SCPRGenericAvatarViewController.h"
 #import "GenericProgram.h"
@@ -29,6 +30,8 @@
 @property SCPRProgramTableViewHeader* otherHeader;
 @property NSArray* kpccPrograms;
 @property NSArray* otherPrograms;
+
+@property (nonatomic, weak)	IBOutlet UIView		*backgroundCoverView;
 @end
 
 
@@ -61,12 +64,12 @@
     [super viewDidAppear:animated];
     
     [[DesignManager shared] setProtectBlurredImage:NO];
-    
-//    [self.blurView setNeedsDisplay];
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+
+	self.view.backgroundColor = [UIColor blackColor];
 
     self.blurView.tintColor = [UIColor clearColor];
     self.blurView.blurRadius = 20.f;
@@ -81,14 +84,26 @@
                                            self.genAvatar.view.frame.size.height);
     self.genAvatar.view.alpha = 0.0f;
     [self.view addSubview:self.genAvatar.view];*/
-    
-    [[DesignManager shared] loadProgramImage:_currentProgram.program_slug
-                                andImageView:self.programBgImage
-                                  completion:^(BOOL status) {
-                                      //[self.blurView setNeedsDisplay];
-                                  }];
-    
-    self.view.backgroundColor = [UIColor clearColor];
+
+//    [[DesignManager shared] loadProgramImage:_currentProgram.program_slug
+//                                andImageView:self.programBgImage
+//                                  completion:^(BOOL status) {
+//                                      [self.blurView setNeedsDisplay];
+//                                  }];
+	
+	UIImage *backgroundImage = [[DesignManager shared] currentBlurredLiveImage];
+	if ( [[AudioManager shared] currentAudioMode] == AudioModeOnDemand ) {
+		UIImage *backgroundImageShow = [[DesignManager shared] currentBlurredImage];
+		if (backgroundImageShow) {
+			backgroundImage = backgroundImageShow;
+		}
+	}
+
+	self.programBgImage.image = backgroundImage;
+
+	[self.backgroundCoverView setBackgroundColor:[[UIColor virtualBlackColor] translucify:0.7f]];
+
+	self.view.backgroundColor = [UIColor clearColor];
 
     // Fetch all Programs from CoreData and filter, given HIDDEN_PROGRAMS.
     NSArray *storedPrograms = [Program fetchAllProgramsInContext:[[ContentManager shared] managedObjectContext]];

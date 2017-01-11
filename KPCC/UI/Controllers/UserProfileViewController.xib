@@ -1,28 +1,24 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="10117" systemVersion="15F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="11762" systemVersion="16C67" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <customFonts key="customFonts">
-        <mutableArray key="FreigSanProBook.otf">
+        <array key="FreigSanProBook.otf">
             <string>FreightSansProBook-Regular</string>
-            <string>FreightSansProBook-Regular</string>
-            <string>FreightSansProBook-Regular</string>
-            <string>FreightSansProBook-Regular</string>
-            <string>FreightSansProBook-Regular</string>
-            <string>FreightSansProBook-Regular</string>
-        </mutableArray>
-        <mutableArray key="FreigSanProMed.otf">
+        </array>
+        <array key="FreigSanProMed.otf">
             <string>FreightSansProMedium-Regular</string>
-        </mutableArray>
-        <mutableArray key="FreigSanProSem.otf">
+        </array>
+        <array key="FreigSanProSem.otf">
             <string>FreightSansProSemibold-Regular</string>
-            <string>FreightSansProSemibold-Regular</string>
-            <string>FreightSansProSemibold-Regular</string>
-            <string>FreightSansProSemibold-Regular</string>
-        </mutableArray>
+        </array>
     </customFonts>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="UserProfileViewController" customModule="KPCC" customModuleProvider="target">
@@ -35,9 +31,9 @@
         </placeholder>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
         <tableView opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" bouncesZoom="NO" style="plain" separatorStyle="none" allowsSelection="NO" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="i5M-Pr-FkT">
-            <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+            <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-            <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+            <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <connections>
                 <outlet property="dataSource" destination="-1" id="Tng-2m-Rnh"/>
                 <outlet property="delegate" destination="-1" id="9aC-8N-iBw"/>
@@ -45,66 +41,66 @@
             <point key="canvasLocation" x="880" y="554"/>
         </tableView>
         <view contentMode="scaleToFill" id="oE6-jD-oqd">
-            <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+            <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <subviews>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Welcome" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Q7x-f8-tX3">
-                    <rect key="frame" x="244" y="72" width="113" height="38"/>
+                    <rect key="frame" x="131" y="72" width="113" height="38"/>
                     <fontDescription key="fontDescription" name="FreightSansProBook-Regular" family="FreightSans Pro" pointSize="30"/>
-                    <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     <nil key="highlightedColor"/>
                 </label>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Already have an account?" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="V1s-Jq-yrx">
-                    <rect key="frame" x="210" y="339" width="180" height="23"/>
+                    <rect key="frame" x="97.5" y="339" width="180" height="23"/>
                     <fontDescription key="fontDescription" name="FreightSansProBook-Regular" family="FreightSans Pro" pointSize="18"/>
-                    <color key="textColor" red="1" green="1" blue="1" alpha="0.69910793439716312" colorSpace="calibratedRGB"/>
+                    <color key="textColor" red="1" green="1" blue="1" alpha="0.69910793439716312" colorSpace="custom" customColorSpace="sRGB"/>
                     <nil key="highlightedColor"/>
                 </label>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="RYh-xL-AMt">
-                    <rect key="frame" x="273" y="356" width="55" height="36"/>
+                    <rect key="frame" x="160" y="356" width="55" height="36"/>
                     <fontDescription key="fontDescription" name="FreightSansProSemibold-Regular" family="FreightSans Pro" pointSize="18"/>
                     <state key="normal" title="LOG IN">
-                        <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     </state>
                     <state key="highlighted">
-                        <color key="titleColor" white="1" alpha="0.70284796099290803" colorSpace="calibratedWhite"/>
+                        <color key="titleColor" red="1" green="1" blue="1" alpha="0.70284796099290803" colorSpace="custom" customColorSpace="sRGB"/>
                     </state>
                     <connections>
                         <action selector="logIn:" destination="-1" eventType="touchUpInside" id="QST-Q9-ddU"/>
                     </connections>
                 </button>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Enter giveaways with one tap and gain instant access to upcoming features with a KPCC profile." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tI8-Sa-KvQ">
-                    <rect key="frame" x="175" y="134" width="250" height="68"/>
+                    <rect key="frame" x="62.5" y="134" width="250" height="68"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="250" id="Evd-ON-vLv"/>
                     </constraints>
                     <fontDescription key="fontDescription" name="FreightSansProBook-Regular" family="FreightSans Pro" pointSize="18"/>
-                    <color key="textColor" red="1" green="1" blue="1" alpha="0.69910793439716312" colorSpace="calibratedRGB"/>
+                    <color key="textColor" red="1" green="1" blue="1" alpha="0.69910793439716312" colorSpace="custom" customColorSpace="sRGB"/>
                     <nil key="highlightedColor"/>
                 </label>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mxw-Y3-HlM">
-                    <rect key="frame" x="200" y="318" width="200" height="1"/>
-                    <color key="backgroundColor" red="0.97254901960784312" green="0.49411764705882355" blue="0.12941176470588234" alpha="1" colorSpace="calibratedRGB"/>
+                    <rect key="frame" x="87.5" y="318" width="200" height="1"/>
+                    <color key="backgroundColor" red="0.97254901960784312" green="0.49411764705882355" blue="0.12941176470588234" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="200" id="hYm-En-dth"/>
                         <constraint firstAttribute="height" constant="1" id="lmw-tL-cfB"/>
                     </constraints>
                 </view>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="OeU-eA-rBV">
-                    <rect key="frame" x="264" y="266" width="72" height="38"/>
+                    <rect key="frame" x="151.5" y="266" width="72" height="38"/>
                     <fontDescription key="fontDescription" name="FreightSansProSemibold-Regular" family="FreightSans Pro" pointSize="20"/>
                     <state key="normal" title="SIGN UP">
-                        <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     </state>
                     <state key="highlighted">
-                        <color key="titleColor" white="1" alpha="0.70284796099290803" colorSpace="calibratedWhite"/>
+                        <color key="titleColor" red="1" green="1" blue="1" alpha="0.70284796099290803" colorSpace="custom" customColorSpace="sRGB"/>
                     </state>
                     <connections>
                         <action selector="signUp:" destination="-1" eventType="touchUpInside" id="qwb-iQ-hDj"/>
                     </connections>
                 </button>
             </subviews>
-            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+            <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
             <constraints>
                 <constraint firstItem="RYh-xL-AMt" firstAttribute="centerX" secondItem="oE6-jD-oqd" secondAttribute="centerX" id="3g4-jA-tOn"/>
                 <constraint firstItem="Q7x-f8-tX3" firstAttribute="centerX" secondItem="oE6-jD-oqd" secondAttribute="centerX" id="7ju-nH-chn"/>
@@ -123,73 +119,73 @@
             <point key="canvasLocation" x="1534" y="554"/>
         </view>
         <view contentMode="scaleToFill" id="ftv-Gz-zuS">
-            <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+            <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <subviews>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="D4F-he-EaB">
-                    <rect key="frame" x="511" y="17" width="76" height="14"/>
+                    <rect key="frame" x="286" y="17" width="76" height="14"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="76" id="f7S-Ma-Zp3"/>
                     </constraints>
                     <fontDescription key="fontDescription" name="FreightSansProMedium-Regular" family="FreightSans Pro" pointSize="12"/>
-                    <color key="tintColor" white="1" alpha="0.80103058510638303" colorSpace="calibratedWhite"/>
+                    <color key="tintColor" red="1" green="1" blue="1" alpha="0.80103058510638303" colorSpace="custom" customColorSpace="sRGB"/>
                     <inset key="titleEdgeInsets" minX="3" minY="0.0" maxX="0.0" maxY="0.0"/>
                     <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="3" maxY="0.0"/>
                     <state key="normal" title="LOG OUT" image="LogOutIcon">
-                        <color key="titleColor" white="1" alpha="0.79956227836879457" colorSpace="calibratedWhite"/>
+                        <color key="titleColor" red="1" green="1" blue="1" alpha="0.79956227836879457" colorSpace="custom" customColorSpace="sRGB"/>
                     </state>
                     <state key="highlighted">
-                        <color key="titleColor" white="1" alpha="0.39996121453900718" colorSpace="calibratedWhite"/>
+                        <color key="titleColor" red="1" green="1" blue="1" alpha="0.39996121453900718" colorSpace="custom" customColorSpace="sRGB"/>
                     </state>
                     <connections>
                         <action selector="logOut:" destination="-1" eventType="touchUpInside" id="jIC-KA-jDz"/>
                     </connections>
                 </button>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="EMAIL ADDRESS:" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wwi-hB-0if">
-                    <rect key="frame" x="256" y="80" width="89" height="16"/>
+                    <rect key="frame" x="143" y="80" width="89" height="16"/>
                     <fontDescription key="fontDescription" name="FreightSansProSemibold-Regular" family="FreightSans Pro" pointSize="12"/>
-                    <color key="textColor" red="0.97254901960784312" green="0.49411764705882355" blue="0.12941176470588234" alpha="1" colorSpace="calibratedRGB"/>
+                    <color key="textColor" red="0.97254901960784312" green="0.49411764705882355" blue="0.12941176470588234" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     <nil key="highlightedColor"/>
                 </label>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="john@doe.com" textAlignment="center" lineBreakMode="middleTruncation" baselineAdjustment="alignBaselines" minimumFontSize="16" translatesAutoresizingMaskIntoConstraints="NO" id="uac-JR-FeM">
-                    <rect key="frame" x="24" y="96" width="552" height="38"/>
+                    <rect key="frame" x="24" y="96" width="327" height="38"/>
                     <fontDescription key="fontDescription" name="FreightSansProBook-Regular" family="FreightSans Pro" pointSize="30"/>
-                    <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     <nil key="highlightedColor"/>
                 </label>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8K0-C4-Bwa">
-                    <rect key="frame" x="0.0" y="220" width="600" height="380"/>
+                    <rect key="frame" x="0.0" y="220" width="375" height="447"/>
                     <subviews>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Stay logged in to enter giveaways with one tap and gain instant access to upcoming features." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tMq-0k-1tO">
-                            <rect key="frame" x="175" y="56" width="250" height="68"/>
+                            <rect key="frame" x="62.5" y="56" width="250" height="68"/>
                             <constraints>
                                 <constraint firstAttribute="width" constant="250" id="KRq-zX-ezo"/>
                             </constraints>
                             <fontDescription key="fontDescription" name="FreightSansProBook-Regular" family="FreightSans Pro" pointSize="18"/>
-                            <color key="textColor" white="0.0" alpha="0.5" colorSpace="calibratedWhite"/>
+                            <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="0.5" colorSpace="custom" customColorSpace="sRGB"/>
                             <nil key="highlightedColor"/>
                         </label>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="c0Z-Z0-I3n">
-                            <rect key="frame" x="254" y="205" width="92" height="33"/>
+                            <rect key="frame" x="141.5" y="205" width="92" height="33"/>
                             <fontDescription key="fontDescription" name="FreightSansProSemibold-Regular" family="FreightSans Pro" pointSize="16"/>
                             <state key="normal" title="CONTACT US">
-                                <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                                <color key="titleColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             </state>
                             <state key="highlighted">
-                                <color key="titleColor" white="0.0" alpha="0.5" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                                <color key="titleColor" red="0.0" green="0.0" blue="0.0" alpha="0.5" colorSpace="custom" customColorSpace="sRGB"/>
                             </state>
                             <connections>
                                 <action selector="contactUs:" destination="-1" eventType="touchUpInside" id="gF2-4p-Hyd"/>
                             </connections>
                         </button>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Questions or issues with your account?" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FBL-sT-Ade">
-                            <rect key="frame" x="176" y="188" width="248" height="21"/>
+                            <rect key="frame" x="63.5" y="188" width="248" height="21"/>
                             <fontDescription key="fontDescription" name="FreightSansProBook-Regular" family="FreightSans Pro" pointSize="16"/>
-                            <color key="textColor" white="0.0" alpha="0.5" colorSpace="calibratedWhite"/>
+                            <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="0.5" colorSpace="custom" customColorSpace="sRGB"/>
                             <nil key="highlightedColor"/>
                         </label>
                     </subviews>
-                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     <constraints>
                         <constraint firstItem="FBL-sT-Ade" firstAttribute="centerX" secondItem="8K0-C4-Bwa" secondAttribute="centerX" id="4hn-Jr-Xe0"/>
                         <constraint firstItem="c0Z-Z0-I3n" firstAttribute="top" secondItem="FBL-sT-Ade" secondAttribute="bottom" constant="-4" id="T3K-M7-nqc"/>
@@ -200,7 +196,7 @@
                     </constraints>
                 </view>
             </subviews>
-            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+            <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
             <constraints>
                 <constraint firstAttribute="trailingMargin" secondItem="uac-JR-FeM" secondAttribute="trailing" constant="16" id="CMs-eJ-hAi"/>
                 <constraint firstItem="wwi-hB-0if" firstAttribute="centerX" secondItem="ftv-Gz-zuS" secondAttribute="centerX" id="FVi-xg-HHj"/>

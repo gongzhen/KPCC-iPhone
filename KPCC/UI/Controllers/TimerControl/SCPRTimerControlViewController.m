@@ -88,8 +88,8 @@
     st.translatesAutoresizingMaskIntoConstraints = NO;
     ac.translatesAutoresizingMaskIntoConstraints = NO;
     
-    self.blurredImageView.image = [[DesignManager shared] currentBlurredLiveImage];
-    
+	self.blurredImageView.image = [[DesignManager shared] currentBlurredLiveImage];
+	
     [self.toggleScroller addSubview:st];
     [self.toggleScroller addSubview:ac];
     self.toggleScroller.scrollEnabled = NO;
