@@ -5,9 +5,9 @@ use_frameworks!
 target 'KPCC' do
 
   pod 'AFNetworking', '~> 3.1'
-  pod 'FBSDKCoreKit', '~> 4.13'
-  pod 'FBSDKShareKit', '~> 4.13'
-  pod 'FBSDKLoginKit', '~> 4.13'
+  pod 'FBSDKCoreKit', '~> 4.18'
+  pod 'FBSDKShareKit', '~> 4.18'
+  pod 'FBSDKLoginKit', '~> 4.18'
   pod 'FXBlurView', '~> 1.6'
   pod 'Flurry-iOS-SDK/FlurrySDK', '~> 7.6'
   pod 'Google/Analytics', '~> 3.0'

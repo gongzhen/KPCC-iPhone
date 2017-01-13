@@ -24,8 +24,9 @@ NSString *const kPushChannel = @"listenLive";
 @implementation SCPRAppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+//	setenv("CFNETWORK_DIAGNOSTICS", "3", 1); TEMP - Used for testing App Transport Security... - JAC
 
-    NSDictionary *globalConfig = [Utils globalConfig];
+	NSDictionary *globalConfig = [Utils globalConfig];
     
     [A0Theme.sharedInstance registerTheme:[A0Theme KPCCThemeWithBundle:NSBundle.mainBundle]];
 
