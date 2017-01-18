@@ -97,11 +97,8 @@
 	<key>NSAppTransportSecurity</key>
 	<dict>
 		<key>NSAllowsArbitraryLoads</key>
-<<<<<<< Updated upstream
-=======
 		<false/>
 		<key>NSAllowsArbitraryLoadsInWebContent</key>
->>>>>>> Stashed changes
 		<true/>
 		<key>NSExceptionDomains</key>
 		<dict>
