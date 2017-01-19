@@ -3407,16 +3407,18 @@ setForOnDemandUI;
 }
 
 - (void)rebootOnDemandUI {
-    
-    if (self.queueBlurShown) {
+	if (self.queueBlurShown) {
         [self.queueBlurView setNeedsDisplay];
         [UIView animateWithDuration:0.3 delay:0. options:UIViewAnimationOptionCurveLinear animations:^{
-            
-            self.queueBlurView.alpha = 0.0f;
-            self.queueDarkBgView.alpha = 0.0f;
-            self.progressView.alpha = 1.0f;
-            self.shareButton.alpha = 1.0f;
-            self.timeLabelOnDemand.alpha = 1.0f;
+			if (!self.menuOpen) {
+				self.queueBlurView.alpha		= 0.0f;
+				self.queueDarkBgView.alpha		= 0.0f;
+
+				self.progressView.alpha			= 1.0f;
+				self.shareButton.alpha			= 1.0f;
+				self.timeLabelOnDemand.alpha	= 1.0f;
+			}
+
             SCPRQueueScrollableView *cv = self.queueUIContents[self.queueCurrentPage];
             if ( self.scrubbing ) {
                 cv.audioTitleLabel.alpha = 0.6;
