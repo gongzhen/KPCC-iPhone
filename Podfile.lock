@@ -102,9 +102,9 @@ PODS:
 
 DEPENDENCIES:
   - AFNetworking (~> 3.1)
-  - FBSDKCoreKit (~> 4.13)
-  - FBSDKLoginKit (~> 4.13)
-  - FBSDKShareKit (~> 4.13)
+  - FBSDKCoreKit (~> 4.18)
+  - FBSDKLoginKit (~> 4.18)
+  - FBSDKShareKit (~> 4.18)
   - Flurry-iOS-SDK/FlurrySDK (~> 7.6)
   - FXBlurView (~> 1.6)
   - Google/Analytics (~> 3.0)
@@ -148,6 +148,6 @@ SPEC CHECKSUMS:
   SimpleKeychain: b50cef3b87939d480ea1143425c00f5b4b70fe21
   XMLDictionary: f9f51601ba76678b594ab485f2b00ec1fed23724
 
-PODFILE CHECKSUM: 07c9b1e932d99e46e9b7d5306370b0abdc94feaa
+PODFILE CHECKSUM: eb5d2c56c2919b9417cf007207000e892c6ec6f6
 
 COCOAPODS: 1.1.1
