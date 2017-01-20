@@ -28,6 +28,8 @@
 @property (strong, nonatomic) NSTimer *alarmTimer;
 @property (strong, nonatomic) SCPRXFSViewController *xfsInterface;
 
+@property (nonatomic, strong)	NSDictionary		*originalLaunchOptions;	// Used for debugging launch context... - JAC
+
 @property UIBackgroundFetchResult alarmResults;
 
 

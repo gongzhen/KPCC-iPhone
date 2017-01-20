@@ -24,9 +24,10 @@ NSString *const kPushChannel = @"listenLive";
 @implementation SCPRAppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-
     NSDictionary *globalConfig = [Utils globalConfig];
-    
+
+	self.originalLaunchOptions	= launchOptions;
+
     [A0Theme.sharedInstance registerTheme:[A0Theme KPCCThemeWithBundle:NSBundle.mainBundle]];
 
     AuthenticationManager *authenticationManager = AuthenticationManager.sharedInstance;

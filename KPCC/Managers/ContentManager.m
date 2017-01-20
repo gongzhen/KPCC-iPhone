@@ -236,8 +236,12 @@ static ContentManager *singleton = nil;
     NSURL *storeURL = [[self applicationCachesDirectory] URLByAppendingPathComponent:pathComponent];
     
     NSError *error = nil;
-    NSDictionary *options = @{NSMigratePersistentStoresAutomaticallyOption: @YES, NSInferMappingModelAutomaticallyOption: @YES};
-    
+    NSDictionary *options = @{
+							  NSMigratePersistentStoresAutomaticallyOption: @YES,
+							  NSInferMappingModelAutomaticallyOption: @YES,
+							  NSPersistentStoreFileProtectionKey: NSFileProtectionComplete
+							  };
+
     _persistentStoreCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:[self managedObjectModel]];
     if (![_persistentStoreCoordinator addPersistentStoreWithType:NSSQLiteStoreType configuration:nil URL:storeURL options:options error:&error]) {
         /*
@@ -264,9 +268,18 @@ static ContentManager *singleton = nil;
          Lightweight migration will only work for a limited set of schema changes; consult "Core Data Model Versioning and Data Migration Programming Guide" for details.
          
          */
-        CLS_LOG(@"Unresolved error %@, %@", error, [error userInfo]);
-        NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
-        abort();
+
+		SCPRAppDelegate *appDelegate = (SCPRAppDelegate *) [UIApplication sharedApplication].delegate;
+
+		CLS_LOG(@"Launch context: %@", appDelegate.originalLaunchOptions);
+		CLS_LOG(@"Application state: %ld", (long)[[UIApplication sharedApplication] applicationState]);
+		CLS_LOG(@"First launch: %ld", (long)UXmanager.shared.isFirstAppLaunch);
+
+		CLS_LOG(@"Unresolved error %@, %@", error, [error userInfo]);
+
+		NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
+
+		abort();
     }
     
     return _persistentStoreCoordinator;
