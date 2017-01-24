@@ -64,11 +64,18 @@ platform :ios do
   lane :beta do
     ensure_git_branch(branch: "develop")
     gym(scheme: "#{APP_NAME}-Release")
-	pilot(
-		skip_submission: true,
-		skip_waiting_for_build_processing: true,
-		username: ENV["ITUNES_USER_ACCOUNT"]
-	)
+
+    # KPCC_APP_BUILD_NUMBER is based on git commit history, and is based on a shell
+    # script contained in the project. We only want to try uploading to TestFlight if
+	# this has incremented.
+
+    if ENV["KPCC_APP_BUILD_NUMBER"] > latest_testflight_build_number
+		pilot(
+			skip_submission: true,
+			skip_waiting_for_build_processing: true,
+			username: ENV["ITUNES_CONNECT_USER"]
+		)
+	end
     delete_ipa
     attributes = [
       APP_NAME,
