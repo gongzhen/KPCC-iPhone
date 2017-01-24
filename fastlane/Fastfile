@@ -64,8 +64,11 @@ platform :ios do
   lane :beta do
     ensure_git_branch(branch: "develop")
     gym(scheme: "#{APP_NAME}-Release")
-#    pilot
-    crashlytics(api_token: "ENV['FABRICBETA_KEY']", build_secret: "ENV['FABRICBETA_SECRET']")
+	pilot(
+		skip_submission: true,
+		skip_waiting_for_build_processing: true,
+		username: ENV["ITUNES_USER_ACCOUNT"]
+	)
     delete_ipa
     attributes = [
       APP_NAME,
