@@ -71,7 +71,7 @@ platform :ios do
 
 	last_kpcc_ios_build_number = File.read('/tmp/last_kpcc_ios_build_number')
 
-    if last_kpcc_ios_build_number > latest_testflight_build_number
+    if Integer(last_kpcc_ios_build_number) > Integer(latest_testflight_build_number)
 		pilot(
 			skip_submission: true,
 			skip_waiting_for_build_processing: true,
