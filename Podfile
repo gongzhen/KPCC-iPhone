@@ -21,9 +21,3 @@ target 'KPCC' do
   pod 'pop', '~> 1.0'
 
 end
-
-target 'KPCCTests' do
-
-  pod 'OCMock', '~> 3.3'
-
-end
