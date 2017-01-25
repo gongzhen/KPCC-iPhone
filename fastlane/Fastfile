@@ -77,17 +77,17 @@ platform :ios do
 			skip_waiting_for_build_processing: true,
 			username: ENV["ITUNES_CONNECT_USER"]
 		)
+		attributes = [
+		  APP_NAME,
+		  get_version_number,
+		  "(#{latest_testflight_build_number})"
+		]
+		slack(
+		  message: "TestFlight: There is an update available for #{attributes * ' '}",
+		  default_payloads: []
+		)
 	end
     delete_ipa
-    attributes = [
-      APP_NAME,
-      get_version_number,
-      "(#{latest_testflight_build_number})"
-    ]
-    slack(
-      message: "TestFlight: There is an update available for #{attributes * ' '}",
-      default_payloads: []
-    )
   end
 
   after_all do |lane|
