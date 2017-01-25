@@ -219,11 +219,6 @@
 		76A308D318C8FB940065D4B1 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 76A308D218C8FB940065D4B1 /* main.m */; };
 		76A308D718C8FB940065D4B1 /* SCPRAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 76A308D618C8FB940065D4B1 /* SCPRAppDelegate.m */; };
 		76A308E518C8FB940065D4B1 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 76A308E418C8FB940065D4B1 /* Images.xcassets */; };
-		76A308EC18C8FB950065D4B1 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 76A308EB18C8FB950065D4B1 /* XCTest.framework */; };
-		76A308ED18C8FB950065D4B1 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 76A308C618C8FB940065D4B1 /* Foundation.framework */; };
-		76A308EE18C8FB950065D4B1 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 76A308CA18C8FB940065D4B1 /* UIKit.framework */; };
-		76A308F618C8FB950065D4B1 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 76A308F418C8FB950065D4B1 /* InfoPlist.strings */; };
-		76A308F818C8FB950065D4B1 /* KPCCTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 76A308F718C8FB950065D4B1 /* KPCCTests.m */; };
 		76A3090418C93C880065D4B1 /* AudioManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 76A3090318C93C880065D4B1 /* AudioManager.m */; };
 		76B9A9AC18EF59FD007A6D8C /* SCPRUserReportViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 76B9A9AA18EF59FD007A6D8C /* SCPRUserReportViewController.m */; };
 		76B9A9AE18EF59FD007A6D8C /* SCPRUserReportViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 76B9A9AB18EF59FD007A6D8C /* SCPRUserReportViewController.xib */; };
@@ -352,18 +347,7 @@
 		EF88E9FC1E20661B00BCEC8F /* program_avatar_writers-almanac.png in Resources */ = {isa = PBXBuildFile; fileRef = EF88E99C1E20661A00BCEC8F /* program_avatar_writers-almanac.png */; };
 		EF88E9FD1E20661B00BCEC8F /* program_avatar_writers-almanac@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EF88E99D1E20661A00BCEC8F /* program_avatar_writers-almanac@2x.png */; };
 		F8B89D8CCF084CC24141C44C /* Pods_KPCC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5EEF9D0A5791A805E9A95672 /* Pods_KPCC.framework */; };
-		FFDF253C558CC417AA607BE4 /* Pods_KPCCTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 41B17E49DE60C14A3D32C727 /* Pods_KPCCTests.framework */; };
 /* End PBXBuildFile section */
-
-/* Begin PBXContainerItemProxy section */
-		76A308EF18C8FB950065D4B1 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 76A308BB18C8FB940065D4B1 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 76A308C218C8FB940065D4B1;
-			remoteInfo = KPCC;
-		};
-/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		07139B831B95E701007DBA91 /* ScheduleOccurrence.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScheduleOccurrence.swift; sourceTree = "<group>"; };
@@ -656,11 +640,7 @@
 		76A308D518C8FB940065D4B1 /* SCPRAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SCPRAppDelegate.h; sourceTree = "<group>"; };
 		76A308D618C8FB940065D4B1 /* SCPRAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SCPRAppDelegate.m; sourceTree = "<group>"; };
 		76A308E418C8FB940065D4B1 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
-		76A308EA18C8FB950065D4B1 /* KPCCTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = KPCCTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		76A308EB18C8FB950065D4B1 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
-		76A308F318C8FB950065D4B1 /* KPCCTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "KPCCTests-Info.plist"; sourceTree = "<group>"; };
-		76A308F518C8FB950065D4B1 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		76A308F718C8FB950065D4B1 /* KPCCTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = KPCCTests.m; sourceTree = "<group>"; };
 		76A3090218C93C880065D4B1 /* AudioManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AudioManager.h; path = Managers/AudioManager.h; sourceTree = "<group>"; };
 		76A3090318C93C880065D4B1 /* AudioManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AudioManager.m; path = Managers/AudioManager.m; sourceTree = "<group>"; };
 		76B9A9A918EF59FD007A6D8C /* SCPRUserReportViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCPRUserReportViewController.h; sourceTree = "<group>"; };
@@ -819,17 +799,6 @@
 				2574799B1B6965F800F72AF6 /* Fabric.framework in Frameworks */,
 				25E5532B1B61A79100C45B85 /* Crashlytics.framework in Frameworks */,
 				F8B89D8CCF084CC24141C44C /* Pods_KPCC.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		76A308E718C8FB940065D4B1 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				76A308EE18C8FB950065D4B1 /* UIKit.framework in Frameworks */,
-				76A308ED18C8FB950065D4B1 /* Foundation.framework in Frameworks */,
-				76A308EC18C8FB950065D4B1 /* XCTest.framework in Frameworks */,
-				FFDF253C558CC417AA607BE4 /* Pods_KPCCTests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1418,7 +1387,6 @@
 			isa = PBXGroup;
 			children = (
 				76A308CC18C8FB940065D4B1 /* KPCC */,
-				76A308F118C8FB950065D4B1 /* KPCCTests */,
 				8BA331511D1C819500B68ED1 /* LocalFrameworks */,
 				76A308C518C8FB940065D4B1 /* Frameworks */,
 				76A308C418C8FB940065D4B1 /* Products */,
@@ -1430,7 +1398,6 @@
 			isa = PBXGroup;
 			children = (
 				76A308C318C8FB940065D4B1 /* KPCC.app */,
-				76A308EA18C8FB950065D4B1 /* KPCCTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1476,24 +1443,6 @@
 				76A308CF18C8FB940065D4B1 /* InfoPlist.strings */,
 				76A308D218C8FB940065D4B1 /* main.m */,
 				8B8657BF1D026E30004F3251 /* Lock.strings */,
-			);
-			name = "Supporting Files";
-			sourceTree = "<group>";
-		};
-		76A308F118C8FB950065D4B1 /* KPCCTests */ = {
-			isa = PBXGroup;
-			children = (
-				76A308F718C8FB950065D4B1 /* KPCCTests.m */,
-				76A308F218C8FB950065D4B1 /* Supporting Files */,
-			);
-			path = KPCCTests;
-			sourceTree = "<group>";
-		};
-		76A308F218C8FB950065D4B1 /* Supporting Files */ = {
-			isa = PBXGroup;
-			children = (
-				76A308F318C8FB950065D4B1 /* KPCCTests-Info.plist */,
-				76A308F418C8FB950065D4B1 /* InfoPlist.strings */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -1629,27 +1578,6 @@
 			productReference = 76A308C318C8FB940065D4B1 /* KPCC.app */;
 			productType = "com.apple.product-type.application";
 		};
-		76A308E918C8FB940065D4B1 /* KPCCTests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 76A308FE18C8FB950065D4B1 /* Build configuration list for PBXNativeTarget "KPCCTests" */;
-			buildPhases = (
-				926EC9265D080B71FAE22B0F /* [CP] Check Pods Manifest.lock */,
-				76A308E618C8FB940065D4B1 /* Sources */,
-				76A308E718C8FB940065D4B1 /* Frameworks */,
-				76A308E818C8FB940065D4B1 /* Resources */,
-				3ABE54E19B075A566C299093 /* [CP] Embed Pods Frameworks */,
-				D61CA4A8E9C1057647F43971 /* [CP] Copy Pods Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				76A308F018C8FB950065D4B1 /* PBXTargetDependency */,
-			);
-			name = KPCCTests;
-			productName = KPCCTests;
-			productReference = 76A308EA18C8FB950065D4B1 /* KPCCTests.xctest */;
-			productType = "com.apple.product-type.bundle.unit-test";
-		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -1673,11 +1601,6 @@
 							};
 						};
 					};
-					76A308E918C8FB940065D4B1 = {
-						DevelopmentTeam = SXALEDSVFU;
-						LastSwiftMigration = 0800;
-						TestTargetID = 76A308C218C8FB940065D4B1;
-					};
 				};
 			};
 			buildConfigurationList = 76A308BE18C8FB940065D4B1 /* Build configuration list for PBXProject "KPCC" */;
@@ -1694,7 +1617,6 @@
 			projectRoot = "";
 			targets = (
 				76A308C218C8FB940065D4B1 /* KPCC */,
-				76A308E918C8FB940065D4B1 /* KPCCTests */,
 			);
 		};
 /* End PBXProject section */
@@ -1937,14 +1859,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		76A308E818C8FB940065D4B1 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				76A308F618C8FB950065D4B1 /* InfoPlist.strings in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
@@ -2020,36 +1934,6 @@
 			shellPath = /bin/sh;
 			shellScript = "if [ \"${CONFIGURATION}\" = \"Release\" ]; then\n  ./Fabric.framework/run 434d44032523439399b6658c29c147e8e869167e 4dc4d9cc0ade16f282932c7daef418996a1adaaf355390fc30594696d8936fb3\nfi";
 		};
-		3ABE54E19B075A566C299093 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-KPCCTests/Pods-KPCCTests-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		926EC9265D080B71FAE22B0F /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
-			showEnvVarsInLog = 0;
-		};
 		ABA2088CBE2D7EC683FE09C9 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -2063,21 +1947,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-KPCC/Pods-KPCC-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		D61CA4A8E9C1057647F43971 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-KPCCTests/Pods-KPCCTests-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -2189,37 +2058,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		76A308E618C8FB940065D4B1 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				76A308F818C8FB950065D4B1 /* KPCCTests.m in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXTargetDependency section */
-		76A308F018C8FB950065D4B1 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 76A308C218C8FB940065D4B1 /* KPCC */;
-			targetProxy = 76A308EF18C8FB950065D4B1 /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		76A308CF18C8FB940065D4B1 /* InfoPlist.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
 				76A308D018C8FB940065D4B1 /* en */,
-			);
-			name = InfoPlist.strings;
-			sourceTree = "<group>";
-		};
-		76A308F418C8FB950065D4B1 /* InfoPlist.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				76A308F518C8FB950065D4B1 /* en */,
 			);
 			name = InfoPlist.strings;
 			sourceTree = "<group>";
@@ -2326,57 +2171,6 @@
 				SWIFT_VERSION = 2.3;
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
-			};
-			name = Enterprise;
-		};
-		075636561B9FBBA9001D1C55 /* Enterprise */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 915B96DFAD2801AC0915A39A /* Pods-KPCCTests.enterprise.xcconfig */;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = YES;
-				DEVELOPMENT_TEAM = SXALEDSVFU;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(DEVELOPER_FRAMEWORKS_DIR)",
-					"$(PROJECT_DIR)",
-					"$(PROJECT_DIR)/LocalFrameworks",
-				);
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				HEADER_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"${PODS_ROOT}/Headers/Public\"",
-					"\"${PODS_ROOT}/Headers/Public/AFNetworking\"",
-					"\"${PODS_ROOT}/Headers/Public/Bolts\"",
-					"\"${PODS_ROOT}/Headers/Public/FXBlurView\"",
-					"\"${PODS_ROOT}/Headers/Public/FlurrySDK\"",
-					"\"${PODS_ROOT}/Headers/Public/Google\"",
-					"\"${PODS_ROOT}/Headers/Public/Google/Google\"",
-					"\"${PODS_ROOT}/Headers/Public/GoogleAnalytics\"",
-					"\"${PODS_ROOT}/Headers/Public/GoogleNetworkingUtilities\"",
-					"\"${PODS_ROOT}/Headers/Public/GoogleSymbolUtilities\"",
-					"\"${PODS_ROOT}/Headers/Public/GoogleUtilities\"",
-					"\"${PODS_ROOT}/Headers/Public/JDStatusBarNotification\"",
-					"\"${PODS_ROOT}/Headers/Public/KSReachability\"",
-					"\"${PODS_ROOT}/Headers/Public/Mixpanel\"",
-					"\"${PODS_ROOT}/Headers/Public/Parse\"",
-					"\"${PODS_ROOT}/Headers/Public/XMLDictionary\"",
-					"\"${PODS_ROOT}/Headers/Public/pop\"",
-					"\"${PROJECT_DIR}/Fabric.framework\"/**",
-					"\"${PROJECT_DIR}/Crashlytics.framework\"",
-					"\"$(CONFIGURATION_TEMP_DIR)/$(PROJECT_NAME).build/DerivedSources\"",
-				);
-				INFOPLIST_FILE = "KPCCTests/KPCCTests-Info.plist";
-				OTHER_LDFLAGS = (
-					"$(inherited)",
-					"-framework",
-					WebKit,
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = "org.scpr.iphone.${PRODUCT_NAME:rfc1034identifier}";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 2.3;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/KPCC.app/KPCC";
-				WRAPPER_EXTENSION = xctest;
 			};
 			name = Enterprise;
 		};
@@ -2587,112 +2381,6 @@
 			};
 			name = Release;
 		};
-		76A308FF18C8FB950065D4B1 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 127FFE4E6B2AEAF414A909CD /* Pods-KPCCTests.debug.xcconfig */;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = YES;
-				DEVELOPMENT_TEAM = SXALEDSVFU;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(DEVELOPER_FRAMEWORKS_DIR)",
-					"$(PROJECT_DIR)",
-					"$(PROJECT_DIR)/LocalFrameworks",
-				);
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
-					"$(inherited)",
-				);
-				HEADER_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"${PODS_ROOT}/Headers/Public\"",
-					"\"${PODS_ROOT}/Headers/Public/AFNetworking\"",
-					"\"${PODS_ROOT}/Headers/Public/Bolts\"",
-					"\"${PODS_ROOT}/Headers/Public/FXBlurView\"",
-					"\"${PODS_ROOT}/Headers/Public/FlurrySDK\"",
-					"\"${PODS_ROOT}/Headers/Public/Google\"",
-					"\"${PODS_ROOT}/Headers/Public/Google/Google\"",
-					"\"${PODS_ROOT}/Headers/Public/GoogleAnalytics\"",
-					"\"${PODS_ROOT}/Headers/Public/GoogleNetworkingUtilities\"",
-					"\"${PODS_ROOT}/Headers/Public/GoogleSymbolUtilities\"",
-					"\"${PODS_ROOT}/Headers/Public/GoogleUtilities\"",
-					"\"${PODS_ROOT}/Headers/Public/JDStatusBarNotification\"",
-					"\"${PODS_ROOT}/Headers/Public/KSReachability\"",
-					"\"${PODS_ROOT}/Headers/Public/Mixpanel\"",
-					"\"${PODS_ROOT}/Headers/Public/Parse\"",
-					"\"${PODS_ROOT}/Headers/Public/XMLDictionary\"",
-					"\"${PODS_ROOT}/Headers/Public/pop\"",
-					"\"${PROJECT_DIR}/Fabric.framework\"/**",
-					"\"${PROJECT_DIR}/Crashlytics.framework\"",
-					"\"$(CONFIGURATION_TEMP_DIR)/$(PROJECT_NAME).build/DerivedSources\"",
-				);
-				INFOPLIST_FILE = "KPCCTests/KPCCTests-Info.plist";
-				OTHER_LDFLAGS = (
-					"$(inherited)",
-					"-framework",
-					WebKit,
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = "org.scpr.iphone.${PRODUCT_NAME:rfc1034identifier}";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 2.3;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/KPCC.app/KPCC";
-				WRAPPER_EXTENSION = xctest;
-			};
-			name = Debug;
-		};
-		76A3090018C8FB950065D4B1 /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 9F75306D7C36C5253D851045 /* Pods-KPCCTests.release.xcconfig */;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = YES;
-				DEVELOPMENT_TEAM = SXALEDSVFU;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(DEVELOPER_FRAMEWORKS_DIR)",
-					"$(PROJECT_DIR)",
-					"$(PROJECT_DIR)/LocalFrameworks",
-				);
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				HEADER_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"${PODS_ROOT}/Headers/Public\"",
-					"\"${PODS_ROOT}/Headers/Public/AFNetworking\"",
-					"\"${PODS_ROOT}/Headers/Public/Bolts\"",
-					"\"${PODS_ROOT}/Headers/Public/FXBlurView\"",
-					"\"${PODS_ROOT}/Headers/Public/FlurrySDK\"",
-					"\"${PODS_ROOT}/Headers/Public/Google\"",
-					"\"${PODS_ROOT}/Headers/Public/Google/Google\"",
-					"\"${PODS_ROOT}/Headers/Public/GoogleAnalytics\"",
-					"\"${PODS_ROOT}/Headers/Public/GoogleNetworkingUtilities\"",
-					"\"${PODS_ROOT}/Headers/Public/GoogleSymbolUtilities\"",
-					"\"${PODS_ROOT}/Headers/Public/GoogleUtilities\"",
-					"\"${PODS_ROOT}/Headers/Public/JDStatusBarNotification\"",
-					"\"${PODS_ROOT}/Headers/Public/KSReachability\"",
-					"\"${PODS_ROOT}/Headers/Public/Mixpanel\"",
-					"\"${PODS_ROOT}/Headers/Public/Parse\"",
-					"\"${PODS_ROOT}/Headers/Public/XMLDictionary\"",
-					"\"${PODS_ROOT}/Headers/Public/pop\"",
-					"\"${PROJECT_DIR}/Fabric.framework\"/**",
-					"\"${PROJECT_DIR}/Crashlytics.framework\"",
-					"\"$(CONFIGURATION_TEMP_DIR)/$(PROJECT_NAME).build/DerivedSources\"",
-				);
-				INFOPLIST_FILE = "KPCCTests/KPCCTests-Info.plist";
-				OTHER_LDFLAGS = (
-					"$(inherited)",
-					"-framework",
-					WebKit,
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = "org.scpr.iphone.${PRODUCT_NAME:rfc1034identifier}";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 2.3;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/KPCC.app/KPCC";
-				WRAPPER_EXTENSION = xctest;
-			};
-			name = Release;
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -2712,16 +2400,6 @@
 				76A308FC18C8FB950065D4B1 /* Debug */,
 				76A308FD18C8FB950065D4B1 /* Release */,
 				075636551B9FBBA9001D1C55 /* Enterprise */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		76A308FE18C8FB950065D4B1 /* Build configuration list for PBXNativeTarget "KPCCTests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				76A308FF18C8FB950065D4B1 /* Debug */,
-				76A3090018C8FB950065D4B1 /* Release */,
-				075636561B9FBBA9001D1C55 /* Enterprise */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
