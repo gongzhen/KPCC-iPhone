@@ -28,11 +28,11 @@ PODS:
     - CocoaLumberjack/Core
   - CocoaLumberjack/Extensions (2.3.0):
     - CocoaLumberjack/Default
-  - FBSDKCoreKit (4.13.1):
+  - FBSDKCoreKit (4.19.0):
     - Bolts (~> 1.7)
-  - FBSDKLoginKit (4.13.1):
+  - FBSDKLoginKit (4.19.0):
     - FBSDKCoreKit
-  - FBSDKShareKit (4.13.1):
+  - FBSDKShareKit (4.19.0):
     - FBSDKCoreKit
   - FirebaseAnalytics (3.2.0):
     - FirebaseInstanceID (~> 1.0)
@@ -101,9 +101,9 @@ PODS:
 
 DEPENDENCIES:
   - AFNetworking (~> 3.1)
-  - FBSDKCoreKit (~> 4.13)
-  - FBSDKLoginKit (~> 4.13)
-  - FBSDKShareKit (~> 4.13)
+  - FBSDKCoreKit (~> 4.18)
+  - FBSDKLoginKit (~> 4.18)
+  - FBSDKShareKit (~> 4.18)
   - Flurry-iOS-SDK/FlurrySDK (~> 7.6)
   - FXBlurView (~> 1.6)
   - Google/Analytics (~> 3.0)
@@ -120,9 +120,9 @@ SPEC CHECKSUMS:
   AFNetworking: 5e0e199f73d8626b11e79750991f5d173d1f8b67
   Bolts: a0058fa3b331c5a1e4402d534f2dae36dbff31e4
   CocoaLumberjack: 97fab7ee5f507fe54445cca7ea80f926729cfd15
-  FBSDKCoreKit: 2807fe0da2ddb49a1469da6d6ff597f99912980f
-  FBSDKLoginKit: 6d350cb6a22d6956e9d078885de6ee8a0ebc51b4
-  FBSDKShareKit: c9438df7573b33780ac8c3451201c5ebb260ffca
+  FBSDKCoreKit: 894b2b6eda6a4c8c4204e92e59cc355709ef045c
+  FBSDKLoginKit: 83ca4d8f12a2022570af9fd6aacf27f6b425b99f
+  FBSDKShareKit: 5953758366278430dc322d5cdc906db361ed7f81
   FirebaseAnalytics: 6f75b04e6bfb8e0b6e9ef298e04c24eea3b13863
   FirebaseInstanceID: d014d574053a2fe84478f12f7bae96979e7051bb
   Flurry-iOS-SDK: 9da972687d3af9f48038dcd86eae9cad3acca456
@@ -145,6 +145,6 @@ SPEC CHECKSUMS:
   SimpleKeychain: b50cef3b87939d480ea1143425c00f5b4b70fe21
   XMLDictionary: f9f51601ba76678b594ab485f2b00ec1fed23724
 
-PODFILE CHECKSUM: d928eab2327acdc9fd0f73741de1bc32b2863136
+PODFILE CHECKSUM: 3b24921b8f32cfbcabf0a00b34cc17c722319bbd
 
 COCOAPODS: 1.1.1

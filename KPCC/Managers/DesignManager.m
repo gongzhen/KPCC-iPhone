@@ -16,7 +16,7 @@
 
 @import MessageUI;
 
-#define kMediaServerPath @"http://media.scpr.org/iphone/program-images/"
+#define kMediaServerPath @"https://media.scpr.org/iphone/program-images/"
 
 static DesignManager *singleton = nil;
 
