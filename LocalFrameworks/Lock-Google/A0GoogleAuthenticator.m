@@ -44,12 +44,12 @@ static NSString * const DefaultConnectionName = @"google-oauth2";
 
 - (instancetype)initWithConnectionName:(NSString *)connectionName andScopes:(NSArray *)scopes {
     return [self initWithConnectionName:connectionName
-                      andGoogleProvider:[[A0GoogleProvider alloc] initWithScopes:scopes]];
+                      andGoogleProvider:[[A0GoogleProvider alloc] initWithScopes:(id _Nonnull)scopes]]; // JAC - silencing static analysis non-nil warning... (see: https://clang-analyzer.llvm.org/faq.html)
 }
 
 - (instancetype)initWithConnectionName:(NSString *)connectionName andClientId:(NSString *)clientId scopes:(NSArray *)scopes {
     return [self initWithConnectionName:connectionName
-                      andGoogleProvider:[[A0GoogleProvider alloc] initWithClientId:clientId scopes:scopes]];
+                      andGoogleProvider:[[A0GoogleProvider alloc] initWithClientId:clientId scopes:(id _Nonnull)scopes]]; // JAC - silencing static analysis non-nil warning... (see: https://clang-analyzer.llvm.org/faq.html)
 }
 
 - (instancetype)initWithConnectionName:(NSString *)connectionName andGoogleProvider:(A0GoogleProvider *)google {
