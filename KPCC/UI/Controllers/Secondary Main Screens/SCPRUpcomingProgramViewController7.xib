@@ -1,8 +1,12 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="7706" systemVersion="14D136" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="11762" systemVersion="16C67" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7703"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="SCPRUpcomingProgramViewController">
@@ -22,37 +26,37 @@
         </placeholder>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
         <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
-            <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+            <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uUC-yF-7Nu" userLabel="View Full Schedule Button" customClass="SCPRButton">
-                    <rect key="frame" x="200" y="531" width="200" height="32"/>
+                    <rect key="frame" x="87.5" y="598" width="200" height="32"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="200" id="9AQ-NE-BdI"/>
                         <constraint firstAttribute="height" constant="32" id="X2z-7p-7ka"/>
                     </constraints>
                     <state key="normal" title="View Full Schedule">
-                        <color key="titleColor" red="1" green="0.97654987932136694" blue="0.98649341385024758" alpha="1" colorSpace="calibratedRGB"/>
-                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="titleColor" red="1" green="0.97654987932136694" blue="0.98649341385024758" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     </state>
                 </button>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="LBP-Xh-p1Q" userLabel="Divider Line Left">
-                    <rect key="frame" x="0.0" y="416" width="42" height="1"/>
-                    <color key="backgroundColor" red="0.92376893939393945" green="0.92376893939393945" blue="0.92376893939393945" alpha="1" colorSpace="calibratedRGB"/>
+                    <rect key="frame" x="0.0" y="483" width="42" height="1"/>
+                    <color key="backgroundColor" red="0.92376893939393945" green="0.92376893939393945" blue="0.92376893939393945" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="42" id="VoC-oo-bJB"/>
                         <constraint firstAttribute="height" constant="1" id="dTw-v6-cja"/>
                     </constraints>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="cIk-Bt-ic3" userLabel="Divider Line Right">
-                    <rect key="frame" x="70" y="416" width="530" height="1"/>
-                    <color key="backgroundColor" red="0.92376893940000004" green="0.92376893940000004" blue="0.92376893940000004" alpha="1" colorSpace="calibratedRGB"/>
+                    <rect key="frame" x="70" y="483" width="305" height="1"/>
+                    <color key="backgroundColor" red="0.92376893940000004" green="0.92376893940000004" blue="0.92376893940000004" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="1" id="WW7-yk-sSw"/>
                     </constraints>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="q3U-N6-KBl" userLabel="genericAvatar">
-                    <rect key="frame" x="38" y="354" width="32" height="32"/>
+                    <rect key="frame" x="38" y="421" width="32" height="32"/>
                     <subviews>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fzX-rs-QCO" userLabel="genAvSeatView">
                             <rect key="frame" x="0.0" y="0.0" width="32" height="32"/>
@@ -64,7 +68,7 @@
                                     <nil key="highlightedColor"/>
                                 </label>
                             </subviews>
-                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             <constraints>
                                 <constraint firstAttribute="centerY" secondItem="BsQ-zf-NMH" secondAttribute="centerY" constant="2" id="6ZO-a6-3Om"/>
                                 <constraint firstItem="BsQ-zf-NMH" firstAttribute="height" secondItem="fzX-rs-QCO" secondAttribute="height" id="dzw-j8-Wnu"/>
@@ -73,7 +77,7 @@
                             </constraints>
                         </view>
                     </subviews>
-                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     <constraints>
                         <constraint firstAttribute="trailing" secondItem="fzX-rs-QCO" secondAttribute="trailing" id="6nj-5d-xMk"/>
                         <constraint firstItem="fzX-rs-QCO" firstAttribute="leading" secondItem="q3U-N6-KBl" secondAttribute="leading" id="8wS-95-nPo"/>
@@ -82,49 +86,49 @@
                     </constraints>
                 </view>
                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="program_avatar_all-things-considered.png" translatesAutoresizingMaskIntoConstraints="NO" id="CiL-KU-SNN" userLabel="avatarImageView">
-                    <rect key="frame" x="40" y="354" width="32" height="32"/>
+                    <rect key="frame" x="40" y="421" width="32" height="32"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="32" id="SkG-fn-rLj"/>
                         <constraint firstAttribute="height" constant="32" id="zhU-1n-7D2"/>
                     </constraints>
                 </imageView>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="All Things Considered" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="M8j-Vi-R5e">
-                    <rect key="frame" x="78" y="354" width="248" height="32"/>
+                    <rect key="frame" x="78" y="421" width="253.5" height="32"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="32" id="zqT-gs-Z6q"/>
                     </constraints>
                     <fontDescription key="fontDescription" type="system" pointSize="26"/>
-                    <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                    <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     <nil key="highlightedColor"/>
                 </label>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="UP NEXT" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="oJZ-LK-GlB">
-                    <rect key="frame" x="80" y="333" width="60" height="21"/>
+                    <rect key="frame" x="80" y="400" width="60" height="21"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="21" id="bzB-Wa-HWP"/>
                     </constraints>
                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                    <color key="textColor" red="1" green="0.65743115594601431" blue="0.13072147144914903" alpha="1" colorSpace="calibratedRGB"/>
+                    <color key="textColor" red="1" green="0.65743115594601431" blue="0.13072147144914903" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     <nil key="highlightedColor"/>
                 </label>
                 <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="icon-up-next.png" translatesAutoresizingMaskIntoConstraints="NO" id="jd8-LM-NlD">
-                    <rect key="frame" x="41" y="402" width="29" height="29"/>
+                    <rect key="frame" x="41" y="469" width="29" height="29"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="29" id="CRe-jw-fZ3"/>
                         <constraint firstAttribute="height" constant="29" id="jlo-6F-4CV"/>
                     </constraints>
                 </imageView>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="12 pm" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="l5u-K6-3c2">
-                    <rect key="frame" x="17" y="432" width="78" height="21"/>
+                    <rect key="frame" x="17" y="499" width="78" height="21"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="21" id="82S-CP-1V5"/>
                         <constraint firstAttribute="width" constant="78" id="M8V-9A-r8f"/>
                     </constraints>
                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                    <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
+                    <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     <nil key="highlightedColor"/>
                 </label>
             </subviews>
-            <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.70999999999999996" colorSpace="calibratedRGB"/>
+            <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.70999999999999996" colorSpace="custom" customColorSpace="sRGB"/>
             <constraints>
                 <constraint firstAttribute="bottom" secondItem="uUC-yF-7Nu" secondAttribute="bottom" constant="37" id="2vf-9y-2nM"/>
                 <constraint firstItem="CiL-KU-SNN" firstAttribute="trailing" secondItem="q3U-N6-KBl" secondAttribute="trailing" constant="2" id="334-pW-eZ6"/>
@@ -159,7 +163,7 @@
         </viewController>
     </objects>
     <resources>
-        <image name="icon-up-next.png" width="18" height="19"/>
+        <image name="icon-up-next.png" width="18" height="18"/>
         <image name="program_avatar_all-things-considered.png" width="32" height="32"/>
     </resources>
 </document>

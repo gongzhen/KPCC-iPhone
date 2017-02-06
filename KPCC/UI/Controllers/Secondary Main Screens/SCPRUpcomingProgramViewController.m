@@ -14,6 +14,7 @@
 #import "SessionManager.h"
 #import "SCPRGenericAvatarViewController.h"
 #import "SCPRButton.h"
+#import "UIImageView+AFNetworking.h"
 
 @interface SCPRUpcomingProgramViewController ()
 
@@ -28,8 +29,8 @@
     
     self.view.backgroundColor = [UIColor clearColor];
     self.avatarImageView.clipsToBounds = YES;
-    self.avatarImageView.layer.cornerRadius = self.avatarImageView.frame.size.width / 2.0f;
-    
+//    self.avatarImageView.layer.cornerRadius = self.avatarImageView.frame.size.width / 2.0f;
+	
     [[DesignManager shared] sculptButton:self.viewFullScheduleButton
                                withStyle:SculptingStyleClearWithBorder
                                  andText:@"View Full Schedule"];
@@ -100,19 +101,25 @@
                                                                                                          @"period" : [[DesignManager shared] proLight:14.0f] }];
     NSString *iconNamed = [self.nextProgram program_slug];
     if (iconNamed) {
-        UIImage *iconImg = [UIImage imageNamed:[NSString stringWithFormat:@"program_avatar_%@", iconNamed]];
-        if ( !iconImg ) {
-            [self.genericAvatar setupWithProgram:self.nextProgram];
-            self.avatarImageView.alpha = 0.0f;
-            self.genericAvatar.view.alpha = 1.0f;
-        } else {
-            self.avatarImageView.image = iconImg;
-            self.genericAvatar.view.alpha = 0.0f;
-        }
-    } else {
-        [self.genericAvatar setupWithProgram:self.nextProgram];
-        self.avatarImageView.alpha = 0.0f;
-        self.genericAvatar.view.alpha = 1.0f;
+		[self.genericAvatar setupWithProgram:self.nextProgram];
+		self.avatarImageView.alpha = 0.0f;
+		self.genericAvatar.view.alpha = 1.0f;
+
+		NSString *densitySuffixString = nil;
+		if ([[UIScreen mainScreen] scale] >= 2.0) {
+			densitySuffixString = @"@2x";
+		}
+		NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"https://media.scpr.org/iphone/avatar-images/program_avatar_%@%@.png", iconNamed, densitySuffixString]] cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:60];;
+
+		__weak SCPRUpcomingProgramViewController *weakSelf = self;
+
+		[self.avatarImageView setImageWithURLRequest:request
+									  placeholderImage:nil
+											   success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {
+												   weakSelf.avatarImageView.image		= image;
+												   weakSelf.avatarImageView.alpha		= 1.0f;
+												   weakSelf.genericAvatar.view.alpha	= 0.0f;
+											   } failure:nil];
     }
 }
 

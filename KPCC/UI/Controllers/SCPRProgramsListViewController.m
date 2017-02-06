@@ -16,6 +16,7 @@
 #import "FXBlurView.h"
 #import "SCPRGenericAvatarViewController.h"
 #import "GenericProgram.h"
+#import "UIImageView+AFNetworking.h"
 
 /**
  * Programs with these slugs will be hidden from this table view.
@@ -177,51 +178,59 @@
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-
     SCPRProgramTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"programTableCell"];
     if (cell == nil) {
-        NSArray *obj = [[NSBundle mainBundle] loadNibNamed:@"SCPRProgramTableViewCell"
-                                                     owner:nil
-                                                   options:nil];
+        NSArray *obj = [[NSBundle mainBundle] loadNibNamed:@"SCPRProgramTableViewCell" owner:nil options:nil];
         cell = (SCPRProgramTableViewCell*)obj[0];
     }
 
     Program* program;
-    if ( indexPath.section == 0 ) {
-        program = self.kpccPrograms[ indexPath.row ];
+    if (indexPath.section == 0) {
+		program = self.kpccPrograms[indexPath.row];
     } else {
-        program = self.otherPrograms[ indexPath.row ];
+		program = self.otherPrograms[indexPath.row];
     }
 
     cell.backgroundColor = [UIColor clearColor];
     cell.programLabel.text = [NSString stringWithFormat:@"%@", [program title]];
-    
-    cell.selectedBackgroundView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0,
-                                                                           cell.frame.size.width,
-                                                                           cell.frame.size.height)];
-    
+
+    cell.selectedBackgroundView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0, cell.frame.size.width, cell.frame.size.height)];
     cell.selectedBackgroundView.backgroundColor = [[UIColor virtualWhiteColor] translucify:0.2];
-    
+
     NSString *iconNamed = [program program_slug];
     if (iconNamed) {
-        UIImage *iconImg = [UIImage imageNamed:[NSString stringWithFormat:@"program_avatar_%@", iconNamed]];
-        if ( !iconImg ) {
-            [cell.gav setupWithProgram:program];
-            cell.gav.view.alpha = 1.0f;
-            cell.iconImageView.alpha = 0.0f;
-        } else {
-        
-            [cell.iconImageView setImage:iconImg];
-            cell.gav.view.alpha = 0.0f;
-            cell.iconImageView.alpha = 1.0f;
-            
-        }
+		[cell.gav setupWithProgram:program];
+		cell.gav.view.alpha = 1.0f;
+		cell.iconImageView.alpha = 0.0f;
+
+		__weak SCPRProgramTableViewCell *weakCell = cell;
+		
+		NSString *densitySuffixString = nil;
+		if ([[UIScreen mainScreen] scale] >= 2.0) {
+			densitySuffixString = @"@2x";
+		}
+		NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"https://media.scpr.org/iphone/avatar-images/program_avatar_%@%@.png", iconNamed, densitySuffixString]] cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:60];
+
+		[weakCell.iconImageView setImageWithURLRequest:request
+									  placeholderImage:nil
+											   success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {
+												   weakCell.iconImageView.image	= image;
+												   weakCell.iconImageView.alpha	= 1.0f;
+												   weakCell.gav.view.alpha		= 0.0f;
+											   } failure:nil];
+
+//        } else {
+//
+//            [cell.iconImageView setImage:iconImg];
+//            cell.gav.view.alpha = 0.0f;
+//            cell.iconImageView.alpha = 1.0f;
+//
+//        }
+//		}
     }
 
     return cell;
 }
-
-
 
 #pragma mark - Table view delegate
 
