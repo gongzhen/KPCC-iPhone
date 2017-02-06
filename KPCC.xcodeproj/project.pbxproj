@@ -250,102 +250,6 @@
 		B5F9F74A1ABCE8FD00115DB3 /* icon-clock@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B5F9F7461ABCE8FD00115DB3 /* icon-clock@2x.png */; };
 		B5F9F74B1ABCE8FD00115DB3 /* icon-stopwatch.png in Resources */ = {isa = PBXBuildFile; fileRef = B5F9F7471ABCE8FD00115DB3 /* icon-stopwatch.png */; };
 		B5F9F74C1ABCE8FD00115DB3 /* icon-stopwatch@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B5F9F7481ABCE8FD00115DB3 /* icon-stopwatch@2x.png */; };
-		EF88E99E1E20661A00BCEC8F /* program_avatar_airtalk.png in Resources */ = {isa = PBXBuildFile; fileRef = EF88E93E1E20661A00BCEC8F /* program_avatar_airtalk.png */; };
-		EF88E99F1E20661A00BCEC8F /* program_avatar_airtalk@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EF88E93F1E20661A00BCEC8F /* program_avatar_airtalk@2x.png */; };
-		EF88E9A01E20661A00BCEC8F /* program_avatar_all-things-considered.png in Resources */ = {isa = PBXBuildFile; fileRef = EF88E9401E20661A00BCEC8F /* program_avatar_all-things-considered.png */; };
-		EF88E9A11E20661A00BCEC8F /* program_avatar_all-things-considered@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EF88E9411E20661A00BCEC8F /* program_avatar_all-things-considered@2x.png */; };
-		EF88E9A21E20661A00BCEC8F /* program_avatar_ask-me-another.png in Resources */ = {isa = PBXBuildFile; fileRef = EF88E9421E20661A00BCEC8F /* program_avatar_ask-me-another.png */; };
-		EF88E9A31E20661A00BCEC8F /* program_avatar_ask-me-another@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EF88E9431E20661A00BCEC8F /* program_avatar_ask-me-another@2x.png */; };
-		EF88E9A41E20661A00BCEC8F /* program_avatar_the-awards-show-show.png in Resources */ = {isa = PBXBuildFile; fileRef = EF88E9441E20661A00BCEC8F /* program_avatar_the-awards-show-show.png */; };
-		EF88E9A51E20661A00BCEC8F /* program_avatar_the-awards-show-show@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EF88E9451E20661A00BCEC8F /* program_avatar_the-awards-show-show@2x.png */; };
-		EF88E9A61E20661A00BCEC8F /* program_avatar_bbc-newshour.png in Resources */ = {isa = PBXBuildFile; fileRef = EF88E9461E20661A00BCEC8F /* program_avatar_bbc-newshour.png */; };
-		EF88E9A71E20661A00BCEC8F /* program_avatar_bbc-newshour@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EF88E9471E20661A00BCEC8F /* program_avatar_bbc-newshour@2x.png */; };
-		EF88E9A81E20661A00BCEC8F /* program_avatar_bbc-world-service.png in Resources */ = {isa = PBXBuildFile; fileRef = EF88E9481E20661A00BCEC8F /* program_avatar_bbc-world-service.png */; };
-		EF88E9A91E20661A00BCEC8F /* program_avatar_bbc-world-service@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EF88E9491E20661A00BCEC8F /* program_avatar_bbc-world-service@2x.png */; };
-		EF88E9AA1E20661A00BCEC8F /* program_avatar_the-brood.png in Resources */ = {isa = PBXBuildFile; fileRef = EF88E94A1E20661A00BCEC8F /* program_avatar_the-brood.png */; };
-		EF88E9AB1E20661A00BCEC8F /* program_avatar_the-brood@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EF88E94B1E20661A00BCEC8F /* program_avatar_the-brood@2x.png */; };
-		EF88E9AC1E20661A00BCEC8F /* program_avatar_bullseye.png in Resources */ = {isa = PBXBuildFile; fileRef = EF88E94C1E20661A00BCEC8F /* program_avatar_bullseye.png */; };
-		EF88E9AD1E20661A00BCEC8F /* program_avatar_bullseye@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EF88E94D1E20661A00BCEC8F /* program_avatar_bullseye@2x.png */; };
-		EF88E9AE1E20661A00BCEC8F /* program_avatar_california-report.png in Resources */ = {isa = PBXBuildFile; fileRef = EF88E94E1E20661A00BCEC8F /* program_avatar_california-report.png */; };
-		EF88E9AF1E20661A00BCEC8F /* program_avatar_california-report@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EF88E94F1E20661A00BCEC8F /* program_avatar_california-report@2x.png */; };
-		EF88E9B01E20661A00BCEC8F /* program_avatar_car-talk.png in Resources */ = {isa = PBXBuildFile; fileRef = EF88E9501E20661A00BCEC8F /* program_avatar_car-talk.png */; };
-		EF88E9B11E20661A00BCEC8F /* program_avatar_car-talk@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EF88E9511E20661A00BCEC8F /* program_avatar_car-talk@2x.png */; };
-		EF88E9B21E20661A00BCEC8F /* program_avatar_dinner-party-download.png in Resources */ = {isa = PBXBuildFile; fileRef = EF88E9521E20661A00BCEC8F /* program_avatar_dinner-party-download.png */; };
-		EF88E9B31E20661A00BCEC8F /* program_avatar_dinner-party-download@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EF88E9531E20661A00BCEC8F /* program_avatar_dinner-party-download@2x.png */; };
-		EF88E9B41E20661A00BCEC8F /* program_avatar_filmweek.png in Resources */ = {isa = PBXBuildFile; fileRef = EF88E9541E20661A00BCEC8F /* program_avatar_filmweek.png */; };
-		EF88E9B51E20661A00BCEC8F /* program_avatar_filmweek@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EF88E9551E20661A00BCEC8F /* program_avatar_filmweek@2x.png */; };
-		EF88E9B61E20661A00BCEC8F /* program_avatar_fresh-air.png in Resources */ = {isa = PBXBuildFile; fileRef = EF88E9561E20661A00BCEC8F /* program_avatar_fresh-air.png */; };
-		EF88E9B71E20661A00BCEC8F /* program_avatar_fresh-air@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EF88E9571E20661A00BCEC8F /* program_avatar_fresh-air@2x.png */; };
-		EF88E9B81E20661A00BCEC8F /* program_avatar_generic.png in Resources */ = {isa = PBXBuildFile; fileRef = EF88E9581E20661A00BCEC8F /* program_avatar_generic.png */; };
-		EF88E9B91E20661A00BCEC8F /* program_avatar_generic@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EF88E9591E20661A00BCEC8F /* program_avatar_generic@2x.png */; };
-		EF88E9BA1E20661A00BCEC8F /* program_avatar_Invisibilia.png in Resources */ = {isa = PBXBuildFile; fileRef = EF88E95A1E20661A00BCEC8F /* program_avatar_Invisibilia.png */; };
-		EF88E9BB1E20661A00BCEC8F /* program_avatar_Invisibilia@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EF88E95B1E20661A00BCEC8F /* program_avatar_Invisibilia@2x.png */; };
-		EF88E9BC1E20661A00BCEC8F /* program_avatar_kpcc-news.png in Resources */ = {isa = PBXBuildFile; fileRef = EF88E95C1E20661A00BCEC8F /* program_avatar_kpcc-news.png */; };
-		EF88E9BD1E20661A00BCEC8F /* program_avatar_kpcc-news@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EF88E95D1E20661A00BCEC8F /* program_avatar_kpcc-news@2x.png */; };
-		EF88E9BE1E20661A00BCEC8F /* program_avatar_latino-usa.png in Resources */ = {isa = PBXBuildFile; fileRef = EF88E95E1E20661A00BCEC8F /* program_avatar_latino-usa.png */; };
-		EF88E9BF1E20661A00BCEC8F /* program_avatar_latino-usa@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EF88E95F1E20661A00BCEC8F /* program_avatar_latino-usa@2x.png */; };
-		EF88E9C01E20661A00BCEC8F /* program_avatar_loh-down-on-science.png in Resources */ = {isa = PBXBuildFile; fileRef = EF88E9601E20661A00BCEC8F /* program_avatar_loh-down-on-science.png */; };
-		EF88E9C11E20661A00BCEC8F /* program_avatar_loh-down-on-science@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EF88E9611E20661A00BCEC8F /* program_avatar_loh-down-on-science@2x.png */; };
-		EF88E9C21E20661A00BCEC8F /* program_avatar_loh-life.png in Resources */ = {isa = PBXBuildFile; fileRef = EF88E9621E20661A00BCEC8F /* program_avatar_loh-life.png */; };
-		EF88E9C31E20661A00BCEC8F /* program_avatar_loh-life@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EF88E9631E20661A00BCEC8F /* program_avatar_loh-life@2x.png */; };
-		EF88E9C41E20661A00BCEC8F /* program_avatar_marketplace-morning-report.png in Resources */ = {isa = PBXBuildFile; fileRef = EF88E9641E20661A00BCEC8F /* program_avatar_marketplace-morning-report.png */; };
-		EF88E9C51E20661A00BCEC8F /* program_avatar_marketplace-morning-report@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EF88E9651E20661A00BCEC8F /* program_avatar_marketplace-morning-report@2x.png */; };
-		EF88E9C61E20661A00BCEC8F /* program_avatar_marketplace-tech-report.png in Resources */ = {isa = PBXBuildFile; fileRef = EF88E9661E20661A00BCEC8F /* program_avatar_marketplace-tech-report.png */; };
-		EF88E9C71E20661A00BCEC8F /* program_avatar_marketplace-tech-report@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EF88E9671E20661A00BCEC8F /* program_avatar_marketplace-tech-report@2x.png */; };
-		EF88E9C81E20661A00BCEC8F /* program_avatar_marketplace-weekend.png in Resources */ = {isa = PBXBuildFile; fileRef = EF88E9681E20661A00BCEC8F /* program_avatar_marketplace-weekend.png */; };
-		EF88E9C91E20661A00BCEC8F /* program_avatar_marketplace-weekend@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EF88E9691E20661A00BCEC8F /* program_avatar_marketplace-weekend@2x.png */; };
-		EF88E9CA1E20661A00BCEC8F /* program_avatar_marketplace.png in Resources */ = {isa = PBXBuildFile; fileRef = EF88E96A1E20661A00BCEC8F /* program_avatar_marketplace.png */; };
-		EF88E9CB1E20661A00BCEC8F /* program_avatar_marketplace@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EF88E96B1E20661A00BCEC8F /* program_avatar_marketplace@2x.png */; };
-		EF88E9CC1E20661A00BCEC8F /* program_avatar_the-mash-up-americans.png in Resources */ = {isa = PBXBuildFile; fileRef = EF88E96C1E20661A00BCEC8F /* program_avatar_the-mash-up-americans.png */; };
-		EF88E9CD1E20661A00BCEC8F /* program_avatar_the-mash-up-americans@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EF88E96D1E20661A00BCEC8F /* program_avatar_the-mash-up-americans@2x.png */; };
-		EF88E9CE1E20661A00BCEC8F /* program_avatar_morning-edition.png in Resources */ = {isa = PBXBuildFile; fileRef = EF88E96E1E20661A00BCEC8F /* program_avatar_morning-edition.png */; };
-		EF88E9CF1E20661A00BCEC8F /* program_avatar_morning-edition@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EF88E96F1E20661A00BCEC8F /* program_avatar_morning-edition@2x.png */; };
-		EF88E9D01E20661A00BCEC8F /* program_avatar_moth-radio-hour.png in Resources */ = {isa = PBXBuildFile; fileRef = EF88E9701E20661A00BCEC8F /* program_avatar_moth-radio-hour.png */; };
-		EF88E9D11E20661A00BCEC8F /* program_avatar_moth-radio-hour@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EF88E9711E20661A00BCEC8F /* program_avatar_moth-radio-hour@2x.png */; };
-		EF88E9D21E20661A00BCEC8F /* program_avatar_offramp.png in Resources */ = {isa = PBXBuildFile; fileRef = EF88E9721E20661A00BCEC8F /* program_avatar_offramp.png */; };
-		EF88E9D31E20661A00BCEC8F /* program_avatar_offramp@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EF88E9731E20661A00BCEC8F /* program_avatar_offramp@2x.png */; };
-		EF88E9D41E20661A00BCEC8F /* program_avatar_on-being.png in Resources */ = {isa = PBXBuildFile; fileRef = EF88E9741E20661A00BCEC8F /* program_avatar_on-being.png */; };
-		EF88E9D51E20661A00BCEC8F /* program_avatar_on-being@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EF88E9751E20661A00BCEC8F /* program_avatar_on-being@2x.png */; };
-		EF88E9D61E20661A00BCEC8F /* program_avatar_on-the-media.png in Resources */ = {isa = PBXBuildFile; fileRef = EF88E9761E20661A00BCEC8F /* program_avatar_on-the-media.png */; };
-		EF88E9D71E20661A00BCEC8F /* program_avatar_on-the-media@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EF88E9771E20661A00BCEC8F /* program_avatar_on-the-media@2x.png */; };
-		EF88E9D81E20661A00BCEC8F /* program_avatar_prairie-home-companion.png in Resources */ = {isa = PBXBuildFile; fileRef = EF88E9781E20661A00BCEC8F /* program_avatar_prairie-home-companion.png */; };
-		EF88E9D91E20661A00BCEC8F /* program_avatar_prairie-home-companion@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EF88E9791E20661A00BCEC8F /* program_avatar_prairie-home-companion@2x.png */; };
-		EF88E9DA1E20661A00BCEC8F /* program_avatar_q.png in Resources */ = {isa = PBXBuildFile; fileRef = EF88E97A1E20661A00BCEC8F /* program_avatar_q.png */; };
-		EF88E9DB1E20661A00BCEC8F /* program_avatar_q@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EF88E97B1E20661A00BCEC8F /* program_avatar_q@2x.png */; };
-		EF88E9DC1E20661A00BCEC8F /* program_avatar_radiolab.png in Resources */ = {isa = PBXBuildFile; fileRef = EF88E97C1E20661A00BCEC8F /* program_avatar_radiolab.png */; };
-		EF88E9DD1E20661A00BCEC8F /* program_avatar_radiolab@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EF88E97D1E20661A00BCEC8F /* program_avatar_radiolab@2x.png */; };
-		EF88E9DE1E20661A00BCEC8F /* program_avatar_the-ride.png in Resources */ = {isa = PBXBuildFile; fileRef = EF88E97E1E20661A00BCEC8F /* program_avatar_the-ride.png */; };
-		EF88E9DF1E20661A00BCEC8F /* program_avatar_the-ride@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EF88E97F1E20661A00BCEC8F /* program_avatar_the-ride@2x.png */; };
-		EF88E9E01E20661A00BCEC8F /* program_avatar_science-friday.png in Resources */ = {isa = PBXBuildFile; fileRef = EF88E9801E20661A00BCEC8F /* program_avatar_science-friday.png */; };
-		EF88E9E11E20661A00BCEC8F /* program_avatar_science-friday@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EF88E9811E20661A00BCEC8F /* program_avatar_science-friday@2x.png */; };
-		EF88E9E21E20661A00BCEC8F /* program_avatar_snap-judgment.png in Resources */ = {isa = PBXBuildFile; fileRef = EF88E9821E20661A00BCEC8F /* program_avatar_snap-judgment.png */; };
-		EF88E9E31E20661A00BCEC8F /* program_avatar_snap-judgment@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EF88E9831E20661A00BCEC8F /* program_avatar_snap-judgment@2x.png */; };
-		EF88E9E41E20661A00BCEC8F /* program_avatar_splendid-table.png in Resources */ = {isa = PBXBuildFile; fileRef = EF88E9841E20661A00BCEC8F /* program_avatar_splendid-table.png */; };
-		EF88E9E51E20661A00BCEC8F /* program_avatar_splendid-table@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EF88E9851E20661A00BCEC8F /* program_avatar_splendid-table@2x.png */; };
-		EF88E9E61E20661A00BCEC8F /* program_avatar_take-two.png in Resources */ = {isa = PBXBuildFile; fileRef = EF88E9861E20661A00BCEC8F /* program_avatar_take-two.png */; };
-		EF88E9E71E20661A00BCEC8F /* program_avatar_take-two@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EF88E9871E20661A00BCEC8F /* program_avatar_take-two@2x.png */; };
-		EF88E9E81E20661A00BCEC8F /* program_avatar_tavis-smiley-show.png in Resources */ = {isa = PBXBuildFile; fileRef = EF88E9881E20661A00BCEC8F /* program_avatar_tavis-smiley-show.png */; };
-		EF88E9E91E20661A00BCEC8F /* program_avatar_tavis-smiley-show@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EF88E9891E20661A00BCEC8F /* program_avatar_tavis-smiley-show@2x.png */; };
-		EF88E9EA1E20661A00BCEC8F /* program_avatar_ted-radio-hour.png in Resources */ = {isa = PBXBuildFile; fileRef = EF88E98A1E20661A00BCEC8F /* program_avatar_ted-radio-hour.png */; };
-		EF88E9EB1E20661A00BCEC8F /* program_avatar_ted-radio-hour@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EF88E98B1E20661A00BCEC8F /* program_avatar_ted-radio-hour@2x.png */; };
-		EF88E9EC1E20661A00BCEC8F /* program_avatar_the-frame.png in Resources */ = {isa = PBXBuildFile; fileRef = EF88E98C1E20661A00BCEC8F /* program_avatar_the-frame.png */; };
-		EF88E9ED1E20661A00BCEC8F /* program_avatar_the-frame@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EF88E98D1E20661A00BCEC8F /* program_avatar_the-frame@2x.png */; };
-		EF88E9EE1E20661A00BCEC8F /* program_avatar_world.png in Resources */ = {isa = PBXBuildFile; fileRef = EF88E98E1E20661A00BCEC8F /* program_avatar_world.png */; };
-		EF88E9EF1E20661A00BCEC8F /* program_avatar_world@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EF88E98F1E20661A00BCEC8F /* program_avatar_world@2x.png */; };
-		EF88E9F01E20661A00BCEC8F /* program_avatar_this-american-life.png in Resources */ = {isa = PBXBuildFile; fileRef = EF88E9901E20661A00BCEC8F /* program_avatar_this-american-life.png */; };
-		EF88E9F11E20661A00BCEC8F /* program_avatar_this-american-life@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EF88E9911E20661A00BCEC8F /* program_avatar_this-american-life@2x.png */; };
-		EF88E9F21E20661A00BCEC8F /* program_avatar_wait-wait-dont-tell-me.png in Resources */ = {isa = PBXBuildFile; fileRef = EF88E9921E20661A00BCEC8F /* program_avatar_wait-wait-dont-tell-me.png */; };
-		EF88E9F31E20661A00BCEC8F /* program_avatar_wait-wait-dont-tell-me@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EF88E9931E20661A00BCEC8F /* program_avatar_wait-wait-dont-tell-me@2x.png */; };
-		EF88E9F41E20661A00BCEC8F /* program_avatar_weekend-edition-saturday.png in Resources */ = {isa = PBXBuildFile; fileRef = EF88E9941E20661A00BCEC8F /* program_avatar_weekend-edition-saturday.png */; };
-		EF88E9F51E20661A00BCEC8F /* program_avatar_weekend-edition-saturday@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EF88E9951E20661A00BCEC8F /* program_avatar_weekend-edition-saturday@2x.png */; };
-		EF88E9F61E20661B00BCEC8F /* program_avatar_weekend-edition-sunday.png in Resources */ = {isa = PBXBuildFile; fileRef = EF88E9961E20661A00BCEC8F /* program_avatar_weekend-edition-sunday.png */; };
-		EF88E9F71E20661B00BCEC8F /* program_avatar_weekend-edition-sunday@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EF88E9971E20661A00BCEC8F /* program_avatar_weekend-edition-sunday@2x.png */; };
-		EF88E9F81E20661B00BCEC8F /* program_avatar_welcome-to-vinci.png in Resources */ = {isa = PBXBuildFile; fileRef = EF88E9981E20661A00BCEC8F /* program_avatar_welcome-to-vinci.png */; };
-		EF88E9F91E20661B00BCEC8F /* program_avatar_welcome-to-vinci@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EF88E9991E20661A00BCEC8F /* program_avatar_welcome-to-vinci@2x.png */; };
-		EF88E9FA1E20661B00BCEC8F /* program_avatar_wits.png in Resources */ = {isa = PBXBuildFile; fileRef = EF88E99A1E20661A00BCEC8F /* program_avatar_wits.png */; };
-		EF88E9FB1E20661B00BCEC8F /* program_avatar_wits@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EF88E99B1E20661A00BCEC8F /* program_avatar_wits@2x.png */; };
-		EF88E9FC1E20661B00BCEC8F /* program_avatar_writers-almanac.png in Resources */ = {isa = PBXBuildFile; fileRef = EF88E99C1E20661A00BCEC8F /* program_avatar_writers-almanac.png */; };
-		EF88E9FD1E20661B00BCEC8F /* program_avatar_writers-almanac@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EF88E99D1E20661A00BCEC8F /* program_avatar_writers-almanac@2x.png */; };
 		F8B89D8CCF084CC24141C44C /* Pods_KPCC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5EEF9D0A5791A805E9A95672 /* Pods_KPCC.framework */; };
 /* End PBXBuildFile section */
 
@@ -684,102 +588,6 @@
 		B5F9F7461ABCE8FD00115DB3 /* icon-clock@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-clock@2x.png"; sourceTree = "<group>"; };
 		B5F9F7471ABCE8FD00115DB3 /* icon-stopwatch.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-stopwatch.png"; sourceTree = "<group>"; };
 		B5F9F7481ABCE8FD00115DB3 /* icon-stopwatch@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-stopwatch@2x.png"; sourceTree = "<group>"; };
-		EF88E93E1E20661A00BCEC8F /* program_avatar_airtalk.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = program_avatar_airtalk.png; sourceTree = "<group>"; };
-		EF88E93F1E20661A00BCEC8F /* program_avatar_airtalk@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "program_avatar_airtalk@2x.png"; sourceTree = "<group>"; };
-		EF88E9401E20661A00BCEC8F /* program_avatar_all-things-considered.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "program_avatar_all-things-considered.png"; sourceTree = "<group>"; };
-		EF88E9411E20661A00BCEC8F /* program_avatar_all-things-considered@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "program_avatar_all-things-considered@2x.png"; sourceTree = "<group>"; };
-		EF88E9421E20661A00BCEC8F /* program_avatar_ask-me-another.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "program_avatar_ask-me-another.png"; sourceTree = "<group>"; };
-		EF88E9431E20661A00BCEC8F /* program_avatar_ask-me-another@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "program_avatar_ask-me-another@2x.png"; sourceTree = "<group>"; };
-		EF88E9441E20661A00BCEC8F /* program_avatar_the-awards-show-show.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "program_avatar_the-awards-show-show.png"; sourceTree = "<group>"; };
-		EF88E9451E20661A00BCEC8F /* program_avatar_the-awards-show-show@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "program_avatar_the-awards-show-show@2x.png"; sourceTree = "<group>"; };
-		EF88E9461E20661A00BCEC8F /* program_avatar_bbc-newshour.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "program_avatar_bbc-newshour.png"; sourceTree = "<group>"; };
-		EF88E9471E20661A00BCEC8F /* program_avatar_bbc-newshour@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "program_avatar_bbc-newshour@2x.png"; sourceTree = "<group>"; };
-		EF88E9481E20661A00BCEC8F /* program_avatar_bbc-world-service.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "program_avatar_bbc-world-service.png"; sourceTree = "<group>"; };
-		EF88E9491E20661A00BCEC8F /* program_avatar_bbc-world-service@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "program_avatar_bbc-world-service@2x.png"; sourceTree = "<group>"; };
-		EF88E94A1E20661A00BCEC8F /* program_avatar_the-brood.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "program_avatar_the-brood.png"; sourceTree = "<group>"; };
-		EF88E94B1E20661A00BCEC8F /* program_avatar_the-brood@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "program_avatar_the-brood@2x.png"; sourceTree = "<group>"; };
-		EF88E94C1E20661A00BCEC8F /* program_avatar_bullseye.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = program_avatar_bullseye.png; sourceTree = "<group>"; };
-		EF88E94D1E20661A00BCEC8F /* program_avatar_bullseye@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "program_avatar_bullseye@2x.png"; sourceTree = "<group>"; };
-		EF88E94E1E20661A00BCEC8F /* program_avatar_california-report.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "program_avatar_california-report.png"; sourceTree = "<group>"; };
-		EF88E94F1E20661A00BCEC8F /* program_avatar_california-report@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "program_avatar_california-report@2x.png"; sourceTree = "<group>"; };
-		EF88E9501E20661A00BCEC8F /* program_avatar_car-talk.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "program_avatar_car-talk.png"; sourceTree = "<group>"; };
-		EF88E9511E20661A00BCEC8F /* program_avatar_car-talk@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "program_avatar_car-talk@2x.png"; sourceTree = "<group>"; };
-		EF88E9521E20661A00BCEC8F /* program_avatar_dinner-party-download.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "program_avatar_dinner-party-download.png"; sourceTree = "<group>"; };
-		EF88E9531E20661A00BCEC8F /* program_avatar_dinner-party-download@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "program_avatar_dinner-party-download@2x.png"; sourceTree = "<group>"; };
-		EF88E9541E20661A00BCEC8F /* program_avatar_filmweek.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = program_avatar_filmweek.png; sourceTree = "<group>"; };
-		EF88E9551E20661A00BCEC8F /* program_avatar_filmweek@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "program_avatar_filmweek@2x.png"; sourceTree = "<group>"; };
-		EF88E9561E20661A00BCEC8F /* program_avatar_fresh-air.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "program_avatar_fresh-air.png"; sourceTree = "<group>"; };
-		EF88E9571E20661A00BCEC8F /* program_avatar_fresh-air@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "program_avatar_fresh-air@2x.png"; sourceTree = "<group>"; };
-		EF88E9581E20661A00BCEC8F /* program_avatar_generic.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = program_avatar_generic.png; sourceTree = "<group>"; };
-		EF88E9591E20661A00BCEC8F /* program_avatar_generic@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "program_avatar_generic@2x.png"; sourceTree = "<group>"; };
-		EF88E95A1E20661A00BCEC8F /* program_avatar_Invisibilia.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = program_avatar_Invisibilia.png; sourceTree = "<group>"; };
-		EF88E95B1E20661A00BCEC8F /* program_avatar_Invisibilia@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "program_avatar_Invisibilia@2x.png"; sourceTree = "<group>"; };
-		EF88E95C1E20661A00BCEC8F /* program_avatar_kpcc-news.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "program_avatar_kpcc-news.png"; sourceTree = "<group>"; };
-		EF88E95D1E20661A00BCEC8F /* program_avatar_kpcc-news@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "program_avatar_kpcc-news@2x.png"; sourceTree = "<group>"; };
-		EF88E95E1E20661A00BCEC8F /* program_avatar_latino-usa.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "program_avatar_latino-usa.png"; sourceTree = "<group>"; };
-		EF88E95F1E20661A00BCEC8F /* program_avatar_latino-usa@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "program_avatar_latino-usa@2x.png"; sourceTree = "<group>"; };
-		EF88E9601E20661A00BCEC8F /* program_avatar_loh-down-on-science.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "program_avatar_loh-down-on-science.png"; sourceTree = "<group>"; };
-		EF88E9611E20661A00BCEC8F /* program_avatar_loh-down-on-science@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "program_avatar_loh-down-on-science@2x.png"; sourceTree = "<group>"; };
-		EF88E9621E20661A00BCEC8F /* program_avatar_loh-life.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "program_avatar_loh-life.png"; sourceTree = "<group>"; };
-		EF88E9631E20661A00BCEC8F /* program_avatar_loh-life@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "program_avatar_loh-life@2x.png"; sourceTree = "<group>"; };
-		EF88E9641E20661A00BCEC8F /* program_avatar_marketplace-morning-report.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "program_avatar_marketplace-morning-report.png"; sourceTree = "<group>"; };
-		EF88E9651E20661A00BCEC8F /* program_avatar_marketplace-morning-report@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "program_avatar_marketplace-morning-report@2x.png"; sourceTree = "<group>"; };
-		EF88E9661E20661A00BCEC8F /* program_avatar_marketplace-tech-report.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "program_avatar_marketplace-tech-report.png"; sourceTree = "<group>"; };
-		EF88E9671E20661A00BCEC8F /* program_avatar_marketplace-tech-report@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "program_avatar_marketplace-tech-report@2x.png"; sourceTree = "<group>"; };
-		EF88E9681E20661A00BCEC8F /* program_avatar_marketplace-weekend.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "program_avatar_marketplace-weekend.png"; sourceTree = "<group>"; };
-		EF88E9691E20661A00BCEC8F /* program_avatar_marketplace-weekend@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "program_avatar_marketplace-weekend@2x.png"; sourceTree = "<group>"; };
-		EF88E96A1E20661A00BCEC8F /* program_avatar_marketplace.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = program_avatar_marketplace.png; sourceTree = "<group>"; };
-		EF88E96B1E20661A00BCEC8F /* program_avatar_marketplace@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "program_avatar_marketplace@2x.png"; sourceTree = "<group>"; };
-		EF88E96C1E20661A00BCEC8F /* program_avatar_the-mash-up-americans.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "program_avatar_the-mash-up-americans.png"; sourceTree = "<group>"; };
-		EF88E96D1E20661A00BCEC8F /* program_avatar_the-mash-up-americans@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "program_avatar_the-mash-up-americans@2x.png"; sourceTree = "<group>"; };
-		EF88E96E1E20661A00BCEC8F /* program_avatar_morning-edition.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "program_avatar_morning-edition.png"; sourceTree = "<group>"; };
-		EF88E96F1E20661A00BCEC8F /* program_avatar_morning-edition@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "program_avatar_morning-edition@2x.png"; sourceTree = "<group>"; };
-		EF88E9701E20661A00BCEC8F /* program_avatar_moth-radio-hour.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "program_avatar_moth-radio-hour.png"; sourceTree = "<group>"; };
-		EF88E9711E20661A00BCEC8F /* program_avatar_moth-radio-hour@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "program_avatar_moth-radio-hour@2x.png"; sourceTree = "<group>"; };
-		EF88E9721E20661A00BCEC8F /* program_avatar_offramp.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = program_avatar_offramp.png; sourceTree = "<group>"; };
-		EF88E9731E20661A00BCEC8F /* program_avatar_offramp@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "program_avatar_offramp@2x.png"; sourceTree = "<group>"; };
-		EF88E9741E20661A00BCEC8F /* program_avatar_on-being.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "program_avatar_on-being.png"; sourceTree = "<group>"; };
-		EF88E9751E20661A00BCEC8F /* program_avatar_on-being@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "program_avatar_on-being@2x.png"; sourceTree = "<group>"; };
-		EF88E9761E20661A00BCEC8F /* program_avatar_on-the-media.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "program_avatar_on-the-media.png"; sourceTree = "<group>"; };
-		EF88E9771E20661A00BCEC8F /* program_avatar_on-the-media@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "program_avatar_on-the-media@2x.png"; sourceTree = "<group>"; };
-		EF88E9781E20661A00BCEC8F /* program_avatar_prairie-home-companion.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "program_avatar_prairie-home-companion.png"; sourceTree = "<group>"; };
-		EF88E9791E20661A00BCEC8F /* program_avatar_prairie-home-companion@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "program_avatar_prairie-home-companion@2x.png"; sourceTree = "<group>"; };
-		EF88E97A1E20661A00BCEC8F /* program_avatar_q.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = program_avatar_q.png; sourceTree = "<group>"; };
-		EF88E97B1E20661A00BCEC8F /* program_avatar_q@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "program_avatar_q@2x.png"; sourceTree = "<group>"; };
-		EF88E97C1E20661A00BCEC8F /* program_avatar_radiolab.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = program_avatar_radiolab.png; sourceTree = "<group>"; };
-		EF88E97D1E20661A00BCEC8F /* program_avatar_radiolab@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "program_avatar_radiolab@2x.png"; sourceTree = "<group>"; };
-		EF88E97E1E20661A00BCEC8F /* program_avatar_the-ride.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "program_avatar_the-ride.png"; sourceTree = "<group>"; };
-		EF88E97F1E20661A00BCEC8F /* program_avatar_the-ride@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "program_avatar_the-ride@2x.png"; sourceTree = "<group>"; };
-		EF88E9801E20661A00BCEC8F /* program_avatar_science-friday.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "program_avatar_science-friday.png"; sourceTree = "<group>"; };
-		EF88E9811E20661A00BCEC8F /* program_avatar_science-friday@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "program_avatar_science-friday@2x.png"; sourceTree = "<group>"; };
-		EF88E9821E20661A00BCEC8F /* program_avatar_snap-judgment.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "program_avatar_snap-judgment.png"; sourceTree = "<group>"; };
-		EF88E9831E20661A00BCEC8F /* program_avatar_snap-judgment@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "program_avatar_snap-judgment@2x.png"; sourceTree = "<group>"; };
-		EF88E9841E20661A00BCEC8F /* program_avatar_splendid-table.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "program_avatar_splendid-table.png"; sourceTree = "<group>"; };
-		EF88E9851E20661A00BCEC8F /* program_avatar_splendid-table@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "program_avatar_splendid-table@2x.png"; sourceTree = "<group>"; };
-		EF88E9861E20661A00BCEC8F /* program_avatar_take-two.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "program_avatar_take-two.png"; sourceTree = "<group>"; };
-		EF88E9871E20661A00BCEC8F /* program_avatar_take-two@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "program_avatar_take-two@2x.png"; sourceTree = "<group>"; };
-		EF88E9881E20661A00BCEC8F /* program_avatar_tavis-smiley-show.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "program_avatar_tavis-smiley-show.png"; sourceTree = "<group>"; };
-		EF88E9891E20661A00BCEC8F /* program_avatar_tavis-smiley-show@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "program_avatar_tavis-smiley-show@2x.png"; sourceTree = "<group>"; };
-		EF88E98A1E20661A00BCEC8F /* program_avatar_ted-radio-hour.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "program_avatar_ted-radio-hour.png"; sourceTree = "<group>"; };
-		EF88E98B1E20661A00BCEC8F /* program_avatar_ted-radio-hour@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "program_avatar_ted-radio-hour@2x.png"; sourceTree = "<group>"; };
-		EF88E98C1E20661A00BCEC8F /* program_avatar_the-frame.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "program_avatar_the-frame.png"; sourceTree = "<group>"; };
-		EF88E98D1E20661A00BCEC8F /* program_avatar_the-frame@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "program_avatar_the-frame@2x.png"; sourceTree = "<group>"; };
-		EF88E98E1E20661A00BCEC8F /* program_avatar_world.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = program_avatar_world.png; sourceTree = "<group>"; };
-		EF88E98F1E20661A00BCEC8F /* program_avatar_world@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "program_avatar_world@2x.png"; sourceTree = "<group>"; };
-		EF88E9901E20661A00BCEC8F /* program_avatar_this-american-life.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "program_avatar_this-american-life.png"; sourceTree = "<group>"; };
-		EF88E9911E20661A00BCEC8F /* program_avatar_this-american-life@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "program_avatar_this-american-life@2x.png"; sourceTree = "<group>"; };
-		EF88E9921E20661A00BCEC8F /* program_avatar_wait-wait-dont-tell-me.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "program_avatar_wait-wait-dont-tell-me.png"; sourceTree = "<group>"; };
-		EF88E9931E20661A00BCEC8F /* program_avatar_wait-wait-dont-tell-me@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "program_avatar_wait-wait-dont-tell-me@2x.png"; sourceTree = "<group>"; };
-		EF88E9941E20661A00BCEC8F /* program_avatar_weekend-edition-saturday.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "program_avatar_weekend-edition-saturday.png"; sourceTree = "<group>"; };
-		EF88E9951E20661A00BCEC8F /* program_avatar_weekend-edition-saturday@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "program_avatar_weekend-edition-saturday@2x.png"; sourceTree = "<group>"; };
-		EF88E9961E20661A00BCEC8F /* program_avatar_weekend-edition-sunday.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "program_avatar_weekend-edition-sunday.png"; sourceTree = "<group>"; };
-		EF88E9971E20661A00BCEC8F /* program_avatar_weekend-edition-sunday@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "program_avatar_weekend-edition-sunday@2x.png"; sourceTree = "<group>"; };
-		EF88E9981E20661A00BCEC8F /* program_avatar_welcome-to-vinci.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "program_avatar_welcome-to-vinci.png"; sourceTree = "<group>"; };
-		EF88E9991E20661A00BCEC8F /* program_avatar_welcome-to-vinci@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "program_avatar_welcome-to-vinci@2x.png"; sourceTree = "<group>"; };
-		EF88E99A1E20661A00BCEC8F /* program_avatar_wits.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = program_avatar_wits.png; sourceTree = "<group>"; };
-		EF88E99B1E20661A00BCEC8F /* program_avatar_wits@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "program_avatar_wits@2x.png"; sourceTree = "<group>"; };
-		EF88E99C1E20661A00BCEC8F /* program_avatar_writers-almanac.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "program_avatar_writers-almanac.png"; sourceTree = "<group>"; };
-		EF88E99D1E20661A00BCEC8F /* program_avatar_writers-almanac@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "program_avatar_writers-almanac@2x.png"; sourceTree = "<group>"; };
 		FD6EF1B97B076E9293882D94 /* Pods-KPCC.enterprise.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KPCC.enterprise.xcconfig"; path = "Pods/Target Support Files/Pods-KPCC/Pods-KPCC.enterprise.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -1026,109 +834,6 @@
 			path = menu;
 			sourceTree = "<group>";
 		};
-		52EFF79F19C368C00059A0E3 /* program_avatars */ = {
-			isa = PBXGroup;
-			children = (
-				EF88E93E1E20661A00BCEC8F /* program_avatar_airtalk.png */,
-				EF88E93F1E20661A00BCEC8F /* program_avatar_airtalk@2x.png */,
-				EF88E9401E20661A00BCEC8F /* program_avatar_all-things-considered.png */,
-				EF88E9411E20661A00BCEC8F /* program_avatar_all-things-considered@2x.png */,
-				EF88E9421E20661A00BCEC8F /* program_avatar_ask-me-another.png */,
-				EF88E9431E20661A00BCEC8F /* program_avatar_ask-me-another@2x.png */,
-				EF88E9441E20661A00BCEC8F /* program_avatar_the-awards-show-show.png */,
-				EF88E9451E20661A00BCEC8F /* program_avatar_the-awards-show-show@2x.png */,
-				EF88E9461E20661A00BCEC8F /* program_avatar_bbc-newshour.png */,
-				EF88E9471E20661A00BCEC8F /* program_avatar_bbc-newshour@2x.png */,
-				EF88E9481E20661A00BCEC8F /* program_avatar_bbc-world-service.png */,
-				EF88E9491E20661A00BCEC8F /* program_avatar_bbc-world-service@2x.png */,
-				EF88E94A1E20661A00BCEC8F /* program_avatar_the-brood.png */,
-				EF88E94B1E20661A00BCEC8F /* program_avatar_the-brood@2x.png */,
-				EF88E94C1E20661A00BCEC8F /* program_avatar_bullseye.png */,
-				EF88E94D1E20661A00BCEC8F /* program_avatar_bullseye@2x.png */,
-				EF88E94E1E20661A00BCEC8F /* program_avatar_california-report.png */,
-				EF88E94F1E20661A00BCEC8F /* program_avatar_california-report@2x.png */,
-				EF88E9501E20661A00BCEC8F /* program_avatar_car-talk.png */,
-				EF88E9511E20661A00BCEC8F /* program_avatar_car-talk@2x.png */,
-				EF88E9521E20661A00BCEC8F /* program_avatar_dinner-party-download.png */,
-				EF88E9531E20661A00BCEC8F /* program_avatar_dinner-party-download@2x.png */,
-				EF88E9541E20661A00BCEC8F /* program_avatar_filmweek.png */,
-				EF88E9551E20661A00BCEC8F /* program_avatar_filmweek@2x.png */,
-				EF88E9561E20661A00BCEC8F /* program_avatar_fresh-air.png */,
-				EF88E9571E20661A00BCEC8F /* program_avatar_fresh-air@2x.png */,
-				EF88E9581E20661A00BCEC8F /* program_avatar_generic.png */,
-				EF88E9591E20661A00BCEC8F /* program_avatar_generic@2x.png */,
-				EF88E95A1E20661A00BCEC8F /* program_avatar_Invisibilia.png */,
-				EF88E95B1E20661A00BCEC8F /* program_avatar_Invisibilia@2x.png */,
-				EF88E95C1E20661A00BCEC8F /* program_avatar_kpcc-news.png */,
-				EF88E95D1E20661A00BCEC8F /* program_avatar_kpcc-news@2x.png */,
-				EF88E95E1E20661A00BCEC8F /* program_avatar_latino-usa.png */,
-				EF88E95F1E20661A00BCEC8F /* program_avatar_latino-usa@2x.png */,
-				EF88E9601E20661A00BCEC8F /* program_avatar_loh-down-on-science.png */,
-				EF88E9611E20661A00BCEC8F /* program_avatar_loh-down-on-science@2x.png */,
-				EF88E9621E20661A00BCEC8F /* program_avatar_loh-life.png */,
-				EF88E9631E20661A00BCEC8F /* program_avatar_loh-life@2x.png */,
-				EF88E9641E20661A00BCEC8F /* program_avatar_marketplace-morning-report.png */,
-				EF88E9651E20661A00BCEC8F /* program_avatar_marketplace-morning-report@2x.png */,
-				EF88E9661E20661A00BCEC8F /* program_avatar_marketplace-tech-report.png */,
-				EF88E9671E20661A00BCEC8F /* program_avatar_marketplace-tech-report@2x.png */,
-				EF88E9681E20661A00BCEC8F /* program_avatar_marketplace-weekend.png */,
-				EF88E9691E20661A00BCEC8F /* program_avatar_marketplace-weekend@2x.png */,
-				EF88E96A1E20661A00BCEC8F /* program_avatar_marketplace.png */,
-				EF88E96B1E20661A00BCEC8F /* program_avatar_marketplace@2x.png */,
-				EF88E96C1E20661A00BCEC8F /* program_avatar_the-mash-up-americans.png */,
-				EF88E96D1E20661A00BCEC8F /* program_avatar_the-mash-up-americans@2x.png */,
-				EF88E96E1E20661A00BCEC8F /* program_avatar_morning-edition.png */,
-				EF88E96F1E20661A00BCEC8F /* program_avatar_morning-edition@2x.png */,
-				EF88E9701E20661A00BCEC8F /* program_avatar_moth-radio-hour.png */,
-				EF88E9711E20661A00BCEC8F /* program_avatar_moth-radio-hour@2x.png */,
-				EF88E9721E20661A00BCEC8F /* program_avatar_offramp.png */,
-				EF88E9731E20661A00BCEC8F /* program_avatar_offramp@2x.png */,
-				EF88E9741E20661A00BCEC8F /* program_avatar_on-being.png */,
-				EF88E9751E20661A00BCEC8F /* program_avatar_on-being@2x.png */,
-				EF88E9761E20661A00BCEC8F /* program_avatar_on-the-media.png */,
-				EF88E9771E20661A00BCEC8F /* program_avatar_on-the-media@2x.png */,
-				EF88E9781E20661A00BCEC8F /* program_avatar_prairie-home-companion.png */,
-				EF88E9791E20661A00BCEC8F /* program_avatar_prairie-home-companion@2x.png */,
-				EF88E97A1E20661A00BCEC8F /* program_avatar_q.png */,
-				EF88E97B1E20661A00BCEC8F /* program_avatar_q@2x.png */,
-				EF88E97C1E20661A00BCEC8F /* program_avatar_radiolab.png */,
-				EF88E97D1E20661A00BCEC8F /* program_avatar_radiolab@2x.png */,
-				EF88E97E1E20661A00BCEC8F /* program_avatar_the-ride.png */,
-				EF88E97F1E20661A00BCEC8F /* program_avatar_the-ride@2x.png */,
-				EF88E9801E20661A00BCEC8F /* program_avatar_science-friday.png */,
-				EF88E9811E20661A00BCEC8F /* program_avatar_science-friday@2x.png */,
-				EF88E9821E20661A00BCEC8F /* program_avatar_snap-judgment.png */,
-				EF88E9831E20661A00BCEC8F /* program_avatar_snap-judgment@2x.png */,
-				EF88E9841E20661A00BCEC8F /* program_avatar_splendid-table.png */,
-				EF88E9851E20661A00BCEC8F /* program_avatar_splendid-table@2x.png */,
-				EF88E9861E20661A00BCEC8F /* program_avatar_take-two.png */,
-				EF88E9871E20661A00BCEC8F /* program_avatar_take-two@2x.png */,
-				EF88E9881E20661A00BCEC8F /* program_avatar_tavis-smiley-show.png */,
-				EF88E9891E20661A00BCEC8F /* program_avatar_tavis-smiley-show@2x.png */,
-				EF88E98A1E20661A00BCEC8F /* program_avatar_ted-radio-hour.png */,
-				EF88E98B1E20661A00BCEC8F /* program_avatar_ted-radio-hour@2x.png */,
-				EF88E98C1E20661A00BCEC8F /* program_avatar_the-frame.png */,
-				EF88E98D1E20661A00BCEC8F /* program_avatar_the-frame@2x.png */,
-				EF88E98E1E20661A00BCEC8F /* program_avatar_world.png */,
-				EF88E98F1E20661A00BCEC8F /* program_avatar_world@2x.png */,
-				EF88E9901E20661A00BCEC8F /* program_avatar_this-american-life.png */,
-				EF88E9911E20661A00BCEC8F /* program_avatar_this-american-life@2x.png */,
-				EF88E9921E20661A00BCEC8F /* program_avatar_wait-wait-dont-tell-me.png */,
-				EF88E9931E20661A00BCEC8F /* program_avatar_wait-wait-dont-tell-me@2x.png */,
-				EF88E9941E20661A00BCEC8F /* program_avatar_weekend-edition-saturday.png */,
-				EF88E9951E20661A00BCEC8F /* program_avatar_weekend-edition-saturday@2x.png */,
-				EF88E9961E20661A00BCEC8F /* program_avatar_weekend-edition-sunday.png */,
-				EF88E9971E20661A00BCEC8F /* program_avatar_weekend-edition-sunday@2x.png */,
-				EF88E9981E20661A00BCEC8F /* program_avatar_welcome-to-vinci.png */,
-				EF88E9991E20661A00BCEC8F /* program_avatar_welcome-to-vinci@2x.png */,
-				EF88E99A1E20661A00BCEC8F /* program_avatar_wits.png */,
-				EF88E99B1E20661A00BCEC8F /* program_avatar_wits@2x.png */,
-				EF88E99C1E20661A00BCEC8F /* program_avatar_writers-almanac.png */,
-				EF88E99D1E20661A00BCEC8F /* program_avatar_writers-almanac@2x.png */,
-			);
-			path = program_avatars;
-			sourceTree = "<group>";
-		};
 		760E3C45194FB4F700D86D91 /* Models */ = {
 			isa = PBXGroup;
 			children = (
@@ -1312,7 +1017,6 @@
 				52CF917519FEF306007BCFA8 /* btn_play@2x.png */,
 				52EFF88519C3BC020059A0E3 /* item-chevron-right.png */,
 				52EFF88619C3BC020059A0E3 /* item-chevron-right@2x.png */,
-				52EFF79F19C368C00059A0E3 /* program_avatars */,
 				52EFF77A19C3688D0059A0E3 /* menu */,
 				768C06871995911600F829EB /* program_images */,
 				7685BD58194BBCB90075BB16 /* pauseButton.png */,
@@ -1626,14 +1330,11 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				EF88E9BE1E20661A00BCEC8F /* program_avatar_latino-usa.png in Resources */,
 				25BBCD7E1A892DA30015071E /* SCPRScrubberViewController.xib in Resources */,
 				B5F9F74C1ABCE8FD00115DB3 /* icon-stopwatch@2x.png in Resources */,
-				EF88E9AF1E20661A00BCEC8F /* program_avatar_california-report@2x.png in Resources */,
 				768C065C1995905D00F829EB /* btn_play_large@2x.png in Resources */,
 				2546AF6F1AB0CB6800E11D5B /* SCPRProgramTableViewCell.xib in Resources */,
 				25F30AFD1B0A9B1800F27187 /* onboarding-schedule-swipe-left@2x.png in Resources */,
-				EF88E9EA1E20661A00BCEC8F /* program_avatar_ted-radio-hour.png in Resources */,
 				2557BA841A1A9BB800B0CAED /* btn_back_to_live_xtra-small@2x.png in Resources */,
 				76B9A9AE18EF59FD007A6D8C /* SCPRUserReportViewController.xib in Resources */,
 				257479B31B6AE08200F72AF6 /* icon-mail@2x.png in Resources */,
@@ -1642,26 +1343,16 @@
 				25BBCD871A893C350015071E /* btn_back_30.png in Resources */,
 				768C067D199590CC00F829EB /* FreigSanProLigIt.otf in Resources */,
 				52EFF78B19C3688D0059A0E3 /* menu-clock.png in Resources */,
-				EF88E9F91E20661B00BCEC8F /* program_avatar_welcome-to-vinci@2x.png in Resources */,
 				523126A819EDB78C008A47A7 /* SCPRPreRollViewController.xib in Resources */,
-				EF88E9AE1E20661A00BCEC8F /* program_avatar_california-report.png in Resources */,
 				25E8BDAC1ABC923E007B99EB /* SCPRSleepViewController.xib in Resources */,
 				52EFF79119C3688D0059A0E3 /* menu-glasses@2x.png in Resources */,
 				768C0675199590CC00F829EB /* FreigSanProBoldIt.otf in Resources */,
 				523E86D219C8A292006FC366 /* SCPRProgramDetailViewController.xib in Resources */,
-				EF88E9B21E20661A00BCEC8F /* program_avatar_dinner-party-download.png in Resources */,
-				EF88E9A31E20661A00BCEC8F /* program_avatar_ask-me-another@2x.png in Resources */,
-				EF88E9AB1E20661A00BCEC8F /* program_avatar_the-brood@2x.png in Resources */,
 				76A308E518C8FB940065D4B1 /* Images.xcassets in Resources */,
 				52CF917619FEF306007BCFA8 /* btn_play.png in Resources */,
-				EF88E9F21E20661A00BCEC8F /* program_avatar_wait-wait-dont-tell-me.png in Resources */,
-				EF88E9E91E20661A00BCEC8F /* program_avatar_tavis-smiley-show@2x.png in Resources */,
 				52CF917719FEF306007BCFA8 /* btn_play@2x.png in Resources */,
 				768C0679199590CC00F829EB /* FreigSanProBookIt.otf in Resources */,
-				EF88E9EE1E20661A00BCEC8F /* program_avatar_world.png in Resources */,
 				2594B5411A31420D0013B93A /* onboarding-episode-swipe.png in Resources */,
-				EF88E9CE1E20661A00BCEC8F /* program_avatar_morning-edition.png in Resources */,
-				EF88E9D81E20661A00BCEC8F /* program_avatar_prairie-home-companion.png in Resources */,
 				25F30AFB1AFABB3E00F27187 /* SCPRScheduleHeaderViewController.xib in Resources */,
 				52EFF78919C3688D0059A0E3 /* menu-antenna@2x.png in Resources */,
 				258E8E071A16AA4200675E68 /* desk_template.json in Resources */,
@@ -1669,192 +1360,109 @@
 				25BBCD881A893C350015071E /* btn_back_30@2x.png in Resources */,
 				258C5D2E1B164C2100C19BE0 /* icon-lock@2x.png in Resources */,
 				254CC6961A23A7A600560805 /* onboarding-logo.png in Resources */,
-				EF88E9BC1E20661A00BCEC8F /* program_avatar_kpcc-news.png in Resources */,
-				EF88E9A71E20661A00BCEC8F /* program_avatar_bbc-newshour@2x.png in Resources */,
 				768C068A1995911600F829EB /* program_tile_generic.jpg in Resources */,
 				07A24B4C1BA3A4F800197EB9 /* SCPRProgramTableViewHeader.xib in Resources */,
 				25B25BB61B1D096D00ABE8B4 /* SCPRBalloonViewController.xib in Resources */,
 				768C0683199590CC00F829EB /* FreigSanProSem.otf in Resources */,
-				EF88E9B51E20661A00BCEC8F /* program_avatar_filmweek@2x.png in Resources */,
-				EF88E9A61E20661A00BCEC8F /* program_avatar_bbc-newshour.png in Resources */,
 				7685BD62194BBCB90075BB16 /* playButton@2x.png in Resources */,
 				256DE7281A16B9D90022EB84 /* menu-feedback@2x.png in Resources */,
 				768C065E1995905D00F829EB /* chevron_down.png in Resources */,
 				52EFF79719C3688D0059A0E3 /* menu-microphone.png in Resources */,
 				7685BD60194BBCB90075BB16 /* playButton.png in Resources */,
-				EF88E9B11E20661A00BCEC8F /* program_avatar_car-talk@2x.png in Resources */,
 				25B25BAE1B1D093D00ABE8B4 /* SCPRPledgePINViewController.xib in Resources */,
 				258C5D2D1B164C2100C19BE0 /* icon-lock.png in Resources */,
 				768C0681199590CC00F829EB /* FreigSanProMedIt.otf in Resources */,
 				25B25BBA1B1E2EA200ABE8B4 /* pfsu-errors.json in Resources */,
 				7685BD5E194BBCB90075BB16 /* pauseButton@2x.png in Resources */,
 				52EFF88719C3BC020059A0E3 /* item-chevron-right.png in Resources */,
-				EF88E9E31E20661A00BCEC8F /* program_avatar_snap-judgment@2x.png in Resources */,
-				EF88E9F61E20661B00BCEC8F /* program_avatar_weekend-edition-sunday.png in Resources */,
-				EF88E9EC1E20661A00BCEC8F /* program_avatar_the-frame.png in Resources */,
 				7685BD5C194BBCB90075BB16 /* pauseButton.png in Resources */,
 				52EFF79D19C3688D0059A0E3 /* menu-settings@2x.png in Resources */,
-				EF88E99F1E20661A00BCEC8F /* program_avatar_airtalk@2x.png in Resources */,
-				EF88E9D61E20661A00BCEC8F /* program_avatar_on-the-media.png in Resources */,
 				25B59A5719FEF93700D4885C /* SCPRShortListViewController.xib in Resources */,
 				768C06561995905D00F829EB /* btn_pause.png in Resources */,
-				EF88E9D31E20661A00BCEC8F /* program_avatar_offramp@2x.png in Resources */,
 				25B25BB81B1D096D00ABE8B4 /* SCPRXFSViewController.xib in Resources */,
 				0778E9151BADAE00005B4F9F /* coverart.png in Resources */,
-				EF88E9E61E20661A00BCEC8F /* program_avatar_take-two.png in Resources */,
 				259E44FF1A1D2CD300F5CD65 /* SCPROnboardingViewController.xib in Resources */,
-				EF88E9CB1E20661A00BCEC8F /* program_avatar_marketplace@2x.png in Resources */,
 				52D9227819D366C90018AD4B /* content-share.png in Resources */,
-				EF88E9C81E20661A00BCEC8F /* program_avatar_marketplace-weekend.png in Resources */,
-				EF88E9ED1E20661A00BCEC8F /* program_avatar_the-frame@2x.png in Resources */,
 				258E8E101A16AE0400675E68 /* SCPRFeedbackViewController.xib in Resources */,
-				EF88E9AD1E20661A00BCEC8F /* program_avatar_bullseye@2x.png in Resources */,
 				52EFF79319C3688D0059A0E3 /* menu-heart-plus.png in Resources */,
-				EF88E9C21E20661A00BCEC8F /* program_avatar_loh-life.png in Resources */,
-				EF88E9E51E20661A00BCEC8F /* program_avatar_splendid-table@2x.png in Resources */,
 				768C065A1995905D00F829EB /* btn_play_large.png in Resources */,
 				52EFF78D19C3688D0059A0E3 /* menu-clock@2x.png in Resources */,
 				254CC6A01A240B6200560805 /* onboarding-episode-swipe@2x.png in Resources */,
 				258C5D2F1B164C2100C19BE0 /* stream-antenna.png in Resources */,
 				8BB4B72B1D0657A100A621BA /* UserProfileViewController.xib in Resources */,
-				EF88E9D41E20661A00BCEC8F /* program_avatar_on-being.png in Resources */,
 				768C0685199590CC00F829EB /* FreigSanProSemIt.otf in Resources */,
-				EF88E9A81E20661A00BCEC8F /* program_avatar_bbc-world-service.png in Resources */,
 				254CC69A1A23A7A600560805 /* onboarding-tile.jpg in Resources */,
-				EF88E9AA1E20661A00BCEC8F /* program_avatar_the-brood.png in Resources */,
-				EF88E9A11E20661A00BCEC8F /* program_avatar_all-things-considered@2x.png in Resources */,
-				EF88E9B41E20661A00BCEC8F /* program_avatar_filmweek.png in Resources */,
-				EF88E9EF1E20661A00BCEC8F /* program_avatar_world@2x.png in Resources */,
 				25B25BA11B190F1200ABE8B4 /* SCPRXFSHeaderCell.xib in Resources */,
-				EF88E9BB1E20661A00BCEC8F /* program_avatar_Invisibilia@2x.png in Resources */,
-				EF88E9EB1E20661A00BCEC8F /* program_avatar_ted-radio-hour@2x.png in Resources */,
-				EF88E9CA1E20661A00BCEC8F /* program_avatar_marketplace.png in Resources */,
-				EF88E9FB1E20661B00BCEC8F /* program_avatar_wits@2x.png in Resources */,
-				EF88E9B91E20661A00BCEC8F /* program_avatar_generic@2x.png in Resources */,
 				258C5D301B164C2100C19BE0 /* stream-antenna@2x.png in Resources */,
 				25BBCD8C1A893C350015071E /* btn_forward_30@2x.png in Resources */,
 				768C0673199590CC00F829EB /* FreigSanProBold.otf in Resources */,
-				EF88E9DB1E20661A00BCEC8F /* program_avatar_q@2x.png in Resources */,
 				768C0677199590CC00F829EB /* FreigSanProBook.otf in Resources */,
-				EF88E9D51E20661A00BCEC8F /* program_avatar_on-being@2x.png in Resources */,
-				EF88E9B81E20661A00BCEC8F /* program_avatar_generic.png in Resources */,
 				259E450E1A1D583A00F5CD65 /* onboarding1.mp3 in Resources */,
 				768C067B199590CC00F829EB /* FreigSanProLig.otf in Resources */,
 				25BBCD8A1A893C350015071E /* btn_close@2x.png in Resources */,
-				EF88E9F31E20661A00BCEC8F /* program_avatar_wait-wait-dont-tell-me@2x.png in Resources */,
 				258E8E021A16AA3900675E68 /* rewind_beat.mp3 in Resources */,
 				257479BA1B6C21FE00F72AF6 /* icon-lock-white.png in Resources */,
-				EF88E9D01E20661A00BCEC8F /* program_avatar_moth-radio-hour.png in Resources */,
-				EF88E9AC1E20661A00BCEC8F /* program_avatar_bullseye.png in Resources */,
-				EF88E9CF1E20661A00BCEC8F /* program_avatar_morning-edition@2x.png in Resources */,
 				768C068C1995911600F829EB /* program_tile_generic@2x.jpg in Resources */,
-				EF88E9BF1E20661A00BCEC8F /* program_avatar_latino-usa@2x.png in Resources */,
 				257479AF1B6AD14200F72AF6 /* onboarding-tile-blurry.jpg in Resources */,
-				EF88E9DC1E20661A00BCEC8F /* program_avatar_radiolab.png in Resources */,
 				52EFF78719C3688D0059A0E3 /* menu-antenna.png in Resources */,
 				52EFF79519C3688D0059A0E3 /* menu-heart-plus@2x.png in Resources */,
-				EF88E9C51E20661A00BCEC8F /* program_avatar_marketplace-morning-report@2x.png in Resources */,
 				25E8BDA51ABB933C007B99EB /* SCPRTimerControlViewController.xib in Resources */,
-				EF88E9D21E20661A00BCEC8F /* program_avatar_offramp.png in Resources */,
 				259E450F1A1D583A00F5CD65 /* onboarding2.mp3 in Resources */,
-				EF88E9DD1E20661A00BCEC8F /* program_avatar_radiolab@2x.png in Resources */,
-				EF88E9E21E20661A00BCEC8F /* program_avatar_snap-judgment.png in Resources */,
-				EF88E9CC1E20661A00BCEC8F /* program_avatar_the-mash-up-americans.png in Resources */,
 				257479AD1B6AD12D00F72AF6 /* onboarding-tile-blurry@2x.jpg in Resources */,
 				2557BA851A1A9BB800B0CAED /* btn_live_rewind_xtra-small.png in Resources */,
-				EF88E9D91E20661A00BCEC8F /* program_avatar_prairie-home-companion@2x.png in Resources */,
 				25F30AED1AFAB6B700F27187 /* SCPRCompleteScheduleViewController.xib in Resources */,
-				EF88E9C91E20661A00BCEC8F /* program_avatar_marketplace-weekend@2x.png in Resources */,
 				B5F9F74A1ABCE8FD00115DB3 /* icon-clock@2x.png in Resources */,
-				EF88E9DE1E20661A00BCEC8F /* program_avatar_the-ride.png in Resources */,
 				B5F9F7491ABCE8FD00115DB3 /* icon-clock.png in Resources */,
 				52EFF79B19C3688D0059A0E3 /* menu-settings.png in Resources */,
-				EF88E9A41E20661A00BCEC8F /* program_avatar_the-awards-show-show.png in Resources */,
-				EF88E9DF1E20661A00BCEC8F /* program_avatar_the-ride@2x.png in Resources */,
-				EF88E9F01E20661A00BCEC8F /* program_avatar_this-american-life.png in Resources */,
 				76A308D118C8FB940065D4B1 /* InfoPlist.strings in Resources */,
 				258C5D261B10048A00C19BE0 /* SCPRUpcomingProgramViewController7.xib in Resources */,
 				25F30AFF1B0A9B5500F27187 /* onboarding-schedule-swipe-left.png in Resources */,
-				EF88E9BD1E20661A00BCEC8F /* program_avatar_kpcc-news@2x.png in Resources */,
 				25F2BC831A3BB61300108F73 /* onboarding-voiceover.m4a in Resources */,
-				EF88E9C71E20661A00BCEC8F /* program_avatar_marketplace-tech-report@2x.png in Resources */,
 				768C06581995905D00F829EB /* btn_pause@2x.png in Resources */,
-				EF88E9E71E20661A00BCEC8F /* program_avatar_take-two@2x.png in Resources */,
 				254CC6991A23A7A600560805 /* onboarding-push-icon@2x.png in Resources */,
 				258C5D281B1503D700C19BE0 /* SCPRAlarmClockViewController7.xib in Resources */,
 				25BBCD891A893C350015071E /* btn_close.png in Resources */,
-				EF88E9F71E20661B00BCEC8F /* program_avatar_weekend-edition-sunday@2x.png in Resources */,
 				25F30AE41AF98F1A00F27187 /* icon-up-next@2x.png in Resources */,
 				25BBCD8B1A893C350015071E /* btn_forward_30.png in Resources */,
-				EF88E9F51E20661A00BCEC8F /* program_avatar_weekend-edition-saturday@2x.png in Resources */,
 				2557BA861A1A9BB800B0CAED /* btn_live_rewind_xtra-small@2x.png in Resources */,
 				768C06541995905D00F829EB /* btn_live_rewind_small@2x.png in Resources */,
 				2574799E1B6AB69700F72AF6 /* menu-profile.png in Resources */,
-				EF88E9B71E20661A00BCEC8F /* program_avatar_fresh-air@2x.png in Resources */,
 				76EF5E8A193E8D6B00568A9D /* Storyboard.storyboard in Resources */,
 				257479B61B6C205600F72AF6 /* kpcc-logo.png in Resources */,
-				EF88E9C01E20661A00BCEC8F /* program_avatar_loh-down-on-science.png in Resources */,
 				254CC69B1A23A7A600560805 /* onboarding-tile@2x.jpg in Resources */,
-				EF88E9C61E20661A00BCEC8F /* program_avatar_marketplace-tech-report.png in Resources */,
 				25F30AE31AF98F1A00F27187 /* icon-up-next.png in Resources */,
 				25BBCD781A892D730015071E /* SCPRScrubbingUIViewController.xib in Resources */,
-				EF88E9E11E20661A00BCEC8F /* program_avatar_science-friday@2x.png in Resources */,
-				EF88E9D11E20661A00BCEC8F /* program_avatar_moth-radio-hour@2x.png in Resources */,
 				8B8657C01D026E30004F3251 /* Lock.strings in Resources */,
 				25F2BC7F1A3B9B4D00108F73 /* SCPRGenericAvatarViewController.xib in Resources */,
 				256DE7271A16B9D90022EB84 /* menu-feedback.png in Resources */,
-				EF88E9CD1E20661A00BCEC8F /* program_avatar_the-mash-up-americans@2x.png in Resources */,
 				52EFF78F19C3688D0059A0E3 /* menu-glasses.png in Resources */,
-				EF88E9B01E20661A00BCEC8F /* program_avatar_car-talk.png in Resources */,
 				25BBCD8E1A893C350015071E /* onboarding-scrubber@2x.png in Resources */,
-				EF88E9B31E20661A00BCEC8F /* program_avatar_dinner-party-download@2x.png in Resources */,
-				EF88E9E81E20661A00BCEC8F /* program_avatar_tavis-smiley-show.png in Resources */,
-				EF88E9E01E20661A00BCEC8F /* program_avatar_science-friday.png in Resources */,
-				EF88E9C31E20661A00BCEC8F /* program_avatar_loh-life@2x.png in Resources */,
 				52E68B8419B8F2D10028F8AE /* SCPRNavigationController.xib in Resources */,
-				EF88E9D71E20661A00BCEC8F /* program_avatar_on-the-media@2x.png in Resources */,
 				2557BA831A1A9BB800B0CAED /* btn_back_to_live_xtra-small.png in Resources */,
 				258E8E031A16AA3900675E68 /* Wood_Crash.mp3 in Resources */,
 				257479BB1B6C21FE00F72AF6 /* icon-lock-white@2x.png in Resources */,
 				52EFF88919C3BC020059A0E3 /* item-chevron-right@2x.png in Resources */,
-				EF88E9DA1E20661A00BCEC8F /* program_avatar_q.png in Resources */,
-				EF88E9A51E20661A00BCEC8F /* program_avatar_the-awards-show-show@2x.png in Resources */,
 				25F30AEF1AFAB6B700F27187 /* SCPRUpcomingProgramViewController.xib in Resources */,
-				EF88E9BA1E20661A00BCEC8F /* program_avatar_Invisibilia.png in Resources */,
 				25E8BDB11AC0920E007B99EB /* SCPRAlarmClockViewController.xib in Resources */,
 				258E8E061A16AA4200675E68 /* desk_customer_template.json in Resources */,
-				EF88E9A91E20661A00BCEC8F /* program_avatar_bbc-world-service@2x.png in Resources */,
 				52D9227A19D366C90018AD4B /* content-share@2x.png in Resources */,
 				25547AB41ACA051D00241B7D /* alarm_beat.aif in Resources */,
 				254CC6971A23A7A600560805 /* onboarding-logo@2x.png in Resources */,
 				768C06521995905D00F829EB /* btn_live_rewind_small.png in Resources */,
 				25263A881A32669E00BD5FF9 /* onboarding3.mp3 in Resources */,
 				768C066F199590CC00F829EB /* FreigSanProBlk.otf in Resources */,
-				EF88E9A21E20661A00BCEC8F /* program_avatar_ask-me-another.png in Resources */,
 				25B25B9B1B17DEF600ABE8B4 /* chevron_up.png in Resources */,
 				258E8E011A16AA3900675E68 /* Glass_Crash.mp3 in Resources */,
-				EF88E9FA1E20661B00BCEC8F /* program_avatar_wits.png in Resources */,
-				EF88E9F81E20661B00BCEC8F /* program_avatar_welcome-to-vinci.png in Resources */,
 				25F2BC811A3BB60B00108F73 /* onboarding-music-bed.m4a in Resources */,
 				2574799F1B6AB69700F72AF6 /* menu-profile@2x.png in Resources */,
-				EF88E9F11E20661A00BCEC8F /* program_avatar_this-american-life@2x.png in Resources */,
-				EF88E9B61E20661A00BCEC8F /* program_avatar_fresh-air.png in Resources */,
 				254CC6981A23A7A600560805 /* onboarding-push-icon.png in Resources */,
-				EF88E9C41E20661A00BCEC8F /* program_avatar_marketplace-morning-report.png in Resources */,
 				B5F9F74B1ABCE8FD00115DB3 /* icon-stopwatch.png in Resources */,
 				25F30AF61AFAB89600F27187 /* SCPRScheduleTableViewCell.xib in Resources */,
-				EF88E9FD1E20661B00BCEC8F /* program_avatar_writers-almanac@2x.png in Resources */,
-				EF88E9FC1E20661B00BCEC8F /* program_avatar_writers-almanac.png in Resources */,
-				EF88E9F41E20661A00BCEC8F /* program_avatar_weekend-edition-saturday.png in Resources */,
 				257479B71B6C205600F72AF6 /* kpcc-logo@2x.png in Resources */,
 				768C06601995905D00F829EB /* chevron_down@2x.png in Resources */,
 				768C0671199590CC00F829EB /* FreigSanProBlkIt.otf in Resources */,
-				EF88E99E1E20661A00BCEC8F /* program_avatar_airtalk.png in Resources */,
 				52CC6D6919D112F400C67322 /* SCPRProgramsListViewController.xib in Resources */,
-				EF88E9C11E20661A00BCEC8F /* program_avatar_loh-down-on-science@2x.png in Resources */,
-				EF88E9A01E20661A00BCEC8F /* program_avatar_all-things-considered.png in Resources */,
 				52EFF79919C3688D0059A0E3 /* menu-microphone@2x.png in Resources */,
-				EF88E9E41E20661A00BCEC8F /* program_avatar_splendid-table.png in Resources */,
 				25B25B9C1B17DEF600ABE8B4 /* chevron_up@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
