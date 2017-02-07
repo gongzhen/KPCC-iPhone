@@ -83,7 +83,7 @@ platform :ios do
 		  "(#{latest_testflight_build_number})"
 		]
 		slack(
-		  message: "TestFlight: There is an update available for #{attributes * ' '}",
+		  message: "TestFlight: New build (#{attributes * ' '}) has been uploaded and is currently processing.\n\nIt will be available to internal testers shortly.",
 		  default_payloads: []
 		)
 	end
