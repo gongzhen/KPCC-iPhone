@@ -49,7 +49,7 @@
 - (void)killBackgroundTask;
 - (void)onboardForLiveFunctionality;
 
-// XFS
+// XFS 
 - (void)applyXFSButton;
 - (void)controlXFSAvailability:(BOOL)available;
 - (void)showCoachingBalloonWithText:(NSString*)text;
