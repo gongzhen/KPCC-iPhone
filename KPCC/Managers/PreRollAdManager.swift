@@ -97,7 +97,7 @@ private class EloquaAction: CustomAction {
                 else {
                     set(
                         heading: "Sorry!",
-                        message: "We can't submit your information for giveaways, as your social profile settings do not allow visibility of your email address. We'll need that to contact you if you win. Contact us for assistance.",
+                        message: "We can't submit your information, as your social profile settings do not allow visibility of your email address. We'll need that to contact you. Please contact us for assistance.",
                         dismissButtonTitle: "Go to KPCC Live",
                         actionButtonTitle: "Contact Us",
                         actionClosure: {
@@ -128,8 +128,8 @@ private class EloquaAction: CustomAction {
 
     private lazy var authenticationMessageViewController: MessageViewController = {
         return MessageViewController(
-            heading: "Success!",
-            message: "You've been entered to win.",
+            heading: "Thanks!",
+            message: "Your information has been submitted.",
             dismissButtonTitle: "Go to KPCC Live"
         )
     }()
@@ -146,8 +146,8 @@ private class EloquaAction: CustomAction {
         authenticationMessageViewController.eloquaAction = self
 
         let authenticationViewController = AuthenticationViewController(originForAnalytics: "ticketTuesdayAd")
-        authenticationViewController.cancelSignUpConfirmationMessage = "You can only enter to win if you create an account."
-        authenticationViewController.cancelLogInConfirmationMessage = "You can only enter to win if you log into the app."
+        authenticationViewController.cancelSignUpConfirmationMessage = "You can only submit your information if you create an account."
+        authenticationViewController.cancelLogInConfirmationMessage = "You can only submit your information if you log into the app."
         authenticationViewController.messageViewController = authenticationMessageViewController
 
         presentViewController(authenticationViewController)
