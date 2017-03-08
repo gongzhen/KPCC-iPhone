@@ -527,11 +527,9 @@ setForOnDemandUI;
 }
 
 - (void)superPop {
-    
-    /*if ( self.menuOpen ) {
+    if ( self.menuOpen ) {
         [self decloakForMenu:YES];
     }
-    */
 
     self.homeIsNotRootViewController = NO;
     [self.navigationController popToRootViewControllerAnimated:YES];
