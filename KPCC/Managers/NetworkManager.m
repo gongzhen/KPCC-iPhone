@@ -157,7 +157,7 @@ static NetworkManager *singleton = nil;
     manager.responseSerializer = [AFHTTPResponseSerializer serializer];
 
     NSDictionary *globalConfig = [Utils globalConfig];
-    NSString *endpoint = [NSString stringWithFormat:globalConfig[@"AdServer"][@"Cookie"], @"feature", kAdServerCookieFeatureValue, @(kAdServerCookieExpiresDays), NSDate.date.timeIntervalSinceNow];
+	NSString *endpoint = [NSString stringWithFormat:globalConfig[@"AdServer"][@"Cookie"], @"feature", kAdServerCookieFeatureValue, [NSString stringWithFormat:@"%lu", (unsigned long)kAdServerCookieExpiresDays], [NSString stringWithFormat:@"%f", NSDate.date.timeIntervalSinceNow]];
 
     NSURLRequest *urlRequest = [NSURLRequest requestWithURL:[NSURL URLWithString:endpoint]];
 
