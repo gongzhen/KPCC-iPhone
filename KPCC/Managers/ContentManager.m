@@ -239,7 +239,7 @@ static ContentManager *singleton = nil;
     NSDictionary *options = @{
 							  NSMigratePersistentStoresAutomaticallyOption: @YES,
 							  NSInferMappingModelAutomaticallyOption: @YES,
-							  NSPersistentStoreFileProtectionKey: NSFileProtectionComplete
+							  NSPersistentStoreFileProtectionKey: NSFileProtectionNone
 							  };
 
     _persistentStoreCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:[self managedObjectModel]];
