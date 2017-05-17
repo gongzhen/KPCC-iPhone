@@ -250,6 +250,7 @@
 		B5F9F74A1ABCE8FD00115DB3 /* icon-clock@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B5F9F7461ABCE8FD00115DB3 /* icon-clock@2x.png */; };
 		B5F9F74B1ABCE8FD00115DB3 /* icon-stopwatch.png in Resources */ = {isa = PBXBuildFile; fileRef = B5F9F7471ABCE8FD00115DB3 /* icon-stopwatch.png */; };
 		B5F9F74C1ABCE8FD00115DB3 /* icon-stopwatch@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B5F9F7481ABCE8FD00115DB3 /* icon-stopwatch@2x.png */; };
+		EF0FBBE31EC3B6F400FC61A2 /* ComScore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EF0FBBE21EC3B6F400FC61A2 /* ComScore.framework */; };
 		F8B89D8CCF084CC24141C44C /* Pods_KPCC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5EEF9D0A5791A805E9A95672 /* Pods_KPCC.framework */; };
 /* End PBXBuildFile section */
 
@@ -585,6 +586,7 @@
 		B5F9F7461ABCE8FD00115DB3 /* icon-clock@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-clock@2x.png"; sourceTree = "<group>"; };
 		B5F9F7471ABCE8FD00115DB3 /* icon-stopwatch.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-stopwatch.png"; sourceTree = "<group>"; };
 		B5F9F7481ABCE8FD00115DB3 /* icon-stopwatch@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-stopwatch@2x.png"; sourceTree = "<group>"; };
+		EF0FBBE21EC3B6F400FC61A2 /* ComScore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = ComScore.framework; sourceTree = "<group>"; };
 		FD6EF1B97B076E9293882D94 /* Pods-KPCC.enterprise.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KPCC.enterprise.xcconfig"; path = "Pods/Target Support Files/Pods-KPCC/Pods-KPCC.enterprise.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -598,6 +600,7 @@
 				76A308C718C8FB940065D4B1 /* Foundation.framework in Frameworks */,
 				768EAAE118D26C9C00469734 /* AVFoundation.framework in Frameworks */,
 				76A308C918C8FB940065D4B1 /* CoreGraphics.framework in Frameworks */,
+				EF0FBBE31EC3B6F400FC61A2 /* ComScore.framework in Frameworks */,
 				768EAADF18D26C5500469734 /* MediaPlayer.framework in Frameworks */,
 				25C409B01A437B9400ADBFFE /* AdSupport.framework in Frameworks */,
 				257479BD1B6C4A3E00F72AF6 /* WebKit.framework in Frameworks */,
@@ -1116,6 +1119,7 @@
 				257479BC1B6C4A3E00F72AF6 /* WebKit.framework */,
 				2574799A1B6965F800F72AF6 /* Fabric.framework */,
 				25E553271B61A79100C45B85 /* Crashlytics.framework */,
+				EF0FBBE21EC3B6F400FC61A2 /* ComScore.framework */,
 				76A308EB18C8FB950065D4B1 /* XCTest.framework */,
 				5EEF9D0A5791A805E9A95672 /* Pods_KPCC.framework */,
 				41B17E49DE60C14A3D32C727 /* Pods_KPCCTests.framework */,

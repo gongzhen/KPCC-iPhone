@@ -9,6 +9,7 @@
 import Foundation
 import AVFoundation
 import MobileCoreServices
+import ComScore
 
 //-----------
 
@@ -45,7 +46,18 @@ public struct AudioPlayerObserver<T> {
 //----------
 
 @objc public class AudioPlayer: NSObject {
-    @objc public enum AudioNetworkStatus:Int {
+	func recordComScorePlayState(state:Bool) {
+		if state == true {
+			print("IS PLAYING!")
+			SCORAnalytics.notifyUxActive()
+//			notifyUxActive
+		} else {
+			print("IS NOT PLAYING!")
+			SCORAnalytics.notifyUxInactive()
+		}
+	}
+
+	@objc public enum AudioNetworkStatus:Int {
         case Unknown = 0, NotReachable = 1, WIFI = 2, Cellular = 3
 
         func toString() -> String {
@@ -379,13 +391,19 @@ public struct AudioPlayerObserver<T> {
     private func _handleObservation(status:AVObserver.Statuses,msg:String,obj:AnyObject?) {
         switch status {
         case .PlayerFailed:
-            self._emitEvent("Player failed with error: \(msg)")
+			self.recordComScorePlayState(false)
+
+			self._emitEvent("Player failed with error: \(msg)")
         case .ItemFailed:
-            self._emitEvent("Item failed with error: \(msg)")
+			self.recordComScorePlayState(false)
+
+			self._emitEvent("Item failed with error: \(msg)")
         case .Stalled:
             if self.status != .Playing {
                 return;
             }
+
+			self.recordComScorePlayState(false)
 
             if self.currentDates?.hasDates() ?? false {
                 self._emitEvent("Playback stalled at \(self._dateFormat.stringFromDate(self.currentDates!.curDate!)).")
@@ -432,7 +450,9 @@ public struct AudioPlayerObserver<T> {
             // we're hitting play as part of our seek operations, so don't
             // pass on that status yet if .Seeking
             if self.status != .Seeking {
-                self._setStatus(.Playing)
+				self.recordComScorePlayState(true)
+
+				self._setStatus(.Playing)
                 self._resetLiveDate()
             }
         case .Paused:
@@ -442,7 +462,9 @@ public struct AudioPlayerObserver<T> {
                 // do nothing
                 true
             default:
-                self._setStatus(.Paused)
+				self.recordComScorePlayState(false)
+
+				self._setStatus(.Paused)
             }
         case .LikelyToKeepUp:
             self._emitEvent("playback should keep up")

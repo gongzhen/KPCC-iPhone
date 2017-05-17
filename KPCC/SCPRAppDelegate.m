@@ -18,13 +18,23 @@
 #import <Lock/Lock.h>
 #import "A0FacebookAuthenticator.h"
 #import "A0GoogleAuthenticator.h"
+#import <ComScore/ComScore.h>
 
 NSString *const kPushChannel = @"listenLive";
 
 @implementation SCPRAppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-    NSDictionary *globalConfig = [Utils globalConfig];
+	SCORPublisherConfiguration *myPublisherConfig = [SCORPublisherConfiguration publisherConfigurationWithBuilderBlock:^(SCORPublisherConfigurationBuilder *builder) {
+		builder.publisherId							= @"6035974";
+		builder.publisherSecret						= @"10196cd31aec3381b04368e7cfa8d620";
+		builder.usagePropertiesAutoUpdateMode		= SCORUsagePropertiesAutoUpdateModeForegroundAndBackground;
+	}];
+
+	[[SCORAnalytics configuration] addClientWithConfiguration:myPublisherConfig];
+	[SCORAnalytics start];
+
+	NSDictionary *globalConfig = [Utils globalConfig];
 
 	self.originalLaunchOptions	= launchOptions;
 
